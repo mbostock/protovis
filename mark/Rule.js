@@ -1,146 +1,140 @@
 pv.Rule = function() {
   pv.Mark.call(this);
-  this.defineProperties(pv.Rule.properties);
 };
-
-pv.Rule.prototype = pv.Mark.extend();
-
-pv.Rule.properties = new pv.Mark.Properties();
-pv.Rule.properties.define("left");
-pv.Rule.properties.define("right");
-pv.Rule.properties.define("top");
-pv.Rule.properties.define("bottom");
-pv.Rule.properties.define("lineWidth", 1);
-pv.Rule.properties.define("strokeStyle", "black");
 
 pv.Rule.toString = function() "rule";
 
-pv.Rule.anchor = function(name) {
-  var rule = this;
-  var anchor = pv.Mark.prototype.add.call(this, this.type);
+pv.Rule.prototype = pv.Mark.extend();
+pv.Rule.prototype.type = pv.Rule;
+pv.Rule.prototype.defineProperty("lineWidth");
+pv.Rule.prototype.defineProperty("strokeStyle");
 
-  anchor.name = (name instanceof Function) ? name : function() name;
+pv.Rule.defaults = pv.Mark.defaults.extend(pv.Rule)
+    .lineWidth(1)
+    .strokeStyle("black");
 
-  anchor.$left = function(d) {
-      switch (this.name(d)) {
-        case "bottom":
-        case "top":
-        case "left": return rule.left();
-      }
-      return undefined;
-    };
-
-  anchor.$right = function(d) {
-      switch (this.name(d)) {
-        case "right": return rule.right();
-      }
-      return undefined;
-    };
-
-  anchor.$top = function(d) {
-      switch (this.name(d)) {
-        case "left":
-        case "right":
-        case "top": return rule.top();
-      }
-      return undefined;
-    };
-
-  anchor.$bottom = function(d) {
-      switch (this.name(d)) {
-        case "bottom": return rule.bottom();
-      }
-      return undefined;
-    };
-
-  anchor.$textAlign = function(d) {
-      switch (this.name(d)) {
-        case "top":
-        case "bottom": return "center";
-        case "right": return "left";
-        case "left": return "right";
-      }
-      return undefined;
-    };
-
-  anchor.$textBaseline = function(d) {
-      switch (this.name(d)) {
-        case "right":
-        case "left": return "middle";
-        case "top": return "bottom";
-        case "bottom": return "top";
-      }
-      return undefined;
-    };
-
-  return anchor;
+pv.Rule.Anchor = function() {
+  pv.Mark.Anchor.call(this);
 };
 
-pv.Rule.render = function(g) {
-  var markState = this.renderState.marks[this.markIndex] = [];
-  for each (let d in this.$data()) {
+pv.Rule.Anchor.prototype = pv.Mark.Anchor.extend();
+pv.Rule.Anchor.prototype.type = pv.Rule;
 
-    /* Skip invisible marks. */
-    if (!this.$visible(d)) {
-      markState[this.index] = {
-        data : d,
-        visible : false,
-      };
-      this.visualization.index++;
-      continue;
+pv.Rule.Anchor.prototype.$left = function(d) {
+  var rule = this.anchorTarget();
+  switch (this.get("name")) {
+    case "bottom":
+    case "top":
+    case "left": return rule.left();
+  }
+ return null;
+};
+
+pv.Rule.Anchor.prototype.$right = function(d) {
+  var rule = this.anchorTarget();
+  switch (this.get("name")) {
+    case "right": return rule.right();
+  }
+  return null;
+};
+
+pv.Rule.Anchor.prototype.$top = function(d) {
+  var rule = this.anchorTarget();
+  switch (this.get("name")) {
+    case "left":
+    case "right":
+    case "top": return rule.top();
+  }
+  return null;
+};
+
+pv.Rule.Anchor.prototype.$bottom = function(d) {
+  var rule = this.anchorTarget();
+  switch (this.get("name")) {
+    case "bottom": return rule.bottom();
+  }
+  return null;
+};
+
+pv.Rule.Anchor.prototype.$textAlign = function(d) {
+  switch (this.get("name")) {
+    case "top":
+    case "bottom": return "center";
+    case "right": return "left";
+    case "left": return "right";
+  }
+  return null;
+};
+
+pv.Rule.Anchor.prototype.$textBaseline = function(d) {
+  switch (this.get("name")) {
+    case "right":
+    case "left": return "middle";
+    case "top": return "bottom";
+    case "bottom": return "top";
+  }
+  return null;
+};
+
+pv.Rule.prototype.renderInstance = function(g, d) {
+  var l = this.get("left");
+  var r = this.get("right");
+  var t = this.get("top");
+  var b = this.get("bottom");
+
+  var x0, x1;
+  if (l == null) {
+    if (r == null) { // horizontal: top, bottom
+      l = r = 0;
+      x0 = this.offset("left");
+      x1 = g.canvas.width - this.offset("right");
+    } else { // vertical: right, right + top + bottom
+      l = g.canvas.width - this.offset("right") - this.offset("left") - r;
+      x0 = x1 = l + this.offset("left");
     }
+  } else if (r == null) { // vertical: left, left + top + bottom
+    r = g.canvas.width - this.offset("right") - this.offset("left") - l;
+    x0 = x1 = l + this.offset("left");
+  } else { // horizontal: top + left + right, bottom + left + right
+    x0 = l + this.offset("left");
+    x1 = g.canvas.width - this.offset("right") - r;
+  }
 
-    var l = this.$left ? this.$left(d) : null;
-    var r = this.$right ? this.$right(d) : null;
-    var t = this.$top ? this.$top(d) : null;
-    var b = this.$bottom ? this.$bottom(d) : null;
-
-    var horizontal
-        = ((l != null) && (r != null) && (t == null) && (b != null))
-       || ((l != null) && (r != null) && (t != null) && (b == null))
-       || ((l == null) && (t == null) && (b != null))
-       || ((l == null) && (t != null) && (b == null));
-
-    if (l == null) {
-      if (r == null) {
-        l = r = 0;
-      } else {
-        l = g.canvas.width - r;
-      }
-    } else if (r == null) {
-      r = g.canvas.width - l;
+  var y0, y1;
+  if (t == null) {
+    if (b == null) { // vertical: left, right
+      b = t = 0;
+      y0 = this.offset("top");
+      y1 = g.canvas.height - this.offset("bottom");
+    } else { // horizontal: bottom, bottom + left + right
+      t = g.canvas.height - this.offset("bottom") - this.offset("top") - b;
+      y0 = y1 = t + this.offset("top");
     }
+  } else if (b == null) { // horizontal: top, top + left + right
+    b = g.canvas.height - this.offset("bottom") - this.offset("top") - t;
+    y0 = y1 = t + this.offset("top");
+  } else { // vertical: left + top + bottom, right + top + bottom
+    y0 = t + this.offset("top");
+    y1 = g.canvas.height - this.offset("bottom") - b;
+  }
 
-    if (b == null) {
-      if (t == null) {
-        b = t = 0;
-      } else {
-        b = g.canvas.height - t;
-      }
-    } else if (t == null) {
-      t = g.canvas.height - b;
-    }
+  var strokeStyle = this.get("strokeStyle");
+  var lineWidth = this.get("lineWidth");
 
-    var strokeStyle = this.$strokeStyle(d);
-    var lineWidth = this.$lineWidth(d);
+  if (strokeStyle) {
+    g.save();
+    g.lineWidth = lineWidth;
+    g.strokeStyle = strokeStyle;
+    g.beginPath();
+    g.moveTo(x0, y0);
+    g.lineTo(x1, y1);
+    g.stroke();
+    g.restore();
+  }
 
-    if (strokeStyle) {
-      g.save();
-      g.lineWidth = lineWidth;
-      g.strokeStyle = strokeStyle;
-      g.beginPath();
-      g.moveTo(l, t);
-      if (horizontal) {
-        g.lineTo((g.canvas.width - r), t);
-      } else {
-        g.lineTo(l, (g.canvas.height - b));
-      }
-      g.stroke();
-      g.restore();
-    }
-
-    markState[this.index] = {
+  this.renderState[this.index] = {
       data : d,
+      visible : true,
       top : t,
       left : l,
       bottom : b,
@@ -148,7 +142,4 @@ pv.Rule.render = function(g) {
       strokeStyle : strokeStyle,
       lineWidth : lineWidth,
     };
-
-    this.visualization.index++;
-  }
 };

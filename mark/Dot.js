@@ -1,99 +1,106 @@
 pv.Dot = function() {
   pv.Mark.call(this);
-  this.defineProperties(pv.Dot.properties);
-  this.radius = function() {
-      return Math.sqrt(this.size());
-    };
 };
-
-pv.Dot.prototype = pv.Mark.extend();
-
-pv.Dot.properties = new pv.Mark.Properties();
-pv.Dot.properties.define("left");
-pv.Dot.properties.define("right");
-pv.Dot.properties.define("top");
-pv.Dot.properties.define("bottom");
-pv.Dot.properties.define("size", 20);
-pv.Dot.properties.define("shape", "circle");
-pv.Dot.properties.define("lineWidth", 1.5);
-pv.Dot.properties.define("strokeStyle", pv.Colors.category10());
-pv.Dot.properties.define("fillStyle", null);
 
 pv.Dot.toString = function() "dot";
 
-pv.Dot.anchor = function(name) {
-  var dot = this;
-  var anchor = pv.Mark.prototype.add.call(this, this.type);
+pv.Dot.prototype = pv.Mark.extend();
+pv.Dot.prototype.type = pv.Dot;
+pv.Dot.prototype.defineProperty("size");
+pv.Dot.prototype.defineProperty("shape");
+pv.Dot.prototype.defineProperty("lineWidth");
+pv.Dot.prototype.defineProperty("strokeStyle");
+pv.Dot.prototype.defineProperty("fillStyle");
 
-  anchor.name = (name instanceof Function) ? name : function() name;
+pv.Dot.defaults = pv.Mark.defaults.extend(pv.Dot)
+    .size(20)
+    .shape("circle")
+    .lineWidth(1.5)
+    .strokeStyle(pv.Colors.category10)
+    .fillStyle(null);
 
-  anchor.$left = function(d) {
-      switch (this.name(d)) {
-        case "bottom":
-        case "top":
-        case "center": return dot.left();
-        case "left": return dot.left() - dot.radius();
-      }
-      return undefined;
-    };
-
-  anchor.$right = function(d) {
-      switch (this.name(d)) {
-        case "bottom":
-        case "top":
-        case "center": return dot.right();
-        case "right": return dot.right() - dot.radius();
-      }
-      return undefined;
-    };
-
-  anchor.$top = function(d) {
-      switch (this.name(d)) {
-        case "left":
-        case "right":
-        case "center": return dot.top();
-        case "top": return dot.top() - dot.radius();
-      }
-      return undefined;
-    };
-
-  anchor.$bottom = function(d) {
-      switch (this.name(d)) {
-        case "left":
-        case "right":
-        case "center": return dot.bottom();
-        case "bottom": return dot.bottom() - dot.radius();
-      }
-      return undefined;
-    };
-
-  anchor.$textAlign = function(d) {
-      switch (this.name(d)) {
-        case "left": return "right";
-        case "bottom":
-        case "top":
-        case "center": return "center";
-        case "right": return "left";
-      }
-      return undefined;
-    };
-
-  anchor.$textBaseline = function(d) {
-      switch (this.name(d)) {
-        case "right":
-        case "left":
-        case "center": return "middle";
-        case "top": return "bottom";
-        case "bottom": return "top";
-      }
-      return undefined;
-    };
-
-  return anchor;
+pv.Dot.Anchor = function() {
+  pv.Mark.Anchor.call(this);
 };
 
-pv.Dot.render = function(g) {
-  var markState = this.renderState.marks[this.markIndex] = [];
+pv.Dot.Anchor.prototype = pv.Mark.Anchor.extend();
+pv.Dot.Anchor.prototype.type = pv.Dot;
+
+pv.Dot.Anchor.prototype.$left = function(d) {
+  var dot = this.anchorTarget();
+  switch (this.get("name")) {
+    case "bottom":
+    case "top":
+    case "center": return dot.left();
+    case "left": return dot.left() - dot.radius();
+  }
+  return null;
+};
+
+pv.Dot.Anchor.prototype.$right = function(d) {
+  var dot = this.anchorTarget();
+  switch (this.get("name")) {
+    case "bottom":
+    case "top":
+    case "center": return dot.right();
+    case "right": return dot.right() - dot.radius();
+  }
+  return null;
+};
+
+pv.Dot.Anchor.prototype.$top = function(d) {
+  var dot = this.anchorTarget();
+  switch (this.get("name")) {
+    case "left":
+    case "right":
+    case "center": return dot.top();
+    case "top": return dot.top() - dot.radius();
+  }
+  return null;
+};
+
+pv.Dot.Anchor.prototype.$bottom = function(d) {
+  var dot = this.anchorTarget();
+  switch (this.get("name")) {
+    case "left":
+    case "right":
+    case "center": return dot.bottom();
+    case "bottom": return dot.bottom() - dot.radius();
+  }
+  return null;
+};
+
+pv.Dot.Anchor.prototype.$textAlign = function(d) {
+  switch (this.get("name")) {
+    case "left": return "right";
+    case "bottom":
+    case "top":
+    case "center": return "center";
+    case "right": return "left";
+  }
+  return null;
+};
+
+pv.Dot.Anchor.prototype.$textBaseline = function(d) {
+  switch (this.get("name")) {
+    case "right":
+    case "left":
+    case "center": return "middle";
+    case "top": return "bottom";
+    case "bottom": return "top";
+  }
+  return null;
+};
+
+pv.Dot.prototype.radius = function() {
+  return Math.sqrt(this.size());
+};
+
+pv.Dot.prototype.renderInstance = function(g, d) {
+  var l = this.get("left");
+  var r = this.get("right");
+  var t = this.get("top");
+  var b = this.get("bottom");
 
   function path(shape, size) {
     g.beginPath();
@@ -139,61 +146,54 @@ pv.Dot.render = function(g) {
     }
   }
 
-  for each (let d in this.$data()) {
+  var width = g.canvas.width - this.offset("right") - this.offset("left");
+  if (l == null) {
+    l = width - r;
+  } else {
+    r = width - l;
+  }
 
-    /* Skip invisible marks. */
-    if (!this.$visible(d)) {
-      markState[this.index] = {
-        data : d,
-        visible : false,
-      };
-      this.visualization.index++;
-      continue;
-    }
+  var height = g.canvas.height - this.offset("bottom") - this.offset("top");
+  if (t == null) {
+    t = height - b;
+  } else {
+    b = height - t;
+  }
 
-    var x = this.$left(d);
-    if (x == undefined) {
-      x = g.canvas.width - this.$right(d);
-    }
+  var x = l + this.offset("left");
+  var y = t + this.offset("top");
 
-    var y = this.$top(d);
-    if (y == undefined) {
-      y = g.canvas.height - this.$bottom(d);
-    }
+  var fillStyle = this.get("fillStyle");
+  var strokeStyle = this.get("strokeStyle");
+  var lineWidth = this.get("lineWidth");
+  var shape = this.get("shape");
+  var size = this.get("size");
 
-    var fillStyle = this.$fillStyle(d);
-    var strokeStyle = this.$strokeStyle(d);
-    var lineWidth = this.$lineWidth(d);
-    var shape = this.$shape(d);
-    var size = this.$size(d);
+  g.save();
+  g.translate(x, y);
+  path(shape, size);
+  if (fillStyle) {
+    g.fillStyle = fillStyle;
+    g.fill();
+  }
+  if (strokeStyle) {
+    g.lineWidth = lineWidth;
+    g.strokeStyle = strokeStyle;
+    g.stroke();
+  }
+  g.restore();
 
-    g.save();
-    g.translate(x, y);
-    path(shape, size);
-    if (fillStyle) {
-      g.fillStyle = fillStyle;
-      g.fill();
-    }
-    if (strokeStyle) {
-      g.lineWidth = lineWidth;
-      g.strokeStyle = strokeStyle;
-      g.stroke();
-    }
-    g.restore();
-
-    markState[this.index] = {
+  this.renderState[this.index] = {
       data : d,
-      top : y,
-      left : x,
-      bottom : g.canvas.height - y,
-      right : g.canvas.width - x,
+      visible : true,
+      top : t,
+      left : l,
+      bottom : b,
+      right : r,
       size : size,
       shape : shape,
       fillStyle : fillStyle,
       strokeStyle : strokeStyle,
       lineWidth : lineWidth,
     };
-
-    this.visualization.index++;
-  }
 };

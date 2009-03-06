@@ -1,149 +1,169 @@
 pv.Area = function() {
   pv.Mark.call(this);
-  this.defineProperties(pv.Area.properties);
 };
-
-pv.Area.prototype = pv.Mark.extend();
-
-pv.Area.properties = new pv.Mark.Properties();
-pv.Area.properties.define("left");
-pv.Area.properties.define("right");
-pv.Area.properties.define("top");
-pv.Area.properties.define("bottom");
-pv.Area.properties.define("width");
-pv.Area.properties.define("height");
-pv.Area.properties.define("lineWidth", 1.5);
-pv.Area.properties.define("strokeStyle", null);
-pv.Area.properties.define("fillStyle", pv.Colors.category20());
 
 pv.Area.toString = function() "area";
 
-pv.Area.anchor = function(name) {
-  var area = this;
-  var anchor = pv.Mark.prototype.add.call(this, this.type);
+pv.Area.prototype = pv.Mark.extend();
+pv.Area.prototype.type = pv.Area;
+pv.Area.prototype.defineProperty("width");
+pv.Area.prototype.defineProperty("height");
+pv.Area.prototype.defineProperty("lineWidth");
+pv.Area.prototype.defineProperty("strokeStyle");
+pv.Area.prototype.defineProperty("fillStyle");
 
-  anchor.name = (name instanceof Function) ? name : function() name;
+pv.Area.defaults = pv.Mark.defaults.extend(pv.Area)
+    .lineWidth(1.5)
+    .strokeStyle(null)
+    .fillStyle(pv.Colors.category20);
 
-  anchor.$left = function(d) {
-      switch (this.name(d)) {
-        case "bottom":
-        case "top":
-        case "center": return area.left() + area.width() / 2;
-        case "right": return area.left() + area.width();
-      }
-      return undefined;
-    };
-
-  anchor.$right = function(d) {
-      switch (this.name(d)) {
-        case "bottom":
-        case "top":
-        case "center": return area.right() + area.width() / 2;
-        case "left": return area.right() + area.width();
-      }
-      return undefined;
-    };
-
-  anchor.$top = function(d) {
-      switch (this.name(d)) {
-        case "left":
-        case "right":
-        case "center": return area.top() + area.height() / 2;
-        case "bottom": return area.top() + area.height();
-      }
-      return undefined;
-    };
-
-  anchor.$bottom = function(d) {
-      switch (this.name(d)) {
-        case "left":
-        case "right":
-        case "center": return area.bottom() + area.height() / 2;
-        case "top": return area.bottom() + area.height();
-      }
-      return undefined;
-    };
-
-  anchor.$textAlign = function(d) {
-      switch (this.name(d)) {
-        case "left": return "right";
-        case "bottom":
-        case "top":
-        case "center": return "center";
-        case "right": return "left";
-      }
-      return undefined;
-    };
-
-  anchor.$textBaseline = function(d) {
-      switch (this.name(d)) {
-        case "right":
-        case "left":
-        case "center": return "middle";
-        case "top": return "bottom";
-        case "bottom": return "top";
-      }
-      return undefined;
-    };
-
-  return anchor;
+pv.Area.Anchor = function() {
+  pv.Mark.Anchor.call(this);
 };
 
-pv.Area.render = function(g) {
-  var markState = this.renderState.marks[this.markIndex] = [];
+pv.Area.Anchor.prototype = pv.Mark.Anchor.extend();
+pv.Area.Anchor.prototype.type = pv.Area;
 
-  g.save();
-  var move = true;
-  var back = [];
-  for each (let d in this.$data()) {
+pv.Area.Anchor.prototype.$left = function(d) {
+  var area = this.anchorTarget();
+  switch (this.get("name")) {
+    case "bottom":
+    case "top":
+    case "center": return area.left() + area.width() / 2;
+    case "right": return area.left() + area.width();
+  }
+  return null;
+};
 
-    /* Skip invisible marks. */
-    if (!this.$visible(d)) {
-      markState[this.index] = {
-        data : d,
-        visible : false,
-      };
-      this.visualization.index++;
-      continue;
+pv.Area.Anchor.prototype.$right = function(d) {
+  var area = this.anchorTarget();
+  switch (this.get("name")) {
+    case "bottom":
+    case "top":
+    case "center": return area.right() + area.width() / 2;
+    case "left": return area.right() + area.width();
+  }
+  return null;
+};
+
+pv.Area.Anchor.prototype.$top = function(d) {
+  var area = this.anchorTarget();
+  switch (this.get("name")) {
+    case "left":
+    case "right":
+    case "center": return area.top() + area.height() / 2;
+    case "bottom": return area.top() + area.height();
+  }
+  return null;
+};
+
+pv.Area.Anchor.prototype.$bottom = function(d) {
+  var area = this.anchorTarget();
+  switch (this.get("name")) {
+    case "left":
+    case "right":
+    case "center": return area.bottom() + area.height() / 2;
+    case "top": return area.bottom() + area.height();
+  }
+  return null;
+};
+
+pv.Area.Anchor.prototype.$textAlign = function(d) {
+  switch (this.get("name")) {
+    case "left": return "right";
+    case "bottom":
+    case "top":
+    case "center": return "center";
+    case "right": return "left";
+  }
+  return null;
+};
+
+pv.Area.Anchor.prototype.$textBaseline = function(d) {
+  switch (this.get("name")) {
+    case "right":
+    case "left":
+    case "center": return "middle";
+    case "top": return "bottom";
+    case "bottom": return "top";
+  }
+  return null;
+};
+
+pv.Area.prototype.render = function(g) {
+  this.renderState = [];
+  this.root.renderData.unshift(null);
+  if (this.get("visible")) {
+
+    g.save();
+    var move = true;
+    var back = [];
+
+    for each (let d in this.get("data")) {
+      this.index++;
+      this.root.renderData[0] = d;
+      if (this.container) {
+        this.container.renderIndex = this.index;
+      }
+
+      var l = this.get("left");
+      var r = this.get("right");
+      var t = this.get("top");
+      var b = this.get("bottom");
+      var w = this.get("width");
+      var h = this.get("height");
+
+      var width = g.canvas.width - this.offset("right") - this.offset("left");
+      var height = g.canvas.height - this.offset("bottom") - this.offset("top");
+      if (w == null) {
+        if (l == null) {
+          l = width - r;
+        } else {
+          r = width - l;
+        }
+        if (t == null) {
+          t = height - h - b;
+        } else {
+          b = height - h - t;
+        }
+      } else {
+        if (l == null) {
+          l = width - w - r;
+        } else {
+          r = width - w - l;
+        }
+        if (t == null) {
+          t = height - b;
+        } else {
+          b = height - t;
+        }
+      }
+
+      var x0 = l + this.offset("left");
+      var x1 = g.canvas.width - r - this.offset("right");
+      var y0 = t + this.offset("top");
+      var y1 = g.canvas.height - b - this.offset("bottom");
+
+      if (move) {
+        move = false;
+        g.beginPath();
+        g.moveTo(x0, y0);
+      } else {
+        g.lineTo(x0, y0);
+      }
+
+      this.renderState[this.index] = {
+          data : d,
+          top : t,
+          left : l,
+          bottom : b,
+          right : r,
+          width : w,
+          height : h,
+        };
+
+      back.push({ x: x1, y: y1 });
     }
-
-    var l = this.$left(d);
-    var r = this.$right(d);
-    var t = this.$top(d);
-    var b = this.$bottom(d);
-    var w = this.$width(d);
-    var h = this.$height(d);
-
-    var x0 = (l == undefined) ? (g.canvas.width - r)
-        : l;
-    var y1 = (t == undefined) ? (g.canvas.height - b)
-        : t;
-    var x1 = (w == undefined) ? x0
-        : ((l == undefined) ? (x0 - w) : (x0 + w));
-    var y0 = (h == undefined) ? y1
-        : ((t == undefined) ? (y1 - h) : (y1 + h))
-
-    back.push({ x: x1, y: y1 });
-
-    if (move) {
-      move = false;
-      g.beginPath();
-      g.moveTo(x0, y0);
-    } else {
-      g.lineTo(x0, y0);
-    }
-
-    markState[this.index] = {
-      data : d,
-      top : y0,
-      left : x0,
-      bottom : g.canvas.height - y1,
-      right : g.canvas.width - x1,
-      width : x1 - x0,
-      height : y1 - y0,
-    };
-
-    this.visualization.index++;
   }
 
   back.reverse();
@@ -152,17 +172,19 @@ pv.Area.render = function(g) {
   }
   g.closePath();
 
-  var fillStyle = this.$fillStyle();
+  var fillStyle = this.get("fillStyle");
   if (fillStyle) {
     g.fillStyle = fillStyle;
     g.fill();
   }
-  var strokeStyle = this.$strokeStyle();
+  var strokeStyle = this.get("strokeStyle");
   if (strokeStyle) {
-    g.lineWidth = this.$lineWidth();
+    g.lineWidth = this.get("lineWidth");
     g.strokeStyle = strokeStyle;
     g.stroke();
   }
 
+  this.root.renderData.shift();
+  delete this.index;
   g.restore();
 };

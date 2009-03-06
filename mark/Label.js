@@ -1,98 +1,98 @@
 pv.Label = function() {
   pv.Mark.call(this);
-  this.defineProperties(pv.Label.properties);
 };
-
-pv.Label.prototype = pv.Mark.extend();
-
-pv.Label.properties = new pv.Mark.Properties();
-pv.Label.properties.define("left");
-pv.Label.properties.define("right");
-pv.Label.properties.define("top");
-pv.Label.properties.define("bottom");
-pv.Label.properties.define("text", function(d) d);
-pv.Label.properties.define("font", "10px Sans-Serif");
-pv.Label.properties.define("textAngle", 0);
-pv.Label.properties.define("textStyle", "black");
-pv.Label.properties.define("textAlign", "left");
-pv.Label.properties.define("textBaseline", "bottom");
-pv.Label.properties.define("textMargin", 3);
 
 pv.Label.toString = function() "label";
 
-pv.Label.render = function(g) {
-  var markState = this.renderState.marks[this.markIndex] = [];
-  for each (let d in this.$data()) {
+pv.Label.prototype = pv.Mark.extend();
+pv.Label.prototype.type = pv.Label;
+pv.Label.prototype.defineProperty("text");
+pv.Label.prototype.defineProperty("font");
+pv.Label.prototype.defineProperty("textAngle");
+pv.Label.prototype.defineProperty("textStyle");
+pv.Label.prototype.defineProperty("textAlign");
+pv.Label.prototype.defineProperty("textBaseline");
+pv.Label.prototype.defineProperty("textMargin");
 
-    /* Skip invisible marks. */
-    if (!this.$visible(d)) {
-      markState[this.index] = {
-        data : d,
-        visible : false,
-      };
-      this.visualization.index++;
-      continue;
-    }
+pv.Label.defaults = pv.Mark.defaults.extend(pv.Label)
+    .text(pv.identity)
+    .font("10px Sans-Serif")
+    .textAngle(0)
+    .textStyle("black")
+    .textAlign("left")
+    .textBaseline("bottom")
+    .textMargin(3);
 
-    var x = this.$left(d);
-    if (x == null) {
-      x = g.canvas.width - this.$right(d);
-    }
+pv.Label.prototype.renderInstance = function(g, d) {
+  var l = this.get("left");
+  var r = this.get("right");
+  var t = this.get("top");
+  var b = this.get("bottom");
 
-    var y = this.$top(d);
-    if (y == null) {
-      y = g.canvas.height - this.$bottom(d);
-    }
+  var width = g.canvas.width - this.offset("right") - this.offset("left");
+  if (l == null) {
+    l = width - r;
+  } else {
+    r = width - l;
+  }
 
-    var font = this.$font(d);
-    var text = this.$text(d);
-    var textStyle = this.$textStyle(d);
-    var textAlign = this.$textAlign(d);
-    var textBaseline = this.$textBaseline(d);
-    var textAngle = this.$textAngle(d);
-    var textMargin = this.$textMargin(d);
+  var height = g.canvas.height - this.offset("bottom") - this.offset("top");
+  if (t == null) {
+    t = height - b;
+  } else {
+    b = height - t;
+  }
 
-    /* Text metrics. */
-    g.save();
-    g.font = font;
+  var x = l + this.offset("left");
+  var y = t + this.offset("top");
 
-    /* Horizontal alignment. (The textAlign property requires Firefox 3.1.) */
-    var ox = 0;
-    switch (textAlign) {
-      case "center": ox += -g.measureText(text).width / 2; break;
-      case "right": ox += -g.measureText(text).width - textMargin; break;
-      case "left": ox += textMargin; break;
-    }
+  var font = this.get("font");
+  var text = this.get("text");
+  var textStyle = this.get("textStyle");
+  var textAlign = this.get("textAlign");
+  var textBaseline = this.get("textBaseline");
+  var textAngle = this.get("textAngle");
+  var textMargin = this.get("textMargin");
 
-    /* Vertical alignment. (The textBaseline property requires Firefox 3.1.) */
-    var oy = 0;
-    function lineHeight(font) {
-      return Number(/[0-9]+/.exec(font)[0]) * .68;
-    }
-    switch (textBaseline) {
-      case "middle": oy += lineHeight(font) / 2; break;
-      case "top": oy += lineHeight(font) + textMargin; break;
-      case "bottom": oy -= textMargin; break;
-    }
+  /* Text metrics. */
+  g.save();
+  g.font = font;
 
-    g.translate(x, y);
-    g.rotate(textAngle);
-    g.fillStyle = textStyle;
-    g.fillText(text, ox, oy);
-    g.restore();
+  /* Horizontal alignment. (The textAlign property requires Firefox 3.1.) */
+  var ox = 0;
+  switch (textAlign) {
+    case "center": ox += -g.measureText(text).width / 2; break;
+    case "right": ox += -g.measureText(text).width - textMargin; break;
+    case "left": ox += textMargin; break;
+  }
 
-    markState[this.index] = {
+  /* Vertical alignment. (The textBaseline property requires Firefox 3.1.) */
+  var oy = 0;
+  function lineHeight(font) {
+    return Number(/[0-9]+/.exec(font)[0]) * .68;
+  }
+  switch (textBaseline) {
+    case "middle": oy += lineHeight(font) / 2; break;
+    case "top": oy += lineHeight(font) + textMargin; break;
+    case "bottom": oy -= textMargin; break;
+  }
+
+  g.translate(x, y);
+  g.rotate(textAngle);
+  g.fillStyle = textStyle;
+  g.fillText(text, ox, oy);
+  g.restore();
+
+  this.renderState[this.index] = {
       data : d,
-      top : y,
-      left : x,
-      bottom : g.canvas.height - y,
-      right : g.canvas.width - x,
+      visible : true,
+      top : t,
+      left : l,
+      bottom : b,
+      right : r,
       font : font,
       textStyle : textStyle,
       textAngle : textAngle,
       textMargin : textMargin,
     };
-
-    this.visualization.index++;
-  }
 };

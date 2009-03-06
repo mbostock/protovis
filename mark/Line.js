@@ -1,71 +1,81 @@
 pv.Line = function() {
   pv.Mark.call(this);
-  this.defineProperties(pv.Line.properties);
 };
-
-pv.Line.prototype = pv.Mark.extend();
-
-pv.Line.properties = new pv.Mark.Properties();
-pv.Line.properties.define("left");
-pv.Line.properties.define("right");
-pv.Line.properties.define("top");
-pv.Line.properties.define("bottom");
-pv.Line.properties.define("lineWidth", 1.5);
-pv.Line.properties.define("strokeStyle", pv.Colors.category10());
 
 pv.Line.toString = function() "line";
 
-pv.Line.render = function(g) {
-  var markState = this.renderState.marks[this.markIndex] = [];
+pv.Line.prototype = pv.Mark.extend();
+pv.Line.prototype.type = pv.Line;
+pv.Line.prototype.defineProperty("lineWidth");
+pv.Line.prototype.defineProperty("strokeStyle");
 
-  g.save();
-  var move = true;
-  for each (let d in this.$data()) {
+pv.Line.defaults = pv.Mark.defaults.extend(pv.Line)
+    .lineWidth(1.5)
+    .strokeStyle(pv.Colors.category10);
 
-    /* Skip invisible marks. */
-    if (!this.$visible(d)) {
-      markState[this.index] = {
-        data : d,
-        visible : false,
-      };
-      this.visualization.index++;
-      continue;
+pv.Line.prototype.render = function(g) {
+  this.renderState = [];
+  this.root.renderData.unshift(null);
+  if (this.get("visible")) {
+
+    g.save();
+    var move = true;
+
+    for each (let d in this.get("data")) {
+      this.index++;
+      this.root.renderData[0] = d;
+      if (this.container) {
+        this.container.renderIndex = this.index;
+      }
+
+      var l = this.get("left");
+      var r = this.get("right");
+      var t = this.get("top");
+      var b = this.get("bottom");
+
+      var width = g.canvas.width - this.offset("right") - this.offset("left");
+      var height = g.canvas.height - this.offset("bottom") - this.offset("top");
+      if (l == null) {
+        l = width - r;
+      } else {
+        r = width - l;
+      }
+      if (t == null) {
+        t = height - b;
+      } else {
+        b = height - t;
+      }
+
+      var x = l + this.offset("left");
+      var y = t + this.offset("top");
+
+      if (move) {
+        move = false;
+        g.beginPath();
+        g.moveTo(x, y);
+      } else {
+        g.lineTo(x, y);
+      }
+
+      this.renderState[this.index] = {
+          data : d,
+          visible : true,
+          top : t,
+          left : l,
+          bottom : b,
+          right : r,
+        };
     }
-
-    var x = this.$left(d);
-    if (x == undefined) {
-      x = g.canvas.width - this.$right(d);
-    }
-
-    var y = this.$top(d);
-    if (y == undefined) {
-      y = g.canvas.height - this.$bottom(d);
-    }
-
-    if (move) {
-      move = false;
-      g.beginPath();
-      g.moveTo(x, y);
-    } else {
-      g.lineTo(x, y);
-    }
-
-    markState[this.index] = {
-      data : d,
-      top : y,
-      left : x,
-      bottom : g.canvas.height - y,
-      right : g.canvas.width - x,
-    };
-
-    this.visualization.index++;
   }
 
-  var strokeStyle = this.$strokeStyle();
+  var strokeStyle = this.get("strokeStyle");
   if (strokeStyle) {
-    g.lineWidth = this.$lineWidth();
+    g.lineWidth = this.get("lineWidth");
     g.strokeStyle = strokeStyle;
     g.stroke();
   }
+
+  this.root.renderData.shift();
+  delete this.index;
   g.restore();
 };

@@ -66,16 +66,20 @@ pv.max = function(array, f) {
   if (!f) {
     f = pv.identity;
   }
-  return array.reduce(function(p, d) Math.max(p, f(d)), 0);
+  return array.reduce(function(p, d) Math.max(p, f(d)), -Infinity);
 };
 
 pv.min = function(array, f) {
   if (!f) {
     f = pv.identity;
   }
-  return array.reduce(function(p, d) Math.min(p, f(d)), 0);
+  return array.reduce(function(p, d) Math.min(p, f(d)), Infinity);
 };
 
 pv.mean = function(array, f) {
   return pv.sum(array, f) / pv.count(array);
+};
+
+pv.function = function(x) {
+  return (x instanceof Function) ? x : function() x;
 };
