@@ -15,7 +15,7 @@ pv.Colors = function(values) {
       var type = this.type.toString();
       var id = type + "-" + this.markIndex;
       var color = idToColor[id];
-      if (typeof color == "undefined") {
+      if (color == undefined) {
         var count = typeToCount[type] = (typeToCount[type] || 0) + 1;
         idToColor[id] = color = values[(i >= count) ? (count - 1) : i++];
       }

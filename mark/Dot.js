@@ -23,9 +23,9 @@ pv.Dot.toString = function() "dot";
 
 pv.Dot.anchor = function(name) {
   var dot = this;
-  var anchor = pv.Mark.prototype.add.call(this, pv.Mark.Anchor);
+  var anchor = pv.Mark.prototype.add.call(this, this.type);
 
-  anchor.name = (typeof name == "function") ? name : function() name;
+  anchor.name = (name instanceof Function) ? name : function() name;
 
   anchor.$left = function(d) {
       switch (this.name(d)) {

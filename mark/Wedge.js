@@ -31,9 +31,9 @@ pv.Wedge.toString = function() "wedge";
 
 pv.Wedge.anchor = function(name) {
   var wedge = this;
-  var anchor = pv.Mark.prototype.add.call(this, pv.Mark.Anchor);
+  var anchor = pv.Mark.prototype.add.call(this, this.type);
 
-  anchor.name = (typeof name == "function") ? name : function() name;
+  anchor.name = (name instanceof Function) ? name : function() name;
 
   anchor.$left = function(d) {
       function cos(a) wedge.midRadius() * Math.cos(a);

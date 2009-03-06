@@ -24,14 +24,6 @@ pv.Mark.prototype.anchor = function(name) {
   return this.type.anchor.call(this, name);
 };
 
-pv.Mark.Anchor = function() {
-  pv.Mark.call(this);
-};
-
-pv.Mark.Anchor.prototype = pv.Mark.extend();
-
-pv.Mark.Anchor.toString = function() "anchor";
-
 pv.Mark.Properties = function() {
   this.map = {};
   this.defaults = {};
@@ -40,16 +32,16 @@ pv.Mark.Properties = function() {
 pv.Mark.Properties.prototype.define = function(name, defaultValue) {
   this.map[name] = function(v) {
       if (arguments.length) {
-        this["$" + name] = ((typeof v == "function") ? v : function() v);
+        this["$" + name] = ((v instanceof Function) ? v : function() v);
         return this;
       }
       if (!this.renderState) {
         return this["$" + name]();
       }
       var v = this.renderState.marks[this.markIndex][this.index][name];
-      return (typeof v == "undefined") ? this["$" + name]() : v;
+      return (v == undefined) ? this["$" + name]() : v;
     };
-  this.defaults[name] = (typeof defaultValue == "function")
+  this.defaults[name] = (defaultValue instanceof Function)
       ? defaultValue : function() defaultValue;
 };
 

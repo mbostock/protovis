@@ -2,6 +2,8 @@ var undefined;
 
 var pv = {};
 
+pv.identity = function(x) x;
+
 pv.context = function(id) {
   return document.getElementById(id).getContext("2d");
 };
@@ -21,15 +23,59 @@ pv.range = function(start, end, step) {
 };
 
 pv.each = function(array) {
-  for (var i = 0; i < array.length; i++) {
-    yield array[i];
+  for each (var x in array) {
+    yield x;
+  }
+};
+
+pv.cross = function(a, b) {
+  for each (var x in a) {
+    for each (var y in b) {
+      yield [x, y];
+    }
   }
 };
 
 pv.normalize = function(array, f) {
   if (!f) {
-    f = function(d) d;
+    f = pv.identity;
   }
   var sum = array.reduce(function(p, d) p + f(d), 0);
   return array.map(function(d) f(d) / sum);
+};
+
+pv.count = function(array) {
+  if (array instanceof Array) {
+    return array.length;
+  }
+  var n = 0;
+  for each (var x in array) {
+    n++;
+  }
+  return n;
+};
+
+pv.sum = function(array, f) {
+  if (!f) {
+    f = pv.identity;
+  }
+  return array.reduce(function(p, d) p + f(d), 0);
+};
+
+pv.max = function(array, f) {
+  if (!f) {
+    f = pv.identity;
+  }
+  return array.reduce(function(p, d) Math.max(p, f(d)), 0);
+};
+
+pv.min = function(array, f) {
+  if (!f) {
+    f = pv.identity;
+  }
+  return array.reduce(function(p, d) Math.min(p, f(d)), 0);
+};
+
+pv.mean = function(array, f) {
+  return pv.sum(array, f) / pv.count(array);
 };

@@ -20,9 +20,9 @@ pv.Area.toString = function() "area";
 
 pv.Area.anchor = function(name) {
   var area = this;
-  var anchor = pv.Mark.prototype.add.call(this, pv.Mark.Anchor);
+  var anchor = pv.Mark.prototype.add.call(this, this.type);
 
-  anchor.name = (typeof name == "function") ? name : function() name;
+  anchor.name = (name instanceof Function) ? name : function() name;
 
   anchor.$left = function(d) {
       switch (this.name(d)) {
@@ -116,24 +116,12 @@ pv.Area.render = function(g) {
 
     var x0 = (l == undefined) ? (g.canvas.width - r)
         : l;
-    var y0 = (t == undefined) ? (g.canvas.height - b)
+    var y1 = (t == undefined) ? (g.canvas.height - b)
         : t;
     var x1 = (w == undefined) ? x0
         : ((l == undefined) ? (x0 - w) : (x0 + w));
-    var y1 = (h == undefined) ? y0
-        : ((t == undefined) ? (y0 - h) : (y0 + h))
-
-    if (y0 > y1) {
-      var t = y1;
-      y1 = y0;
-      y0 = t;
-    }
-
-    if (x0 > x1) {
-      var t = x1;
-      x1 = x0;
-      x0 = t;
-    }
+    var y0 = (h == undefined) ? y1
+        : ((t == undefined) ? (y1 - h) : (y1 + h))
 
     back.push({ x: x1, y: y1 });
 
