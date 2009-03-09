@@ -8,6 +8,7 @@ pv.Dot.prototype = pv.Mark.extend();
 pv.Dot.prototype.type = pv.Dot;
 pv.Dot.prototype.defineProperty("size");
 pv.Dot.prototype.defineProperty("shape");
+pv.Dot.prototype.defineProperty("angle");
 pv.Dot.prototype.defineProperty("lineWidth");
 pv.Dot.prototype.defineProperty("strokeStyle");
 pv.Dot.prototype.defineProperty("fillStyle");
@@ -15,6 +16,7 @@ pv.Dot.prototype.defineProperty("fillStyle");
 pv.Dot.defaults = pv.Mark.defaults.extend(pv.Dot)
     .size(20)
     .shape("circle")
+    .angle(0)
     .lineWidth(1.5)
     .strokeStyle(pv.Colors.category10)
     .fillStyle(null);
@@ -139,6 +141,11 @@ pv.Dot.prototype.renderInstance = function(g, d) {
         g.closePath();
         break;
       }
+      case "tick": {
+        g.moveTo(0, 0);
+        g.lineTo(0, -size);
+        break;
+      }
       default: {
         g.arc(0, 0, radius, 0, 2.0 * Math.PI, false);
         break;
@@ -166,11 +173,13 @@ pv.Dot.prototype.renderInstance = function(g, d) {
   var fillStyle = this.get("fillStyle");
   var strokeStyle = this.get("strokeStyle");
   var lineWidth = this.get("lineWidth");
-  var shape = this.get("shape");
   var size = this.get("size");
+  var shape = this.get("shape");
+  var angle = this.get("angle");
 
   g.save();
   g.translate(x, y);
+  g.rotate(angle);
   path(shape, size);
   if (fillStyle) {
     g.fillStyle = fillStyle;
@@ -195,5 +204,6 @@ pv.Dot.prototype.renderInstance = function(g, d) {
       fillStyle : fillStyle,
       strokeStyle : strokeStyle,
       lineWidth : lineWidth,
+      angle : angle,
     };
 };
