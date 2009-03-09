@@ -104,7 +104,7 @@ pv.Mark.prototype.dispose = function() {
   delete this.renderState;
 };
 
-pv.Mark.prototype.get = function(name, d) {
+pv.Mark.prototype.get = function(name) {
   var mark = this;
   while (!mark["$" + name]) {
     mark = mark.defaults;
