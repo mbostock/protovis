@@ -24,8 +24,8 @@ pv.Line.prototype.render = function(g) {
     for each (let d in this.get("data")) {
       this.index++;
       this.root.renderData[0] = d;
-      if (this.container) {
-        this.container.renderIndex = this.index;
+      if (this.panel) {
+        this.panel.renderIndex = this.index;
       }
 
       var l = this.get("left");

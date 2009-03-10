@@ -8,7 +8,7 @@ pv.Mark.property = function(name) {
         this["$" + name] = pv.function(v);
         return this;
       }
-      return this.renderState[this.container.renderIndex][name];
+      return this.renderState[this.panel.renderIndex][name];
     };
 };
 
@@ -18,7 +18,7 @@ pv.Mark.prototype.defineProperty = function(name) {
 
 pv.Mark.prototype.type = pv.Mark;
 pv.Mark.prototype.prototype = null;
-pv.Mark.prototype.container = null;
+pv.Mark.prototype.panel = null;
 pv.Mark.prototype.markIndex = -1;
 pv.Mark.prototype.index = -1;
 pv.Mark.prototype.renderState = null;
@@ -35,7 +35,7 @@ pv.Mark.defaults = new pv.Mark()
   .visible(true);
 
 pv.Mark.prototype.offset = function(name) {
-  var c = this.container;
+  var c = this.panel;
   return c ? c.offset(name) + c.renderState[c.index][name] : 0;
 };
 
@@ -46,7 +46,7 @@ pv.Mark.prototype.extend = function(type) {
 };
 
 pv.Mark.prototype.add = function(type) {
-  var mark = this.container.add(type);
+  var mark = this.panel.add(type);
   mark.prototype = this;
   return mark;
 };
@@ -64,7 +64,7 @@ pv.Mark.prototype.anchor = function(name) {
     anchorType = anchorType.defaults.type;
   }
   var anchor = this.extend(anchorType.Anchor).name(name);
-  anchor.container = this.container;
+  anchor.panel = this.panel;
   anchor.type = this.type;
   return anchor;
 };
@@ -87,8 +87,8 @@ pv.Mark.prototype.render = function(g) {
   for each (let d in this.get("data")) {
     this.index++;
     this.root.renderData[0] = d;
-    if (this.container) {
-      this.container.renderIndex = this.index;
+    if (this.panel) {
+      this.panel.renderIndex = this.index;
     }
     if (this.get("visible")) {
       this.renderInstance(g, d);

@@ -1,46 +1,46 @@
-pv.Container = function() {
+pv.Panel = function() {
   pv.Mark.call(this);
   this.marks = [];
   this.root = this;
 };
 
-pv.Container.toString = function() "container";
+pv.Panel.toString = function() "panel";
 
-pv.Container.prototype = pv.Mark.extend();
-pv.Container.prototype.type = pv.Container;
-pv.Container.prototype.renderIndex = -1;
-pv.Container.prototype.renderData = null;
-pv.Container.prototype.defineProperty("width");
-pv.Container.prototype.defineProperty("height");
+pv.Panel.prototype = pv.Mark.extend();
+pv.Panel.prototype.type = pv.Panel;
+pv.Panel.prototype.renderIndex = -1;
+pv.Panel.prototype.renderData = null;
+pv.Panel.prototype.defineProperty("width");
+pv.Panel.prototype.defineProperty("height");
 
-pv.Container.defaults = pv.Mark.defaults.extend(pv.Container)
+pv.Panel.defaults = pv.Mark.defaults.extend(pv.Panel)
     .left(0)
     .right(0)
     .top(0)
     .bottom(0);
 
-pv.Container.prototype.add = function(type) {
+pv.Panel.prototype.add = function(type) {
   var mark = new type();
-  mark.container = this;
+  mark.panel = this;
   mark.root = this.root;
   mark.markIndex = this.marks.length;
   this.marks.push(mark);
   return mark;
 };
 
-pv.Container.prototype.render = function(g) {
-  if (!this.container) {
+pv.Panel.prototype.render = function(g) {
+  if (!this.panel) {
     g.clearRect(0, 0, g.canvas.width, g.canvas.height);
     this.renderData = [];
   }
   pv.Mark.prototype.render.apply(this, arguments);
-  if (!this.container) {
+  if (!this.panel) {
     this.dispose();
     delete this.renderData;
   }
 };
 
-pv.Container.prototype.renderInstance = function(g, d) {
+pv.Panel.prototype.renderInstance = function(g, d) {
   var l = this.get("left");
   var r = this.get("right");
   var t = this.get("top");
@@ -85,7 +85,7 @@ pv.Container.prototype.renderInstance = function(g, d) {
   }
 };
 
-pv.Container.prototype.dispose = function() {
+pv.Panel.prototype.dispose = function() {
   pv.Mark.prototype.dispose.call(this);
   for each (var mark in this.marks) {
     mark.dispose();
