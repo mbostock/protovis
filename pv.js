@@ -22,12 +22,6 @@ pv.range = function(start, end, step) {
   }
 };
 
-pv.each = function(array) {
-  for each (var x in array) {
-    yield x;
-  }
-};
-
 pv.cross = function(a, b) {
   for each (var x in a) {
     for each (var y in b) {
@@ -78,6 +72,16 @@ pv.min = function(array, f) {
 
 pv.mean = function(array, f) {
   return pv.sum(array, f) / pv.count(array);
+};
+
+pv.median = function(array, f) {
+  if (!f) {
+    f = pv.identity;
+  }
+  array = [f(x) for each (x in array)].sort(function(a, b) a - b);
+  return (array.length % 2)
+      ? array[Math.floor(array.length / 2)]
+      : let (i = array.length / 2) (array[i - 1] + array[i]) / 2
 };
 
 pv.function = function(x) {
