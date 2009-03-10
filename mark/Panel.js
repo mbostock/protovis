@@ -12,6 +12,7 @@ pv.Panel.prototype.renderIndex = -1;
 pv.Panel.prototype.renderData = null;
 pv.Panel.prototype.defineProperty("width");
 pv.Panel.prototype.defineProperty("height");
+pv.Panel.prototype.defineProperty("canvas");
 
 pv.Panel.defaults = pv.Mark.defaults.extend(pv.Panel)
     .left(0)
@@ -28,19 +29,43 @@ pv.Panel.prototype.add = function(type) {
   return mark;
 };
 
-pv.Panel.prototype.render = function(g) {
-  if (!this.panel) {
+pv.Panel.prototype.clear = function(g) {
+  this.renderData = [null];
+  for each (let d in this.get("data")) {
+    this.renderData[0] = d;
+    this.index++;
+    g = this.context(g);
     g.clearRect(0, 0, g.canvas.width, g.canvas.height);
+  }
+  delete this.renderData;
+  delete this.index;
+};
+
+pv.Panel.prototype.context = function(g) {
+  var c = this.get("canvas");
+  if (c == null) {
+    return g;
+  }
+  if (typeof c == "string") {
+    c = document.getElementById(c);
+  }
+  return c.getContext("2d");
+};
+
+pv.Panel.prototype.render = function() {
+  if (!this.panel) {
+    pv.Panel.prototype.clear.apply(this, arguments);
     this.renderData = [];
   }
   pv.Mark.prototype.render.apply(this, arguments);
   if (!this.panel) {
     this.dispose();
-    delete this.renderData;
   }
 };
 
 pv.Panel.prototype.renderInstance = function(g, d) {
+  g = this.context(g);
+
   var l = this.get("left");
   var r = this.get("right");
   var t = this.get("top");
