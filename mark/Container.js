@@ -20,7 +20,7 @@ pv.Container.defaults = pv.Mark.defaults.extend(pv.Container)
     .bottom(0);
 
 pv.Container.prototype.add = function(type) {
-  var mark = new (type || this.type)();
+  var mark = new type();
   mark.container = this;
   mark.root = this.root;
   mark.markIndex = this.marks.length;

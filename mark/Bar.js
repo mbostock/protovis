@@ -13,7 +13,7 @@ pv.Bar.prototype.defineProperty("strokeStyle");
 pv.Bar.prototype.defineProperty("fillStyle");
 
 pv.Bar.defaults = pv.Mark.defaults.extend(pv.Bar)
-    .lineWidth(1)
+    .lineWidth(1.5)
     .strokeStyle(null)
     .fillStyle(pv.Colors.category20);
 

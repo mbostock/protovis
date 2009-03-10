@@ -17,7 +17,7 @@ pv.Mark.prototype.defineProperty = function(name) {
 };
 
 pv.Mark.prototype.type = pv.Mark;
-pv.Mark.prototype.defaults = null;
+pv.Mark.prototype.prototype = null;
 pv.Mark.prototype.container = null;
 pv.Mark.prototype.markIndex = -1;
 pv.Mark.prototype.index = -1;
@@ -40,14 +40,14 @@ pv.Mark.prototype.offset = function(name) {
 };
 
 pv.Mark.prototype.extend = function(type) {
-  var mark = new (type || this.type)();
-  mark.defaults = this;
+  var mark = new type();
+  mark.prototype = this;
   return mark;
 };
 
 pv.Mark.prototype.add = function(type) {
-  var mark = this.container.add(type || this.type);
-  mark.defaults = this;
+  var mark = this.container.add(type);
+  mark.prototype = this;
   return mark;
 };
 
@@ -72,9 +72,9 @@ pv.Mark.prototype.anchor = function(name) {
 pv.Mark.prototype.anchorTarget = function() {
   var target = this;
   while (!(target instanceof pv.Mark.Anchor)) {
-    target = target.defaults;
+    target = target.prototype;
   }
-  return target.defaults;
+  return target.prototype;
 };
 
 pv.Mark.prototype.previous = function() {
@@ -107,11 +107,11 @@ pv.Mark.prototype.dispose = function() {
 pv.Mark.prototype.get = function(name) {
   var mark = this;
   while (!mark["$" + name]) {
-    mark = mark.defaults;
+    mark = mark.prototype;
     if (!mark) {
       mark = this.type.defaults;
       while (!mark["$" + name]) {
-        mark = mark.defaults;
+        mark = mark.prototype;
         if (!mark) {
           return null;
         }

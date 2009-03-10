@@ -18,7 +18,7 @@ pv.Wedge.prototype.defineProperty("fillStyle");
 pv.Wedge.defaults = pv.Mark.defaults.extend(pv.Wedge)
     .startAngle(function() this.index ? this.previous().endAngle : -Math.PI / 2)
     .innerRadius(0)
-    .lineWidth(1)
+    .lineWidth(1.5)
     .strokeStyle(null)
     .fillStyle(pv.Colors.category20.unique);
 
