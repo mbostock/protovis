@@ -30,8 +30,10 @@ pv.Panel.prototype.add = function(type) {
 };
 
 pv.Panel.prototype.clear = function(g) {
-  this.renderData = [null];
-  for each (let d in this.get("data")) {
+  this.renderData = [];
+  var data = this.get("data");
+  this.renderData.unshift(null);
+  for each (let d in data) {
     this.renderData[0] = d;
     this.index++;
     g = this.context(g);

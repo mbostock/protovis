@@ -83,8 +83,9 @@ pv.Mark.prototype.previous = function() {
 
 pv.Mark.prototype.render = function(g) {
   this.renderState = [];
+  var data = this.get("data");
   this.root.renderData.unshift(null);
-  for each (let d in this.get("data")) {
+  for each (let d in data) {
     this.index++;
     this.root.renderData[0] = d;
     if (this.panel) {
