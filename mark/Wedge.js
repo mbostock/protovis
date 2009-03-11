@@ -37,66 +37,86 @@ pv.Wedge.Anchor = function() {
 pv.Wedge.Anchor.prototype = pv.Mark.Anchor.extend();
 pv.Wedge.Anchor.prototype.type = pv.Wedge;
 
-pv.Wedge.Anchor.prototype.$left = function(d) {
-  var wedge = this.anchorTarget();
-  function cos(a) wedge.midRadius() * Math.cos(a);
+pv.Wedge.Anchor.prototype.$left = function() {
+  var w = this.anchorTarget();
   switch (this.get("name")) {
-    case "start": return wedge.left() + cos(wedge.startAngle());
-    case "center": return wedge.left() + cos(wedge.midAngle());
-    case "end": return wedge.left() + cos(wedge.endAngle());
+    case "outer": return w.left() + w.outerRadius() * Math.cos(w.midAngle());
+    case "inner": return w.left() + w.innerRadius() * Math.cos(w.midAngle());
+    case "start": return w.left() + w.midRadius() * Math.cos(w.startAngle());
+    case "center": return w.left() + w.midRadius() * Math.cos(w.midAngle());
+    case "end": return w.left() + w.midRadius() * Math.cos(w.endAngle());
   }
   return null;
 };
 
-pv.Wedge.Anchor.prototype.$right = function(d) {
-  var wedge = this.anchorTarget();
-  function cos(a) wedge.midRadius() * Math.cos(a);
+pv.Wedge.Anchor.prototype.$right = function() {
+  var w = this.anchorTarget();
   switch (this.get("name")) {
-    case "start": return wedge.right() + cos(wedge.startAngle());
-    case "center": return wedge.right() + cos(wedge.midAngle());
-    case "end": return wedge.right() + cos(wedge.endAngle());
+    case "outer": return w.right() + w.outerRadius() * Math.cos(w.midAngle());
+    case "inner": return w.right() + w.innerRadius() * Math.cos(w.midAngle());
+    case "start": return w.right() + w.midRadius() * Math.cos(w.startAngle());
+    case "center": return w.right() + w.midRadius() * Math.cos(w.midAngle());
+    case "end": return w.right() + w.midRadius() * Math.cos(w.endAngle());
   }
   return null;
 };
 
-pv.Wedge.Anchor.prototype.$top = function(d) {
-  var wedge = this.anchorTarget();
-  function sin(a) wedge.midRadius() * Math.sin(a);
+pv.Wedge.Anchor.prototype.$top = function() {
+  var w = this.anchorTarget();
   switch (this.get("name")) {
-    case "start": return wedge.top() + sin(wedge.startAngle());
-    case "center": return wedge.top() + sin(wedge.midAngle());
-    case "end": return wedge.top() + sin(wedge.endAngle());
+    case "outer": return w.top() + w.outerRadius() * Math.sin(w.midAngle());
+    case "inner": return w.top() + w.innerRadius() * Math.sin(w.midAngle());
+    case "start": return w.top() + w.midRadius() * Math.sin(w.startAngle());
+    case "center": return w.top() + w.midRadius() * Math.sin(w.midAngle());
+    case "end": return w.top() + w.midRadius() * Math.sin(w.endAngle());
   }
   return null;
 };
 
-pv.Wedge.Anchor.prototype.$bottom = function(d) {
-  var wedge = this.anchorTarget();
-  function sin(a) wedge.midRadius() * Math.sin(a);
+pv.Wedge.Anchor.prototype.$bottom = function() {
+  var w = this.anchorTarget();
   switch (this.get("name")) {
-    case "start": return wedge.bottom() + sin(wedge.startAngle());
-    case "center": return wedge.bottom() + sin(wedge.midAngle());
-    case "end": return wedge.bottom() + sin(wedge.endAngle());
+    case "outer": return w.bottom() + w.outerRadius() * Math.sin(w.midAngle());
+    case "inner": return w.bottom() + w.innerRadius() * Math.sin(w.midAngle());
+    case "start": return w.bottom() + w.midRadius() * Math.sin(w.startAngle());
+    case "center": return w.bottom() + w.midRadius() * Math.sin(w.midAngle());
+    case "end": return w.bottom() + w.midRadius() * Math.sin(w.endAngle());
   }
   return null;
 };
 
-pv.Wedge.Anchor.prototype.$textAlign = function(d) {
+pv.Wedge.Anchor.prototype.$textAlign = function() {
+  var w = this.anchorTarget();
   switch (this.get("name")) {
-    case "start": return "right";
-    case "center": return "center";
-    case "end": return "left";
+    case "outer": return pv.Wedge.upright(w.midAngle()) ? "right" : "left";
+    case "inner": return pv.Wedge.upright(w.midAngle()) ? "left" : "right";
+    default: return "center";
   }
-  return null;
 };
 
-pv.Wedge.Anchor.prototype.$textBaseline = function(d) {
+pv.Wedge.Anchor.prototype.$textBaseline = function() {
   switch (this.get("name")) {
-    case "start":
-    case "end":
-    case "center": return "middle";
+    case "start": return "top";
+    case "end": return "bottom";
+    default: return "middle";
   }
-  return null;
+};
+
+pv.Wedge.Anchor.prototype.$textAngle = function() {
+  var w = this.anchorTarget();
+  var a = 0;
+  switch (this.get("name")) {
+    case "center":
+    case "inner":
+    case "outer": a = w.midAngle(); break;
+    case "start": a = w.startAngle(); break;
+    case "end": a = w.endAngle(); break;
+  }
+  return pv.Wedge.upright(a) ? a : (a + Math.PI);
+};
+
+pv.Wedge.upright = function(angle) {
+  return (angle < Math.PI / 2) || (angle > 3 * Math.PI / 2);
 };
 
 pv.Wedge.prototype.renderInstance = function(g, d) {
