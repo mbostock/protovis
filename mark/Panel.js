@@ -53,7 +53,7 @@ pv.Panel.prototype.createCanvas = function() {
       while (node.lastChild && node.lastChild.tagName) {
         node = node.lastChild;
       }
-      return node.parentNode;
+      return (node == document.body) ? node : node.parentNode;
     }
     c = this.canvases[this.index] = document.createElement("canvas");
     c.width = this.get("width");

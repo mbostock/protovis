@@ -165,6 +165,7 @@ pv.Area.prototype.render = function(g) {
       back.push({ x: x1, y: y1 });
     }
   }
+  delete this.index;
 
   back.reverse();
   for each (let v in back) {
@@ -185,6 +186,5 @@ pv.Area.prototype.render = function(g) {
   }
 
   this.root.renderData.shift();
-  delete this.index;
   g.restore();
 };

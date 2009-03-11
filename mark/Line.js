@@ -67,6 +67,7 @@ pv.Line.prototype.render = function(g) {
         };
     }
   }
+  delete this.index;
 
   var strokeStyle = this.get("strokeStyle");
   if (strokeStyle) {
@@ -76,6 +77,5 @@ pv.Line.prototype.render = function(g) {
   }
 
   this.root.renderData.shift();
-  delete this.index;
   g.restore();
 };

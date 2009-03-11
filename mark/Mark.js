@@ -8,7 +8,8 @@ pv.Mark.property = function(name) {
         this["$" + name] = pv.function(v);
         return this;
       }
-      return this.renderState[this.panel.renderIndex][name];
+      var index = this.panel ? this.panel.renderIndex : this.index;
+      return this.renderState[index][name];
     };
 };
 
