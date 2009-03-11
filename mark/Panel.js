@@ -36,17 +36,37 @@ pv.Panel.prototype.clear = function(g) {
   for each (let d in data) {
     this.renderData[0] = d;
     this.index++;
-    g = this.context(g);
+    let g = this.context(g);
     g.clearRect(0, 0, g.canvas.width, g.canvas.height);
   }
   delete this.renderData;
   delete this.index;
 };
 
+pv.Panel.prototype.createCanvas = function() {
+  if (!this.canvases) {
+    this.canvases = [];
+  }
+  var c = this.canvases[this.index];
+  if (!c) {
+    function lastChild(node) {
+      while (node.lastChild && node.lastChild.tagName) {
+        node = node.lastChild;
+      }
+      return node.parentNode;
+    }
+    c = this.canvases[this.index] = document.createElement("canvas");
+    c.width = this.get("width");
+    c.height = this.get("height");
+    lastChild(document.body).appendChild(c);
+  }
+  return c;
+};
+
 pv.Panel.prototype.context = function(g) {
   var c = this.get("canvas");
   if (c == null) {
-    return g;
+    return (g == null) ? this.createCanvas().getContext("2d") : g;
   }
   if (typeof c == "string") {
     c = document.getElementById(c);
