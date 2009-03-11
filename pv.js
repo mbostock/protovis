@@ -4,10 +4,6 @@ var pv = {};
 
 pv.identity = function(x) x;
 
-pv.context = function(id) {
-  return document.getElementById(id).getContext("2d");
-};
-
 pv.singleton = function(value) {
   yield value;
 };
@@ -27,6 +23,28 @@ pv.cross = function(a, b) {
     for each (var y in b) {
       yield [x, y];
     }
+  }
+};
+
+pv.nest = function(array) {
+  return new pv.Nest(array);
+};
+
+pv.keys = function(map) {
+  for (var key in map) {
+    yield key;
+  }
+};
+
+pv.entries = function(map) {
+  for (var key in map) {
+    yield { key: key, value: map[key] };
+  }
+};
+
+pv.values = function(map) {
+  for each (var value in map) {
+    yield value;
   }
 };
 
