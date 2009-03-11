@@ -22,7 +22,10 @@ pv.Colors = function(values) {
   }
 
   color.values = values;
-  color.unique = function() values[this.index];
+  color.unique = function() {
+    var index = (this.index == -1) ? this.panel.index : this.index;
+    return values[index];
+  }
   return color;
 };
 
