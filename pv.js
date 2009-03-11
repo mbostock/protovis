@@ -105,3 +105,7 @@ pv.median = function(array, f) {
 pv.function = function(x) {
   return (x instanceof Function) ? x : function() x;
 };
+
+pv.date = function(s, format) {
+  return pv.Date.parse(s, format);
+};
