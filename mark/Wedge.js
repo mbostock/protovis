@@ -95,9 +95,10 @@ pv.Wedge.Anchor.prototype.$textAlign = function() {
 };
 
 pv.Wedge.Anchor.prototype.$textBaseline = function() {
+  var w = this.anchorTarget();
   switch (this.get("name")) {
-    case "start": return "top";
-    case "end": return "bottom";
+    case "start": return pv.Wedge.upright(w.startAngle()) ? "top" : "bottom";
+    case "end": return pv.Wedge.upright(w.endAngle()) ? "bottom" : "top";
     default: return "middle";
   }
 };
