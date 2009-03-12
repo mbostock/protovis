@@ -117,6 +117,8 @@ pv.Wedge.Anchor.prototype.$textAngle = function() {
 };
 
 pv.Wedge.upright = function(angle) {
+  angle = angle % (2 * Math.PI);
+  angle = (angle < 0) ? (2 * Math.PI + angle) : angle;
   return (angle < Math.PI / 2) || (angle > 3 * Math.PI / 2);
 };
 
