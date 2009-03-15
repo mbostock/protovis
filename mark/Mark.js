@@ -8,8 +8,7 @@ pv.Mark.property = function(name) {
         this["$" + name] = pv.function(v);
         return this;
       }
-      var index = this.panel ? this.panel.renderIndex : this.index;
-      return this.renderState[index][name];
+      return this.renderState[this.index][name];
     };
 };
 
@@ -86,12 +85,10 @@ pv.Mark.prototype.render = function(g) {
   this.renderState = [];
   var data = this.get("data");
   this.root.renderData.unshift(null);
+  this.index = -1;
   for each (let d in data) {
-    this.index++;
+    pv.Mark.prototype.index = ++this.index;
     this.root.renderData[0] = d;
-    if (this.panel) {
-      this.panel.renderIndex = this.index;
-    }
     if (this.get("visible")) {
       this.renderInstance(g, d);
     } else {
@@ -100,6 +97,7 @@ pv.Mark.prototype.render = function(g) {
   }
   this.root.renderData.shift();
   delete this.index;
+  pv.Mark.prototype.index = -1;
 };
 
 pv.Mark.prototype.dispose = function() {

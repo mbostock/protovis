@@ -8,7 +8,6 @@ pv.Panel.toString = function() "panel";
 
 pv.Panel.prototype = pv.Mark.extend();
 pv.Panel.prototype.type = pv.Panel;
-pv.Panel.prototype.renderIndex = -1;
 pv.Panel.prototype.renderData = null;
 pv.Panel.prototype.defineProperty("width");
 pv.Panel.prototype.defineProperty("height");

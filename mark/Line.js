@@ -21,12 +21,10 @@ pv.Line.prototype.render = function(g) {
     g.save();
     var move = true;
 
+    this.index = -1;
     for each (let d in this.get("data")) {
-      this.index++;
+      pv.Mark.prototype.index = ++this.index;
       this.root.renderData[0] = d;
-      if (this.panel) {
-        this.panel.renderIndex = this.index;
-      }
 
       var l = this.get("left");
       var r = this.get("right");
@@ -68,6 +66,7 @@ pv.Line.prototype.render = function(g) {
     }
   }
   delete this.index;
+  pv.Mark.prototype.index = -1;
 
   var strokeStyle = this.get("strokeStyle");
   if (strokeStyle) {
