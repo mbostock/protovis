@@ -124,7 +124,7 @@ pv.permute = function(array, permutation, f) {
     f = pv.identity;
   }
   var p = new Array(array.length);
-  permutation.forEach(function(j,i) p[i] = f(array[j]));
+  permutation.forEach(function(j, i) p[i] = f(array[j]));
   return p;
 };
 
@@ -133,6 +133,6 @@ pv.numerate = function(array, f) {
     f = pv.identity;
   }
   var map = {};
-  array.forEach(function(x,i) map[f(x)] = i);
+  array.forEach(function(x, i) map[f(x)] = i);
   return map;
 }

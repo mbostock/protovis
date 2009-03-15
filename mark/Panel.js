@@ -13,11 +13,7 @@ pv.Panel.prototype.defineProperty("width");
 pv.Panel.prototype.defineProperty("height");
 pv.Panel.prototype.defineProperty("canvas");
 
-pv.Panel.defaults = pv.Mark.defaults.extend(pv.Panel)
-    .left(0)
-    .right(0)
-    .top(0)
-    .bottom(0);
+pv.Panel.defaults = pv.Mark.defaults.extend(pv.Panel);
 
 pv.Panel.prototype.add = function(type) {
   var mark = new type();
@@ -95,25 +91,22 @@ pv.Panel.prototype.renderInstance = function(g, d) {
   var h = this.get("height");
 
   var width = g.canvas.width - this.offset("right") - this.offset("left");
-  if (l == null) {
-    l = width - w - r;
+  if (w == null) {
+    w = width - (r = r || 0) - (l = l || 0);
   } else if (r == null) {
-    r = width - w - l;
-  } else if (w == null) {
-    w = width - r - l;
+    r = width - w - (l = l || 0);
+  } else if (l == null) {
+    l = width - w - (r = r || 0);
   }
 
   var height = g.canvas.height - this.offset("bottom") - this.offset("top");
-  if (t == null) {
-    t = height - h - b;
+  if (h == null) {
+    h = height - (t = t || 0) - (b = b || 0);
   } else if (b == null) {
-    b = height - h - t;
-  } else if (h == null) {
-    h = height - t - b;
+    b = height - h - (t = t || 0);
+  } else if (t == null) {
+    t = height - h - (b = b || 0);
   }
-
-  var x = l + this.offset("left");
-  var y = t + this.offset("top");
 
   this.renderState[this.index] = {
       data : d,
