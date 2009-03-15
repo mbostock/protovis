@@ -16,7 +16,7 @@ pv.Colors = function(values) {
     var color = idToColor[id];
     if (color == undefined) {
       var count = typeToCount[type] = (typeToCount[type] || 0) + 1;
-      idToColor[id] = color = values[count - 1];
+      idToColor[id] = color = values[(count - 1) % values.length];
     }
     return color;
   }
@@ -24,7 +24,7 @@ pv.Colors = function(values) {
   color.values = values;
   color.unique = function() {
     var index = (this.index == -1) ? this.panel.index : this.index;
-    return values[index];
+    return values[index % values.length];
   }
   return color;
 };

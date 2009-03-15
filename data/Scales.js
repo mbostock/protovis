@@ -34,5 +34,5 @@ pv.Scales.logFixed = function(array, min, max) {
 
 pv.Scales.ordinal = function(ordinals) {
   let map = pv.numerate(ordinals);
-  return function(x) let (i = map[x]) (i == undefined ? -1 : i);
+  return function(x) let (i = map[x]) (i == undefined) ? -1 : i;
 };
