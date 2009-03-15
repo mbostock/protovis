@@ -30,6 +30,15 @@ pv.nest = function(array) {
   return new pv.Nest(array);
 };
 
+pv.blend = function() {
+  for (let i = 0; i < arguments.length; ++i) {
+    let a = arguments[i];
+    for each (var x in a) {
+      yield x;
+    }
+  }
+};
+
 pv.keys = function(map) {
   for (var key in map) {
     yield key;
@@ -109,3 +118,21 @@ pv.function = function(x) {
 pv.date = function(s, format) {
   return pv.Date.parse(s, format);
 };
+
+pv.permute = function(array, permutation, f) {
+  if (!f) {
+    f = pv.identity;
+  }
+  var p = new Array(array.length);
+  permutation.forEach(function(j,i) p[i] = f(array[j]));
+  return p;
+};
+
+pv.numerate = function(array, f) {
+  if (!f) {
+    f = pv.identity;
+  }
+  var map = {};
+  array.forEach(function(x,i) map[f(x)] = i);
+  return map;
+}
