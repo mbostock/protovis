@@ -77,6 +77,14 @@ pv.Mark.prototype.anchorTarget = function() {
   return target.proto;
 };
 
+pv.Mark.prototype.first = function() {
+  return this.renderState[0];
+};
+
+pv.Mark.prototype.last = function() {
+  return this.renderState[this.renderState.length - 1];
+};
+
 pv.Mark.prototype.sibling = function() {
   return (this.index == 0) ? null : this.renderState[this.index - 1];
 };
