@@ -31,7 +31,7 @@ pv.Mark.prototype.defineProperty("top");
 pv.Mark.prototype.defineProperty("bottom");
 
 pv.Mark.defaults = new pv.Mark()
-  .data(function() pv.singleton())
+  .data(function() pv.singleton(null))
   .visible(true);
 
 pv.Mark.prototype.offset = function(name) {
