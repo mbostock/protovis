@@ -81,9 +81,15 @@ pv.Mark.prototype.sibling = function() {
   return (this.index == 0) ? null : this.renderState[this.index - 1];
 };
 
-pv.Mark.prototype.nephew = function() {
-  return this.panel ? let (s = this.panel.sibling()) (s
-      ? s.marks[this.markIndex][this.index] : null) : null;
+pv.Mark.prototype.cousin = function() {
+  if (!this.panel) {
+    return null;
+  }
+  var s = this.panel.sibling();
+  if (!s || !s.marks) {
+    return null;
+  }
+  return s.marks[this.markIndex][this.index];
 };
 
 pv.Mark.prototype.render = function(g) {

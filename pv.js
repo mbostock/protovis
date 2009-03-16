@@ -135,4 +135,4 @@ pv.numerate = function(array, f) {
   var map = {};
   array.forEach(function(x, i) map[f(x)] = i);
   return map;
-}
+};
