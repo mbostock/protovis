@@ -108,6 +108,7 @@ pv.Panel.prototype.renderInstance = function(g, d) {
     t = height - h - (b = b || 0);
   }
 
+  var marks = [];
   this.renderState[this.index] = {
       data : d,
       visible : true,
@@ -117,10 +118,12 @@ pv.Panel.prototype.renderInstance = function(g, d) {
       right : r,
       width : w,
       height : h,
+      marks : marks,
     };
 
   for each (let m in this.marks) {
     m.render(g);
+    marks.push(m.renderState);
   }
 };
 

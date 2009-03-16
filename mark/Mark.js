@@ -77,8 +77,13 @@ pv.Mark.prototype.anchorTarget = function() {
   return target.proto;
 };
 
-pv.Mark.prototype.previous = function() {
+pv.Mark.prototype.sibling = function() {
   return (this.index == 0) ? null : this.renderState[this.index - 1];
+};
+
+pv.Mark.prototype.nephew = function() {
+  return this.panel ? let (s = this.panel.sibling()) (s
+      ? s.marks[this.markIndex][this.index] : null) : null;
 };
 
 pv.Mark.prototype.render = function(g) {
