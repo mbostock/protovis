@@ -15,14 +15,15 @@ pv.Line.defaults = pv.Mark.defaults.extend(pv.Line)
 
 pv.Line.prototype.render = function(g) {
   this.renderState = [];
-  this.root.renderData.unshift(null);
   if (this.get("visible")) {
 
     g.save();
     var move = true;
+    var data = this.get("data");
+    this.root.renderData.unshift(null);
 
     this.index = -1;
-    for each (let d in this.get("data")) {
+    for each (let d in data) {
       pv.Mark.prototype.index = ++this.index;
       this.root.renderData[0] = d;
 
