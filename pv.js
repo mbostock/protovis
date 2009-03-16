@@ -136,3 +136,7 @@ pv.numerate = function(array, f) {
   array.forEach(function(x, i) map[f(x)] = i);
   return map;
 };
+
+pv.compare = function(a, b) {
+  return (a < b) ? -1 : ((a > b) ? 1 : 0);
+};
