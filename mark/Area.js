@@ -12,7 +12,7 @@ pv.Area.prototype.defineProperty("lineWidth");
 pv.Area.prototype.defineProperty("strokeStyle");
 pv.Area.prototype.defineProperty("fillStyle");
 
-pv.Area.defaults = pv.Mark.defaults.extend(pv.Area)
+pv.Area.defaults = new pv.Area().extend(pv.Mark.defaults)
     .lineWidth(1.5)
     .strokeStyle(null)
     .fillStyle(pv.Colors.category20);

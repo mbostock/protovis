@@ -14,7 +14,7 @@ pv.Label.prototype.defineProperty("textAlign");
 pv.Label.prototype.defineProperty("textBaseline");
 pv.Label.prototype.defineProperty("textMargin");
 
-pv.Label.defaults = pv.Mark.defaults.extend(pv.Label)
+pv.Label.defaults = new pv.Label().extend(pv.Mark.defaults)
     .text(pv.identity)
     .font("10px Sans-Serif")
     .textAngle(0)

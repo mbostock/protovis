@@ -39,10 +39,9 @@ pv.Mark.prototype.offset = function(name) {
   return c ? c.offset(name) + c.renderState[c.index][name] : 0;
 };
 
-pv.Mark.prototype.extend = function(type) {
-  var mark = new type();
-  mark.proto = this;
-  return mark;
+pv.Mark.prototype.extend = function(proto) {
+  this.proto = proto;
+  return this;
 };
 
 pv.Mark.prototype.add = function(type) {
@@ -89,15 +88,13 @@ pv.Mark.prototype.sibling = function() {
   return (this.index == 0) ? null : this.renderState[this.index - 1];
 };
 
-pv.Mark.prototype.cousin = function() {
-  if (!this.panel) {
-    return null;
-  }
-  var s = this.panel.sibling();
-  if (!s || !s.marks) {
-    return null;
-  }
-  return s.marks[this.markIndex][this.index];
+pv.Mark.prototype.cousin = function(panel, i) {
+  var s = panel
+      ? panel.renderState[this.panel.index]
+      : (this.panel && this.panel.sibling());
+  return (s && s.marks)
+      ? s.marks[this.markIndex][(i == undefined) ? this.index : i]
+      : null;
 };
 
 pv.Mark.prototype.render = function(g) {

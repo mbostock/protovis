@@ -15,7 +15,7 @@ pv.Wedge.prototype.defineProperty("lineWidth");
 pv.Wedge.prototype.defineProperty("strokeStyle");
 pv.Wedge.prototype.defineProperty("fillStyle");
 
-pv.Wedge.defaults = pv.Mark.defaults.extend(pv.Wedge)
+pv.Wedge.defaults = new pv.Wedge().extend(pv.Mark.defaults)
     .startAngle(function() let (s = this.sibling()) s ? s.endAngle : -Math.PI / 2)
     .innerRadius(0)
     .lineWidth(1.5)

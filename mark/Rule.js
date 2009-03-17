@@ -9,7 +9,7 @@ pv.Rule.prototype.type = pv.Rule;
 pv.Rule.prototype.defineProperty("lineWidth");
 pv.Rule.prototype.defineProperty("strokeStyle");
 
-pv.Rule.defaults = pv.Mark.defaults.extend(pv.Rule)
+pv.Rule.defaults = new pv.Rule().extend(pv.Mark.defaults)
     .lineWidth(1)
     .strokeStyle("black");
 

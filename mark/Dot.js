@@ -13,7 +13,7 @@ pv.Dot.prototype.defineProperty("lineWidth");
 pv.Dot.prototype.defineProperty("strokeStyle");
 pv.Dot.prototype.defineProperty("fillStyle");
 
-pv.Dot.defaults = pv.Mark.defaults.extend(pv.Dot)
+pv.Dot.defaults = new pv.Dot().extend(pv.Mark.defaults)
     .size(20)
     .shape("circle")
     .angle(0)

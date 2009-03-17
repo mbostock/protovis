@@ -13,7 +13,7 @@ pv.Panel.prototype.defineProperty("width");
 pv.Panel.prototype.defineProperty("height");
 pv.Panel.prototype.defineProperty("canvas");
 
-pv.Panel.defaults = pv.Mark.defaults.extend(pv.Panel);
+pv.Panel.defaults = new pv.Panel().extend(pv.Mark.defaults);
 
 pv.Panel.prototype.add = function(type) {
   var mark = new type();
