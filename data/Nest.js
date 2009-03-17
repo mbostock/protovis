@@ -9,12 +9,12 @@ pv.Nest.prototype.key = function(key) {
 };
 
 pv.Nest.prototype.sortKeys = function(order) {
-  this.keys[this.keys.length - 1].order = order;
+  this.keys[this.keys.length - 1].order = order || pv.naturalOrder;
   return this;
 };
 
 pv.Nest.prototype.sortValues = function(order) {
-  this.order = order;
+  this.order = order || pv.naturalOrder;
   return this;
 };
 
