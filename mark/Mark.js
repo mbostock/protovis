@@ -62,7 +62,7 @@ pv.Mark.prototype.anchor = function(name) {
   while (!anchorType.Anchor) {
     anchorType = anchorType.defaults.type;
   }
-  var anchor = this.extend(anchorType.Anchor).name(name);
+  var anchor = new anchorType.Anchor().extend(this).name(name);
   anchor.panel = this.panel;
   anchor.type = this.type;
   return anchor;

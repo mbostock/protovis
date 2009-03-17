@@ -9,10 +9,14 @@ pv.singleton = function(value) {
 };
 
 pv.range = function(start, end, step) {
+  if (arguments.length == 1) {
+    end = start;
+    start = 0;
+  }
   if (step == undefined) {
     step = 1;
   }
-  while (start <= end) {
+  while (start < end) {
     yield start;
     start += step;
   }
