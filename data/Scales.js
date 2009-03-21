@@ -13,7 +13,7 @@ pv.Scales.step = function(min, max, base) {
 
 pv.Scales.ordinal = function(ordinals) {
   let map = pv.numerate(ordinals);
-  let f = function(x) let (i = map[x]) (i == undefined) ? -1 : i;
+  function f(x) let (i = map[x]) (i == undefined) ? -1 : i;
   f.values = function() ordinals;
   f.interp = function(i) ordinals[i];
   return f;
@@ -24,11 +24,11 @@ pv.Scales.ordinal = function(ordinals) {
 pv.Scales.linear = function(min, max, base) {
   if (base == undefined) base = pv.Scales.defaultBase;
   let range = max - min, eps = pv.Scales.epsilon;
-  let f = function(x) range < eps && range > -eps ? 0 : (x - min) / range;
+  function f(x) range < eps && range > -eps ? 0 : (x - min) / range;
   f.values = function(n) pv.Scales.linear.values(min, max, base, n);
   f.interp = function(f) min + f * range;
   return f;
-}
+};
 
 pv.Scales.linear.fromData = function(array, f, base, nice) {
   if (base == undefined) base = pv.Scales.defaultBase;
@@ -46,7 +46,7 @@ pv.Scales.linear.fromData = function(array, f, base, nice) {
 pv.Scales.linear.values = function(min, max, base, n) {
   if (base == undefined) base = pv.Scales.defaultBase;
   if (n == undefined) n = -1;
-  let range = max - min;  
+  let range = max - min;
   if (range == 0) {
     yield min;
   } else {
@@ -71,7 +71,7 @@ pv.Scales.root = function(min, max, base) {
   if (base == undefined) base = 2;
   let root = function(x) let (s=(x<0?-1:1)) s*Math.pow(s*x, 1/base);
   let rmin = root(min), range = root(max) - rmin, eps = pv.Scales.epsilon;
-  var f = function(x) (root(x) - rmin) / range;
+  function f(x) (root(x) - rmin) / range;
   f.values = function(n) pv.Scales.linear.values(min, max, base, 10);
   f.interp = function(f) let (g = rmin + f*range, s = g<0?-1:1) s*Math.pow(s*g, base);
   return f;
@@ -96,7 +96,7 @@ pv.Scales.log = function(min, max, base) {
   if (base == undefined) base = pv.Scales.defaultBase;
   let lg = (min < 0 && max > 0) ? pv.Scales.log.zlog : pv.Scales.log.log;
   let lmin = lg(min, base), lrange = lg(max, base) - lmin, eps = pv.Scales.epsilon;
-  let f = function(x)
+  function f(x)
     (lrange < eps && lrange > -eps) ? 0 : (lg(x, base) - lmin) / lrange;
   f.values = function(n)
      pv.Scales.log.values(min, max, 10, n);
