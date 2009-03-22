@@ -2,7 +2,9 @@ pv.Rule = function() {
   pv.Mark.call(this);
 };
 
-pv.Rule.toString = function() "rule";
+pv.Rule.toString = function() {
+  return "rule";
+};
 
 pv.Rule.prototype = pv.Mark.extend();
 pv.Rule.prototype.type = pv.Rule;

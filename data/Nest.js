@@ -37,13 +37,30 @@ pv.Nest.prototype.rollup = function(f) {
 };
 
 pv.Nest.prototype.entries = function() {
-  function array(map) {
-    return [{
-        key: k,
-        values: let (v = map[k]) (v instanceof Array) ? v : array(v)
-      } for (k in map)];
+
+  function entries(map) {
+    var array = [];
+    for (var k in map) {
+      var v = map[k];
+      array.push({ key: k, values: (v instanceof Array) ? v : entries(v) });
+    };
+    return array;
   }
-  return array(this.map());
+
+  function sort(array, i) {
+    var o = this.keys[i].order;
+    if (o) {
+      array.sort(function(a, b) { return o(a.key, b.key); });
+    }
+    if (++i < this.keys.length) {
+      for (var j = 0; j < array.length; j++) {
+        sort.call(this, array[j].values, i);
+      }
+    }
+    return array;
+  }
+
+  return sort.call(this, entries(this.map()), 0);
 };
 
 pv.Nest.prototype.map = function() {
@@ -51,74 +68,31 @@ pv.Nest.prototype.map = function() {
     return this.array;
   }
 
-  var keys = new Array(this.keys.length);
-  for (var i = 0; i < this.keys.length; i++) {
-    keys[i] = {};
-  }
-
-  function KeyIterator(keys) {
-    this.keys = keys;
-    this.i = 0;
-  }
-
-  KeyIterator.prototype.next = function() {
-    if (this.i >= this.keys.length) {
-      throw StopIteration;
+  var map = {}, values = [];
+  for (var i, j = 0; j < this.array.length; j++) {
+    var x = this.array[j];
+    var m = map;
+    for (i = 0; i < this.keys.length - 1; i++) {
+      var k = this.keys[i](x);
+      if (!m[k]) {
+        m[k] = {};
+      }
+      m = m[k];
     }
-    return this.keys[this.i++];
-  };
-
-  function EntryIterator(keys, map) {
-    KeyIterator.call(this, keys);
-    this.map = map;
-  }
-
-  EntryIterator.prototype.next = function() {
-    return this.map[KeyIterator.prototype.next.call(this)];
-  };
-
-  var values = [];
-  function map(i) {
-    if (i == keys.length) {
+    k = this.keys[i](x);
+    if (!m[k]) {
       var a = [];
       values.push(a);
-      return a;
+      m[k] = a;
     }
-    return {
-        __iterator__: function(keysOnly) {
-            return keysOnly
-                ? new KeyIterator(keys[i])
-                : new EntryIterator(keys[i], this);
-          }
-      };
-  }
-
-  var entries = map(0);
-  for each (var x in this.array) {
-    var entry = entries;
-    for (var i = 0; i < this.keys.length; i++) {
-      var k = this.keys[i](x);
-      keys[i][k] = true;
-      if (!entry[k]) {
-        entry[k] = map(i + 1);
-      }
-      entry = entry[k];
-    }
-    entry.push(x);
-  }
-
-  for (var i = 0; i < this.keys.length; i++) {
-    keys[i] = [v for (v in keys[i])];
-    if (this.keys[i].order) {
-      keys[i].sort(this.keys[i].order);
-    }
+    m[k].push(x);
   }
 
   if (this.order) {
-    for each (var a in values) {
-      a.sort(this.order);
+    for (var i = 0; i < values.length; i++) {
+      values[i].sort(this.order);
     }
   }
 
-  return entries;
+  return map;
 };

@@ -2,7 +2,9 @@ pv.Area = function() {
   pv.Mark.call(this);
 };
 
-pv.Area.toString = function() "area";
+pv.Area.toString = function() {
+  return "area";
+};
 
 pv.Area.prototype = pv.Mark.extend();
 pv.Area.prototype.type = pv.Area;
@@ -101,9 +103,9 @@ pv.Area.prototype.render = function(g) {
     this.root.renderData.unshift(null);
 
     this.index = -1;
-    for each (let d in data) {
+    for (var i = 0, d; i < data.length; i++) {
       pv.Mark.prototype.index = ++this.index;
-      this.root.renderData[0] = d;
+      this.root.renderData[0] = d = data[i];
 
       var l = this.get("left");
       var r = this.get("right");
@@ -168,8 +170,8 @@ pv.Area.prototype.render = function(g) {
   pv.Mark.prototype.index = -1;
 
   back.reverse();
-  for each (let v in back) {
-    g.lineTo(v.x, v.y);
+  for (var i = 0; i < back.length; i++) {
+    g.lineTo(back[i].x, back[i].y);
   }
   g.closePath();
 

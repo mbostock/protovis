@@ -2,7 +2,9 @@ pv.Dot = function() {
   pv.Mark.call(this);
 };
 
-pv.Dot.toString = function() "dot";
+pv.Dot.toString = function() {
+  return "dot";
+};
 
 pv.Dot.prototype = pv.Mark.extend();
 pv.Dot.prototype.type = pv.Dot;

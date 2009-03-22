@@ -2,7 +2,9 @@ pv.Line = function() {
   pv.Mark.call(this);
 };
 
-pv.Line.toString = function() "line";
+pv.Line.toString = function() {
+  return "line";
+};
 
 pv.Line.prototype = pv.Mark.extend();
 pv.Line.prototype.type = pv.Line;
@@ -23,9 +25,9 @@ pv.Line.prototype.render = function(g) {
     this.root.renderData.unshift(null);
 
     this.index = -1;
-    for each (let d in data) {
+    for (var i = 0, d; i < data.length; i++) {
       pv.Mark.prototype.index = ++this.index;
-      this.root.renderData[0] = d;
+      this.root.renderData[0] = d = data[i];
 
       var l = this.get("left");
       var r = this.get("right");

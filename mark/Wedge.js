@@ -2,7 +2,9 @@ pv.Wedge = function() {
   pv.Mark.call(this);
 };
 
-pv.Wedge.toString = function() "wedge";
+pv.Wedge.toString = function() {
+  return "wedge";
+};
 
 pv.Wedge.prototype = pv.Mark.extend();
 pv.Wedge.prototype.type = pv.Wedge;
@@ -16,7 +18,10 @@ pv.Wedge.prototype.defineProperty("strokeStyle");
 pv.Wedge.prototype.defineProperty("fillStyle");
 
 pv.Wedge.defaults = new pv.Wedge().extend(pv.Mark.defaults)
-    .startAngle(function() let (s = this.sibling()) s ? s.endAngle : -Math.PI / 2)
+    .startAngle(function() {
+        var s = this.sibling();
+        return s ? s.endAngle : -Math.PI / 2;
+      })
     .innerRadius(0)
     .lineWidth(1.5)
     .strokeStyle(null)

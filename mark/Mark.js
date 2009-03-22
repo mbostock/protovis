@@ -1,11 +1,14 @@
 pv.Mark = function() {};
 
-pv.Mark.toString = function() "mark";
+pv.Mark.toString = function() {
+  return "mark";
+};
 
 pv.Mark.property = function(name) {
   return function(v) {
       if (arguments.length) {
-        this["$" + name] = pv.function(v);
+        this["$" + name] = (v instanceof Function)
+            ? v : function() { return v; };
         return this;
       }
       return this.renderState[this.index][name];
@@ -31,7 +34,7 @@ pv.Mark.prototype.defineProperty("top");
 pv.Mark.prototype.defineProperty("bottom");
 
 pv.Mark.defaults = new pv.Mark()
-  .data(function() pv.singleton(null))
+  .data([null])
   .visible(true);
 
 pv.Mark.prototype.offset = function(name) {
@@ -102,9 +105,9 @@ pv.Mark.prototype.render = function(g) {
   var data = this.get("data");
   this.root.renderData.unshift(null);
   this.index = -1;
-  for each (let d in data) {
+  for (var i = 0, d; i < data.length; i++) {
     pv.Mark.prototype.index = ++this.index;
-    this.root.renderData[0] = d;
+    this.root.renderData[0] = d = data[i];
     if (this.get("visible")) {
       this.renderInstance(g, d);
     } else {

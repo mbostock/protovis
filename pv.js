@@ -1,12 +1,6 @@
-var undefined;
-
 var pv = {};
 
-pv.identity = function(x) x;
-
-pv.singleton = function(value) {
-  yield value;
-};
+pv.identity = function(x) { return x; };
 
 pv.range = function(start, end, step) {
   if (arguments.length == 1) {
@@ -16,96 +10,93 @@ pv.range = function(start, end, step) {
   if (step == undefined) {
     step = 1;
   }
+  var array = []
   while (start < end) {
-    yield start;
+    array.push(start);
     start += step;
   }
+  return array;
 };
 
 pv.cross = function(a, b) {
-  for each (var x in a) {
-    for each (var y in b) {
-      yield [x, y];
+  var array = [];
+  for (var i = 0, n = a.length, m = b.length; i < n; i++) {
+    for (var j = 0, x = a[i]; j < m; j++) {
+      array.push([x, b[j]]);
     }
   }
+  return array;
 };
 
 pv.nest = function(array) {
   return new pv.Nest(array);
 };
 
-pv.blend = function() {
-  for (let i = 0; i < arguments.length; ++i) {
-    let a = arguments[i];
-    for each (var x in a) {
-      yield x;
-    }
-  }
+pv.blend = function(arrays) {
+  return Array.prototype.concat.apply([], arrays);
 };
 
 pv.keys = function(map) {
+  var array = [];
   for (var key in map) {
-    yield key;
+    array.push(key);
   }
+  return array;
 };
 
 pv.entries = function(map) {
+  var array = [];
   for (var key in map) {
-    yield { key: key, value: map[key] };
+    array.push({ key: key, value: map[key] });
   }
+  return array;
 };
 
 pv.values = function(map) {
-  for each (var value in map) {
-    yield value;
+  var array = [];
+  for (var key in map) {
+    array.push(map[key]);
   }
+  return array;
 };
 
 pv.normalize = function(array, f) {
   if (!f) {
     f = pv.identity;
   }
-  var sum = array.reduce(function(p, d) p + f(d), 0);
-  return array.map(function(d) f(d) / sum);
+  var sum = array.reduce(function(p, d) { return p + f(d); }, 0);
+  return array.map(function(d) { return f(d) / sum; });
 };
 
 pv.count = function(array) {
-  if (array instanceof Array) {
-    return array.length;
-  }
-  var n = 0;
-  for each (var x in array) {
-    n++;
-  }
-  return n;
+  return array.length;
 };
 
 pv.sum = function(array, f) {
   if (!f) {
     f = pv.identity;
   }
-  return array.reduce(function(p, d) p + f(d), 0);
+  return array.reduce(function(p, d) { return p + f(d); }, 0);
 };
 
 pv.max = function(array, f) {
   if (!f) {
     f = pv.identity;
   }
-  return array.reduce(function(p, d) Math.max(p, f(d)), -Infinity);
+  return array.reduce(function(p, d) { return Math.max(p, f(d)); }, -Infinity);
 };
 
 pv.max.index = function(array, f) {
   if (!f) {
     f = pv.identity;
   }
-  var i = 0, maxi = -1, maxx = -Infinity;
-  for each (let x in array) {
-    x = f(x);
+  var maxi = -1, maxx = -Infinity;
+  for (var i = 0; i < array.length; i++) {
+    var x = f(array[i]);
     if (x > maxx) {
       maxx = x;
       maxi = i;
     }
-    i++;
   }
   return maxi;
 }
@@ -114,45 +105,38 @@ pv.min = function(array, f) {
   if (!f) {
     f = pv.identity;
   }
-  return array.reduce(function(p, d) Math.min(p, f(d)), Infinity);
+  return array.reduce(function(p, d) { return Math.min(p, f(d)); }, Infinity);
 };
 
 pv.min.index = function(array, f) {
   if (!f) {
     f = pv.identity;
   }
-  var i = 0, mini = -1, minx = Infinity;
-  for each (let x in array) {
-    x = f(x);
+  var mini = -1, minx = Infinity;
+  for (var i = 0; i < array.length; i++) {
+    var x = f(array[i]);
     if (x < minx) {
       minx = x;
       mini = i;
     }
-    i++;
   }
   return mini;
 }
 
 pv.mean = function(array, f) {
-  return pv.sum(array, f) / pv.count(array);
+  return pv.sum(array, f) / array.length;
 };
 
 pv.median = function(array, f) {
   if (!f) {
     f = pv.identity;
   }
-  array = [f(x) for each (x in array)].sort(function(a, b) a - b);
-  return (array.length % 2)
-      ? array[Math.floor(array.length / 2)]
-      : let (i = array.length / 2) (array[i - 1] + array[i]) / 2
-};
-
-pv.function = function(x) {
-  return (x instanceof Function) ? x : function() x;
-};
-
-pv.date = function(s, format) {
-  return pv.Date.parse(s, format);
+  array = array.map(f).sort(function(a, b) { return a - b; });
+  if (array.length % 2) {
+    return array[Math.floor(array.length / 2)];
+  }
+  var i = array.length / 2;
+  return (array[i - 1] + array[i]) / 2;
 };
 
 pv.permute = function(array, permutation, f) {
@@ -160,7 +144,7 @@ pv.permute = function(array, permutation, f) {
     f = pv.identity;
   }
   var p = new Array(array.length);
-  permutation.forEach(function(j, i) p[i] = f(array[j]));
+  permutation.forEach(function(j, i) { p[i] = f(array[j]); });
   return p;
 };
 
@@ -169,7 +153,7 @@ pv.numerate = function(array, f) {
     f = pv.identity;
   }
   var map = {};
-  array.forEach(function(x, i) map[f(x)] = i);
+  array.forEach(function(x, i) { map[f(x)] = i; });
   return map;
 };
 

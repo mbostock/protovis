@@ -2,7 +2,9 @@ pv.Bar = function() {
   pv.Mark.call(this);
 };
 
-pv.Bar.toString = function() "bar";
+pv.Bar.toString = function() {
+  return "bar";
+};
 
 pv.Bar.prototype = pv.Mark.extend();
 pv.Bar.prototype.type = pv.Bar;

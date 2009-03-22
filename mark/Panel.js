@@ -4,7 +4,9 @@ pv.Panel = function() {
   this.root = this;
 };
 
-pv.Panel.toString = function() "panel";
+pv.Panel.toString = function() {
+  return "panel";
+};
 
 pv.Panel.prototype = pv.Mark.extend();
 pv.Panel.prototype.type = pv.Panel;
@@ -28,10 +30,10 @@ pv.Panel.prototype.clear = function(g) {
   this.renderData = [];
   var data = this.get("data");
   this.renderData.unshift(null);
-  for each (let d in data) {
-    this.renderData[0] = d;
+  for (var i = 0; i < data.length; i++) {
+    this.renderData[0] = data[i];
     this.index++;
-    let g = this.context(g);
+    var g = this.context(g);
     g.clearRect(0, 0, g.canvas.width, g.canvas.height);
   }
   delete this.renderData;
@@ -121,7 +123,8 @@ pv.Panel.prototype.renderInstance = function(g, d) {
       marks : marks,
     };
 
-  for each (let m in this.marks) {
+  for (var i = 0; i < this.marks.length; i++) {
+    var m = this.marks[i];
     m.render(g);
     marks.push(m.renderState);
   }
@@ -129,7 +132,7 @@ pv.Panel.prototype.renderInstance = function(g, d) {
 
 pv.Panel.prototype.dispose = function() {
   pv.Mark.prototype.dispose.call(this);
-  for each (var mark in this.marks) {
-    mark.dispose();
+  for (var i = 0; i < this.marks.length; i++) {
+    this.marks[i].dispose();
   }
 };

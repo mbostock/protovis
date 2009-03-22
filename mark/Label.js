@@ -2,7 +2,9 @@ pv.Label = function() {
   pv.Mark.call(this);
 };
 
-pv.Label.toString = function() "label";
+pv.Label.toString = function() {
+  return "label";
+};
 
 pv.Label.prototype = pv.Mark.extend();
 pv.Label.prototype.type = pv.Label;
