@@ -1,33 +1,28 @@
 if (!Array.prototype.reduce) {
-  Array.prototype.reduce = function(f /*, initial*/) {
+  Array.prototype.reduce = function(f, v) {
     var len = this.length;
     if (!len && (arguments.length == 1)) {
       throw new Error();
     }
 
     var i = 0;
-    if (arguments.length >= 2) {
-      var rv = arguments[1];
-    } else {
-      do {
+    if (arguments.length < 2) {
+      while (true) {
         if (i in this) {
-          rv = this[i++];
+          v = this[i++];
           break;
         }
-
-        // if array contains no values, no initial value to return
         if (++i >= len) {
           throw new Error();
         }
-      } while (true);
+      }
     }
 
     for (; i < len; i++) {
       if (i in this) {
-        rv = f.call(null, rv, this[i], i, this);
+        v = f.call(null, v, this[i], i, this);
       }
     }
-
-    return rv;
+    return v;
   };
 }
