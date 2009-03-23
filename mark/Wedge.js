@@ -134,6 +134,9 @@ pv.Wedge.prototype.renderInstance = function(g, d) {
   var b = this.get("bottom");
 
   function path(a0, a1, r0, r1) {
+    if ((r0 + r1) == 0) {
+      return;
+    }
     g.beginPath();
     if (r0 == 0) {
       g.moveTo(0, 0);
