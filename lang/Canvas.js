@@ -1,17 +1,27 @@
 if (typeof CanvasRenderingContext2D != "undefined") {
-  if (!CanvasRenderingContext2D.prototype.measureText) {
-    CanvasRenderingContext2D.prototype.measureText = function(s) {
-      this.mozTextStyle = this.font;
-      return { width: this.mozMeasureText(s) };
-    };
-  }
-  if (!CanvasRenderingContext2D.prototype.fillText) {
-    CanvasRenderingContext2D.prototype.fillText = function(s, x, y) {
-      this.mozTextStyle = this.font;
-      this.save();
-      this.translate(x, y);
-      this.mozDrawText(s);
-      this.restore();
-    };
+  var c = CanvasRenderingContext2D.prototype;
+  if (c.mozDrawText) {
+    if (!c.measureText) {
+      c.measureText = function(s) {
+        this.mozTextStyle = this.font;
+        return { width: this.mozMeasureText(s) };
+      };
+    }
+    if (!c.fillText) {
+      c.fillText = function(s, x, y) {
+        this.mozTextStyle = this.font;
+        this.save();
+        this.translate(x, y);
+        this.mozDrawText(s);
+        this.restore();
+      };
+    }
+  } else {
+    if (!c.measureText) {
+      c.measureText = function() { return { width: -1 }; };
+    }
+    if (!c.fillText) {
+      c.fillText = function() {};
+    }
   }
 }
