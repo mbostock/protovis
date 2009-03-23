@@ -94,6 +94,10 @@ pv.Bar.Anchor.prototype.$textBaseline = function(d) {
   return null;
 };
 
+pv.Bar.style = function(s, g, w, h) {
+  return (s instanceof pv.Gradient) ? s.create(g, w, h) : s;
+};
+
 pv.Bar.prototype.renderInstance = function(g, d) {
   var l = this.get("left");
   var r = this.get("right");
@@ -128,14 +132,15 @@ pv.Bar.prototype.renderInstance = function(g, d) {
   var lineWidth = this.get("lineWidth");
 
   g.save();
+  g.translate(x, y);
   if (fillStyle) {
-    g.fillStyle = fillStyle;
-    g.fillRect(x, y, w, h);
+    g.fillStyle = pv.Bar.style(fillStyle, g, w, h);
+    g.fillRect(0, 0, w, h);
   }
   if (strokeStyle) {
     g.lineWidth = lineWidth;
-    g.strokeStyle = strokeStyle;
-    g.strokeRect(x, y, w, h);
+    g.strokeStyle = pv.Bar.style(strokeStyle, g, w, h);
+    g.strokeRect(0, 0, w, h);
   }
   g.restore();
 

@@ -195,3 +195,14 @@ pv.reverseOrder = function(b, a) {
 pv.naturalOrder = function(a, b) {
   return (a < b) ? -1 : ((a > b) ? 1 : 0);
 };
+
+pv.gradient = function() {
+  if (arguments.length < 2) {
+    return arguments[0];
+  }
+  var g = new pv.Gradient();
+  for (var i = 0, n = arguments.length - 1; i <= n; i++) {
+    g.color(i / n, arguments[i]);
+  }
+  return g;
+};
