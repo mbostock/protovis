@@ -1,5 +1,36 @@
 var pv = {};
 
+/* Function expression support. */
+try {
+  eval("pv.parse = function(x) x;"); // native support
+} catch (e) {
+  pv.parse = function(js) { // hacky regex support
+    var re = /function([^)]*)/g, m, i = 0;
+    var s = "";
+    while (m = re.exec(js)) {
+      var j = m.index + m[0].length;
+      while (js[++j] == ' ');
+      if (js[j--] != '{') {
+        s += js.substring(i, j) + "{return ";
+        i = j;
+        for (var p = 0; p >= 0 && j < js.length; j++) {
+          switch (js[j]) {
+            case '(': p++; break;
+            case ')': p--; break;
+            case ';':
+            case ',': if (p == 0) p--; break;
+          }
+        }
+        s += pv.parse(js.substring(i, --j)) + ";}";
+        i = j;
+      }
+      re.lastIndex = j;
+    }
+    s += js.substring(i);
+    return s;
+  };
+}
+
 pv.identity = function(x) { return x; };
 
 pv.range = function(start, end, step) {

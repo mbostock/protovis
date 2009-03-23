@@ -55,7 +55,9 @@ pv.Panel.prototype.createCanvas = function() {
     c = this.canvases[this.index] = document.createElement("canvas");
     c.width = this.get("width");
     c.height = this.get("height");
-    lastChild(document.body).appendChild(c);
+    pv.$dom // "current element" for text/javascript+protovis
+        ? pv.$dom.parentNode.insertBefore(c, pv.$dom)
+        : lastChild(document.body).appendChild(c);
   }
   return c;
 };
