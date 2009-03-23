@@ -15,8 +15,8 @@ try {
         i = j;
         for (var p = 0; p >= 0 && j < js.length; j++) {
           switch (js[j]) {
-            case '(': p++; break;
-            case ')': p--; break;
+            case '[': case '(': p++; break;
+            case ']': case ')': p--; break;
             case ';':
             case ',': if (p == 0) p--; break;
           }

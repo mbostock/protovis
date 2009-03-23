@@ -10,6 +10,7 @@ pv.Line.prototype = pv.Mark.extend();
 pv.Line.prototype.type = pv.Line;
 pv.Line.prototype.defineProperty("lineWidth");
 pv.Line.prototype.defineProperty("strokeStyle");
+pv.Line.prototype.defineProperty("fillStyle");
 
 pv.Line.defaults = new pv.Line().extend(pv.Mark.defaults)
     .lineWidth(1.5)
@@ -70,6 +71,12 @@ pv.Line.prototype.render = function(g) {
   }
   delete this.index;
   pv.Mark.prototype.index = -1;
+
+  var fillStyle = this.get("fillStyle");
+  if (fillStyle) {
+    g.fillStyle = fillStyle;
+    g.fill();
+  }
 
   var strokeStyle = this.get("strokeStyle");
   if (strokeStyle) {
