@@ -17,74 +17,36 @@ pv.Line.defaults = new pv.Line().extend(pv.Mark.defaults)
     .strokeStyle(pv.Colors.category10);
 
 pv.Line.prototype.render = function(g) {
-  this.renderState = [];
-  if (this.get("visible")) {
+  g.save();
+  var move = true;
 
-    g.save();
-    var move = true;
-    var data = this.get("data");
-    this.root.renderData.unshift(null);
+  for (var i = 0; i < this.scene.length; i++) {
+    var s = this.scene[i];
+    if (!s.visible) {
+      continue; // TODO render fragment
+    }
 
-    this.index = -1;
-    for (var i = 0, d; i < data.length; i++) {
-      pv.Mark.prototype.index = ++this.index;
-      this.root.renderData[0] = d = data[i];
-
-      var l = this.get("left");
-      var r = this.get("right");
-      var t = this.get("top");
-      var b = this.get("bottom");
-
-      var width = g.canvas.width - this.offset("right") - this.offset("left");
-      var height = g.canvas.height - this.offset("bottom") - this.offset("top");
-      if (l == null) {
-        l = width - r;
-      } else {
-        r = width - l;
-      }
-      if (t == null) {
-        t = height - b;
-      } else {
-        b = height - t;
-      }
-
-      var x = l + this.offset("left");
-      var y = t + this.offset("top");
-
-      if (move) {
-        move = false;
-        g.beginPath();
-        g.moveTo(x, y);
-      } else {
-        g.lineTo(x, y);
-      }
-
-      this.renderState[this.index] = {
-          data : d,
-          visible : true,
-          top : t,
-          left : l,
-          bottom : b,
-          right : r,
-        };
+    if (move) {
+      move = false;
+      g.beginPath();
+      g.moveTo(s.left, s.top);
+    } else {
+      g.lineTo(s.left, s.top);
     }
   }
-  delete this.index;
-  pv.Mark.prototype.index = -1;
 
-  var fillStyle = this.get("fillStyle");
-  if (fillStyle) {
-    g.fillStyle = fillStyle;
-    g.fill();
+  /* TODO variable fillStyle, strokeStyle, lineWidth */
+  if (s) {
+    if (s.fillStyle) {
+      g.fillStyle = s.fillStyle;
+      g.fill();
+    }
+    if (s.strokeStyle) {
+      g.lineWidth = s.lineWidth;
+      g.strokeStyle = s.strokeStyle;
+      g.stroke();
+    }
   }
 
-  var strokeStyle = this.get("strokeStyle");
-  if (strokeStyle) {
-    g.lineWidth = this.get("lineWidth");
-    g.strokeStyle = strokeStyle;
-    g.stroke();
-  }
-
-  this.root.renderData.shift();
   g.restore();
 };

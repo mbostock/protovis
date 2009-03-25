@@ -127,12 +127,14 @@ pv.Wedge.upright = function(angle) {
   return (angle < Math.PI / 2) || (angle > 3 * Math.PI / 2);
 };
 
-pv.Wedge.prototype.renderInstance = function(g, d) {
-  var l = this.get("left");
-  var r = this.get("right");
-  var t = this.get("top");
-  var b = this.get("bottom");
+pv.Wedge.prototype.buildImplied = function(s) {
+  pv.Mark.prototype.buildImplied.call(this, s);
+  if (s.endAngle == null) {
+    s.endAngle = s.startAngle + s.angle;
+  }
+};
 
+pv.Wedge.prototype.renderInstance = function(g, s) {
   function path(a0, a1, r0, r1) {
     if ((r0 + r1) == 0) {
       return;
@@ -152,65 +154,17 @@ pv.Wedge.prototype.renderInstance = function(g, d) {
     }
   }
 
-  var width = g.canvas.width - this.offset("right") - this.offset("left");
-  if (l == null) {
-    l = width - r;
-  } else {
-    r = width - l;
-  }
-
-  var height = g.canvas.height - this.offset("bottom") - this.offset("top");
-  if (t == null) {
-    t = height - b;
-  } else {
-    b = height - t;
-  }
-
-  var x = l + this.offset("left");
-  var y = t + this.offset("top");
-
-  var a0 = this.get("startAngle");
-  var a1 = this.get("endAngle");
-
-  if (a1 == null) {
-    a1 = a0 + this.get("angle");
-  }
-
-  var r0 = this.get("innerRadius");
-  var r1 = this.get("outerRadius");
-
-  var fillStyle = this.get("fillStyle");
-  var strokeStyle = this.get("strokeStyle");
-  var lineWidth = this.get("lineWidth");
-
   g.save();
-  g.translate(x, y);
-  path(a0, a1, r0, r1);
-  if (fillStyle) {
-    g.fillStyle = fillStyle;
+  g.translate(s.left, s.top);
+  path(s.startAngle, s.endAngle, s.innerRadius, s.outerRadius);
+  if (s.fillStyle) {
+    g.fillStyle = s.fillStyle;
     g.fill();
   }
-  if (strokeStyle) {
-    g.lineWidth = lineWidth;
-    g.strokeStyle = strokeStyle;
+  if (s.strokeStyle) {
+    g.lineWidth = s.lineWidth;
+    g.strokeStyle = s.strokeStyle;
     g.stroke();
   }
   g.restore();
-
-  this.renderState[this.index] = {
-      data : d,
-      visible : true,
-      top : t,
-      left : l,
-      bottom : b,
-      right : r,
-      startAngle : a0,
-      endAngle : a1,
-      angle : a1 - a0,
-      innerRadius : r0,
-      outerRadius : r1,
-      fillStyle : fillStyle,
-      strokeStyle : strokeStyle,
-      lineWidth : lineWidth,
-    };
 };

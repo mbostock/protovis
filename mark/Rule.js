@@ -78,70 +78,38 @@ pv.Rule.Anchor.prototype.$textBaseline = function(d) {
   return null;
 };
 
-pv.Rule.prototype.renderInstance = function(g, d) {
-  var l = this.get("left");
-  var r = this.get("right");
-  var t = this.get("top");
-  var b = this.get("bottom");
+pv.Rule.prototype.buildImplied = function(s) {
+  s.width = s.height = 0;
 
-  var x0, x1;
-  if (l == null) {
-    if (r == null) { // horizontal: top, bottom
-      l = r = 0;
-      x0 = this.offset("left");
-      x1 = g.canvas.width - this.offset("right");
-    } else { // vertical: right, right + top + bottom
-      l = g.canvas.width - this.offset("right") - this.offset("left") - r;
-      x0 = x1 = l + this.offset("left");
-    }
-  } else if (r == null) { // vertical: left, left + top + bottom
-    r = g.canvas.width - this.offset("right") - this.offset("left") - l;
-    x0 = x1 = l + this.offset("left");
-  } else { // horizontal: top + left + right, bottom + left + right
-    x0 = l + this.offset("left");
-    x1 = g.canvas.width - this.offset("right") - r;
+  var l = s.left;
+  var r = s.right;
+  var t = s.top;
+  var b = s.bottom;
+
+  /* Determine horizontal or vertical orientation. */
+  if (((l == null) && (r == null)) || (r != null)) {
+    s.width = s.parent.width - (l = l || 0) - (r = r || 0);
+  } else if (((t == null) && (b == null)) || (b != null)) {
+    s.height = s.parent.height - (t = t || 0) - (b = b || 0);
   }
 
-  var y0, y1;
-  if (t == null) {
-    if (b == null) { // vertical: left, right
-      b = t = 0;
-      y0 = this.offset("top");
-      y1 = g.canvas.height - this.offset("bottom");
-    } else { // horizontal: bottom, bottom + left + right
-      t = g.canvas.height - this.offset("bottom") - this.offset("top") - b;
-      y0 = y1 = t + this.offset("top");
-    }
-  } else if (b == null) { // horizontal: top, top + left + right
-    b = g.canvas.height - this.offset("bottom") - this.offset("top") - t;
-    y0 = y1 = t + this.offset("top");
-  } else { // vertical: left + top + bottom, right + top + bottom
-    y0 = t + this.offset("top");
-    y1 = g.canvas.height - this.offset("bottom") - b;
-  }
+  s.left = l;
+  s.right = r;
+  s.top = t;
+  s.bottom = b;
 
-  var strokeStyle = this.get("strokeStyle");
-  var lineWidth = this.get("lineWidth");
+  pv.Mark.prototype.buildImplied.call(this, s);
+};
 
-  if (strokeStyle) {
+pv.Rule.prototype.renderInstance = function(g, s) {
+  if (s.strokeStyle) {
     g.save();
-    g.lineWidth = lineWidth;
-    g.strokeStyle = strokeStyle;
+    g.lineWidth = s.lineWidth;
+    g.strokeStyle = s.strokeStyle;
     g.beginPath();
-    g.moveTo(x0, y0);
-    g.lineTo(x1, y1);
+    g.moveTo(s.left, s.top);
+    g.lineTo(s.left + s.width, s.top + s.height);
     g.stroke();
     g.restore();
   }
-
-  this.renderState[this.index] = {
-      data : d,
-      visible : true,
-      top : t,
-      left : l,
-      bottom : b,
-      right : r,
-      strokeStyle : strokeStyle,
-      lineWidth : lineWidth,
-    };
 };

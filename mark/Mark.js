@@ -7,24 +7,27 @@ pv.Mark.toString = function() {
 pv.Mark.property = function(name) {
   return function(v) {
       if (arguments.length) {
-        this["$" + name] = (v instanceof Function)
-            ? v : function() { return v; };
+        this["$" + name] = (v instanceof Function) ? v : function() { return v; };
         return this;
       }
-      return this.renderState[this.index][name];
+      return this.scene[this.index][name];
     };
 };
 
 pv.Mark.prototype.defineProperty = function(name) {
+  if (!this.hasOwnProperty("properties")) {
+    this.properties = (this.properties || []).concat();
+  }
+  this.properties.push(name);
   this[name] = pv.Mark.property(name);
 };
 
 pv.Mark.prototype.type = pv.Mark;
 pv.Mark.prototype.proto = null;
-pv.Mark.prototype.panel = null;
-pv.Mark.prototype.markIndex = -1;
+pv.Mark.prototype.parent = null;
+pv.Mark.prototype.childIndex = -1;
 pv.Mark.prototype.index = -1;
-pv.Mark.prototype.renderState = null;
+pv.Mark.prototype.scene = null;
 pv.Mark.prototype.root = null;
 pv.Mark.prototype.defineProperty("data");
 pv.Mark.prototype.defineProperty("visible");
@@ -37,20 +40,13 @@ pv.Mark.defaults = new pv.Mark()
   .data([null])
   .visible(true);
 
-pv.Mark.prototype.offset = function(name) {
-  var c = this.panel;
-  return c ? c.offset(name) + c.renderState[c.index][name] : 0;
-};
-
 pv.Mark.prototype.extend = function(proto) {
   this.proto = proto;
   return this;
 };
 
 pv.Mark.prototype.add = function(type) {
-  var mark = this.panel.add(type);
-  mark.proto = this;
-  return mark;
+  return this.parent.add(type).extend(this);
 };
 
 pv.Mark.Anchor = function() {
@@ -63,10 +59,10 @@ pv.Mark.Anchor.prototype.name = pv.Mark.property("name");
 pv.Mark.prototype.anchor = function(name) {
   var anchorType = this.type;
   while (!anchorType.Anchor) {
-    anchorType = anchorType.defaults.type;
+    anchorType = anchorType.defaults.proto.type;
   }
   var anchor = new anchorType.Anchor().extend(this).name(name);
-  anchor.panel = this.panel;
+  anchor.parent = this.parent;
   anchor.type = this.type;
   return anchor;
 };
@@ -80,47 +76,98 @@ pv.Mark.prototype.anchorTarget = function() {
 };
 
 pv.Mark.prototype.first = function() {
-  return this.renderState[0];
+  return this.scene[0];
 };
 
 pv.Mark.prototype.last = function() {
-  return this.renderState[this.renderState.length - 1];
+  return this.scene[this.scene.length - 1];
 };
 
 pv.Mark.prototype.sibling = function() {
-  return (this.index == 0) ? null : this.renderState[this.index - 1];
+  return (this.index == 0) ? null : this.scene[this.index - 1];
 };
 
 pv.Mark.prototype.cousin = function(panel, i) {
   var s = panel
-      ? panel.renderState[this.panel.index]
-      : (this.panel && this.panel.sibling());
-  return (s && s.marks)
-      ? s.marks[this.markIndex][(i == undefined) ? this.index : i]
+      ? panel.scene[this.parent.index]
+      : (this.parent && this.parent.sibling());
+  return (s && s.children)
+      ? s.children[this.childIndex][(i == undefined) ? this.index : i]
       : null;
 };
 
-pv.Mark.prototype.render = function(g) {
-  this.renderState = [];
+pv.Mark.prototype.build = function(s) {
+  if (!this.scene) {
+    this.scene = [];
+    if (!this.parent) {
+      s = {};
+      this.scene.data = [];
+    }
+  }
+
   var data = this.get("data");
-  this.root.renderData.unshift(null);
+  this.root.scene.data.unshift(null);
   this.index = -1;
   for (var i = 0, d; i < data.length; i++) {
     pv.Mark.prototype.index = ++this.index;
-    this.root.renderData[0] = d = data[i];
-    if (this.get("visible")) {
-      this.renderInstance(g, d);
-    } else {
-      this.renderState[this.index] = { data : d, visible : false };
-    }
+    this.root.scene.data[0] = d = data[i];
+    this.scene[this.index] = this.get("visible")
+        ? this.buildInstance(s, d) : { data: d, visible: false };
   }
-  this.root.renderData.shift();
+  this.root.scene.data.shift();
   delete this.index;
   pv.Mark.prototype.index = -1;
+
+  return this;
 };
 
-pv.Mark.prototype.dispose = function() {
-  delete this.renderState;
+pv.Mark.prototype.buildInstance = function(s, d) {
+  var p = this.type.prototype;
+  s = { data: d, parent: s, visible: true };
+  for (var i = 0; i < p.properties.length; i++) {
+    var name = p.properties[i];
+    if (!(name in s)) {
+      s[name] = this.get(name);
+    }
+  }
+  this.buildImplied(s);
+  return s;
+};
+
+pv.Mark.prototype.buildImplied = function(s) {
+  var p = this.type.prototype;
+
+  var l = s.left;
+  var r = s.right;
+  var t = s.top;
+  var b = s.bottom;
+  var w = p.width ? s.width : 0;
+  var h = p.height ? s.height : 0;
+
+  var width = s.parent.width;
+  if (w == null) {
+    w = width - (r = r || 0) - (l = l || 0);
+  } else if (r == null) {
+    r = width - w - (l = l || 0);
+  } else if (l == null) {
+    l = width - w - (r = r || 0);
+  }
+
+  var height = s.parent.height;
+  if (h == null) {
+    h = height - (t = t || 0) - (b = b || 0);
+  } else if (b == null) {
+    b = height - h - (t = t || 0);
+  } else if (t == null) {
+    t = height - h - (b = b || 0);
+  }
+
+  s.left = l;
+  s.right = r;
+  s.top = t;
+  s.bottom = b;
+  if (p.width) s.width = w;
+  if (p.height) s.height = h;
 };
 
 pv.Mark.prototype.get = function(name) {
@@ -143,5 +190,16 @@ pv.Mark.prototype.get = function(name) {
   // leaf-level mark), rather than whatever mark defined the property function.
   // This can be confusing because a property function can be called on an
   // object of a different "class", but is useful for logic reuse.
-  return mark["$" + name].apply(this, this.root.renderData);
+  return mark["$" + name].apply(this, this.root.scene.data);
 };
+
+pv.Mark.prototype.render = function(g) {
+  for (var i = 0; i < this.scene.length; i++) {
+    var s = this.scene[i];
+    if (s.visible) {
+      this.renderInstance(g, s);
+    }
+  }
+};
+
+pv.Mark.prototype.renderInstance = function(g, s) {};

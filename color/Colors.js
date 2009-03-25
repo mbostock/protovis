@@ -1,18 +1,18 @@
 pv.Colors = function(values) {
-  var idToColor = {}; // from type-markIndex to assigned color
+  var idToColor = {}; // from type-childIndex to assigned color
   var typeToCount = {}; // from type to number of marks seen (of that type)
 
   function color() {
 
     /* TODO Blech. Need a better solution than this... */
-    if (!this.root.renderState._resetColors) {
+    if (!this.root.scene._resetColors) {
       idToColor = {};
       typeToCount = {};
-      this.root.renderState._resetColors = true;
+      this.root.scene._resetColors = true;
     }
 
     var type = this.type.toString();
-    var id = type + "-" + this.markIndex;
+    var id = type + "-" + this.childIndex;
     var color = idToColor[id];
     if (color == undefined) {
       var count = typeToCount[type] = (typeToCount[type] || 0) + 1;
@@ -23,9 +23,9 @@ pv.Colors = function(values) {
 
   color.values = values;
   color.unique = function() {
-    var index = (this.index == -1) ? this.panel.index : this.index;
-    return values[index % values.length];
-  }
+      var index = (this.index == -1) ? this.parent.index : this.index;
+      return values[index % values.length];
+    };
   return color;
 };
 

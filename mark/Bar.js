@@ -94,67 +94,22 @@ pv.Bar.Anchor.prototype.$textBaseline = function(d) {
   return null;
 };
 
-pv.Bar.style = function(s, g, w, h) {
-  return (s instanceof pv.Gradient) ? s.create(g, w, h) : s;
+pv.Bar.renderStyle = function(style, g, w, h) {
+  return (style instanceof pv.Gradient) ? style.create(g, w, h) : style;
 };
 
-pv.Bar.prototype.renderInstance = function(g, d) {
-  var l = this.get("left");
-  var r = this.get("right");
-  var t = this.get("top");
-  var b = this.get("bottom");
-  var w = this.get("width");
-  var h = this.get("height");
-
-  var width = g.canvas.width - this.offset("right") - this.offset("left");
-  if (l == null) {
-    l = width - w - r;
-  } else if (r == null) {
-    r = width - w - l;
-  } else {
-    w = width - r - l;
-  }
-
-  var height = g.canvas.height - this.offset("bottom") - this.offset("top");
-  if (t == null) {
-    t = height - h - b;
-  } else if (b == null) {
-    b = height - h - t;
-  } else {
-    h = height - t - b;
-  }
-
-  var x = l + this.offset("left");
-  var y = t + this.offset("top");
-
-  var fillStyle = this.get("fillStyle");
-  var strokeStyle = this.get("strokeStyle");
-  var lineWidth = this.get("lineWidth");
-
+pv.Bar.prototype.renderInstance = function(g, s) {
+  var x = s.left, y = s.top, w = s.width, h = s.height;
   g.save();
   g.translate(x, y);
-  if (fillStyle) {
-    g.fillStyle = pv.Bar.style(fillStyle, g, w, h);
+  if (s.fillStyle) {
+    g.fillStyle = pv.Bar.renderStyle(s.fillStyle, g, w, h);
     g.fillRect(0, 0, w, h);
   }
-  if (strokeStyle) {
-    g.lineWidth = lineWidth;
-    g.strokeStyle = pv.Bar.style(strokeStyle, g, w, h);
+  if (s.strokeStyle) {
+    g.lineWidth = s.lineWidth;
+    g.strokeStyle = pv.Bar.renderStyle(s.strokeStyle, g, w, h);
     g.strokeRect(0, 0, w, h);
   }
   g.restore();
-
-  this.renderState[this.index] = {
-      data : d,
-      visible : true,
-      top : t,
-      left : l,
-      bottom : b,
-      right : r,
-      width : w,
-      height : h,
-      fillStyle : fillStyle,
-      strokeStyle : strokeStyle,
-      lineWidth : lineWidth,
-    };
 };

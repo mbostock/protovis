@@ -100,12 +100,7 @@ pv.Dot.prototype.radius = function() {
   return Math.sqrt(this.size());
 };
 
-pv.Dot.prototype.renderInstance = function(g, d) {
-  var l = this.get("left");
-  var r = this.get("right");
-  var t = this.get("top");
-  var b = this.get("bottom");
-
+pv.Dot.prototype.renderInstance = function(g, s) {
   function path(shape, size) {
     g.beginPath();
     var radius = Math.sqrt(size);
@@ -155,57 +150,18 @@ pv.Dot.prototype.renderInstance = function(g, d) {
     }
   }
 
-  var width = g.canvas.width - this.offset("right") - this.offset("left");
-  if (l == null) {
-    l = width - r;
-  } else {
-    r = width - l;
-  }
-
-  var height = g.canvas.height - this.offset("bottom") - this.offset("top");
-  if (t == null) {
-    t = height - b;
-  } else {
-    b = height - t;
-  }
-
-  var x = l + this.offset("left");
-  var y = t + this.offset("top");
-
-  var fillStyle = this.get("fillStyle");
-  var strokeStyle = this.get("strokeStyle");
-  var lineWidth = this.get("lineWidth");
-  var size = this.get("size");
-  var shape = this.get("shape");
-  var angle = this.get("angle");
-
   g.save();
-  g.translate(x, y);
-  g.rotate(angle);
-  path(shape, size);
-  if (fillStyle) {
-    g.fillStyle = fillStyle;
+  g.translate(s.left, s.top);
+  g.rotate(s.angle);
+  path(s.shape, s.size);
+  if (s.fillStyle) {
+    g.fillStyle = s.fillStyle;
     g.fill();
   }
-  if (strokeStyle) {
-    g.lineWidth = lineWidth;
-    g.strokeStyle = strokeStyle;
+  if (s.strokeStyle) {
+    g.lineWidth = s.lineWidth;
+    g.strokeStyle = s.strokeStyle;
     g.stroke();
   }
   g.restore();
-
-  this.renderState[this.index] = {
-      data : d,
-      visible : true,
-      top : t,
-      left : l,
-      bottom : b,
-      right : r,
-      size : size,
-      shape : shape,
-      fillStyle : fillStyle,
-      strokeStyle : strokeStyle,
-      lineWidth : lineWidth,
-      angle : angle,
-    };
 };
