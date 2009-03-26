@@ -213,6 +213,11 @@ pv.Mark.prototype.title = function(s) {
   return this;
 };
 
+pv.Mark.prototype.cursor = function(s) {
+  this.parent.canvas().style.cursor = s;
+  return this;
+};
+
 pv.Mark.prototype.event = function(type, handler) {
   this["on" + type] = handler;
   this.root.$interactive = true;

@@ -117,19 +117,22 @@ pv.Panel.prototype.listen = function() {
   if (!this.$interactive) return; // TODO selective listening
   var that = this;
   function dispatch(e) {
-    that.dispatch(e);
+    if (that.dispatch(e)) {
+      e.preventDefault();
+    }
   }
   for (var i = 0; i < this.scene.length; i++) {
     var c = this.scene[i].canvas;
     c.addEventListener("click", dispatch, false);
-    c.addEventListener("mousedown", dispatch, false);
-    c.addEventListener("mouseup", dispatch, false);
     c.addEventListener("mousemove", dispatch, false);
     c.addEventListener("mouseout", dispatch, false);
+    c.addEventListener("mousedown", dispatch, false);
+    window.addEventListener("mouseup", dispatch, false);
   }
 };
 
 pv.Panel.prototype.dispatch = function(e) {
+  var handled = false;
 
   /* Recursively compute offset for DOM element. */
   function offset(e) {
@@ -152,15 +155,28 @@ pv.Panel.prototype.dispatch = function(e) {
         if ((e.type == "mousemove") && this.onmouseover) {
           s.$mouseover = true;
           this.onmouseover(s.data);
+          handled = true;
         }
       }
-      if (this["on" + e.type]) {
+      if ((e.type != "mouseup") && this["on" + e.type]) {
+        if (e.type == "mousedown") {
+          s.$mousedown = true;
+        }
         this["on" + e.type](s.data);
+        handled = true;
       }
     } else if (s.$mouseover) {
       if ((e.type == "mousemove") || (e.type == "mouseout")) {
         this.onmouseout(s.data);
+        handled = true;
         delete s.$mouseover;
+      }
+    }
+    if (s.$mousedown) {
+      if (e.type == "mouseup") {
+        this.onmouseup(s.data);
+        handled = true;
+        delete s.$mousedown;
       }
     }
 
@@ -195,6 +211,7 @@ pv.Panel.prototype.dispatch = function(e) {
   }
 
   this.update();
+  return handled;
 };
 
 pv.Panel.prototype.contains = function(x, y, s) {
