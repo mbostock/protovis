@@ -7,7 +7,11 @@ pv.Mark.toString = function() {
 pv.Mark.property = function(name) {
   return function(v) {
       if (arguments.length) {
-        this["$" + name] = (v instanceof Function) ? v : function() { return v; };
+        if (this.scene) {
+          this.scene[this.index][name] = v;
+        } else {
+          this["$" + name] = (v instanceof Function) ? v : function() { return v; };
+        }
         return this;
       }
       return this.scene[this.index][name];
@@ -203,3 +207,18 @@ pv.Mark.prototype.render = function(g) {
 };
 
 pv.Mark.prototype.renderInstance = function(g, s) {};
+
+pv.Mark.prototype.title = function(s) {
+  this.parent.canvas().title = s;
+  return this;
+};
+
+pv.Mark.prototype.event = function(type, handler) {
+  this["on" + type] = handler;
+  this.root.$interactive = true;
+  return this;
+};
+
+pv.Mark.prototype.contains = function(x, y, s) {
+  return false;
+};

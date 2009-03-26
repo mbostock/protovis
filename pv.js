@@ -206,3 +206,7 @@ pv.gradient = function() {
   }
   return g;
 };
+
+pv.css = function(e, p) {
+  return parseFloat(self.getComputedStyle(e, null).getPropertyValue(p));
+};

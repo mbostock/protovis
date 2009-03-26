@@ -113,3 +113,9 @@ pv.Bar.prototype.renderInstance = function(g, s) {
   }
   g.restore();
 };
+
+pv.Bar.prototype.contains = function(x, y, s) {
+  var p = s.strokeStyle ? s.lineWidth : 0;
+  return ((s.left - p) <= x) && (x < (s.left + s.width + p))
+      && ((s.top - p) <= y) && (y < (s.top + s.height + p));
+};

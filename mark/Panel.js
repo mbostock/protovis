@@ -26,7 +26,7 @@ pv.Panel.prototype.add = function(type) {
   return child;
 };
 
-pv.Panel.prototype.clear = function(g) {
+pv.Panel.prototype.clear = function() {
   for (var i = 0; i < this.scene.length; i++) {
     var c = this.scene[i].canvas;
     if (!c.$clear) {
@@ -88,10 +88,17 @@ pv.Panel.prototype.buildImplied = function(s) {
 
 pv.Panel.prototype.render = function(g) {
   if (!this.parent) {
+    delete this.scene;
     this.build();
+    this.listen();
+  }
+  this.update(g);
+};
+
+pv.Panel.prototype.update = function(g) {
+  if (!this.parent) {
     this.clear();
   }
-
   for (var i = 0; i < this.scene.length; i++) {
     var s = this.scene[i], sg = g || s.canvas.getContext("2d");
     sg.save();
@@ -104,6 +111,93 @@ pv.Panel.prototype.render = function(g) {
     }
     sg.restore();
   }
+};
 
-  delete this.scene;
+pv.Panel.prototype.listen = function() {
+  if (!this.$interactive) return; // TODO selective listening
+  var that = this;
+  function dispatch(e) {
+    that.dispatch(e);
+  }
+  for (var i = 0; i < this.scene.length; i++) {
+    var c = this.scene[i].canvas;
+    c.addEventListener("click", dispatch, false);
+    c.addEventListener("mousedown", dispatch, false);
+    c.addEventListener("mouseup", dispatch, false);
+    c.addEventListener("mousemove", dispatch, false);
+    c.addEventListener("mouseout", dispatch, false);
+  }
+};
+
+pv.Panel.prototype.dispatch = function(e) {
+
+  /* Recursively compute offset for DOM element. */
+  function offset(e) {
+    var o = {
+        left: pv.css(e, "padding-left") + pv.css(e, "border-left-width"),
+        top: pv.css(e, "padding-top") + pv.css(e, "border-top-width"),
+      };
+    while (e.offsetParent) {
+      o.left += e.offsetLeft;
+      o.top += e.offsetTop;
+      e = e.offsetParent;
+    }
+    return o;
+  }
+
+  /* Recursively visit child panels. TODO prune tree */
+  function visit(x, y, s) {
+    if (this.contains(x, y, s)) {
+      if (!s.$mouseover) {
+        if ((e.type == "mousemove") && this.onmouseover) {
+          s.$mouseover = true;
+          this.onmouseover(s.data);
+        }
+      }
+      if (this["on" + e.type]) {
+        this["on" + e.type](s.data);
+      }
+    } else if (s.$mouseover) {
+      if ((e.type == "mousemove") || (e.type == "mouseout")) {
+        this.onmouseout(s.data);
+        delete s.$mouseover;
+      }
+    }
+
+    if (s.children) {
+      x -= s.left;
+      y -= s.top;
+      for (var i = 0; i < s.children.length; i++) {
+        var c = this.children[i], cs = s.children[i];
+        c.scene = cs;
+        for (var j = 0; j < cs.length; j++) {
+          c.index = j;
+          visit.call(c, x, y, cs[j]);
+          delete c.index;
+        }
+        delete c.scene;
+      }
+    }
+  }
+
+  /* Only root panels can have custom canvases. */
+  var ex = e.pageX, ey = e.pageY;
+  for (var i = 0; i < this.scene.length; i++) {
+    var s = this.scene[i], c = s.canvas, o = c.$offset;
+    if (!o) c.$offset = o = offset(c);
+    this.index = i;
+    visit.call(this, ex - o.left, ey - o.top, s);
+    delete this.index;
+  }
+
+  for (var i = 0; i < this.scene.length; i++) {
+    delete this.scene[i].canvas.$offset;
+  }
+
+  this.update();
+};
+
+pv.Panel.prototype.contains = function(x, y, s) {
+  return (s.left <= x) && (x < (s.left + s.width))
+      && (s.top <= y) && (y < (s.top + s.height));
 };
