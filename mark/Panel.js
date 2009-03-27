@@ -1,5 +1,5 @@
 pv.Panel = function() {
-  pv.Mark.call(this);
+  pv.Bar.call(this);
   this.children = [];
   this.root = this;
 };
@@ -8,14 +8,13 @@ pv.Panel.toString = function() {
   return "panel";
 };
 
-pv.Panel.prototype = pv.Mark.extend();
+pv.Panel.prototype = pv.Bar.extend();
 pv.Panel.prototype.type = pv.Panel;
-pv.Panel.prototype.defineProperty("width");
-pv.Panel.prototype.defineProperty("height");
 pv.Panel.prototype.defineProperty("canvas");
 
-pv.Panel.defaults = new pv.Panel().extend(pv.Mark.defaults)
-    .top(0).left(0).bottom(0).right(0);
+pv.Panel.defaults = new pv.Panel().extend(pv.Bar.defaults)
+    .top(0).left(0).bottom(0).right(0)
+    .fillStyle(null);
 
 pv.Panel.prototype.add = function(type) {
   var child = new type();
@@ -56,7 +55,7 @@ pv.Panel.prototype.createCanvas = function(w, h) {
 };
 
 pv.Panel.prototype.buildInstance = function(s, d) {
-  s = pv.Mark.prototype.buildInstance.call(this, s, d);
+  s = pv.Bar.prototype.buildInstance.call(this, s, d);
   this.scene[this.index] = s;
   s.children = [];
   for (var i = 0; i < this.children.length; i++) {
@@ -83,7 +82,7 @@ pv.Panel.prototype.buildImplied = function(s) {
         s.width + s.left + s.right,
         s.height + s.top + s.bottom);
   }
-  pv.Mark.prototype.buildImplied.call(this, s);
+  pv.Bar.prototype.buildImplied.call(this, s);
 };
 
 pv.Panel.prototype.render = function(g) {
@@ -101,6 +100,7 @@ pv.Panel.prototype.update = function(g) {
   }
   for (var i = 0; i < this.scene.length; i++) {
     var s = this.scene[i], sg = g || s.canvas.getContext("2d");
+    this.renderInstance(sg, s);
     sg.save();
     sg.translate(s.left, s.top);
     for (var j = 0; j < this.children.length; j++) {
@@ -212,9 +212,4 @@ pv.Panel.prototype.dispatch = function(e) {
 
   this.update();
   return handled;
-};
-
-pv.Panel.prototype.contains = function(x, y, s) {
-  return (s.left <= x) && (x < (s.left + s.width))
-      && (s.top <= y) && (y < (s.top + s.height));
 };
