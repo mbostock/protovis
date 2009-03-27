@@ -110,15 +110,16 @@ pv.Mark.prototype.build = function(s) {
   }
 
   var data = this.get("data");
-  this.root.scene.data.unshift(null);
+  var stack = this.root.scene.data;
+  stack.unshift(null);
   this.index = -1;
   for (var i = 0, d; i < data.length; i++) {
     pv.Mark.prototype.index = ++this.index;
-    this.root.scene.data[0] = d = data[i];
+    stack[0] = d = data[i];
     this.scene[this.index] = this.get("visible")
         ? this.buildInstance(s, d) : { data: d, visible: false };
   }
-  this.root.scene.data.shift();
+  stack.shift();
   delete this.index;
   pv.Mark.prototype.index = -1;
 

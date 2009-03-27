@@ -45,7 +45,12 @@ pv.Panel.prototype.createCanvas = function(w, h) {
     }
     return (node == document.body) ? node : node.parentNode;
   }
-  var c = document.createElement("canvas");
+
+  /* Cache the canvas element to reuse across renders. */
+  if (!this.$canvases) this.$canvases = [];
+  var c = this.$canvases[this.index]
+  if (!c) this.$canvases[this.index] = c = document.createElement("canvas");
+
   c.width = w;
   c.height = h;
   pv.$dom // script element for text/javascript+protovis
@@ -123,11 +128,17 @@ pv.Panel.prototype.listen = function() {
   }
   for (var i = 0; i < this.scene.length; i++) {
     var c = this.scene[i].canvas;
-    c.addEventListener("click", dispatch, false);
-    c.addEventListener("mousemove", dispatch, false);
-    c.addEventListener("mouseout", dispatch, false);
-    c.addEventListener("mousedown", dispatch, false);
-    window.addEventListener("mouseup", dispatch, false);
+    if (!c.$listen) {
+      c.$listen = true;
+      c.addEventListener("click", dispatch, false);
+      c.addEventListener("mousemove", dispatch, false);
+      c.addEventListener("mouseout", dispatch, false);
+      c.addEventListener("mousedown", dispatch, false);
+    }
+  }
+  if (!self.$listen) {
+    self.$listen = true;
+    self.addEventListener("mouseup", dispatch, false);
   }
 };
 
