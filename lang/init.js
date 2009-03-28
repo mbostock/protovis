@@ -3,10 +3,10 @@ window.addEventListener("load", function() {
     for (var i = 0; i < scripts.length; i++) {
       if (scripts[i].type == "text/javascript+protovis") {
         try {
-          pv.$dom = scripts[i];
+          pv.Panel.$dom = scripts[i];
           eval(pv.parse(scripts[i].textContent));
         } catch (ignored) {}
-        delete pv.$dom;
+        delete pv.Panel.$dom;
       }
     }
   }, false);

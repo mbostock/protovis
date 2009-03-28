@@ -53,11 +53,7 @@ pv.Image.prototype.buildImplied = function(s) {
 
     s.image = i;
   } else if (s.image instanceof Function) {
-
-    /* Cache the canvas element to reuse across renders. */
-    if (!this.$canvases) this.$canvases = [];
-    var c = this.$canvases[this.index]
-    if (!c) this.$canvases[this.index] = c = document.createElement("canvas");
+    var c = document.createElement("canvas"); // TODO cache?
 
     /* Update the canvas dimensions. */
     var w = s.imageWidth || s.width, h = s.imageHeight || s.height;

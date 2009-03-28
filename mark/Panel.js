@@ -2,6 +2,7 @@ pv.Panel = function() {
   pv.Bar.call(this);
   this.children = [];
   this.root = this;
+  this.$dom = pv.Panel.$dom;
 };
 
 pv.Panel.toString = function() {
@@ -48,14 +49,16 @@ pv.Panel.prototype.createCanvas = function(w, h) {
 
   /* Cache the canvas element to reuse across renders. */
   if (!this.$canvases) this.$canvases = [];
-  var c = this.$canvases[this.index]
-  if (!c) this.$canvases[this.index] = c = document.createElement("canvas");
+  var c = this.$canvases[this.index];
+  if (!c) {
+    this.$canvases[this.index] = c = document.createElement("canvas");
+    this.$dom // script element for text/javascript+protovis
+        ? this.$dom.parentNode.insertBefore(c, this.$dom)
+        : lastChild(document.body).appendChild(c);
+  }
 
   c.width = w;
   c.height = h;
-  pv.$dom // script element for text/javascript+protovis
-      ? pv.$dom.parentNode.insertBefore(c, pv.$dom)
-      : lastChild(document.body).appendChild(c);
   return c;
 };
 
