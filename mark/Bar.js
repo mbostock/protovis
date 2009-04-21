@@ -94,28 +94,29 @@ pv.Bar.Anchor.prototype.$textBaseline = function(d) {
   return null;
 };
 
-pv.Bar.renderStyle = function(style, g, w, h) {
-  return (style instanceof pv.Gradient) ? style.create(g, w, h) : style;
-};
-
-pv.Bar.prototype.renderInstance = function(g, s) {
-  var x = s.left, y = s.top, w = s.width, h = s.height;
-  g.save();
-  g.translate(x, y);
-  if (s.fillStyle) {
-    g.fillStyle = pv.Bar.renderStyle(s.fillStyle, g, w, h);
-    g.fillRect(0, 0, w, h);
+pv.Bar.prototype.updateInstance = function(s) {
+  var v = s.svg;
+  if (s.visible && !v) {
+    v = s.svg = document.createElementNS(pv.ns.svg, "rect");
+    s.parent.svg.appendChild(v);
   }
-  if (s.strokeStyle) {
-    g.lineWidth = s.lineWidth;
-    g.strokeStyle = pv.Bar.renderStyle(s.strokeStyle, g, w, h);
-    g.strokeRect(0, 0, w, h);
-  }
-  g.restore();
-};
 
-pv.Bar.prototype.contains = function(x, y, s) {
-  var p = s.strokeStyle ? s.lineWidth : 0;
-  return ((s.left - p) <= x) && (x < (s.left + s.width + p))
-      && ((s.top - p) <= y) && (y < (s.top + s.height + p));
+  pv.Mark.prototype.updateInstance.call(this, s);
+  if (!s.visible) return;
+
+  v.setAttribute("x", s.left);
+  v.setAttribute("y", s.top);
+
+  /* If width and height are exactly zero, the rect is not stroked! */
+  v.setAttribute("width", Math.max(1E-10, s.width));
+  v.setAttribute("height", Math.max(1E-10, s.height));
+
+  /* TODO gradient, patterns */
+  var fill = new pv.Style(s.fillStyle);
+  v.setAttribute("fill", fill.color);
+  v.setAttribute("fill-opacity", fill.opacity);
+  var stroke = new pv.Style(s.strokeStyle);
+  v.setAttribute("stroke", stroke.color);
+  v.setAttribute("stroke-opacity", stroke.opacity);
+  v.setAttribute("stroke-width", s.lineWidth);
 };

@@ -100,68 +100,75 @@ pv.Dot.prototype.radius = function() {
   return Math.sqrt(this.size());
 };
 
-pv.Dot.prototype.renderInstance = function(g, s) {
-  function path(shape, size) {
-    g.beginPath();
-    var radius = Math.sqrt(size);
-    switch (shape) {
-      case "cross": {
-        g.moveTo(-radius, -radius);
-        g.lineTo(radius, radius);
-        g.moveTo(radius, -radius);
-        g.lineTo(-radius, radius);
-        break;
-      }
-      case "triangle": {
-        var h = radius;
-        var w = radius * 2 / Math.sqrt(3);
-        g.moveTo(0, h);
-        g.lineTo(w, -h);
-        g.lineTo(-w, -h);
-        g.closePath();
-        break;
-      }
-      case "diamond": {
-        radius *= Math.sqrt(2);
-        g.moveTo(0, -radius);
-        g.lineTo(radius, 0);
-        g.lineTo(0, radius);
-        g.lineTo(-radius, 0);
-        g.closePath();
-        break;
-      }
-      case "square": {
-        g.moveTo(-radius, -radius);
-        g.lineTo(radius, -radius);
-        g.lineTo(radius, radius);
-        g.lineTo(-radius, radius);
-        g.closePath();
-        break;
-      }
-      case "tick": {
-        g.moveTo(0, 0);
-        g.lineTo(0, -size);
-        break;
-      }
-      default: {
-        g.arc(0, 0, radius, 0, 2.0 * Math.PI, false);
-        break;
-      }
-    }
+pv.Dot.prototype.updateInstance = function(s) {
+  var v = s.svg;
+  if (s.visible && !v) {
+    v = s.svg = document.createElementNS(pv.ns.svg, "path");
+    s.parent.svg.appendChild(v);
   }
 
-  g.save();
-  g.translate(s.left, s.top);
-  g.rotate(s.angle);
-  path(s.shape, s.size);
-  if (s.fillStyle) {
-    g.fillStyle = s.fillStyle;
-    g.fill();
+  pv.Mark.prototype.updateInstance.call(this, s);
+  if (!s.visible) return;
+
+  v.setAttribute("transform", "translate(" + s.left + "," + s.top +")"
+      + (s.angle ? " rotate(" + 180 * s.angle / Math.PI + ")" : ""));
+
+  /* TODO gradient, patterns? */
+  var fill = new pv.Style(s.fillStyle);
+  v.setAttribute("fill", fill.color);
+  v.setAttribute("fill-opacity", fill.opacity);
+  var stroke = new pv.Style(s.strokeStyle);
+  v.setAttribute("stroke", stroke.color);
+  v.setAttribute("stroke-opacity", stroke.opacity);
+  v.setAttribute("stroke-width", s.lineWidth);
+
+  var radius = Math.sqrt(s.size);
+
+  var d;
+  switch (s.shape) {
+    case "cross": {
+      d = "M" + -radius + "," + -radius
+          + "L" + radius + "," + radius
+          + "M" + radius + "," + -radius
+          + "L" + -radius + "," + radius;
+      break;
+    }
+    case "triangle": {
+      var h = radius, w = radius * 2 / Math.sqrt(3);
+      d = "M0," + h
+          + "L" + w +"," + -h
+          + " " + -w + "," + -h
+          + "Z";
+      break;
+    }
+    case "diamond": {
+      radius *= Math.sqrt(2);
+      d = "M0," + -radius
+          + "L" + radius + ",0"
+          + " 0," + radius
+          + " " + -radius + ",0"
+          + "Z";
+      break;
+    }
+    case "square": {
+      d = "M" + -radius + "," + -radius
+          + "L" + radius + "," + -radius
+          + " " + radius + "," + radius
+          + " " + -radius + "," + radius
+          + "Z";
+      break;
+    }
+    case "tick": {
+      d = "M0,0L0," + -s.size;
+      break;
+    }
+    default: { // circle
+      d = "M0," + radius
+          + "A" + radius + "," + radius + " 0 1,1 0," + (-radius)
+          + "A" + radius + "," + radius + " 0 1,1 0," + radius
+          + "Z";
+      break;
+    }
   }
-  if (s.strokeStyle) {
-    g.lineWidth = s.lineWidth;
-    g.strokeStyle = s.strokeStyle;
-    g.stroke();
-  }
-  g.restore();
+  v.setAttribute("d", d);
 };

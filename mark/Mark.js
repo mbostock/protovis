@@ -39,6 +39,8 @@ pv.Mark.prototype.defineProperty("left");
 pv.Mark.prototype.defineProperty("right");
 pv.Mark.prototype.defineProperty("top");
 pv.Mark.prototype.defineProperty("bottom");
+pv.Mark.prototype.defineProperty("cursor");
+pv.Mark.prototype.defineProperty("title");
 
 pv.Mark.defaults = new pv.Mark()
   .data([null])
@@ -100,11 +102,22 @@ pv.Mark.prototype.cousin = function(panel, i) {
       : null;
 };
 
-pv.Mark.prototype.build = function(s) {
+/**
+ * Renders this mark; includes all children marks if this is a panel. This
+ * method consists of two phases: BUILD and UPDATE.
+ */
+pv.Mark.prototype.render = function() {
+  this.build();
+  this.update();
+};
+
+/**
+ * Evaluates properties and computes implied properties.
+ */
+pv.Mark.prototype.build = function(parent) {
   if (!this.scene) {
     this.scene = [];
     if (!this.parent) {
-      s = {};
       this.scene.data = [];
     }
   }
@@ -115,28 +128,55 @@ pv.Mark.prototype.build = function(s) {
   this.index = -1;
   for (var i = 0, d; i < data.length; i++) {
     pv.Mark.prototype.index = ++this.index;
-    stack[0] = d = data[i];
-    this.scene[this.index] = this.get("visible")
-        ? this.buildInstance(s, d) : { data: d, visible: false };
+    var s = {};
+
+    /*
+     * This is a bit confusing and could be cleaned up. This "scene" stores the
+     * previous scene graph; we want to reuse SVG elements that were created
+     * previously rather than recreating them, so we extract them. We also want
+     * to reuse SVG child elements as well.
+     */
+    if (this.scene[this.index]) {
+      s.svg = this.scene[this.index].svg;
+      s.children = this.scene[this.index].children;
+    }
+    this.scene[this.index] = s;
+
+    s.data = stack[0] = data[i];
+    s.parent = parent;
+    s.visible = this.get("visible");
+    if (s.visible) {
+      this.buildInstance(s);
+    }
   }
   stack.shift();
   delete this.index;
   pv.Mark.prototype.index = -1;
 
+  /* Clear any old instances from the scene. */
+  for (var i = data.length; i < this.scene.length; i++) {
+    this.clearInstance(this.scene[i]);
+  }
+  this.scene.length = data.length;
+
   return this;
 };
 
-pv.Mark.prototype.buildInstance = function(s, d) {
+pv.Mark.prototype.clearInstance = function(s) {
+  if (s.svg) {
+    s.parent.svg.removeChild(s.svg);
+  }
+};
+
+pv.Mark.prototype.buildInstance = function(s) {
   var p = this.type.prototype;
-  s = { data: d, parent: s, visible: true };
   for (var i = 0; i < p.properties.length; i++) {
     var name = p.properties[i];
-    if (!(name in s)) {
+    if (!s[name]) {
       s[name] = this.get(name);
     }
   }
   this.buildImplied(s);
-  return s;
 };
 
 pv.Mark.prototype.buildImplied = function(s) {
@@ -149,7 +189,7 @@ pv.Mark.prototype.buildImplied = function(s) {
   var w = p.width ? s.width : 0;
   var h = p.height ? s.height : 0;
 
-  var width = s.parent.width;
+  var width = s.parent ? s.parent.width : 0;
   if (w == null) {
     w = width - (r = r || 0) - (l = l || 0);
   } else if (r == null) {
@@ -158,7 +198,7 @@ pv.Mark.prototype.buildImplied = function(s) {
     l = width - w - (r = r || 0);
   }
 
-  var height = s.parent.height;
+  var height = s.parent ? s.parent.height : 0;
   if (h == null) {
     h = height - (t = t || 0) - (b = b || 0);
   } else if (b == null) {
@@ -198,33 +238,51 @@ pv.Mark.prototype.get = function(name) {
   return mark["$" + name].apply(this, this.root.scene.data);
 };
 
-pv.Mark.prototype.render = function(g) {
+/**
+ * Previously-computed property values are used to update the display. In cases
+ * where the scene graph has been manipulated externally, this method can be
+ * invoked separately to update the display (e.g., changing the color of a mark
+ * on mouse-over).
+ */
+pv.Mark.prototype.update = function() {
   for (var i = 0; i < this.scene.length; i++) {
-    var s = this.scene[i];
-    if (s.visible) {
-      this.renderInstance(g, s);
-    }
+    this.updateInstance(this.scene[i]);
   }
 };
 
-pv.Mark.prototype.renderInstance = function(g, s) {};
+pv.Mark.prototype.updateInstance = function(s) {
+  var that = this, v = s.svg;
 
-pv.Mark.prototype.title = function(s) {
-  this.parent.canvas().title = s;
-  return this;
-};
+  if (!s.visible) {
+    if (v) v.setAttribute("display", "none");
+    return;
+  }
+  v.removeAttribute("display");
 
-pv.Mark.prototype.cursor = function(s) {
-  this.parent.canvas().style.cursor = s;
-  return this;
+  /* TODO set title via mouseover + mouseout. */
+  if (s.cursor) v.style.cursor = s.cursor;
+
+  function dispatch(type) {
+    return function(e) {
+        /* TODO set full scene stack, index correctly. */
+        that.index = 0;
+        that.scene = [s];
+        that.events[type].call(that, s.data);
+        that.updateInstance(s); // XXX updateInstance, bah!
+        delete that.index;
+        delete that.scene;
+        e.preventDefault();
+      };
+  };
+
+  /* TODO inherit event handlers. */
+  for (var type in this.events) {
+    v["on" + type] = dispatch(type);
+  }
 };
 
 pv.Mark.prototype.event = function(type, handler) {
-  this["on" + type] = handler;
-  this.root.$interactive = true;
+  if (!this.events) this.events = {};
+  this.events[type] = handler;
   return this;
-};
-
-pv.Mark.prototype.contains = function(x, y, s) {
-  return false;
 };

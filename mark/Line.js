@@ -16,37 +16,49 @@ pv.Line.defaults = new pv.Line().extend(pv.Mark.defaults)
     .lineWidth(1.5)
     .strokeStyle(pv.Colors.category10);
 
-pv.Line.prototype.render = function(g) {
-  g.save();
-  var move = true;
+pv.Line.prototype.update = function(g) {
+  if (!this.scene.length) return;
 
-  for (var i = 0; i < this.scene.length; i++) {
-    var s = this.scene[i];
-    if (!s.visible) {
-      continue; // TODO render fragment
+  var s = this.scene[0], v = s.svg;
+  if (s.visible) {
+    if (!v) {
+      v = s.svg = document.createElementNS(pv.ns.svg, "polyline");
+      s.parent.svg.appendChild(v);
     }
 
-    if (move) {
-      move = false;
-      g.beginPath();
-      g.moveTo(s.left, s.top);
-    } else {
-      g.lineTo(s.left, s.top);
+    /* TODO allow points to be changed on events? */
+    var p = "";
+    for (var i = 0; i < this.scene.length; i++) {
+      var si = this.scene[i];
+      if (isNaN(si.left)) si.left = 0;
+      if (isNaN(si.top)) si.top = 0;
+      p += si.left + "," + si.top + " ";
     }
+    v.setAttribute("points", p);
+
+    this.updateInstance(s);
+    v.removeAttribute("display");
+  } else if (v) {
+    v.setAttribute("display", "none");
   }
+};
 
-  /* TODO variable fillStyle, strokeStyle, lineWidth */
-  if (s) {
-    if (s.fillStyle) {
-      g.fillStyle = s.fillStyle;
-      g.fill();
-    }
-    if (s.strokeStyle) {
-      g.lineWidth = s.lineWidth;
-      g.strokeStyle = s.strokeStyle;
-      g.stroke();
-    }
-  }
+/**
+ * For Lines, this method is only invoked after event handlers have updated the
+ * scene graph; it is guaranteed to be called only from the first scene.
+ */
+pv.Line.prototype.updateInstance = function(s) {
+  var v = s.svg;
 
-  g.restore();
+  pv.Mark.prototype.updateInstance.call(this, s);
+  if (!s.visible) return;
+
+  /* TODO gradient, patterns */
+  var fill = new pv.Style(s.fillStyle);
+  v.setAttribute("fill", fill.color);
+  v.setAttribute("fill-opacity", fill.opacity);
+  var stroke = new pv.Style(s.strokeStyle);
+  v.setAttribute("stroke", stroke.color);
+  v.setAttribute("stroke-opacity", stroke.opacity);
+  v.setAttribute("stroke-width", s.lineWidth);
 };

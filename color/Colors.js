@@ -22,10 +22,8 @@ pv.Colors = function(values) {
   }
 
   color.values = values;
-  color.unique = function() {
-      var index = (this.index == -1) ? this.parent.index : this.index;
-      return values[index % values.length];
-    };
+  color.unique = function() { return values[this.index % values.length]; };
+  color.parent = function() { return values[this.parent.index % values.length]; };
   return color;
 };
 

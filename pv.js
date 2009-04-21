@@ -210,3 +210,9 @@ pv.gradient = function() {
 pv.css = function(e, p) {
   return parseFloat(self.getComputedStyle(e, null).getPropertyValue(p));
 };
+
+pv.ns = {
+ svg: "http://www.w3.org/2000/svg",
+ xmlns: "http://www.w3.org/2000/xmlns",
+ xlink: "http://www.w3.org/1999/xlink",
+};

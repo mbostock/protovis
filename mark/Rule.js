@@ -101,15 +101,24 @@ pv.Rule.prototype.buildImplied = function(s) {
   pv.Mark.prototype.buildImplied.call(this, s);
 };
 
-pv.Rule.prototype.renderInstance = function(g, s) {
-  if (s.strokeStyle) {
-    g.save();
-    g.lineWidth = s.lineWidth;
-    g.strokeStyle = s.strokeStyle;
-    g.beginPath();
-    g.moveTo(s.left, s.top);
-    g.lineTo(s.left + s.width, s.top + s.height);
-    g.stroke();
-    g.restore();
+pv.Rule.prototype.updateInstance = function(s) {
+  var v = s.svg;
+  if (s.visible && !v) {
+    v = s.svg = document.createElementNS(pv.ns.svg, "line");
+    s.parent.svg.appendChild(v);
   }
+
+  pv.Mark.prototype.updateInstance.call(this, s);
+  if (!s.visible) return;
+
+  v.setAttribute("x1", s.left);
+  v.setAttribute("y1", s.top);
+  v.setAttribute("x2", s.left + s.width);
+  v.setAttribute("y2", s.top + s.height);
+
+  /* TODO gradient, patterns? */
+  var stroke = new pv.Style(s.strokeStyle);
+  v.setAttribute("stroke", stroke.color);
+  v.setAttribute("stroke-opacity", stroke.opacity);
+  v.setAttribute("stroke-width", s.lineWidth);
 };

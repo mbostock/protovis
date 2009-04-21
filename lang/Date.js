@@ -69,9 +69,17 @@ if (Date.prototype.toLocaleFormat) {
           case '%a': return [
               "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat",
             ][d.getDay()];
-        case '%b': return [
-              "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
-              "Aug", "Sep", "Oct", "Nov", "Dec"
+          case '%A': return [
+              "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
+              "Saturday",
+            ][d.getDay()];
+          case '%b': return [
+              "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep",
+              "Oct", "Nov", "Dec",
+            ][d.getMonth()];
+          case '%B': return [
+              "January", "February", "March", "April", "May", "June", "July",
+              "August", "September", "October", "November", "December",
             ][d.getMonth()];
           case '%S': return d.getSeconds();
           case '%M': return d.getMinutes();

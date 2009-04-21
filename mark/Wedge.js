@@ -134,37 +134,61 @@ pv.Wedge.prototype.buildImplied = function(s) {
   }
 };
 
-pv.Wedge.prototype.renderInstance = function(g, s) {
-  function path(a0, a1, r0, r1) {
-    if ((r0 + r1) == 0) {
-      return;
-    }
-    g.beginPath();
-    if (r0 == 0) {
-      g.moveTo(0, 0);
-      g.arc(0, 0, r1, a0, a1, false);
-    } else if (r0 == r1) {
-      g.arc(0, 0, r0, a0, a1, false);
+pv.Wedge.prototype.updateInstance = function(s) {
+  var v = s.svg;
+  if (s.visible && !v) {
+    v = s.svg = document.createElementNS(pv.ns.svg, "path");
+    v.setAttribute("fill-rule", "evenodd");
+    s.parent.svg.appendChild(v);
+  }
+
+  pv.Mark.prototype.updateInstance.call(this, s);
+  if (!s.visible) return;
+
+  v.setAttribute("transform", "translate(" + s.left + "," + s.top +")");
+
+  var r1 = s.innerRadius, r2 = s.outerRadius;
+  if (s.angle >= 2 * Math.PI) {
+    if (r1) {
+      v.setAttribute("d", "M0," + r2
+          + "A" + r2 + "," + r2 + " 0 1,1 0," + (-r2)
+          + "A" + r2 + "," + r2 + " 0 1,1 0," + r2
+          + "M0," + r1
+          + "A" + r1 + "," + r1 + " 0 1,1 0," + (-r1)
+          + "A" + r1 + "," + r1 + " 0 1,1 0," + r1
+          + "Z");
     } else {
-      g.arc(0, 0, r0, a0, a1, false);
-      g.arc(0, 0, r1, a1, a0, true);
+      v.setAttribute("d", "M0," + r2
+          + "A" + r2 + "," + r2 + " 0 1,1 0," + (-r2)
+          + "A" + r2 + "," + r2 + " 0 1,1 0," + r2
+          + "Z");
     }
-    if (a0 != a1) {
-      g.closePath();
+  } else {
+    var c1 = Math.cos(s.startAngle), c2 = Math.cos(s.endAngle),
+        s1 = Math.sin(s.startAngle), s2 = Math.sin(s.endAngle);
+    if (r1) {
+      v.setAttribute("d", "M" + r2 * c1 + "," + r2 * s1
+          + "A" + r2 + "," + r2 + " 0 "
+          + ((s.angle < Math.PI) ? "0" : "1") + ",1 "
+          + r2 * c2 + "," + r2 * s2
+          + "L" + r1 * c2 + "," + r1 * s2
+          + "A" + r1 + "," + r1 + " 0 "
+          + ((s.angle < Math.PI) ? "0" : "1") + ",0 "
+          + r1 * c1 + "," + r1 * s1 + "Z");
+    } else {
+      v.setAttribute("d", "M" + r2 * c1 + "," + r2 * s1
+          + "A" + r2 + "," + r2 + " 0 "
+          + ((s.angle < Math.PI) ? "0" : "1") + ",1 "
+          + r2 * c2 + "," + r2 * s2 + "L0,0Z");
     }
   }
 
-  g.save();
-  g.translate(s.left, s.top);
-  path(s.startAngle, s.endAngle, s.innerRadius, s.outerRadius);
-  if (s.fillStyle) {
-    g.fillStyle = s.fillStyle;
-    g.fill();
-  }
-  if (s.strokeStyle) {
-    g.lineWidth = s.lineWidth;
-    g.strokeStyle = s.strokeStyle;
-    g.stroke();
-  }
-  g.restore();
+  /* TODO gradient, patterns */
+  var fill = new pv.Style(s.fillStyle);
+  v.setAttribute("fill", fill.color);
+  v.setAttribute("fill-opacity", fill.opacity);
+  var stroke = new pv.Style(s.strokeStyle);
+  v.setAttribute("stroke", stroke.color);
+  v.setAttribute("stroke-opacity", stroke.opacity);
+  v.setAttribute("stroke-width", s.lineWidth);
 };
