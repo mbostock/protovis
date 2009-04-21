@@ -5,11 +5,10 @@ try {
   eval("pv.parse = function(x) x;"); // native support
 } catch (e) {
   pv.parse = function(js) { // hacky regex support
-    var re = new RegExp("function([^)]*)", "g"), m, i = 0;
+    var re = new RegExp("function\\([^)]*\\)\\s*", "mg"), m, i = 0;
     var s = "";
     while (m = re.exec(js)) {
       var j = m.index + m[0].length;
-      while (js[++j] == ' ');
       if (js[j--] != '{') {
         s += js.substring(i, j) + "{return ";
         i = j;
