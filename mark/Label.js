@@ -40,7 +40,7 @@ pv.Label.prototype.updateInstance = function(s) {
   v.setAttribute("transform", "translate(" + s.left + "," + s.top + ")"
       + (s.textAngle ? " rotate(" + 180 * s.textAngle / Math.PI + ")" : ""));
 
-  var dx = 0, dy = 1, a = "middle"; // fudge to match canvas behavior
+  var dx = 0, dy = 0, a = "middle"; // fudge to match canvas behavior
   switch (s.textAlign) {
     case "right": {
       a = "end";

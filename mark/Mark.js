@@ -265,10 +265,14 @@ pv.Mark.prototype.updateInstance = function(s) {
   function dispatch(type) {
     return function(e) {
         /* TODO set full scene stack, index correctly. */
+        var data = [s.data], p = s;
+        while (p = p.parent) {
+          data.push(p.data);
+        }
         that.index = 0;
         that.scene = [s];
-        that.events[type].call(that, s.data);
-        that.updateInstance(s); // XXX updateInstance, bah!
+        that.events[type].apply(that, data);
+        that.updateInstance(that.scene[that.index]); // XXX updateInstance, bah!
         delete that.index;
         delete that.scene;
         e.preventDefault();
