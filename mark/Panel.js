@@ -68,11 +68,23 @@ pv.Panel.prototype.buildImplied = function(s) {
     var c = s.canvas;
     if (c) {
       var d = (typeof c == "string") ? document.getElementById(c) : c;
-      d.innerHTML = ""; // hack to remove all child nodes
-      s.canvas = c = document.createElementNS(pv.ns.svg, "svg");
+
+      /* Clear the container if it's not already associated with this panel. */
+      if (d.$panel != this) {
+        d.$panel = this;
+        delete d.$canvas;
+        d.innerHTML = "";
+      }
+
+      /* Construct the canvas if not already present. */
+      if (!(c = d.$canvas)) {
+        d.$canvas = c = document.createElementNS(pv.ns.svg, "svg");
+        d.appendChild(c);
+      }
+
       c.setAttribute("width", c.$width = pv.css(d, "width"));
       c.setAttribute("height", c.$height = pv.css(d, "height"));
-      d.appendChild(c);
+      s.canvas = c;
       s.width = c.$width - s.left - s.right;
       s.height = c.$height - s.top - s.bottom;
     } else {
