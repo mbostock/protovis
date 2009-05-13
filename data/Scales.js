@@ -154,7 +154,7 @@ pv.Scales.log.values = function(min, max, base, n) {
   var i, j, b, v = z?-1:1;
 
   if (beg == end && beg>0 && Math.pow(base,beg) > min) {
-  	--beg; // decrement to generate more values
+    --beg; // decrement to generate more values
   }
   var array = [];
   for (i = beg; i <= end; ++i) {
@@ -175,13 +175,13 @@ pv.Scales.log.range = function(min, max, base) {
   function lg(x) { return Math.log(x) / Math.log(base); }
   var r = {
     min: (min > 0 ?  Math.pow(base,  Math.floor(lg(min)))
-			: -Math.pow(base, -Math.floor(-lg(-min)))),
+      : -Math.pow(base, -Math.floor(-lg(-min)))),
     max: (max > 0 ?  Math.pow(base,  Math.ceil(lg(max)))
-			: -Math.pow(base, -Math.ceil(-lg(-max))))
+      : -Math.pow(base, -Math.ceil(-lg(-max))))
   };
   if (min < 0 && max > 0) {
     if (Math.abs(min) < base) r.min = Math.floor(min);
-    if (Math.abs(max) < base) r.max = Math.ceil(max);	
+    if (Math.abs(max) < base) r.max = Math.ceil(max);
   }
   return r;
 };
