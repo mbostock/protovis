@@ -94,7 +94,7 @@ pv.normalize = function(array, f) {
   if (!f) {
     f = pv.identity;
   }
-  var sum = array.reduce(function(p, d) { return p + f(d); }, 0);
+  var sum = pv.reduce(array, function(p, d) { return p + f(d); }, 0);
   return array.map(function(d) { return f(d) / sum; });
 };
 
@@ -106,14 +106,14 @@ pv.sum = function(array, f) {
   if (!f) {
     f = pv.identity;
   }
-  return array.reduce(function(p, d) { return p + f(d); }, 0);
+  return pv.reduce(array, function(p, d) { return p + f(d); }, 0);
 };
 
 pv.max = function(array, f) {
   if (!f) {
     f = pv.identity;
   }
-  return array.reduce(function(p, d) { return Math.max(p, f(d)); }, -Infinity);
+  return pv.reduce(array, function(p, d) { return Math.max(p, f(d)); }, -Infinity);
 };
 
 pv.max.index = function(array, f) {
@@ -135,7 +135,7 @@ pv.min = function(array, f) {
   if (!f) {
     f = pv.identity;
   }
-  return array.reduce(function(p, d) { return Math.min(p, f(d)); }, Infinity);
+  return pv.reduce(array, function(p, d) { return Math.min(p, f(d)); }, Infinity);
 };
 
 pv.min.index = function(array, f) {
@@ -167,6 +167,46 @@ pv.median = function(array, f) {
   }
   var i = array.length / 2;
   return (array[i - 1] + array[i]) / 2;
+};
+
+/**
+ * Array reduce was added in JavaScript 1.8. This implementation uses the native
+ * method if provided; otherwise we use our own implementation derived from the
+ * JavaScript documentation. Note that we don't want to add it to the Array
+ * prototype directly because this breaks certain (bad) for loop idioms.
+ */
+if (Array.prototype.reduce) {
+  pv.reduce = function(array, f, v) {
+    var p = Array.prototype;
+    return p.reduce.apply(array, p.slice.call(arguments, 1));
+  };
+} else {
+  pv.reduce = function(array, f, v) {
+    var len = array.length;
+    if (!len && (arguments.length == 2)) {
+      throw new Error();
+    }
+
+    var i = 0;
+    if (arguments.length < 3) {
+      while (true) {
+        if (i in array) {
+          v = array[i++];
+          break;
+        }
+        if (++i >= len) {
+          throw new Error();
+        }
+      }
+    }
+
+    for (; i < len; i++) {
+      if (i in array) {
+        v = f.call(null, v, array[i], i, array);
+      }
+    }
+    return v;
+  };
 };
 
 pv.permute = function(array, permutation, f) {
