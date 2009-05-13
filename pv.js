@@ -255,3 +255,5 @@ pv.ns = {
  xmlns: "http://www.w3.org/2000/xmlns",
  xlink: "http://www.w3.org/1999/xlink",
 };
+
+pv.version = { major: 2, minor: 0 };
