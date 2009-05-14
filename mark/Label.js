@@ -40,30 +40,41 @@ pv.Label.prototype.updateInstance = function(s) {
   v.setAttribute("transform", "translate(" + s.left + "," + s.top + ")"
       + (s.textAngle ? " rotate(" + 180 * s.textAngle / Math.PI + ")" : ""));
 
-  var dx = 0, dy = 0, a = "middle"; // fudge to match canvas behavior
+  switch (s.textBaseline) {
+    case "middle": {
+      v.removeAttribute("y");
+      v.setAttribute("dy", ".4em");
+      break;
+    }
+    case "top": {
+      v.setAttribute("y", s.textMargin);
+      v.setAttribute("dy", ".8em");
+      break;
+    }
+    case "bottom": {
+      v.setAttribute("y", -s.textMargin);
+      v.removeAttribute("dy");
+      break;
+    }
+  }
+
   switch (s.textAlign) {
     case "right": {
-      a = "end";
-      dx -= s.textMargin;
+      v.setAttribute("text-anchor", "end");
+      v.setAttribute("x", -s.textMargin);
+      break;
+    }
+    case "center": {
+      v.setAttribute("text-anchor", "middle");
+      v.removeAttribute("x");
       break;
     }
     case "left": {
-      a = "start";
-      dx += s.textMargin;
+      v.setAttribute("text-anchor", "start");
+      v.setAttribute("x", s.textMargin);
       break;
     }
   }
-  function lineHeight(font) {
-    return Number(/[0-9]+/.exec(font)[0]) * .68;
-  }
-  switch (s.textBaseline) {
-    case "middle": dy += lineHeight(s.font) / 2; break;
-    case "top": dy += lineHeight(s.font) + s.textMargin; break;
-    case "bottom": dy -= s.textMargin; break;
-  }
-  v.setAttribute("x", dx);
-  v.setAttribute("y", dy);
-  v.setAttribute("text-anchor", a);
 
   /* TODO centralize font definition? */
   v.$text.nodeValue = s.text;
