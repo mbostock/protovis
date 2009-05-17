@@ -6,7 +6,7 @@ pv.Line.toString = function() {
   return "line";
 };
 
-pv.Line.prototype = pv.Mark.extend();
+pv.Line.prototype = pv.extend(pv.Mark);
 pv.Line.prototype.type = pv.Line;
 pv.Line.prototype.defineProperty("lineWidth");
 pv.Line.prototype.defineProperty("strokeStyle");

@@ -6,7 +6,7 @@ pv.Rule.toString = function() {
   return "rule";
 };
 
-pv.Rule.prototype = pv.Mark.extend();
+pv.Rule.prototype = pv.extend(pv.Mark);
 pv.Rule.prototype.type = pv.Rule;
 pv.Rule.prototype.defineProperty("lineWidth");
 pv.Rule.prototype.defineProperty("strokeStyle");
@@ -19,7 +19,7 @@ pv.Rule.Anchor = function() {
   pv.Mark.Anchor.call(this);
 };
 
-pv.Rule.Anchor.prototype = pv.Mark.Anchor.extend();
+pv.Rule.Anchor.prototype = pv.extend(pv.Mark.Anchor);
 pv.Rule.Anchor.prototype.type = pv.Rule;
 
 pv.Rule.Anchor.prototype.$left = function(d) {

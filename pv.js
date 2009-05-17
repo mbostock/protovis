@@ -1,5 +1,11 @@
 var pv = {};
 
+pv.extend = function(f) {
+  function g() {}
+  g.prototype = f.prototype;
+  return new g();
+};
+
 /* Function expression support. */
 try {
   eval("pv.parse = function(x) x;"); // native support
@@ -175,7 +181,7 @@ pv.median = function(array, f) {
  * JavaScript documentation. Note that we don't want to add it to the Array
  * prototype directly because this breaks certain (bad) for loop idioms.
  */
-if (Array.prototype.reduce) {
+if (/\[native code\]/.test(Array.prototype.reduce)) {
   pv.reduce = function(array, f, v) {
     var p = Array.prototype;
     return p.reduce.apply(array, p.slice.call(arguments, 1));

@@ -9,7 +9,7 @@ pv.Panel.toString = function() {
   return "panel";
 };
 
-pv.Panel.prototype = pv.Bar.extend();
+pv.Panel.prototype = pv.extend(pv.Bar);
 pv.Panel.prototype.type = pv.Panel;
 pv.Panel.prototype.defineProperty("canvas");
 

@@ -6,7 +6,7 @@ pv.Wedge.toString = function() {
   return "wedge";
 };
 
-pv.Wedge.prototype = pv.Mark.extend();
+pv.Wedge.prototype = pv.extend(pv.Mark);
 pv.Wedge.prototype.type = pv.Wedge;
 pv.Wedge.prototype.defineProperty("startAngle");
 pv.Wedge.prototype.defineProperty("endAngle");
@@ -39,7 +39,7 @@ pv.Wedge.Anchor = function() {
   pv.Mark.Anchor.call(this);
 };
 
-pv.Wedge.Anchor.prototype = pv.Mark.Anchor.extend();
+pv.Wedge.Anchor.prototype = pv.extend(pv.Mark.Anchor);
 pv.Wedge.Anchor.prototype.type = pv.Wedge;
 
 pv.Wedge.Anchor.prototype.$left = function() {

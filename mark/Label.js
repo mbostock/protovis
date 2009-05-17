@@ -6,7 +6,7 @@ pv.Label.toString = function() {
   return "label";
 };
 
-pv.Label.prototype = pv.Mark.extend();
+pv.Label.prototype = pv.extend(pv.Mark);
 pv.Label.prototype.type = pv.Label;
 pv.Label.prototype.defineProperty("text");
 pv.Label.prototype.defineProperty("font");

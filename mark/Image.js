@@ -6,7 +6,7 @@ pv.Image.toString = function() {
   return "image";
 };
 
-pv.Image.prototype = pv.Bar.extend();
+pv.Image.prototype = pv.extend(pv.Bar);
 pv.Image.prototype.type = pv.Image;
 pv.Image.prototype.defineProperty("image");
 pv.Image.prototype.defineProperty("imageWidth");

@@ -59,7 +59,7 @@ pv.Mark.Anchor = function() {
   pv.Mark.call(this);
 };
 
-pv.Mark.Anchor.prototype = pv.Mark.extend();
+pv.Mark.Anchor.prototype = pv.extend(pv.Mark);
 pv.Mark.Anchor.prototype.name = pv.Mark.property("name");
 
 pv.Mark.prototype.anchor = function(name) {

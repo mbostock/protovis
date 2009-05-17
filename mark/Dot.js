@@ -6,7 +6,7 @@ pv.Dot.toString = function() {
   return "dot";
 };
 
-pv.Dot.prototype = pv.Mark.extend();
+pv.Dot.prototype = pv.extend(pv.Mark);
 pv.Dot.prototype.type = pv.Dot;
 pv.Dot.prototype.defineProperty("size");
 pv.Dot.prototype.defineProperty("shape");
@@ -27,7 +27,7 @@ pv.Dot.Anchor = function() {
   pv.Mark.Anchor.call(this);
 };
 
-pv.Dot.Anchor.prototype = pv.Mark.Anchor.extend();
+pv.Dot.Anchor.prototype = pv.extend(pv.Mark.Anchor);
 pv.Dot.Anchor.prototype.type = pv.Dot;
 
 pv.Dot.Anchor.prototype.$left = function(d) {

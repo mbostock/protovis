@@ -6,7 +6,7 @@ pv.Bar.toString = function() {
   return "bar";
 };
 
-pv.Bar.prototype = pv.Mark.extend();
+pv.Bar.prototype = pv.extend(pv.Mark);
 pv.Bar.prototype.type = pv.Bar;
 pv.Bar.prototype.defineProperty("width");
 pv.Bar.prototype.defineProperty("height");
@@ -23,7 +23,7 @@ pv.Bar.Anchor = function() {
   pv.Mark.Anchor.call(this);
 };
 
-pv.Bar.Anchor.prototype = pv.Mark.Anchor.extend();
+pv.Bar.Anchor.prototype = pv.extend(pv.Mark.Anchor);
 pv.Bar.Anchor.prototype.type = pv.Bar;
 
 pv.Bar.Anchor.prototype.$left = function(d) {

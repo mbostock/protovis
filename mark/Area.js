@@ -6,7 +6,7 @@ pv.Area.toString = function() {
   return "area";
 };
 
-pv.Area.prototype = pv.Mark.extend();
+pv.Area.prototype = pv.extend(pv.Mark);
 pv.Area.prototype.type = pv.Area;
 pv.Area.prototype.defineProperty("width");
 pv.Area.prototype.defineProperty("height");
@@ -25,7 +25,7 @@ pv.Area.Anchor = function() {
   pv.Mark.Anchor.call(this);
 };
 
-pv.Area.Anchor.prototype = pv.Mark.Anchor.extend();
+pv.Area.Anchor.prototype = pv.extend(pv.Mark.Anchor);
 pv.Area.Anchor.prototype.type = pv.Area;
 
 pv.Area.Anchor.prototype.$left = function(d) {
