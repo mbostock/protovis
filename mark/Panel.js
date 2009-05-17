@@ -82,11 +82,24 @@ pv.Panel.prototype.buildImplied = function(s) {
         d.appendChild(c);
       }
 
-      c.setAttribute("width", c.$width = pv.css(d, "width"));
-      c.setAttribute("height", c.$height = pv.css(d, "height"));
+      /* If width and height weren't specified, inspect the container. */
+      var w, h;
+      if (s.width == null) {
+        w = pv.css(d, "width");
+        s.width = w - s.left - s.right;
+      } else {
+        w = s.width + s.left + s.right;
+      }
+      if (s.height == null) {
+        h = pv.css(d, "height");
+        s.height = w - s.top - s.bottom;
+      } else {
+        h = s.height + s.top + s.bottom;
+      }
+
+      c.setAttribute("width", w);
+      c.setAttribute("height", h);
       s.canvas = c;
-      s.width = c.$width - s.left - s.right;
-      s.height = c.$height - s.top - s.bottom;
     } else {
       s.canvas = this.createCanvas(
           s.width + s.left + s.right,
