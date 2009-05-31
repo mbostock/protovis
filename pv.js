@@ -215,6 +215,17 @@ if (/\[native code\]/.test(Array.prototype.reduce)) {
   };
 };
 
+pv.dict = function(array, f) {
+  var m = {};
+  for (var i = 0; i < array.length; i++) {
+    if (i in array) {
+      var k = array[i];
+      m[k] = f.call(null, k, i, array);
+    }
+  }
+  return m;
+};
+
 pv.permute = function(array, permutation, f) {
   if (!f) {
     f = pv.identity;
@@ -262,4 +273,4 @@ pv.ns = {
  xlink: "http://www.w3.org/1999/xlink",
 };
 
-pv.version = { major: 2, minor: 0 };
+pv.version = { major: 2, minor: 3 };
