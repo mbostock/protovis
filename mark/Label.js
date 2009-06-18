@@ -15,6 +15,7 @@ pv.Label.prototype.defineProperty("textStyle");
 pv.Label.prototype.defineProperty("textAlign");
 pv.Label.prototype.defineProperty("textBaseline");
 pv.Label.prototype.defineProperty("textMargin");
+pv.Label.prototype.defineProperty("textShadow");
 
 pv.Label.defaults = new pv.Label().extend(pv.Mark.defaults)
     .text(pv.identity)
@@ -78,7 +79,11 @@ pv.Label.prototype.updateInstance = function(s) {
 
   /* TODO centralize font definition? */
   v.$text.nodeValue = s.text;
-  v.setAttribute("style", "font:" + s.font + ";");
+  var style = "font:" + s.font + ";";
+  if (s.textShadow) {
+    style += "text-shadow:" + s.textShadow +";";
+  }
+  v.setAttribute("style", style);
 
   /* TODO gradient, patterns? */
   var fill = new pv.Style(s.textStyle);

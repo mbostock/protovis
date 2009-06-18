@@ -28,7 +28,7 @@ pv.Wedge.defaults = new pv.Wedge().extend(pv.Mark.defaults)
     .fillStyle(pv.Colors.category20.unique);
 
 pv.Wedge.prototype.midRadius = function() {
-  return (this.innerRadius() + this.outerRadius()) / 2;
+  return (this.innerRadius() + 2 * this.outerRadius()) / 3;
 };
 
 pv.Wedge.prototype.midAngle = function() {
