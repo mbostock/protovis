@@ -46,10 +46,9 @@ pv.range = function(start, end, step) {
   if (step == undefined) {
     step = 1;
   }
-  var array = []
-  while (start < end) {
-    array.push(start);
-    start += step;
+  var array = [], i = 0, j;
+  while ((j = start + step * i++) < end) {
+    array.push(j);
   }
   return array;
 };
@@ -273,4 +272,4 @@ pv.ns = {
  xlink: "http://www.w3.org/1999/xlink",
 };
 
-pv.version = { major: 2, minor: 4 };
+pv.version = { major: 2, minor: 5 };
