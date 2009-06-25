@@ -4,7 +4,7 @@ pv.Scales.root = function(min, max, base) {
 
 /**
  * RootScale is a QuantativeScale that performs a root transformation of the
- * data. This could be a square root or any arbitrary power.  A root scale may
+ * data. This could be a square root or any arbitrary power. A root scale may
  * be a many-to-one mapping where the reverse mapping will not be correct.
  */
 pv.Scales.RootScale = function(min, max, base) {
