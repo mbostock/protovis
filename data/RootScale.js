@@ -80,7 +80,7 @@ pv.Scales.RootScale.prototype.nice = function() {
 // TODO: This function needs further testing
 pv.Scales.RootScale.prototype.ruleValues = function() {
   var step = this.step(this._rmin, this._rmax);
-  if (step < 1) step = 1; // bound to 1
+//  if (step < 1) step = 1; // bound to 1
   // TODO: handle decimal values
 
   var s;
