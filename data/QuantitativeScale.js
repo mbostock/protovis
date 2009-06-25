@@ -1,5 +1,5 @@
 /**
- * QuantativeScale is a base class for representing quantitative numerical data
+ * QuantitativeScale is a base class for representing quantitative numerical data
  * scales.
  */
 pv.Scales.QuantitativeScale = function(min, max, base) {
