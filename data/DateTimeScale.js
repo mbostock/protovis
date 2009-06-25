@@ -2,12 +2,12 @@ pv.Scales.dateTime = function(min, max) {
   return new pv.Scales.DateTimeScale(min, max);
 }
 
-/** 
+/**
  * DateTimeScale DateTimeScale scales time data.
  */
 pv.Scales.DateTimeScale = function(min, max) {
-  pv.Scales.Scale.call(this);  
-  
+  pv.Scales.Scale.call(this);
+
   this._min = min;
   this._max = max;
 };
@@ -21,7 +21,7 @@ pv.Scales.DateTimeScale.prototype.min = function(x) {
   } else {
     this._min = x;
     return this;
-  }  
+  }
 };
 
 // Accessor method for max
@@ -38,7 +38,7 @@ pv.Scales.DateTimeScale.prototype.max = function(x) {
 pv.Scales.DateTimeScale.prototype.normalize = function(x) {
   var eps = pv.Scales.epsilon;
   var range = this._max - this._min;
-  
+
   return (range < eps && range > -eps) ? 0 : (x - this._min) / range;
 };
 
@@ -66,7 +66,7 @@ pv.Scales.DateTimeScale.prototype.ruleValues = function() {
   var span = this.span(this._min, this._max);
   var step = this.step(this._min, this._max, span);
   var list = [];
-  
+
   var d = this._min;
   if (span < pv.Scales.DateTimeScale.Span.MONTHS) {
     while (d.valueOf() <= max) {
@@ -82,14 +82,14 @@ pv.Scales.DateTimeScale.prototype.ruleValues = function() {
       d.setMonth(d.getMonth() + step);
     }
   } else { // Span.YEARS
-    step = 1; 
+    step = 1;
     while (d.valueOf() <= max) {
       list.push(d);
       d = new Date(d);
       d.setFullYear(d.getFullYear() + step);
     }
   }
-  
+
   return list;
 };
 
@@ -113,7 +113,7 @@ pv.Scales.DateTimeScale.prototype.round = function(t, span, roundUp) {
   if (span > Span.YEARS) {
     d = new Date(t.getFullYear() + bias, 0);
   } else if (span == Span.MONTHS) {
-    d = new Date(t.getFullYear(), t.getMonth() + bias);	
+    d = new Date(t.getFullYear(), t.getMonth() + bias);
   } else if (span == Span.DAYS) {
     d = new Date(t.getFullYear(), t.getMonth(), t.getDate() + bias);
   } else if (span == Span.HOURS) {
@@ -139,13 +139,13 @@ pv.Scales.DateTimeScale.prototype.span = function(min, max) {
   var days = span / MS_DAY;
 
   // TODO: handle Weeks/Quarters
-  if (days >= 365*2) 		return (1 + max.getFullYear()-min.getFullYear());
-  else if (days >= 60)   	return Span.MONTHS;
-  else if (span/MS_WEEK > 1)	return Span.WEEKS;
-  else if (span/MS_DAY > 1)	return Span.DAYS;
-  else if (span/MS_HOUR > 1)	return Span.HOURS;
-  else if (span/MS_MIN > 1)	return Span.MINUTES;
-  else if (span/1000.0 > 1)	return Span.SECONDS;
+  if (days >= 365*2) return (1 + max.getFullYear()-min.getFullYear());
+  else if (days >= 60) return Span.MONTHS;
+  else if (span/MS_WEEK > 1) return Span.WEEKS;
+  else if (span/MS_DAY > 1) return Span.DAYS;
+  else if (span/MS_HOUR > 1) return Span.HOURS;
+  else if (span/MS_MIN > 1) return Span.MINUTES;
+  else if (span/1000.0 > 1) return Span.SECONDS;
   else return Span.MILLISECONDS;
 }
 

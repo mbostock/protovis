@@ -3,14 +3,13 @@ pv.Scales.ordinal = function(ordinals) {
 }
 
 /**
- * OrdinalScale is a Scale for ordered sequential data.
- * This supports both numeric and non-numeric data, and 
- * simply places each element in sequence using the 
- * ordering found in the input data array. 
+ * OrdinalScale is a Scale for ordered sequential data.  This supports both
+ * numeric and non-numeric data, and simply places each element in sequence
+ * using the ordering found in the input data array.
  */
 pv.Scales.OrdinalScale = function(ordinals) {
   pv.Scales.Scale.call(this);
-  
+
   // The list of ordinals
   this._ordinals = ordinals;
   // Map of ordinal to index
@@ -33,22 +32,22 @@ pv.Scales.OrdinalScale.prototype.ordinals = function(ordinals) {
 // Normalizes the value
 pv.Scales.OrdinalScale.prototype.normalize = function(x) {
   var i = this._map[x];
-  
+
   // if x not an ordinal value(assume x is an index value)
-  if(i == undefined) i = x; 
-  
+  if (i == undefined) i = x;
+
   // Not sure if the value should be shifted
   return (i == undefined) ? -1 : (i + 0.5) / this._ordinals.length;
 };
 
 // Returns the ordinal values for i
-pv.Scales.OrdinalScale.prototype.unnormalize = function(n) { 
-  var i = Math.floor(n * this._ordinals.length - 0.5); 
-  return this._ordinals[i]; 
+pv.Scales.OrdinalScale.prototype.unnormalize = function(n) {
+  var i = Math.floor(n * this._ordinals.length - 0.5);
+  return this._ordinals[i];
 };
 
 // Returns a list of rule values
-pv.Scales.OrdinalScale.prototype.ruleValues = function() {  
+pv.Scales.OrdinalScale.prototype.ruleValues = function() {
   return pv.range(0.5, this._ordinals.length-0.5);
 };
 

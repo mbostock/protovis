@@ -1,19 +1,19 @@
 /**
- * QuantativeScale is a base class for representing 
- * quantitative numerical data scales.
+ * QuantativeScale is a base class for representing quantitative numerical data
+ * scales.
  */
 pv.Scales.QuantitativeScale = function(min, max, base) {
   pv.Scales.Scale.call(this);
-  
+
   if (min instanceof Array) {
     var data = min;
-    
+
     if (base == undefined) base = max;
-    
+
     min = pv.min(data);
     max = pv.max(data);
   }
-  
+
   this._min = min;
   this._max = max;
   this._base = base==undefined ? pv.Scales.defaultBase : base;
@@ -60,6 +60,6 @@ pv.Scales.QuantitativeScale.prototype.contains = function(x) {
 pv.Scales.QuantitativeScale.prototype.step = function(min, max, base) {
   if (!base) base = pv.Scales.defaultBase;
   var exp = Math.round(Math.log(max-min)/Math.log(base)) - 1;
-  
+
   return Math.pow(base, exp);
 };
