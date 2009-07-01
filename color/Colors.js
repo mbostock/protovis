@@ -1,31 +1,51 @@
 pv.Colors = function(values) {
-  var idToColor = {}; // from type-childIndex to assigned color
-  var typeToCount = {}; // from type to number of marks seen (of that type)
 
-  function color() {
+  /*
+   * Each set of colors has an associated (numeric) ID that is used to store a
+   * cache of assigned colors on the root scene. As unique keys are discovered,
+   * a new color is allocated and assigned to the given key.
+   *
+   * The key function determines how uniqueness is determined. By default,
+   * colors are assigned using the mark's childIndex, such that each new mark
+   * added is given a new color. Note that derived marks will not inherit the
+   * exact color of the prototype, but instead inherit the set of colors.
+   */
+  function colors(keyf) {
+    var id = pv.Colors.count++;
 
-    /* TODO Blech. Need a better solution than this... */
-    if (!this.root.scene._resetColors) {
-      idToColor = {};
-      typeToCount = {};
-      this.root.scene._resetColors = true;
-    }
-
-    var type = this.type.toString();
-    var id = type + "-" + this.childIndex;
-    var color = idToColor[id];
-    if (color == undefined) {
-      var count = typeToCount[type] = (typeToCount[type] || 0) + 1;
-      idToColor[id] = color = values[(count - 1) % values.length];
+    function color() {
+      var key = keyf.apply(this, this.root.scene.data);
+      var state = this.root.scene.colors;
+      if (!state) this.root.scene.colors = state = {};
+      if (!state[id]) state[id] = { count: 0 };
+      var color = state[id][key];
+      if (color == undefined) {
+        color = state[id][key] = values[state[id].count++ % values.length];
+      }
+      return color;
     }
     return color;
-  }
+  };
 
-  color.values = values;
-  color.unique = function() { return values[this.index % values.length]; };
-  color.parent = function() { return values[this.parent.index % values.length]; };
-  return color;
+  var c = colors(function() { return this.childIndex; });
+
+  /*
+   * The by function allows a new set of colors to be derived from the current
+   * set using a different key function. For instance, to color marks using the
+   * value of the field "foo", say: pv.Colors.category10.by(function(d) d.foo).
+   * For convenience, "index" and "parent.index" keys are predefined.
+   */
+  c.by = colors;
+  c.unique = c.by(function() { return this.index; });
+  c.parent = c.by(function() { return this.parent.index; });
+
+  /* Or, you can just access the array of color values directly. */
+  c.values = values;
+
+  return c;
 };
+
+pv.Colors.count = 0;
 
 /* From Flare. */
 
