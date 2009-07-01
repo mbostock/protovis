@@ -1,6 +1,6 @@
 pv.Scales.root = function(min, max, base) {
   return new pv.Scales.RootScale(min, max, base);
-}
+};
 
 /**
  * RootScale is a QuantativeScale that performs a root transformation of the
@@ -23,7 +23,7 @@ pv.Scales.RootScale = function(min, max, base) {
 pv.Scales.RootScale.root = function (x, b) {
   var s = (x < 0) ? -1 : 1;
   return s * Math.pow(s * x, 1 / b);
-}
+};
 
 pv.Scales.RootScale.prototype = pv.extend(pv.Scales.QuantitativeScale);
 
@@ -53,7 +53,9 @@ pv.Scales.RootScale.prototype.normalize = function(x) {
   var eps = pv.Scales.epsilon;
   var range = this._rmax - this._rmin;
 
-  return (range < eps && range > -eps) ? 0 : (pv.Scales.RootScale.root(x, this._base) - this._rmin) / (this._rmax - this._rmin);
+  return (range < eps && range > -eps) ? 0
+    : (pv.Scales.RootScale.root(x, this._base) - this._rmin)
+      / (this._rmax - this._rmin);
 };
 
 // Un-normalizes the value

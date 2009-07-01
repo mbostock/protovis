@@ -1,11 +1,10 @@
 pv.Scales.linear = function(min, max, base) {
   return new pv.Scales.LinearScale(min, max, base);
-}
+};
 
 /**
- * LinearScale is a QuantativeScale that spaces
- * values linearly along the scale range.
- * This is the default scale for numeric types.
+ * LinearScale is a QuantativeScale that spaces values linearly along the scale
+ * range. This is the default scale for numeric types.
  */
 pv.Scales.LinearScale = function(min, max, base) {
   pv.Scales.QuantitativeScale.call(this, min, max, base);

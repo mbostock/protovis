@@ -1,6 +1,6 @@
 pv.Scales.log = function(min, max, base) {
   return new pv.Scales.LogScale(min, max, base);
-}
+};
 
 /*
  * LogScale is a QuantativeScale that performs a log transformation of the

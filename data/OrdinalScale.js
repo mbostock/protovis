@@ -1,6 +1,6 @@
 pv.Scales.ordinal = function(ordinals) {
   return new pv.Scales.OrdinalScale(ordinals);
-}
+};
 
 /**
  * OrdinalScale is a Scale for ordered sequential data.  This supports both
@@ -14,7 +14,7 @@ pv.Scales.OrdinalScale = function(ordinals) {
   this._ordinals = ordinals;
   // Map of ordinal to index
   this._map = pv.numerate(ordinals);
-}
+};
 
 pv.Scales.OrdinalScale.prototype = pv.extend(pv.Scales.Scale);
 
@@ -27,7 +27,7 @@ pv.Scales.OrdinalScale.prototype.ordinals = function(ordinals) {
     this._map = pv.numerate(ordinals);
     return this;
   }
-}
+};
 
 // Normalizes the value
 pv.Scales.OrdinalScale.prototype.normalize = function(x) {
@@ -54,4 +54,4 @@ pv.Scales.OrdinalScale.prototype.ruleValues = function() {
 // Returns the width between rules
 pv.Scales.OrdinalScale.prototype.ruleWidth = function() {
   return this.scale(1/this._ordinals.length);
-}
+};

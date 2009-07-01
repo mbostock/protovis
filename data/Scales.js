@@ -60,10 +60,10 @@ pv.Scales.Scale.prototype.rangeMax = function(x) {
 pv.Scales.Scale.prototype.scale = function(x) {
   var v = this._rMin + (this._rMax-this._rMin) * this.normalize(x);
   return this._round ? Math.round(v) : v;
-}
+};
 
 // Returns the inverse scaled value.
 pv.Scales.Scale.prototype.invert = function(y) {
   var n = (y - this._rMin) / (this._rMax - this._rMin);
   return this.unnormalize(n);
-}
+};
