@@ -10,10 +10,18 @@ pv.Scales.ordinal = function(ordinals) {
 pv.Scales.OrdinalScale = function(ordinals) {
   pv.Scales.Scale.call(this);
 
-  // The list of ordinals
-  this._ordinals = ordinals;
-  // Map of ordinal to index
-  this._map = pv.numerate(ordinals);
+  /* Filter the specified ordinals to their unique values. */
+  var seen = {};
+  this._ordinals = [];
+  for (var i = 0; i < ordinals.length; i++) {
+    var o = ordinals[i];
+    if (seen[o] == undefined) {
+      seen[o] = true;
+      this._ordinals.push(o);
+    }
+  }
+
+  this._map = pv.numerate(this._ordinals);
 };
 
 pv.Scales.OrdinalScale.prototype = pv.extend(pv.Scales.Scale);
