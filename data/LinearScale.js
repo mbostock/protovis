@@ -39,12 +39,13 @@ pv.Scales.LinearScale.prototype.nice = function() {
 pv.Scales.LinearScale.prototype.ruleValues = function() {
   var step = this.step(this._min, this._max, this._base);
 
-  var start = Math.floor(this._min/step)*step;
-  var end = Math.ceil(this._max/step)*step;
+  var start = Math.floor(this._min / step) * step;
+  var end = Math.ceil(this._max / step) * step;
 
   var list = pv.range(start, end+step, step);
 
   // Remove precision problems
+  // TODO move to tick rendering, not scales
   if (step < 1) {
     var exp = Math.round(Math.log(step)/Math.log(this._base));
 
