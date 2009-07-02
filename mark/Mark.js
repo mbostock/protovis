@@ -142,6 +142,7 @@ pv.Mark.prototype.build = function(parent) {
     }
     this.scene[this.index] = s;
 
+    s.index = i;
     s.data = stack[0] = data[i];
     s.parent = parent;
     s.visible = this.get("visible");
@@ -264,15 +265,15 @@ pv.Mark.prototype.updateInstance = function(s) {
 
   function dispatch(type) {
     return function(e) {
-        /* TODO set full scene stack, index correctly. */
+        /* TODO set full scene stack. */
         var data = [s.data], p = s;
         while (p = p.parent) {
           data.push(p.data);
         }
-        that.index = 0;
-        that.scene = [s];
+        that.index = s.index;
+        that.scene = s.parent.children[that.childIndex];
         that.events[type].apply(that, data);
-        that.updateInstance(that.scene[that.index]); // XXX updateInstance, bah!
+        that.updateInstance(s); // XXX updateInstance, bah!
         delete that.index;
         delete that.scene;
         e.preventDefault();
