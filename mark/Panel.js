@@ -12,10 +12,12 @@ pv.Panel.toString = function() {
 pv.Panel.prototype = pv.extend(pv.Bar);
 pv.Panel.prototype.type = pv.Panel;
 pv.Panel.prototype.defineProperty("canvas");
+pv.Panel.prototype.defineProperty("reverse");
 
 pv.Panel.defaults = new pv.Panel().extend(pv.Bar.defaults)
     .top(0).left(0).bottom(0).right(0)
-    .fillStyle(null);
+    .fillStyle(null)
+    .reverse(false);
 
 pv.Panel.prototype.add = function(type) {
   var child = new type();
@@ -110,13 +112,14 @@ pv.Panel.prototype.buildImplied = function(s) {
 };
 
 pv.Panel.prototype.update = function() {
+  var appends = [];
   for (var i = 0; i < this.scene.length; i++) {
     var s = this.scene[i];
 
-    var v = s.svg, append = false;
+    var v = s.svg;
     if (!v) {
       v = s.svg = document.createElementNS(pv.ns.svg, "g");
-      append = true;
+      appends.push(s);
     }
 
     this.updateInstance(s);
@@ -126,15 +129,19 @@ pv.Panel.prototype.update = function() {
       c.update();
       delete c.scene;
     }
+  }
 
-    /*
-     * WebKit appears to have a bug where images were not rendered if the <g>
-     * element was appended before it contained any elements. Creating the child
-     * elements first and then appending them solves the problem and is likely
-     * more efficient.
-     */
-    if (append) {
-      (s.parent ? s.parent.svg : s.canvas).appendChild(v);
+  /*
+   * WebKit appears to have a bug where images were not rendered if the <g>
+   * element was appended before it contained any elements. Creating the child
+   * elements first and then appending them solves the problem and is likely
+   * more efficient. Also, it means we can reverse the order easily.
+   */
+  if (appends.length) {
+    if (appends[0].reverse) appends.reverse();
+    for (var i = 0; i < appends.length; i++) {
+      var s = appends[i];
+      (s.parent ? s.parent.svg : s.canvas).appendChild(s.svg);
     }
   }
 };
