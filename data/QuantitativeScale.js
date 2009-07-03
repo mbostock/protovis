@@ -5,15 +5,6 @@
 pv.Scales.QuantitativeScale = function(min, max, base) {
   pv.Scales.Scale.call(this);
 
-  if (min instanceof Array) {
-    var data = min;
-
-    if (base == undefined) base = max;
-
-    min = pv.min(data);
-    max = pv.max(data);
-  }
-
   this._min = min;
   this._max = max;
   this._base = base==undefined ? pv.Scales.defaultBase : base;

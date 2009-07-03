@@ -2,6 +2,10 @@ pv.Scales.root = function(min, max, base) {
   return new pv.Scales.RootScale(min, max, base);
 };
 
+pv.Scales.root.fromData = function(data, f, base) {
+  return new pv.Scales.RootScale(pv.min(data, f), pv.max(data, f), base);
+}
+
 /**
  * RootScale is a QuantativeScale that performs a root transformation of the
  * data. This could be a square root or any arbitrary power. A root scale may

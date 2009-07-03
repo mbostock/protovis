@@ -2,6 +2,10 @@ pv.Scales.log = function(min, max, base) {
   return new pv.Scales.LogScale(min, max, base);
 };
 
+pv.Scales.log.fromData = function(data, f, base) {
+  return new pv.Scales.LogScale(pv.min(data, f), pv.max(data, f), base);
+}
+
 /*
  * LogScale is a QuantativeScale that performs a log transformation of the
  * data. The base of the logarithm is determined by the base property.
