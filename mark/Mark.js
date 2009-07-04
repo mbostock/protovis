@@ -173,7 +173,7 @@ pv.Mark.prototype.buildInstance = function(s) {
   var p = this.type.prototype;
   for (var i = 0; i < p.properties.length; i++) {
     var name = p.properties[i];
-    if (!s[name]) {
+    if (!(name in s)) {
       s[name] = this.get(name);
     }
   }
