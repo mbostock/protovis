@@ -94,7 +94,7 @@ pv.Panel.prototype.buildImplied = function(s) {
       }
       if (s.height == null) {
         h = pv.css(d, "height");
-        s.height = w - s.top - s.bottom;
+        s.height = h - s.top - s.bottom;
       } else {
         h = s.height + s.top + s.bottom;
       }

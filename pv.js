@@ -272,4 +272,4 @@ pv.ns = {
  xlink: "http://www.w3.org/1999/xlink",
 };
 
-pv.version = { major: 2, minor: 4 };
+pv.version = { major: 2, minor: 5 };
