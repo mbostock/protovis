@@ -184,10 +184,10 @@ pv.Wedge.prototype.updateInstance = function(s) {
   }
 
   /* TODO gradient, patterns */
-  var fill = new pv.Style(s.fillStyle);
+  var fill = pv.color(s.fillStyle);
   v.setAttribute("fill", fill.color);
   v.setAttribute("fill-opacity", fill.opacity);
-  var stroke = new pv.Style(s.strokeStyle);
+  var stroke = pv.color(s.strokeStyle);
   v.setAttribute("stroke", stroke.color);
   v.setAttribute("stroke-opacity", stroke.opacity);
   v.setAttribute("stroke-width", s.lineWidth);

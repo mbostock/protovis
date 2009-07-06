@@ -117,7 +117,7 @@ pv.Rule.prototype.updateInstance = function(s) {
   v.setAttribute("y2", s.top + s.height);
 
   /* TODO gradient, patterns? */
-  var stroke = new pv.Style(s.strokeStyle);
+  var stroke = pv.color(s.strokeStyle);
   v.setAttribute("stroke", stroke.color);
   v.setAttribute("stroke-opacity", stroke.opacity);
   v.setAttribute("stroke-width", s.lineWidth);
