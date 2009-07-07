@@ -7,6 +7,9 @@ pv.color = function(style) {
   if (!style || (style == "transparent")) {
     return new pv.Color.Rgb(0, 0, 0, 0);
   }
+  if (style instanceof pv.Color) {
+    return style;
+  }
 
   /* Handle hsl, rgb. */
   var m1 = /([a-z]+)\((.*)\)/i.exec(style);
