@@ -123,11 +123,13 @@ pv.Panel.prototype.update = function() {
     }
 
     this.updateInstance(s);
-    for (var j = 0; j < this.children.length; j++) {
-      var c = this.children[j];
-      c.scene = s.children[j];
-      c.update();
-      delete c.scene;
+    if (s.children) { // check visibility
+      for (var j = 0; j < this.children.length; j++) {
+        var c = this.children[j];
+        c.scene = s.children[j];
+        c.update();
+        delete c.scene;
+      }
     }
   }
 
