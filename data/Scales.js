@@ -56,6 +56,16 @@ pv.Scales.Scale.prototype.rangeMax = function(x) {
   }
 };
 
+// Accessor method for round
+pv.Scales.Scale.prototype.round = function(x) {
+  if (x == undefined) {
+    return this._round;
+  } else {
+    this._round = x;
+    return this;
+  }
+};
+
 //Scales the input to the set range
 pv.Scales.Scale.prototype.scale = function(x) {
   var v = this._rMin + (this._rMax-this._rMin) * this.normalize(x);
