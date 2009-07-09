@@ -260,8 +260,22 @@ pv.Mark.prototype.updateInstance = function(s) {
   }
   v.removeAttribute("display");
 
-  /* TODO set title via mouseover + mouseout. */
+  /* cursor */
   if (s.cursor) v.style.cursor = s.cursor;
+
+  /* title (Safari only supports xlink:title on anchor elements) */
+  if (s.title) {
+    if (!s.svg.$title) {
+      s.svg.$title = document.createElementNS(pv.ns.svg, "a");
+      s.parent.svg.insertBefore(s.svg.$title, s.svg);
+      s.svg.$title.appendChild(s.svg);
+    }
+    s.svg.$title.setAttributeNS(pv.ns.xlink, "title", s.title);
+  } else if (s.svg.$title) {
+    s.parent.svg.insertBefore(s.svg, s.svg.$title);
+    s.parent.svg.removeChild(s.svg.$title);
+    delete s.svg.$title;
+  }
 
   function dispatch(type) {
     return function(e) {
