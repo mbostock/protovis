@@ -610,14 +610,12 @@ pv.Mark.prototype.buildImplied = function(s) {
   var t = s.top;
   var b = s.bottom;
 
-  /*
-   * If this mark type does not support width and height, then assume for the
-   * purposes of the box model that these values are zero.
-   */
+  /* Assume width and height are zero if not supported by this mark type. */
   var p = this.type.prototype;
   var w = p.width ? s.width : 0;
   var h = p.height ? s.height : 0;
 
+  /* Compute implied width, right and left. */
   var width = s.parent ? s.parent.width : 0;
   if (w == null) {
     w = width - (r = r || 0) - (l = l || 0);
@@ -627,6 +625,7 @@ pv.Mark.prototype.buildImplied = function(s) {
     l = width - w - (r = r || 0);
   }
 
+  /* Compute implied height, bottom and top. */
   var height = s.parent ? s.parent.height : 0;
   if (h == null) {
     h = height - (t = t || 0) - (b = b || 0);
@@ -650,7 +649,23 @@ var property; // XXX
 
 /**
  * Evaluates the property function with the specified name for the current data
- * stack.
+ * stack. The data stack, {@code this.root.scene.data}, contains the current
+ * datum, followed by the datum for the enclosing panel, and so on.
+ *
+ * <p>This method first finds the implementing property function by querying the
+ * current mark. If the current mark does not define the property function, the
+ * prototype mark is queried, and so on. If none of the mark prototypes define a
+ * property function with the given name, the type default function is used. If
+ * no default function is provided, this method returns null.
+ *
+ * <p>The context of the property function is {@code this} instance (i.e., the
+ * leaf-level mark), rather than whatever mark defined the property function.
+ * Because of this behavior, a property function may be called on an object of a
+ * different "class" (e.g., a Dot inheriting the fill style from a Line). Also
+ * note that properties are not inherited statically; inheritance happens at the
+ * property function / mark level, not per property value / mark instance. Thus,
+ * even if a Dot extends from a Line, if the Line's fill style is defined using
+ * a function that generates a random color, the Dot may get a different color.
  *
  * @param name the property name.
  * @return the evaluated property value.
@@ -670,20 +685,17 @@ pv.Mark.prototype.get = function(name) {
       break;
     }
   }
-
-  // Note that the property function is applied to the 'this' instance (the
-  // leaf-level mark), rather than whatever mark defined the property function.
-  // This can be confusing because a property function can be called on an
-  // object of a different "class", but is useful for logic reuse.
   property = name; // XXX
   return mark["$" + name].apply(this, this.root.scene.data);
 };
 
 /**
- * Previously-computed property values are used to update the display. In cases
- * where the scene graph has been manipulated externally, this method can be
- * invoked separately to update the display (e.g., changing the color of a mark
- * on mouse-over).
+ * Updates the display, propagating property values computed in the build phase
+ * to the SVG image. This method is typically invoked by {@link #render}, but is
+ * also invoked after an event handler is triggered to update the display of a
+ * specific mark.
+ *
+ * @see #event
  */
 pv.Mark.prototype.update = function() {
   for (var i = 0; i < this.scene.length; i++) {
@@ -691,9 +703,18 @@ pv.Mark.prototype.update = function() {
   }
 };
 
+/**
+ * Updates the display for the specified mark instance {@code s} in the scene
+ * graph. This implementation handles basic properties for all mark types, such
+ * as visibility, cursor and title tooltip. Concrete mark types should override
+ * this method to specify how marks are rendered.
+ *
+ * @param s a node in the scene graph; the instance of the mark to update.
+ */
 pv.Mark.prototype.updateInstance = function(s) {
   var that = this, v = s.svg;
 
+  /* visible */
   if (!s.visible) {
     if (v) v.setAttribute("display", "none");
     return;
@@ -717,6 +738,7 @@ pv.Mark.prototype.updateInstance = function(s) {
     delete s.svg.$title;
   }
 
+  /* event */
   function dispatch(type) {
     return function(e) {
         /* TODO set full scene stack. */
@@ -740,6 +762,54 @@ pv.Mark.prototype.updateInstance = function(s) {
   }
 };
 
+/**
+ * Registers an event handler for the specified event type with this mark. When
+ * an event of the specified type is triggered, the specified handler will be
+ * invoked. The handler is invoked in a similar method to property functions:
+ * the context is {@code this} mark instance, and the arguments are the full
+ * data stack. Event handlers can use property methods to manipulate the display
+ * properties of the mark:
+ *
+ * <pre>m.event("click", function() this.fillStyle("red"));</pre>
+ *
+ * Alternatively, the external data can be manipulated and the visualization
+ * redrawn:
+ *
+ * <pre>m.event("click", function(d) {
+ *     data = all.filter(function(k) k.name == d);
+ *     vis.render();
+ *   });</pre>
+ *
+ * TODO: In the current event handler implementation, only the mark instance
+ * that triggered the event is updated, even if the event handler dirties the
+ * rest of the scene. While this can be ameliorated by explicitly re-rendering,
+ * it would be better and more efficient for the event dispatcher to handle
+ * dirtying and redraw automatically.
+ *
+ * <p>The complete set of event types is defined by SVG; see the reference
+ * below. The set of supported event types is:<ul>
+ *
+ * <li>click
+ * <li>mousedown
+ * <li>mouseup
+ * <li>mouseover
+ * <li>mousemove
+ * <li>mouseout
+ *
+ * </ul>Since Protovis does not specify any concept of focus, it does not
+ * support key events; these should be handled outside the visualization using
+ * standard JavaScript. In the future, support for interaction may be extended
+ * to support additional event types, particularly those most relevant to
+ * interactive visualization, such as selection.
+ *
+ * <p>TODO: In the current implementation, event handlers are not inherited from
+ * prototype marks. They must be defined explicitly on each interactive mark. In
+ * addition, only one event handler for a given event type can be defined; when
+ * specifying multiple event handlers for the same type, only the last one will
+ * be used.
+ *
+ * @see http://www.w3.org/TR/SVGTiny12/interact.html#SVGEvents
+ */
 pv.Mark.prototype.event = function(type, handler) {
   if (!this.events) this.events = {};
   this.events[type] = handler;
