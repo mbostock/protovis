@@ -315,7 +315,7 @@ pv.Mark.Anchor = function() {
 };
 
 pv.Mark.Anchor.prototype = pv.extend(pv.Mark);
-pv.Mark.Anchor.prototype.name = pv.Mark.property("name");
+pv.Mark.Anchor.prototype.defineProperty("name");
 
 pv.Mark.prototype.anchor = function(name) {
   var anchorType = this.type;
