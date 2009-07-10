@@ -5,13 +5,11 @@ pv.ramp = function(start, end) {
 };
 
 pv.Ramp = function(start, end) {
-  var s = start.rgb(), e = end.rgb();
+  var s = start.rgb(), e = end.rgb(), f = pv.identity;
 
-  /* Factory method for a property function with the specified value. */
-  function ramp(f) {
-    return function () {
-        return value(f.apply(this, this.root.scene.data));
-      };
+  /* Property function. */
+  function ramp() {
+    return value(f.apply(this, this.root.scene.data));
   }
 
   /* Interpolates between start and end at value t in [0,1]. */
@@ -27,8 +25,7 @@ pv.Ramp = function(start, end) {
             Math.round(s.b * (1 - t) + e.b * t), a));
   }
 
-  var r = ramp(pv.identity);
-  r.by = ramp;
-  r.value = value;
-  return r;
+  ramp.by = function(v) { f = v; return this; };
+  ramp.value = value;
+  return ramp;
 };
