@@ -1,8 +1,8 @@
 /**
- * Represents a data-driven graphical mark. The {@code Mark} class is the
- * abstract base class for all graphical marks in Protovis; it does not provide
- * any specific rendering functionality, but together with {@link Panel}
- * establishes the core framework.
+ * Represents a data-driven graphical mark. The {@code Mark} class is the base
+ * class for all graphical marks in Protovis; it does not provide any specific
+ * rendering functionality, but together with {@link Panel} establishes the core
+ * framework.
  *
  * <p>Concrete mark types include familiar visual elements such as bars, lines
  * and labels. Although a bar mark may be used to construct a bar chart, marks
@@ -54,30 +54,30 @@ pv.Mark.toString = function() {
  * for each associated datum. The return value of the function is used as the
  * computed property value. The context of the function ({@code this}) is this
  * mark. The arguments to the function are the associated data of this mark and
- * any enclosing panels. For example, to use a linear encoding of numerical data
- * to height, saying
+ * any enclosing panels. For example, a linear encoding of numerical data to
+ * height is specified as
  *
  * <pre>m.height(function(d) d * 100);</pre>
  *
- * will use the specified function to evaluate the height property for each mark
- * instance. This function is stored in the {@code $height} field. The return
- * value of the property method (e.g., {@code m.height}) is this mark ({@code
- * m})).
+ * The expression {@code d * 100} will be evaluated for the height property of
+ * each mark instance. This function is stored in the {@code $height} field. The
+ * return value of the property method (e.g., {@code m.height}) is this mark
+ * ({@code m})).
  *
  * <li>If invoked with a non-function argument, the property is treated as a
- * constant, and wrapped with a simple accessor function. This wrapper function
- * is stored in the equivalent internal ({@code $}-prefixed) field. The return
+ * constant, and wrapped with an accessor function. This wrapper function is
+ * stored in the equivalent internal ({@code $}-prefixed) field. The return
  * value of the property method (e.g., {@code m.height}) is this mark.
  *
- * <li>If invoked from an event handler, the specified value is set on the
- * current instance (i.e., the instance that triggered the event, such as a
- * mouse click). In this case, the value should be a constant and not a
- * function. For example, saying
+ * <li>If invoked from an event handler, the property is set to the specified
+ * value on the current instance (i.e., the instance that triggered the event,
+ * such as a mouse click). In this case, the value should be a constant and not
+ * a function. The return value is this mark. For example, saying
  *
- * <p>this.fillStyle("red");</pre>
+ * <p>this.fillStyle("red").strokeStyle("black");</pre>
  *
- * from a "click" event handler will set the fill color to red for any marks
- * that are clicked.
+ * from a "click" event handler will set the fill color to red, and the stroke
+ * color to black, for any marks that are clicked.
  *
  * <li>If invoked with no arguments, the computed property value for the current
  * mark instance in the scene graph is returned. This facilitates <i>property
@@ -86,9 +86,8 @@ pv.Mark.toString = function() {
  *
  * <pre>m.top(function() this.proto.top() + 10);</pre>
  *
- * Note that this style of invocation is a bit magical and potentially
- * confusing; the index of the mark being evaluated (in the above example,
- * {@code this.proto}) is inherited from the {@code Mark} class and set by this
+ * Note that the index of the mark being evaluated (in the above example, {@code
+ * this.proto}) is inherited from the {@code Mark} class and set by this
  * mark. So, if the fifth element's top property is being evaluated, the fifth
  * instance of {@code this.proto} will similarly be queried for the value of its
  * top property. If the mark being evaluated has a different number of
@@ -168,9 +167,9 @@ pv.Mark.prototype.index = -1;
  * properties.
  *
  * <p>For instance, consider a stacked area chart. The bottom property of the
- * area can be defined using the <i>cousin</i> instance, which is the
- * corresponding area instance in the previous instantiation of the parent
- * panel. In this sample code,
+ * area can be defined using the <i>cousin</i> instance, which is the current
+ * area instance in the previous instantiation of the parent panel. In this
+ * sample code,
  *
  * <pre>new pv.Panel()
  *     .width(150).height(150)
@@ -310,13 +309,52 @@ pv.Mark.prototype.add = function(type) {
   return this.parent.add(type).extend(this);
 };
 
+/**
+ * Represents an anchor on a given mark. An anchor is itself a mark, but without
+ * a visual representation. It serves only to provide useful default properties
+ * that can be inherited by other marks. Each type of mark can define any number
+ * of named anchors for convenience. If the concrete mark type does not define
+ * an anchor implementation specifically, one will be inherited from the mark's
+ * parent class.
+ *
+ * <p>For example, the bar mark provides anchors for its four sides: left,
+ * right, top and bottom. Adding a label to the top anchor of a bar,
+ *
+ * <pre>bar.anchor("top").add(pv.Label);</pre>
+ *
+ * will render a text label on the top edge of the bar; the top anchor defines
+ * the appropriate position properties (top and left), as well as text-rendering
+ * properties for convenience (textAlign and textBaseline).
+ */
 pv.Mark.Anchor = function() {
   pv.Mark.call(this);
 };
-
 pv.Mark.Anchor.prototype = pv.extend(pv.Mark);
+
+/**
+ * The anchor name. The set of supported anchor names is dependent on the
+ * concrete mark type; see the mark type for details. For example, bars support
+ * left, right, top and bottom anchors.
+ *
+ * <p>While anchor names are typically constants, the anchor name is a true
+ * property, which means you can specify a function to compute the anchor name
+ * dynamically. For instance, if you wanted to alternate top and bottom anchors,
+ * saying
+ *
+ * <pre>m.anchor(function() (this.index % 2) ? "top" : "bottom").add(pv.Dot);</pre>
+ *
+ * would have the desired effect.
+ */
 pv.Mark.Anchor.prototype.defineProperty("name");
 
+/**
+ * Returns an anchor with the specified name. While anchor names are typically
+ * constants, the anchor name is a true property, which means you can specify a
+ * function to compute the anchor name dynamically. See the {@link #name}
+ * property for details.
+ *
+ * @param name the anchor name; either a string or a property function.
+ */
 pv.Mark.prototype.anchor = function(name) {
   var anchorType = this.type;
   while (!anchorType.Anchor) {
@@ -328,38 +366,88 @@ pv.Mark.prototype.anchor = function(name) {
   return anchor;
 };
 
+/**
+ * Returns the anchor target of this mark, if it is derived from an anchor;
+ * otherwise returns null. For example, if a label is derived from a bar anchor,
+ *
+ * <pre>bar.anchor("top").add(pv.Label);</pre>
+ *
+ * then property functions on the label can refer to the bar via the {@code
+ * anchorTarget} method. This method is also useful for mark types defining
+ * properties on custom anchors.
+ *
+ * @return the anchor target of this mark; possibly null.
+ */
 pv.Mark.prototype.anchorTarget = function() {
   var target = this;
   while (!(target instanceof pv.Mark.Anchor)) {
     target = target.proto;
+    if (!target) return null;
   }
   return target.proto;
 };
 
+/**
+ * Returns the first instance of this mark in the scene graph. This method can
+ * only be called when the mark is bound to the scene graph (for example, from
+ * an event handler, or within a property function).
+ *
+ * @return a node in the scene graph.
+ */
 pv.Mark.prototype.first = function() {
   return this.scene[0];
 };
 
+/**
+ * Returns the last instance of this mark in the scene graph. This method can
+ * only be called when the mark is bound to the scene graph (for example, from
+ * an event handler, or within a property function). In addition, note that mark
+ * instances are built sequentially, so the last instance of this mark may not
+ * yet be constructed.
+ *
+ * @return a node in the scene graph.
+ */
 pv.Mark.prototype.last = function() {
   return this.scene[this.scene.length - 1];
 };
 
+/**
+ * Returns the previous instance of this mark in the scene graph, or null if
+ * this is the first instance.
+ *
+ * @return a node in the scene graph, or null.
+ */
 pv.Mark.prototype.sibling = function() {
   return (this.index == 0) ? null : this.scene[this.index - 1];
 };
 
-pv.Mark.prototype.cousin = function(panel, i) {
-  var s = panel
-      ? panel.scene[this.parent.index]
-      : (this.parent && this.parent.sibling());
-  return (s && s.children)
-      ? s.children[this.childIndex][(i == undefined) ? this.index : i]
-      : null;
+/**
+ * Returns the current instance in the scene graph of this mark, in the previous
+ * instance of the enclsoing parent panel. May return null if this instance
+ * could not be found.
+ *
+ * @return a node in the scene graph, or null.
+ */
+pv.Mark.prototype.cousin = function() {
+  var p = this.parent, s = p && p.sibling();
+  return (s && s.children) ? s.children[this.childIndex][this.index] : null;
 };
 
 /**
- * Renders this mark; includes all children marks if this is a panel. This
- * method consists of two phases: BUILD and UPDATE.
+ * Renders this mark, including recursively rendering all child marks if this is
+ * a panel. Rendering consists of two phases: <b>build</b> and <b>update</b>. In
+ * the future, the update phase could conceivably be decoupled to allow
+ * different rendering engines. Similarly, future work is needed to allow
+ * dynamic rebuilding based on interaction. (For example, dynamic expansion of a
+ * tree visualization.)
+ *
+ * <p>In the build phase (see {@link #build}), all properties are evaluated, and
+ * the scene graph is generated. However, nothing is rendered.
+ *
+ * <p>In the update phase (see {@link #update}), the mark is rendered by
+ * creating and updating elements and attributes in the SVG image. No properties
+ * are evaluated during the update phase; instead the values computed previously
+ * in the build phase are simply translated into SVG.
  */
 pv.Mark.prototype.render = function() {
   this.build();
@@ -367,7 +455,38 @@ pv.Mark.prototype.render = function() {
 };
 
 /**
- * Evaluates properties and computes implied properties.
+ * Evaluates properties and computes implied properties. Properties are stored
+ * in the {@link #scene} array for each instance of this mark.
+ *
+ * <p>As marks are built recursively, the {@link #index} property is updated to
+ * match the current index into the data array for each mark. Note that the
+ * index property is only set for the mark currently being built and its
+ * enclosing parent panels. The index property for other marks is unset, but is
+ * inherited from the global {@code Mark} class prototype. This allows mark
+ * properties to refer to properties on other marks <i>in the same panel</i>
+ * conveniently; however, in general it is better to reference mark instances
+ * specifically through the scene graph rather than depending on the magical
+ * behavior of {@link #index}.
+ *
+ * <p>The root scene array has a special property, {@code data}, which stores
+ * the current data stack. The first element in this stack is the current datum,
+ * followed by the datum of the enclosing parent panel, and so on. The data
+ * stack should not be accessed directly; instead, property functions are passed
+ * the current data stack as arguments.
+ *
+ * <p>The evaluation of the {@code data} and {@code visible} properties is
+ * special. The {@code data} property is evaluated first; unlike the other
+ * properties, the data stack is from the parent panel, rather than the current
+ * mark, since the data is not defined until the data property is evaluated.
+ * The {@code visisble} property is subsequently evaluated for each instance;
+ * only if true will the {@link #buildInstance} method be called, evaluating
+ * other properties and recursively building the scene graph.
+ *
+ * <p>If this mark is being re-built, any old instances of this mark that no
+ * longer exist (because the new data array contains fewer elements) will be
+ * cleared using {@link #clearInstance}.
+ *
+ * @param parent the instance of the parent panel from the scene graph.
  */
 pv.Mark.prototype.build = function(parent) {
   if (!this.scene) {
@@ -421,12 +540,33 @@ pv.Mark.prototype.build = function(parent) {
   return this;
 };
 
+/**
+ * Removes the specified mark instance from the SVG image. This method depends
+ * on the {@code svg} property of the scene graph node. If the specified mark
+ * instance was not present in the SVG image (for example, because it was not
+ * visible), this method has no effect.
+ *
+ * @param s a node in the scene graph; the instance of the mark to clear.
+ */
 pv.Mark.prototype.clearInstance = function(s) {
   if (s.svg) {
     s.parent.svg.removeChild(s.svg);
   }
 };
 
+/**
+ * Evaluates all of the properties for this mark for the specified instance
+ * {@code s} in the scene graph. The set of properties to evaluate is retrieved
+ * from the {@link #properties} array for this mark type (see {@link #type}).
+ * After these properties are evaluated, any <b>implied</b> properties may be
+ * computed by the mark and set on the scene graph; see {@link #buildImplied}.
+ *
+ * <p>For panels, this method recursively builds the scene graph for all child
+ * marks as well. In general, this method should not need to be overridden by
+ * concrete mark types.
+ *
+ * @param s a node in the scene graph; the instance of the mark to build.
+ */
 pv.Mark.prototype.buildInstance = function(s) {
   var p = this.type.prototype;
   for (var i = 0; i < p.properties.length; i++) {
@@ -438,13 +578,43 @@ pv.Mark.prototype.buildInstance = function(s) {
   this.buildImplied(s);
 };
 
+/**
+ * Computes the implied properties for this mark for the specified instance
+ * {@code s} in the scene graph. Implied properties are those with dependencies
+ * on multiple other properties; for example, the width property may be implied
+ * if the left and right properties are set. This method can be overridden by
+ * concrete mark types to define new implied properties, if necessary.
+ *
+ * <p>The default implementation computes the implied CSS box model properties.
+ * The prioritization of redundant properties is as follows:<ol>
+ *
+ * <li>If the {@code width} property is not specified (i.e., null), its value is
+ * the width of the parent panel, minus this mark's left and right margins; the
+ * left and right margins are zero if not specified.
+ *
+ * <li>Otherwise, if the {@code right} margin is not specified, its value is the
+ * width of the parent panel, minus this mark's width and left margin; the left
+ * margin is zero if not specified.
+ *
+ * <li>Otherwise, if the {@code left} property is not specified, its value is
+ * the width of the parent panel, minus this mark's width and the right margin.
+ *
+ * </ol>This prioritization is then duplicated for the {@code height}, {@code
+ * bottom} and {@code top} properties, respectively.
+ *
+ * @param s a node in the scene graph; the instance of the mark to build.
+ */
 pv.Mark.prototype.buildImplied = function(s) {
-  var p = this.type.prototype;
-
   var l = s.left;
   var r = s.right;
   var t = s.top;
   var b = s.bottom;
+
+  /*
+   * If this mark type does not support width and height, then assume for the
+   * purposes of the box model that these values are zero.
+   */
+  var p = this.type.prototype;
   var w = p.width ? s.width : 0;
   var h = p.height ? s.height : 0;
 
@@ -470,12 +640,21 @@ pv.Mark.prototype.buildImplied = function(s) {
   s.right = r;
   s.top = t;
   s.bottom = b;
+
+  /* Only set width and height if they are supported by this mark type. */
   if (p.width) s.width = w;
   if (p.height) s.height = h;
 };
 
 var property; // XXX
 
+/**
+ * Evaluates the property function with the specified name for the current data
+ * stack.
+ *
+ * @param name the property name.
+ * @return the evaluated property value.
+ */
 pv.Mark.prototype.get = function(name) {
   var mark = this;
   while (!mark["$" + name]) {
