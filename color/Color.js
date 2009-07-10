@@ -47,7 +47,7 @@ pv.color = function(style) {
 };
 
 pv.Color.Rgb = function(r, g, b, a) {
-  pv.Color.call(this, "rgb(" + r + "," + g + "," + b + ")", a);
+  pv.Color.call(this, a ? ("rgb(" + r + "," + g + "," + b + ")") : "none", a);
   this.r = r; // [0,255], integer
   this.g = g; // [0,255], integer
   this.b = b; // [0,255], integer
