@@ -284,11 +284,28 @@ pv.Mark.defaults = new pv.Mark()
   .data([null])
   .visible(true);
 
+/**
+ * Sets the prototype of this mark to the specified mark. Any properties not
+ * defined on this mark may be inherited from the specified prototype mark, or
+ * its prototype, and so on. The prototype mark need not be the same type of
+ * mark as this mark. (Note that for inheritance to be useful, properties with
+ * the same name on different mark types should have equivalent meaning.)
+ *
+ * @param proto the new prototype.
+ * @return this mark.
+ */
 pv.Mark.prototype.extend = function(proto) {
   this.proto = proto;
   return this;
 };
 
+/**
+ * Adds a new mark of the specified type to the enclosing parent panel, whilst
+ * simultaneously setting the prototype of the new mark to be this mark.
+ *
+ * @param type the type of mark to add.
+ * @return the new mark.
+ */
 pv.Mark.prototype.add = function(type) {
   return this.parent.add(type).extend(this);
 };
