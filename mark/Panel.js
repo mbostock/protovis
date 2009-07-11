@@ -132,21 +132,70 @@ pv.Panel.prototype.createCanvas = function(w, h) {
   return c;
 };
 
+/**
+ * Evaluates all of the properties for this panel for the specified instance
+ * {@code s} in the scene graph, including recursively building the scene graph
+ * for child marks.
+ *
+ * @param s a node in the scene graph; the instance of the panel to build.
+ * @see Mark#scene
+ */
 pv.Panel.prototype.buildInstance = function(s) {
   pv.Bar.prototype.buildInstance.call(this, s);
-  if (!s.children) s.children = [];
+
+  /*
+   * Build each child, passing in the parent (this panel) scene graph node. The
+   * child mark's scene is initialized from the corresponding entry in the
+   * existing scene graph, such that properties from the previous build can be
+   * reused; this is largely to facilitate the recycling of SVG elements.
+   */
   for (var i = 0; i < this.children.length; i++) {
     this.children[i].scene = s.children[i] || [];
     this.children[i].build(s);
   }
+
+  /*
+   * Once the child marks have been built, the new scene graph nodes are removed
+   * from the child marks and placed into the scene graph. The nodes cannot
+   * remain on the child nodes because this panel (or a parent panel) may be
+   * instantiated multiple times!
+   */
   for (var i = 0; i < this.children.length; i++) {
     s.children[i] = this.children[i].scene;
     delete this.children[i].scene;
   }
+
+  /* Delete any expired child scenes, should child marks have been removed. */
   s.children.length = this.children.length;
 };
 
+/**
+ * Computes the implied properties for this panel for the specified instance
+ * {@code s} in the scene graph. Panels have two implied properties:<ul>
+ *
+ * <li>The {@code canvas} property references the DOM element, typically a DIV,
+ * that contains the SVG element that is used to display the visualization. This
+ * property may be specified as a string, referring to the unique ID of the
+ * element in the DOM. The string is converted to a reference to the DOM
+ * element. The width and height of the SVG element is inferred from this DOM
+ * element. If no canvas property is specified, a new SVG element is created and
+ * inserted into the document, using the panel dimensions; see {@link
+ * #createCanvas}.
+ *
+ * <li>The {@code children} array, while not a property per se, contains the
+ * scene graph for each child mark. This array is initialized to be empty, and
+ * is populated above in {@link #buildInstance}.
+ *
+ * </ul>The current implementation creates the SVG element, if necessary, during
+ * the build phase; in the future, it may be preferrable to move this to the
+ * update phase, although then the canvas property would be undefined. In
+ * addition, DOM inspection is necessary to define the implied width and height
+ * properties that may be inferred from the DOM.
+ *
+ * @param s a node in the scene graph; the instance of the panel to build.
+ */
 pv.Panel.prototype.buildImplied = function(s) {
+  if (!s.children) s.children = [];
   if (!s.parent) {
     var c = s.canvas;
     if (c) {
@@ -194,17 +243,26 @@ pv.Panel.prototype.buildImplied = function(s) {
   pv.Bar.prototype.buildImplied.call(this, s);
 };
 
+/**
+ * Updates the display, propagating property values computed in the build phase
+ * to the SVG image. In addition to the SVG element that serves as the canvas,
+ * each panel instance has a corresponding {@code g} (container) element. The
+ * {@code g} element uses the {@code transform} attribute to offset the location
+ * of contained graphical elements.
+ */
 pv.Panel.prototype.update = function() {
   var appends = [];
   for (var i = 0; i < this.scene.length; i++) {
     var s = this.scene[i];
 
+    /* Create the <svg:g> element, if necessary. */
     var v = s.svg;
     if (!v) {
       v = s.svg = document.createElementNS(pv.ns.svg, "g");
       appends.push(s);
     }
 
+    /* Update this instance, recursively including child marks. */
     this.updateInstance(s);
     if (s.children) { // check visibility
       for (var j = 0; j < this.children.length; j++) {
@@ -217,10 +275,10 @@ pv.Panel.prototype.update = function() {
   }
 
   /*
-   * WebKit appears to have a bug where images were not rendered if the <g>
-   * element was appended before it contained any elements. Creating the child
-   * elements first and then appending them solves the problem and is likely
-   * more efficient. Also, it means we can reverse the order easily.
+   * WebKit appears has a bug where images are not rendered if the <g> element
+   * is appended before it contained any elements. Creating the child elements
+   * first and then appending them solves the problem and is likely more
+   * efficient. Also, it means we can reverse the order easily.
    */
   if (appends.length) {
     if (appends[0].reverse) appends.reverse();
@@ -231,19 +289,20 @@ pv.Panel.prototype.update = function() {
   }
 };
 
-/*
- * TODO fill and stroke on the <g> element does not render a box, but are
- * instead inherited by child elements. In order to render any fill and
- * stroke associated with the panel itself, we must create another <rect>
- * element.
+/**
+ * Updates the display for the specified panel instance {@code s} in the scene
+ * graph. This implementation handles the fill and stroke style for the panel,
+ * as well as any necessary transform to offset the location of contained marks.
  *
- * TODO As a performance optimization, it may also be possible to assign
- * constant property values (or even the most common value for each
- * property) as attributes on the <g> element so they can be inherited.
+ * <p>TODO: As a performance optimization, it may also be possible to assign
+ * constant property values (or even the most common value for each property) as
+ * attributes on the <g> element so they can be inherited.
+ *
+ * @param s a node in the scene graph; the instance of the panel to update.
  */
-
 pv.Panel.prototype.updateInstance = function(s) {
   // TODO visibility?
+  // TODO width, height -- should affect contained rect? what about SVG / DOM?
 
   /* fillStyle, strokeStyle */
   var r = s.svg.$rect;
@@ -268,7 +327,10 @@ pv.Panel.prototype.updateInstance = function(s) {
     delete s.svg.$rect;
   }
 
+  /* left, top */
   if (s.left || s.top) {
     s.svg.setAttribute("transform", "translate(" + s.left + "," + s.top +")");
+  } else {
+    s.svg.removeAttribute("transform");
   }
 };
