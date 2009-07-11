@@ -1,19 +1,73 @@
+/**
+ * Represents a container mark. Panels allow repeated or nested structures,
+ * commonly used in small multiple displays where a small visualization is tiled
+ * to facilitate comparison across one or more dimensions. Other types of
+ * visualizations may benefit from repeated and possibly overlapping structure
+ * as well, such as stacked area charts. Panels can also offset the position of
+ * marks to provide padding from surrounding content.
+ *
+ * <p>All Protovis displays have at least one panel; this is the root panel to
+ * which marks are rendered. The box model properties (four margins, width and
+ * height) are used to offset the positions of contained marks. The data
+ * property determines the panel count: a panel is generated once per associated
+ * datum. When nested panels are used, property functions can declare additional
+ * arguments to access the data associated with enclosing panels.
+ *
+ * <p>Panels can be rendered inline, facilitating the creation of sparklines.
+ * This allows designers to reuse browser layout features, such as text flow and
+ * tables; designers can also overlay HTML elements such as rich text and
+ * images.
+ *
+ * <p>All panels have a {@code children} array (possibly empty) containing the
+ * child marks in the order they were added. Panels also have a {@code root}
+ * field which points to the root (outermost) panel; the root panel's root field
+ * points to itself.
+ */
 pv.Panel = function() {
   pv.Bar.call(this);
   this.children = [];
   this.root = this;
+
+  /*
+   * The internal $dom field is set by the Protovis loader; see lang/init.js. It
+   * refers to the script element that contains the Protovis specification, so
+   * that the panel knows where in the DOM to insert the generated SVG element.
+   */
   this.$dom = pv.Panel.$dom;
 };
-
-pv.Panel.toString = function() {
-  return "panel";
-};
-
 pv.Panel.prototype = pv.extend(pv.Bar);
 pv.Panel.prototype.type = pv.Panel;
+pv.Panel.toString = function() { return "panel"; };
+
+/**
+ * The canvas element; either the string ID of the canvas element in the current
+ * document, or a reference to the canvas element itself. If null, a canvas
+ * element will be created and inserted into the document at the location of the
+ * script element containing the current Protovis specification. This property
+ * only applies to root panels and is ignored on nested panels.
+ *
+ * <p>Note: the "canvas" element here refers to a {@code div} (or other suitable
+ * HTML container element), <i>not</i> a {@code canvas} element. The name of
+ * this property is a historical anachronism from the first implementation that
+ * used HTML 5 canvas, rather than SVG.
+ */
 pv.Panel.prototype.defineProperty("canvas");
+
+/**
+ * The reverse property; a boolean determining whether child marks are ordered
+ * from front-to-back or back-to-front. SVG does not support explicit
+ * z-ordering; shapes are rendered in the order they appear. Thus, by default,
+ * child marks are rendered in the order they are added to the panel. Setting
+ * the reverse property to false reverses the order in which they are added to
+ * the SVG element; however, the properties are still evaluated (i.e., built) in
+ * forward order.
+ */
 pv.Panel.prototype.defineProperty("reverse");
 
+/**
+ * Default properties for panels. By default, the margins are zero, the fill
+ * style is transparent, and the reverse property is false.
+ */
 pv.Panel.defaults = new pv.Panel().extend(pv.Bar.defaults)
     .top(0).left(0).bottom(0).right(0)
     .fillStyle(null)
