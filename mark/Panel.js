@@ -309,8 +309,6 @@ pv.Panel.prototype.updateInstance = function(s) {
   if (s.fillStyle || s.strokeStyle) {
     if (!r) {
       r = s.svg.$rect = document.createElementNS(pv.ns.svg, "rect");
-      r.setAttribute("width", "100%");
-      r.setAttribute("height", "100%");
       s.svg.insertBefore(r, s.svg.firstChild);
     }
 
@@ -322,6 +320,8 @@ pv.Panel.prototype.updateInstance = function(s) {
     r.setAttribute("stroke", stroke.color);
     r.setAttribute("stroke-opacity", stroke.opacity);
     r.setAttribute("stroke-width", s.lineWidth);
+    r.setAttribute("width", s.width);
+    r.setAttribute("height", s.height);
   } else if (r) {
     s.svg.removeChild(r);
     delete s.svg.$rect;
