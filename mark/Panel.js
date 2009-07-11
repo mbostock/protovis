@@ -73,6 +73,17 @@ pv.Panel.defaults = new pv.Panel().extend(pv.Bar.defaults)
     .fillStyle(null)
     .reverse(false);
 
+/**
+ * Adds a new mark of the specified type to this panel. Unlike the normal {@link
+ * Mark#add} behavior, adding a mark to a panel does not cause the mark to
+ * inherit from the panel. Since the contained marks are offset by the panel
+ * margins already, inheriting properties is generally undesirable; of course,
+ * it is always possible to change this behavior by calling {@link Mark#extend}
+ * explicitly.
+ *
+ * @param type the type of the new mark to add.
+ * @return the new mark.
+ */
 pv.Panel.prototype.add = function(type) {
   var child = new type();
   child.parent = this;
@@ -82,26 +93,42 @@ pv.Panel.prototype.add = function(type) {
   return child;
 };
 
+/**
+ * Creates a new canvas (SVG) element with the specified width and height, and
+ * inserts it into the current document. If the {@code $dom} field is set, as
+ * for text/javascript+protovis scripts, the SVG element is inserted into the
+ * DOM before the script element. Otherwise, the SVG element is inserted into
+ * the last child element of the document, as for text/javascript scripts.
+ *
+ * @param w the width of the canvas to create, in pixels.
+ * @param h the height of the canvas to create, in pixels.
+ * @return the new canvas (SVG) element.
+ */
 pv.Panel.prototype.createCanvas = function(w, h) {
-  function lastChild(node) {
+
+  /**
+   * Returns the last element in the current document's body. The canvas element
+   * is appended to this last element if another DOM element has not already
+   * been specified via the {@code $dom} field.
+   */
+  function lastElement() {
+    var node = document.body;
     while (node.lastChild && node.lastChild.tagName) {
       node = node.lastChild;
     }
     return (node == document.body) ? node : node.parentNode;
   }
 
-  /* Cache the canvas element to reuse across renders. */
-  if (!this.$canvases) this.$canvases = [];
-  var c = this.$canvases[this.index];
-  if (!c) {
-    this.$canvases[this.index] = c = document.createElementNS(pv.ns.svg, "svg");
-    this.$dom // script element for text/javascript+protovis
-        ? this.$dom.parentNode.insertBefore(c, this.$dom)
-        : lastChild(document.body).appendChild(c);
-  }
-
+  /* Create the SVG element. */
+  var c = document.createElementNS(pv.ns.svg, "svg");
   c.setAttribute("width", w);
   c.setAttribute("height", h);
+
+  /* Insert it into the DOM at the appropriate location. */
+  this.$dom // script element for text/javascript+protovis
+      ? this.$dom.parentNode.insertBefore(c, this.$dom)
+      : lastElement().appendChild(c);
+
   return c;
 };
 
@@ -156,6 +183,8 @@ pv.Panel.prototype.buildImplied = function(s) {
       c.setAttribute("width", w);
       c.setAttribute("height", h);
       s.canvas = c;
+    } else if (s.svg) {
+      s.canvas = s.svg.parentNode;
     } else {
       s.canvas = this.createCanvas(
           s.width + s.left + s.right,
