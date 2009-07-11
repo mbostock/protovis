@@ -161,6 +161,30 @@ pv.Panel.prototype.update = function() {
 
 pv.Panel.prototype.updateInstance = function(s) {
   // TODO visibility?
+
+  /* fillStyle, strokeStyle */
+  var r = s.svg.$rect;
+  if (s.fillStyle || s.strokeStyle) {
+    if (!r) {
+      r = s.svg.$rect = document.createElementNS(pv.ns.svg, "rect");
+      r.setAttribute("width", "100%");
+      r.setAttribute("height", "100%");
+      s.svg.insertBefore(r, s.svg.firstChild);
+    }
+
+    /* TODO gradient, patterns */
+    var fill = pv.color(s.fillStyle);
+    r.setAttribute("fill", fill.color);
+    r.setAttribute("fill-opacity", fill.opacity);
+    var stroke = pv.color(s.strokeStyle);
+    r.setAttribute("stroke", stroke.color);
+    r.setAttribute("stroke-opacity", stroke.opacity);
+    r.setAttribute("stroke-width", s.lineWidth);
+  } else if (r) {
+    s.svg.removeChild(r);
+    delete s.svg.$rect;
+  }
+
   if (s.left || s.top) {
     s.svg.setAttribute("transform", "translate(" + s.left + "," + s.top +")");
   }
