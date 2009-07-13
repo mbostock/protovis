@@ -64,22 +64,41 @@ pv.Area.prototype.defineProperty("strokeStyle");
 pv.Area.prototype.defineProperty("fillStyle");
 
 /**
- * Default properties for areas.
+ * Default properties for areas. By default, there is no stroke and the fill
+ * style is a categorical color.
  */
 pv.Area.defaults = new pv.Area().extend(pv.Mark.defaults)
-    .width(0)
-    .height(0)
     .lineWidth(1.5)
-    .strokeStyle(null)
     .fillStyle(pv.Colors.category20);
 
+/**
+ * Represents an anchor for an area mark. Areas support five different
+ * anchors:<ul>
+ *
+ * <li>top
+ * <li>left
+ * <li>center
+ * <li>bottom
+ * <li>right
+ *
+ * </ul>In addition to positioning properties (left, right, top bottom), the
+ * anchors support text rendering properties (textAlign, textBaseline). Text is
+ * rendered to appear inside the area polygon.
+ *
+ * <p>To facilitate stacking of areas, the anchors are defined in terms of their
+ * opposite edge. For example, the top anchor defines the bottom property, such
+ * that the area grows upwards; the bottom anchor instead defines the top
+ * property, such that the area grows downwards. Of course, in general it is
+ * more robust to use panels and the cousin accessor to define stacked area
+ * marks; see {@link Mark#scene} for an example.
+ */
 pv.Area.Anchor = function() {
   pv.Mark.Anchor.call(this);
 };
-
 pv.Area.Anchor.prototype = pv.extend(pv.Mark.Anchor);
 pv.Area.Anchor.prototype.type = pv.Area;
 
+/** The left property; null for "left" anchors, non-null otherwise. */
 pv.Area.Anchor.prototype.$left = function(d) {
   var area = this.anchorTarget();
   switch (this.get("name")) {
@@ -91,6 +110,7 @@ pv.Area.Anchor.prototype.$left = function(d) {
   return null;
 };
 
+/** The right property; null for "right" anchors, non-null otherwise. */
 pv.Area.Anchor.prototype.$right = function(d) {
   var area = this.anchorTarget();
   switch (this.get("name")) {
@@ -102,6 +122,7 @@ pv.Area.Anchor.prototype.$right = function(d) {
   return null;
 };
 
+/** The top property; null for "top" anchors, non-null otherwise. */
 pv.Area.Anchor.prototype.$top = function(d) {
   var area = this.anchorTarget();
   switch (this.get("name")) {
@@ -113,6 +134,7 @@ pv.Area.Anchor.prototype.$top = function(d) {
   return null;
 };
 
+/** The bottom property; null for "bottom" anchors, non-null otherwise. */
 pv.Area.Anchor.prototype.$bottom = function(d) {
   var area = this.anchorTarget();
   switch (this.get("name")) {
@@ -124,6 +146,7 @@ pv.Area.Anchor.prototype.$bottom = function(d) {
   return null;
 };
 
+/** The text-align property, for horizontal alignment inside the area. */
 pv.Area.Anchor.prototype.$textAlign = function(d) {
   switch (this.get("name")) {
     case "left": return "left";
@@ -135,6 +158,7 @@ pv.Area.Anchor.prototype.$textAlign = function(d) {
   return null;
 };
 
+/** The text-baseline property, for vertical alignment inside the area. */
 pv.Area.Anchor.prototype.$textBaseline = function(d) {
   switch (this.get("name")) {
     case "right":
@@ -146,23 +170,35 @@ pv.Area.Anchor.prototype.$textBaseline = function(d) {
   return null;
 };
 
+/**
+ * Overrides the default behavior of {@link Mark#buildImplied} such that the
+ * width and height are set to zero if null.
+ *
+ * @param s a node in the scene graph; the instance of the mark to build.
+ */
 pv.Area.prototype.buildImplied = function(s) {
   if (s.height == null) s.height = 0;
   if (s.width == null) s.width = 0;
   pv.Mark.prototype.buildImplied.call(this, s);
 };
 
-pv.Area.prototype.update = function(g) {
+/**
+ * Override the default update implementation, since the area mark generates a
+ * single graphical element rather than multiple distinct elements.
+ */
+pv.Area.prototype.update = function() {
   if (!this.scene.length) return;
 
   var s = this.scene[0], v = s.svg;
   if (s.visible) {
+
+    /* Create the <svg:polygon> element, if necesary. */
     if (!v) {
       v = s.svg = document.createElementNS(pv.ns.svg, "polygon");
       s.parent.svg.appendChild(v);
     }
 
-    /* TODO allow points to be changed on events? */
+    /* points */
     var p = "";
     for (var i = 0; i < this.scene.length; i++) {
       var si = this.scene[i];
@@ -173,17 +209,20 @@ pv.Area.prototype.update = function(g) {
       p += (si.left + si.width) + "," + (si.top + si.height) + " ";
     }
     v.setAttribute("points", p);
-
-    this.updateInstance(s);
-    v.removeAttribute("display");
-  } else if (v) {
-    v.setAttribute("display", "none");
   }
+
+  this.updateInstance(s);
 };
 
 /**
- * For Areas, this method is only invoked after event handlers have updated the
- * scene graph; it is guaranteed to be called only from the first scene.
+ * Updates the display for the (singleton) area instance. The area mark
+ * generates a single graphical element rather than multiple distinct elements.
+ *
+ * <p>TODO Recompute points? For efficiency, the points (the span positions) are
+ * not recomputed, and therefore cannot be updated automatically from event
+ * handlers without an explicit call to rebuild the area.
+ *
+ * @param s a node in the scene graph; the instance of the mark to update.
  */
 pv.Area.prototype.updateInstance = function(s) {
   var v = s.svg;
