@@ -20,6 +20,14 @@
  * can be specified succinctly using anonymous functions. Special properties
  * called event handlers can be registered to add interactivity.
  *
+ * <p>While most properties are <i>variable</i>, some mark types, such as lines
+ * and areas, generate a single visual element rather than a distinct visual
+ * element per datum. With these marks, some properties may be <b>fixed</b>.
+ * Fixed properties can vary per mark, but not <i>per datum</i>! These
+ * properties are evaluated solely for the first (0-index) datum, and typically
+ * are specified as a constant. However, it is valid to use a function if the
+ * property varies between panels or is dynamically generated.
+ *
  * <p>Protovis uses <b>inheritance</b> to simplify the specification of related
  * marks: a new mark can be derived from an existing mark, inheriting its
  * properties. The new mark can then override properties to specify new
@@ -725,17 +733,18 @@ pv.Mark.prototype.updateInstance = function(s) {
   if (s.cursor) v.style.cursor = s.cursor;
 
   /* title (Safari only supports xlink:title on anchor elements) */
+  var p = v.parentNode;
   if (s.title) {
-    if (!s.svg.$title) {
-      s.svg.$title = document.createElementNS(pv.ns.svg, "a");
-      s.parent.svg.insertBefore(s.svg.$title, s.svg);
-      s.svg.$title.appendChild(s.svg);
+    if (!v.$title) {
+      v.$title = document.createElementNS(pv.ns.svg, "a");
+      p.insertBefore(v.$title, v);
+      v.$title.appendChild(v);
     }
-    s.svg.$title.setAttributeNS(pv.ns.xlink, "title", s.title);
-  } else if (s.svg.$title) {
-    s.parent.svg.insertBefore(s.svg, s.svg.$title);
-    s.parent.svg.removeChild(s.svg.$title);
-    delete s.svg.$title;
+    v.$title.setAttributeNS(pv.ns.xlink, "title", s.title);
+  } else if (v.$title) {
+    p.insertBefore(v, v.$title);
+    p.removeChild(v.$title);
+    delete v.$title;
   }
 
   /* event */
@@ -780,11 +789,11 @@ pv.Mark.prototype.updateInstance = function(s) {
  *     vis.render();
  *   });</pre>
  *
- * TODO: In the current event handler implementation, only the mark instance
- * that triggered the event is updated, even if the event handler dirties the
- * rest of the scene. While this can be ameliorated by explicitly re-rendering,
- * it would be better and more efficient for the event dispatcher to handle
- * dirtying and redraw automatically.
+ * TODO In the current event handler implementation, only the mark instance that
+ * triggered the event is updated, even if the event handler dirties the rest of
+ * the scene. While this can be ameliorated by explicitly re-rendering, it would
+ * be better and more efficient for the event dispatcher to handle dirtying and
+ * redraw automatically.
  *
  * <p>The complete set of event types is defined by SVG; see the reference
  * below. The set of supported event types is:<ul>
@@ -802,7 +811,7 @@ pv.Mark.prototype.updateInstance = function(s) {
  * to support additional event types, particularly those most relevant to
  * interactive visualization, such as selection.
  *
- * <p>TODO: In the current implementation, event handlers are not inherited from
+ * <p>TODO In the current implementation, event handlers are not inherited from
  * prototype marks. They must be defined explicitly on each interactive mark. In
  * addition, only one event handler for a given event type can be defined; when
  * specifying multiple event handlers for the same type, only the last one will

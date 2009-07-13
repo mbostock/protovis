@@ -1,19 +1,71 @@
+/**
+ * Represents an area mark: the solid area between two series of connected line
+ * segments. Unsurprisingly, areas are used most frequently for area charts.
+ *
+ * <p>Just as a line represents a polyline, the {@code Area} mark type
+ * represents a <i>polygon</i>. However, an area is not an arbitrary polygon;
+ * vertices are paired either horizontally or vertically into parallel
+ * <i>spans</i>, and each span corresponds to an associated datum. Either the
+ * width or the height must be specified, but not both; this determines whether
+ * the area is horizontally-oriented or vertically-oriented.  Like lines, areas
+ * can be stroked and filled with arbitrary colors.
+ */
 pv.Area = function() {
   pv.Mark.call(this);
 };
-
-pv.Area.toString = function() {
-  return "area";
-};
-
 pv.Area.prototype = pv.extend(pv.Mark);
 pv.Area.prototype.type = pv.Area;
+pv.Area.toString = function() { return "area"; };
+
+/**
+ * The width of a given span; used for horizontal spans. If the width is
+ * specified, the height property should be 0 (the default). Either the top or
+ * bottom property should be used to space the spans vertically, typically as a
+ * multiple of the index.
+ */
 pv.Area.prototype.defineProperty("width");
+
+/**
+ * The height of a given span; used for vertical spans. If the height is
+ * specified, the width property should be 0 (the default). Either the left or
+ * right property should be used to space the spans horizontally, typically as a
+ * multiple of the index.
+ */
 pv.Area.prototype.defineProperty("height");
+
+/**
+ * The width of stroked lines in pixels; used in conjunction with {@code
+ * strokeStyle} to stroke the perimeter of the area. Unlike the {@link Line}
+ * mark type, the entire perimeter is stroked, rather than just one edge. The
+ * default value of this property is 1.5, but since the default stroke style is
+ * null, area marks are not stroked by default.
+ *
+ * <p>This property is <i>fixed</i>. See {@link Mark}.
+ */
 pv.Area.prototype.defineProperty("lineWidth");
+
+/**
+ * The style of stroked lines; used in conjunction with {@code lineWidth} to
+ * stroke the perimeter of the area. Unlike the {@link Line} mark type, the
+ * entire perimeter is stroked, rather than just one edge. The default value of
+ * this property is null, meaning areas are not stroked by default.
+ *
+ * <p>This property is <i>fixed</i>. See {@link Mark}.
+ */
 pv.Area.prototype.defineProperty("strokeStyle");
+
+/**
+ * The area fill style; if non-null, the interior of the polygon forming the
+ * area is filled with the specified color. The default value of this property
+ * is a categorical color.
+ *
+ * <p>This property is <i>fixed</i>. See {@link Mark}.
+ */
 pv.Area.prototype.defineProperty("fillStyle");
 
+/**
+ * Default properties for areas.
+ */
 pv.Area.defaults = new pv.Area().extend(pv.Mark.defaults)
     .width(0)
     .height(0)
@@ -94,6 +146,12 @@ pv.Area.Anchor.prototype.$textBaseline = function(d) {
   return null;
 };
 
+pv.Area.prototype.buildImplied = function(s) {
+  if (s.height == null) s.height = 0;
+  if (s.width == null) s.width = 0;
+  pv.Mark.prototype.buildImplied.call(this, s);
+};
+
 pv.Area.prototype.update = function(g) {
   if (!this.scene.length) return;
 
@@ -108,14 +166,10 @@ pv.Area.prototype.update = function(g) {
     var p = "";
     for (var i = 0; i < this.scene.length; i++) {
       var si = this.scene[i];
-      if (isNaN(si.left)) si.left = 0;
-      if (isNaN(si.top)) si.top = 0;
       p += si.left + "," + si.top + " ";
     }
     for (var i = this.scene.length - 1; i >= 0; i--) {
       var si = this.scene[i];
-      if (isNaN(si.width)) si.width = 0;
-      if (isNaN(si.height)) si.height = 0;
       p += (si.left + si.width) + "," + (si.top + si.height) + " ";
     }
     v.setAttribute("points", p);

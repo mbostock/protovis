@@ -279,6 +279,10 @@ pv.Panel.prototype.update = function() {
    * is appended before it contained any elements. Creating the child elements
    * first and then appending them solves the problem and is likely more
    * efficient. Also, it means we can reverse the order easily.
+   *
+   * TODO It would be nice to support arbitrary z-order here, at least within
+   * panel. Of course, the order of children may need to be updated not just on
+   * append.
    */
   if (appends.length) {
     if (appends[0].reverse) appends.reverse();
@@ -294,23 +298,33 @@ pv.Panel.prototype.update = function() {
  * graph. This implementation handles the fill and stroke style for the panel,
  * as well as any necessary transform to offset the location of contained marks.
  *
- * <p>TODO: As a performance optimization, it may also be possible to assign
+ * <p>TODO As a performance optimization, it may also be possible to assign
  * constant property values (or even the most common value for each property) as
  * attributes on the <g> element so they can be inherited.
  *
  * @param s a node in the scene graph; the instance of the panel to update.
  */
 pv.Panel.prototype.updateInstance = function(s) {
-  // TODO visibility?
-  // TODO width, height -- should affect contained rect? what about SVG / DOM?
+  var v = s.svg;
+
+  /* visible */
+  if (!s.visible) {
+    if (v) v.setAttribute("display", "none");
+    return;
+  }
+  v.removeAttribute("display");
 
   /* fillStyle, strokeStyle */
-  var r = s.svg.$rect;
+  var r = v.$rect;
   if (s.fillStyle || s.strokeStyle) {
     if (!r) {
-      r = s.svg.$rect = document.createElementNS(pv.ns.svg, "rect");
-      s.svg.insertBefore(r, s.svg.firstChild);
+      r = v.$rect = document.createElementNS(pv.ns.svg, "rect");
+      v.insertBefore(r, v.firstChild);
     }
+
+    /* If width and height are exactly zero, the rect is not stroked! */
+    r.setAttribute("width", Math.max(1E-10, s.width));
+    r.setAttribute("height", Math.max(1E-10, s.height));
 
     /* TODO gradient, patterns */
     var fill = pv.color(s.fillStyle);
@@ -320,17 +334,26 @@ pv.Panel.prototype.updateInstance = function(s) {
     r.setAttribute("stroke", stroke.color);
     r.setAttribute("stroke-opacity", stroke.opacity);
     r.setAttribute("stroke-width", s.lineWidth);
-    r.setAttribute("width", s.width);
-    r.setAttribute("height", s.height);
   } else if (r) {
-    s.svg.removeChild(r);
-    delete s.svg.$rect;
+    v.removeChild(r);
+    delete v.$rect;
+    r = null;
+  }
+
+  /* cursor, title, event, etc. */
+  if (r) {
+    try {
+      s.svg = r;
+      pv.Mark.prototype.updateInstance.call(this, s);
+    } finally {
+      s.svg = v;
+    }
   }
 
   /* left, top */
   if (s.left || s.top) {
-    s.svg.setAttribute("transform", "translate(" + s.left + "," + s.top +")");
+    v.setAttribute("transform", "translate(" + s.left + "," + s.top +")");
   } else {
-    s.svg.removeAttribute("transform");
+    v.removeAttribute("transform");
   }
 };
