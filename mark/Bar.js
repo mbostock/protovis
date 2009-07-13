@@ -58,7 +58,7 @@ pv.Bar.prototype.defineProperty("strokeStyle");
 pv.Bar.prototype.defineProperty("fillStyle");
 
 /**
- * Default properties for areas. By default, there is no stroke and the fill
+ * Default properties for bars. By default, there is no stroke and the fill
  * style is a categorical color.
  */
 pv.Bar.defaults = new pv.Bar().extend(pv.Mark.defaults)
