@@ -18,23 +18,23 @@ pv.Area.prototype.type = pv.Area;
 pv.Area.toString = function() { return "area"; };
 
 /**
- * The width of a given span; used for horizontal spans. If the width is
- * specified, the height property should be 0 (the default). Either the top or
- * bottom property should be used to space the spans vertically, typically as a
- * multiple of the index.
+ * The width of a given span, in pixels; used for horizontal spans. If the width
+ * is specified, the height property should be 0 (the default). Either the top
+ * or bottom property should be used to space the spans vertically, typically as
+ * a multiple of the index.
  */
 pv.Area.prototype.defineProperty("width");
 
 /**
- * The height of a given span; used for vertical spans. If the height is
- * specified, the width property should be 0 (the default). Either the left or
- * right property should be used to space the spans horizontally, typically as a
- * multiple of the index.
+ * The height of a given span, in pixels; used for vertical spans. If the height
+ * is specified, the width property should be 0 (the default). Either the left
+ * or right property should be used to space the spans horizontally, typically
+ * as a multiple of the index.
  */
 pv.Area.prototype.defineProperty("height");
 
 /**
- * The width of stroked lines in pixels; used in conjunction with {@code
+ * The width of stroked lines, in pixels; used in conjunction with {@code
  * strokeStyle} to stroke the perimeter of the area. Unlike the {@link Line}
  * mark type, the entire perimeter is stroked, rather than just one edge. The
  * default value of this property is 1.5, but since the default stroke style is
