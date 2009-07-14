@@ -79,11 +79,11 @@ pv.Label.prototype.defineProperty("textAlign");
 pv.Label.prototype.defineProperty("textBaseline");
 
 /**
- * The text margin, in pixels. The margin should be used to pad (nudge) the text
- * away from its anchor location, in a direction dependent on the horizontal and
- * vertical alignment properties. For example, if the text is left- and
- * middle-aligned, the margin shifts the text to the right. The default margin
- * is 3 pixels.
+ * The text margin; may be specified in pixels, or in font-dependent units
+ * (e.g., ".1ex"). The margin can be used to pad text away from its anchor
+ * location, in a direction dependent on the horizontal and vertical alignment
+ * properties. For example, if the text is left- and middle-aligned, the margin
+ * shifts the text to the right. The default margin is .3em.
  */
 pv.Label.prototype.defineProperty("textMargin");
 
@@ -108,7 +108,7 @@ pv.Label.defaults = new pv.Label().extend(pv.Mark.defaults)
     .textStyle("black")
     .textAlign("left")
     .textBaseline("bottom")
-    .textMargin(3);
+    .textMargin(".3em");
 
 /**
  * Updates the display for the specified label instance {@code s} in the scene
@@ -140,16 +140,16 @@ pv.Label.prototype.updateInstance = function(s) {
   switch (s.textBaseline) {
     case "middle": {
       v.removeAttribute("y");
-      v.setAttribute("dy", ".4em");
+      v.setAttribute("dy", ".35em");
       break;
     }
     case "top": {
       v.setAttribute("y", s.textMargin);
-      v.setAttribute("dy", ".8em");
+      v.setAttribute("dy", ".71em");
       break;
     }
     case "bottom": {
-      v.setAttribute("y", -s.textMargin);
+      v.setAttribute("y", "-" + s.textMargin);
       v.removeAttribute("dy");
       break;
     }
@@ -159,7 +159,7 @@ pv.Label.prototype.updateInstance = function(s) {
   switch (s.textAlign) {
     case "right": {
       v.setAttribute("text-anchor", "end");
-      v.setAttribute("x", -s.textMargin);
+      v.setAttribute("x", "-" + s.textMargin);
       break;
     }
     case "center": {
