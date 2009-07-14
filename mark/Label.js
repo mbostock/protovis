@@ -83,7 +83,7 @@ pv.Label.prototype.defineProperty("textBaseline");
  * (e.g., ".1ex"). The margin can be used to pad text away from its anchor
  * location, in a direction dependent on the horizontal and vertical alignment
  * properties. For example, if the text is left- and middle-aligned, the margin
- * shifts the text to the right. The default margin is .3em.
+ * shifts the text to the right. The default margin is 3 pixels.
  */
 pv.Label.prototype.defineProperty("textMargin");
 
@@ -108,7 +108,7 @@ pv.Label.defaults = new pv.Label().extend(pv.Mark.defaults)
     .textStyle("black")
     .textAlign("left")
     .textBaseline("bottom")
-    .textMargin(".3em");
+    .textMargin(3);
 
 /**
  * Updates the display for the specified label instance {@code s} in the scene
