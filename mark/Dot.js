@@ -83,7 +83,6 @@ pv.Dot.defaults = new pv.Dot().extend(pv.Mark.defaults)
     .lineWidth(1.5)
     .strokeStyle(pv.Colors.category10);
 
-
 /**
  * Represents an anchor for a dot mark. Dots support five different anchors:<ul>
  *

@@ -53,7 +53,7 @@ pv.Line.prototype.updateInstance = function(s) {
   pv.Mark.prototype.updateInstance.call(this, s);
   if (!s.visible) return;
 
-  /* TODO gradient, patterns */
+  /* fill, stroke TODO gradient, patterns */
   var fill = pv.color(s.fillStyle);
   v.setAttribute("fill", fill.color);
   v.setAttribute("fill-opacity", fill.opacity);

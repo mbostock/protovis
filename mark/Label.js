@@ -85,7 +85,7 @@ pv.Label.prototype.updateInstance = function(s) {
   }
   v.setAttribute("style", style);
 
-  /* TODO gradient, patterns? */
+  /* fill */
   var fill = pv.color(s.textStyle);
   v.setAttribute("fill", fill.color);
   v.setAttribute("fill-opacity", fill.opacity);

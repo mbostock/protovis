@@ -183,7 +183,7 @@ pv.Wedge.prototype.updateInstance = function(s) {
     }
   }
 
-  /* TODO gradient, patterns */
+  /* fill, stroke TODO gradient, patterns */
   var fill = pv.color(s.fillStyle);
   v.setAttribute("fill", fill.color);
   v.setAttribute("fill-opacity", fill.opacity);

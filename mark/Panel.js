@@ -326,7 +326,7 @@ pv.Panel.prototype.updateInstance = function(s) {
     r.setAttribute("width", Math.max(1E-10, s.width));
     r.setAttribute("height", Math.max(1E-10, s.height));
 
-    /* TODO gradient, patterns */
+    /* fill, stroke TODO gradient, patterns */
     var fill = pv.color(s.fillStyle);
     r.setAttribute("fill", fill.color);
     r.setAttribute("fill-opacity", fill.opacity);

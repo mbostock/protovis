@@ -196,7 +196,7 @@ pv.Bar.prototype.updateInstance = function(s) {
   v.setAttribute("width", Math.max(1E-10, s.width));
   v.setAttribute("height", Math.max(1E-10, s.height));
 
-  /* TODO gradient, patterns */
+  /* fill, stroke TODO gradient, patterns */
   var fill = pv.color(s.fillStyle);
   v.setAttribute("fill", fill.color);
   v.setAttribute("fill-opacity", fill.opacity);
