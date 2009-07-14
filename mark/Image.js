@@ -26,6 +26,7 @@ pv.Image.prototype.updateInstance = function(s) {
   var v = s.svg;
   if (s.visible && !v) {
     v = s.svg = document.createElementNS(pv.ns.svg, "image");
+    v.setAttribute("preserveAspectRatio", "none");
     s.parent.svg.appendChild(v);
   }
 
@@ -63,7 +64,7 @@ pv.Image.prototype.updateInstance = function(s) {
     f.setAttribute("fill", fill.color);
     f.setAttribute("fill-opacity", fill.opacity);
   } else if (v.$fill) {
-    v.parentNode.removeChild(v.$fill);
+    v.$fill.parentNode.removeChild(v.$fill);
     delete v.$fill;
   }
 
