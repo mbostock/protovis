@@ -30,6 +30,13 @@ pv.Image.prototype.updateInstance = function(s) {
     s.parent.svg.appendChild(v);
   }
 
+  /*
+   * TODO It might be nice in the future to allow different modes of positioning
+   * the image, such as: "scale" -- preserve aspect ratio, "tile" -- repeat the
+   * image, "center" -- center the image, "fill" -- scale without preserving
+   * aspect ratio.
+   */
+
   if (!s.strokeStyle) {
 
     /* XXX Blech ... */
