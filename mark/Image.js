@@ -1,5 +1,19 @@
 /**
- * TODO
+ * Represents an image. Images share the same layout and style properties as
+ * bars, in conjunction with an external image such as PNG or JPEG. The image is
+ * specified via the {@link #url} property. The fill, if specified, appears
+ * beneath the image, while the optional stroke appears above the image.
+ *
+ * <p>TODO Restore support for dynamic images (such as heatmaps). These were
+ * supported in the canvas implementation using the pixel buffer API; although
+ * SVG does not support pixel manipulation, it is possible to embed a canvas
+ * element in SVG using foreign objects.
+ *
+ * <p>TODO Allow different modes of image placement: "scale" -- scale and
+ * preserve aspect ratio, "tile" -- repeat the image, "center" -- center the
+ * image, "fill" -- scale without preserving aspect ratio.
+ *
+ * <p>See {@link Bar} for details on positioning properties.
  */
 pv.Image = function() {
   pv.Bar.call(this);
@@ -9,21 +23,37 @@ pv.Image.prototype.type = pv.Image;
 pv.Image.toString = function() { return "image"; };
 
 /**
- * TODO
+ * The URL of the image to display. The set of supported image types is
+ * browser-dependent; PNG and JPEG and recommended.
  */
-pv.Image.prototype.defineProperty("image");
+pv.Image.prototype.defineProperty("url");
 
 /**
- * TODO
+ * Default properties for images. By default, there is no stroke or fill style.
  */
 pv.Image.defaults = new pv.Image().extend(pv.Bar.defaults)
     .fillStyle(null);
 
 /**
- * TODO
+ * Updates the display for the specified image instance {@code s} in the scene
+ * graph. This implementation handles the fill and stroke style for the image,
+ * as well as positional properties.
+ *
+ * <p>Image rendering is a bit more complicated than most marks because it can
+ * entail up to four SVG elements: three for the fill, image and stroke, and the
+ * fourth an anchor element for the title tooltip. The anchor element is placed
+ * around the stroke rect element, if present, and otherwise the image element.
+ * Similarly the event handlers and cursor style is placed on the stroke
+ * element, if present, and otherwise the image element. Note that since the
+ * stroke element is transparent, the {@code pointer-events} attribute is used
+ * to capture events.
+ *
+ * @param s a node in the scene graph; the instance of the bar to update.
  */
 pv.Image.prototype.updateInstance = function(s) {
   var v = s.svg;
+
+  /* Create the svg:image element, if necessary. */
   if (s.visible && !v) {
     v = s.svg = document.createElementNS(pv.ns.svg, "image");
     v.setAttribute("preserveAspectRatio", "none");
@@ -31,23 +61,30 @@ pv.Image.prototype.updateInstance = function(s) {
   }
 
   /*
-   * TODO It might be nice in the future to allow different modes of positioning
-   * the image, such as: "scale" -- preserve aspect ratio, "tile" -- repeat the
-   * image, "center" -- center the image, "fill" -- scale without preserving
-   * aspect ratio.
+   * If no stroke is specified, then the event handlers and title anchor element
+   * can be placed on the image element. However, if there was previously a
+   * title anchor element around the stroke element, we must be careful to
+   * remove it. This logic could likely be simplified.
    */
-
   if (!s.strokeStyle) {
-
-    /* XXX Blech ... */
     if (v.$stroke) {
       v.parentNode.removeChild(v.$stroke.$title || v.$stroke);
       delete v.$stroke;
     }
 
+    /* cursor, title, events, etc. */
     pv.Mark.prototype.updateInstance.call(this, s);
   }
 
+  /* visible */
+  function display(v) {
+    s.visible ? v.removeAttribute("display") : v.setAttribute("display", "none");
+  }
+  if (v) {
+    display(v);
+    if (v.$stroke) display(v.$stroke);
+    if (v.$fill) display(v.$fill);
+  }
   if (!s.visible) return;
 
   /* left, top, width, height */
@@ -59,7 +96,7 @@ pv.Image.prototype.updateInstance = function(s) {
   }
   position(v);
 
-  /* fill */
+  /* fill (via an underlaid svg:rect element) */
   if (s.fillStyle) {
     var f = v.$fill;
     if (!f) {
@@ -75,11 +112,15 @@ pv.Image.prototype.updateInstance = function(s) {
     delete v.$fill;
   }
 
-  /* stroke */
+  /* stroke (via an overlaid svg:rect element) */
   if (s.strokeStyle) {
     var f = v.$stroke;
 
-    /* XXX Blech ... */
+    /*
+     * If the $title attribute is set, that means the title anchor element was
+     * previously on the image element; now that the stroke style is set, we
+     * must delete the old title element to make room for the new one.
+     */
     if (v.$title) {
       var p = v.$title.parentNode;
       p.insertBefore(v, v.$title);
@@ -87,6 +128,7 @@ pv.Image.prototype.updateInstance = function(s) {
       delete v.$title;
     }
 
+    /* Create the stroke svg:rect element, if necessary. */
     if (!f) {
       f = v.$stroke = document.createElementNS(pv.ns.svg, "rect");
       f.setAttribute("fill", "none");
@@ -99,6 +141,7 @@ pv.Image.prototype.updateInstance = function(s) {
     f.setAttribute("stroke-opacity", stroke.opacity);
     f.setAttribute("stroke-width", s.lineWidth);
 
+    /* cursor, title, events, etc. */
     try {
       s.svg = f;
       pv.Mark.prototype.updateInstance.call(this, s);
@@ -107,6 +150,6 @@ pv.Image.prototype.updateInstance = function(s) {
     }
   }
 
-  /* image */
-  v.setAttributeNS(pv.ns.xlink, "href", s.image);
+  /* url */
+  v.setAttributeNS(pv.ns.xlink, "href", s.url);
 };
