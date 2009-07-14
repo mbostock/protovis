@@ -147,7 +147,6 @@ pv.Bar.Anchor.prototype.$bottom = function(d) {
 
 /** The text-align property, for horizontal alignment inside the bar. */
 pv.Bar.Anchor.prototype.$textAlign = function(d) {
-  var bar = this.anchorTarget();
   switch (this.get("name")) {
     case "left": return "left";
     case "bottom":
@@ -160,7 +159,6 @@ pv.Bar.Anchor.prototype.$textAlign = function(d) {
 
 /** The text-baseline property, for vertical alignment inside the bar. */
 pv.Bar.Anchor.prototype.$textBaseline = function(d) {
-  var bar = this.anchorTarget();
   switch (this.get("name")) {
     case "right":
     case "left":

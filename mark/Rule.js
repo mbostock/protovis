@@ -1,92 +1,126 @@
+/**
+ * Represents a horizontal or vertical rule. Rules are frequently used for axes
+ * and grid lines. For example, specifying only the bottom property draws
+ * horizontal rules, while specifying only the left draws vertical rules. Rules
+ * can also be used as thin bars. The visual style is controlled in the same
+ * manner as lines.
+ *
+ * <p>Rules are positioned exclusively using the four margins. The following
+ * combinations of properties are supported:<ul>
+ *
+ * <li>left (vertical)
+ * <li>right (vertical)
+ * <li>left, bottom, top (vertical)
+ * <li>right, bottom, top (vertical)
+ * <li>top (horizontal)
+ * <li>bottom (horizontal)
+ * <li>top, left, right (horizontal)
+ * <li>bottom, left, right (horizontal)
+ *
+ * </ul>TODO If rules supported width (for horizontal) and height (for vertical)
+ * properties, it might be easier to place them. Small rules can be used as tick
+ * marks; alternatively, a {@link Dot} with the "tick" shape can be used.
+ *
+ * @see Line
+ */
 pv.Rule = function() {
   pv.Mark.call(this);
 };
-
-pv.Rule.toString = function() {
-  return "rule";
-};
-
 pv.Rule.prototype = pv.extend(pv.Mark);
 pv.Rule.prototype.type = pv.Rule;
+pv.Rule.toString = function() { return "rule"; };
+
+/**
+ * The width of stroked lines, in pixels; used in conjunction with {@code
+ * strokeStyle} to stroke the rule. The default value is 1 pixel.
+ */
 pv.Rule.prototype.defineProperty("lineWidth");
+
+/**
+ * The style of stroked lines; used in conjunction with {@code lineWidth} to
+ * stroke the rule. The default value of this property is black.
+ */
 pv.Rule.prototype.defineProperty("strokeStyle");
 
+/**
+ * Default properties for rules. By default, a single-pixel black line is
+ * stroked.
+ */
 pv.Rule.defaults = new pv.Rule().extend(pv.Mark.defaults)
     .lineWidth(1)
     .strokeStyle("black");
 
+/**
+ * Represents an anchor for a rule mark. Rules support five different
+ * anchors:<ul>
+ *
+ * <li>top
+ * <li>left
+ * <li>center
+ * <li>bottom
+ * <li>right
+ *
+ * </ul>In addition to positioning properties (left, right, top bottom), the
+ * anchors support text rendering properties (textAlign, textBaseline). Text is
+ * rendered to appear outside the rule. Note that this behavior is different
+ * from other mark anchors, which default to rendering text <i>inside</i> the
+ * mark.
+ *
+ * <p>For consistency with the other mark types, the anchor positions are
+ * defined in terms of their opposite edge. For example, the top anchor defines
+ * the bottom property, such that a bar added to the top anchor grows upward.
+ */
 pv.Rule.Anchor = function() {
-  pv.Mark.Anchor.call(this);
+  pv.Bar.Anchor.call(this);
 };
-
-pv.Rule.Anchor.prototype = pv.extend(pv.Mark.Anchor);
+pv.Rule.Anchor.prototype = pv.extend(pv.Bar.Anchor);
 pv.Rule.Anchor.prototype.type = pv.Rule;
 
-pv.Rule.Anchor.prototype.$left = function(d) {
-  var rule = this.anchorTarget();
-  switch (this.get("name")) {
-    case "bottom":
-    case "top":
-    case "left": return rule.left();
-  }
- return null;
-};
-
-pv.Rule.Anchor.prototype.$right = function(d) {
-  var rule = this.anchorTarget();
-  switch (this.get("name")) {
-    case "right": return rule.right();
-  }
-  return null;
-};
-
-pv.Rule.Anchor.prototype.$top = function(d) {
-  var rule = this.anchorTarget();
-  switch (this.get("name")) {
-    case "left":
-    case "right":
-    case "top": return rule.top();
-  }
-  return null;
-};
-
-pv.Rule.Anchor.prototype.$bottom = function(d) {
-  var rule = this.anchorTarget();
-  switch (this.get("name")) {
-    case "bottom": return rule.bottom();
-  }
-  return null;
-};
-
+/** The text-align property, for horizontal alignment outside the rule. */
 pv.Rule.Anchor.prototype.$textAlign = function(d) {
   switch (this.get("name")) {
-    case "top":
-    case "bottom": return "center";
-    case "right": return "left";
     case "left": return "right";
+    case "bottom":
+    case "top":
+    case "center": return "center";
+    case "right": return "left";
   }
   return null;
 };
 
+/** The text-baseline property, for vertical alignment outside the rule. */
 pv.Rule.Anchor.prototype.$textBaseline = function(d) {
   switch (this.get("name")) {
     case "right":
-    case "left": return "middle";
+    case "left":
+    case "center": return "middle";
     case "top": return "bottom";
     case "bottom": return "top";
   }
   return null;
 };
 
+/** Returns the pseudo-width of the rule in pixels; read-only. */
+pv.Rule.prototype.width = function() {
+  return this.scene[this.index].width;
+};
+
+/** Returns the pseudo-height of the rule in pixels; read-only. */
+pv.Rule.prototype.height = function() {
+  return this.scene[this.index].height;
+};
+
+/**
+ * Overrides the default behavior of {@link Mark#buildImplied} to determine the
+ * orientation (vertical or horizontal) of the rule.
+ *
+ * @param s a node in the scene graph; the instance of the rule to build.
+ */
 pv.Rule.prototype.buildImplied = function(s) {
   s.width = s.height = 0;
 
-  var l = s.left;
-  var r = s.right;
-  var t = s.top;
-  var b = s.bottom;
-
   /* Determine horizontal or vertical orientation. */
+  var l = s.left, r = s.right, t = s.top, b = s.bottom;
   if (((l == null) && (r == null)) || ((r != null) && (l != null))) {
     s.width = s.parent.width - (l = l || 0) - (r = r || 0);
   } else {
@@ -101,16 +135,27 @@ pv.Rule.prototype.buildImplied = function(s) {
   pv.Mark.prototype.buildImplied.call(this, s);
 };
 
+/**
+ * Updates the display for the specified rule instance {@code s} in the scene
+ * graph. This implementation handles the stroke style for the rule, as well as
+ * positional properties.
+ *
+ * @param s a node in the scene graph; the instance of the rule to update.
+ */
 pv.Rule.prototype.updateInstance = function(s) {
   var v = s.svg;
+
+  /* Create the svg:line element, if necessary. */
   if (s.visible && !v) {
     v = s.svg = document.createElementNS(pv.ns.svg, "line");
     s.parent.svg.appendChild(v);
   }
 
+  /* visible, cursor, title, events, etc. */
   pv.Mark.prototype.updateInstance.call(this, s);
   if (!s.visible) return;
 
+  /* left, top */
   v.setAttribute("x1", s.left);
   v.setAttribute("y1", s.top);
   v.setAttribute("x2", s.left + s.width);
