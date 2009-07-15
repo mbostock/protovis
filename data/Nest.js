@@ -1,3 +1,7 @@
+pv.nest = function(array) {
+  return new pv.Nest(array);
+};
+
 pv.Nest = function(array) {
   this.array = array;
   this.keys = [];

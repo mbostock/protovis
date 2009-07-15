@@ -1,12 +1,45 @@
+/**
+ * The Protovis namespace, {@code pv}. All public methods and fields should be
+ * registered on this object. Note that core Protovis source is surrounded by an
+ * anonymous function, so any other declared globals will not be visible outside
+ * of core methods. This also allows multiple versions of Protovis to coexist,
+ * since each version will see their own {@code pv} namespace.
+ */
 var pv = {};
 
+/**
+ * Returns a prototype object suitable for extending the given class. Rather
+ * than constructing a new instance of {@code f} to serve as the prototype
+ * (which unnecessarily runs the constructor on the created prototype object,
+ * potentially polluting it), an anonymous function is generated internally that
+ * shares the same prototype:
+ *
+ * <pre>function g() {}
+ * g.prototype = f.prototype;
+ * return new g();</pre>
+ *
+ * For more details, see Douglas Crockford's essay on prototypal inheritance.
+ *
+ * @param f a constructor.
+ * @return a suitable prototype object.
+ * @see http://crockford.org
+ */
 pv.extend = function(f) {
   function g() {}
   g.prototype = f.prototype;
   return new g();
 };
 
-/* Function expression support. */
+/**
+ * Parses a Protovis specification, which may use JavaScript 1.8 function
+ * expresses, replacing those function expressions with proper functions, such
+ * that the code can be run by a JavaScript 1.6 interpreter. This hack only
+ * supports function expressions (using clumsy regular expressions, no less),
+ * and not other JavaScript 1.8 features such as let expressions.
+ *
+ * @param s a Protovis specification (i.e., a string of JavaScript 1.8 source code).
+ * @return conformant JavaScript 1.6 source code.
+ */
 try {
   eval("pv.parse = function(x) x;"); // native support
 } catch (e) {
@@ -20,6 +53,13 @@ try {
         i = j;
         for (var p = 0; p >= 0 && j < js.length; j++) {
           switch (js[j]) {
+            case '"': case '\'': {
+              var c = js[j];
+              while (++j < js.length && (js[j] != c)) {
+                if (js[j] == '\\') j++;
+              }
+              break;
+            }
             case '[': case '(': p++; break;
             case ']': case ')': p--; break;
             case ';':
@@ -36,23 +76,59 @@ try {
   };
 }
 
+/**
+ * Returns the passed-in argument, {@code x}; the identity function. This method
+ * is provided for convenience since it is used as the default behavior for a
+ * number of property functions.
+ *
+ * @param x a value.
+ * @return the value {@code x}.
+ */
 pv.identity = function(x) { return x; };
 
-pv.range = function(start, end, step) {
+/**
+ * Returns an array of numbers, starting at {@code start}, incrementing by
+ * {@code step}, until {@code stop} is reached. The stop value is exclusive. If
+ * only a single argument is specified, this value is interpeted as the
+ * <i>stop</i> value, with the <i>start</i> value as zero. If only two arguments
+ * are specified, the step value is implied to be one.
+ *
+ * <p>The method is modeled after the built-in {@code range} method from
+ * Python. See the Python documentation for more details.
+ *
+ * @see http://docs.python.org/library/functions.html#range
+ */
+pv.range = function(start, stop, step) {
   if (arguments.length == 1) {
-    end = start;
+    stop = start;
     start = 0;
   }
-  if (step == undefined) {
-    step = 1;
-  }
+  if (step == undefined) step = 1;
+  else if (!step) throw new Error("step must be non-zero");
   var array = [], i = 0, j;
-  while ((j = start + step * i++) < end) {
-    array.push(j);
+  if (step < 0) {
+    while ((j = start + step * i++) > stop) {
+      array.push(j);
+    }
+  } else {
+    while ((j = start + step * i++) < stop) {
+      array.push(j);
+    }
   }
   return array;
 };
 
+/**
+ * Given two arrays {@code a} and {@code b}, returns an array of all possible
+ * pairs of elements a_i-b_j. The outer loop is on array <i>a</i>, while the
+ * inner loop is on <i>b</i>, such that the order of returned elements is
+ * a_0-b_0, a_0-b_1, ... a_0-b_m, a_1-b_0, a_1-b_1, ... a_1-b_m, ... a_n-b_m.
+ * If either array is empty, an empty array is returned.
+ *
+ * @param a an array.
+ * @param b an array.
+ * @return an array of pairs of elements in {@code a} and {@code b}.
+ */
 pv.cross = function(a, b) {
   var array = [];
   for (var i = 0, n = a.length, m = b.length; i < n; i++) {
@@ -61,10 +137,6 @@ pv.cross = function(a, b) {
     }
   }
   return array;
-};
-
-pv.nest = function(array) {
-  return new pv.Nest(array);
 };
 
 pv.blend = function(arrays) {
