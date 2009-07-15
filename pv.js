@@ -205,13 +205,13 @@ pv.values = function(map) {
  * Returns a normalized copy of the specified array, such that the sum of the
  * returned elements sum to one. If the specified array is not an array of
  * numbers, the specified accessor function {@code f} can be specified to map
- * the array to an array of numbers. For example, if {@code array} is an array
- * of objects, and each object has a numeric property "foo", the function
+ * the elements to numbers. For example, if {@code array} is an array of
+ * objects, and each object has a numeric property "foo", the function
  *
  * <pre>function(d) d.foo</pre>
  *
- * can be used to determine how to normalize the array. If an accessor function
- * is not specified, the identity function is used.
+ * can be used to normalize the array on the "foo" property. If an accessor
+ * function is not specified, the identity function is used.
  *
  * @param array an array of objects, or numbers.
  * @param f an optional accessor function.
@@ -224,10 +224,9 @@ pv.normalize = function(array, f) {
 };
 
 /**
- * Returns the sum of the specified array of numbers. If the specified array is
- * not an array of numbers, the specified accessor function {@code f} can be
- * specified to map the array to an array of numbers. See {@link #normalize} for
- * an example.
+ * Returns the sum of the specified array. If the specified array is not an
+ * array of numbers, the specified accessor function {@code f} can be specified
+ * to map the elements to numbers. See {@link #normalize} for an example.
  *
  * @param array an array of objects, or numbers.
  * @param f an optional accessor function.
@@ -239,10 +238,10 @@ pv.sum = function(array, f) {
 };
 
 /**
- * Returns the maximum value of the specified array of numbers. If the specified
- * array is not an array of numbers, the specified accessor function {@code f}
- * can be specified to map the array to an array of numbers. See {@link
- * #normalize} for an example.
+ * Returns the maximum value of the specified array. If the specified array is
+ * not an array of numbers, the specified accessor function {@code f} can be
+ * specified to map the elements to numbers. See {@link #normalize} for an
+ * example.
  *
  * @param array an array of objects, or numbers.
  * @param f an optional accessor function.
@@ -253,6 +252,16 @@ pv.max = function(array, f) {
   return pv.reduce(array, function(p, d) { return Math.max(p, f(d)); }, -Infinity);
 };
 
+/**
+ * Returns the index of the maximum value of the specified array. If the
+ * specified array is not an array of numbers, the specified accessor function
+ * {@code f} can be specified to map the elements to numbers. See {@link
+ * #normalize} for an example.
+ *
+ * @param array an array of objects, or numbers.
+ * @param f an optional accessor function.
+ * @return the index of the maximum value of the specified array.
+ */
 pv.max.index = function(array, f) {
   if (!f) f = pv.identity;
   var maxi = -1, maxx = -Infinity;
@@ -269,8 +278,8 @@ pv.max.index = function(array, f) {
 /**
  * Returns the minimum value of the specified array of numbers. If the specified
  * array is not an array of numbers, the specified accessor function {@code f}
- * can be specified to map the array to an array of numbers. See {@link
- * #normalize} for an example.
+ * can be specified to map the elements to numbers. See {@link #normalize} for
+ * an example.
  *
  * @param array an array of objects, or numbers.
  * @param f an optional accessor function.
@@ -281,6 +290,16 @@ pv.min = function(array, f) {
   return pv.reduce(array, function(p, d) { return Math.min(p, f(d)); }, Infinity);
 };
 
+/**
+ * Returns the index of the minimum value of the specified array. If the
+ * specified array is not an array of numbers, the specified accessor function
+ * {@code f} can be specified to map the elements to numbers. See {@link
+ * #normalize} for an example.
+ *
+ * @param array an array of objects, or numbers.
+ * @param f an optional accessor function.
+ * @return the index of the minimum value of the specified array.
+ */
 pv.min.index = function(array, f) {
   if (!f) f = pv.identity;
   var mini = -1, minx = Infinity;
@@ -294,10 +313,29 @@ pv.min.index = function(array, f) {
   return mini;
 }
 
+/**
+ * Returns the arithmetic mean, or average, of the specified array. If the
+ * specified array is not an array of numbers, the specified accessor function
+ * {@code f} can be specified to map the elements to numbers. See {@link
+ * #normalize} for an example.
+ *
+ * @param array an array of objects, or numbers.
+ * @param f an optional accessor function.
+ * @return the mean of the specified array.
+ */
 pv.mean = function(array, f) {
   return pv.sum(array, f) / array.length;
 };
 
+/**
+ * Returns the median of the specified array. If the specified array is not an
+ * array of numbers, the specified accessor function {@code f} can be specified
+ * to map the elements to numbers. See {@link #normalize} for an example.
+ *
+ * @param array an array of objects, or numbers.
+ * @param f an optional accessor function.
+ * @return the median of the specified array.
+ */
 pv.median = function(array, f) {
   if (!f) f = pv.identity;
   array = array.map(f).sort(function(a, b) { return a - b; });
@@ -307,10 +345,20 @@ pv.median = function(array, f) {
 };
 
 /**
- * Array reduce was added in JavaScript 1.8. This implementation uses the native
+ * Applies the specified function {@code f} against an accumulator and each
+ * value of the specified array (from left-ot-right) so as to reduce it to a
+ * single value.
+ *
+ * <p>Array reduce was added in JavaScript 1.8. This implementation uses the native
  * method if provided; otherwise we use our own implementation derived from the
  * JavaScript documentation. Note that we don't want to add it to the Array
  * prototype directly because this breaks certain (bad) for loop idioms.
+ *
+ * @see http://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/reduce
+ * @param array an array.
+ * @param f a callback function to execute on each value in the array.
+ * @param v the object to use as the first argument to the first callback.
+ * @return the reduced value.
  */
 if (/\[native code\]/.test(Array.prototype.reduce)) {
   pv.reduce = function(array, f, v) {
