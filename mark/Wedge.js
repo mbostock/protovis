@@ -265,6 +265,12 @@ pv.Wedge.prototype.updateInstance = function(s) {
   /* left, top */
   v.setAttribute("transform", "translate(" + s.left + "," + s.top +")");
 
+  /*
+   * TODO If the angle or endAngle is updated by an event handler, the implied
+   * properties won't recompute correctly, so this will lead to potentially
+   * buggy redraw. How to re-evaluate implied properties on update?
+   */
+
   /* innerRadius, outerRadius, startAngle, endAngle */
   var r1 = s.innerRadius, r2 = s.outerRadius;
   if (s.angle >= 2 * Math.PI) {
