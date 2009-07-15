@@ -22,7 +22,7 @@ var pv = {};
  *
  * @param f a constructor.
  * @return a suitable prototype object.
- * @see http://crockford.org
+ * @see http://javascript.crockford.com/prototypal.html
  */
 pv.extend = function(f) {
   function g() {}
@@ -139,10 +139,29 @@ pv.cross = function(a, b) {
   return array;
 };
 
+/**
+ * Given the specified array of {@code arrays}, concatenates the arrays into a
+ * single array. If the individual arrays are explicitly known, an alternative
+ * to blend is to use JavaScript's {@code concat} method directly, e.g.:
+ *
+ * <pre>[1, 2, 3].concat(["a", "b", "c"])</pre>
+ *
+ * returns [1, 2, 3, "a", "b", "c"].
+ *
+ * @param arrays an array of arrays.
+ * @return an array containing all the elements of each array in {@code arrays}.
+ */
 pv.blend = function(arrays) {
   return Array.prototype.concat.apply([], arrays);
 };
 
+/**
+ * Returns all of the property names (keys) of the specified object (a map). The
+ * order of the returned array is not defined.
+ *
+ * @param map an object.
+ * @return an array of strings corresponding to the keys.
+ */
 pv.keys = function(map) {
   var array = [];
   for (var key in map) {
@@ -151,6 +170,14 @@ pv.keys = function(map) {
   return array;
 };
 
+/**
+ * Returns all of the entries (key-value pairs) of the specified object (a
+ * map). The order of the returned array is not defined. Each key-value pair is
+ * represented as an object with {@code key} and {@code value} attributes.
+ *
+ * @param map an object.
+ * @return an array of key-value pairs corresponding to the keys.
+ */
 pv.entries = function(map) {
   var array = [];
   for (var key in map) {
@@ -159,6 +186,13 @@ pv.entries = function(map) {
   return array;
 };
 
+/**
+ * Returns all of the values (attribute values) of the specified object (a
+ * map). The order of the returned array is not defined.
+ *
+ * @param map an object.
+ * @return an array of objects corresponding to the values.
+ */
 pv.values = function(map) {
   var array = [];
   for (var key in map) {
@@ -167,36 +201,60 @@ pv.values = function(map) {
   return array;
 };
 
+/**
+ * Returns a normalized copy of the specified array, such that the sum of the
+ * returned elements sum to one. If the specified array is not an array of
+ * numbers, the specified accessor function {@code f} can be specified to map
+ * the array to an array of numbers. For example, if {@code array} is an array
+ * of objects, and each object has a numeric property "foo", the function
+ *
+ * <pre>function(d) d.foo</pre>
+ *
+ * can be used to determine how to normalize the array. If an accessor function
+ * is not specified, the identity function is used.
+ *
+ * @param array an array of objects, or numbers.
+ * @param f an optional accessor function.
+ * @return an array of numbers that sums to one.
+ */
 pv.normalize = function(array, f) {
-  if (!f) {
-    f = pv.identity;
-  }
-  var sum = pv.reduce(array, function(p, d) { return p + f(d); }, 0);
+  if (!f) f = pv.identity;
+  var sum = pv.sum(array, f);
   return array.map(function(d) { return f(d) / sum; });
 };
 
-pv.count = function(array) {
-  return array.length;
-};
-
+/**
+ * Returns the sum of the specified array of numbers. If the specified array is
+ * not an array of numbers, the specified accessor function {@code f} can be
+ * specified to map the array to an array of numbers. See {@link #normalize} for
+ * an example.
+ *
+ * @param array an array of objects, or numbers.
+ * @param f an optional accessor function.
+ * @return the sum of the specified array.
+ */
 pv.sum = function(array, f) {
-  if (!f) {
-    f = pv.identity;
-  }
+  if (!f) f = pv.identity;
   return pv.reduce(array, function(p, d) { return p + f(d); }, 0);
 };
 
+/**
+ * Returns the maximum value of the specified array of numbers. If the specified
+ * array is not an array of numbers, the specified accessor function {@code f}
+ * can be specified to map the array to an array of numbers. See {@link
+ * #normalize} for an example.
+ *
+ * @param array an array of objects, or numbers.
+ * @param f an optional accessor function.
+ * @return the maximum value of the specified array.
+ */
 pv.max = function(array, f) {
-  if (!f) {
-    f = pv.identity;
-  }
+  if (!f) f = pv.identity;
   return pv.reduce(array, function(p, d) { return Math.max(p, f(d)); }, -Infinity);
 };
 
 pv.max.index = function(array, f) {
-  if (!f) {
-    f = pv.identity;
-  }
+  if (!f) f = pv.identity;
   var maxi = -1, maxx = -Infinity;
   for (var i = 0; i < array.length; i++) {
     var x = f(array[i]);
@@ -208,17 +266,23 @@ pv.max.index = function(array, f) {
   return maxi;
 }
 
+/**
+ * Returns the minimum value of the specified array of numbers. If the specified
+ * array is not an array of numbers, the specified accessor function {@code f}
+ * can be specified to map the array to an array of numbers. See {@link
+ * #normalize} for an example.
+ *
+ * @param array an array of objects, or numbers.
+ * @param f an optional accessor function.
+ * @return the minimum value of the specified array.
+ */
 pv.min = function(array, f) {
-  if (!f) {
-    f = pv.identity;
-  }
+  if (!f) f = pv.identity;
   return pv.reduce(array, function(p, d) { return Math.min(p, f(d)); }, Infinity);
 };
 
 pv.min.index = function(array, f) {
-  if (!f) {
-    f = pv.identity;
-  }
+  if (!f) f = pv.identity;
   var mini = -1, minx = Infinity;
   for (var i = 0; i < array.length; i++) {
     var x = f(array[i]);
@@ -235,13 +299,9 @@ pv.mean = function(array, f) {
 };
 
 pv.median = function(array, f) {
-  if (!f) {
-    f = pv.identity;
-  }
+  if (!f) f = pv.identity;
   array = array.map(f).sort(function(a, b) { return a - b; });
-  if (array.length % 2) {
-    return array[Math.floor(array.length / 2)];
-  }
+  if (array.length % 2) return array[Math.floor(array.length / 2)];
   var i = array.length / 2;
   return (array[i - 1] + array[i]) / 2;
 };
@@ -298,18 +358,14 @@ pv.dict = function(array, f) {
 };
 
 pv.permute = function(array, permutation, f) {
-  if (!f) {
-    f = pv.identity;
-  }
+  if (!f) f = pv.identity;
   var p = new Array(array.length);
   permutation.forEach(function(j, i) { p[i] = f(array[j]); });
   return p;
 };
 
 pv.numerate = function(array, f) {
-  if (!f) {
-    f = pv.identity;
-  }
+  if (!f) f = pv.identity;
   var map = {};
   array.forEach(function(x, i) { map[f(x)] = i; });
   return map;
@@ -323,17 +379,6 @@ pv.naturalOrder = function(a, b) {
   return (a < b) ? -1 : ((a > b) ? 1 : 0);
 };
 
-pv.gradient = function() {
-  if (arguments.length < 2) {
-    return arguments[0];
-  }
-  var g = new pv.Gradient();
-  for (var i = 0, n = arguments.length - 1; i <= n; i++) {
-    g.color(i / n, arguments[i]);
-  }
-  return g;
-};
-
 pv.css = function(e, p) {
   return parseFloat(self.getComputedStyle(e, null).getPropertyValue(p));
 };
@@ -344,4 +389,4 @@ pv.ns = {
  xlink: "http://www.w3.org/1999/xlink",
 };
 
-pv.version = { major: 2, minor: 5 };
+pv.version = { major: 2, minor: 6 };
