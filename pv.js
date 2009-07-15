@@ -394,47 +394,121 @@ if (/\[native code\]/.test(Array.prototype.reduce)) {
   };
 };
 
-pv.dict = function(array, f) {
+/**
+ * Returns a map constructed from the specified {@code keys}, using the function
+ * {@code f} to compute the value for each key. The arguments to the value
+ * function are the same as those used in the built-in array {@code map}
+ * function: the key, the index, and the array itself. The callback is invoked
+ * only for indexes of the array which have assigned values; it is not invoked
+ * for indexes which have been deleted or which have never been assigned values.
+ *
+ * <p>The following example creates a map from strings to string length:
+ *
+ * <pre>pv.dict(["one", "three", "seventeen"], function(s) s.length)</pre>
+ *
+ * The returned value is <tt>{one: 3, three: 5, seventeen: 9}</tt>.
+ *
+ * @see http://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Global_Objects/Array/map
+ * @param keys an array.
+ * @param f a value function.
+ * @return a map from keys to values.
+ */
+pv.dict = function(keys, f) {
   var m = {};
-  for (var i = 0; i < array.length; i++) {
-    if (i in array) {
-      var k = array[i];
-      m[k] = f.call(null, k, i, array);
+  for (var i = 0; i < keys.length; i++) {
+    if (i in keys) {
+      var k = keys[i];
+      m[k] = f.call(null, k, i, keys);
     }
   }
   return m;
 };
 
-pv.permute = function(array, permutation, f) {
+/**
+ * Returns a permutation of the specified array, using the specified array of
+ * indexes. The returned array contains the corresponding element in {@code
+ * array} for each index in {@code indexes}, in order. For example,
+ *
+ * <pre>pv.permute(["a", "b", "c"], [1, 2, 0])</pre>
+ *
+ * returns <tt>["b", "c", "a"]</tt>. It is acceptable for the array of indexes
+ * to be a different length from the array of elements, and for indexes to be
+ * duplicated or omitted. The optional accessor function {@code f} can be used
+ * to perform a simultaneous mapping of the array elements.
+ *
+ * @param array an array.
+ * @param indexes an array of indexes into {@code array}.
+ * @param f an optional accessor function.
+ * @return an array of elements from {@code array}; a permutation.
+ */
+pv.permute = function(array, indexes, f) {
   if (!f) f = pv.identity;
-  var p = new Array(array.length);
-  permutation.forEach(function(j, i) { p[i] = f(array[j]); });
+  var p = new Array(indexes.length);
+  indexes.forEach(function(j, i) { p[i] = f(array[j]); });
   return p;
 };
 
-pv.numerate = function(array, f) {
+/**
+ * Returns a map from key to index for the specified {@code keys} array. For
+ * example,
+ *
+ * <pre>pv.numerate(["a", "b", "c"])</pre>
+ *
+ * returns <tt>{a: 0, b: 1, c: 2}</tt>. Note that since JavaScript maps only
+ * support string keys, {@code keys} must contain strings, or other values that
+ * naturally map to distinct string values. Alternatively, an optional accessor
+ * function {@code f} can be specified to compute the string key for the given
+ * element.
+ *
+ * @param keys an array, usually of string keys.
+ * @param f an optional key function.
+ * @return a map from key to index.
+ */
+pv.numerate = function(keys, f) {
   if (!f) f = pv.identity;
   var map = {};
-  array.forEach(function(x, i) { map[f(x)] = i; });
+  keys.forEach(function(x, i) { map[f(x)] = i; });
   return map;
 };
 
-pv.reverseOrder = function(b, a) {
-  return (a < b) ? -1 : ((a > b) ? 1 : 0);
-};
-
+/**
+ * The compare function for natural order. This can be used in conjunction with
+ * the built-in array {@code sort} method to sort elements by their natural
+ * order, ascending. Note that if no compare function is specified to the
+ * built-in {@code sort} method, the default order is lexicographic <i>not</i>
+ * natural!
+ *
+ * @see http://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Global_Objects/Array/sort
+ * @param a an element to compare.
+ * @param b an element to compare.
+ * @return negative if a &lt; b; positive if a &gt; b; otherwise 0.
+ */
 pv.naturalOrder = function(a, b) {
   return (a < b) ? -1 : ((a > b) ? 1 : 0);
 };
 
-pv.css = function(e, p) {
-  return parseFloat(self.getComputedStyle(e, null).getPropertyValue(p));
+/**
+ * The compare function for reverse natural order. This can be used in
+ * conjunction with the built-in array {@code sort} method to sort elements by
+ * their natural order, descending. Note that if no compare function is
+ * specified to the built-in {@code sort} method, the default order is
+ * lexicographic <i>not</i> natural!
+ *
+ * @see #naturalOrder
+ * @param a an element to compare.
+ * @param b an element to compare.
+ * @return negative if a &lt; b; positive if a &gt; b; otherwise 0.
+ */
+pv.reverseOrder = function(b, a) {
+  return (a < b) ? -1 : ((a > b) ? 1 : 0);
 };
 
+/** Namespace constants for SVG, XMLNS, and XLINK. */
 pv.ns = {
  svg: "http://www.w3.org/2000/svg",
  xmlns: "http://www.w3.org/2000/xmlns",
  xlink: "http://www.w3.org/1999/xlink",
 };
 
+/** Protovis major and minor version numbers. */
 pv.version = { major: 2, minor: 6 };

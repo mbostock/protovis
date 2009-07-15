@@ -214,16 +214,21 @@ pv.Panel.prototype.buildImplied = function(s) {
         d.appendChild(c);
       }
 
+      /** Returns the computed style for the given element and property. */
+      function css(e, p) {
+        return parseFloat(self.getComputedStyle(e, null).getPropertyValue(p));
+      }
+
       /* If width and height weren't specified, inspect the container. */
       var w, h;
       if (s.width == null) {
-        w = pv.css(d, "width");
+        w = css(d, "width");
         s.width = w - s.left - s.right;
       } else {
         w = s.width + s.left + s.right;
       }
       if (s.height == null) {
-        h = pv.css(d, "height");
+        h = css(d, "height");
         s.height = h - s.top - s.bottom;
       } else {
         h = s.height + s.top + s.bottom;
