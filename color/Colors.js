@@ -1,12 +1,12 @@
 /**
  * Returns a new categorical color encoding using the specified colors.
+ * The arguments to this method are an array of colors; see {@link pv.color}.
  *
- * @param {Array} values an array of colors; see {@link pv.color}.
  * @returns {pv.Colors} a new categorical color encoding.
  * @see pv.Colors
  */
-pv.colors = function(values) {
-  return pv.Colors(values);
+pv.colors = function() {
+  return pv.Colors(arguments);
 };
 
 /**
