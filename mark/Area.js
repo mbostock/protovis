@@ -9,12 +9,21 @@
  * width or the height must be specified, but not both; this determines whether
  * the area is horizontally-oriented or vertically-oriented.  Like lines, areas
  * can be stroked and filled with arbitrary colors.
+ *
+ * @class
+ * @extends pv.Mark
  */
 pv.Area = function() {
   pv.Mark.call(this);
 };
 pv.Area.prototype = pv.extend(pv.Mark);
 pv.Area.prototype.type = pv.Area;
+
+/**
+ * Returns "area".
+ *
+ * @returns {string} "area".
+ */
 pv.Area.toString = function() { return "area"; };
 
 /**
@@ -22,6 +31,9 @@ pv.Area.toString = function() { return "area"; };
  * is specified, the height property should be 0 (the default). Either the top
  * or bottom property should be used to space the spans vertically, typically as
  * a multiple of the index.
+ *
+ * @type number
+ * @name pv.Area.prototype.width
  */
 pv.Area.prototype.defineProperty("width");
 
@@ -30,6 +42,9 @@ pv.Area.prototype.defineProperty("width");
  * is specified, the width property should be 0 (the default). Either the left
  * or right property should be used to space the spans horizontally, typically
  * as a multiple of the index.
+ *
+ * @type number
+ * @name pv.Area.prototype.height
  */
 pv.Area.prototype.defineProperty("height");
 
@@ -40,7 +55,10 @@ pv.Area.prototype.defineProperty("height");
  * edge. The default value of this property is 1.5, but since the default stroke
  * style is null, area marks are not stroked by default.
  *
- * <p>This property is <i>fixed</i>. See {@link Mark}.
+ * <p>This property is <i>fixed</i>. See {@link pv.Mark}.
+ *
+ * @type number
+ * @name pv.Area.prototype.lineWidth
  */
 pv.Area.prototype.defineProperty("lineWidth");
 
@@ -50,7 +68,10 @@ pv.Area.prototype.defineProperty("lineWidth");
  * entire perimeter is stroked, rather than just one edge. The default value of
  * this property is null, meaning areas are not stroked by default.
  *
- * <p>This property is <i>fixed</i>. See {@link Mark}.
+ * <p>This property is <i>fixed</i>. See {@link pv.Mark}.
+ *
+ * @type string
+ * @name pv.Area.prototype.strokeStyle
  */
 pv.Area.prototype.defineProperty("strokeStyle");
 
@@ -59,13 +80,18 @@ pv.Area.prototype.defineProperty("strokeStyle");
  * area is filled with the specified color. The default value of this property
  * is a categorical color.
  *
- * <p>This property is <i>fixed</i>. See {@link Mark}.
+ * <p>This property is <i>fixed</i>. See {@link pv.Mark}.
+ *
+ * @type string
+ * @name pv.Area.prototype.fillStyle
  */
 pv.Area.prototype.defineProperty("fillStyle");
 
 /**
  * Default properties for areas. By default, there is no stroke and the fill
  * style is a categorical color.
+ *
+ * @type pv.Area
  */
 pv.Area.defaults = new pv.Area().extend(pv.Mark.defaults)
     .lineWidth(1.5)
@@ -90,7 +116,10 @@ pv.Area.defaults = new pv.Area().extend(pv.Mark.defaults)
  * that the area grows upwards; the bottom anchor instead defines the top
  * property, such that the area grows downwards. Of course, in general it is
  * more robust to use panels and the cousin accessor to define stacked area
- * marks; see {@link Mark#scene} for an example.
+ * marks; see {@link pv.Mark#scene} for an example.
+ *
+ * @class
+ * @extends pv.Mark.Anchor
  */
 pv.Area.Anchor = function() {
   pv.Mark.Anchor.call(this);
@@ -171,7 +200,7 @@ pv.Area.Anchor.prototype.$textBaseline = function(d) {
 };
 
 /**
- * Overrides the default behavior of {@link Mark#buildImplied} such that the
+ * Overrides the default behavior of {@link pv.Mark#buildImplied} such that the
  * width and height are set to zero if null.
  *
  * @param s a node in the scene graph; the instance of the mark to build.
