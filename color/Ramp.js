@@ -14,19 +14,21 @@ pv.ramp = function(start, end) {
 };
 
 /**
- * Represents a linear color ramp from the specified <tt>start</tt> color to the
- * specified <tt>end</tt> color. Ramps can be used as property functions; their
- * behavior is equivalent to calling {@link #value}, passing in the current
- * datum as the sample point. If the data is <i>not</i> a float in [0, 1], the
- * {@link #by} method can be used to map the datum to a suitable sample point.
- *
- * <p>This constructor should not be invoked directly; use {@link pv.ramp}
+ * Constructs a ramp from the specified start color to the specified end
+ * color. This constructor should not be invoked directly; use {@link pv.ramp}
  * instead.
  *
- * @class
+ * @class Represents a linear color ramp from the specified <tt>start</tt> color
+ * to the specified <tt>end</tt> color. Ramps can be used as property functions;
+ * their behavior is equivalent to calling {@link #value}, passing in the
+ * current datum as the sample point. If the data is <i>not</i> a float in [0,
+ * 1], the {@link #by} method can be used to map the datum to a suitable sample
+ * point.
+ *
  * @extends Function
  * @param {pv.Color} start the start color.
  * @param {pv.Color} end the end color.
+ * @see pv.ramp
  */
 pv.Ramp = function(start, end) {
   var s = start.rgb(), e = end.rgb(), f = pv.identity;

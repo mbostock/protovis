@@ -68,7 +68,8 @@ pv.color = function(format) {
 };
 
 /**
- * Constructs a color with the specified color format string and opacity.
+ * Constructs a color with the specified color format string and opacity. This
+ * constructor should not be invoked directly; use {@link pv.color} instead.
  *
  * @class Represents an abstract (possibly translucent) color. The color is
  * divided into two parts: the <tt>color</tt> attribute, an opaque color format
@@ -76,11 +77,9 @@ pv.color = function(format) {
  * space is dependent on the implementing class; all colors should support the
  * {@link #rgb} method to convert to RGB color space for interpolation.
  *
- * <p>This constructor should not be invoked directly; use {@link pv.color}
- * instead.
- *
  * @param {string} color an opaque color format string, such as "#f00".
  * @param {number} opacity the opacity, in [0,1].
+ * @see pv.color
  */
 pv.Color = function(color, opacity) {
   /**
@@ -101,13 +100,14 @@ pv.Color = function(color, opacity) {
 };
 
 /**
- * Represents a color in RGB space.
+ * Constructs a new RGB color with the specified channel values.
+ *
+ * @class Represents a color in RGB space.
  *
  * @param {number} r the red channel, an integer in [0,255].
  * @param {number} g the green channel, an integer in [0,255].
  * @param {number} b the blue channel, an integer in [0,255].
  * @param {number} a the alpha channel, a float in [0,1].
- * @class
  * @extends pv.Color
  */
 pv.Color.Rgb = function(r, g, b, a) {
@@ -160,13 +160,14 @@ pv.Color.Rgb.prototype = pv.extend(pv.Color);
 pv.Color.Rgb.prototype.rgb = function() { return this; };
 
 /**
- * Represents a color in HSL space.
+ * Constructs a new HSL color with the specified values.
+ *
+ * @class Represents a color in HSL space.
  *
  * @param {number} h the hue, an integer in [0, 360].
  * @param {number} s the saturation, a float in [0, 1].
  * @param {number} l the lightness, a float in [0, 1].
  * @param {number} a the opacity, a float in [0, 1].
- * @class
  * @extends pv.Color
  */
 pv.Color.Hsl = function(h, s, l, a) {
