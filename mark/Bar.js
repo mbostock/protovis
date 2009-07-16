@@ -14,20 +14,32 @@
  * margins; this is convenient as an inset from the containing panel, for
  * example.
  *
- * <p>See {@link Mark#buildImplied} for details on the prioritization of
+ * <p>See {@link pv.Mark#buildImplied} for details on the prioritization of
  * redundant positioning properties.
+ *
+ * @class
+ * @extends pv.Mark
  */
 pv.Bar = function() {
   pv.Mark.call(this);
 };
 pv.Bar.prototype = pv.extend(pv.Mark);
 pv.Bar.prototype.type = pv.Bar;
+
+/**
+ * Returns "bar".
+ *
+ * @returns {string} "bar".
+ */
 pv.Bar.toString = function() { return "bar"; };
 
 /**
  * The width of the bar, in pixels. If the left position is specified, the bar
  * extends rightward from the left edge; if the right position is specified, the
  * bar extends leftward from the right edge.
+ *
+ * @type number
+ * @name pv.Bar.prototype.width
  */
 pv.Bar.prototype.defineProperty("width");
 
@@ -35,12 +47,18 @@ pv.Bar.prototype.defineProperty("width");
  * The height of the bar, in pixels. If the bottom position is specified, the
  * bar extends upward from the bottom edge; if the top position is specified,
  * the bar extends downward from the top edge.
+ *
+ * @type number
+ * @name pv.Bar.prototype.height
  */
 pv.Bar.prototype.defineProperty("height");
 
 /**
  * The width of stroked lines, in pixels; used in conjunction with
  * <tt>strokeStyle</tt> to stroke the bar's border.
+ *
+ * @type number
+ * @name pv.Bar.prototype.lineWidth
  */
 pv.Bar.prototype.defineProperty("lineWidth");
 
@@ -48,18 +66,26 @@ pv.Bar.prototype.defineProperty("lineWidth");
  * The style of stroked lines; used in conjunction with <tt>lineWidth</tt> to
  * stroke the bar's border. The default value of this property is null, meaning
  * bars are not stroked by default.
+ *
+ * @type string
+ * @name pv.Bar.prototype.strokeStyle
  */
 pv.Bar.prototype.defineProperty("strokeStyle");
 
 /**
  * The bar fill style; if non-null, the interior of the bar is filled with the
  * specified color. The default value of this property is a categorical color.
+ *
+ * @type string
+ * @name pv.Bar.prototype.fillStyle
  */
 pv.Bar.prototype.defineProperty("fillStyle");
 
 /**
  * Default properties for bars. By default, there is no stroke and the fill
  * style is a categorical color.
+ *
+ * @type pv.Bar
  */
 pv.Bar.defaults = new pv.Bar().extend(pv.Mark.defaults)
     .lineWidth(1.5)
@@ -83,13 +109,16 @@ pv.Bar.defaults = new pv.Bar().extend(pv.Mark.defaults)
  * that the bar grows upwards; the bottom anchor instead defines the top
  * property, such that the bar grows downwards. Of course, in general it is more
  * robust to use panels and the cousin accessor to define stacked bars; see
- * {@link Mark#scene} for an example.
+ * {@link pv.Mark#scene} for an example.
  *
  * <p>Bar anchors also "smartly" specify position properties based on whether
  * the derived mark type supports the width and height properties. If the
  * derived mark type does not support these properties (e.g., Dot), the position
  * will be centered on the corresponding edge. Otherwise (e.g., Bar), the
  * position will be in the opposite side.
+ *
+ * @class
+ * @extends pv.Mark.Anchor
  */
 pv.Bar.Anchor = function() {
   pv.Mark.Anchor.call(this);
@@ -97,8 +126,13 @@ pv.Bar.Anchor = function() {
 pv.Bar.Anchor.prototype = pv.extend(pv.Mark.Anchor);
 pv.Bar.Anchor.prototype.type = pv.Bar;
 
-/** The left property; null for "left" anchors, non-null otherwise. */
-pv.Bar.Anchor.prototype.$left = function(d) {
+/**
+ * The left property; null for "left" anchors, non-null otherwise.
+ *
+ * @type number
+ * @name pv.Bar.Anchor.prototype.left
+ */ /** @private */
+pv.Bar.Anchor.prototype.$left = function() {
   var bar = this.anchorTarget();
   switch (this.get("name")) {
     case "bottom":
@@ -109,8 +143,13 @@ pv.Bar.Anchor.prototype.$left = function(d) {
   return null;
 };
 
-/** The right property; null for "right" anchors, non-null otherwise. */
-pv.Bar.Anchor.prototype.$right = function(d) {
+/**
+ * The right property; null for "right" anchors, non-null otherwise.
+ *
+ * @type number
+ * @name pv.Bar.Anchor.prototype.right
+ */ /** @private */
+pv.Bar.Anchor.prototype.$right = function() {
   var bar = this.anchorTarget();
   switch (this.get("name")) {
     case "bottom":
@@ -121,8 +160,13 @@ pv.Bar.Anchor.prototype.$right = function(d) {
   return null;
 };
 
-/** The top property; null for "top" anchors, non-null otherwise. */
-pv.Bar.Anchor.prototype.$top = function(d) {
+/**
+ * The top property; null for "top" anchors, non-null otherwise.
+ *
+ * @type number
+ * @name pv.Bar.Anchor.prototype.top
+ */ /** @private */
+pv.Bar.Anchor.prototype.$top = function() {
   var bar = this.anchorTarget();
   switch (this.get("name")) {
     case "left":
@@ -133,8 +177,13 @@ pv.Bar.Anchor.prototype.$top = function(d) {
   return null;
 };
 
-/** The bottom property; null for "bottom" anchors, non-null otherwise. */
-pv.Bar.Anchor.prototype.$bottom = function(d) {
+/**
+ * The bottom property; null for "bottom" anchors, non-null otherwise.
+ *
+ * @type number
+ * @name pv.Bar.Anchor.prototype.bottom
+ */ /** @private */
+pv.Bar.Anchor.prototype.$bottom = function() {
   var bar = this.anchorTarget();
   switch (this.get("name")) {
     case "left":
@@ -145,8 +194,13 @@ pv.Bar.Anchor.prototype.$bottom = function(d) {
   return null;
 };
 
-/** The text-align property, for horizontal alignment inside the bar. */
-pv.Bar.Anchor.prototype.$textAlign = function(d) {
+/**
+ * The text-align property, for horizontal alignment inside the bar.
+ *
+ * @type string
+ * @name pv.Bar.Anchor.prototype.textAlign
+ */ /** @private */
+pv.Bar.Anchor.prototype.$textAlign = function() {
   switch (this.get("name")) {
     case "left": return "left";
     case "bottom":
@@ -157,8 +211,13 @@ pv.Bar.Anchor.prototype.$textAlign = function(d) {
   return null;
 };
 
-/** The text-baseline property, for vertical alignment inside the bar. */
-pv.Bar.Anchor.prototype.$textBaseline = function(d) {
+/**
+ * The text-baseline property, for vertical alignment inside the bar.
+ *
+ * @type string
+ * @name pv.Bar.Anchor.prototype.textBaseline
+ */ /** @private */
+pv.Bar.Anchor.prototype.$textBaseline = function() {
   switch (this.get("name")) {
     case "right":
     case "left":

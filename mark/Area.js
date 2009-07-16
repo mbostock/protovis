@@ -127,8 +127,13 @@ pv.Area.Anchor = function() {
 pv.Area.Anchor.prototype = pv.extend(pv.Mark.Anchor);
 pv.Area.Anchor.prototype.type = pv.Area;
 
-/** The left property; null for "left" anchors, non-null otherwise. */
-pv.Area.Anchor.prototype.$left = function(d) {
+/**
+ * The left property; null for "left" anchors, non-null otherwise.
+ *
+ * @type number
+ * @name pv.Area.Anchor.prototype.left
+ */ /** @private */
+pv.Area.Anchor.prototype.$left = function() {
   var area = this.anchorTarget();
   switch (this.get("name")) {
     case "bottom":
@@ -139,8 +144,13 @@ pv.Area.Anchor.prototype.$left = function(d) {
   return null;
 };
 
-/** The right property; null for "right" anchors, non-null otherwise. */
-pv.Area.Anchor.prototype.$right = function(d) {
+/**
+ * The right property; null for "right" anchors, non-null otherwise.
+ *
+ * @type number
+ * @name pv.Area.Anchor.prototype.right
+ */ /** @private */
+pv.Area.Anchor.prototype.$right = function() {
   var area = this.anchorTarget();
   switch (this.get("name")) {
     case "bottom":
@@ -151,8 +161,13 @@ pv.Area.Anchor.prototype.$right = function(d) {
   return null;
 };
 
-/** The top property; null for "top" anchors, non-null otherwise. */
-pv.Area.Anchor.prototype.$top = function(d) {
+/**
+ * The top property; null for "top" anchors, non-null otherwise.
+ *
+ * @type number
+ * @name pv.Area.Anchor.prototype.top
+ */ /** @private */
+pv.Area.Anchor.prototype.$top = function() {
   var area = this.anchorTarget();
   switch (this.get("name")) {
     case "left":
@@ -163,8 +178,13 @@ pv.Area.Anchor.prototype.$top = function(d) {
   return null;
 };
 
-/** The bottom property; null for "bottom" anchors, non-null otherwise. */
-pv.Area.Anchor.prototype.$bottom = function(d) {
+/**
+ * The bottom property; null for "bottom" anchors, non-null otherwise.
+ *
+ * @type number
+ * @name pv.Area.Anchor.prototype.bottom
+ */ /** @private */
+pv.Area.Anchor.prototype.$bottom = function() {
   var area = this.anchorTarget();
   switch (this.get("name")) {
     case "left":
@@ -175,8 +195,13 @@ pv.Area.Anchor.prototype.$bottom = function(d) {
   return null;
 };
 
-/** The text-align property, for horizontal alignment inside the area. */
-pv.Area.Anchor.prototype.$textAlign = function(d) {
+/**
+ * The text-align property, for horizontal alignment inside the area.
+ *
+ * @type string
+ * @name pv.Area.Anchor.prototype.textAlign
+ */ /** @private */
+pv.Area.Anchor.prototype.$textAlign = function() {
   switch (this.get("name")) {
     case "left": return "left";
     case "bottom":
@@ -187,8 +212,13 @@ pv.Area.Anchor.prototype.$textAlign = function(d) {
   return null;
 };
 
-/** The text-baseline property, for vertical alignment inside the area. */
-pv.Area.Anchor.prototype.$textBaseline = function(d) {
+/**
+ * The text-baseline property, for vertical alignment inside the area.
+ *
+ * @type string
+ * @name pv.Area.Anchor.prototype.textBasline
+ */ /** @private */
+pv.Area.Anchor.prototype.$textBaseline = function() {
   switch (this.get("name")) {
     case "right":
     case "left":
