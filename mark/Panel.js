@@ -1,10 +1,13 @@
 /**
- * Represents a container mark. Panels allow repeated or nested structures,
- * commonly used in small multiple displays where a small visualization is tiled
- * to facilitate comparison across one or more dimensions. Other types of
- * visualizations may benefit from repeated and possibly overlapping structure
- * as well, such as stacked area charts. Panels can also offset the position of
- * marks to provide padding from surrounding content.
+ * Constructs a new, empty panel with default properties.
+ *
+ * @class Represents a container mark. Panels allow repeated or nested
+ * structures, commonly used in small multiple displays where a small
+ * visualization is tiled to facilitate comparison across one or more
+ * dimensions. Other types of visualizations may benefit from repeated and
+ * possibly overlapping structure as well, such as stacked area charts. Panels
+ * can also offset the position of marks to provide padding from surrounding
+ * content.
  *
  * <p>All Protovis displays have at least one panel; this is the root panel to
  * which marks are rendered. The box model properties (four margins, width and
@@ -22,21 +25,39 @@
  * child marks in the order they were added. Panels also have a <tt>root</tt>
  * field which points to the root (outermost) panel; the root panel's root field
  * points to itself.
+ *
+ * @extends pv.Bar
  */
 pv.Panel = function() {
   pv.Bar.call(this);
+
+  /**
+   * The child marks; zero or more {@link pv.Mark}s in the order they were
+   * added.
+   *
+   * @see #add
+   * @type Array
+   */
   this.children = [];
   this.root = this;
 
-  /*
+  /**
    * The internal $dom field is set by the Protovis loader; see lang/init.js. It
    * refers to the script element that contains the Protovis specification, so
    * that the panel knows where in the DOM to insert the generated SVG element.
+   *
+   * @private
    */
   this.$dom = pv.Panel.$dom;
 };
 pv.Panel.prototype = pv.extend(pv.Bar);
 pv.Panel.prototype.type = pv.Panel;
+
+/**
+ * Returns "panel".
+ *
+ * @returns {string} "panel".
+ */
 pv.Panel.toString = function() { return "panel"; };
 
 /**
@@ -50,6 +71,9 @@ pv.Panel.toString = function() { return "panel"; };
  * HTML container element), <i>not</i> a <tt>canvas</tt> element. The name of
  * this property is a historical anachronism from the first implementation that
  * used HTML 5 canvas, rather than SVG.
+ *
+ * @type string
+ * @name pv.Panel.prototype.canvas
  */
 pv.Panel.prototype.defineProperty("canvas");
 
@@ -61,12 +85,17 @@ pv.Panel.prototype.defineProperty("canvas");
  * the reverse property to false reverses the order in which they are added to
  * the SVG element; however, the properties are still evaluated (i.e., built) in
  * forward order.
+ *
+ * @type boolean
+ * @name pv.Panel.prototype.reverse
  */
 pv.Panel.prototype.defineProperty("reverse");
 
 /**
  * Default properties for panels. By default, the margins are zero, the fill
  * style is transparent, and the reverse property is false.
+ *
+ * @type pv.Panel
  */
 pv.Panel.defaults = new pv.Panel().extend(pv.Bar.defaults)
     .top(0).left(0).bottom(0).right(0)
@@ -81,8 +110,8 @@ pv.Panel.defaults = new pv.Panel().extend(pv.Bar.defaults)
  * it is always possible to change this behavior by calling {@link Mark#extend}
  * explicitly.
  *
- * @param type the type of the new mark to add.
- * @return the new mark.
+ * @param {Function} type the type of the new mark to add.
+ * @returns {pv.Mark} the new mark.
  */
 pv.Panel.prototype.add = function(type) {
   var child = new type();

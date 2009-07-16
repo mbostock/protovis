@@ -1,16 +1,17 @@
 /**
- * Represents a series of connected line segments, or <i>polyline</i>, that can
- * be stroked with a configurable color and thickness. Each articulation point
- * in the line corresponds to a datum; for <i>n</i> points, <i>n</i>-1
- * connected line segments are drawn. The point is positioned using the box
- * model. Arbitrary paths are also possible, allowing radar plots and other
- * custom visualizations.
+ * Constructs a new line mark with default properties.
+ *
+ * @class Represents a series of connected line segments, or <i>polyline</i>,
+ * that can be stroked with a configurable color and thickness. Each
+ * articulation point in the line corresponds to a datum; for <i>n</i> points,
+ * <i>n</i>-1 connected line segments are drawn. The point is positioned using
+ * the box model. Arbitrary paths are also possible, allowing radar plots and
+ * other custom visualizations.
  *
  * <p>Like areas, lines can be stroked and filled with arbitrary colors. In most
  * cases, lines are only stroked, but the fill style can be used to construct
  * arbitrary polygons.
  *
- * @class
  * @extends pv.Mark
  */
 pv.Line = function() {

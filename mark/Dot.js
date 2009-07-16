@@ -1,5 +1,7 @@
 /**
- * Represents a dot; a dot is simply a sized glyph centered at a given point
+ * Constructs a new dot mark with default properties.
+ *
+ * @class Represents a dot; a dot is simply a sized glyph centered at a given point
  * that can also be stroked and filled. The <tt>size</tt> property is
  * proportional to the area of the rendered glyph to encourage meaningful visual
  * encodings. Dots can visually encode up to eight dimensions of data, though
@@ -8,7 +10,6 @@
  * <p>See {@link Mark#buildImplied} for details on the prioritization of
  * redundant positioning properties.
  *
- * @class
  * @extends pv.Mark
  */
 pv.Dot = function() {
@@ -114,7 +115,10 @@ pv.Dot.defaults = new pv.Dot().extend(pv.Mark.defaults)
     .strokeStyle(pv.Colors.category10);
 
 /**
- * Represents an anchor for a dot mark. Dots support five different anchors:<ul>
+ * Constructs a new dot anchor with default properties.
+ *
+ * @class Represents an anchor for a dot mark. Dots support five different
+ * anchors:<ul>
  *
  * <li>top
  * <li>left
@@ -131,7 +135,6 @@ pv.Dot.defaults = new pv.Dot().extend(pv.Mark.defaults)
  * defined in terms of their opposite edge. For example, the top anchor defines
  * the bottom property, such that a bar added to the top anchor grows upward.
  *
- * @class
  * @extends pv.Mark.Anchor
  */
 pv.Dot.Anchor = function() {

@@ -1,5 +1,7 @@
 /**
- * Represents an image. Images share the same layout and style properties as
+ * Constructs a new dot mark with default properties.
+ *
+ * @class Represents an image. Images share the same layout and style properties as
  * bars, in conjunction with an external image such as PNG or JPEG. The image is
  * specified via the {@link #url} property. The fill, if specified, appears
  * beneath the image, while the optional stroke appears above the image.
@@ -15,7 +17,6 @@
  *
  * <p>See {@link pv.Bar} for details on positioning properties.
  *
- * @class
  * @extends pv.Bar
  */
 pv.Image = function() {

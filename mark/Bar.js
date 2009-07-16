@@ -1,5 +1,7 @@
 /**
- * Represents a bar: an axis-aligned rectangle that can be stroked and
+ * Constructs a new bar mark with default properties.
+ *
+ * @class Represents a bar: an axis-aligned rectangle that can be stroked and
  * filled. Bars are used for many chart types, including bar charts, histograms
  * and Gantt charts. Bars can also be used as decorations, for example to draw a
  * frame border around a panel; in fact, a panel is a special type (a subclass)
@@ -17,7 +19,6 @@
  * <p>See {@link pv.Mark#buildImplied} for details on the prioritization of
  * redundant positioning properties.
  *
- * @class
  * @extends pv.Mark
  */
 pv.Bar = function() {
@@ -94,7 +95,10 @@ pv.Bar.defaults = new pv.Bar().extend(pv.Mark.defaults)
     .fillStyle(pv.Colors.category20);
 
 /**
- * Represents an anchor for a bar mark. Bars support five different anchors:<ul>
+ * Constructs a new bar anchor with default properties.
+ *
+ * @class Represents an anchor for a bar mark. Bars support five different
+ * anchors:<ul>
  *
  * <li>top
  * <li>left
@@ -119,7 +123,6 @@ pv.Bar.defaults = new pv.Bar().extend(pv.Mark.defaults)
  * will be centered on the corresponding edge. Otherwise (e.g., Bar), the
  * position will be in the opposite side.
  *
- * @class
  * @extends pv.Mark.Anchor
  */
 pv.Bar.Anchor = function() {

@@ -68,10 +68,12 @@ pv.color = function(format) {
 };
 
 /**
- * Represents an abstract (possibly translucent) color. The color is divided
- * into two parts: the <tt>color</tt> attribute, an opaque color format string,
- * and the <tt>opacity</tt> attribute, a float in [0, 1]. The color space is
- * dependent on the implementing class; all colors should support the
+ * Constructs a color with the specified color format string and opacity.
+ *
+ * @class Represents an abstract (possibly translucent) color. The color is
+ * divided into two parts: the <tt>color</tt> attribute, an opaque color format
+ * string, and the <tt>opacity</tt> attribute, a float in [0, 1]. The color
+ * space is dependent on the implementing class; all colors should support the
  * {@link #rgb} method to convert to RGB color space for interpolation.
  *
  * <p>This constructor should not be invoked directly; use {@link pv.color}
@@ -79,7 +81,6 @@ pv.color = function(format) {
  *
  * @param {string} color an opaque color format string, such as "#f00".
  * @param {number} opacity the opacity, in [0,1].
- * @class
  */
 pv.Color = function(color, opacity) {
   /**

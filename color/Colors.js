@@ -1,7 +1,13 @@
+/**
+ * @returns {pv.Colors}
+ */
 pv.colors = function() {
   return pv.Colors(arguments);
 };
 
+/**
+ * @class
+ */
 pv.Colors = function(values) {
 
   /*

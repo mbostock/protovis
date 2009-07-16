@@ -1,7 +1,9 @@
 /**
- * Represents a wedge, or pie slice. Specified in terms of start and end angle,
- * inner and outer radius, wedges can be used to construct donut charts and
- * polar bar charts as well. If the {@link #angle} property is used, the end
+ * Constructs a new wedge with default properties.
+ *
+ * @class Represents a wedge, or pie slice. Specified in terms of start and end
+ * angle, inner and outer radius, wedges can be used to construct donut charts
+ * and polar bar charts as well. If the {@link #angle} property is used, the end
  * angle is implied by adding this value to start angle. By default, the start
  * angle is the previously-generated wedge's end angle. This design allows
  * explicit control over the wedge placement if desired, while offering
@@ -9,12 +11,20 @@
  *
  * <p>The center point of the circle is positioned using the standard box model.
  * The wedge can be stroked and filled, similar to {link Bar}.
+ *
+ * @extends pv.Mark
  */
 pv.Wedge = function() {
   pv.Mark.call(this);
 };
 pv.Wedge.prototype = pv.extend(pv.Mark);
 pv.Wedge.prototype.type = pv.Wedge;
+
+/**
+ * Returns "wedge".
+ *
+ * @returns {string} "wedge".
+ */
 pv.Wedge.toString = function() { return "wedge"; };
 
 /**
@@ -23,18 +33,27 @@ pv.Wedge.toString = function() { return "wedge"; };
  * the end angle of the previous instance (the {@link Mark#sibling}), or -PI / 2
  * for the first wedge; for pie and donut charts, typically only the
  * {@link #angle} property needs to be specified.
+ *
+ * @type number
+ * @name pv.Wedge.prototype.startAngle
  */
 pv.Wedge.prototype.defineProperty("startAngle");
 
 /**
  * The end angle of the wedge, in radians. If not specified, the end angle is
  * implied as the start angle plus the {@link #angle}.
+ *
+ * @type number
+ * @name pv.Wedge.prototype.endAngle
  */
 pv.Wedge.prototype.defineProperty("endAngle");
 
 /**
  * The angular span of the wedge, in radians. This property is used if end angle
  * is not specified.
+ *
+ * @type number
+ * @name pv.Wedge.prototype.angle
  */
 pv.Wedge.prototype.defineProperty("angle");
 
@@ -42,6 +61,9 @@ pv.Wedge.prototype.defineProperty("angle");
  * The inner radius of the wedge, in pixels. The default value of this property
  * is zero; a positive value will produce a donut slice rather than a pie slice.
  * The inner radius can vary per-wedge.
+ *
+ * @type number
+ * @name pv.Wedge.prototype.innerRadius
  */
 pv.Wedge.prototype.defineProperty("innerRadius");
 
@@ -49,12 +71,18 @@ pv.Wedge.prototype.defineProperty("innerRadius");
  * The outer radius of the wedge, in pixels. This property is required. For
  * pies, only this radius is required; for donuts, the inner radius must be
  * specified as well. The outer radius can vary per-wedge.
+ *
+ * @type number
+ * @name pv.Wedge.prototype.outerRadius
  */
 pv.Wedge.prototype.defineProperty("outerRadius");
 
 /**
  * The width of stroked lines, in pixels; used in conjunction with
  * <tt>strokeStyle</tt> to stroke the wedge's border.
+ *
+ * @type number
+ * @name pv.Wedge.prototype.lineWidth
  */
 pv.Wedge.prototype.defineProperty("lineWidth");
 
@@ -62,6 +90,10 @@ pv.Wedge.prototype.defineProperty("lineWidth");
  * The style of stroked lines; used in conjunction with <tt>lineWidth</tt> to
  * stroke the wedge's border. The default value of this property is null,
  * meaning wedges are not stroked by default.
+ *
+ * @type string
+ * @name pv.Wedge.prototype.strokeStyle
+ * @see pv.color
  */
 pv.Wedge.prototype.defineProperty("strokeStyle");
 
@@ -69,12 +101,18 @@ pv.Wedge.prototype.defineProperty("strokeStyle");
  * The wedge fill style; if non-null, the interior of the wedge is filled with
  * the specified color. The default value of this property is a categorical
  * color.
+ *
+ * @type string
+ * @name pv.Wedge.prototype.fillStyle
+ * @see pv.color
  */
 pv.Wedge.prototype.defineProperty("fillStyle");
 
 /**
  * Default properties for wedges. By default, there is no stroke and the fill
  * style is a categorical color.
+ *
+ * @type pv.Wedge
  */
 pv.Wedge.defaults = new pv.Wedge().extend(pv.Mark.defaults)
     .startAngle(function() {
@@ -92,6 +130,7 @@ pv.Wedge.defaults = new pv.Wedge().extend(pv.Mark.defaults)
  *
  * @see #innerRadius
  * @see #outerRadius
+ * @returns {number} the mid-radius, in pixels.
  */
 pv.Wedge.prototype.midRadius = function() {
   return (this.innerRadius() + this.outerRadius()) / 2;
@@ -103,13 +142,17 @@ pv.Wedge.prototype.midRadius = function() {
  *
  * @see #startAngle
  * @see #endAngle
+ * @returns {number} the mid-angle, in radians.
  */
 pv.Wedge.prototype.midAngle = function() {
   return (this.startAngle() + this.endAngle()) / 2;
 };
 
 /**
- * Represents an anchor for a wedge mark. Wedges support five different anchors:<ul>
+ * Constructs a new wedge anchor with default properties.
+ *
+ * @class Represents an anchor for a wedge mark. Wedges support five different
+ * anchors:<ul>
  *
  * <li>outer
  * <li>inner
@@ -120,6 +163,8 @@ pv.Wedge.prototype.midAngle = function() {
  * </ul>In addition to positioning properties (left, right, top bottom), the
  * anchors support text rendering properties (textAlign, textBaseline,
  * textAngle). Text is rendered to appear inside the wedge.
+ *
+ * @extends pv.Mark.Anchor
  */
 pv.Wedge.Anchor = function() {
   pv.Mark.Anchor.call(this);
@@ -127,7 +172,12 @@ pv.Wedge.Anchor = function() {
 pv.Wedge.Anchor.prototype = pv.extend(pv.Mark.Anchor);
 pv.Wedge.Anchor.prototype.type = pv.Wedge;
 
-/** The left property; non-null. */
+/**
+ * The left property; non-null.
+ *
+ * @type number
+ * @name pv.Wedge.Anchor.prototype.left
+ */ /** @private */
 pv.Wedge.Anchor.prototype.$left = function() {
   var w = this.anchorTarget();
   switch (this.get("name")) {
@@ -140,7 +190,12 @@ pv.Wedge.Anchor.prototype.$left = function() {
   return null;
 };
 
-/** The right property; non-null. */
+/**
+ * The right property; non-null.
+ *
+ * @type number
+ * @name pv.Wedge.Anchor.prototype.right
+ */ /** @private */
 pv.Wedge.Anchor.prototype.$right = function() {
   var w = this.anchorTarget();
   switch (this.get("name")) {
@@ -153,7 +208,12 @@ pv.Wedge.Anchor.prototype.$right = function() {
   return null;
 };
 
-/** The top property; non-null. */
+/**
+ * The top property; non-null.
+ *
+ * @type number
+ * @name pv.Wedge.Anchor.prototype.top
+ */ /** @private */
 pv.Wedge.Anchor.prototype.$top = function() {
   var w = this.anchorTarget();
   switch (this.get("name")) {
@@ -166,7 +226,12 @@ pv.Wedge.Anchor.prototype.$top = function() {
   return null;
 };
 
-/** The bottom property; non-null. */
+/**
+ * The bottom property; non-null.
+ *
+ * @type number
+ * @name pv.Wedge.Anchor.prototype.bottom
+ */ /** @private */
 pv.Wedge.Anchor.prototype.$bottom = function() {
   var w = this.anchorTarget();
   switch (this.get("name")) {
@@ -179,7 +244,12 @@ pv.Wedge.Anchor.prototype.$bottom = function() {
   return null;
 };
 
-/** The text-align property, for horizontal alignment inside the wedge. */
+/**
+ * The text-align property, for horizontal alignment inside the wedge.
+ *
+ * @type string
+ * @name pv.Wedge.Anchor.prototype.textAlign
+ */ /** @private */
 pv.Wedge.Anchor.prototype.$textAlign = function() {
   var w = this.anchorTarget();
   switch (this.get("name")) {
@@ -189,7 +259,12 @@ pv.Wedge.Anchor.prototype.$textAlign = function() {
   }
 };
 
-/** The text-baseline property, for vertical alignment inside the wedge. */
+/**
+ * The text-baseline property, for vertical alignment inside the wedge.
+ *
+ * @type string
+ * @name pv.Wedge.Anchor.prototype.textBaseline
+ */ /** @private */
 pv.Wedge.Anchor.prototype.$textBaseline = function() {
   var w = this.anchorTarget();
   switch (this.get("name")) {
@@ -199,7 +274,12 @@ pv.Wedge.Anchor.prototype.$textBaseline = function() {
   }
 };
 
-/** The text-angle property, for text rotation inside the wedge. */
+/**
+ * The text-angle property, for text rotation inside the wedge.
+ *
+ * @type number
+ * @name pv.Wedge.Anchor.prototype.textAngle
+ */ /** @private */
 pv.Wedge.Anchor.prototype.$textAngle = function() {
   var w = this.anchorTarget();
   var a = 0;
@@ -214,12 +294,13 @@ pv.Wedge.Anchor.prototype.$textAngle = function() {
 };
 
 /**
- * Returns true if the specified angle is consider "upright", as in, text
+ * Returns true if the specified angle is considered "upright", as in, text
  * rendered at that angle would appear upright. If the angle is not upright,
  * text is rotated 180 degrees to be upright, and the text alignment properties
  * are correspondingly changed.
  *
- * @angle an angle, in radius.
+ * @param {number} angle an angle, in radius.
+ * @returns {boolean} true if the specified angle is upright.
  */
 pv.Wedge.upright = function(angle) {
   angle = angle % (2 * Math.PI);

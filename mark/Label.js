@@ -1,5 +1,7 @@
 /**
- * Represents a text label, allowing textual annotation of other marks or
+ * Constructs a new label mark with default properties.
+ *
+ * @class Represents a text label, allowing textual annotation of other marks or
  * arbitrary text within the visualization. The character data must be plain
  * text (unicode), though the text can be styled using the {@link #font}
  * property. If rich text is needed, external HTML elements can be overlaid on
@@ -15,7 +17,6 @@
  * underlying marks, such as bars. In the future, we may support event handlers
  * on labels.
  *
- * @class
  * @extends pv.Mark
  */
 pv.Label = function() {

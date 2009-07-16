@@ -1,9 +1,11 @@
 /**
- * Represents a horizontal or vertical rule. Rules are frequently used for axes
- * and grid lines. For example, specifying only the bottom property draws
- * horizontal rules, while specifying only the left draws vertical rules. Rules
- * can also be used as thin bars. The visual style is controlled in the same
- * manner as lines.
+ * Constructs a new rule with default properties.
+ *
+ * @class Represents a horizontal or vertical rule. Rules are frequently used
+ * for axes and grid lines. For example, specifying only the bottom property
+ * draws horizontal rules, while specifying only the left draws vertical
+ * rules. Rules can also be used as thin bars. The visual style is controlled in
+ * the same manner as lines.
  *
  * <p>Rules are positioned exclusively using the four margins. The following
  * combinations of properties are supported:<ul>
@@ -21,37 +23,55 @@
  * properties, it might be easier to place them. Small rules can be used as tick
  * marks; alternatively, a {@link Dot} with the "tick" shape can be used.
  *
- * @see Line
+ * @see pv.Line
+ * @extends pv.Mark
  */
 pv.Rule = function() {
   pv.Mark.call(this);
 };
 pv.Rule.prototype = pv.extend(pv.Mark);
 pv.Rule.prototype.type = pv.Rule;
+
+/**
+ * Returns "rule".
+ *
+ * @returns {string} "rule".
+ */
 pv.Rule.toString = function() { return "rule"; };
 
 /**
  * The width of stroked lines, in pixels; used in conjunction with
  * <tt>strokeStyle</tt> to stroke the rule. The default value is 1 pixel.
+ *
+ * @type number
+ * @name pv.Rule.prototype.lineWidth
  */
 pv.Rule.prototype.defineProperty("lineWidth");
 
 /**
  * The style of stroked lines; used in conjunction with <tt>lineWidth</tt> to
  * stroke the rule. The default value of this property is black.
+ *
+ * @type string
+ * @name pv.Rule.prototype.strokeStyle
+ * @see pv.color
  */
 pv.Rule.prototype.defineProperty("strokeStyle");
 
 /**
  * Default properties for rules. By default, a single-pixel black line is
  * stroked.
+ *
+ * @type pv.Rule
  */
 pv.Rule.defaults = new pv.Rule().extend(pv.Mark.defaults)
     .lineWidth(1)
     .strokeStyle("black");
 
 /**
- * Represents an anchor for a rule mark. Rules support five different
+ * Constructs a new rule anchor with default properties.
+ *
+ * @class Represents an anchor for a rule mark. Rules support five different
  * anchors:<ul>
  *
  * <li>top
@@ -69,6 +89,8 @@ pv.Rule.defaults = new pv.Rule().extend(pv.Mark.defaults)
  * <p>For consistency with the other mark types, the anchor positions are
  * defined in terms of their opposite edge. For example, the top anchor defines
  * the bottom property, such that a bar added to the top anchor grows upward.
+ *
+ * @extends pv.Bar.Anchor
  */
 pv.Rule.Anchor = function() {
   pv.Bar.Anchor.call(this);
@@ -76,7 +98,12 @@ pv.Rule.Anchor = function() {
 pv.Rule.Anchor.prototype = pv.extend(pv.Bar.Anchor);
 pv.Rule.Anchor.prototype.type = pv.Rule;
 
-/** The text-align property, for horizontal alignment outside the rule. */
+/**
+ * The text-align property, for horizontal alignment outside the rule.
+ *
+ * @type string
+ * @name pv.Rule.Anchor.prototype.textAlign
+ */ /** @private */
 pv.Rule.Anchor.prototype.$textAlign = function(d) {
   switch (this.get("name")) {
     case "left": return "right";
@@ -88,7 +115,12 @@ pv.Rule.Anchor.prototype.$textAlign = function(d) {
   return null;
 };
 
-/** The text-baseline property, for vertical alignment outside the rule. */
+/**
+ * The text-baseline property, for vertical alignment outside the rule.
+ *
+ * @type string
+ * @name pv.Rule.Anchor.prototype.textBaseline
+ */ /** @private */
 pv.Rule.Anchor.prototype.$textBaseline = function(d) {
   switch (this.get("name")) {
     case "right":
@@ -100,12 +132,20 @@ pv.Rule.Anchor.prototype.$textBaseline = function(d) {
   return null;
 };
 
-/** Returns the pseudo-width of the rule in pixels; read-only. */
+/**
+ * Returns the pseudo-width of the rule in pixels; read-only.
+ *
+ * @returns {number} the pseudo-width, in pixels.
+ */
 pv.Rule.prototype.width = function() {
   return this.scene[this.index].width;
 };
 
-/** Returns the pseudo-height of the rule in pixels; read-only. */
+/**
+ * Returns the pseudo-height of the rule in pixels; read-only.
+ *
+ * @returns {number} the pseudo-height, in pixels.
+ */
 pv.Rule.prototype.height = function() {
   return this.scene[this.index].height;
 };

@@ -1,6 +1,9 @@
 /**
- * Represents an area mark: the solid area between two series of connected line
- * segments. Unsurprisingly, areas are used most frequently for area charts.
+ * Constructs a new area mark with default properties.
+ *
+ * @class Represents an area mark: the solid area between two series of
+ * connected line segments. Unsurprisingly, areas are used most frequently for
+ * area charts.
  *
  * <p>Just as a line represents a polyline, the <tt>Area</tt> mark type
  * represents a <i>polygon</i>. However, an area is not an arbitrary polygon;
@@ -10,7 +13,6 @@
  * the area is horizontally-oriented or vertically-oriented.  Like lines, areas
  * can be stroked and filled with arbitrary colors.
  *
- * @class
  * @extends pv.Mark
  */
 pv.Area = function() {
@@ -100,7 +102,9 @@ pv.Area.defaults = new pv.Area().extend(pv.Mark.defaults)
     .fillStyle(pv.Colors.category20);
 
 /**
- * Represents an anchor for an area mark. Areas support five different
+ * Constructs a new area anchor with default properties.
+ *
+ * @class Represents an anchor for an area mark. Areas support five different
  * anchors:<ul>
  *
  * <li>top
@@ -120,7 +124,6 @@ pv.Area.defaults = new pv.Area().extend(pv.Mark.defaults)
  * more robust to use panels and the cousin accessor to define stacked area
  * marks; see {@link pv.Mark#scene} for an example.
  *
- * @class
  * @extends pv.Mark.Anchor
  */
 pv.Area.Anchor = function() {

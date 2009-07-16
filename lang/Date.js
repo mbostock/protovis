@@ -1,3 +1,8 @@
+/**
+ * @class The built-in Date class.
+ * @name Date
+ */
+
 Date.__parse__ = Date.parse;
 
 /**
