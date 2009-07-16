@@ -114,7 +114,7 @@ pv.Panel.defaults = new pv.Panel().extend(pv.Bar.defaults)
  * it is always possible to change this behavior by calling {@link Mark#extend}
  * explicitly.
  *
- * @param {Function} type the type of the new mark to add.
+ * @param {function} type the type of the new mark to add.
  * @returns {pv.Mark} the new mark.
  */
 pv.Panel.prototype.add = function(type) {

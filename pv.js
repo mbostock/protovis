@@ -21,7 +21,7 @@ var pv = {};
  *
  * For more details, see Douglas Crockford's essay on prototypal inheritance.
  *
- * @param {Function} f a constructor.
+ * @param {function} f a constructor.
  * @returns a suitable prototype object.
  * @see Douglas Crockford's essay on <a
  * href="http://javascript.crockford.com/prototypal.html">prototypal
@@ -105,7 +105,7 @@ pv.identity = function(x) { return x; };
  * @param {number} [start] the start value.
  * @param {number} stop the stop value.
  * @param {number} [step] the step value.
- * @returns {Array} an array of numbers.
+ * @returns {number[]} an array of numbers.
  */
 pv.range = function(start, stop, step) {
   if (arguments.length == 1) {
@@ -137,9 +137,9 @@ pv.range = function(start, stop, step) {
  * b<sub>m</sub>], ... [a<sub>n</sub>, b<sub>m</sub>]. If either array is empty,
  * an empty array is returned.
  *
- * @param {Array} a an array.
- * @param {Array} b an array.
- * @returns {Array} an array of pairs of elements in <tt>a</tt> and <tt>b</tt>.
+ * @param {array} a an array.
+ * @param {array} b an array.
+ * @returns {array} an array of pairs of elements in <tt>a</tt> and <tt>b</tt>.
  */
 pv.cross = function(a, b) {
   var array = [];
@@ -162,8 +162,8 @@ pv.cross = function(a, b) {
  *
  * </ul>return [1, 2, 3, "a", "b", "c"].
  *
- * @param {Array} arrays an array of arrays.
- * @returns {Array} an array containing all the elements of each array in
+ * @param {array[]} arrays an array of arrays.
+ * @returns {array} an array containing all the elements of each array in
  * <tt>arrays</tt>.
  */
 pv.blend = function(arrays) {
@@ -175,7 +175,7 @@ pv.blend = function(arrays) {
  * order of the returned array is not defined.
  *
  * @param map an object.
- * @returns {Array} an array of strings corresponding to the keys.
+ * @returns {string[]} an array of strings corresponding to the keys.
  * @see #entries
  */
 pv.keys = function(map) {
@@ -193,7 +193,7 @@ pv.keys = function(map) {
  * e.g., <tt>{key: "foo", value: 42}</tt>.
  *
  * @param map an object.
- * @returns {Array} an array of key-value pairs corresponding to the keys.
+ * @returns {array} an array of key-value pairs corresponding to the keys.
  */
 pv.entries = function(map) {
   var array = [];
@@ -208,7 +208,7 @@ pv.entries = function(map) {
  * map). The order of the returned array is not defined.
  *
  * @param map an object.
- * @returns {Array} an array of objects corresponding to the values.
+ * @returns {array} an array of objects corresponding to the values.
  * @see #entries
  */
 pv.values = function(map) {
@@ -231,9 +231,9 @@ pv.values = function(map) {
  * returns a normalized array on the "foo" property. If an accessor function is
  * not specified, the identity function is used.
  *
- * @param {Array} array an array of objects, or numbers.
- * @param {Function} [f] an optional accessor function.
- * @returns {Array} an array of numbers that sums to one.
+ * @param {array} array an array of objects, or numbers.
+ * @param {function} [f] an optional accessor function.
+ * @returns {number[]} an array of numbers that sums to one.
  */
 pv.normalize = function(array, f) {
   if (!f) f = pv.identity;
@@ -246,8 +246,8 @@ pv.normalize = function(array, f) {
  * array of numbers, an optional accessor function <tt>f</tt> can be specified
  * to map the elements to numbers. See {@link #normalize} for an example.
  *
- * @param {Array} array an array of objects, or numbers.
- * @param {Function} [f] an optional accessor function.
+ * @param {array} array an array of objects, or numbers.
+ * @param {function} [f] an optional accessor function.
  * @returns {number} the sum of the specified array.
  */
 pv.sum = function(array, f) {
@@ -261,8 +261,8 @@ pv.sum = function(array, f) {
  * specified to map the elements to numbers. See {@link #normalize} for an
  * example.
  *
- * @param {Array} array an array of objects, or numbers.
- * @param {Function} [f] an optional accessor function.
+ * @param {array} array an array of objects, or numbers.
+ * @param {function} [f] an optional accessor function.
  * @returns {number} the maximum value of the specified array.
  */
 pv.max = function(array, f) {
@@ -276,8 +276,8 @@ pv.max = function(array, f) {
  * <tt>f</tt> can be specified to map the elements to numbers. See
  * {@link #normalize} for an example.
  *
- * @param {Array} array an array of objects, or numbers.
- * @param {Function} [f] an optional accessor function.
+ * @param {array} array an array of objects, or numbers.
+ * @param {function} [f] an optional accessor function.
  * @returns {number} the index of the maximum value of the specified array.
  */
 pv.max.index = function(array, f) {
@@ -299,8 +299,8 @@ pv.max.index = function(array, f) {
  * can be specified to map the elements to numbers. See {@link #normalize} for
  * an example.
  *
- * @param {Array} array an array of objects, or numbers.
- * @param {Function} [f] an optional accessor function.
+ * @param {array} array an array of objects, or numbers.
+ * @param {function} [f] an optional accessor function.
  * @returns {number} the minimum value of the specified array.
  */
 pv.min = function(array, f) {
@@ -314,8 +314,8 @@ pv.min = function(array, f) {
  * <tt>f</tt> can be specified to map the elements to numbers. See
  * {@link #normalize} for an example.
  *
- * @param {Array} array an array of objects, or numbers.
- * @param {Function} [f] an optional accessor function.
+ * @param {array} array an array of objects, or numbers.
+ * @param {function} [f] an optional accessor function.
  * @returns {number} the index of the minimum value of the specified array.
  */
 pv.min.index = function(array, f) {
@@ -337,8 +337,8 @@ pv.min.index = function(array, f) {
  * <tt>f</tt> can be specified to map the elements to numbers. See
  * {@link #normalize} for an example.
  *
- * @param {Array} array an array of objects, or numbers.
- * @param {Function} [f] an optional accessor function.
+ * @param {array} array an array of objects, or numbers.
+ * @param {function} [f] an optional accessor function.
  * @returns {number} the mean of the specified array.
  */
 pv.mean = function(array, f) {
@@ -350,8 +350,8 @@ pv.mean = function(array, f) {
  * array of numbers, an optional accessor function <tt>f</tt> can be specified
  * to map the elements to numbers. See {@link #normalize} for an example.
  *
- * @param {Array} array an array of objects, or numbers.
- * @param {Function} [f] an optional accessor function.
+ * @param {array} array an array of objects, or numbers.
+ * @param {function} [f] an optional accessor function.
  * @returns {number} the median of the specified array.
  */
 pv.median = function(array, f) {
@@ -375,8 +375,8 @@ if (/\[native code\]/.test(Array.prototype.reduce)) {
  *
  * @see <a
  * href="http://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/reduce">Array.reduce</a>.
- * @param {Array} array an array.
- * @param {Function} [f] a callback function to execute on each value in the array.
+ * @param {array} array an array.
+ * @param {function} [f] a callback function to execute on each value in the array.
  * @param [v] the object to use as the first argument to the first callback.
  * @returns the reduced value.
  */
@@ -429,8 +429,8 @@ if (/\[native code\]/.test(Array.prototype.reduce)) {
  *
  * @see <a
  * href="http://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Global_Objects/Array/map">Array.map</a>.
- * @param {Array} keys an array.
- * @param {Function} f a value function.
+ * @param {array} keys an array.
+ * @param {function} f a value function.
  * @returns a map from keys to values.
  */
 pv.dict = function(keys, f) {
@@ -456,10 +456,10 @@ pv.dict = function(keys, f) {
  * duplicated or omitted. The optional accessor function <tt>f</tt> can be used
  * to perform a simultaneous mapping of the array elements.
  *
- * @param {Array} array an array.
- * @param {Array} indexes an array of indexes into <tt>array</tt>.
- * @param {Function} [f] an optional accessor function.
- * @returns {Array} an array of elements from <tt>array</tt>; a permutation.
+ * @param {array} array an array.
+ * @param {number[]} indexes an array of indexes into <tt>array</tt>.
+ * @param {function} [f] an optional accessor function.
+ * @returns {array} an array of elements from <tt>array</tt>; a permutation.
  */
 pv.permute = function(array, indexes, f) {
   if (!f) f = pv.identity;
@@ -480,8 +480,8 @@ pv.permute = function(array, indexes, f) {
  * function <tt>f</tt> can be specified to compute the string key for the given
  * element.
  *
- * @param {Array} keys an array, usually of string keys.
- * @param {Function} [f] an optional key function.
+ * @param {array} keys an array, usually of string keys.
+ * @param {function} [f] an optional key function.
  * @returns a map from key to index.
  */
 pv.numerate = function(keys, f) {

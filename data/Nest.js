@@ -3,7 +3,7 @@
  * convenience factory method, equivalent to <tt>new pv.Nest(array)</tt>.
  *
  * @see pv.Nest
- * @param {Array} array an array of elements to nest.
+ * @param {array} array an array of elements to nest.
  * @returns {pv.Nest} a nest operator for the specified array.
  */
 pv.nest = function(array) {
@@ -58,7 +58,7 @@ pv.nest = function(array) {
  * Further details, including sorting and rollup, is provided below on the
  * corresponding methods.
  *
- * @param {Array} array an array of elements to nest.
+ * @param {array} array an array of elements to nest.
  */
 pv.Nest = function(array) {
   this.array = array;
@@ -69,7 +69,7 @@ pv.Nest = function(array) {
  * Nests using the specified key function. Multiple keys may be added to the
  * nest; the array elements will be nested in the order keys are specified.
  *
- * @param {Function} key a key function; must return a string or suitable map
+ * @param {function} key a key function; must return a string or suitable map
  * key.
  * @return {pv.Nest} this.
  */
@@ -98,7 +98,7 @@ pv.Nest.prototype.key = function(key) {
  * returns an array of key-values pairs. If the nest is used to construct a
  * {@link #map} instead, keys are unsorted.
  *
- * @param {Function} [order] an optional comparator function.
+ * @param {function} [order] an optional comparator function.
  * @returns {pv.Nest} this.
  */
 pv.Nest.prototype.sortKeys = function(order) {
@@ -125,7 +125,7 @@ pv.Nest.prototype.sortKeys = function(order) {
  * <p>Value sort order, unlike keys, applies to both {@link #entries} and
  * {@link #map}. It has no effect on {@link #rollup}.
  *
- * @param {Function} [order] an optional comparator function.
+ * @param {function} [order] an optional comparator function.
  * @return {pv.Nest} this.
  */
 pv.Nest.prototype.sortValues = function(order) {
@@ -234,7 +234,7 @@ pv.Nest.prototype.entries = function() {
  * yield for the given site.
  *
  * @see #map
- * @param {Function} f a rollup function.
+ * @param {function} f a rollup function.
  * @returns a hierarhical map, with the leaf values computed by <tt>f</tt>.
  */
 pv.Nest.prototype.rollup = function(f) {

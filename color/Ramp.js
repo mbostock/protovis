@@ -54,7 +54,7 @@ pv.Ramp = function(start, end) {
   /**
    * Sets the sample function to be the specified function <tt>v</tt>.
    *
-   * @param {Function} v the new sample function.
+   * @param {function} v the new sample function.
    * @name pv.Ramp.prototype.by
    * @function
    * @returns {pv.Ramp} this.

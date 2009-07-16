@@ -355,7 +355,7 @@ pv.Mark.prototype.extend = function(proto) {
  * Adds a new mark of the specified type to the enclosing parent panel, whilst
  * simultaneously setting the prototype of the new mark to be this mark.
  *
- * @param {Function} type the type of mark to add; a constructor, such as
+ * @param {function} type the type of mark to add; a constructor, such as
  * <tt>pv.Bar</tt>.
  * @return {pv.Mark} the new mark.
  */
@@ -873,7 +873,7 @@ pv.Mark.prototype.updateInstance = function(s) {
  *
  * @see <a href="http://www.w3.org/TR/SVGTiny12/interact.html#SVGEvents">SVG events</a>.
  * @param {string} type the event type.
- * @param {Function} handler the event handler.
+ * @param {function} handler the event handler.
  * @returns {pv.Mark} this.
  */
 pv.Mark.prototype.event = function(type, handler) {

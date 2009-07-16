@@ -73,7 +73,7 @@ pv.Colors = function(values) {
    *
    * For convenience, "index" and "parent.index" keys are predefined.
    *
-   * @param {Function} v the new key function.
+   * @param {function} v the new key function.
    * @name pv.Colors.prototype.by
    * @function
    * @returns {pv.Colors} a new color scheme
