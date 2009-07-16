@@ -1,8 +1,17 @@
 /**
- * Returns a new categorical color encoding using the specified colors.
- * The arguments to this method are an array of colors; see {@link pv.color}.
+ * Returns a new categorical color encoding using the specified colors.  The
+ * arguments to this method are an array of colors; see {@link pv.color}. For
+ * example, to create a categorical color encoding using the <tt>species</tt>
+ * attribute:
+ *
+ * <pre>pv.colors("red", "green", "blue").by(function(d) d.species)</pre>
+ *
+ * The result of this expression can be used as a fill- or stroke-style
+ * property. This assumes that the data's <tt>species</tt> attribute is a
+ * string.
  *
  * @returns {pv.Colors} a new categorical color encoding.
+ * @param {string} colors... categorical colors.
  * @see pv.Colors
  */
 pv.colors = function() {
@@ -10,7 +19,8 @@ pv.colors = function() {
 };
 
 /**
- * Returns a new categorical color encoding using the specified colors.
+ * Returns a new categorical color encoding using the specified colors. This
+ * constructor is typically not used directly; use {@link pv.colors} instead.
  *
  * @class Represents a categorical color encoding using the specified colors.
  * The returned object can be used as a property function; the appropriate
@@ -19,8 +29,9 @@ pv.colors = function() {
  * the {@link #by} method. The default implementation allocates a distinct color
  * per {@link pv.Mark#childIndex}.
  *
- * @param {Array} values an array of colors; see {@link pv.color}.
+ * @param {string[]} values an array of colors; see {@link pv.color}.
  * @returns {pv.Colors} a new categorical color encoding.
+ * @see pv.colors
  */
 pv.Colors = function(values) {
 
@@ -62,7 +73,7 @@ pv.Colors = function(values) {
    *
    * For convenience, "index" and "parent.index" keys are predefined.
    *
-   * @param {function} v the new key function.
+   * @param {Function} v the new key function.
    * @name pv.Colors.prototype.by
    * @function
    * @returns {pv.Colors} a new color scheme
