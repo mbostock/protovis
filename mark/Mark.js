@@ -143,7 +143,7 @@ pv.Mark.prototype.defineProperty = function(name) {
  * functions (see {@link #defaults}) that are used if the property is not
  * overriden by the mark or any of its prototypes.
  *
- * @type Function
+ * @type function
  */
 pv.Mark.prototype.type = pv.Mark;
 
@@ -247,7 +247,7 @@ pv.Mark.prototype.root = null;
  * area graph example (see {@link #scene}), the data function on the area mark
  * dereferences each series.
  *
- * @type Array
+ * @type array
  * @name pv.Mark.prototype.data
  */
 pv.Mark.prototype.defineProperty("data");

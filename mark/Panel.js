@@ -40,7 +40,7 @@ pv.Panel = function() {
    * added.
    *
    * @see #add
-   * @type Array
+   * @type pv.Mark[]
    */
   this.children = [];
   this.root = this;

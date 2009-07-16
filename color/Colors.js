@@ -101,7 +101,7 @@ pv.Colors = function(values) {
   /**
    * The underlying array of colors.
    *
-   * @type Array
+   * @type string[]
    * @name pv.Colors.prototype.values
    */
   c.values = values;
