@@ -7,12 +7,21 @@
  *
  * <p>See {@link Mark#buildImplied} for details on the prioritization of
  * redundant positioning properties.
+ *
+ * @class
+ * @extends pv.Mark
  */
 pv.Dot = function() {
   pv.Mark.call(this);
 };
 pv.Dot.prototype = pv.extend(pv.Mark);
 pv.Dot.prototype.type = pv.Dot;
+
+/**
+ * Returns "dot".
+ *
+ * @returns {string} "dot".
+ */
 pv.Dot.toString = function() { return "dot"; };
 
 /**
@@ -21,6 +30,8 @@ pv.Dot.toString = function() { return "dot"; };
  * facilitating representative encodings.
  *
  * @see #radius
+ * @type number
+ * @name pv.Dot.prototype.size
  */
 pv.Dot.prototype.defineProperty("size");
 
@@ -44,18 +55,27 @@ pv.Dot.prototype.defineProperty("size");
  * tick-shaped Dot. However, the Rule mark doesn't support the width and height
  * properties, so it's a bit clumsy to use. It should be possible to add support
  * for width and height to rule, and then remove the tick shape.
+ *
+ * @type string
+ * @name pv.Dot.prototype.shape
  */
 pv.Dot.prototype.defineProperty("shape");
 
 /**
  * The rotation angle, in radians. Used to rotate shapes, such as to turn a
  * cross into a plus.
+ *
+ * @type number
+ * @name pv.Dot.prototype.angle
  */
 pv.Dot.prototype.defineProperty("angle");
 
 /**
  * The width of stroked lines, in pixels; used in conjunction with
  * <tt>strokeStyle</tt> to stroke the dot's shape.
+ *
+ * @type number
+ * @name pv.Dot.prototype.lineWidth
  */
 pv.Dot.prototype.defineProperty("lineWidth");
 
@@ -63,6 +83,9 @@ pv.Dot.prototype.defineProperty("lineWidth");
  * The style of stroked lines; used in conjunction with <tt>lineWidth</tt> to
  * stroke the dot's shape. The default value of this property is a categorical
  * color.
+ *
+ * @type string
+ * @name pv.Dot.prototype.strokeStyle
  */
 pv.Dot.prototype.defineProperty("strokeStyle");
 
@@ -70,12 +93,17 @@ pv.Dot.prototype.defineProperty("strokeStyle");
  * The fill style; if non-null, the interior of the dot is filled with the
  * specified color. The default value of this property is null, meaning dots are
  * not filled by default.
+ *
+ * @type string
+ * @name pv.Dot.prototype.fillStyle
  */
 pv.Dot.prototype.defineProperty("fillStyle");
 
 /**
  * Default properties for dots. By default, there is no fill and the stroke
  * style is a categorical color. The default shape is "circle" with size 20.
+ *
+ * @type pv.Dot
  */
 pv.Dot.defaults = new pv.Dot().extend(pv.Mark.defaults)
     .size(20)
@@ -100,6 +128,9 @@ pv.Dot.defaults = new pv.Dot().extend(pv.Mark.defaults)
  * <p>For consistency with the other mark types, the anchor positions are
  * defined in terms of their opposite edge. For example, the top anchor defines
  * the bottom property, such that a bar added to the top anchor grows upward.
+ *
+ * @class
+ * @extends pv.Mark.Anchor
  */
 pv.Dot.Anchor = function() {
   pv.Mark.Anchor.call(this);
@@ -107,7 +138,12 @@ pv.Dot.Anchor = function() {
 pv.Dot.Anchor.prototype = pv.extend(pv.Mark.Anchor);
 pv.Dot.Anchor.prototype.type = pv.Dot;
 
-/** The left property; null for "left" anchors, non-null otherwise. */
+/**
+ * The left property; null for "left" anchors, non-null otherwise.
+ *
+ * @type number
+ * @name pv.Dot.Anchor.prototype.left
+ */ /** @private */
 pv.Dot.Anchor.prototype.$left = function(d) {
   var dot = this.anchorTarget();
   switch (this.get("name")) {
@@ -119,7 +155,12 @@ pv.Dot.Anchor.prototype.$left = function(d) {
   return null;
 };
 
-/** The right property; null for "right" anchors, non-null otherwise. */
+/**
+ * The right property; null for "right" anchors, non-null otherwise.
+ *
+ * @type number
+ * @name pv.Dot.Anchor.prototype.right
+ */ /** @private */
 pv.Dot.Anchor.prototype.$right = function(d) {
   var dot = this.anchorTarget();
   switch (this.get("name")) {
@@ -131,7 +172,12 @@ pv.Dot.Anchor.prototype.$right = function(d) {
   return null;
 };
 
-/** The top property; null for "top" anchors, non-null otherwise. */
+/**
+ * The top property; null for "top" anchors, non-null otherwise.
+ *
+ * @type number
+ * @name pv.Dot.Anchor.prototype.top
+ */ /** @private */
 pv.Dot.Anchor.prototype.$top = function(d) {
   var dot = this.anchorTarget();
   switch (this.get("name")) {
@@ -143,7 +189,12 @@ pv.Dot.Anchor.prototype.$top = function(d) {
   return null;
 };
 
-/** The bottom property; null for "bottom" anchors, non-null otherwise. */
+/**
+ * The bottom property; null for "bottom" anchors, non-null otherwise.
+ *
+ * @type number
+ * @name pv.Dot.Anchor.prototype.bottom
+ */ /** @private */
 pv.Dot.Anchor.prototype.$bottom = function(d) {
   var dot = this.anchorTarget();
   switch (this.get("name")) {
@@ -155,7 +206,12 @@ pv.Dot.Anchor.prototype.$bottom = function(d) {
   return null;
 };
 
-/** The text-align property, for horizontal alignment outside the dot. */
+/**
+ * The text-align property, for horizontal alignment outside the dot.
+ *
+ * @type string
+ * @name pv.Dot.Anchor.prototype.textAlign
+ */ /** @private */
 pv.Dot.Anchor.prototype.$textAlign = function(d) {
   switch (this.get("name")) {
     case "left": return "right";
@@ -167,7 +223,12 @@ pv.Dot.Anchor.prototype.$textAlign = function(d) {
   return null;
 };
 
-/** The text-baseline property, for vertical alignment outside the dot. */
+/**
+ * The text-baseline property, for vertical alignment outside the dot.
+ *
+ * @type string
+ * @name pv.Dot.Anchor.prototype.textBasline
+ */ /** @private */
 pv.Dot.Anchor.prototype.$textBaseline = function(d) {
   switch (this.get("name")) {
     case "right":
@@ -182,6 +243,8 @@ pv.Dot.Anchor.prototype.$textBaseline = function(d) {
 /**
  * Returns the radius of the dot, which is defined to be the square root of the
  * {@link #size} property.
+ *
+ * @returns {number} the radius.
  */
 pv.Dot.prototype.radius = function() {
   return Math.sqrt(this.size());
