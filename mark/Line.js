@@ -1,5 +1,7 @@
 /**
- * Constructs a new line mark with default properties.
+ * Constructs a new line mark with default properties. Lines are not typically
+ * constructed directly, but by adding to a panel or an existing mark via
+ * {@link pv.Mark#add}.
  *
  * @class Represents a series of connected line segments, or <i>polyline</i>,
  * that can be stroked with a configurable color and thickness. Each
@@ -11,6 +13,8 @@
  * <p>Like areas, lines can be stroked and filled with arbitrary colors. In most
  * cases, lines are only stroked, but the fill style can be used to construct
  * arbitrary polygons.
+ *
+ * <p>See also the <a href="http://protovis.org/api/Line.html">Line guide</a>.
  *
  * @extends pv.Mark
  */

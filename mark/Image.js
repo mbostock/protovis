@@ -1,5 +1,7 @@
 /**
- * Constructs a new dot mark with default properties.
+ * Constructs a new dot mark with default properties. Images are not typically
+ * constructed directly, but by adding to a panel or an existing mark via
+ * {@link pv.Mark#add}.
  *
  * @class Represents an image. Images share the same layout and style properties as
  * bars, in conjunction with an external image such as PNG or JPEG. The image is

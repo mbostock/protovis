@@ -1,5 +1,7 @@
 /**
- * Constructs a new label mark with default properties.
+ * Constructs a new label mark with default properties. Labels are not typically
+ * constructed directly, but by adding to a panel or an existing mark via
+ * {@link pv.Mark#add}.
  *
  * @class Represents a text label, allowing textual annotation of other marks or
  * arbitrary text within the visualization. The character data must be plain
@@ -16,6 +18,8 @@
  * <p>Labels ignore events, so as to not interfere with event handlers on
  * underlying marks, such as bars. In the future, we may support event handlers
  * on labels.
+ *
+ * <p>See also the <a href="http://protovis.org/api/Label.html">Label guide</a>.
  *
  * @extends pv.Mark
  */

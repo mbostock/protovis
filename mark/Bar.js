@@ -1,5 +1,7 @@
 /**
- * Constructs a new bar mark with default properties.
+ * Constructs a new bar mark with default properties. Bars are not typically
+ * constructed directly, but by adding to a panel or an existing mark via
+ * {@link pv.Mark#add}.
  *
  * @class Represents a bar: an axis-aligned rectangle that can be stroked and
  * filled. Bars are used for many chart types, including bar charts, histograms
@@ -14,10 +16,10 @@
  * then extends to the right, while the height extends to the top. As an
  * alternative to the four corners, a bar can be positioned exclusively using
  * margins; this is convenient as an inset from the containing panel, for
- * example.
+ * example. See {@link pv.Mark#buildImplied} for details on the prioritization
+ * of redundant positioning properties.
  *
- * <p>See {@link pv.Mark#buildImplied} for details on the prioritization of
- * redundant positioning properties.
+ * <p>See also the <a href="http://protovis.org/api/Bar.html">Bar guide</a>.
  *
  * @extends pv.Mark
  */
@@ -107,8 +109,8 @@ pv.Bar.defaults = new pv.Bar().extend(pv.Mark.defaults)
  * <li>right
  *
  * </ul>In addition to positioning properties (left, right, top bottom), the
- * anchors support text rendering properties (textAlign, textBaseline). Text is
- * rendered to appear inside the bar.
+ * anchors support text rendering properties (text-align, text-baseline). Text
+ * is rendered to appear inside the bar.
  *
  * <p>To facilitate stacking of bars, the anchors are defined in terms of their
  * opposite edge. For example, the top anchor defines the bottom property, such
@@ -119,9 +121,9 @@ pv.Bar.defaults = new pv.Bar().extend(pv.Mark.defaults)
  *
  * <p>Bar anchors also "smartly" specify position properties based on whether
  * the derived mark type supports the width and height properties. If the
- * derived mark type does not support these properties (e.g., Dot), the position
- * will be centered on the corresponding edge. Otherwise (e.g., Bar), the
- * position will be in the opposite side.
+ * derived mark type does not support these properties (e.g., dots), the
+ * position will be centered on the corresponding edge. Otherwise (e.g., bars),
+ * the position will be in the opposite side.
  *
  * @extends pv.Mark.Anchor
  */

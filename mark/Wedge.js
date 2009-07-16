@@ -1,5 +1,7 @@
 /**
- * Constructs a new wedge with default properties.
+ * Constructs a new wedge with default properties. Wedges are not typically
+ * constructed directly, but by adding to a panel or an existing mark via
+ * {@link pv.Mark#add}.
  *
  * @class Represents a wedge, or pie slice. Specified in terms of start and end
  * angle, inner and outer radius, wedges can be used to construct donut charts
@@ -11,6 +13,8 @@
  *
  * <p>The center point of the circle is positioned using the standard box model.
  * The wedge can be stroked and filled, similar to {link Bar}.
+ *
+ * <p>See also the <a href="http://protovis.org/api/Wedge.html">Wedge guide</a>.
  *
  * @extends pv.Mark
  */
@@ -161,7 +165,7 @@ pv.Wedge.prototype.midAngle = function() {
  * <li>end
  *
  * </ul>In addition to positioning properties (left, right, top bottom), the
- * anchors support text rendering properties (textAlign, textBaseline,
+ * anchors support text rendering properties (text-align, text-baseline,
  * textAngle). Text is rendered to appear inside the wedge.
  *
  * @extends pv.Mark.Anchor

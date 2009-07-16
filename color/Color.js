@@ -74,8 +74,10 @@ pv.color = function(format) {
  * @class Represents an abstract (possibly translucent) color. The color is
  * divided into two parts: the <tt>color</tt> attribute, an opaque color format
  * string, and the <tt>opacity</tt> attribute, a float in [0, 1]. The color
- * space is dependent on the implementing class; all colors should support the
+ * space is dependent on the implementing class; all colors support the
  * {@link #rgb} method to convert to RGB color space for interpolation.
+ *
+ * <p>See also the <a href="http://protovis.org/api/Color.html">Color guide</a>.
  *
  * @param {string} color an opaque color format string, such as "#f00".
  * @param {number} opacity the opacity, in [0,1].

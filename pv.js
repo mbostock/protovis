@@ -9,11 +9,11 @@
 var pv = {};
 
 /**
- * Returns a prototype object suitable for extending the given class. Rather
- * than constructing a new instance of <tt>f</tt> to serve as the prototype
- * (which unnecessarily runs the constructor on the created prototype object,
- * potentially polluting it), an anonymous function is generated internally that
- * shares the same prototype:
+ * Returns a prototype object suitable for extending the given class
+ * <tt>f</tt>. Rather than constructing a new instance of <tt>f</tt> to serve as
+ * the prototype (which unnecessarily runs the constructor on the created
+ * prototype object, potentially polluting it), an anonymous function is
+ * generated internally that shares the same prototype:
  *
  * <pre>function g() {}
  * g.prototype = f.prototype;
@@ -39,7 +39,7 @@ try {
 
 /**
  * Parses a Protovis specification, which may use JavaScript 1.8 function
- * expresses, replacing those function expressions with proper functions, such
+ * expresses, replacing those function expressions with proper functions such
  * that the code can be run by a JavaScript 1.6 interpreter. This hack only
  * supports function expressions (using clumsy regular expressions, no less),
  * and not other JavaScript 1.8 features such as let expressions.
@@ -129,10 +129,13 @@ pv.range = function(start, stop, step) {
 
 /**
  * Given two arrays <tt>a</tt> and <tt>b</tt>, returns an array of all possible
- * pairs of elements a_i-b_j. The outer loop is on array <i>a</i>, while the
- * inner loop is on <i>b</i>, such that the order of returned elements is
- * a_0-b_0, a_0-b_1, ... a_0-b_m, a_1-b_0, a_1-b_1, ... a_1-b_m, ... a_n-b_m.
- * If either array is empty, an empty array is returned.
+ * pairs of elements [a<sub>i</sub>, b<sub>j</sub>]. The outer loop is on array
+ * <i>a</i>, while the inner loop is on <i>b</i>, such that the order of
+ * returned elements is [a<sub>0</sub>, b<sub>0</sub>], [a<sub>0</sub>,
+ * b<sub>1</sub>], ... [a<sub>0</sub>, b<sub>m</sub>], [a<sub>1</sub>,
+ * b<sub>0</sub>], [a<sub>1</sub>, b<sub>1</sub>], ... [a<sub>1</sub>,
+ * b<sub>m</sub>], ... [a<sub>n</sub>, b<sub>m</sub>]. If either array is empty,
+ * an empty array is returned.
  *
  * @param {Array} a an array.
  * @param {Array} b an array.
@@ -151,11 +154,13 @@ pv.cross = function(a, b) {
 /**
  * Given the specified array of <tt>arrays</tt>, concatenates the arrays into a
  * single array. If the individual arrays are explicitly known, an alternative
- * to blend is to use JavaScript's <tt>concat</tt> method directly, e.g.:
+ * to blend is to use JavaScript's <tt>concat</tt> method directly. These two
+ * equivalent expressions:<ul>
  *
- * <pre>[1, 2, 3].concat(["a", "b", "c"])</pre>
+ * <li><tt>pv.blend([[1, 2, 3], ["a", "b", "c"]])</tt>
+ * <li><tt>[1, 2, 3].concat(["a", "b", "c"])</tt>
  *
- * returns [1, 2, 3, "a", "b", "c"].
+ * </ul>return [1, 2, 3, "a", "b", "c"].
  *
  * @param {Array} arrays an array of arrays.
  * @returns {Array} an array containing all the elements of each array in
@@ -171,6 +176,7 @@ pv.blend = function(arrays) {
  *
  * @param map an object.
  * @returns {Array} an array of strings corresponding to the keys.
+ * @see #entries
  */
 pv.keys = function(map) {
   var array = [];
@@ -183,7 +189,8 @@ pv.keys = function(map) {
 /**
  * Returns all of the entries (key-value pairs) of the specified object (a
  * map). The order of the returned array is not defined. Each key-value pair is
- * represented as an object with <tt>key</tt> and <tt>value</tt> attributes.
+ * represented as an object with <tt>key</tt> and <tt>value</tt> attributes,
+ * e.g., <tt>{key: "foo", value: 42}</tt>.
  *
  * @param map an object.
  * @returns {Array} an array of key-value pairs corresponding to the keys.
@@ -202,6 +209,7 @@ pv.entries = function(map) {
  *
  * @param map an object.
  * @returns {Array} an array of objects corresponding to the values.
+ * @see #entries
  */
 pv.values = function(map) {
   var array = [];
@@ -214,14 +222,14 @@ pv.values = function(map) {
 /**
  * Returns a normalized copy of the specified array, such that the sum of the
  * returned elements sum to one. If the specified array is not an array of
- * numbers, the specified accessor function <tt>f</tt> can be specified to map
- * the elements to numbers. For example, if <tt>array</tt> is an array of
- * objects, and each object has a numeric property "foo", the function
+ * numbers, an optional accessor function <tt>f</tt> can be specified to map the
+ * elements to numbers. For example, if <tt>array</tt> is an array of objects,
+ * and each object has a numeric property "foo", the expression
  *
- * <pre>function(d) d.foo</pre>
+ * <pre>pv.normalize(array, function(d) d.foo)</pre>
  *
- * can be used to normalize the array on the "foo" property. If an accessor
- * function is not specified, the identity function is used.
+ * returns a normalized array on the "foo" property. If an accessor function is
+ * not specified, the identity function is used.
  *
  * @param {Array} array an array of objects, or numbers.
  * @param {Function} [f] an optional accessor function.
@@ -235,7 +243,7 @@ pv.normalize = function(array, f) {
 
 /**
  * Returns the sum of the specified array. If the specified array is not an
- * array of numbers, the specified accessor function <tt>f</tt> can be specified
+ * array of numbers, an optional accessor function <tt>f</tt> can be specified
  * to map the elements to numbers. See {@link #normalize} for an example.
  *
  * @param {Array} array an array of objects, or numbers.
@@ -249,7 +257,7 @@ pv.sum = function(array, f) {
 
 /**
  * Returns the maximum value of the specified array. If the specified array is
- * not an array of numbers, the specified accessor function <tt>f</tt> can be
+ * not an array of numbers, an optional accessor function <tt>f</tt> can be
  * specified to map the elements to numbers. See {@link #normalize} for an
  * example.
  *
@@ -264,7 +272,7 @@ pv.max = function(array, f) {
 
 /**
  * Returns the index of the maximum value of the specified array. If the
- * specified array is not an array of numbers, the specified accessor function
+ * specified array is not an array of numbers, an optional accessor function
  * <tt>f</tt> can be specified to map the elements to numbers. See
  * {@link #normalize} for an example.
  *
@@ -287,7 +295,7 @@ pv.max.index = function(array, f) {
 
 /**
  * Returns the minimum value of the specified array of numbers. If the specified
- * array is not an array of numbers, the specified accessor function <tt>f</tt>
+ * array is not an array of numbers, an optional accessor function <tt>f</tt>
  * can be specified to map the elements to numbers. See {@link #normalize} for
  * an example.
  *
@@ -302,7 +310,7 @@ pv.min = function(array, f) {
 
 /**
  * Returns the index of the minimum value of the specified array. If the
- * specified array is not an array of numbers, the specified accessor function
+ * specified array is not an array of numbers, an optional accessor function
  * <tt>f</tt> can be specified to map the elements to numbers. See
  * {@link #normalize} for an example.
  *
@@ -325,7 +333,7 @@ pv.min.index = function(array, f) {
 
 /**
  * Returns the arithmetic mean, or average, of the specified array. If the
- * specified array is not an array of numbers, the specified accessor function
+ * specified array is not an array of numbers, an optional accessor function
  * <tt>f</tt> can be specified to map the elements to numbers. See
  * {@link #normalize} for an example.
  *
@@ -339,7 +347,7 @@ pv.mean = function(array, f) {
 
 /**
  * Returns the median of the specified array. If the specified array is not an
- * array of numbers, the specified accessor function <tt>f</tt> can be specified
+ * array of numbers, an optional accessor function <tt>f</tt> can be specified
  * to map the elements to numbers. See {@link #normalize} for an example.
  *
  * @param {Array} array an array of objects, or numbers.
@@ -413,13 +421,14 @@ if (/\[native code\]/.test(Array.prototype.reduce)) {
  * only for indexes of the array which have assigned values; it is not invoked
  * for indexes which have been deleted or which have never been assigned values.
  *
- * <p>The following example creates a map from strings to string length:
+ * <p>For example, this expression creates a map from strings to string length:
  *
  * <pre>pv.dict(["one", "three", "seventeen"], function(s) s.length)</pre>
  *
  * The returned value is <tt>{one: 3, three: 5, seventeen: 9}</tt>.
  *
- * @see http://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Global_Objects/Array/map
+ * @see <a
+ * href="http://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Global_Objects/Array/map">Array.map</a>.
  * @param {Array} keys an array.
  * @param {Function} f a value function.
  * @returns a map from keys to values.
@@ -483,13 +492,14 @@ pv.numerate = function(keys, f) {
 };
 
 /**
- * The compare function for natural order. This can be used in conjunction with
+ * The comparator function for natural order. This can be used in conjunction with
  * the built-in array <tt>sort</tt> method to sort elements by their natural
- * order, ascending. Note that if no compare function is specified to the
- * built-in <tt>sort</tt> method, the default order is lexicographic <i>not</i>
+ * order, ascending. Note that if no comparator function is specified to the
+ * built-in <tt>sort</tt> method, the default order is lexicographic, <i>not</i>
  * natural!
  *
- * @see http://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Global_Objects/Array/sort
+ * @see <a
+ * href="http://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Global_Objects/Array/sort">Array.sort</a>.
  * @param a an element to compare.
  * @param b an element to compare.
  * @returns {number} negative if a &lt; b; positive if a &gt; b; otherwise 0.
@@ -499,11 +509,11 @@ pv.naturalOrder = function(a, b) {
 };
 
 /**
- * The compare function for reverse natural order. This can be used in
+ * The comparator function for reverse natural order. This can be used in
  * conjunction with the built-in array <tt>sort</tt> method to sort elements by
- * their natural order, descending. Note that if no compare function is
+ * their natural order, descending. Note that if no comparator function is
  * specified to the built-in <tt>sort</tt> method, the default order is
- * lexicographic <i>not</i> natural!
+ * lexicographic, <i>not</i> natural!
  *
  * @see #naturalOrder
  * @param a an element to compare.

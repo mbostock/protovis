@@ -1,5 +1,7 @@
 /**
- * Constructs a new rule with default properties.
+ * Constructs a new rule with default properties. Rules are not typically
+ * constructed directly, but by adding to a panel or an existing mark via
+ * {@link pv.Mark#add}.
  *
  * @class Represents a horizontal or vertical rule. Rules are frequently used
  * for axes and grid lines. For example, specifying only the bottom property
@@ -22,6 +24,8 @@
  * </ul>TODO If rules supported width (for horizontal) and height (for vertical)
  * properties, it might be easier to place them. Small rules can be used as tick
  * marks; alternatively, a {@link Dot} with the "tick" shape can be used.
+ *
+ * <p>See also the <a href="http://protovis.org/api/Rule.html">Rule guide</a>.
  *
  * @see pv.Line
  * @extends pv.Mark
@@ -81,7 +85,7 @@ pv.Rule.defaults = new pv.Rule().extend(pv.Mark.defaults)
  * <li>right
  *
  * </ul>In addition to positioning properties (left, right, top bottom), the
- * anchors support text rendering properties (textAlign, textBaseline). Text is
+ * anchors support text rendering properties (text-align, text-baseline). Text is
  * rendered to appear outside the rule. Note that this behavior is different
  * from other mark anchors, which default to rendering text <i>inside</i> the
  * mark.

@@ -1,5 +1,7 @@
 /**
- * Constructs a new mark with default properties.
+ * Constructs a new mark with default properties. Marks, with the exception of
+ * the root panel, are not typically constructed directly; instead, they are
+ * added to a panel or an existing mark via {@link pv.Mark#add}.
  *
  * @class Represents a data-driven graphical mark. The <tt>Mark</tt> class is
  * the base class for all graphical marks in Protovis; it does not provide any
@@ -36,6 +38,8 @@
  * behavior, potentially in terms of the old behavior. In this way, the old mark
  * serves as the <b>prototype</b> for the new mark. Most mark types share the
  * same basic properties for consistency and to facilitate inheritance.
+ *
+ * <p>See also the <a href="http://protovis.org/api/">Protovis guide</a>.
  */
 pv.Mark = function() {};
 
@@ -72,12 +76,12 @@ pv.Mark.toString = function() { return "mark"; };
  * The expression <tt>d * 100</tt> will be evaluated for the height property of
  * each mark instance. This function is stored in the <tt>$height</tt> field. The
  * return value of the property method (e.g., <tt>m.height</tt>) is this mark
- * (<tt>m</tt>)).
+ * (<tt>m</tt>)).<p>
  *
  * <li>If invoked with a non-function argument, the property is treated as a
  * constant, and wrapped with an accessor function. This wrapper function is
  * stored in the equivalent internal (<tt>$</tt>-prefixed) field. The return
- * value of the property method (e.g., <tt>m.height</tt>) is this mark.
+ * value of the property method (e.g., <tt>m.height</tt>) is this mark.<p>
  *
  * <li>If invoked from an event handler, the property is set to the specified
  * value on the current instance (i.e., the instance that triggered the event,
@@ -87,7 +91,7 @@ pv.Mark.toString = function() { return "mark"; };
  * <pre>this.fillStyle("red").strokeStyle("black");</pre>
  *
  * from a "click" event handler will set the fill color to red, and the stroke
- * color to black, for any marks that are clicked.
+ * color to black, for any marks that are clicked.<p>
  *
  * <li>If invoked with no arguments, the computed property value for the current
  * mark instance in the scene graph is returned. This facilitates <i>property

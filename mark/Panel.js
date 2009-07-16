@@ -1,5 +1,7 @@
 /**
- * Constructs a new, empty panel with default properties.
+ * Constructs a new, empty panel with default properties. Panels, with the
+ * exception of the root panel, are not typically constructed directly; instead,
+ * they are added to an existing panel or mark via {@link pv.Mark#add}.
  *
  * @class Represents a container mark. Panels allow repeated or nested
  * structures, commonly used in small multiple displays where a small
@@ -25,6 +27,8 @@
  * child marks in the order they were added. Panels also have a <tt>root</tt>
  * field which points to the root (outermost) panel; the root panel's root field
  * points to itself.
+ *
+ * <p>See also the <a href="http://protovis.org/api/">Protovis guide</a>.
  *
  * @extends pv.Bar
  */

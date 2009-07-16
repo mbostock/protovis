@@ -1,5 +1,7 @@
 /**
- * Constructs a new area mark with default properties.
+ * Constructs a new area mark with default properties. Areas are not typically
+ * constructed directly, but by adding to a panel or an existing mark via
+ * {@link pv.Mark#add}.
  *
  * @class Represents an area mark: the solid area between two series of
  * connected line segments. Unsurprisingly, areas are used most frequently for
@@ -12,6 +14,8 @@
  * width or the height must be specified, but not both; this determines whether
  * the area is horizontally-oriented or vertically-oriented.  Like lines, areas
  * can be stroked and filled with arbitrary colors.
+ *
+ * <p>See also the <a href="http://protovis.org/api/Area.html">Area guide</a>.
  *
  * @extends pv.Mark
  */
@@ -114,7 +118,7 @@ pv.Area.defaults = new pv.Area().extend(pv.Mark.defaults)
  * <li>right
  *
  * </ul>In addition to positioning properties (left, right, top bottom), the
- * anchors support text rendering properties (textAlign, textBaseline). Text is
+ * anchors support text rendering properties (text-align, text-baseline). Text is
  * rendered to appear inside the area polygon.
  *
  * <p>To facilitate stacking of areas, the anchors are defined in terms of their
@@ -286,7 +290,7 @@ pv.Area.prototype.update = function() {
  * not recomputed, and therefore cannot be updated automatically from event
  * handlers without an explicit call to rebuild the area.
  *
- * @param s a node in the scene graph; the instance of the mark to update.
+ * @param s a node in the scene graph; the area to update.
  */
 pv.Area.prototype.updateInstance = function(s) {
   var v = s.svg;

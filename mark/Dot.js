@@ -1,14 +1,16 @@
 /**
- * Constructs a new dot mark with default properties.
+ * Constructs a new dot mark with default properties. Dots are not typically
+ * constructed directly, but by adding to a panel or an existing mark via
+ * {@link pv.Mark#add}.
  *
- * @class Represents a dot; a dot is simply a sized glyph centered at a given point
- * that can also be stroked and filled. The <tt>size</tt> property is
+ * @class Represents a dot; a dot is simply a sized glyph centered at a given
+ * point that can also be stroked and filled. The <tt>size</tt> property is
  * proportional to the area of the rendered glyph to encourage meaningful visual
  * encodings. Dots can visually encode up to eight dimensions of data, though
- * this may be unwise due to integrality.
+ * this may be unwise due to integrality. See {@link pv.Mark#buildImplied} for
+ * details on the prioritization of redundant positioning properties.
  *
- * <p>See {@link Mark#buildImplied} for details on the prioritization of
- * redundant positioning properties.
+ * <p>See also the <a href="http://protovis.org/api/Dot.html">Dot guide</a>.
  *
  * @extends pv.Mark
  */
@@ -127,7 +129,7 @@ pv.Dot.defaults = new pv.Dot().extend(pv.Mark.defaults)
  * <li>right
  *
  * </ul>In addition to positioning properties (left, right, top bottom), the
- * anchors support text rendering properties (textAlign, textBaseline). Text is
+ * anchors support text rendering properties (text-align, text-baseline). Text is
  * rendered to appear outside the dot. Note that this behavior is different from
  * other mark anchors, which default to rendering text <i>inside</i> the mark.
  *
