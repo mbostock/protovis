@@ -16,11 +16,11 @@
  * and yellowgreen". The "transparent" keyword is also supported for a fully-
  * transparent color.
  *
- * <p>If the {@code format} argument is already an instance of {@code Color},
+ * <p>If the <tt>format</tt> argument is already an instance of <tt>Color</tt>,
  * the argument is returned with no further processing.
  *
  * @param format the color specification string, e.g., "#f00".
- * @return the corresponding {@code Color}.
+ * @return the corresponding <tt>Color</tt>.
  * @see http://www.w3.org/TR/SVG/types.html#ColorKeywords
  * @see http://www.w3.org/TR/css3-color/
  */
@@ -69,10 +69,10 @@ pv.color = function(format) {
 
 /**
  * Represents an abstract (possibly translucent) color. The color is divided
- * into two parts: the {@code color} attribute, an opaque color format string,
- * and the {@code opacity} attribute, a float between 0 and 1. The color space
- * is dependent on the implementing class; all colors should support the {@link
- * #rgb} method to convert to RGB color space for interpolation.
+ * into two parts: the <tt>color</tt> attribute, an opaque color format string,
+ * and the <tt>opacity</tt> attribute, a float between 0 and 1. The color space
+ * is dependent on the implementing class; all colors should support the
+ * {@link #rgb} method to convert to RGB color space for interpolation.
  *
  * @param color an opaque color format string, such as "#f00".
  * @param opacity the opacity, in [0,1].

@@ -1,5 +1,5 @@
 /**
- * Represents a data-driven graphical mark. The {@code Mark} class is the base
+ * Represents a data-driven graphical mark. The <tt>Mark</tt> class is the base
  * class for all graphical marks in Protovis; it does not provide any specific
  * rendering functionality, but together with {@link Panel} establishes the core
  * framework.
@@ -34,17 +34,19 @@
  * behavior, potentially in terms of the old behavior. In this way, the old mark
  * serves as the <b>prototype</b> for the new mark. Most mark types share the
  * same basic properties for consistency and to facilitate inheritance.
+ *
+ * @class
  */
 pv.Mark = function() {};
 
 /**
  * Returns the mark type name. Names should be lower case, with words separated
- * by hyphens. For example, the mark class {@code FooBar} should return
+ * by hyphens. For example, the mark class <tt>FooBar</tt> should return
  * "foo-bar".
  *
  * <p>Note that this method is defined on the constructor, not on the prototype,
- * and thus is a static method. The constructor is accessible through the {@link
- * #type} field.
+ * and thus is a static method. The constructor is accessible through the
+ * {@link #type} field.
  */
 pv.Mark.toString = function() {
   return "mark";
@@ -53,36 +55,36 @@ pv.Mark.toString = function() {
 /**
  * Defines and registers a property method for the property with the given name.
  * This method should be called on a mark class prototype to define each exposed
- * property. (Note this refers to the JavaScript {@code prototype}, not the
+ * property. (Note this refers to the JavaScript <tt>prototype</tt>, not the
  * Protovis mark prototype, which is the {@link #proto} field.)
  *
  * <p>The created property method supports several modes of invocation: <ol>
  *
- * <li>If invoked with a {@code Function} argument, this function is evaluated
+ * <li>If invoked with a <tt>Function</tt> argument, this function is evaluated
  * for each associated datum. The return value of the function is used as the
- * computed property value. The context of the function ({@code this}) is this
+ * computed property value. The context of the function (<tt>this</tt>) is this
  * mark. The arguments to the function are the associated data of this mark and
  * any enclosing panels. For example, a linear encoding of numerical data to
  * height is specified as
  *
  * <pre>m.height(function(d) d * 100);</pre>
  *
- * The expression {@code d * 100} will be evaluated for the height property of
- * each mark instance. This function is stored in the {@code $height} field. The
- * return value of the property method (e.g., {@code m.height}) is this mark
- * ({@code m})).
+ * The expression <tt>d * 100</tt> will be evaluated for the height property of
+ * each mark instance. This function is stored in the <tt>$height</tt> field. The
+ * return value of the property method (e.g., <tt>m.height</tt>) is this mark
+ * (<tt>m</tt>)).
  *
  * <li>If invoked with a non-function argument, the property is treated as a
  * constant, and wrapped with an accessor function. This wrapper function is
- * stored in the equivalent internal ({@code $}-prefixed) field. The return
- * value of the property method (e.g., {@code m.height}) is this mark.
+ * stored in the equivalent internal (<tt>$</tt>-prefixed) field. The return
+ * value of the property method (e.g., <tt>m.height</tt>) is this mark.
  *
  * <li>If invoked from an event handler, the property is set to the specified
  * value on the current instance (i.e., the instance that triggered the event,
  * such as a mouse click). In this case, the value should be a constant and not
  * a function. The return value is this mark. For example, saying
  *
- * <p>this.fillStyle("red").strokeStyle("black");</pre>
+ * <pre>this.fillStyle("red").strokeStyle("black");</pre>
  *
  * from a "click" event handler will set the fill color to red, and the stroke
  * color to black, for any marks that are clicked.
@@ -94,22 +96,22 @@ pv.Mark.toString = function() {
  *
  * <pre>m.top(function() this.proto.top() + 10);</pre>
  *
- * Note that the index of the mark being evaluated (in the above example, {@code
- * this.proto}) is inherited from the {@code Mark} class and set by this
- * mark. So, if the fifth element's top property is being evaluated, the fifth
- * instance of {@code this.proto} will similarly be queried for the value of its
- * top property. If the mark being evaluated has a different number of
+ * Note that the index of the mark being evaluated (in the above example,
+ * <tt>this.proto</tt>) is inherited from the <tt>Mark</tt> class and set by
+ * this mark. So, if the fifth element's top property is being evaluated, the
+ * fifth instance of <tt>this.proto</tt> will similarly be queried for the value
+ * of its top property. If the mark being evaluated has a different number of
  * instances, or its data is unrelated, the behavior of this method is
- * undefined. In these cases it may be better to index the {@code scene}
+ * undefined. In these cases it may be better to index the <tt>scene</tt>
  * explicitly to specify the exact instance.
  *
  * </ol><p>Property names should follow standard JavaScript method naming
  * conventions, using lowerCamel-style capitalization.
  *
  * <p>In addition to creating the property method, every property is registered
- * in the {@link #properties} array on the {@code prototype}. Although this
+ * in the {@link #properties} array on the <tt>prototype</tt>. Although this
  * array is an instance field, it is considered immutable and shared by all
- * instances of a given mark type. The {@code properties} array can be queried
+ * instances of a given mark type. The <tt>properties</tt> array can be queried
  * to see if a mark type defines a particular property, such as width or height.
  *
  * @param name the property name.
@@ -156,7 +158,7 @@ pv.Mark.prototype.parent = null;
 
 /**
  * The child index. -1 if the enclosing parent panel is null; otherwise, the
- * zero-based index of this mark into the parent panel's {@code children} array.
+ * zero-based index of this mark into the parent panel's <tt>children</tt> array.
  */
 pv.Mark.prototype.childIndex = -1;
 
@@ -333,6 +335,9 @@ pv.Mark.prototype.add = function(type) {
  * will render a text label on the top edge of the bar; the top anchor defines
  * the appropriate position properties (top and left), as well as text-rendering
  * properties for convenience (textAlign and textBaseline).
+ *
+ * @class
+ * @extends pv.Mark
  */
 pv.Mark.Anchor = function() {
   pv.Mark.call(this);
@@ -352,14 +357,17 @@ pv.Mark.Anchor.prototype = pv.extend(pv.Mark);
  * <pre>m.anchor(function() (this.index % 2) ? "top" : "bottom").add(pv.Dot);</pre>
  *
  * would have the desired effect.
+ *
+ * @type string
+ * @name pv.Mark.Anchor.prototype.name
  */
 pv.Mark.Anchor.prototype.defineProperty("name");
 
 /**
  * Returns an anchor with the specified name. While anchor names are typically
  * constants, the anchor name is a true property, which means you can specify a
- * function to compute the anchor name dynamically. See the {@link #name}
- * property for details.
+ * function to compute the anchor name dynamically. See the
+ * {@link pv.Mark.Anchor#name} property for details.
  *
  * @param name the anchor name; either a string or a property function.
  */
@@ -380,9 +388,9 @@ pv.Mark.prototype.anchor = function(name) {
  *
  * <pre>bar.anchor("top").add(pv.Label);</pre>
  *
- * then property functions on the label can refer to the bar via the {@code
- * anchorTarget} method. This method is also useful for mark types defining
- * properties on custom anchors.
+ * then property functions on the label can refer to the bar via the
+ * <tt>anchorTarget</tt> method. This method is also useful for mark types
+ * defining properties on custom anchors.
  *
  * @return the anchor target of this mark; possibly null.
  */
@@ -470,23 +478,23 @@ pv.Mark.prototype.render = function() {
  * match the current index into the data array for each mark. Note that the
  * index property is only set for the mark currently being built and its
  * enclosing parent panels. The index property for other marks is unset, but is
- * inherited from the global {@code Mark} class prototype. This allows mark
+ * inherited from the global <tt>Mark</tt> class prototype. This allows mark
  * properties to refer to properties on other marks <i>in the same panel</i>
  * conveniently; however, in general it is better to reference mark instances
  * specifically through the scene graph rather than depending on the magical
  * behavior of {@link #index}.
  *
- * <p>The root scene array has a special property, {@code data}, which stores
+ * <p>The root scene array has a special property, <tt>data</tt>, which stores
  * the current data stack. The first element in this stack is the current datum,
  * followed by the datum of the enclosing parent panel, and so on. The data
  * stack should not be accessed directly; instead, property functions are passed
  * the current data stack as arguments.
  *
- * <p>The evaluation of the {@code data} and {@code visible} properties is
- * special. The {@code data} property is evaluated first; unlike the other
+ * <p>The evaluation of the <tt>data</tt> and <tt>visible</tt> properties is
+ * special. The <tt>data</tt> property is evaluated first; unlike the other
  * properties, the data stack is from the parent panel, rather than the current
  * mark, since the data is not defined until the data property is evaluated.
- * The {@code visisble} property is subsequently evaluated for each instance;
+ * The <tt>visisble</tt> property is subsequently evaluated for each instance;
  * only if true will the {@link #buildInstance} method be called, evaluating
  * other properties and recursively building the scene graph.
  *
@@ -550,7 +558,7 @@ pv.Mark.prototype.build = function(parent) {
 
 /**
  * Removes the specified mark instance from the SVG image. This method depends
- * on the {@code svg} property of the scene graph node. If the specified mark
+ * on the <tt>svg</tt> property of the scene graph node. If the specified mark
  * instance was not present in the SVG image (for example, because it was not
  * visible), this method has no effect.
  *
@@ -564,7 +572,7 @@ pv.Mark.prototype.clearInstance = function(s) {
 
 /**
  * Evaluates all of the properties for this mark for the specified instance
- * {@code s} in the scene graph. The set of properties to evaluate is retrieved
+ * <tt>s</tt> in the scene graph. The set of properties to evaluate is retrieved
  * from the {@link #properties} array for this mark type (see {@link #type}).
  * After these properties are evaluated, any <b>implied</b> properties may be
  * computed by the mark and set on the scene graph; see {@link #buildImplied}.
@@ -588,7 +596,7 @@ pv.Mark.prototype.buildInstance = function(s) {
 
 /**
  * Computes the implied properties for this mark for the specified instance
- * {@code s} in the scene graph. Implied properties are those with dependencies
+ * <tt>s</tt> in the scene graph. Implied properties are those with dependencies
  * on multiple other properties; for example, the width property may be implied
  * if the left and right properties are set. This method can be overridden by
  * concrete mark types to define new implied properties, if necessary.
@@ -596,19 +604,19 @@ pv.Mark.prototype.buildInstance = function(s) {
  * <p>The default implementation computes the implied CSS box model properties.
  * The prioritization of redundant properties is as follows:<ol>
  *
- * <li>If the {@code width} property is not specified (i.e., null), its value is
+ * <li>If the <tt>width</tt> property is not specified (i.e., null), its value is
  * the width of the parent panel, minus this mark's left and right margins; the
  * left and right margins are zero if not specified.
  *
- * <li>Otherwise, if the {@code right} margin is not specified, its value is the
+ * <li>Otherwise, if the <tt>right</tt> margin is not specified, its value is the
  * width of the parent panel, minus this mark's width and left margin; the left
  * margin is zero if not specified.
  *
- * <li>Otherwise, if the {@code left} property is not specified, its value is
+ * <li>Otherwise, if the <tt>left</tt> property is not specified, its value is
  * the width of the parent panel, minus this mark's width and the right margin.
  *
- * </ol>This prioritization is then duplicated for the {@code height}, {@code
- * bottom} and {@code top} properties, respectively.
+ * </ol>This prioritization is then duplicated for the <tt>height</tt>,
+ * <tt>bottom</tt> and <tt>top</tt> properties, respectively.
  *
  * @param s a node in the scene graph; the instance of the mark to build.
  */
@@ -657,7 +665,7 @@ var property; // XXX
 
 /**
  * Evaluates the property function with the specified name for the current data
- * stack. The data stack, {@code this.root.scene.data}, contains the current
+ * stack. The data stack, <tt>this.root.scene.data</tt>, contains the current
  * datum, followed by the datum for the enclosing panel, and so on.
  *
  * <p>This method first finds the implementing property function by querying the
@@ -666,7 +674,7 @@ var property; // XXX
  * property function with the given name, the type default function is used. If
  * no default function is provided, this method returns null.
  *
- * <p>The context of the property function is {@code this} instance (i.e., the
+ * <p>The context of the property function is <tt>this</tt> instance (i.e., the
  * leaf-level mark), rather than whatever mark defined the property function.
  * Because of this behavior, a property function may be called on an object of a
  * different "class" (e.g., a Dot inheriting the fill style from a Line). Also
@@ -712,7 +720,7 @@ pv.Mark.prototype.update = function() {
 };
 
 /**
- * Updates the display for the specified mark instance {@code s} in the scene
+ * Updates the display for the specified mark instance <tt>s</tt> in the scene
  * graph. This implementation handles basic properties for all mark types, such
  * as visibility, cursor and title tooltip. Concrete mark types should override
  * this method to specify how marks are rendered.
@@ -775,7 +783,7 @@ pv.Mark.prototype.updateInstance = function(s) {
  * Registers an event handler for the specified event type with this mark. When
  * an event of the specified type is triggered, the specified handler will be
  * invoked. The handler is invoked in a similar method to property functions:
- * the context is {@code this} mark instance, and the arguments are the full
+ * the context is <tt>this</tt> mark instance, and the arguments are the full
  * data stack. Event handlers can use property methods to manipulate the display
  * properties of the mark:
  *

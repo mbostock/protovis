@@ -1,6 +1,6 @@
 /**
  * Represents a dot; a dot is simply a sized glyph centered at a given point
- * that can also be stroked and filled. The {@code size} property is
+ * that can also be stroked and filled. The <tt>size</tt> property is
  * proportional to the area of the rendered glyph to encourage meaningful visual
  * encodings. Dots can visually encode up to eight dimensions of data, though
  * this may be unwise due to integrality.
@@ -54,13 +54,13 @@ pv.Dot.prototype.defineProperty("shape");
 pv.Dot.prototype.defineProperty("angle");
 
 /**
- * The width of stroked lines, in pixels; used in conjunction with {@code
- * strokeStyle} to stroke the dot's shape.
+ * The width of stroked lines, in pixels; used in conjunction with
+ * <tt>strokeStyle</tt> to stroke the dot's shape.
  */
 pv.Dot.prototype.defineProperty("lineWidth");
 
 /**
- * The style of stroked lines; used in conjunction with {@code lineWidth} to
+ * The style of stroked lines; used in conjunction with <tt>lineWidth</tt> to
  * stroke the dot's shape. The default value of this property is a categorical
  * color.
  */
@@ -188,7 +188,7 @@ pv.Dot.prototype.radius = function() {
 };
 
 /**
- * Updates the display for the specified dot instance {@code s} in the scene
+ * Updates the display for the specified dot instance <tt>s</tt> in the scene
  * graph. This implementation handles the fill and stroke style for the dot, as
  * well as positional properties.
  *

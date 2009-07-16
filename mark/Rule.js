@@ -31,13 +31,13 @@ pv.Rule.prototype.type = pv.Rule;
 pv.Rule.toString = function() { return "rule"; };
 
 /**
- * The width of stroked lines, in pixels; used in conjunction with {@code
- * strokeStyle} to stroke the rule. The default value is 1 pixel.
+ * The width of stroked lines, in pixels; used in conjunction with
+ * <tt>strokeStyle</tt> to stroke the rule. The default value is 1 pixel.
  */
 pv.Rule.prototype.defineProperty("lineWidth");
 
 /**
- * The style of stroked lines; used in conjunction with {@code lineWidth} to
+ * The style of stroked lines; used in conjunction with <tt>lineWidth</tt> to
  * stroke the rule. The default value of this property is black.
  */
 pv.Rule.prototype.defineProperty("strokeStyle");
@@ -136,7 +136,7 @@ pv.Rule.prototype.buildImplied = function(s) {
 };
 
 /**
- * Updates the display for the specified rule instance {@code s} in the scene
+ * Updates the display for the specified rule instance <tt>s</tt> in the scene
  * graph. This implementation handles the stroke style for the rule, as well as
  * positional properties.
  *

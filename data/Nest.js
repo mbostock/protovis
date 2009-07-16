@@ -1,6 +1,6 @@
 /**
  * Returns a {@link Nest} operator for the specified array. This is a
- * convenience factory method, equivalent to {@code new pv.Nest(array)}.
+ * convenience factory method, equivalent to <tt>new pv.Nest(array)</tt>.
  *
  * @see Nest
  * @param array an array of elements to nest.
@@ -16,9 +16,9 @@ pv.nest = function(array) {
  * levels in the tree are specified by <i>key</i> functions. The leaf nodes of
  * the tree can be sorted by value, while the internal nodes can be sorted by
  * key. Finally, the tree can be returned either has a multidimensional array
- * via {@link #entries}, or as a hierarchical map via {@link #map}. The {@link
- * #rollup} routine similarly returns a map, collapsing the elements in each
- * leaf node using a summary function.
+ * via {@link #entries}, or as a hierarchical map via {@link #map}. The
+ * {@link #rollup} routine similarly returns a map, collapsing the elements in
+ * each leaf node using a summary function.
  *
  * <p>For example, consider the following tabular data structure of Barley
  * yields, from various sites in Minnesota during 1931-2:
@@ -78,10 +78,10 @@ pv.Nest.prototype.key = function(key) {
 
 /**
  * Sorts the previously-added keys. The natural sort order is used by default
- * (see {@link pv#naturalOrder}); if an alternative order is desired, {@code
- * order} should be a comparator function. If this method is not called (i.e.,
- * keys are <i>unsorted</i>), keys will appear in the order they appear in the
- * underlying elements array. For example,
+ * (see {@link pv#naturalOrder}); if an alternative order is desired,
+ * <tt>order</tt> should be a comparator function. If this method is not called
+ * (i.e., keys are <i>unsorted</i>), keys will appear in the order they appear
+ * in the underlying elements array. For example,
  *
  * <pre>pv.nest(yields)
  *     .key(function(d) d.year)
@@ -105,10 +105,10 @@ pv.Nest.prototype.sortKeys = function(order) {
 };
 
 /**
- * Sorts the leaf values. The natural sort order is used by default (see {@link
- * pv#naturalOrder}); if an alternative order is desired, {@code order} should
- * be a comparator function. If this method is not called (i.e., values are
- * <i>unsorted</i>), values will appear in the order they appear in the
+ * Sorts the leaf values. The natural sort order is used by default (see
+ * {@link pv#naturalOrder}); if an alternative order is desired, <tt>order</tt>
+ * should be a comparator function. If this method is not called (i.e., values
+ * are <i>unsorted</i>), values will appear in the order they appear in the
  * underlying elements array. For example,
  *
  * <pre>pv.nest(yields)
@@ -120,8 +120,8 @@ pv.Nest.prototype.sortKeys = function(order) {
  * groups yield data by year, then variety, and sorts the values for each
  * variety group by yield.
  *
- * <p>Value sort order, unlike keys, applies to both {@link #entries} and {@link
- * #map}. It has no effect on {@link #rollup}.
+ * <p>Value sort order, unlike keys, applies to both {@link #entries} and
+ * {@link #map}. It has no effect on {@link #rollup}.
  *
  * @param order an optional comparator function.
  * @return this.
@@ -143,8 +143,8 @@ pv.Nest.prototype.sortValues = function(order) {
  *     .key(function(d) d.site)
  *     .map()</pre>
  *
- * returns a map {@code m} such that {@code m[variety][site]} is an array, a subset of
- * {@code yields}, with each element having the given variety and site.
+ * returns a map <tt>m</tt> such that <tt>m[variety][site]</tt> is an array, a subset of
+ * <tt>yields</tt>, with each element having the given variety and site.
  *
  * @return a hierarchical map of values.
  */
@@ -180,13 +180,13 @@ pv.Nest.prototype.map = function() {
 };
 
 /**
- * Returns a hierarchical nested array. This method is similar to {@link
- * pv#entries}, but works recursively on the entire hierarchy. Rather than
- * returning a map like {@link #map}, this method returns a nested array. Each
- * element of the array has a {@code key} and {@code values} field. For leaf
- * nodes, the {@code values} array will be a subset of the underlying elements
- * array; for non-leaf nodes, the {@code values} array will contain more
- * key-values pairs.
+ * Returns a hierarchical nested array. This method is similar to
+ * {@link pv#entries}, but works recursively on the entire hierarchy. Rather
+ * than returning a map like {@link #map}, this method returns a nested
+ * array. Each element of the array has a <tt>key</tt> and <tt>values</tt>
+ * field. For leaf nodes, the <tt>values</tt> array will be a subset of the
+ * underlying elements array; for non-leaf nodes, the <tt>values</tt> array will
+ * contain more key-values pairs.
  *
  * <p>For an example usage, see the {@link Nest} constructor.
  *
@@ -220,9 +220,9 @@ pv.Nest.prototype.entries = function() {
 };
 
 /**
- * Returns a rollup map. The behavior of this method is the same as {@link
- * #map}, except that the leaf values are replaced with the return value of the
- * specified rollup function {@code f}. For example,
+ * Returns a rollup map. The behavior of this method is the same as
+ * {@link #map}, except that the leaf values are replaced with the return value
+ * of the specified rollup function <tt>f</tt>. For example,
  *
  * <pre>pv.nest(yields)
  *      .key(function(d) d.site)
@@ -233,7 +233,7 @@ pv.Nest.prototype.entries = function() {
  *
  * @see #map
  * @param f a rollup function.
- * @return a hierarhical map, with the leaf values computed by {@code f}.
+ * @return a hierarhical map, with the leaf values computed by <tt>f</tt>.
  */
 pv.Nest.prototype.rollup = function(f) {
 

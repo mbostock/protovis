@@ -21,8 +21,8 @@ pv.Wedge.toString = function() { return "wedge"; };
  * The start angle of the wedge, in radians. The start angle is measured
  * clockwise from the 3 o'clock position. The default value of this property is
  * the end angle of the previous instance (the {@link Mark#sibling}), or -PI / 2
- * for the first wedge; for pie and donut charts, typically only the {@link
- * #angle} property needs to be specified.
+ * for the first wedge; for pie and donut charts, typically only the
+ * {@link #angle} property needs to be specified.
  */
 pv.Wedge.prototype.defineProperty("startAngle");
 
@@ -53,13 +53,13 @@ pv.Wedge.prototype.defineProperty("innerRadius");
 pv.Wedge.prototype.defineProperty("outerRadius");
 
 /**
- * The width of stroked lines, in pixels; used in conjunction with {@code
- * strokeStyle} to stroke the wedge's border.
+ * The width of stroked lines, in pixels; used in conjunction with
+ * <tt>strokeStyle</tt> to stroke the wedge's border.
  */
 pv.Wedge.prototype.defineProperty("lineWidth");
 
 /**
- * The style of stroked lines; used in conjunction with {@code lineWidth} to
+ * The style of stroked lines; used in conjunction with <tt>lineWidth</tt> to
  * stroke the wedge's border. The default value of this property is null,
  * meaning wedges are not stroked by default.
  */
@@ -242,7 +242,7 @@ pv.Wedge.prototype.buildImplied = function(s) {
 };
 
 /**
- * Updates the display for the specified wedge instance {@code s} in the scene
+ * Updates the display for the specified wedge instance <tt>s</tt> in the scene
  * graph. This implementation handles the fill and stroke style for the wedge,
  * as well as positional properties.
  *

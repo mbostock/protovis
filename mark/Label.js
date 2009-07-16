@@ -7,8 +7,8 @@
  *
  * <p>Labels are positioned using the box model, similarly to {@link Dot}. Thus,
  * a label has no width or height, but merely a text anchor location. The text
- * is positioned relative to this anchor location based on the {@link
- * #textAlign}, {@link #textBaseline} and {@link #textMargin} properties.
+ * is positioned relative to this anchor location based on the
+ * {@link #textAlign}, {@link #textBaseline} and {@link #textMargin} properties.
  * Furthermore, the text may be rotated using {@link #textAngle}.
  *
  * <p>Labels ignore events, so as to not interfere with event handlers on
@@ -25,7 +25,7 @@ pv.Label.toString = function() { return "label"; };
 /**
  * The character data to render; a string. The default value of the text
  * property is the identity function, meaning the label's associated datum will
- * be rendered using its {@code toString}.
+ * be rendered using its <tt>toString</tt>.
  */
 pv.Label.prototype.defineProperty("text");
 
@@ -111,7 +111,7 @@ pv.Label.defaults = new pv.Label().extend(pv.Mark.defaults)
     .textMargin(3);
 
 /**
- * Updates the display for the specified label instance {@code s} in the scene
+ * Updates the display for the specified label instance <tt>s</tt> in the scene
  * graph. This implementation handles the text formatting for the label, as well
  * as positional properties.
  *

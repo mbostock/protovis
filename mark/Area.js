@@ -2,7 +2,7 @@
  * Represents an area mark: the solid area between two series of connected line
  * segments. Unsurprisingly, areas are used most frequently for area charts.
  *
- * <p>Just as a line represents a polyline, the {@code Area} mark type
+ * <p>Just as a line represents a polyline, the <tt>Area</tt> mark type
  * represents a <i>polygon</i>. However, an area is not an arbitrary polygon;
  * vertices are paired either horizontally or vertically into parallel
  * <i>spans</i>, and each span corresponds to an associated datum. Either the
@@ -34,18 +34,18 @@ pv.Area.prototype.defineProperty("width");
 pv.Area.prototype.defineProperty("height");
 
 /**
- * The width of stroked lines, in pixels; used in conjunction with {@code
- * strokeStyle} to stroke the perimeter of the area. Unlike the {@link Line}
- * mark type, the entire perimeter is stroked, rather than just one edge. The
- * default value of this property is 1.5, but since the default stroke style is
- * null, area marks are not stroked by default.
+ * The width of stroked lines, in pixels; used in conjunction with
+ * <tt>strokeStyle</tt> to stroke the perimeter of the area. Unlike the
+ * {@link Line} mark type, the entire perimeter is stroked, rather than just one
+ * edge. The default value of this property is 1.5, but since the default stroke
+ * style is null, area marks are not stroked by default.
  *
  * <p>This property is <i>fixed</i>. See {@link Mark}.
  */
 pv.Area.prototype.defineProperty("lineWidth");
 
 /**
- * The style of stroked lines; used in conjunction with {@code lineWidth} to
+ * The style of stroked lines; used in conjunction with <tt>lineWidth</tt> to
  * stroke the perimeter of the area. Unlike the {@link Line} mark type, the
  * entire perimeter is stroked, rather than just one edge. The default value of
  * this property is null, meaning areas are not stroked by default.

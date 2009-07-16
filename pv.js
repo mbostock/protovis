@@ -1,15 +1,16 @@
 /**
- * The Protovis namespace, {@code pv}. All public methods and fields should be
- * registered on this object. Note that core Protovis source is surrounded by an
- * anonymous function, so any other declared globals will not be visible outside
- * of core methods. This also allows multiple versions of Protovis to coexist,
- * since each version will see their own {@code pv} namespace.
+ * @namespace The Protovis namespace, <tt>pv</tt>. All public methods and fields
+ * should be registered on this object. Note that core Protovis source is
+ * surrounded by an anonymous function, so any other declared globals will not
+ * be visible outside of core methods. This also allows multiple versions of
+ * Protovis to coexist, since each version will see their own <tt>pv</tt>
+ * namespace.
  */
 var pv = {};
 
 /**
  * Returns a prototype object suitable for extending the given class. Rather
- * than constructing a new instance of {@code f} to serve as the prototype
+ * than constructing a new instance of <tt>f</tt> to serve as the prototype
  * (which unnecessarily runs the constructor on the created prototype object,
  * potentially polluting it), an anonymous function is generated internally that
  * shares the same prototype:
@@ -77,23 +78,23 @@ try {
 }
 
 /**
- * Returns the passed-in argument, {@code x}; the identity function. This method
+ * Returns the passed-in argument, <tt>x</tt>; the identity function. This method
  * is provided for convenience since it is used as the default behavior for a
  * number of property functions.
  *
  * @param x a value.
- * @return the value {@code x}.
+ * @return the value <tt>x</tt>.
  */
 pv.identity = function(x) { return x; };
 
 /**
- * Returns an array of numbers, starting at {@code start}, incrementing by
- * {@code step}, until {@code stop} is reached. The stop value is exclusive. If
+ * Returns an array of numbers, starting at <tt>start</tt>, incrementing by
+ * <tt>step</tt>, until <tt>stop</tt> is reached. The stop value is exclusive. If
  * only a single argument is specified, this value is interpeted as the
  * <i>stop</i> value, with the <i>start</i> value as zero. If only two arguments
  * are specified, the step value is implied to be one.
  *
- * <p>The method is modeled after the built-in {@code range} method from
+ * <p>The method is modeled after the built-in <tt>range</tt> method from
  * Python. See the Python documentation for more details.
  *
  * @see http://docs.python.org/library/functions.html#range
@@ -119,7 +120,7 @@ pv.range = function(start, stop, step) {
 };
 
 /**
- * Given two arrays {@code a} and {@code b}, returns an array of all possible
+ * Given two arrays <tt>a</tt> and <tt>b</tt>, returns an array of all possible
  * pairs of elements a_i-b_j. The outer loop is on array <i>a</i>, while the
  * inner loop is on <i>b</i>, such that the order of returned elements is
  * a_0-b_0, a_0-b_1, ... a_0-b_m, a_1-b_0, a_1-b_1, ... a_1-b_m, ... a_n-b_m.
@@ -127,7 +128,7 @@ pv.range = function(start, stop, step) {
  *
  * @param a an array.
  * @param b an array.
- * @return an array of pairs of elements in {@code a} and {@code b}.
+ * @return an array of pairs of elements in <tt>a</tt> and <tt>b</tt>.
  */
 pv.cross = function(a, b) {
   var array = [];
@@ -140,16 +141,16 @@ pv.cross = function(a, b) {
 };
 
 /**
- * Given the specified array of {@code arrays}, concatenates the arrays into a
+ * Given the specified array of <tt>arrays</tt>, concatenates the arrays into a
  * single array. If the individual arrays are explicitly known, an alternative
- * to blend is to use JavaScript's {@code concat} method directly, e.g.:
+ * to blend is to use JavaScript's <tt>concat</tt> method directly, e.g.:
  *
  * <pre>[1, 2, 3].concat(["a", "b", "c"])</pre>
  *
  * returns [1, 2, 3, "a", "b", "c"].
  *
  * @param arrays an array of arrays.
- * @return an array containing all the elements of each array in {@code arrays}.
+ * @return an array containing all the elements of each array in <tt>arrays</tt>.
  */
 pv.blend = function(arrays) {
   return Array.prototype.concat.apply([], arrays);
@@ -173,7 +174,7 @@ pv.keys = function(map) {
 /**
  * Returns all of the entries (key-value pairs) of the specified object (a
  * map). The order of the returned array is not defined. Each key-value pair is
- * represented as an object with {@code key} and {@code value} attributes.
+ * represented as an object with <tt>key</tt> and <tt>value</tt> attributes.
  *
  * @param map an object.
  * @return an array of key-value pairs corresponding to the keys.
@@ -204,8 +205,8 @@ pv.values = function(map) {
 /**
  * Returns a normalized copy of the specified array, such that the sum of the
  * returned elements sum to one. If the specified array is not an array of
- * numbers, the specified accessor function {@code f} can be specified to map
- * the elements to numbers. For example, if {@code array} is an array of
+ * numbers, the specified accessor function <tt>f</tt> can be specified to map
+ * the elements to numbers. For example, if <tt>array</tt> is an array of
  * objects, and each object has a numeric property "foo", the function
  *
  * <pre>function(d) d.foo</pre>
@@ -225,7 +226,7 @@ pv.normalize = function(array, f) {
 
 /**
  * Returns the sum of the specified array. If the specified array is not an
- * array of numbers, the specified accessor function {@code f} can be specified
+ * array of numbers, the specified accessor function <tt>f</tt> can be specified
  * to map the elements to numbers. See {@link #normalize} for an example.
  *
  * @param array an array of objects, or numbers.
@@ -239,7 +240,7 @@ pv.sum = function(array, f) {
 
 /**
  * Returns the maximum value of the specified array. If the specified array is
- * not an array of numbers, the specified accessor function {@code f} can be
+ * not an array of numbers, the specified accessor function <tt>f</tt> can be
  * specified to map the elements to numbers. See {@link #normalize} for an
  * example.
  *
@@ -255,8 +256,8 @@ pv.max = function(array, f) {
 /**
  * Returns the index of the maximum value of the specified array. If the
  * specified array is not an array of numbers, the specified accessor function
- * {@code f} can be specified to map the elements to numbers. See {@link
- * #normalize} for an example.
+ * <tt>f</tt> can be specified to map the elements to numbers. See
+ * {@link #normalize} for an example.
  *
  * @param array an array of objects, or numbers.
  * @param f an optional accessor function.
@@ -277,7 +278,7 @@ pv.max.index = function(array, f) {
 
 /**
  * Returns the minimum value of the specified array of numbers. If the specified
- * array is not an array of numbers, the specified accessor function {@code f}
+ * array is not an array of numbers, the specified accessor function <tt>f</tt>
  * can be specified to map the elements to numbers. See {@link #normalize} for
  * an example.
  *
@@ -293,8 +294,8 @@ pv.min = function(array, f) {
 /**
  * Returns the index of the minimum value of the specified array. If the
  * specified array is not an array of numbers, the specified accessor function
- * {@code f} can be specified to map the elements to numbers. See {@link
- * #normalize} for an example.
+ * <tt>f</tt> can be specified to map the elements to numbers. See
+ * {@link #normalize} for an example.
  *
  * @param array an array of objects, or numbers.
  * @param f an optional accessor function.
@@ -316,8 +317,8 @@ pv.min.index = function(array, f) {
 /**
  * Returns the arithmetic mean, or average, of the specified array. If the
  * specified array is not an array of numbers, the specified accessor function
- * {@code f} can be specified to map the elements to numbers. See {@link
- * #normalize} for an example.
+ * <tt>f</tt> can be specified to map the elements to numbers. See
+ * {@link #normalize} for an example.
  *
  * @param array an array of objects, or numbers.
  * @param f an optional accessor function.
@@ -329,7 +330,7 @@ pv.mean = function(array, f) {
 
 /**
  * Returns the median of the specified array. If the specified array is not an
- * array of numbers, the specified accessor function {@code f} can be specified
+ * array of numbers, the specified accessor function <tt>f</tt> can be specified
  * to map the elements to numbers. See {@link #normalize} for an example.
  *
  * @param array an array of objects, or numbers.
@@ -345,7 +346,7 @@ pv.median = function(array, f) {
 };
 
 /**
- * Applies the specified function {@code f} against an accumulator and each
+ * Applies the specified function <tt>f</tt> against an accumulator and each
  * value of the specified array (from left-ot-right) so as to reduce it to a
  * single value.
  *
@@ -395,9 +396,9 @@ if (/\[native code\]/.test(Array.prototype.reduce)) {
 };
 
 /**
- * Returns a map constructed from the specified {@code keys}, using the function
- * {@code f} to compute the value for each key. The arguments to the value
- * function are the same as those used in the built-in array {@code map}
+ * Returns a map constructed from the specified <tt>keys</tt>, using the function
+ * <tt>f</tt> to compute the value for each key. The arguments to the value
+ * function are the same as those used in the built-in array <tt>map</tt>
  * function: the key, the index, and the array itself. The callback is invoked
  * only for indexes of the array which have assigned values; it is not invoked
  * for indexes which have been deleted or which have never been assigned values.
@@ -426,20 +427,20 @@ pv.dict = function(keys, f) {
 
 /**
  * Returns a permutation of the specified array, using the specified array of
- * indexes. The returned array contains the corresponding element in {@code
- * array} for each index in {@code indexes}, in order. For example,
+ * indexes. The returned array contains the corresponding element in
+ * <tt>array</tt> for each index in <tt>indexes</tt>, in order. For example,
  *
  * <pre>pv.permute(["a", "b", "c"], [1, 2, 0])</pre>
  *
  * returns <tt>["b", "c", "a"]</tt>. It is acceptable for the array of indexes
  * to be a different length from the array of elements, and for indexes to be
- * duplicated or omitted. The optional accessor function {@code f} can be used
+ * duplicated or omitted. The optional accessor function <tt>f</tt> can be used
  * to perform a simultaneous mapping of the array elements.
  *
  * @param array an array.
- * @param indexes an array of indexes into {@code array}.
+ * @param indexes an array of indexes into <tt>array</tt>.
  * @param f an optional accessor function.
- * @return an array of elements from {@code array}; a permutation.
+ * @return an array of elements from <tt>array</tt>; a permutation.
  */
 pv.permute = function(array, indexes, f) {
   if (!f) f = pv.identity;
@@ -449,15 +450,15 @@ pv.permute = function(array, indexes, f) {
 };
 
 /**
- * Returns a map from key to index for the specified {@code keys} array. For
+ * Returns a map from key to index for the specified <tt>keys</tt> array. For
  * example,
  *
  * <pre>pv.numerate(["a", "b", "c"])</pre>
  *
  * returns <tt>{a: 0, b: 1, c: 2}</tt>. Note that since JavaScript maps only
- * support string keys, {@code keys} must contain strings, or other values that
+ * support string keys, <tt>keys</tt> must contain strings, or other values that
  * naturally map to distinct string values. Alternatively, an optional accessor
- * function {@code f} can be specified to compute the string key for the given
+ * function <tt>f</tt> can be specified to compute the string key for the given
  * element.
  *
  * @param keys an array, usually of string keys.
@@ -473,9 +474,9 @@ pv.numerate = function(keys, f) {
 
 /**
  * The compare function for natural order. This can be used in conjunction with
- * the built-in array {@code sort} method to sort elements by their natural
+ * the built-in array <tt>sort</tt> method to sort elements by their natural
  * order, ascending. Note that if no compare function is specified to the
- * built-in {@code sort} method, the default order is lexicographic <i>not</i>
+ * built-in <tt>sort</tt> method, the default order is lexicographic <i>not</i>
  * natural!
  *
  * @see http://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Global_Objects/Array/sort
@@ -489,9 +490,9 @@ pv.naturalOrder = function(a, b) {
 
 /**
  * The compare function for reverse natural order. This can be used in
- * conjunction with the built-in array {@code sort} method to sort elements by
+ * conjunction with the built-in array <tt>sort</tt> method to sort elements by
  * their natural order, descending. Note that if no compare function is
- * specified to the built-in {@code sort} method, the default order is
+ * specified to the built-in <tt>sort</tt> method, the default order is
  * lexicographic <i>not</i> natural!
  *
  * @see #naturalOrder
@@ -503,12 +504,20 @@ pv.reverseOrder = function(b, a) {
   return (a < b) ? -1 : ((a > b) ? 1 : 0);
 };
 
-/** Namespace constants for SVG, XMLNS, and XLINK. */
+/** @namespace Namespace constants for SVG, XMLNS, and XLINK. */
 pv.ns = {
+ /** SVG namespace, "http://www.w3.org/2000/svg". */
  svg: "http://www.w3.org/2000/svg",
+ /** XMLNS namespace, "http://www.w3.org/2000/xmlns". */
  xmlns: "http://www.w3.org/2000/xmlns",
+ /** XLINK namespace, "http://www.w3.org/1999/xlink". */
  xlink: "http://www.w3.org/1999/xlink",
 };
 
-/** Protovis major and minor version numbers. */
-pv.version = { major: 2, minor: 6 };
+/** @namespace Protovis major and minor version numbers. */
+pv.version = {
+  /** Major version number. */
+  major: 2,
+  /** Minor version number. */
+  minor: 6
+};

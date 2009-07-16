@@ -39,13 +39,13 @@ pv.Bar.prototype.defineProperty("width");
 pv.Bar.prototype.defineProperty("height");
 
 /**
- * The width of stroked lines, in pixels; used in conjunction with {@code
- * strokeStyle} to stroke the bar's border.
+ * The width of stroked lines, in pixels; used in conjunction with
+ * <tt>strokeStyle</tt> to stroke the bar's border.
  */
 pv.Bar.prototype.defineProperty("lineWidth");
 
 /**
- * The style of stroked lines; used in conjunction with {@code lineWidth} to
+ * The style of stroked lines; used in conjunction with <tt>lineWidth</tt> to
  * stroke the bar's border. The default value of this property is null, meaning
  * bars are not stroked by default.
  */
@@ -170,7 +170,7 @@ pv.Bar.Anchor.prototype.$textBaseline = function(d) {
 };
 
 /**
- * Updates the display for the specified bar instance {@code s} in the scene
+ * Updates the display for the specified bar instance <tt>s</tt> in the scene
  * graph. This implementation handles the fill and stroke style for the bar, as
  * well as positional properties.
  *

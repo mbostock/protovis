@@ -35,7 +35,7 @@ pv.Image.defaults = new pv.Image().extend(pv.Bar.defaults)
     .fillStyle(null);
 
 /**
- * Updates the display for the specified image instance {@code s} in the scene
+ * Updates the display for the specified image instance <tt>s</tt> in the scene
  * graph. This implementation handles the fill and stroke style for the image,
  * as well as positional properties.
  *
@@ -45,7 +45,7 @@ pv.Image.defaults = new pv.Image().extend(pv.Bar.defaults)
  * around the stroke rect element, if present, and otherwise the image element.
  * Similarly the event handlers and cursor style is placed on the stroke
  * element, if present, and otherwise the image element. Note that since the
- * stroke element is transparent, the {@code pointer-events} attribute is used
+ * stroke element is transparent, the <tt>pointer-events</tt> attribute is used
  * to capture events.
  *
  * @param s a node in the scene graph; the instance of the bar to update.

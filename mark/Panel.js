@@ -18,8 +18,8 @@
  * tables; designers can also overlay HTML elements such as rich text and
  * images.
  *
- * <p>All panels have a {@code children} array (possibly empty) containing the
- * child marks in the order they were added. Panels also have a {@code root}
+ * <p>All panels have a <tt>children</tt> array (possibly empty) containing the
+ * child marks in the order they were added. Panels also have a <tt>root</tt>
  * field which points to the root (outermost) panel; the root panel's root field
  * points to itself.
  */
@@ -46,8 +46,8 @@ pv.Panel.toString = function() { return "panel"; };
  * script element containing the current Protovis specification. This property
  * only applies to root panels and is ignored on nested panels.
  *
- * <p>Note: the "canvas" element here refers to a {@code div} (or other suitable
- * HTML container element), <i>not</i> a {@code canvas} element. The name of
+ * <p>Note: the "canvas" element here refers to a <tt>div</tt> (or other suitable
+ * HTML container element), <i>not</i> a <tt>canvas</tt> element. The name of
  * this property is a historical anachronism from the first implementation that
  * used HTML 5 canvas, rather than SVG.
  */
@@ -74,9 +74,9 @@ pv.Panel.defaults = new pv.Panel().extend(pv.Bar.defaults)
     .reverse(false);
 
 /**
- * Adds a new mark of the specified type to this panel. Unlike the normal {@link
- * Mark#add} behavior, adding a mark to a panel does not cause the mark to
- * inherit from the panel. Since the contained marks are offset by the panel
+ * Adds a new mark of the specified type to this panel. Unlike the normal
+ * {@link Mark#add} behavior, adding a mark to a panel does not cause the mark
+ * to inherit from the panel. Since the contained marks are offset by the panel
  * margins already, inheriting properties is generally undesirable; of course,
  * it is always possible to change this behavior by calling {@link Mark#extend}
  * explicitly.
@@ -95,7 +95,7 @@ pv.Panel.prototype.add = function(type) {
 
 /**
  * Creates a new canvas (SVG) element with the specified width and height, and
- * inserts it into the current document. If the {@code $dom} field is set, as
+ * inserts it into the current document. If the <tt>$dom</tt> field is set, as
  * for text/javascript+protovis scripts, the SVG element is inserted into the
  * DOM before the script element. Otherwise, the SVG element is inserted into
  * the last child element of the document, as for text/javascript scripts.
@@ -109,7 +109,7 @@ pv.Panel.prototype.createCanvas = function(w, h) {
   /**
    * Returns the last element in the current document's body. The canvas element
    * is appended to this last element if another DOM element has not already
-   * been specified via the {@code $dom} field.
+   * been specified via the <tt>$dom</tt> field.
    */
   function lastElement() {
     var node = document.body;
@@ -134,7 +134,7 @@ pv.Panel.prototype.createCanvas = function(w, h) {
 
 /**
  * Evaluates all of the properties for this panel for the specified instance
- * {@code s} in the scene graph, including recursively building the scene graph
+ * <tt>s</tt> in the scene graph, including recursively building the scene graph
  * for child marks.
  *
  * @param s a node in the scene graph; the instance of the panel to build.
@@ -171,18 +171,18 @@ pv.Panel.prototype.buildInstance = function(s) {
 
 /**
  * Computes the implied properties for this panel for the specified instance
- * {@code s} in the scene graph. Panels have two implied properties:<ul>
+ * <tt>s</tt> in the scene graph. Panels have two implied properties:<ul>
  *
- * <li>The {@code canvas} property references the DOM element, typically a DIV,
+ * <li>The <tt>canvas</tt> property references the DOM element, typically a DIV,
  * that contains the SVG element that is used to display the visualization. This
  * property may be specified as a string, referring to the unique ID of the
  * element in the DOM. The string is converted to a reference to the DOM
  * element. The width and height of the SVG element is inferred from this DOM
  * element. If no canvas property is specified, a new SVG element is created and
- * inserted into the document, using the panel dimensions; see {@link
- * #createCanvas}.
+ * inserted into the document, using the panel dimensions; see
+ * {@link #createCanvas}.
  *
- * <li>The {@code children} array, while not a property per se, contains the
+ * <li>The <tt>children</tt> array, while not a property per se, contains the
  * scene graph for each child mark. This array is initialized to be empty, and
  * is populated above in {@link #buildInstance}.
  *
@@ -251,8 +251,8 @@ pv.Panel.prototype.buildImplied = function(s) {
 /**
  * Updates the display, propagating property values computed in the build phase
  * to the SVG image. In addition to the SVG element that serves as the canvas,
- * each panel instance has a corresponding {@code g} (container) element. The
- * {@code g} element uses the {@code transform} attribute to offset the location
+ * each panel instance has a corresponding <tt>g</tt> (container) element. The
+ * <tt>g</tt> element uses the <tt>transform</tt> attribute to offset the location
  * of contained graphical elements.
  */
 pv.Panel.prototype.update = function() {
@@ -299,7 +299,7 @@ pv.Panel.prototype.update = function() {
 };
 
 /**
- * Updates the display for the specified panel instance {@code s} in the scene
+ * Updates the display for the specified panel instance <tt>s</tt> in the scene
  * graph. This implementation handles the fill and stroke style for the panel,
  * as well as any necessary transform to offset the location of contained marks.
  *

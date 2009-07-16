@@ -18,13 +18,13 @@ pv.Line.prototype.type = pv.Line;
 pv.Line.toString = function() { return "line"; };
 
 /**
- * The width of stroked lines, in pixels; used in conjunction with {@code
- * strokeStyle} to stroke the line.
+ * The width of stroked lines, in pixels; used in conjunction with
+ * <tt>strokeStyle</tt> to stroke the line.
  */
 pv.Line.prototype.defineProperty("lineWidth");
 
 /**
- * The style of stroked lines; used in conjunction with {@code lineWidth} to
+ * The style of stroked lines; used in conjunction with <tt>lineWidth</tt> to
  * stroke the line. The default value of this property is a categorical color.
  */
 pv.Line.prototype.defineProperty("strokeStyle");
