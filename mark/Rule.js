@@ -25,7 +25,7 @@
  * properties, it might be easier to place them. Small rules can be used as tick
  * marks; alternatively, a {@link Dot} with the "tick" shape can be used.
  *
- * <p>See also the <a href="http://protovis.org/api/Rule.html">Rule guide</a>.
+ * <p>See also the <a href="../../api/Rule.html">Rule guide</a>.
  *
  * @see pv.Line
  * @extends pv.Mark

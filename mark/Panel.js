@@ -28,7 +28,7 @@
  * field which points to the root (outermost) panel; the root panel's root field
  * points to itself.
  *
- * <p>See also the <a href="http://protovis.org/api/">Protovis guide</a>.
+ * <p>See also the <a href="../../api/">Protovis guide</a>.
  *
  * @extends pv.Bar
  */

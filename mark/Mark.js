@@ -39,7 +39,7 @@
  * serves as the <b>prototype</b> for the new mark. Most mark types share the
  * same basic properties for consistency and to facilitate inheritance.
  *
- * <p>See also the <a href="http://protovis.org/api/">Protovis guide</a>.
+ * <p>See also the <a href="../../api/">Protovis guide</a>.
  */
 pv.Mark = function() {};
 

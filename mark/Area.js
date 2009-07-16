@@ -15,7 +15,7 @@
  * the area is horizontally-oriented or vertically-oriented.  Like lines, areas
  * can be stroked and filled with arbitrary colors.
  *
- * <p>See also the <a href="http://protovis.org/api/Area.html">Area guide</a>.
+ * <p>See also the <a href="../../api/Area.html">Area guide</a>.
  *
  * @extends pv.Mark
  */

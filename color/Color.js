@@ -77,7 +77,7 @@ pv.color = function(format) {
  * space is dependent on the implementing class; all colors support the
  * {@link #rgb} method to convert to RGB color space for interpolation.
  *
- * <p>See also the <a href="http://protovis.org/api/Color.html">Color guide</a>.
+ * <p>See also the <a href="../../api/Color.html">Color guide</a>.
  *
  * @param {string} color an opaque color format string, such as "#f00".
  * @param {number} opacity the opacity, in [0,1].

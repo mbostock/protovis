@@ -19,7 +19,7 @@
  * underlying marks, such as bars. In the future, we may support event handlers
  * on labels.
  *
- * <p>See also the <a href="http://protovis.org/api/Label.html">Label guide</a>.
+ * <p>See also the <a href="../../api/Label.html">Label guide</a>.
  *
  * @extends pv.Mark
  */

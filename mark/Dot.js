@@ -10,7 +10,7 @@
  * this may be unwise due to integrality. See {@link pv.Mark#buildImplied} for
  * details on the prioritization of redundant positioning properties.
  *
- * <p>See also the <a href="http://protovis.org/api/Dot.html">Dot guide</a>.
+ * <p>See also the <a href="../../api/Dot.html">Dot guide</a>.
  *
  * @extends pv.Mark
  */

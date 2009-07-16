@@ -14,7 +14,7 @@
  * cases, lines are only stroked, but the fill style can be used to construct
  * arbitrary polygons.
  *
- * <p>See also the <a href="http://protovis.org/api/Line.html">Line guide</a>.
+ * <p>See also the <a href="../../api/Line.html">Line guide</a>.
  *
  * @extends pv.Mark
  */

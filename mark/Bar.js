@@ -19,7 +19,7 @@
  * example. See {@link pv.Mark#buildImplied} for details on the prioritization
  * of redundant positioning properties.
  *
- * <p>See also the <a href="http://protovis.org/api/Bar.html">Bar guide</a>.
+ * <p>See also the <a href="../../api/Bar.html">Bar guide</a>.
  *
  * @extends pv.Mark
  */

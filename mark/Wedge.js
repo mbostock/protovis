@@ -14,7 +14,7 @@
  * <p>The center point of the circle is positioned using the standard box model.
  * The wedge can be stroked and filled, similar to {link Bar}.
  *
- * <p>See also the <a href="http://protovis.org/api/Wedge.html">Wedge guide</a>.
+ * <p>See also the <a href="../../api/Wedge.html">Wedge guide</a>.
  *
  * @extends pv.Mark
  */
