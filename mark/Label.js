@@ -14,18 +14,30 @@
  * <p>Labels ignore events, so as to not interfere with event handlers on
  * underlying marks, such as bars. In the future, we may support event handlers
  * on labels.
+ *
+ * @class
+ * @extends pv.Mark
  */
 pv.Label = function() {
   pv.Mark.call(this);
 };
 pv.Label.prototype = pv.extend(pv.Mark);
 pv.Label.prototype.type = pv.Label;
+
+/**
+ * Returns "label".
+ *
+ * @returns {string} "label".
+ */
 pv.Label.toString = function() { return "label"; };
 
 /**
  * The character data to render; a string. The default value of the text
  * property is the identity function, meaning the label's associated datum will
  * be rendered using its <tt>toString</tt>.
+ *
+ * @type string
+ * @name pv.Label.prototype.text
  */
 pv.Label.prototype.defineProperty("text");
 
@@ -36,7 +48,9 @@ pv.Label.prototype.defineProperty("text");
  * ignored. The other font-style, font-variant, font-weight, font-size and
  * font-family properties are supported.
  *
- * @see http://www.w3.org/TR/CSS2/fonts.html#font-shorthand
+ * @see <a href="http://www.w3.org/TR/CSS2/fonts.html#font-shorthand">CSS2 fonts</a>.
+ * @type string
+ * @name pv.Label.prototype.font
  */
 pv.Label.prototype.defineProperty("font");
 
@@ -44,6 +58,9 @@ pv.Label.prototype.defineProperty("font");
  * The rotation angle, in radians. Text is rotated clockwise relative to the
  * anchor location. For example, with the default left alignment, an angle of
  * Math.PI / 2 causes text to proceed downwards. The default angle is zero.
+ *
+ * @type number
+ * @name pv.Label.prototype.textAngle
  */
 pv.Label.prototype.defineProperty("textAngle");
 
@@ -52,7 +69,9 @@ pv.Label.prototype.defineProperty("textAngle");
  * and "strokeStyle", although it might be better to rename this property (and
  * perhaps use the same name as "strokeStyle"). The default color is black.
  *
- * @see Color
+ * @see pv.color
+ * @type string
+ * @name pv.Label.prototype.textStyle
  */
 pv.Label.prototype.defineProperty("textStyle");
 
@@ -64,6 +83,9 @@ pv.Label.prototype.defineProperty("textStyle");
  * <li>right
  *
  * </ul>The default horizontal alignment is left.
+ *
+ * @type string
+ * @name pv.Label.prototype.textAlign
  */
 pv.Label.prototype.defineProperty("textAlign");
 
@@ -75,6 +97,9 @@ pv.Label.prototype.defineProperty("textAlign");
  * <li>bottom
  *
  * </ul>The default vertical alignment is bottom.
+ *
+ * @type string
+ * @name pv.Label.prototype.textBaselin
  */
 pv.Label.prototype.defineProperty("textBaseline");
 
@@ -84,22 +109,29 @@ pv.Label.prototype.defineProperty("textBaseline");
  * location, in a direction dependent on the horizontal and vertical alignment
  * properties. For example, if the text is left- and middle-aligned, the margin
  * shifts the text to the right. The default margin is 3 pixels.
+ *
+ * @type number
+ * @name pv.Label.prototype.textMargin
  */
 pv.Label.prototype.defineProperty("textMargin");
 
 /**
- * A list of shoadw effects to be applied to text, per the CSS Text Level 3
+ * A list of shadow effects to be applied to text, per the CSS Text Level 3
  * text-shadow property. An example specification is "0.1em 0.1em 0.1em
  * rgba(0,0,0,.5)"; the first length is the horizontal offset, the second the
  * vertical offset, and the third the blur radius.
  *
- * @see http://www.w3.org/TR/css3-text/#text-shadow
+ * @see <a href="http://www.w3.org/TR/css3-text/#text-shadow">CSS3 text</a>.
+ * @type string
+ * @name pv.Label.prototype.textShadow
  */
 pv.Label.prototype.defineProperty("textShadow");
 
 /**
  * Default properties for labels. See the individual properties for the default
  * values.
+ *
+ * @type pv.Label
  */
 pv.Label.defaults = new pv.Label().extend(pv.Mark.defaults)
     .text(pv.identity)
