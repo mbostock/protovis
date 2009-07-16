@@ -72,6 +72,7 @@ pv.Area.prototype.defineProperty("lineWidth");
  *
  * @type string
  * @name pv.Area.prototype.strokeStyle
+ * @see pv.color
  */
 pv.Area.prototype.defineProperty("strokeStyle");
 
@@ -84,6 +85,7 @@ pv.Area.prototype.defineProperty("strokeStyle");
  *
  * @type string
  * @name pv.Area.prototype.fillStyle
+ * @see pv.color
  */
 pv.Area.prototype.defineProperty("fillStyle");
 

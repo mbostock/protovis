@@ -86,6 +86,7 @@ pv.Dot.prototype.defineProperty("lineWidth");
  *
  * @type string
  * @name pv.Dot.prototype.strokeStyle
+ * @see pv.color
  */
 pv.Dot.prototype.defineProperty("strokeStyle");
 
@@ -96,6 +97,7 @@ pv.Dot.prototype.defineProperty("strokeStyle");
  *
  * @type string
  * @name pv.Dot.prototype.fillStyle
+ * @see pv.color
  */
 pv.Dot.prototype.defineProperty("fillStyle");
 

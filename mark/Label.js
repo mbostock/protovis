@@ -69,9 +69,9 @@ pv.Label.prototype.defineProperty("textAngle");
  * and "strokeStyle", although it might be better to rename this property (and
  * perhaps use the same name as "strokeStyle"). The default color is black.
  *
- * @see pv.color
  * @type string
  * @name pv.Label.prototype.textStyle
+ * @see pv.color
  */
 pv.Label.prototype.defineProperty("textStyle");
 
@@ -99,7 +99,7 @@ pv.Label.prototype.defineProperty("textAlign");
  * </ul>The default vertical alignment is bottom.
  *
  * @type string
- * @name pv.Label.prototype.textBaselin
+ * @name pv.Label.prototype.textBaseline
  */
 pv.Label.prototype.defineProperty("textBaseline");
 

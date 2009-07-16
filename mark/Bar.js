@@ -69,6 +69,7 @@ pv.Bar.prototype.defineProperty("lineWidth");
  *
  * @type string
  * @name pv.Bar.prototype.strokeStyle
+ * @see pv.color
  */
 pv.Bar.prototype.defineProperty("strokeStyle");
 
@@ -78,6 +79,7 @@ pv.Bar.prototype.defineProperty("strokeStyle");
  *
  * @type string
  * @name pv.Bar.prototype.fillStyle
+ * @see pv.color
  */
 pv.Bar.prototype.defineProperty("fillStyle");
 
