@@ -13,23 +13,37 @@
  * preserve aspect ratio, "tile" -- repeat the image, "center" -- center the
  * image, "fill" -- scale without preserving aspect ratio.
  *
- * <p>See {@link Bar} for details on positioning properties.
+ * <p>See {@link pv.Bar} for details on positioning properties.
+ *
+ * @class
+ * @extends pv.Bar
  */
 pv.Image = function() {
   pv.Bar.call(this);
 };
 pv.Image.prototype = pv.extend(pv.Bar);
 pv.Image.prototype.type = pv.Image;
+
+/**
+ * Returns "image".
+ *
+ * @returns {string} "image".
+ */
 pv.Image.toString = function() { return "image"; };
 
 /**
  * The URL of the image to display. The set of supported image types is
- * browser-dependent; PNG and JPEG and recommended.
+ * browser-dependent; PNG and JPEG are recommended.
+ *
+ * @type string
+ * @name pv.Image.prototype.url
  */
 pv.Image.prototype.defineProperty("url");
 
 /**
  * Default properties for images. By default, there is no stroke or fill style.
+ *
+ * @type pv.Image
  */
 pv.Image.defaults = new pv.Image().extend(pv.Bar.defaults)
     .fillStyle(null);
@@ -48,7 +62,7 @@ pv.Image.defaults = new pv.Image().extend(pv.Bar.defaults)
  * stroke element is transparent, the <tt>pointer-events</tt> attribute is used
  * to capture events.
  *
- * @param s a node in the scene graph; the instance of the bar to update.
+ * @param s a node in the scene graph; the instance of the image to update.
  */
 pv.Image.prototype.updateInstance = function(s) {
   var v = s.svg;
