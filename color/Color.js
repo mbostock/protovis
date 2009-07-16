@@ -1,7 +1,7 @@
 /**
- * Returns the {@link Color} for the specified color format string. Colors may
- * have an associated opacity, or alpha channel. Color formats are specified by
- * CSS Color Modular Level 3, using either in RGB or HSL color space. For
+ * Returns the {@link pv.Color} for the specified color format string. Colors
+ * may have an associated opacity, or alpha channel. Color formats are specified
+ * by CSS Color Modular Level 3, using either in RGB or HSL color space. For
  * example:<ul>
  *
  * <li>#f00 // #rgb
@@ -13,16 +13,16 @@
  * <li>hsla(120, 100%, 50%, 1)
  *
  * </ul>The SVG 1.0 color keywords names are also supported, such as "aliceblue"
- * and yellowgreen". The "transparent" keyword is also supported for a fully-
- * transparent color.
+ * and yellowgreen". The "transparent" keyword is also supported for a
+ * fully-transparent color.
  *
  * <p>If the <tt>format</tt> argument is already an instance of <tt>Color</tt>,
  * the argument is returned with no further processing.
  *
- * @param format the color specification string, e.g., "#f00".
- * @return the corresponding <tt>Color</tt>.
- * @see http://www.w3.org/TR/SVG/types.html#ColorKeywords
- * @see http://www.w3.org/TR/css3-color/
+ * @param {string} format the color specification string, e.g., "#f00".
+ * @returns {pv.Color} the corresponding <tt>Color</tt>.
+ * @see <a href="http://www.w3.org/TR/SVG/types.html#ColorKeywords">SVG color keywords</a>.
+ * @see <a href="http://www.w3.org/TR/css3-color/">CSS3 color module</a>.
  */
 pv.color = function(format) {
   if (!format || (format == "transparent")) {
@@ -70,57 +70,141 @@ pv.color = function(format) {
 /**
  * Represents an abstract (possibly translucent) color. The color is divided
  * into two parts: the <tt>color</tt> attribute, an opaque color format string,
- * and the <tt>opacity</tt> attribute, a float between 0 and 1. The color space
- * is dependent on the implementing class; all colors should support the
+ * and the <tt>opacity</tt> attribute, a float in [0, 1]. The color space is
+ * dependent on the implementing class; all colors should support the
  * {@link #rgb} method to convert to RGB color space for interpolation.
  *
- * @param color an opaque color format string, such as "#f00".
- * @param opacity the opacity, in [0,1].
+ * <p>This constructor should not be invoked directly; use {@link pv.color}
+ * instead.
+ *
+ * @param {string} color an opaque color format string, such as "#f00".
+ * @param {number} opacity the opacity, in [0,1].
+ * @class
  */
 pv.Color = function(color, opacity) {
+  /**
+   * An opaque color format string, such as "#f00".
+   *
+   * @type string
+   * @see <a href="http://www.w3.org/TR/SVG/types.html#ColorKeywords">SVG color keywords</a>.
+   * @see <a href="http://www.w3.org/TR/css3-color/">CSS3 color module</a>.
+   */
   this.color = color;
+
+  /**
+   * The opacity, a float in [0, 1].
+   *
+   * @type number
+   */
   this.opacity = opacity;
 };
 
 /**
  * Represents a color in RGB space.
  *
- * @param r the red channel, an integer in [0,255].
- * @param g the green channel, an integer in [0,255].
- * @param b the blue channel, an integer in [0,255].
- * @param a the alpha channel, a float in [0,1].
+ * @param {number} r the red channel, an integer in [0,255].
+ * @param {number} g the green channel, an integer in [0,255].
+ * @param {number} b the blue channel, an integer in [0,255].
+ * @param {number} a the alpha channel, a float in [0,1].
+ * @class
+ * @extends pv.Color
  */
 pv.Color.Rgb = function(r, g, b, a) {
   pv.Color.call(this, a ? ("rgb(" + r + "," + g + "," + b + ")") : "none", a);
-  this.r = r; // [0,255], integer
-  this.g = g; // [0,255], integer
-  this.b = b; // [0,255], integer
-  this.a = a; // [0,1]
+
+  /**
+   * The red channel, an integer in [0, 255].
+   *
+   * @type number
+   */
+  this.r = r;
+
+  /**
+   * The green channel, an integer in [0, 255].
+   *
+   * @type number
+   */
+  this.g = g;
+
+  /**
+   * The blue channel, an integer in [0, 255].
+   *
+   * @type number
+   */
+  this.b = b;
+
+  /**
+   * The alpha channel, a float in [0, 1].
+   *
+   * @type number
+   */
+  this.a = a;
 };
 pv.Color.Rgb.prototype = pv.extend(pv.Color);
+
+/**
+ * Returns the RGB color equivalent to this color. This method is abstract and
+ * must be implemented by subclasses.
+ *
+ * @returns {pv.Color.Rgb} an RGB color.
+ * @function
+ * @name pv.Color.prototype.rgb
+ */
+
+/**
+ * Returns this.
+ *
+ * @returns {pv.Color.Rgb} this.
+ */
 pv.Color.Rgb.prototype.rgb = function() { return this; };
 
 /**
  * Represents a color in HSL space.
  *
- * @param h the hue, an integer in [0,360].
- * @param s the saturation, a float in [0,1].
- * @param l the lightness, a float in [0,1].
- * @param a the opacity, a float in [0,1].
+ * @param {number} h the hue, an integer in [0, 360].
+ * @param {number} s the saturation, a float in [0, 1].
+ * @param {number} l the lightness, a float in [0, 1].
+ * @param {number} a the opacity, a float in [0, 1].
+ * @class
+ * @extends pv.Color
  */
 pv.Color.Hsl = function(h, s, l, a) {
   pv.Color.call(this, "hsl(" + h + "," + (s * 100) + "%," + (l * 100) + "%)", a);
-  this.h = h; // [0,360]
-  this.s = s; // [0,1]
-  this.l = l; // [0,1]
-  this.a = a; // [0,1]
+
+  /**
+   * The hue, an integer in [0, 360].
+   *
+   * @type number
+   */
+  this.h = h;
+
+  /**
+   * The saturation, a float in [0, 1].
+   *
+   * @type number
+   */
+  this.s = s;
+
+  /**
+   * The lightness, a float in [0, 1].
+   *
+   * @type number
+   */
+  this.l = l;
+
+  /**
+   * The opacity, a float in [0, 1].
+   *
+   * @type number
+   */
+  this.a = a;
 };
 pv.Color.Hsl.prototype = pv.extend(pv.Color);
 
 /**
  * Returns the RGB color equivalent to this HSL color.
  *
- * @see Color.Rgb
+ * @returns {pv.Color.Rgb} an RGB color.
  */
 pv.Color.Hsl.prototype.rgb = function() {
   var h = this.h, s = this.s, l = this.l;
