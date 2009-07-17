@@ -10,7 +10,7 @@ window.addEventListener("load", function() {
       if (scripts[i].type == "text/javascript+protovis") {
         try {
           pv.Panel.$dom = scripts[i];
-          eval(pv.parse(scripts[i].textContent));
+          window.eval(pv.parse(scripts[i].textContent));
         } catch (ignored) {}
         delete pv.Panel.$dom;
       }
