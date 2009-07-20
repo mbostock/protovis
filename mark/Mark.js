@@ -127,7 +127,7 @@ pv.Mark.prototype.defineProperty = function(name) {
   this.properties.push(name);
   this[name] = function(v) {
       if (arguments.length) {
-        if (this.scene) {
+        if (this.index >= 0) {
           this.scene[this.index][name] = v;
         } else {
           this["$" + name] = (v instanceof Function) ? v : function() { return v; };
