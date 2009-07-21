@@ -252,18 +252,12 @@ pv.Panel.prototype.buildImplied = function(s) {
       if (s.width == null) {
         w = parseFloat(pv.css(d, "width"));
         s.width = w - s.left - s.right;
-      } else {
-        w = s.width + s.left + s.right;
       }
       if (s.height == null) {
         h = parseFloat(pv.css(d, "height"));
         s.height = h - s.top - s.bottom;
-      } else {
-        h = s.height + s.top + s.bottom;
       }
 
-      c.setAttribute("width", w);
-      c.setAttribute("height", h);
       s.canvas = c;
     } else if (s.svg) {
       s.canvas = s.svg.parentNode;
@@ -388,5 +382,11 @@ pv.Panel.prototype.updateInstance = function(s) {
     v.setAttribute("transform", "translate(" + s.left + "," + s.top +")");
   } else {
     v.removeAttribute("transform");
+  }
+
+  /* width, height */
+  if (s.canvas) {
+    s.canvas.setAttribute("width", s.width + s.left + s.right);
+    s.canvas.setAttribute("height", s.height + s.top + s.bottom);
   }
 };
