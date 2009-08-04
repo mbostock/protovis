@@ -571,3 +571,14 @@ pv.version = {
    */
   minor: 6
 };
+
+/**
+ * Reports the specified error to the JavaScript console. Mozilla only allows
+ * logging to the console for privileged code; if the console is unavailable,
+ * the alert dialog box is used instead.
+ *
+ * @param e the exception that triggered the error.
+ */
+pv.error = function(e) {
+  (typeof console == "undefined") ? alert(e) : console.error(e);
+};

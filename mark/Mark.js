@@ -837,7 +837,7 @@ pv.Mark.prototype.updateInstance = function(s) {
 pv.Mark.prototype.insertElement = function(type) {
   var i = Math.max(0, this.index), s = this.scene[i];
   var v = document.createElementNS(pv.ns.svg, type);
-  s.parent.svg.insertBefore(v, i && this.scene[i - 1].svg);
+  s.parent.svg.insertBefore(v, i ? this.scene[i - 1].svg : null);
   return v;
 };
 

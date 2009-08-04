@@ -11,7 +11,9 @@ window.addEventListener("load", function() {
         try {
           pv.Panel.$dom = scripts[i];
           window.eval(pv.parse(scripts[i].textContent));
-        } catch (ignored) {}
+        } catch (e) {
+          pv.error(e);
+        }
         delete pv.Panel.$dom;
       }
     }
