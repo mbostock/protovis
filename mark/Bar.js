@@ -245,8 +245,7 @@ pv.Bar.Anchor.prototype.$textBaseline = function() {
 pv.Bar.prototype.updateInstance = function(s) {
   var v = s.svg;
   if (s.visible && !v) {
-    v = s.svg = document.createElementNS(pv.ns.svg, "rect");
-    s.parent.svg.appendChild(v);
+    v = s.svg = this.insertElement("rect");
   }
 
   pv.Mark.prototype.updateInstance.call(this, s);

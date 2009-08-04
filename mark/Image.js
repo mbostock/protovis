@@ -72,9 +72,8 @@ pv.Image.prototype.updateInstance = function(s) {
 
   /* Create the svg:image element, if necessary. */
   if (s.visible && !v) {
-    v = s.svg = document.createElementNS(pv.ns.svg, "image");
+    v = s.svg = this.insertElement("image");
     v.setAttribute("preserveAspectRatio", "none");
-    s.parent.svg.appendChild(v);
   }
 
   /*

@@ -269,8 +269,7 @@ pv.Dot.prototype.updateInstance = function(s) {
 
   /* Create the <svg:path> element, if necessary. */
   if (s.visible && !v) {
-    v = s.svg = document.createElementNS(pv.ns.svg, "path");
-    s.parent.svg.appendChild(v);
+    v = s.svg = this.insertElement("path");
   }
 
   /* visible, cursor, title, event, etc. */

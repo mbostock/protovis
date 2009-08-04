@@ -159,10 +159,9 @@ pv.Label.prototype.updateInstance = function(s) {
 
   /* Create the svg:text element, if necessary. */
   if (s.visible && !v) {
-    v = s.svg = document.createElementNS(pv.ns.svg, "text");
+    v = s.svg = this.insertElement("text");
     v.$text = document.createTextNode("");
     v.appendChild(v.$text);
-    s.parent.svg.appendChild(v);
   }
 
   /* cursor, title, events, visible, etc. */

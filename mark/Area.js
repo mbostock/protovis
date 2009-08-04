@@ -262,8 +262,7 @@ pv.Area.prototype.update = function() {
 
     /* Create the <svg:polygon> element, if necesary. */
     if (!v) {
-      v = s.svg = document.createElementNS(pv.ns.svg, "polygon");
-      s.parent.svg.appendChild(v);
+      v = s.svg = this.insertElement("polygon");
     }
 
     /* points */

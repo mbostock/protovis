@@ -338,9 +338,8 @@ pv.Wedge.prototype.updateInstance = function(s) {
 
   /* Create the <svg:path> element, if necessary. */
   if (s.visible && !v) {
-    v = s.svg = document.createElementNS(pv.ns.svg, "path");
+    v = s.svg = this.insertElement("path");
     v.setAttribute("fill-rule", "evenodd");
-    s.parent.svg.appendChild(v);
   }
 
   /* visible, cursor, title, events, etc. */

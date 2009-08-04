@@ -761,8 +761,10 @@ pv.Mark.prototype.get = function(name) {
  */
 pv.Mark.prototype.update = function() {
   for (var i = 0; i < this.scene.length; i++) {
+    this.index = i;
     this.updateInstance(this.scene[i]);
   }
+  delete this.index;
 };
 
 /**
@@ -823,6 +825,20 @@ pv.Mark.prototype.updateInstance = function(s) {
   for (var type in this.events) {
     v["on" + type] = dispatch(type);
   }
+};
+
+/**
+ * Creates and inserts a new SVG element of the specified type. The element is
+ * inserted after the previous sibling's SVG element, if any.
+ *
+ * @param {string} type the SVG element type, such as "line".
+ * @returns the new SVG element.
+ */
+pv.Mark.prototype.insertElement = function(type) {
+  var i = Math.max(0, this.index), s = this.scene[i];
+  var v = document.createElementNS(pv.ns.svg, type);
+  s.parent.svg.insertBefore(v, i && this.scene[i - 1].svg);
+  return v;
 };
 
 /**

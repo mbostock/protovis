@@ -84,8 +84,7 @@ pv.Line.prototype.update = function() {
 
     /* Create the svg:polyline element, if necessary. */
     if (!v) {
-      v = s.svg = document.createElementNS(pv.ns.svg, "polyline");
-      s.parent.svg.appendChild(v);
+      v = s.svg = this.insertElement("polyline");
     }
 
     /* left, top TODO allow points to be changed on events? */

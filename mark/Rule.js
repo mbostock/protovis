@@ -191,8 +191,7 @@ pv.Rule.prototype.updateInstance = function(s) {
 
   /* Create the svg:line element, if necessary. */
   if (s.visible && !v) {
-    v = s.svg = document.createElementNS(pv.ns.svg, "line");
-    s.parent.svg.appendChild(v);
+    v = s.svg = this.insertElement("line");
   }
 
   /* visible, cursor, title, events, etc. */
