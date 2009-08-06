@@ -27,7 +27,7 @@ pv.colors = function() {
  * categorical color will be returned by evaluating the current datum, or
  * through whatever other means the encoding uses to determine uniqueness, per
  * the {@link #by} method. The default implementation allocates a distinct color
- * per {@link pv.Mark#childIndex}.
+ * per parent panel instance (<tt>this.parent.index</tt>).
  *
  * @param {string[]} values an array of colors; see {@link pv.color}.
  * @returns {pv.Colors} a new categorical color encoding.
@@ -41,7 +41,7 @@ pv.Colors = function(values) {
    * discovered, a new color is allocated and assigned to the given key.
    *
    * The key function determines how uniqueness is determined. By default,
-   * colors are assigned using the mark's childIndex, such that each new mark
+   * colors are assigned using the parent's index, such that each new series
    * added is given a new color. Note that derived marks will not inherit the
    * exact color of the prototype, but instead inherit the set of colors.
    */
@@ -62,7 +62,7 @@ pv.Colors = function(values) {
     return color;
   }
 
-  var c = colors(function() { return this.childIndex; });
+  var c = colors(function() { return this.parent.index; });
 
   /**
    * Allows a new set of colors to be derived from the current set using a
@@ -71,7 +71,7 @@ pv.Colors = function(values) {
    *
    * <pre>pv.Colors.category10.by(function(d) d.foo)</pre>
    *
-   * For convenience, "index" and "parent.index" keys are predefined.
+   * For convenience, an index key is predefined; see {@link #index}.
    *
    * @param {function} v the new key function.
    * @name pv.Colors.prototype.by
@@ -84,19 +84,10 @@ pv.Colors = function(values) {
    * A derivative color encoding using the same colors, but allocating unique
    * colors based on the mark index.
    *
-   * @name pv.Colors.prototype.unique
+   * @name pv.Colors.prototype.index
    * @type pv.Colors
    */
-  c.unique = c.by(function() { return this.index; });
-
-  /**
-   * A derivative color encoding using the same colors, but allocating unique
-   * colors based on the parent index.
-   *
-   * @name pv.Colors.prototype.parent
-   * @type pv.Colors
-   */
-  c.parent = c.by(function() { return this.parent.index; });
+  c.index = c.by(function() { return this.index; });
 
   /**
    * The underlying array of colors.
