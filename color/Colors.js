@@ -90,12 +90,24 @@ pv.Colors = function(values) {
   c.index = c.by(function() { return this.index; });
 
   /**
+   * A derivative color encoding using the same colors, but allocating unique
+   * colors based on the child index.
+   *
+   * @name pv.Colors.prototype.child
+   * @type pv.Colors
+   */
+  c.child = c.by(function() { return this.childIndex; });
+
+  /**
    * The underlying array of colors.
    *
    * @type string[]
    * @name pv.Colors.prototype.values
    */
   c.values = values;
+
+  c.parent = c; // @deprecated
+  c.unique = c.index; // @deprecated
 
   return c;
 };

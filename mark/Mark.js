@@ -791,17 +791,15 @@ pv.Mark.prototype.updateInstance = function(s) {
   if (s.cursor) v.style.cursor = s.cursor;
 
   /* title (Safari only supports xlink:title on anchor elements) */
-  var p = v.parentNode;
   if (s.title) {
     if (!v.$title) {
       v.$title = document.createElementNS(pv.ns.svg, "a");
-      p.insertBefore(v.$title, v);
+      v.parentNode.insertBefore(v.$title, v);
       v.$title.appendChild(v);
     }
     v.$title.setAttributeNS(pv.ns.xlink, "title", s.title);
   } else if (v.$title) {
-    p.insertBefore(v, v.$title);
-    p.removeChild(v.$title);
+    v.$title.parentNode.replaceChild(v, v.$title);
     delete v.$title;
   }
 
