@@ -831,15 +831,16 @@ pv.Mark.prototype.updateInstance = function(s) {
 
 /**
  * Creates and inserts a new SVG element of the specified type. The element is
- * inserted after the previous sibling's SVG element, if any.
+ * inserted after the last SVG element for this mark, if any.
  *
  * @param {string} type the SVG element type, such as "line".
  * @returns the new SVG element.
  */
 pv.Mark.prototype.insertElement = function(type) {
-  var i = Math.max(0, this.index), s = this.scene[i];
-  var v = document.createElementNS(pv.ns.svg, type);
-  s.parent.svg.insertBefore(v, i ? this.scene[i - 1].svg.nextSibling : null);
+  var i = Math.max(0, this.index);
+  while (i > 0 && !this.scene[i].svg) i--;
+  var v = document.createElementNS(pv.ns.svg, type), s = this.scene[i];
+  s.parent.svg.insertBefore(v, (i > 0) ? s.svg.nextSibling : null);
   return v;
 };
 
