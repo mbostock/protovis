@@ -107,6 +107,29 @@ pv.Panel.defaults = new pv.Panel().extend(pv.Bar.defaults)
     .reverse(false);
 
 /**
+ * Returns an anchor with the specified name. This method is overridden since
+ * the behavior of Panel anchors is slightly different from normal anchors:
+ * adding to an anchor adds to the anchor target's, rather than the anchor
+ * target's parent. To avoid double margins, we override the anchor's proto so
+ * that the margins are zero.
+ *
+ * @param {string} name the anchor name; either a string or a property function.
+ * @returns {pv.Mark.Anchor} the new anchor.
+ */
+pv.Panel.prototype.anchor = function(name) {
+
+  /* A "view" of this panel whose margins appear to be zero. */
+  function z() { return 0; }
+  z.prototype = this;
+  z.prototype.left = z.prototype.right = z.prototype.top = z.prototype.bottom = z;
+
+  var anchor = pv.Mark.prototype.anchor.call(this, name);
+  anchor.parent = this;
+  anchor.proto = new z();
+  return anchor;
+};
+
+/**
  * Adds a new mark of the specified type to this panel. Unlike the normal
  * {@link Mark#add} behavior, adding a mark to a panel does not cause the mark
  * to inherit from the panel. Since the contained marks are offset by the panel
