@@ -345,6 +345,7 @@ pv.Mark.defaults = new pv.Mark()
  *
  * @param {pv.Mark} proto the new prototype.
  * @return {pv.Mark} this mark.
+ * @see #add
  */
 pv.Mark.prototype.extend = function(proto) {
   this.proto = proto;
@@ -358,6 +359,7 @@ pv.Mark.prototype.extend = function(proto) {
  * @param {function} type the type of mark to add; a constructor, such as
  * <tt>pv.Bar</tt>.
  * @return {pv.Mark} the new mark.
+ * @see #extend
  */
 pv.Mark.prototype.add = function(type) {
   return this.parent.add(type).extend(this);
