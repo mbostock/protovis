@@ -4,17 +4,18 @@
  *
  * @see pv#parse
  */
-window.addEventListener("load", function() {
+pv.listen(window, "load", function() {
     var scripts = document.getElementsByTagName("script");
     for (var i = 0; i < scripts.length; i++) {
-      if (scripts[i].type == "text/javascript+protovis") {
-        try {
-          pv.Panel.$dom = scripts[i];
-          window.eval(pv.parse(scripts[i].textContent));
-        } catch (e) {
-          pv.error(e);
-        }
+      var s = scripts[i];
+      if (s.type == "text/javascript+protovis") {
+//         try {
+          pv.Panel.$dom = s;
+          window.eval(pv.parse(s.textContent || s.innerHTML)); // IE
+//         } catch (e) {
+//           pv.error(e);
+//         }
         delete pv.Panel.$dom;
       }
     }
-  }, false);
+  });

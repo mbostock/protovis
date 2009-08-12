@@ -53,15 +53,15 @@ try {
     var s = "";
     while (m = re.exec(js)) {
       var j = m.index + m[0].length;
-      if (js[j--] != '{') {
+      if (js.charAt(j--) != '{') {
         s += js.substring(i, j) + "{return ";
         i = j;
         for (var p = 0; p >= 0 && j < js.length; j++) {
-          switch (js[j]) {
+          switch (js.charAt(j)) {
             case '"': case '\'': {
-              var c = js[j];
-              while (++j < js.length && (js[j] != c)) {
-                if (js[j] == '\\') j++;
+              var c = js.charAt(j);
+              while (++j < js.length && (js.charAt(j) != c)) {
+                if (js.charAt(j) == '\\') j++;
               }
               break;
             }
@@ -552,7 +552,7 @@ pv.ns = {
   *
   * @type string
   */
- xlink: "http://www.w3.org/1999/xlink",
+ xlink: "http://www.w3.org/1999/xlink"
 };
 
 /** @namespace Protovis major and minor version numbers. */
@@ -581,4 +581,19 @@ pv.version = {
  */
 pv.error = function(e) {
   (typeof console == "undefined") ? alert(e) : console.error(e);
+};
+
+/**
+ * Registers the specified listener for events of the specified type on the
+ * specified target. For standards-compliant browsers, this method uses
+ * <tt>addEventListener</tt>; for Internet Explorer, <tt>attachEvent</tt>.
+ *
+ * @param target a DOM element.
+ * @param {string} type the type of event, such as "click".
+ * @param {function} the listener callback function.
+ */
+pv.listen = function(target, type, listener) {
+  return target.addEventListener
+    ? target.addEventListener(type, listener, false)
+    : target.attachEvent("on" + type, listener);
 };
