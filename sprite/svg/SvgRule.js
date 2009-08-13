@@ -6,22 +6,16 @@ pv.SvgRule.prototype.update = function() {
 
   /* Create SVG elements as needed. */
   if (this.visible) {
-    if (!svg) {
-      svg = this.$svg = {};
-      svg.title = this.insert("a");
-      svg.title.appendChild(svg.line = this.create("line"));
-    }
-    delete svg.title.style.display;
+    if (!svg) svg = this.$svg = {line: this.insert("line")};
+    delete svg.line.style.display;
   } else {
-    if (svg) svg.title.style.display = "none";
+    if (svg) svg.line.style.display = "none";
     return;
   }
 
-  /* title */
-  this.apply(svg.title, {"title": this.title});
-
   /* line */
   this.apply(svg.line, {
+      "title": this.title,
       "cursor": this.cursor,
       "x1": this.left,
       "y1": this.top,

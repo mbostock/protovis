@@ -1,8 +1,5 @@
 /*
  * TODO
- * - optimize: don't create rect if fill and stroke are none
- * - optimize: don't create title if title is none or fill and stroke are none
- * - optimize: don't create transform attribute if left and top are zero
  * - optimize: dirty bit
  * - z-index
  */
@@ -17,10 +14,7 @@ pv.SvgPanel.prototype.update = function(parentNode) {
   if (this.visible) {
     if (!svg) {
       var insert = true;
-      svg = this.$svg = {};
-      svg.g = this.create("g");
-      svg.g.appendChild(svg.title = this.create("a"));
-      svg.title.appendChild(svg.rect = this.create("rect"));
+      svg = this.$svg = {g: this.create("g")};
       if (!this.parent) {
         if (this.canvas.firstChild) {
           svg.svg = this.canvas.firstChild;
@@ -36,7 +30,9 @@ pv.SvgPanel.prototype.update = function(parentNode) {
   }
 
   /* g */
-  this.apply(svg.g, {"transform": "translate(" + this.left + "," + this.top + ")"});
+  this.apply(svg.g, {
+      "transform": (this.left || this.top) ? "translate(" + this.left + "," + this.top + ")" : ""
+    });
 
   /* svg */
   if (svg.svg) this.apply(svg.svg, {
@@ -44,18 +40,19 @@ pv.SvgPanel.prototype.update = function(parentNode) {
       "height": this.height + this.top + this.bottom
     });
 
-  /* title */
-  this.apply(svg.title, {"title": this.title});
-
   /* rect */
-  this.apply(svg.rect, {
-      "cursor": this.cursor,
-      "width": Math.max(1E-10, this.width),
-      "height": Math.max(1E-10, this.height),
-      "fill": this.fillStyle,
-      "stroke": this.strokeStyle,
-      "stroke-width": this.lineWidth
-    });
+  if (svg.rect || this.fillStyle || this.strokeStyle) {
+    if (!svg.rect) svg.g.insertBefore(svg.rect = this.create("rect"), svg.g.firstChild);
+    this.apply(svg.rect, {
+        "title": this.title,
+        "cursor": this.cursor,
+        "width": Math.max(1E-10, this.width),
+        "height": Math.max(1E-10, this.height),
+        "fill": this.fillStyle,
+        "stroke": this.strokeStyle,
+        "stroke-width": this.strokeStyle ? this.lineWidth : 0
+      });
+  }
 
   /* children */
   for (var i = 0; i < this.children.length; i++) {

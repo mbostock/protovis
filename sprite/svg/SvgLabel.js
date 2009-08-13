@@ -9,8 +9,7 @@ pv.SvgLabel.prototype.update = function() {
   /* Create SVG elements as needed. */
   if (this.visible) {
     if (!svg) {
-      svg = this.$svg = {};
-      svg.text = this.insert("text");
+      svg = this.$svg = {text: this.insert("text")};
       svg.text.setAttribute("pointer-events", "none"); // TODO enable events, cursor, title?
       svg.text.appendChild(document.createTextNode(""));
     }

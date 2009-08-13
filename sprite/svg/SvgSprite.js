@@ -48,22 +48,34 @@ pv.SvgSprite.prototype.dispose = function() {};
 /**
  *
  */
-pv.SvgSprite.prototype.apply = function(element, map) {
+pv.SvgSprite.prototype.apply = function(e, map) {
+  function set(e, key, value, ns) {
+    if (!ns) ns = null;
+    value ? e.setAttributeNS(ns, key, value) : e.removeAttributeNS(ns, key);
+  }
   for (var key in map) {
+    var value = map[key];
     switch (key) {
-      case "href":
+      case "href": set(e, key, value, pv.ns.xlink); break;
       case "title": {
-        element.setAttributeNS(pv.ns.xlink, key, map[key]);
+        if (!e.$title && value) {
+          e.$title = this.create("a");
+          e.parentNode.replaceChild(e.$title, e);
+          e.$title.appendChild(e);
+        }
+        if (e.$title) set(e.$title, key, value, pv.ns.xlink);
         break;
       }
       case "fill":
       case "stroke": {
-        var color = pv.color(map[key]);
-        element.setAttribute(key, color.color);
-        element.setAttribute(key + "-opacity", color.opacity);
+        var color = pv.color(value);
+        e.setAttribute(key, color.color);
+        ((0 < color.opacity) && (color.opacity < 1))
+            ? e.setAttribute(key + "-opacity", color.opacity)
+            : e.removeAttribute(key + "-opacity");
         break;
       }
-      default: element.setAttribute(key, map[key]); break;
+      default: set(e, key, value); break;
     }
   }
 };

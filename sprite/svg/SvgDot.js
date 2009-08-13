@@ -6,14 +6,10 @@ pv.SvgDot.prototype.update = function() {
 
   /* Create SVG elements as needed. */
   if (this.visible) {
-    if (!svg) {
-      svg = this.$svg = {};
-      svg.title = this.insert("a");
-      svg.title.appendChild(svg.path = this.create("path"));
-    }
-    delete svg.title.style.display;
+    if (!svg) svg = this.$svg = {path: this.insert("path")};
+    delete svg.path.style.display;
   } else {
-    if (svg) svg.title.style.display = "none";
+    if (svg) svg.path.style.display = "none";
     return;
   }
 
@@ -66,13 +62,11 @@ pv.SvgDot.prototype.update = function() {
     }
   }
 
-  /* title */
-  this.apply(svg.title, {"title": this.title});
-
   /* path */
   this.apply(svg.path, {
       "transform": "translate(" + this.left + "," + this.top +")"
           + (this.angle ? " rotate(" + 180 * this.angle / Math.PI + ")" : ""),
+      "title": this.title,
       "cursor": this.cursor,
       "fill": this.fillStyle,
       "stroke": this.strokeStyle,

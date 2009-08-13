@@ -6,14 +6,10 @@ pv.SvgLine.prototype.updateAll = function(siblings) {
 
   /* Create SVG elements as needed. */
   if (this.visible) {
-    if (!svg) {
-      svg = this.$svg = {};
-      svg.title = this.insert("a");
-      svg.title.appendChild(svg.polyline = this.create("polyline"));
-    }
-    delete svg.title.style.display;
+    if (!svg) svg = this.$svg = {polyline: this.insert("polyline")};
+    delete svg.polyline.style.display;
   } else {
-    if (svg) svg.title.style.display = "none";
+    if (svg) svg.polyline.style.display = "none";
     return;
   }
 
@@ -26,11 +22,9 @@ pv.SvgLine.prototype.updateAll = function(siblings) {
     p += s.left + "," + s.top + " ";
   }
 
-  /* title */
-  this.apply(svg.title, {"title": this.title});
-
   /* polyline */
   this.apply(svg.polyline, {
+      "title": this.title,
       "cursor": this.cursor,
       "fill": this.fillStyle,
       "stroke": this.strokeStyle,

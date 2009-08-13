@@ -334,9 +334,7 @@ pv.Mark.prototype.defineProperty("title");
  */
 pv.Mark.defaults = new pv.Mark()
   .data([null])
-  .visible(true)
-  .cursor("auto")
-  .title("");
+  .visible(true);
 
 /**
  * Sets the prototype of this mark to the specified mark. Any properties not
