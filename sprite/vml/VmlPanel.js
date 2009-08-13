@@ -30,7 +30,7 @@ pv.VmlPanel.prototype.update = function(parentNode) {
     return;
   }
 
-  vml.root.style.position = "relative";
+  vml.root.style.position = "absolute";
   vml.root.style.width = this.width;
   vml.root.style.height = this.height;
   vml.root.style.left = this.left;
