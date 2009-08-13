@@ -19,6 +19,7 @@ pv.Dot = function() {
 };
 pv.Dot.prototype = pv.extend(pv.Mark);
 pv.Dot.prototype.type = pv.Dot;
+pv.Dot.prototype.sprite = pv.Sprites.Dot;
 
 /**
  * Returns "dot".
@@ -255,87 +256,4 @@ pv.Dot.Anchor.prototype.$textBaseline = function(d) {
  */
 pv.Dot.prototype.radius = function() {
   return Math.sqrt(this.size());
-};
-
-/**
- * Updates the display for the specified dot instance <tt>s</tt> in the scene
- * graph. This implementation handles the fill and stroke style for the dot, as
- * well as positional properties.
- *
- * @param s a node in the scene graph; the instance of the dot to update.
- */
-pv.Dot.prototype.updateInstance = function(s) {
-  var v = s.svg;
-
-  /* Create the <svg:path> element, if necessary. */
-  if (s.visible && !v) {
-    v = s.svg = this.insertElement("path");
-  }
-
-  /* visible, cursor, title, event, etc. */
-  pv.Mark.prototype.updateInstance.call(this, s);
-  if (!s.visible) return;
-
-  /* left, top */
-  v.setAttribute("transform", "translate(" + s.left + "," + s.top +")"
-      + (s.angle ? " rotate(" + 180 * s.angle / Math.PI + ")" : ""));
-
-  /* fill, stroke TODO gradient, patterns? */
-  var fill = pv.color(s.fillStyle);
-  v.setAttribute("fill", fill.color);
-  v.setAttribute("fill-opacity", fill.opacity);
-  var stroke = pv.color(s.strokeStyle);
-  v.setAttribute("stroke", stroke.color);
-  v.setAttribute("stroke-opacity", stroke.opacity);
-  v.setAttribute("stroke-width", s.lineWidth);
-
-  /* shape, size */
-  var radius = Math.sqrt(s.size);
-  var d;
-  switch (s.shape) {
-    case "cross": {
-      d = "M" + -radius + "," + -radius
-          + "L" + radius + "," + radius
-          + "M" + radius + "," + -radius
-          + "L" + -radius + "," + radius;
-      break;
-    }
-    case "triangle": {
-      var h = radius, w = radius * 2 / Math.sqrt(3);
-      d = "M0," + h
-          + "L" + w +"," + -h
-          + " " + -w + "," + -h
-          + "Z";
-      break;
-    }
-    case "diamond": {
-      radius *= Math.sqrt(2);
-      d = "M0," + -radius
-          + "L" + radius + ",0"
-          + " 0," + radius
-          + " " + -radius + ",0"
-          + "Z";
-      break;
-    }
-    case "square": {
-      d = "M" + -radius + "," + -radius
-          + "L" + radius + "," + -radius
-          + " " + radius + "," + radius
-          + " " + -radius + "," + radius
-          + "Z";
-      break;
-    }
-    case "tick": {
-      d = "M0,0L0," + -s.size;
-      break;
-    }
-    default: { // circle
-      d = "M0," + radius
-          + "A" + radius + "," + radius + " 0 1,1 0," + (-radius)
-          + "A" + radius + "," + radius + " 0 1,1 0," + radius
-          + "Z";
-      break;
-    }
-  }
-  v.setAttribute("d", d);
 };

@@ -24,6 +24,7 @@ pv.Area = function() {
 };
 pv.Area.prototype = pv.extend(pv.Mark);
 pv.Area.prototype.type = pv.Area;
+pv.Area.prototype.sprite = pv.Sprites.Area;
 
 /**
  * Returns "area".
@@ -248,61 +249,4 @@ pv.Area.prototype.buildImplied = function(s) {
   if (s.height == null) s.height = 0;
   if (s.width == null) s.width = 0;
   pv.Mark.prototype.buildImplied.call(this, s);
-};
-
-/**
- * Override the default update implementation, since the area mark generates a
- * single graphical element rather than multiple distinct elements.
- */
-pv.Area.prototype.update = function() {
-  if (!this.scene.length) return;
-
-  var s = this.scene[0], v = s.svg;
-  if (s.visible) {
-
-    /* Create the <svg:polygon> element, if necesary. */
-    if (!v) {
-      v = s.svg = this.insertElement("polygon");
-    }
-
-    /* points */
-    var p = "";
-    for (var i = 0; i < this.scene.length; i++) {
-      var si = this.scene[i];
-      p += si.left + "," + si.top + " ";
-    }
-    for (var i = this.scene.length - 1; i >= 0; i--) {
-      var si = this.scene[i];
-      p += (si.left + si.width) + "," + (si.top + si.height) + " ";
-    }
-    v.setAttribute("points", p);
-  }
-
-  this.updateInstance(s);
-};
-
-/**
- * Updates the display for the (singleton) area instance. The area mark
- * generates a single graphical element rather than multiple distinct elements.
- *
- * <p>TODO Recompute points? For efficiency, the points (the span positions) are
- * not recomputed, and therefore cannot be updated automatically from event
- * handlers without an explicit call to rebuild the area.
- *
- * @param s a node in the scene graph; the area to update.
- */
-pv.Area.prototype.updateInstance = function(s) {
-  var v = s.svg;
-
-  pv.Mark.prototype.updateInstance.call(this, s);
-  if (!s.visible) return;
-
-  /* fill, stroke TODO gradient, patterns */
-  var fill = pv.color(s.fillStyle);
-  v.setAttribute("fill", fill.color);
-  v.setAttribute("fill-opacity", fill.opacity);
-  var stroke = pv.color(s.strokeStyle);
-  v.setAttribute("stroke", stroke.color);
-  v.setAttribute("stroke-opacity", stroke.opacity);
-  v.setAttribute("stroke-width", s.lineWidth);
 };

@@ -23,6 +23,7 @@ pv.Wedge = function() {
 };
 pv.Wedge.prototype = pv.extend(pv.Mark);
 pv.Wedge.prototype.type = pv.Wedge;
+pv.Wedge.prototype.sprite = pv.Sprites.Wedge;
 
 /**
  * Returns "wedge".

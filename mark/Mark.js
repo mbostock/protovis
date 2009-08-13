@@ -334,7 +334,9 @@ pv.Mark.prototype.defineProperty("title");
  */
 pv.Mark.defaults = new pv.Mark()
   .data([null])
-  .visible(true);
+  .visible(true)
+  .cursor("auto")
+  .title("");
 
 /**
  * Sets the prototype of this mark to the specified mark. Any properties not
@@ -571,16 +573,20 @@ pv.Mark.prototype.build = function(parent) {
 
   for (var i = 0, d; i < data.length; i++) {
     pv.Mark.prototype.index = ++this.index;
-    var s = {};
+    var s = new this.sprite();
 
     /*
      * This is a bit confusing and could be cleaned up. This "scene" stores the
      * previous scene graph; we want to reuse SVG elements that were created
      * previously rather than recreating them, so we extract them. We also want
      * to reuse SVG child elements as well.
+     *
+     * It might be cleaner if we reused the existing sprite, but then we have to
+     * figure out how to reset any evaluated properties. But shouldn't most
+     * properties be reset when we build, anyway?
      */
     if (this.scene[this.index]) {
-      s.svg = this.scene[this.index].svg;
+      s.$svg = this.scene[this.index].$svg; // XXX
       s.children = this.scene[this.index].children;
     }
     this.scene[this.index] = s;
@@ -589,9 +595,7 @@ pv.Mark.prototype.build = function(parent) {
     s.data = stack[0] = data[i];
     s.parent = parent;
     s.visible = this.get("visible");
-    if (s.visible) {
-      this.buildInstance(s);
-    }
+    if (s.visible) this.buildInstance(s);
   }
   stack.shift();
   delete this.index;
@@ -599,25 +603,11 @@ pv.Mark.prototype.build = function(parent) {
 
   /* Clear any old instances from the scene. */
   for (var i = data.length; i < this.scene.length; i++) {
-    this.clearInstance(this.scene[i]);
+    this.scene[i].dispose();
   }
   this.scene.length = data.length;
 
   return this;
-};
-
-/**
- * Removes the specified mark instance from the SVG image. This method depends
- * on the <tt>svg</tt> property of the scene graph node. If the specified mark
- * instance was not present in the SVG image (for example, because it was not
- * visible), this method has no effect.
- *
- * @param s a node in the scene graph; the instance of the mark to clear.
- */
-pv.Mark.prototype.clearInstance = function(s) {
-  if (s.svg) {
-    s.parent.svg.removeChild(s.svg);
-  }
 };
 
 /**
@@ -637,7 +627,7 @@ pv.Mark.prototype.buildInstance = function(s) {
   var p = this.type.prototype;
   for (var i = 0; i < p.properties.length; i++) {
     var name = p.properties[i];
-    if (!(name in s)) {
+    if (!(name in s)) { // XXX prevents rebuilding, why do this?
       s[name] = this.get(name);
     }
   }
@@ -764,85 +754,31 @@ pv.Mark.prototype.get = function(name) {
  * @see #event
  */
 pv.Mark.prototype.update = function() {
-  for (var i = 0; i < this.scene.length; i++) {
-    this.index = i;
-    this.updateInstance(this.scene[i]);
-  }
-  delete this.index;
+  if (this.scene.length) this.scene[0].updateAll(this.scene);
 };
 
-/**
- * Updates the display for the specified mark instance <tt>s</tt> in the scene
- * graph. This implementation handles basic properties for all mark types, such
- * as visibility, cursor and title tooltip. Concrete mark types should override
- * this method to specify how marks are rendered.
- *
- * @param s a node in the scene graph; the instance of the mark to update.
- */
-pv.Mark.prototype.updateInstance = function(s) {
-  var that = this, v = s.svg;
+//   /* event */
+//   function dispatch(type) {
+//     return function(e) {
+//         /* TODO set full scene stack. */
+//         var data = [s.data], p = s;
+//         while (p = p.parent) {
+//           data.push(p.data);
+//         }
+//         that.index = s.index;
+//         that.scene = s.parent.children[that.childIndex];
+//         that.events[type].apply(that, data);
+//         that.updateInstance(s); // XXX updateInstance, bah!
+//         delete that.index;
+//         delete that.scene;
+//         e.preventDefault();
+//       };
+//   };
 
-  /* visible */
-  if (!s.visible) {
-    if (v) v.setAttribute("display", "none");
-    return;
-  }
-  v.removeAttribute("display");
-
-  /* cursor */
-  if (s.cursor) v.style.cursor = s.cursor;
-
-  /* title (Safari only supports xlink:title on anchor elements) */
-  if (s.title) {
-    if (!v.$title) {
-      v.$title = document.createElementNS(pv.ns.svg, "a");
-      v.parentNode.insertBefore(v.$title, v);
-      v.$title.appendChild(v);
-    }
-    v.$title.setAttributeNS(pv.ns.xlink, "title", s.title);
-  } else if (v.$title) {
-    v.$title.parentNode.replaceChild(v, v.$title);
-    delete v.$title;
-  }
-
-  /* event */
-  function dispatch(type) {
-    return function(e) {
-        /* TODO set full scene stack. */
-        var data = [s.data], p = s;
-        while (p = p.parent) {
-          data.push(p.data);
-        }
-        that.index = s.index;
-        that.scene = s.parent.children[that.childIndex];
-        that.events[type].apply(that, data);
-        that.updateInstance(s); // XXX updateInstance, bah!
-        delete that.index;
-        delete that.scene;
-        e.preventDefault();
-      };
-  };
-
-  /* TODO inherit event handlers. */
-  for (var type in this.events) {
-    v["on" + type] = dispatch(type);
-  }
-};
-
-/**
- * Creates and inserts a new SVG element of the specified type. The element is
- * inserted after the last SVG element for this mark, if any.
- *
- * @param {string} type the SVG element type, such as "line".
- * @returns the new SVG element.
- */
-pv.Mark.prototype.insertElement = function(type) {
-  var i = Math.max(0, this.index);
-  while (i > 0 && !this.scene[i].svg) i--;
-  var v = document.createElementNS(pv.ns.svg, type), s = this.scene[i];
-  s.parent.svg.insertBefore(v, (i > 0) ? s.svg.nextSibling : null);
-  return v;
-};
+//   /* TODO inherit event handlers. */
+//   for (var type in this.events) {
+//     v["on" + type] = dispatch(type);
+//   }
 
 /**
  * Registers an event handler for the specified event type with this mark. When

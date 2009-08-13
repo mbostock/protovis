@@ -23,6 +23,7 @@ pv.Line = function() {
 };
 pv.Line.prototype = pv.extend(pv.Mark);
 pv.Line.prototype.type = pv.Line;
+pv.Line.prototype.sprite = pv.Sprites.Line;
 
 /**
  * Returns "line".
@@ -70,63 +71,3 @@ pv.Line.prototype.defineProperty("fillStyle");
 pv.Line.defaults = new pv.Line().extend(pv.Mark.defaults)
     .lineWidth(1.5)
     .strokeStyle(pv.Colors.category10);
-
-/**
- * Override the default update implementation, since the line mark generates a
- * single graphical element rather than multiple distinct elements.
- */
-pv.Line.prototype.update = function() {
-  if (!this.scene.length) return;
-
-  /* visible */
-  var s = this.scene[0], v = s.svg;
-  if (s.visible) {
-
-    /* Create the svg:polyline element, if necessary. */
-    if (!v) {
-      v = s.svg = this.insertElement("polyline");
-    }
-
-    /* left, top TODO allow points to be changed on events? */
-    var p = "";
-    for (var i = 0; i < this.scene.length; i++) {
-      var si = this.scene[i];
-      if (isNaN(si.left)) si.left = 0;
-      if (isNaN(si.top)) si.top = 0;
-      p += si.left + "," + si.top + " ";
-    }
-    v.setAttribute("points", p);
-
-    /* cursor, title, events, etc. */
-    this.updateInstance(s);
-    v.removeAttribute("display");
-  } else if (v) {
-    v.setAttribute("display", "none");
-  }
-};
-
-/**
- * Updates the display for the (singleton) line instance. The line mark
- * generates a single graphical element rather than multiple distinct elements.
- *
- * <p>TODO Recompute points? For efficiency, the points are not recomputed, and
- * therefore cannot be updated automatically from event handlers without an
- * explicit call to rebuild the line.
- *
- * @param s a node in the scene graph; the instance of the mark to update.
- */
-pv.Line.prototype.updateInstance = function(s) {
-  var v = s.svg;
-
-  pv.Mark.prototype.updateInstance.call(this, s);
-  if (!s.visible) return;
-
-  /* fill, stroke TODO gradient, patterns */
-  var fill = pv.color(s.fillStyle);
-  v.setAttribute("fill", fill.color);
-  v.setAttribute("fill-opacity", fill.opacity);
-  var stroke = pv.color(s.strokeStyle);
-  v.setAttribute("stroke", stroke.color);
-  v.setAttribute("stroke-opacity", stroke.opacity);
-  v.setAttribute("stroke-width", s.lineWidth);
-};

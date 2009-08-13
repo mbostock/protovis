@@ -28,6 +28,7 @@ pv.Bar = function() {
 };
 pv.Bar.prototype = pv.extend(pv.Mark);
 pv.Bar.prototype.type = pv.Bar;
+pv.Bar.prototype.sprite = pv.Sprites.Bar;
 
 /**
  * Returns "bar".
@@ -233,38 +234,4 @@ pv.Bar.Anchor.prototype.$textBaseline = function() {
     case "bottom": return "bottom";
   }
   return null;
-};
-
-/**
- * Updates the display for the specified bar instance <tt>s</tt> in the scene
- * graph. This implementation handles the fill and stroke style for the bar, as
- * well as positional properties.
- *
- * @param s a node in the scene graph; the instance of the bar to update.
- */
-pv.Bar.prototype.updateInstance = function(s) {
-  var v = s.svg;
-  if (s.visible && !v) {
-    v = s.svg = this.insertElement("rect");
-  }
-
-  pv.Mark.prototype.updateInstance.call(this, s);
-  if (!s.visible) return;
-
-  /* left, top */
-  v.setAttribute("x", s.left);
-  v.setAttribute("y", s.top);
-
-  /* If width and height are exactly zero, the rect is not stroked! */
-  v.setAttribute("width", Math.max(1E-10, s.width));
-  v.setAttribute("height", Math.max(1E-10, s.height));
-
-  /* fill, stroke TODO gradient, patterns */
-  var fill = pv.color(s.fillStyle);
-  v.setAttribute("fill", fill.color);
-  v.setAttribute("fill-opacity", fill.opacity);
-  var stroke = pv.color(s.strokeStyle);
-  v.setAttribute("stroke", stroke.color);
-  v.setAttribute("stroke-opacity", stroke.opacity);
-  v.setAttribute("stroke-width", s.lineWidth);
 };

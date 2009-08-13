@@ -28,6 +28,7 @@ pv.Label = function() {
 };
 pv.Label.prototype = pv.extend(pv.Mark);
 pv.Label.prototype.type = pv.Label;
+pv.Label.prototype.sprite = pv.Sprites.Label;
 
 /**
  * Returns "label".
@@ -146,83 +147,3 @@ pv.Label.defaults = new pv.Label().extend(pv.Mark.defaults)
     .textAlign("left")
     .textBaseline("bottom")
     .textMargin(3);
-
-/**
- * Updates the display for the specified label instance <tt>s</tt> in the scene
- * graph. This implementation handles the text formatting for the label, as well
- * as positional properties.
- *
- * @param s a node in the scene graph; the instance of the dot to update.
- */
-pv.Label.prototype.updateInstance = function(s) {
-  var v = s.svg;
-
-  /* Create the svg:text element, if necessary. */
-  if (s.visible && !v) {
-    v = s.svg = this.insertElement("text");
-    v.$text = document.createTextNode("");
-    v.appendChild(v.$text);
-  }
-
-  /* cursor, title, events, visible, etc. */
-  pv.Mark.prototype.updateInstance.call(this, s);
-  if (!s.visible) return;
-
-  /* left, top, angle */
-  v.setAttribute("transform", "translate(" + s.left + "," + s.top + ")"
-      + (s.textAngle ? " rotate(" + 180 * s.textAngle / Math.PI + ")" : ""));
-
-  /* text-baseline */
-  switch (s.textBaseline) {
-    case "middle": {
-      v.removeAttribute("y");
-      v.setAttribute("dy", ".35em");
-      break;
-    }
-    case "top": {
-      v.setAttribute("y", s.textMargin);
-      v.setAttribute("dy", ".71em");
-      break;
-    }
-    case "bottom": {
-      v.setAttribute("y", "-" + s.textMargin);
-      v.removeAttribute("dy");
-      break;
-    }
-  }
-
-  /* text-align */
-  switch (s.textAlign) {
-    case "right": {
-      v.setAttribute("text-anchor", "end");
-      v.setAttribute("x", "-" + s.textMargin);
-      break;
-    }
-    case "center": {
-      v.setAttribute("text-anchor", "middle");
-      v.removeAttribute("x");
-      break;
-    }
-    case "left": {
-      v.setAttribute("text-anchor", "start");
-      v.setAttribute("x", s.textMargin);
-      break;
-    }
-  }
-
-  /* font, text-shadow TODO centralize font definition? */
-  v.$text.nodeValue = s.text;
-  var style = "font:" + s.font + ";";
-  if (s.textShadow) {
-    style += "text-shadow:" + s.textShadow +";";
-  }
-  v.setAttribute("style", style);
-
-  /* fill */
-  var fill = pv.color(s.textStyle);
-  v.setAttribute("fill", fill.color);
-  v.setAttribute("fill-opacity", fill.opacity);
-
-  /* TODO enable interaction on labels? centralize this definition? */
-  v.setAttribute("pointer-events", "none");
-};

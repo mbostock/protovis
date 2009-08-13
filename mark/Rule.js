@@ -35,6 +35,7 @@ pv.Rule = function() {
 };
 pv.Rule.prototype = pv.extend(pv.Mark);
 pv.Rule.prototype.type = pv.Rule;
+pv.Rule.prototype.sprite = pv.Sprites.Rule;
 
 /**
  * Returns "rule".

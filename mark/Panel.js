@@ -56,6 +56,7 @@ pv.Panel = function() {
 };
 pv.Panel.prototype = pv.extend(pv.Bar);
 pv.Panel.prototype.type = pv.Panel;
+pv.Panel.prototype.sprite = pv.Sprites.Panel;
 
 /**
  * Returns "panel".
@@ -150,45 +151,6 @@ pv.Panel.prototype.add = function(type) {
 };
 
 /**
- * Creates a new canvas (SVG) element with the specified width and height, and
- * inserts it into the current document. If the <tt>$dom</tt> field is set, as
- * for text/javascript+protovis scripts, the SVG element is inserted into the
- * DOM before the script element. Otherwise, the SVG element is inserted into
- * the last child element of the document, as for text/javascript scripts.
- *
- * @param w the width of the canvas to create, in pixels.
- * @param h the height of the canvas to create, in pixels.
- * @return the new canvas (SVG) element.
- */
-pv.Panel.prototype.createCanvas = function(w, h) {
-
-  /**
-   * Returns the last element in the current document's body. The canvas element
-   * is appended to this last element if another DOM element has not already
-   * been specified via the <tt>$dom</tt> field.
-   */
-  function lastElement() {
-    var node = document.body;
-    while (node.lastChild && node.lastChild.tagName) {
-      node = node.lastChild;
-    }
-    return (node == document.body) ? node : node.parentNode;
-  }
-
-  /* Create the SVG element. */
-  var c = document.createElementNS(pv.ns.svg, "svg");
-  c.setAttribute("width", w);
-  c.setAttribute("height", h);
-
-  /* Insert it into the DOM at the appropriate location. */
-  this.$dom // script element for text/javascript+protovis
-      ? this.$dom.parentNode.insertBefore(c, this.$dom)
-      : lastElement().appendChild(c);
-
-  return c;
-};
-
-/**
  * Evaluates all of the properties for this panel for the specified instance
  * <tt>s</tt> in the scene graph, including recursively building the scene graph
  * for child marks.
@@ -222,7 +184,7 @@ pv.Panel.prototype.buildInstance = function(s) {
   }
 
   /* Delete any expired child scenes, should child marks have been removed. */
-  s.children.length = this.children.length;
+  s.children.length = this.children.length; // TODO dispose?
 };
 
 /**
@@ -251,165 +213,49 @@ pv.Panel.prototype.buildInstance = function(s) {
  * @param s a node in the scene graph; the instance of the panel to build.
  */
 pv.Panel.prototype.buildImplied = function(s) {
-  if (!s.children) s.children = [];
   if (!s.parent) {
     var c = s.canvas;
     if (c) {
-      var d = (typeof c == "string") ? document.getElementById(c) : c;
+      if (typeof c == "string") c = document.getElementById(c);
 
-      /* Clear the container if it's not already associated with this panel. */
-      if (d.$panel != this) {
-        d.$panel = this;
-        delete d.$canvas;
-        d.innerHTML = "";
-      }
-
-      /* Construct the canvas if not already present. */
-      if (!(c = d.$canvas)) {
-        d.$canvas = c = document.createElementNS(pv.ns.svg, "svg");
-        d.appendChild(c);
+      /* Clear the container if it's not associated with this panel. */
+      if (c.$panel != this) {
+        c.$panel = this;
+        c.innerHTML = "";
       }
 
       /* If width and height weren't specified, inspect the container. */
       var w, h;
       if (s.width == null) {
-        w = parseFloat(pv.css(d, "width"));
+        w = parseFloat(pv.css(c, "width"));
         s.width = w - s.left - s.right;
       }
       if (s.height == null) {
-        h = parseFloat(pv.css(d, "height"));
+        h = parseFloat(pv.css(c, "height"));
         s.height = h - s.top - s.bottom;
       }
-
-      s.canvas = c;
-    } else if (s.svg) {
-      s.canvas = s.svg.parentNode;
     } else {
-      s.canvas = this.createCanvas(
-          s.width + s.left + s.right,
-          s.height + s.top + s.bottom);
+
+      /**
+       * Returns the last element in the current document's body. The canvas
+       * element is appended to this last element if another DOM element has not
+       * already been specified via the <tt>$dom</tt> field.
+       */
+      function lastElement() {
+        var node = document.body;
+        while (node.lastChild && node.lastChild.tagName) {
+          node = node.lastChild;
+        }
+        return (node == document.body) ? node : node.parentNode;
+      }
+
+      /* Insert a new container into the DOM. */
+      c = document.createElement("span");
+      this.$dom // script element for text/javascript+protovis
+          ? this.$dom.parentNode.insertBefore(c, this.$dom)
+          : lastElement().appendChild(c);
     }
+    s.canvas = c;
   }
   pv.Bar.prototype.buildImplied.call(this, s);
-};
-
-/**
- * Updates the display, propagating property values computed in the build phase
- * to the SVG image. In addition to the SVG element that serves as the canvas,
- * each panel instance has a corresponding <tt>g</tt> (container) element. The
- * <tt>g</tt> element uses the <tt>transform</tt> attribute to offset the location
- * of contained graphical elements.
- */
-pv.Panel.prototype.update = function() {
-  var appends = [];
-  for (var i = 0; i < this.scene.length; i++) {
-    var s = this.scene[i];
-
-    /* Create the <svg:g> element, if necessary. */
-    var v = s.svg;
-    if (!v) {
-      v = s.svg = document.createElementNS(pv.ns.svg, "g");
-      appends.push(s);
-    }
-
-    /* Update this instance, recursively including child marks. */
-    this.updateInstance(s);
-    if (s.children) { // check visibility
-      for (var j = 0; j < this.children.length; j++) {
-        var c = this.children[j];
-        c.scene = s.children[j];
-        c.update();
-        delete c.scene;
-      }
-    }
-  }
-
-  /*
-   * WebKit appears has a bug where images are not rendered if the <g> element
-   * is appended before it contained any elements. Creating the child elements
-   * first and then appending them solves the problem and is likely more
-   * efficient. Also, it means we can reverse the order easily.
-   *
-   * TODO It would be nice to support arbitrary z-order here, at least within
-   * panel. Of course, the order of children may need to be updated not just on
-   * append.
-   */
-  if (appends.length) {
-    if (appends[0].reverse) appends.reverse();
-    for (var i = 0; i < appends.length; i++) {
-      var s = appends[i];
-      (s.parent ? s.parent.svg : s.canvas).appendChild(s.svg);
-    }
-  }
-};
-
-/**
- * Updates the display for the specified panel instance <tt>s</tt> in the scene
- * graph. This implementation handles the fill and stroke style for the panel,
- * as well as any necessary transform to offset the location of contained marks.
- *
- * <p>TODO As a performance optimization, it may also be possible to assign
- * constant property values (or even the most common value for each property) as
- * attributes on the <g> element so they can be inherited.
- *
- * @param s a node in the scene graph; the instance of the panel to update.
- */
-pv.Panel.prototype.updateInstance = function(s) {
-  var v = s.svg;
-
-  /* visible */
-  if (!s.visible) {
-    if (v) v.setAttribute("display", "none");
-    return;
-  }
-  v.removeAttribute("display");
-
-  /* fillStyle, strokeStyle */
-  var r = v.$rect;
-  if (s.fillStyle || s.strokeStyle) {
-    if (!r) {
-      r = v.$rect = document.createElementNS(pv.ns.svg, "rect");
-      v.insertBefore(r, v.firstChild);
-    }
-
-    /* If width and height are exactly zero, the rect is not stroked! */
-    r.setAttribute("width", Math.max(1E-10, s.width));
-    r.setAttribute("height", Math.max(1E-10, s.height));
-
-    /* fill, stroke TODO gradient, patterns */
-    var fill = pv.color(s.fillStyle);
-    r.setAttribute("fill", fill.color);
-    r.setAttribute("fill-opacity", fill.opacity);
-    var stroke = pv.color(s.strokeStyle);
-    r.setAttribute("stroke", stroke.color);
-    r.setAttribute("stroke-opacity", stroke.opacity);
-    r.setAttribute("stroke-width", s.lineWidth);
-  } else if (r) {
-    v.removeChild(r);
-    delete v.$rect;
-    r = null;
-  }
-
-  /* cursor, title, event, etc. */
-  if (r) {
-    try {
-      s.svg = r;
-      pv.Mark.prototype.updateInstance.call(this, s);
-    } finally {
-      s.svg = v;
-    }
-  }
-
-  /* left, top */
-  if (s.left || s.top) {
-    v.setAttribute("transform", "translate(" + s.left + "," + s.top +")");
-  } else {
-    v.removeAttribute("transform");
-  }
-
-  /* width, height */
-  if (s.canvas) {
-    s.canvas.setAttribute("width", s.width + s.left + s.right);
-    s.canvas.setAttribute("height", s.height + s.top + s.bottom);
-  }
 };
