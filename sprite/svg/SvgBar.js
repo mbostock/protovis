@@ -2,11 +2,11 @@ pv.SvgBar = function() {};
 pv.SvgBar.prototype = pv.extend(pv.SvgSprite);
 
 pv.SvgBar.prototype.update = function() {
-  var svg = this.$svg;
+  var svg = this.$dom;
 
   /* Create SVG elements as needed. */
   if (this.visible) {
-    if (!svg) svg = this.$svg = {root: this.insert("rect")};
+    if (!svg) svg = this.$dom = {root: this.insert("rect")};
     delete svg.root.style.display;
   } else {
     if (svg) svg.root.style.display = "none";

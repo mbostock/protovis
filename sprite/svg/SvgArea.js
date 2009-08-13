@@ -2,11 +2,11 @@ pv.SvgArea = function() {};
 pv.SvgArea.prototype = pv.extend(pv.SvgSprite);
 
 pv.SvgArea.prototype.updateAll = function(siblings) {
-  var svg = this.$svg;
+  var svg = this.$dom;
 
   /* Create SVG elements as needed. */
   if (this.visible) {
-    if (!svg) svg = this.$svg = {root: this.insert("polygon")};
+    if (!svg) svg = this.$dom = {root: this.insert("polygon")};
     delete svg.root.style.display;
   } else {
     if (svg) svg.root.style.display = "none";

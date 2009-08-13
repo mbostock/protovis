@@ -5,12 +5,12 @@ pv.SvgLabel = function() {};
 pv.SvgLabel.prototype = pv.extend(pv.SvgSprite);
 
 pv.SvgLabel.prototype.update = function() {
-  var svg = this.$svg;
+  var svg = this.$dom;
 
   /* Create SVG elements as needed. */
   if (this.visible) {
     if (!svg) {
-      svg = this.$svg = {root: this.insert("text")};
+      svg = this.$dom = {root: this.insert("text")};
       svg.root.setAttribute("pointer-events", "none");
       svg.root.appendChild(document.createTextNode(""));
     }

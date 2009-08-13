@@ -2,11 +2,11 @@ pv.SvgDot = function() {};
 pv.SvgDot.prototype = pv.extend(pv.SvgSprite);
 
 pv.SvgDot.prototype.update = function() {
-  var svg = this.$svg;
+  var svg = this.$dom;
 
   /* Create SVG elements as needed. */
   if (this.visible) {
-    if (!svg) svg = this.$svg = {root: this.insert("path")};
+    if (!svg) svg = this.$dom = {root: this.insert("path")};
     delete svg.root.style.display;
   } else {
     if (svg) svg.root.style.display = "none";

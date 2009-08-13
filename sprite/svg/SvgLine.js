@@ -2,11 +2,11 @@ pv.SvgLine = function() {};
 pv.SvgLine.prototype = pv.extend(pv.SvgSprite);
 
 pv.SvgLine.prototype.updateAll = function(siblings) {
-  var svg = this.$svg;
+  var svg = this.$dom;
 
   /* Create SVG elements as needed. */
   if (this.visible) {
-    if (!svg) svg = this.$svg = {root: this.insert("polyline")};
+    if (!svg) svg = this.$dom = {root: this.insert("polyline")};
     delete svg.root.style.display;
   } else {
     if (svg) svg.root.style.display = "none";

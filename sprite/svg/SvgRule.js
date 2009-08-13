@@ -2,11 +2,11 @@ pv.SvgRule = function() {};
 pv.SvgRule.prototype = pv.extend(pv.SvgSprite);
 
 pv.SvgRule.prototype.update = function() {
-  var svg = this.$svg;
+  var svg = this.$dom;
 
   /* Create SVG elements as needed. */
   if (this.visible) {
-    if (!svg) svg = this.$svg = {root: this.insert("line")};
+    if (!svg) svg = this.$dom = {root: this.insert("line")};
     delete svg.root.style.display;
   } else {
     if (svg) svg.root.style.display = "none";

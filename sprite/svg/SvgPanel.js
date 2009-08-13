@@ -8,13 +8,13 @@ pv.SvgPanel = function() { this.children = []; };
 pv.SvgPanel.prototype = pv.extend(pv.SvgSprite);
 
 pv.SvgPanel.prototype.update = function(parentNode) {
-  var svg = this.$svg;
+  var svg = this.$dom;
 
   /* Create SVG elements as needed. */
   if (this.visible) {
     if (!svg) {
       var insert = true;
-      svg = this.$svg = {g: this.create("g")};
+      svg = this.$dom = {g: this.create("g")};
       if (!this.parent) {
         if (this.canvas.firstChild) {
           svg.svg = this.canvas.firstChild;

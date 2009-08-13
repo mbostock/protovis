@@ -2,12 +2,12 @@ pv.SvgImage = function() {};
 pv.SvgImage.prototype = pv.extend(pv.SvgSprite);
 
 pv.SvgImage.prototype.update = function() {
-  var svg = this.$svg;
+  var svg = this.$dom;
 
   /* Create SVG elements as needed. */
   if (this.visible) {
     if (!svg) {
-      svg = this.$svg = {root: this.insert("g")};
+      svg = this.$dom = {root: this.insert("g")};
       svg.root.appendChild(svg.fill = this.create("rect"));
       svg.root.appendChild(svg.image = this.create("image"));
       svg.image.setAttribute("preserveAspectRatio", "none");

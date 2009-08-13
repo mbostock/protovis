@@ -647,7 +647,7 @@ pv.Mark.prototype.buildInstance = function(s) {
         if (that.scene) that.update(); // TODO dirty bit
         delete that.index;
         delete that.scene;
-        e.preventDefault();
+        e ? e.preventDefault() : window.event.returnValue = false;
       };
   };
 

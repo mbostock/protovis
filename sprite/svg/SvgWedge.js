@@ -2,12 +2,12 @@ pv.SvgWedge = function() {};
 pv.SvgWedge.prototype = pv.extend(pv.SvgSprite);
 
 pv.SvgWedge.prototype.update = function() {
-  var svg = this.$svg;
+  var svg = this.$dom;
 
   /* Create SVG elements as needed. */
   if (this.visible) {
     if (!svg) {
-      svg = this.$svg = {root: this.insert("path")};
+      svg = this.$dom = {root: this.insert("path")};
       svg.root.setAttribute("fill-rule", "evenodd");
     }
     delete svg.root.style.display;
