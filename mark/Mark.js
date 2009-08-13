@@ -326,15 +326,30 @@ pv.Mark.prototype.defineProperty("cursor");
 pv.Mark.prototype.defineProperty("title");
 
 /**
+ * The reverse property; a boolean determining whether marks are ordered from
+ * front-to-back or back-to-front. SVG does not support explicit z-ordering;
+ * shapes are rendered in the order they appear. Thus, by default, marks are
+ * rendered in data order. Setting the reverse property to false reverses the
+ * order in which they are rendered; however, the properties are still evaluated
+ * (i.e., built) in forward order.
+ *
+ * @type boolean
+ * @name pv.Mark.prototype.reverse
+ */
+pv.Mark.prototype.defineProperty("reverse");
+
+/**
  * Default properties for all mark types. By default, the data array is a single
  * null element; if the data property is not specified, this causes each mark to
- * be instantiated as a singleton. The visible property is true by default.
+ * be instantiated as a singleton. The visible property is true by default, and
+ * the reverse property is false.
  *
  * @type pv.Mark
  */
 pv.Mark.defaults = new pv.Mark()
   .data([null])
-  .visible(true);
+  .visible(true)
+  .reverse(false);
 
 /**
  * Sets the prototype of this mark to the specified mark. Any properties not
@@ -570,8 +585,11 @@ pv.Mark.prototype.build = function(parent) {
 
   for (var i = 0, d; i < data.length; i++) {
     pv.Mark.prototype.index = ++this.index;
-    var s = this.scene[this.index];
-    if (!s) this.scene[this.index] = s = new this.sprite();
+    var s = this.scene[i];
+    if (!s) {
+      this.scene[i] = s = new this.sprite();
+      s.previousSibling = this.scene[i - 1];
+    }
     s.index = i;
     s.data = stack[0] = data[i];
     s.parent = parent;

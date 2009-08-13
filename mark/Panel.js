@@ -83,29 +83,14 @@ pv.Panel.toString = function() { return "panel"; };
 pv.Panel.prototype.defineProperty("canvas");
 
 /**
- * The reverse property; a boolean determining whether child marks are ordered
- * from front-to-back or back-to-front. SVG does not support explicit
- * z-ordering; shapes are rendered in the order they appear. Thus, by default,
- * child marks are rendered in the order they are added to the panel. Setting
- * the reverse property to false reverses the order in which they are added to
- * the SVG element; however, the properties are still evaluated (i.e., built) in
- * forward order.
- *
- * @type boolean
- * @name pv.Panel.prototype.reverse
- */
-pv.Panel.prototype.defineProperty("reverse");
-
-/**
  * Default properties for panels. By default, the margins are zero, the fill
- * style is transparent, and the reverse property is false.
+ * style is transparent.
  *
  * @type pv.Panel
  */
 pv.Panel.defaults = new pv.Panel().extend(pv.Bar.defaults)
     .top(0).left(0).bottom(0).right(0)
-    .fillStyle(null)
-    .reverse(false);
+    .fillStyle(null);
 
 /**
  * Returns an anchor with the specified name. This method is overridden since

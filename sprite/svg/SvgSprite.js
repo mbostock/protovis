@@ -29,7 +29,8 @@ pv.SvgSprite.prototype.update = function() {};
  */
 pv.SvgSprite.prototype.insert = function(type) {
   var e = (typeof type == "string") ? this.create(type) : type;
-  this.parent.$svg.g.appendChild(e); // TODO cursor
+  var s = this.previousSibling; while (s && !s.$svg) s = s.previousSibling;
+  this.parent.$svg.g.insertBefore(e, s ? (this.reverse ? s.$svg.root : s.$svg.root.nextSibling) : null);
   return e;
 };
 

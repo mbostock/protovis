@@ -42,7 +42,7 @@ pv.SvgLabel.prototype.update = function() {
       "transform": "translate(" + this.left + "," + this.top + ")"
           + (this.textAngle ? " rotate(" + 180 * this.textAngle / Math.PI + ")" : ""),
       "style": "font:" + this.font + ";"
-          + (this.textShadow ? "text-shadow:" + this.textShadow + ":" : ""),
+          + (this.textShadow ? "text-shadow:" + this.textShadow + ";" : ""),
       "fill": this.textStyle,
       "x": x,
       "y": y,
