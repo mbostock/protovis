@@ -22,7 +22,7 @@ pv.VmlBar.prototype.update = function() {
   vml.root.style.width = this.width;
   vml.root.style.height = this.height;
   vml.root.style.cursor = this.cursor;
-  vml.root.title = this.title;
+  vml.root.title = this.title || "";
 
   var fill = pv.color(this.fillStyle);
   vml.fill.color = fill.color;
