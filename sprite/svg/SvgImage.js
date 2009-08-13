@@ -7,22 +7,22 @@ pv.SvgImage.prototype.update = function() {
   /* Create SVG elements as needed. */
   if (this.visible) {
     if (!svg) {
-      svg = this.$svg = {g: this.insert("g")};
-      svg.g.appendChild(svg.fill = this.create("rect"));
-      svg.g.appendChild(svg.image = this.create("image"));
+      svg = this.$svg = {root: this.insert("g")};
+      svg.root.appendChild(svg.fill = this.create("rect"));
+      svg.root.appendChild(svg.image = this.create("image"));
       svg.image.setAttribute("preserveAspectRatio", "none");
-      svg.g.appendChild(svg.stroke = this.create("rect"));
+      svg.root.appendChild(svg.stroke = this.create("rect"));
       svg.stroke.setAttribute("fill", "none");
       svg.stroke.setAttribute("pointer-events", "all");
     }
-    delete svg.g.style.display;
+    delete svg.root.style.display;
   } else {
-    if (svg) svg.g.style.display = "none";
+    if (svg) svg.root.style.display = "none";
     return;
   }
 
   /* g */
-  this.apply(svg.g, {
+  this.apply(svg.root, {
       "transform": (this.left || this.top) ? "translate(" + this.left + "," + this.top + ")" : ""
     });
 
@@ -49,4 +49,7 @@ pv.SvgImage.prototype.update = function() {
       "stroke": this.strokeStyle,
       "stroke-width": this.lineWidth
     });
+
+  /* events */
+  this.listen(svg.stroke);
 };

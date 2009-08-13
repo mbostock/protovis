@@ -566,34 +566,16 @@ pv.Mark.prototype.build = function(parent) {
   var stack = this.root.scene.data;
   stack.unshift(null);
   this.index = -1;
-
   this.$$data = data; // XXX
 
   for (var i = 0, d; i < data.length; i++) {
     pv.Mark.prototype.index = ++this.index;
-    var s = new this.sprite();
-
-    /*
-     * This is a bit confusing and could be cleaned up. This "scene" stores the
-     * previous scene graph; we want to reuse SVG elements that were created
-     * previously rather than recreating them, so we extract them. We also want
-     * to reuse SVG child elements as well.
-     *
-     * It might be cleaner if we reused the existing sprite, but then we have to
-     * figure out how to reset any evaluated properties. But shouldn't most
-     * properties be reset when we build, anyway?
-     */
-    if (this.scene[this.index]) {
-      s.$svg = this.scene[this.index].$svg; // XXX
-      s.children = this.scene[this.index].children;
-    }
-    this.scene[this.index] = s;
-
+    var s = this.scene[this.index];
+    if (!s) this.scene[this.index] = s = new this.sprite();
     s.index = i;
     s.data = stack[0] = data[i];
     s.parent = parent;
-    s.visible = this.get("visible");
-    if (s.visible) this.buildInstance(s);
+    if (s.visible = this.get("visible")) this.buildInstance(s);
   }
   stack.shift();
   delete this.index;
@@ -622,14 +604,39 @@ pv.Mark.prototype.build = function(parent) {
  * @param s a node in the scene graph; the instance of the mark to build.
  */
 pv.Mark.prototype.buildInstance = function(s) {
+
+  /* evaluated properties */
   var p = this.type.prototype;
   for (var i = 0; i < p.properties.length; i++) {
     var name = p.properties[i];
-    if (!(name in s)) { // XXX prevents rebuilding, why do this?
-      s[name] = this.get(name);
-    }
+    switch (name) { case "data": case "visible": continue; }
+    s[name] = this.get(name);
   }
+
+  /* implied properties */
   this.buildImplied(s);
+
+  /* event handlers */
+  var that = this;
+  function dispatch(type) {
+    return function(e) {
+        /* TODO set full scene stack. */
+        var data = [s.data], p = s;
+        while (p = p.parent) data.push(p.data);
+        that.index = s.index;
+        that.scene = s.parent.children[that.childIndex];
+        that.events[type].apply(that, data);
+        if (that.scene) that.update(); // TODO dirty bit
+        delete that.index;
+        delete that.scene;
+        e.preventDefault();
+      };
+  };
+
+  s.event = {};
+  for (var type in this.events) {
+    s.event[type] = dispatch(type);
+  }
 };
 
 /**
@@ -754,29 +761,6 @@ pv.Mark.prototype.get = function(name) {
 pv.Mark.prototype.update = function() {
   if (this.scene.length) this.scene[0].updateAll(this.scene);
 };
-
-//   /* event */
-//   function dispatch(type) {
-//     return function(e) {
-//         /* TODO set full scene stack. */
-//         var data = [s.data], p = s;
-//         while (p = p.parent) {
-//           data.push(p.data);
-//         }
-//         that.index = s.index;
-//         that.scene = s.parent.children[that.childIndex];
-//         that.events[type].apply(that, data);
-//         that.updateInstance(s); // XXX updateInstance, bah!
-//         delete that.index;
-//         delete that.scene;
-//         e.preventDefault();
-//       };
-//   };
-
-//   /* TODO inherit event handlers. */
-//   for (var type in this.events) {
-//     v["on" + type] = dispatch(type);
-//   }
 
 /**
  * Registers an event handler for the specified event type with this mark. When

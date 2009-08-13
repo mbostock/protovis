@@ -6,10 +6,10 @@ pv.SvgArea.prototype.updateAll = function(siblings) {
 
   /* Create SVG elements as needed. */
   if (this.visible) {
-    if (!svg) svg = this.$svg = {polygon: this.insert("polygon")};
-    delete svg.polygon.style.display;
+    if (!svg) svg = this.$svg = {root: this.insert("polygon")};
+    delete svg.root.style.display;
   } else {
-    if (svg) svg.polygon.style.display = "none";
+    if (svg) svg.root.style.display = "none";
     return;
   }
 
@@ -25,7 +25,7 @@ pv.SvgArea.prototype.updateAll = function(siblings) {
   }
 
   /* polygon */
-  this.apply(svg.polygon, {
+  this.apply(svg.root, {
       "title": this.title,
       "points": p,
       "cursor": this.cursor,
@@ -33,4 +33,7 @@ pv.SvgArea.prototype.updateAll = function(siblings) {
       "stroke": this.strokeStyle,
       "stroke-width": this.lineWidth
     });
+
+  /* events */
+  this.listen(svg.root);
 };

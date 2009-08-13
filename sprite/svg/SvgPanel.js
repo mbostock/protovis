@@ -22,10 +22,11 @@ pv.SvgPanel.prototype.update = function(parentNode) {
           this.canvas.appendChild(svg.svg = this.create("svg"));
         }
       }
+      svg.root = svg.svg || svg.g;
     }
-    delete (svg.svg || svg.g).style.display;
+    delete svg.root.style.display;
   } else {
-    if (svg) (svg.svg || svg.g).style.display = "none";
+    if (svg) svg.root.style.display = "none";
     return;
   }
 
@@ -52,6 +53,9 @@ pv.SvgPanel.prototype.update = function(parentNode) {
         "stroke": this.strokeStyle,
         "stroke-width": this.strokeStyle ? this.lineWidth : 0
       });
+
+    /* events */
+    this.listen(svg.rect);
   }
 
   /* children */
@@ -65,14 +69,5 @@ pv.SvgPanel.prototype.update = function(parentNode) {
    * is appended before it contained any elements. Creating the child elements
    * first and then appending them solves the problem.
    */
-  if (insert) this.parent ? this.insert(svg.g) : svg.svg.appendChild(svg.g);
-};
-
-pv.SvgPanel.prototype.dispose = function() {
-  var svg = this.$svg;
-  if (svg.g) {
-    var node = svg.svg || svg.g;
-    node.parentNode.removeChild(node);
-    this.$svg = {};
-  }
+  if (insert) svg.svg ? svg.svg.appendChild(svg.g) : this.insert(svg.g);
 };

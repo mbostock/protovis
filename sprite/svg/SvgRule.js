@@ -6,15 +6,15 @@ pv.SvgRule.prototype.update = function() {
 
   /* Create SVG elements as needed. */
   if (this.visible) {
-    if (!svg) svg = this.$svg = {line: this.insert("line")};
-    delete svg.line.style.display;
+    if (!svg) svg = this.$svg = {root: this.insert("line")};
+    delete svg.root.style.display;
   } else {
-    if (svg) svg.line.style.display = "none";
+    if (svg) svg.root.style.display = "none";
     return;
   }
 
   /* line */
-  this.apply(svg.line, {
+  this.apply(svg.root, {
       "title": this.title,
       "cursor": this.cursor,
       "x1": this.left,
@@ -24,4 +24,7 @@ pv.SvgRule.prototype.update = function() {
       "stroke": this.strokeStyle,
       "stroke-width": this.lineWidth
     });
+
+  /* events */
+  this.listen(svg.root);
 };

@@ -1,4 +1,5 @@
 /* TODO centralize font definition? */
+/* TODO enable events, cursor, title? */
 
 pv.SvgLabel = function() {};
 pv.SvgLabel.prototype = pv.extend(pv.SvgSprite);
@@ -9,13 +10,13 @@ pv.SvgLabel.prototype.update = function() {
   /* Create SVG elements as needed. */
   if (this.visible) {
     if (!svg) {
-      svg = this.$svg = {text: this.insert("text")};
-      svg.text.setAttribute("pointer-events", "none"); // TODO enable events, cursor, title?
-      svg.text.appendChild(document.createTextNode(""));
+      svg = this.$svg = {root: this.insert("text")};
+      svg.root.setAttribute("pointer-events", "none");
+      svg.root.appendChild(document.createTextNode(""));
     }
-    delete svg.text.style.display;
+    delete svg.root.style.display;
   } else {
-    if (svg) svg.text.style.display = "none";
+    if (svg) svg.root.style.display = "none";
     return;
   }
 
@@ -36,8 +37,8 @@ pv.SvgLabel.prototype.update = function() {
   }
 
   /* text */
-  svg.text.firstChild.nodeValue = this.text;
-  this.apply(svg.text, {
+  svg.root.firstChild.nodeValue = this.text;
+  this.apply(svg.root, {
       "transform": "translate(" + this.left + "," + this.top + ")"
           + (this.textAngle ? " rotate(" + 180 * this.textAngle / Math.PI + ")" : ""),
       "style": "font:" + this.font + ";"

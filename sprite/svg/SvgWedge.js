@@ -7,12 +7,12 @@ pv.SvgWedge.prototype.update = function() {
   /* Create SVG elements as needed. */
   if (this.visible) {
     if (!svg) {
-      svg = this.$svg = {path: this.insert("path")};
-      svg.path.setAttribute("fill-rule", "evenodd");
+      svg = this.$svg = {root: this.insert("path")};
+      svg.root.setAttribute("fill-rule", "evenodd");
     }
-    delete svg.path.style.display;
+    delete svg.root.style.display;
   } else {
-    if (svg) svg.path.style.display = "none";
+    if (svg) svg.root.style.display = "none";
     return;
   }
 
@@ -60,7 +60,7 @@ pv.SvgWedge.prototype.update = function() {
   }
 
   /* path */
-  this.apply(svg.path, {
+  this.apply(svg.root, {
       "transform": "translate(" + this.left + "," + this.top + ")",
       "title": this.title,
       "cursor": this.cursor,
@@ -69,4 +69,7 @@ pv.SvgWedge.prototype.update = function() {
       "stroke-width": this.lineWidth,
       "d": d
     });
+
+  /* events */
+  this.listen(svg.root);
 };

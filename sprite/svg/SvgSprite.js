@@ -33,8 +33,6 @@ pv.SvgSprite.prototype.insert = function(type) {
   return e;
 };
 
-// TODO events
-
 /**
  * Removes the specified mark instance from the SVG image. This method depends
  * on the <tt>svg</tt> property of the scene graph node. If the specified mark
@@ -43,7 +41,14 @@ pv.SvgSprite.prototype.insert = function(type) {
  *
  * @param s a node in the scene graph; the instance of the mark to clear.
  */
-pv.SvgSprite.prototype.dispose = function() {};
+pv.SvgSprite.prototype.dispose = function() {
+  var svg = this.$svg;
+  if (svg) {
+    var root = svg.root.$title || svg.root;
+    root.parentNode.removeChild(root);
+    delete this.$svg;
+  }
+};
 
 /**
  *
@@ -78,4 +83,9 @@ pv.SvgSprite.prototype.apply = function(e, map) {
       default: set(e, key, value); break;
     }
   }
+};
+
+pv.SvgSprite.prototype.listen = function(e) {
+  // TODO clear event listeners
+  for (var type in this.event) e["on" + type] = this.event[type];
 };

@@ -6,10 +6,10 @@ pv.SvgDot.prototype.update = function() {
 
   /* Create SVG elements as needed. */
   if (this.visible) {
-    if (!svg) svg = this.$svg = {path: this.insert("path")};
-    delete svg.path.style.display;
+    if (!svg) svg = this.$svg = {root: this.insert("path")};
+    delete svg.root.style.display;
   } else {
-    if (svg) svg.path.style.display = "none";
+    if (svg) svg.root.style.display = "none";
     return;
   }
 
@@ -63,7 +63,7 @@ pv.SvgDot.prototype.update = function() {
   }
 
   /* path */
-  this.apply(svg.path, {
+  this.apply(svg.root, {
       "transform": "translate(" + this.left + "," + this.top +")"
           + (this.angle ? " rotate(" + 180 * this.angle / Math.PI + ")" : ""),
       "title": this.title,
@@ -73,4 +73,7 @@ pv.SvgDot.prototype.update = function() {
       "stroke-width": this.lineWidth,
       "d": d
     });
+
+  /* events */
+  this.listen(svg.root);
 };

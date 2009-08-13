@@ -6,15 +6,15 @@ pv.SvgBar.prototype.update = function() {
 
   /* Create SVG elements as needed. */
   if (this.visible) {
-    if (!svg) svg = this.$svg = {rect: this.insert("rect")};
-    delete svg.rect.style.display;
+    if (!svg) svg = this.$svg = {root: this.insert("rect")};
+    delete svg.root.style.display;
   } else {
-    if (svg) svg.rect.style.display = "none";
+    if (svg) svg.root.style.display = "none";
     return;
   }
 
   /* rect */
-  this.apply(svg.rect, {
+  this.apply(svg.root, {
       "cursor": this.cursor,
       "title": this.title,
       "x": this.left,
@@ -25,4 +25,7 @@ pv.SvgBar.prototype.update = function() {
       "stroke": this.strokeStyle,
       "stroke-width": this.strokeStyle ? this.lineWidth : 0
     });
+
+  /* events */
+  this.listen(svg.root);
 };
