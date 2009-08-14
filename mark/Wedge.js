@@ -322,6 +322,12 @@ pv.Wedge.upright = function(angle) {
  */
 pv.Wedge.prototype.buildImplied = function(s) {
   pv.Mark.prototype.buildImplied.call(this, s);
+
+  /*
+   * TODO If the angle or endAngle is updated by an event handler, the implied
+   * properties won't recompute correctly, so this will lead to potentially
+   * buggy redraw. How to re-evaluate implied properties on update?
+   */
   if (s.endAngle == null) {
     s.endAngle = s.startAngle + s.angle;
   }

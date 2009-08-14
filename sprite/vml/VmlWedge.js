@@ -1,18 +1,21 @@
-pv.SvgWedge = function() {};
-pv.SvgWedge.prototype = pv.extend(pv.SvgSprite);
+pv.VmlWedge = function() {};
+pv.VmlWedge.prototype = pv.extend(pv.VmlSprite);
 
-pv.SvgWedge.prototype.update = function() {
-  var svg = this.$dom;
+pv.VmlWedge.prototype.update = function() {
+  var vml = this.$dom;
 
-  /* Create SVG elements as needed. */
+  /* Create VML elements as needed. */
   if (this.visible) {
-    if (!svg) {
-      svg = this.$dom = {root: this.insert("path")};
-      svg.root.setAttribute("fill-rule", "evenodd");
+    if (!vml) {
+      vml = this.$dom = {root: this.insert("v:shape")};
+      vml.root.appendChild(vml.path = this.create("v:path"));
+      vml.root.appendChild(vml.fill = this.create("v:fill"));
+      vml.root.appendChild(vml.stroke = this.create("v:stroke"));
+      // vml.root.setAttribute("fill-rule", "evenodd");
     }
-    delete svg.root.style.display;
+    vml.root.style.display = "";
   } else {
-    if (svg) svg.root.style.display = "none";
+    if (vml) vml.root.style.display = "none";
     return;
   }
 
@@ -54,7 +57,7 @@ pv.SvgWedge.prototype.update = function() {
   }
 
   /* path */
-  this.apply(svg.root, {
+  this.apply(vml.root, {
       "transform": "translate(" + this.left + "," + this.top + ")",
       "title": this.title,
       "cursor": this.cursor,
@@ -65,5 +68,5 @@ pv.SvgWedge.prototype.update = function() {
     });
 
   /* events */
-  this.listen(svg.root);
+  this.listen(vml.root);
 };
