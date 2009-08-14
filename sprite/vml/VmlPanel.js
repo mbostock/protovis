@@ -15,6 +15,7 @@ pv.VmlPanel.prototype.update = function(parentNode) {
     if (!vml) {
       vml = this.$dom = {};
       if (!this.parent) {
+        this.canvas.style.position = "relative";
         if (this.canvas.firstChild) {
           vml.root = this.canvas.firstChild;
         } else {
@@ -28,6 +29,12 @@ pv.VmlPanel.prototype.update = function(parentNode) {
   } else {
     if (vml) vml.root.style.display = "none";
     return;
+  }
+
+  if (!this.parent) {
+    this.canvas.style.width = this.width;
+    this.canvas.style.height = this.height;
+    this.canvas.style.overflow = "hidden";
   }
 
   vml.root.style.position = "absolute";

@@ -20,52 +20,45 @@ pv.VmlWedge.prototype.update = function() {
   }
 
   /* points */
-  var r1 = this.innerRadius, r2 = this.outerRadius, d;
+  var r1 = Math.round(this.innerRadius), r2 = Math.round(this.outerRadius), d;
   if (this.angle >= 2 * Math.PI) {
     if (r1) {
-      d = "M0," + r2
-          + "A" + r2 + "," + r2 + " 0 1,1 0," + (-r2)
-          + "A" + r2 + "," + r2 + " 0 1,1 0," + r2
-          + "M0," + r1
-          + "A" + r1 + "," + r1 + " 0 1,1 0," + (-r1)
-          + "A" + r1 + "," + r1 + " 0 1,1 0," + r1
-          + "Z";
+      d = "AE0,0 " + r2 + "," + r2 + " 0 23592960"
+          + "AL0,0 " + r1 + "," + r1 + " 0 23592960";
     } else {
-      d = "M0," + r2
-          + "A" + r2 + "," + r2 + " 0 1,1 0," + (-r2)
-          + "A" + r2 + "," + r2 + " 0 1,1 0," + r2
-          + "Z";
+      d = "AE0,0 " + r2 + "," + r2 + " 0 23592960";
     }
   } else {
-    var c1 = Math.cos(this.startAngle), c2 = Math.cos(this.endAngle),
-        s1 = Math.sin(this.startAngle), s2 = Math.sin(this.endAngle);
+    var sa = Math.round(this.startAngle / Math.PI * 11796480),
+        a = Math.round(this.angle / Math.PI * 11796480);
     if (r1) {
-      d = "M" + r2 * c1 + "," + r2 * s1
-          + "A" + r2 + "," + r2 + " 0 "
-          + ((this.angle < Math.PI) ? "0" : "1") + ",1 "
-          + r2 * c2 + "," + r2 * s2
-          + "L" + r1 * c2 + "," + r1 * s2
-          + "A" + r1 + "," + r1 + " 0 "
-          + ((this.angle < Math.PI) ? "0" : "1") + ",0 "
-          + r1 * c1 + "," + r1 * s1 + "Z";
+      d = "AE 0,0 " + r2 + "," + r2 + " " + -sa + " " + -a
+        + " 0,0 " + r1 + "," + r1 + " " + -(sa + a) + " " + a
+        + "X";
     } else {
-      d = "M" + r2 * c1 + "," + r2 * s1
-          + "A" + r2 + "," + r2 + " 0 "
-          + ((this.angle < Math.PI) ? "0" : "1") + ",1 "
-          + r2 * c2 + "," + r2 * s2 + "L0,0Z";
+      d = "M0,0"
+        + "AE0,0 " + r2 + "," + r2 + " " + -sa + " " + -a
+        + "X";
     }
   }
 
   /* path */
-  this.apply(vml.root, {
-      "transform": "translate(" + this.left + "," + this.top + ")",
-      "title": this.title,
-      "cursor": this.cursor,
-      "fill": this.fillStyle,
-      "stroke": this.strokeStyle,
-      "stroke-width": this.lineWidth,
-      "d": d
-    });
+  vml.root.style.left = this.left;
+  vml.root.style.top = this.top;
+  vml.root.style.width = "100%";
+  vml.root.style.height = "100%";
+  vml.root.style.cursor = this.cursor;
+  vml.root.title = this.title || "";
+
+  var fill = pv.color(this.fillStyle);
+  vml.fill.color = fill.color;
+  vml.fill.opacity = fill.opacity;
+  var stroke = pv.color(this.strokeStyle);
+  vml.stroke.color = stroke.color;
+  vml.stroke.opacity = stroke.opacity;
+  vml.stroke.weight = this.lineWidth + "px";
+
+  vml.path.v = d;
 
   /* events */
   this.listen(vml.root);

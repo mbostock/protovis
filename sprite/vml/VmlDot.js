@@ -73,18 +73,23 @@ pv.VmlDot.prototype.update = function() {
 
   /* root + shape */
   var a = this.angle;
-  vml.root.style.left = -this.parent.width / 2;
-  vml.root.style.top = -this.parent.height / 2;
-  vml.root.style.width = this.parent.width;
-  vml.root.style.height = this.parent.height;
-  vml.root.style.rotation = 180 * a / Math.PI;
-  vml.shape.style.marginLeft = this.parent.width / 2;
-  vml.shape.style.marginTop = this.parent.height / 2;
   if (a) {
     var x = this.left, y = this.top;
     vml.shape.style.left = Math.cos(-a) * x - Math.sin(-a) * y;
     vml.shape.style.top = Math.sin(-a) * x + Math.cos(-a) * y;
+    vml.root.style.left = -this.parent.width / 2;
+    vml.root.style.top = -this.parent.height / 2;
+    vml.root.style.rotation = 180 * a / Math.PI;
+    vml.shape.style.marginLeft = this.parent.width / 2;
+    vml.shape.style.marginTop = this.parent.height / 2;
+  } else {
+    vml.root.style.rotation = "";
+    vml.shape.style.left = this.left;
+    vml.shape.style.top = this.top;
   }
+
+  vml.root.style.width = this.parent.width;
+  vml.root.style.height = this.parent.height;
   vml.shape.style.width = this.parent.width;
   vml.shape.style.height = this.parent.height;
   vml.shape.style.cursor = this.cursor;

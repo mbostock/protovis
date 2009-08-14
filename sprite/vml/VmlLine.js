@@ -21,11 +21,11 @@ pv.VmlLine.prototype.updateAll = function(siblings) {
   /* points */
   var p;
   for (var i = 0; i < siblings.length; i++) {
-    var s = siblings[i];
-    if (isNaN(s.left)) s.left = 0;
-    if (isNaN(s.top)) s.top = 0;
-    if (!p) p = "m" + s.left + "," + s.top + "l";
-    else p += s.left + "," + s.top + " ";
+    var s = siblings[i], x = Math.round(s.left), y = Math.round(s.top);
+    if (isNaN(x)) x = 0;
+    if (isNaN(y)) y = 0;
+    if (!p) p = "m" + x + "," + y + "l";
+    else p += x + "," + y + " ";
   }
 
   /* polygon */

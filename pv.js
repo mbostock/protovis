@@ -528,7 +528,9 @@ pv.reverseOrder = function(b, a) {
  * TODO
  */
 pv.css = function(e, p) {
-  return window.getComputedStyle(e, null).getPropertyValue(p);
+  return window.getComputedStyle
+      ? window.getComputedStyle(e, null).getPropertyValue(p)
+      : e.currentStyle[p];
 };
 
 /** @namespace Namespace constants for SVG, XMLNS, and XLINK. */
