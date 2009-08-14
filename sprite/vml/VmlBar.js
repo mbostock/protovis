@@ -29,7 +29,7 @@ pv.VmlBar.prototype.update = function() {
   vml.fill.opacity = fill.opacity;
   var stroke = pv.color(this.strokeStyle);
   vml.stroke.color = stroke.color;
-  vml.stroke.opacity = stroke.opacity;
+  vml.stroke.opacity = stroke.opacity * Math.min(this.lineWidth, 1);
   vml.stroke.weight = this.lineWidth + "px";
 
   /* events */

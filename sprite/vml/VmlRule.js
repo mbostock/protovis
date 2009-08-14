@@ -7,7 +7,7 @@ pv.VmlRule.prototype.update = function() {
   /* Create VML elements as needed. */
   if (this.visible) {
     if (!vml) vml = this.$dom = {root: this.insert("v:line")};
-    vml.root.appendChild(vml.stroke = this.insert("v:stroke"));
+    vml.root.appendChild(vml.stroke = this.create("v:stroke"));
     vml.root.style.display = "";
   } else {
     if (vml) vml.root.style.display = "none";
@@ -22,7 +22,7 @@ pv.VmlRule.prototype.update = function() {
 
   var color = pv.color(this.strokeStyle);
   vml.stroke.color = color.color;
-  vml.stroke.opacity = color.opacity;
+  vml.stroke.opacity = color.opacity * Math.min(this.lineWidth, 1);
   vml.stroke.weight = this.lineWidth + "px";
 
   /* events */
