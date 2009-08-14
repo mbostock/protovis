@@ -17,8 +17,8 @@ pv.SvgWedge.prototype.update = function() {
   }
 
   /* points */
-  var r1 = this.innerRadius, r2 = this.outerRadius, d;
-  if (this.angle >= 2 * Math.PI) {
+  var r1 = this.innerRadius, r2 = this.outerRadius, a = Math.abs(this.angle), d;
+  if (a >= 2 * Math.PI) {
     if (r1) {
       d = "M0," + r2
           + "A" + r2 + "," + r2 + " 0 1,1 0," + (-r2)
@@ -34,21 +34,23 @@ pv.SvgWedge.prototype.update = function() {
           + "Z";
     }
   } else {
-    var c1 = Math.cos(this.startAngle), c2 = Math.cos(this.endAngle),
-        s1 = Math.sin(this.startAngle), s2 = Math.sin(this.endAngle);
+    var sa = Math.min(this.startAngle, this.endAngle),
+        ea = Math.max(this.startAngle, this.endAngle),
+        c1 = Math.cos(sa), c2 = Math.cos(ea),
+        s1 = Math.sin(sa), s2 = Math.sin(ea);
     if (r1) {
       d = "M" + r2 * c1 + "," + r2 * s1
           + "A" + r2 + "," + r2 + " 0 "
-          + ((this.angle < Math.PI) ? "0" : "1") + ",1 "
+          + ((a < Math.PI) ? "0" : "1") + ",1 "
           + r2 * c2 + "," + r2 * s2
           + "L" + r1 * c2 + "," + r1 * s2
           + "A" + r1 + "," + r1 + " 0 "
-          + ((this.angle < Math.PI) ? "0" : "1") + ",0 "
+          + ((a < Math.PI) ? "0" : "1") + ",0 "
           + r1 * c1 + "," + r1 * s1 + "Z";
     } else {
       d = "M" + r2 * c1 + "," + r2 * s1
           + "A" + r2 + "," + r2 + " 0 "
-          + ((this.angle < Math.PI) ? "0" : "1") + ",1 "
+          + ((a < Math.PI) ? "0" : "1") + ",1 "
           + r2 * c2 + "," + r2 * s2 + "L0,0Z";
     }
   }

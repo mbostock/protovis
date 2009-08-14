@@ -328,9 +328,8 @@ pv.Wedge.prototype.buildImplied = function(s) {
    * properties won't recompute correctly, so this will lead to potentially
    * buggy redraw. How to re-evaluate implied properties on update?
    */
-  if (s.endAngle == null) {
-    s.endAngle = s.startAngle + s.angle;
-  }
+  if (s.endAngle == null) s.endAngle = s.startAngle + s.angle;
+  if (s.angle == null) s.angle = s.endAngle - s.startAngle;
 };
 
 /**
