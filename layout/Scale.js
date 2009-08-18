@@ -83,24 +83,3 @@ pv.Scale.Impl = function(mark) {
 pv.Scale.Impl.prototype.start = 0;
 
 pv.Scale.Impl.prototype.by = pv.identity;
-
-pv.Scale.linear = function() {
-  function impl(mark) {
-    pv.Scale.Impl.call(this, mark);
-    this.k = (this.end - this.start) / (this.max - this.min);
-  }
-  impl.prototype = pv.extend(pv.Scale.Impl);
-  impl.prototype.scale = function(d) { return (d - this.min) * this.k; };
-  return this.generic(impl);
-};
-
-pv.Scale.log = function() {
-  function impl(mark) {
-    pv.Scale.Impl.call(this, mark);
-    this.k = (this.end - this.start) / (this.log(this.max) - this.log(this.min));
-  }
-  impl.prototype = pv.extend(pv.Scale.Impl);
-  impl.prototype.log = function(d) { return Math.log(d); }
-  impl.prototype.scale = function(d) { return (this.log(d) - this.log(this.min)) * this.k; };
-  return this.generic(impl);
-};
