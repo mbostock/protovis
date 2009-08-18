@@ -9,12 +9,12 @@ pv.listen(window, "load", function() {
     for (var i = 0; i < scripts.length; i++) {
       var s = scripts[i];
       if (s.type == "text/javascript+protovis") {
-//         try {
+        try {
           pv.Panel.$dom = s;
           window.eval(pv.parse(s.textContent || s.innerHTML)); // IE
-//         } catch (e) {
-//           pv.error(e);
-//         }
+        } catch (e) {
+          pv.error(e);
+        }
         delete pv.Panel.$dom;
       }
     }

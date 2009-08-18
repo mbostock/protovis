@@ -27,7 +27,6 @@ pv.Bar = function() {
   pv.Mark.call(this);
 };
 pv.Bar.prototype = pv.extend(pv.Mark);
-pv.Bar.prototype.type = pv.Bar;
 pv.Bar.prototype.sprite = pv.Sprites.Bar;
 
 /**
@@ -93,7 +92,8 @@ pv.Bar.prototype.defineProperty("fillStyle");
  *
  * @type pv.Bar
  */
-pv.Bar.defaults = new pv.Bar().extend(pv.Mark.defaults)
+pv.Bar.prototype.defaults = new pv.Bar()
+    .extend(pv.Mark.prototype.defaults)
     .lineWidth(1.5)
     .fillStyle(pv.Colors.category20);
 
@@ -131,8 +131,8 @@ pv.Bar.defaults = new pv.Bar().extend(pv.Mark.defaults)
 pv.Bar.Anchor = function() {
   pv.Mark.Anchor.call(this);
 };
+pv.Bar.prototype.Anchor = pv.Bar.Anchor;
 pv.Bar.Anchor.prototype = pv.extend(pv.Mark.Anchor);
-pv.Bar.Anchor.prototype.type = pv.Bar;
 
 /**
  * The left property; null for "left" anchors, non-null otherwise.
@@ -145,7 +145,7 @@ pv.Bar.Anchor.prototype.$left = function() {
   switch (this.get("name")) {
     case "bottom":
     case "top":
-    case "center": return bar.left() + (this.type.prototype.width ? 0 : (bar.width() / 2));
+    case "center": return bar.left() + (this.properties.width ? 0 : (bar.width() / 2));
     case "right": return bar.left() + bar.width();
   }
   return null;
@@ -162,7 +162,7 @@ pv.Bar.Anchor.prototype.$right = function() {
   switch (this.get("name")) {
     case "bottom":
     case "top":
-    case "center": return bar.right() + (this.type.prototype.width ? 0 : (bar.width() / 2));
+    case "center": return bar.right() + (this.properties.width ? 0 : (bar.width() / 2));
     case "left": return bar.right() + bar.width();
   }
   return null;
@@ -179,7 +179,7 @@ pv.Bar.Anchor.prototype.$top = function() {
   switch (this.get("name")) {
     case "left":
     case "right":
-    case "center": return bar.top() + (this.type.prototype.height ? 0 : (bar.height() / 2));
+    case "center": return bar.top() + (this.properties.height ? 0 : (bar.height() / 2));
     case "bottom": return bar.top() + bar.height();
   }
   return null;
@@ -196,7 +196,7 @@ pv.Bar.Anchor.prototype.$bottom = function() {
   switch (this.get("name")) {
     case "left":
     case "right":
-    case "center": return bar.bottom() + (this.type.prototype.height ? 0 : (bar.height() / 2));
+    case "center": return bar.bottom() + (this.properties.height ? 0 : (bar.height() / 2));
     case "top": return bar.bottom() + bar.height();
   }
   return null;

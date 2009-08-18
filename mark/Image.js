@@ -25,7 +25,6 @@ pv.Image = function() {
   pv.Bar.call(this);
 };
 pv.Image.prototype = pv.extend(pv.Bar);
-pv.Image.prototype.type = pv.Image;
 pv.Image.prototype.sprite = pv.Sprites.Image;
 
 /**
@@ -49,5 +48,6 @@ pv.Image.prototype.defineProperty("url");
  *
  * @type pv.Image
  */
-pv.Image.defaults = new pv.Image().extend(pv.Bar.defaults)
+pv.Image.prototype.defaults = new pv.Image()
+    .extend(pv.Bar.prototype.defaults)
     .fillStyle(null);

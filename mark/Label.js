@@ -27,7 +27,6 @@ pv.Label = function() {
   pv.Mark.call(this);
 };
 pv.Label.prototype = pv.extend(pv.Mark);
-pv.Label.prototype.type = pv.Label;
 pv.Label.prototype.sprite = pv.Sprites.Label;
 
 /**
@@ -139,7 +138,8 @@ pv.Label.prototype.defineProperty("textShadow");
  *
  * @type pv.Label
  */
-pv.Label.defaults = new pv.Label().extend(pv.Mark.defaults)
+pv.Label.prototype.defaults = new pv.Label()
+    .extend(pv.Mark.prototype.defaults)
     .text(pv.identity)
     .font("10px sans-serif")
     .textAngle(0)

@@ -22,7 +22,6 @@ pv.Wedge = function() {
   pv.Mark.call(this);
 };
 pv.Wedge.prototype = pv.extend(pv.Mark);
-pv.Wedge.prototype.type = pv.Wedge;
 pv.Wedge.prototype.sprite = pv.Sprites.Wedge;
 
 /**
@@ -119,7 +118,8 @@ pv.Wedge.prototype.defineProperty("fillStyle");
  *
  * @type pv.Wedge
  */
-pv.Wedge.defaults = new pv.Wedge().extend(pv.Mark.defaults)
+pv.Wedge.prototype.defaults = new pv.Wedge()
+    .extend(pv.Mark.prototype.defaults)
     .startAngle(function() {
         var s = this.sibling();
         return s ? s.endAngle : -Math.PI / 2;
@@ -174,8 +174,8 @@ pv.Wedge.prototype.midAngle = function() {
 pv.Wedge.Anchor = function() {
   pv.Mark.Anchor.call(this);
 };
+pv.Wedge.prototype.Anchor = pv.Wedge.Anchor;
 pv.Wedge.Anchor.prototype = pv.extend(pv.Mark.Anchor);
-pv.Wedge.Anchor.prototype.type = pv.Wedge;
 
 /**
  * The left property; non-null.
@@ -330,80 +330,4 @@ pv.Wedge.prototype.buildImplied = function(s) {
    */
   if (s.endAngle == null) s.endAngle = s.startAngle + s.angle;
   if (s.angle == null) s.angle = s.endAngle - s.startAngle;
-};
-
-/**
- * Updates the display for the specified wedge instance <tt>s</tt> in the scene
- * graph. This implementation handles the fill and stroke style for the wedge,
- * as well as positional properties.
- *
- * @param s a node in the scene graph; the instance of the bar to update.
- */
-pv.Wedge.prototype.updateInstance = function(s) {
-  var v = s.svg;
-
-  /* Create the <svg:path> element, if necessary. */
-  if (s.visible && !v) {
-    v = s.svg = this.insertElement("path");
-    v.setAttribute("fill-rule", "evenodd");
-  }
-
-  /* visible, cursor, title, events, etc. */
-  pv.Mark.prototype.updateInstance.call(this, s);
-  if (!s.visible) return;
-
-  /* left, top */
-  v.setAttribute("transform", "translate(" + s.left + "," + s.top +")");
-
-  /*
-   * TODO If the angle or endAngle is updated by an event handler, the implied
-   * properties won't recompute correctly, so this will lead to potentially
-   * buggy redraw. How to re-evaluate implied properties on update?
-   */
-
-  /* innerRadius, outerRadius, startAngle, endAngle */
-  var r1 = s.innerRadius, r2 = s.outerRadius;
-  if (s.angle >= 2 * Math.PI) {
-    if (r1) {
-      v.setAttribute("d", "M0," + r2
-          + "A" + r2 + "," + r2 + " 0 1,1 0," + (-r2)
-          + "A" + r2 + "," + r2 + " 0 1,1 0," + r2
-          + "M0," + r1
-          + "A" + r1 + "," + r1 + " 0 1,1 0," + (-r1)
-          + "A" + r1 + "," + r1 + " 0 1,1 0," + r1
-          + "Z");
-    } else {
-      v.setAttribute("d", "M0," + r2
-          + "A" + r2 + "," + r2 + " 0 1,1 0," + (-r2)
-          + "A" + r2 + "," + r2 + " 0 1,1 0," + r2
-          + "Z");
-    }
-  } else {
-    var c1 = Math.cos(s.startAngle), c2 = Math.cos(s.endAngle),
-        s1 = Math.sin(s.startAngle), s2 = Math.sin(s.endAngle);
-    if (r1) {
-      v.setAttribute("d", "M" + r2 * c1 + "," + r2 * s1
-          + "A" + r2 + "," + r2 + " 0 "
-          + ((s.angle < Math.PI) ? "0" : "1") + ",1 "
-          + r2 * c2 + "," + r2 * s2
-          + "L" + r1 * c2 + "," + r1 * s2
-          + "A" + r1 + "," + r1 + " 0 "
-          + ((s.angle < Math.PI) ? "0" : "1") + ",0 "
-          + r1 * c1 + "," + r1 * s1 + "Z");
-    } else {
-      v.setAttribute("d", "M" + r2 * c1 + "," + r2 * s1
-          + "A" + r2 + "," + r2 + " 0 "
-          + ((s.angle < Math.PI) ? "0" : "1") + ",1 "
-          + r2 * c2 + "," + r2 * s2 + "L0,0Z");
-    }
-  }
-
-  /* fill, stroke TODO gradient, patterns */
-  var fill = pv.color(s.fillStyle);
-  v.setAttribute("fill", fill.color);
-  v.setAttribute("fill-opacity", fill.opacity);
-  var stroke = pv.color(s.strokeStyle);
-  v.setAttribute("stroke", stroke.color);
-  v.setAttribute("stroke-opacity", stroke.opacity);
-  v.setAttribute("stroke-width", s.lineWidth);
 };

@@ -122,9 +122,9 @@ pv.Mark.toString = function() { return "mark"; };
  */
 pv.Mark.prototype.defineProperty = function(name) {
   if (!this.hasOwnProperty("properties")) {
-    this.properties = (this.properties || []).concat();
+    this.properties = pv.dict(pv.keys(this.properties || {}), pv.identity);
   }
-  this.properties.push(name);
+  this.properties[name] = true;
   this[name] = function(v) {
       if (arguments.length) {
         if (this.index >= 0) {
@@ -137,15 +137,6 @@ pv.Mark.prototype.defineProperty = function(name) {
       return this.scene[this.index][name];
     };
 };
-
-/**
- * The constructor; the mark type. This mark type may define default property
- * functions (see {@link #defaults}) that are used if the property is not
- * overriden by the mark or any of its prototypes.
- *
- * @type function
- */
-pv.Mark.prototype.type = pv.Mark;
 
 /**
  * The mark prototype, possibly null, from which to inherit property
@@ -346,7 +337,7 @@ pv.Mark.prototype.defineProperty("reverse");
  *
  * @type pv.Mark
  */
-pv.Mark.defaults = new pv.Mark()
+pv.Mark.prototype.defaults = new pv.Mark()
   .data([null])
   .visible(true)
   .reverse(false);
@@ -404,6 +395,7 @@ pv.Mark.prototype.add = function(type) {
 pv.Mark.Anchor = function() {
   pv.Mark.call(this);
 };
+pv.Mark.prototype.Anchor = pv.Mark.Anchor;
 pv.Mark.Anchor.prototype = pv.extend(pv.Mark);
 
 /**
@@ -435,13 +427,8 @@ pv.Mark.Anchor.prototype.defineProperty("name");
  * @returns {pv.Mark.Anchor} the new anchor.
  */
 pv.Mark.prototype.anchor = function(name) {
-  var anchorType = this.type;
-  while (!anchorType.Anchor) {
-    anchorType = anchorType.defaults.proto.type;
-  }
-  var anchor = new anchorType.Anchor().extend(this).name(name);
+  var anchor = new this.Anchor().extend(this).name(name);
   anchor.parent = this.parent;
-  anchor.type = this.type;
   return anchor;
 };
 
@@ -624,9 +611,7 @@ pv.Mark.prototype.build = function(parent) {
 pv.Mark.prototype.buildInstance = function(s) {
 
   /* evaluated properties */
-  var p = this.type.prototype;
-  for (var i = 0; i < p.properties.length; i++) {
-    var name = p.properties[i];
+  for (var name in this.properties) {
     switch (name) { case "data": case "visible": continue; }
     s[name] = this.get(name);
   }
@@ -690,7 +675,7 @@ pv.Mark.prototype.buildImplied = function(s) {
   var b = s.bottom;
 
   /* Assume width and height are zero if not supported by this mark type. */
-  var p = this.type.prototype;
+  var p = this.properties;
   var w = p.width ? s.width : 0;
   var h = p.height ? s.height : 0;
 
@@ -754,7 +739,7 @@ pv.Mark.prototype.get = function(name) {
   while (!mark["$" + name]) {
     mark = mark.proto;
     if (!mark) {
-      mark = this.type.defaults;
+      mark = this.defaults;
       while (!mark["$" + name]) {
         mark = mark.proto;
         if (!mark) {

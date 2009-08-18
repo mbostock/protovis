@@ -34,7 +34,6 @@ pv.Rule = function() {
   pv.Mark.call(this);
 };
 pv.Rule.prototype = pv.extend(pv.Mark);
-pv.Rule.prototype.type = pv.Rule;
 pv.Rule.prototype.sprite = pv.Sprites.Rule;
 
 /**
@@ -69,7 +68,8 @@ pv.Rule.prototype.defineProperty("strokeStyle");
  *
  * @type pv.Rule
  */
-pv.Rule.defaults = new pv.Rule().extend(pv.Mark.defaults)
+pv.Rule.prototype.defaults = new pv.Rule()
+    .extend(pv.Mark.prototype.defaults)
     .lineWidth(1)
     .strokeStyle("black");
 
@@ -100,8 +100,8 @@ pv.Rule.defaults = new pv.Rule().extend(pv.Mark.defaults)
 pv.Rule.Anchor = function() {
   pv.Bar.Anchor.call(this);
 };
+pv.Rule.prototype.Anchor = pv.Rule.Anchor;
 pv.Rule.Anchor.prototype = pv.extend(pv.Bar.Anchor);
-pv.Rule.Anchor.prototype.type = pv.Rule;
 
 /**
  * The text-align property, for horizontal alignment outside the rule.
@@ -178,36 +178,4 @@ pv.Rule.prototype.buildImplied = function(s) {
   s.bottom = b;
 
   pv.Mark.prototype.buildImplied.call(this, s);
-};
-
-/**
- * Updates the display for the specified rule instance <tt>s</tt> in the scene
- * graph. This implementation handles the stroke style for the rule, as well as
- * positional properties.
- *
- * @param s a node in the scene graph; the instance of the rule to update.
- */
-pv.Rule.prototype.updateInstance = function(s) {
-  var v = s.svg;
-
-  /* Create the svg:line element, if necessary. */
-  if (s.visible && !v) {
-    v = s.svg = this.insertElement("line");
-  }
-
-  /* visible, cursor, title, events, etc. */
-  pv.Mark.prototype.updateInstance.call(this, s);
-  if (!s.visible) return;
-
-  /* left, top */
-  v.setAttribute("x1", s.left);
-  v.setAttribute("y1", s.top);
-  v.setAttribute("x2", s.left + s.width);
-  v.setAttribute("y2", s.top + s.height);
-
-  /* stroke TODO gradient, patterns, dashes */
-  var stroke = pv.color(s.strokeStyle);
-  v.setAttribute("stroke", stroke.color);
-  v.setAttribute("stroke-opacity", stroke.opacity);
-  v.setAttribute("stroke-width", s.lineWidth);
 };

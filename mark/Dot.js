@@ -18,7 +18,6 @@ pv.Dot = function() {
   pv.Mark.call(this);
 };
 pv.Dot.prototype = pv.extend(pv.Mark);
-pv.Dot.prototype.type = pv.Dot;
 pv.Dot.prototype.sprite = pv.Sprites.Dot;
 
 /**
@@ -111,7 +110,8 @@ pv.Dot.prototype.defineProperty("fillStyle");
  *
  * @type pv.Dot
  */
-pv.Dot.defaults = new pv.Dot().extend(pv.Mark.defaults)
+pv.Dot.prototype.defaults = new pv.Dot()
+    .extend(pv.Mark.prototype.defaults)
     .size(20)
     .shape("circle")
     .lineWidth(1.5)
@@ -143,8 +143,8 @@ pv.Dot.defaults = new pv.Dot().extend(pv.Mark.defaults)
 pv.Dot.Anchor = function() {
   pv.Mark.Anchor.call(this);
 };
+pv.Dot.prototype.Anchor = pv.Dot.Anchor;
 pv.Dot.Anchor.prototype = pv.extend(pv.Mark.Anchor);
-pv.Dot.Anchor.prototype.type = pv.Dot;
 
 /**
  * The left property; null for "left" anchors, non-null otherwise.

@@ -22,7 +22,6 @@ pv.Line = function() {
   pv.Mark.call(this);
 };
 pv.Line.prototype = pv.extend(pv.Mark);
-pv.Line.prototype.type = pv.Line;
 pv.Line.prototype.sprite = pv.Sprites.Line;
 
 /**
@@ -68,6 +67,7 @@ pv.Line.prototype.defineProperty("fillStyle");
  *
  * @type pv.Line
  */
-pv.Line.defaults = new pv.Line().extend(pv.Mark.defaults)
+pv.Line.prototype.defaults = new pv.Line()
+    .extend(pv.Mark.prototype.defaults)
     .lineWidth(1.5)
     .strokeStyle(pv.Colors.category10);

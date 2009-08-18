@@ -55,7 +55,6 @@ pv.Panel = function() {
   this.$dom = pv.Panel.$dom;
 };
 pv.Panel.prototype = pv.extend(pv.Bar);
-pv.Panel.prototype.type = pv.Panel;
 pv.Panel.prototype.sprite = pv.Sprites.Panel;
 
 /**
@@ -88,8 +87,12 @@ pv.Panel.prototype.defineProperty("canvas");
  *
  * @type pv.Panel
  */
-pv.Panel.defaults = new pv.Panel().extend(pv.Bar.defaults)
-    .top(0).left(0).bottom(0).right(0)
+pv.Panel.prototype.defaults = new pv.Panel()
+    .extend(pv.Bar.prototype.defaults)
+    .top(0)
+    .left(0)
+    .bottom(0)
+    .right(0)
     .fillStyle(null);
 
 /**

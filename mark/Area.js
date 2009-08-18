@@ -23,7 +23,6 @@ pv.Area = function() {
   pv.Mark.call(this);
 };
 pv.Area.prototype = pv.extend(pv.Mark);
-pv.Area.prototype.type = pv.Area;
 pv.Area.prototype.sprite = pv.Sprites.Area;
 
 /**
@@ -102,7 +101,8 @@ pv.Area.prototype.defineProperty("fillStyle");
  *
  * @type pv.Area
  */
-pv.Area.defaults = new pv.Area().extend(pv.Mark.defaults)
+pv.Area.prototype.defaults = new pv.Area()
+    .extend(pv.Mark.prototype.defaults)
     .lineWidth(1.5)
     .fillStyle(pv.Colors.category20);
 
@@ -134,8 +134,8 @@ pv.Area.defaults = new pv.Area().extend(pv.Mark.defaults)
 pv.Area.Anchor = function() {
   pv.Mark.Anchor.call(this);
 };
+pv.Area.prototype.Anchor = pv.Area.Anchor;
 pv.Area.Anchor.prototype = pv.extend(pv.Mark.Anchor);
-pv.Area.Anchor.prototype.type = pv.Area;
 
 /**
  * The left property; null for "left" anchors, non-null otherwise.
