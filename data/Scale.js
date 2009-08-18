@@ -1,23 +1,62 @@
+// TODO allow override of log base
+// TODO zlog, etc.
+// TODO ticks / rule values
+// TODO ordinal scale
+// TODO date scale
+
 pv.Scale = {};
 
-pv.Scale.linear = function() {
-  var min, max, nice = false, s, f = pv.identity;
+pv.Scale.generic = function(impl) {
+  var p = impl.prototype;
 
   /* Property function. */
   function scale() {
-    if (s == undefined) {
-      if (min == undefined) min = pv.min(this.$$data, f);
-      if (max == undefined) max = pv.max(this.$$data, f);
-      if (nice) { // TODO Only "nice" bounds set automatically.
-        var step = Math.pow(10, Math.round(Math.log(max - min) / Math.log(10)) - 1);
-        min = Math.floor(min / step) * step;
-        max = Math.ceil(max / step) * step;
-      }
-      s = range.call(this) / (max - min);
-    }
-    return (f.apply(this, arguments) - min) * s;
+    var s = this.scene[0].$scale;
+    if (!s) s = this.scene[0].$scale = {};
+    if (!s[property]) s[property] = new impl(this);
+    var d = s[property].by.apply(this, arguments);
+    return s[property].scale(d);
   }
 
+  // XXX by returns a view, while other methods modify
+
+  scale.by = function(v) {
+    function i(mark) { impl.call(this, mark); }
+    i.prototype = pv.extend(impl);
+    i.prototype.by = v;
+    return pv.Scale.generic(i);
+  };
+
+  scale.min = function(v) {
+    p.min = v;
+    return this;
+  };
+
+  scale.max = function(v) {
+    p.max = v;
+    return this;
+  };
+
+  scale.nice = function(v) {
+    p.nice = (arguments.length == 0) ? true : v;
+    return this;
+  };
+
+  scale.range = function() {
+    if (arguments.length == 1) {
+      p.start = 0;
+      p.end = arguments[0];
+    } else {
+      p.start = arguments[0];
+      p.end = arguments[1] - arguments[0];
+    }
+    return this;
+  };
+
+  return scale;
+};
+
+pv.Scale.Impl = function(mark) {
   function range() {
     switch (property) {
       case "height":
@@ -30,25 +69,38 @@ pv.Scale.linear = function() {
     }
   }
 
-  scale.by = function(v) { f = v; return this; };
-  scale.min = function(v) { min = v; return this; };
-  scale.max = function(v) { max = v; return this; };
+  var data = mark.$$data;
+  if (this.min == undefined) this.min = pv.min(data, this.by);
+  if (this.max == undefined) this.max = pv.max(data, this.by);
+  if (this.end == undefined) this.end = range.call(mark);
+  if (this.nice) { // TODO Only "nice" bounds set automatically.
+    var step = Math.pow(10, Math.round(Math.log(this.max - this.min) / Math.log(10)) - 1);
+    this.min = Math.floor(this.min / step) * step;
+    this.max = Math.ceil(this.max / step) * step;
+  }
+};
 
-  scale.nice = function(v) {
-    nice = (arguments.length == 0) ? true : v;
-    return this;
-  };
+pv.Scale.Impl.prototype.start = 0;
 
-  scale.range = function() {
-    if (arguments.length == 1) {
-      o = 0;
-      s = arguments[0];
-    } else {
-      o = arguments[0];
-      s = arguments[1] - arguments[0];
-    }
-    return this;
-  };
+pv.Scale.Impl.prototype.by = pv.identity;
 
-  return scale;
+pv.Scale.linear = function() {
+  function impl(mark) {
+    pv.Scale.Impl.call(this, mark);
+    this.k = (this.end - this.start) / (this.max - this.min);
+  }
+  impl.prototype = pv.extend(pv.Scale.Impl);
+  impl.prototype.scale = function(d) { return (d - this.min) * this.k; };
+  return this.generic(impl);
+};
+
+pv.Scale.log = function() {
+  function impl(mark) {
+    pv.Scale.Impl.call(this, mark);
+    this.k = (this.end - this.start) / (this.log(this.max) - this.log(this.min));
+  }
+  impl.prototype = pv.extend(pv.Scale.Impl);
+  impl.prototype.log = function(d) { return Math.log(d); }
+  impl.prototype.scale = function(d) { return (this.log(d) - this.log(this.min)) * this.k; };
+  return this.generic(impl);
 };
