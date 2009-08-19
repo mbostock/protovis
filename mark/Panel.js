@@ -55,14 +55,7 @@ pv.Panel = function() {
   this.$dom = pv.Panel.$dom;
 };
 pv.Panel.prototype = pv.extend(pv.Bar);
-pv.Panel.prototype.sprite = pv.Sprites.Panel;
-
-/**
- * Returns "panel".
- *
- * @returns {string} "panel".
- */
-pv.Panel.toString = function() { return "panel"; };
+pv.Panel.prototype.type = "panel";
 
 /**
  * The canvas element; either the string ID of the canvas element in the current

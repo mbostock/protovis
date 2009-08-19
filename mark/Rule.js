@@ -34,14 +34,7 @@ pv.Rule = function() {
   pv.Mark.call(this);
 };
 pv.Rule.prototype = pv.extend(pv.Mark);
-pv.Rule.prototype.sprite = pv.Sprites.Rule;
-
-/**
- * Returns "rule".
- *
- * @returns {string} "rule".
- */
-pv.Rule.toString = function() { return "rule"; };
+pv.Rule.prototype.type = "rule";
 
 /**
  * The width of stroked lines, in pixels; used in conjunction with

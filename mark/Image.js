@@ -25,14 +25,7 @@ pv.Image = function() {
   pv.Bar.call(this);
 };
 pv.Image.prototype = pv.extend(pv.Bar);
-pv.Image.prototype.sprite = pv.Sprites.Image;
-
-/**
- * Returns "image".
- *
- * @returns {string} "image".
- */
-pv.Image.toString = function() { return "image"; };
+pv.Image.prototype.type = "image";
 
 /**
  * The URL of the image to display. The set of supported image types is

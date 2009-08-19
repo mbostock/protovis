@@ -23,14 +23,7 @@ pv.Area = function() {
   pv.Mark.call(this);
 };
 pv.Area.prototype = pv.extend(pv.Mark);
-pv.Area.prototype.sprite = pv.Sprites.Area;
-
-/**
- * Returns "area".
- *
- * @returns {string} "area".
- */
-pv.Area.toString = function() { return "area"; };
+pv.Area.prototype.type = "area";
 
 /**
  * The width of a given span, in pixels; used for horizontal spans. If the width

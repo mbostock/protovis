@@ -18,14 +18,7 @@ pv.Dot = function() {
   pv.Mark.call(this);
 };
 pv.Dot.prototype = pv.extend(pv.Mark);
-pv.Dot.prototype.sprite = pv.Sprites.Dot;
-
-/**
- * Returns "dot".
- *
- * @returns {string} "dot".
- */
-pv.Dot.toString = function() { return "dot"; };
+pv.Dot.prototype.type = "dot";
 
 /**
  * The size of the dot, in square pixels. Square pixels are used such that the

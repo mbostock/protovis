@@ -27,14 +27,7 @@ pv.Bar = function() {
   pv.Mark.call(this);
 };
 pv.Bar.prototype = pv.extend(pv.Mark);
-pv.Bar.prototype.sprite = pv.Sprites.Bar;
-
-/**
- * Returns "bar".
- *
- * @returns {string} "bar".
- */
-pv.Bar.toString = function() { return "bar"; };
+pv.Bar.prototype.type = "bar";
 
 /**
  * The width of the bar, in pixels. If the left position is specified, the bar

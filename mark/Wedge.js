@@ -22,14 +22,7 @@ pv.Wedge = function() {
   pv.Mark.call(this);
 };
 pv.Wedge.prototype = pv.extend(pv.Mark);
-pv.Wedge.prototype.sprite = pv.Sprites.Wedge;
-
-/**
- * Returns "wedge".
- *
- * @returns {string} "wedge".
- */
-pv.Wedge.toString = function() { return "wedge"; };
+pv.Wedge.prototype.type = "wedge";
 
 /**
  * The start angle of the wedge, in radians. The start angle is measured

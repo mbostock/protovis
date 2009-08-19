@@ -27,14 +27,7 @@ pv.Label = function() {
   pv.Mark.call(this);
 };
 pv.Label.prototype = pv.extend(pv.Mark);
-pv.Label.prototype.sprite = pv.Sprites.Label;
-
-/**
- * Returns "label".
- *
- * @returns {string} "label".
- */
-pv.Label.toString = function() { return "label"; };
+pv.Label.prototype.type = "label";
 
 /**
  * The character data to render; a string. The default value of the text

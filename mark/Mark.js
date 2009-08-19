@@ -44,19 +44,6 @@
 pv.Mark = function() {};
 
 /**
- * Returns the mark type name. Names should be lower case, with words separated
- * by hyphens. For example, the mark class <tt>FooBar</tt> should return
- * "foo-bar".
- *
- * <p>Note that this method is defined on the constructor, not on the prototype,
- * and thus is a static method. The constructor is accessible through the
- * {@link #type} field.
- *
- * @returns {string} the mark type name, such as "mark".
- */
-pv.Mark.toString = function() { return "mark"; };
-
-/**
  * Defines and registers a property method for the property with the given name.
  * This method should be called on a mark class prototype to define each exposed
  * property. (Note this refers to the JavaScript <tt>prototype</tt>, not the
@@ -574,7 +561,7 @@ pv.Mark.prototype.build = function(parent) {
     pv.Mark.prototype.index = ++this.index;
     var s = this.scene[i];
     if (!s) {
-      this.scene[i] = s = new this.sprite();
+      this.scene[i] = s = new pv.Sprites[this.type]();
       s.previousSibling = this.scene[i - 1];
     }
     s.index = i;

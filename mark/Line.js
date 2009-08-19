@@ -22,14 +22,7 @@ pv.Line = function() {
   pv.Mark.call(this);
 };
 pv.Line.prototype = pv.extend(pv.Mark);
-pv.Line.prototype.sprite = pv.Sprites.Line;
-
-/**
- * Returns "line".
- *
- * @returns {string} "line".
- */
-pv.Line.toString = function() { return "line"; };
+pv.Line.prototype.type = "line";
 
 /**
  * The width of stroked lines, in pixels; used in conjunction with
