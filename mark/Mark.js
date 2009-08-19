@@ -126,14 +126,24 @@ pv.Mark.prototype.defineProperty = function(name) {
 };
 
 /**
+ * The mark type; a lowercase hypen-separated name. The type name controls
+ * rendering behavior, and unless the rendering engine is extended, must be one
+ * of the built-in concrete mark types: area, bar, dot, image, label, line,
+ * panel, rule, or wedge.
+ *
+ * @type string
+ * @name pv.Mark.prototype.type
+ */
+
+/**
  * The mark prototype, possibly null, from which to inherit property
  * functions. The mark prototype is not necessarily of the same type as this
  * mark. Any properties defined on this mark will override properties inherited
  * either from the prototype or from the type-specific defaults.
  *
  * @type pv.Mark
+ * @name pv.Mark.prototype.proto
  */
-pv.Mark.prototype.proto = null;
 
 /**
  * The enclosing parent panel. The parent panel is generally null only for the
@@ -141,8 +151,8 @@ pv.Mark.prototype.proto = null;
  * only for inheritance purposes.
  *
  * @type pv.Panel
+ * @name pv.Mark.prototype.parent
  */
-pv.Mark.prototype.parent = null;
 
 /**
  * The child index. -1 if the enclosing parent panel is null; otherwise, the
@@ -200,16 +210,16 @@ pv.Mark.prototype.index = -1;
  * @see #last
  * @see #sibling
  * @see #cousin
+ * @name pv.Mark.prototype.scene
  */
-pv.Mark.prototype.scene = null;
 
 /**
  * The root parent panel. This may be null for "offscreen" marks that are
  * created for inheritance purposes only.
  *
  * @type pv.Panel
+ * @name pv.Mark.prototype.root
  */
-pv.Mark.prototype.root = null;
 
 /**
  * The data property; an array of objects. The size of the array determines the
