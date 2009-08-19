@@ -215,8 +215,6 @@ pv.Panel.prototype.buildImplied = function(s) {
         h = parseFloat(pv.css(c, "height"));
         s.height = h - s.top - s.bottom;
       }
-    } else if (s.$canvas) {
-      c = s.$canvas;
     } else {
 
       /**
@@ -233,7 +231,7 @@ pv.Panel.prototype.buildImplied = function(s) {
       }
 
       /* Insert a new container into the DOM. */
-      c = s.$canvas = document.createElement("span");
+      c = document.createElement("span");
       this.$dom // script element for text/javascript+protovis
           ? this.$dom.parentNode.insertBefore(c, this.$dom)
           : lastElement().appendChild(c);
