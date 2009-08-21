@@ -4,6 +4,10 @@
 // TODO ordinal scale
 // TODO date scale
 
+// TODO XXX by function is a bit bogus, because when used to compute the min and
+// max values, it is not called using the mark instance as the context. As a
+// result, it's not valid to say by(function() this.index).
+
 pv.Scale = {};
 
 pv.Scale.generic = function(impl) {
