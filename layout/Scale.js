@@ -8,6 +8,10 @@
 // max values, it is not called using the mark instance as the context. As a
 // result, it's not valid to say by(function() this.index).
 
+// TODO It's also not clear how you would use scales for more complex
+// visualizations, for example stacked area graphs, where the minimum and
+// maximum value are the sum of all the data points.
+
 pv.Scale = {};
 
 pv.Scale.generic = function(impl) {

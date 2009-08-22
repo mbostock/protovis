@@ -109,7 +109,7 @@ pv.Mark = function() {};
  */
 pv.Mark.prototype.defineProperty = function(name) {
   if (!this.hasOwnProperty("properties")) {
-    this.properties = pv.dict(pv.keys(this.properties || {}), pv.identity);
+    this.properties = pv.extend(this.properties || {});
   }
   this.properties[name] = true;
   this[name] = function(v) {
@@ -117,7 +117,7 @@ pv.Mark.prototype.defineProperty = function(name) {
         if (this.index >= 0) {
           this.scene[this.index][name] = v;
         } else {
-          this["$" + name] = (v instanceof Function) ? v : function() { return v; };
+          this["$" + name] = v;
         }
         return this;
       }
@@ -414,6 +414,13 @@ pv.Mark.Anchor.prototype = pv.extend(pv.Mark);
  */
 pv.Mark.Anchor.prototype.defineProperty("name");
 
+/** */
+pv.Mark.Anchor.prototype.add = function(type) {
+  var child = pv.Mark.prototype.add.call(this, type);
+  child.defineProperty("name"); // XXX
+  return child;
+};
+
 /**
  * Returns an anchor with the specified name. While anchor names are typically
  * constants, the anchor name is a true property, which means you can specify a
@@ -515,8 +522,40 @@ pv.Mark.prototype.cousin = function() {
  * in the build phase are simply translated into SVG.
  */
 pv.Mark.prototype.render = function() {
+  this.bind();
   this.build();
   this.update();
+};
+
+/** */
+pv.Mark.prototype.bind = function() {
+  var binds = {constants: {}, functions: {}};
+
+  /** */
+  function find(mark, name) {
+    var dname = "$" + name;
+    do {
+      if (dname in mark) {
+        var value = mark[dname];
+        if (value instanceof Function) {
+          binds.functions[name] = value;
+        } else {
+          binds.constants[name] = value;
+        }
+        return true;
+      }
+    } while (mark = mark.proto);
+    return false;
+  }
+
+  /* */
+  for (var name in this.properties) {
+    if (!find(this, name) && !find(this.defaults, name)) {
+      binds.constants[name] = null; // default
+    }
+  }
+
+  this.binds = binds;
 };
 
 /**
@@ -732,22 +771,10 @@ var property; // XXX
  * @returns the evaluated property value.
  */
 pv.Mark.prototype.get = function(name) {
-  var mark = this;
-  while (!mark["$" + name]) {
-    mark = mark.proto;
-    if (!mark) {
-      mark = this.defaults;
-      while (!mark["$" + name]) {
-        mark = mark.proto;
-        if (!mark) {
-          return null;
-        }
-      }
-      break;
-    }
-  }
   property = name; // XXX
-  return mark["$" + name].apply(this, this.root.scene.data);
+  return (name in this.binds.constants)
+      ? this.binds.constants[name]
+      : this.binds.functions[name].apply(this, this.root.scene.data);
 };
 
 /**

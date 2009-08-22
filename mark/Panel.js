@@ -131,6 +131,14 @@ pv.Panel.prototype.add = function(type) {
   return child;
 };
 
+/** */
+pv.Panel.prototype.bind = function() {
+  pv.Mark.prototype.bind.call(this);
+  for (var i = 0; i < this.children.length; i++) {
+    this.children[i].bind();
+  }
+};
+
 /**
  * Evaluates all of the properties for this panel for the specified instance
  * <tt>s</tt> in the scene graph, including recursively building the scene graph

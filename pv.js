@@ -29,7 +29,7 @@ var pv = {};
  */
 pv.extend = function(f) {
   function g() {}
-  g.prototype = f.prototype;
+  g.prototype = f.prototype || f;
   return new g();
 };
 
