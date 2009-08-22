@@ -1,7 +1,7 @@
 pv.Scale.index = function() {
   function impl(mark) {
     this.min = 0;
-    this.max = mark.$$data.length;
+    this.max = mark.$$data.length - 1;
     this.by = function() { return this.index; };
     pv.Scale.Impl.call(this, mark);
     this.k = (this.end - this.start) / this.max;
