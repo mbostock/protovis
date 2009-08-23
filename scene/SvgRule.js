@@ -1,4 +1,3 @@
-// TODO title property
 // TODO don't populate default attributes?
 
 pv.SvgScene.rule = function(scenes) {
@@ -12,7 +11,7 @@ pv.SvgScene.rule = function(scenes) {
     var stroke = pv.color(s.strokeStyle);
     if (!stroke.opacity) continue;
 
-    var line = scenes.parent.scene.g.appendChild(this.create("line"));
+    var line = this.create("line");
     line.setAttribute("cursor", s.cursor);
     line.setAttribute("x1", s.left);
     line.setAttribute("y1", s.top);
@@ -21,5 +20,6 @@ pv.SvgScene.rule = function(scenes) {
     line.setAttribute("stroke", stroke.color);
     line.setAttribute("stroke-opacity", stroke.opacity);
     line.setAttribute("stroke-width", s.lineWidth);
+    scenes.parent.scene.g.appendChild(this.title(line, s));
   }
 };

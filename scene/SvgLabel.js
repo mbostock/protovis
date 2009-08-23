@@ -1,4 +1,3 @@
-// TODO title property
 // TODO don't populate default attributes?
 
 pv.SvgScene.label = function(scenes) {
@@ -25,7 +24,7 @@ pv.SvgScene.label = function(scenes) {
       case "left": x = s.textMargin; break;
     }
 
-    var text = scenes.parent.scene.g.appendChild(this.create("text"));
+    var text = this.create("text");
     text.setAttribute("pointer-events", "none");
     text.appendChild(document.createTextNode(s.text));
     text.setAttribute("x", x);
@@ -39,5 +38,6 @@ pv.SvgScene.label = function(scenes) {
     text.setAttribute("fill-opacity", fill.opacity);
     text.style.font = s.font;
     text.style.textShadow = s.textShadow;
+    scenes.parent.scene.g.appendChild(text);
   }
 };

@@ -1,4 +1,3 @@
-// TODO title property
 // TODO don't populate default attributes?
 
 pv.SvgScene.line = function(scenes) {
@@ -19,7 +18,7 @@ pv.SvgScene.line = function(scenes) {
     p += si.left + "," + si.top + " ";
   }
 
-  var polyline = scenes.parent.scene.g.appendChild(this.create("polyline"));
+  var polyline = this.create("polyline");
   polyline.setAttribute("cursor", s.cursor);
   polyline.setAttribute("points", p);
   polyline.setAttribute("fill", fill.color);
@@ -27,4 +26,5 @@ pv.SvgScene.line = function(scenes) {
   polyline.setAttribute("stroke", stroke.color);
   polyline.setAttribute("stroke-opacity", stroke.opacity);
   polyline.setAttribute("stroke-width", s.lineWidth);
+  scenes.parent.scene.g.appendChild(this.title(polyline, s));
 };

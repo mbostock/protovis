@@ -1,4 +1,3 @@
-// TODO title property
 // TODO don't populate default attributes?
 
 pv.SvgScene.image = function(scenes) {
@@ -36,14 +35,17 @@ pv.SvgScene.image = function(scenes) {
 
     /* stroke */
     var stroke = pv.color(s.strokeStyle);
-    if (stroke.opacity || s.cursor) {
-      var rect = g.appendChild(this.create("rect"));
+    if (stroke.opacity || s.cursor || s.title) {
+      var rect = this.create("rect");
       rect.setAttribute("width", s.width);
       rect.setAttribute("height", s.height);
+      rect.setAttribute("fill", "none");
+      rect.setAttribute("pointer-events", "all");
       rect.setAttribute("stroke", stroke.color);
       rect.setAttribute("stroke-opacity", stroke.opacity);
       rect.setAttribute("stroke-width", s.lineWidth);
       rect.setAttribute("cursor", s.cursor);
+      g.appendChild(this.title(rect, s));
     }
   }
 };

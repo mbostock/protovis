@@ -1,4 +1,3 @@
-// TODO title property
 // TODO don't populate default attributes?
 
 pv.SvgScene.wedge = function(scenes) {
@@ -51,7 +50,7 @@ pv.SvgScene.wedge = function(scenes) {
       }
     }
 
-    var path = scenes.parent.scene.g.appendChild(this.create("path"));
+    var path = this.create("path");
     path.setAttribute("fill-rule", "evenodd");
     path.setAttribute("cursor", s.cursor);
     path.setAttribute("transform", "translate(" + s.left + "," + s.top + ")");
@@ -61,5 +60,6 @@ pv.SvgScene.wedge = function(scenes) {
     path.setAttribute("stroke", stroke.color);
     path.setAttribute("stroke-opacity", stroke.opacity);
     path.setAttribute("stroke-width", s.lineWidth);
+    scenes.parent.scene.g.appendChild(this.title(path, s));
   }
 };

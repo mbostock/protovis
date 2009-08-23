@@ -1,4 +1,3 @@
-// TODO title property
 // TODO don't populate default attributes?
 
 pv.SvgScene.area = function(scenes) {
@@ -20,7 +19,7 @@ pv.SvgScene.area = function(scenes) {
     p2 += (sj.left + sj.width) + "," + (sj.top + sj.height) + " ";
   }
 
-  var polygon = scenes.parent.scene.g.appendChild(this.create("polygon"));
+  var polygon = this.create("polygon");
   polygon.setAttribute("cursor", s.cursor);
   polygon.setAttribute("points", p1 + p2);
   polygon.setAttribute("fill", fill.color);
@@ -28,4 +27,5 @@ pv.SvgScene.area = function(scenes) {
   polygon.setAttribute("stroke", stroke.color);
   polygon.setAttribute("stroke-opacity", stroke.opacity);
   polygon.setAttribute("stroke-width", s.lineWidth);
+  scenes.parent.scene.g.appendChild(this.title(polygon, s));
 };

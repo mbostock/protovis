@@ -1,4 +1,3 @@
-// TODO title property
 // TODO don't populate default attributes?
 
 pv.SvgScene.panel = function(scenes) {
@@ -22,16 +21,17 @@ pv.SvgScene.panel = function(scenes) {
     }
 
     /* g */
-    var g;
+    var g, append;
     if (s.left || s.top) {
       if (previous
           && (previous.left == s.left)
           && (previous.top == s.top)) {
         g = previous.scene.g;
       } else {
-        g = (parent ? parent.scene.g : svg).appendChild(this.create("g"));
+        g = this.create("g");
         g.setAttribute("transform", "translate(" + s.left + "," + s.top + ")");
         previous = s;
+        append = parent ? parent.scene.g : svg;
       }
     } else if (parent) {
       g = parent.scene.g;
@@ -50,7 +50,7 @@ pv.SvgScene.panel = function(scenes) {
     /* fill, stroke */
     var fill = pv.color(s.fillStyle), stroke = pv.color(s.strokeStyle);
     if (fill.opacity || stroke.opacity) {
-      var rect = g.appendChild(this.create("rect"));
+      var rect = this.create("rect");
       rect.setAttribute("cursor", s.cursor);
       rect.setAttribute("width", Math.max(1E-10, s.width));
       rect.setAttribute("height", Math.max(1E-10, s.height));
@@ -59,6 +59,14 @@ pv.SvgScene.panel = function(scenes) {
       rect.setAttribute("stroke", stroke.color);
       rect.setAttribute("stroke-opacity", stroke.opacity);
       rect.setAttribute("stroke-width", s.lineWidth);
+      g.appendChild(this.title(rect, s));
     }
+
+    /*
+     * WebKit appears has a bug where images are not rendered if the g element
+     * is appended before it contained any elements. Creating the child elements
+     * first and then appending them solves the problem and is more efficient.
+     */
+    if (append) append.appendChild(g);
   }
 };

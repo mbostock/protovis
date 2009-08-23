@@ -342,7 +342,9 @@ pv.Mark.prototype.defineProperty("reverse");
 pv.Mark.prototype.defaults = new pv.Mark()
     .data([null])
     .visible(true)
-    .reverse(false);
+    .reverse(false)
+    .cursor("auto")
+    .title("");
 
 /**
  * Sets the prototype of this mark to the specified mark. Any properties not
