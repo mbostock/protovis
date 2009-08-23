@@ -174,9 +174,7 @@ pv.Panel.prototype.buildInstance = function(s) {
   }
 
   /* Delete any expired child scenes, should child marks have been removed. */
-  for (; i < s.children.length; i++) {
-    s.children[i].state = pv.Scene.State.DELETE;
-  }
+  s.children.length = this.children.length;
 };
 
 /**

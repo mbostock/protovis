@@ -1,52 +1,30 @@
+// TODO title property
+// TODO don't populate default attributes?
+
 pv.SvgScene.line = function(scenes) {
   if (!scenes.length) return;
-  var s = scenes[0], d = s.scene;
+  var s = scenes[0];
 
-  // TODO more efficient removal?
+  /* visible */
+  if (!s.visible) return;
+
+  /* fill, stroke */
+  var fill = pv.color(s.fillStyle), stroke = pv.color(s.strokeStyle);
+  if (!fill.opacity && !stroke.opacity) return;
+
+  /* points */
+  var p = "";
   for (var i = 0; i < scenes.length; i++) {
-    if (scenes[i].state == pv.Scene.State.DELETE) {
-      scenes.splice(i--, 1);
-    }
-  }
-  if (!scenes.length) {
-    scenes.parent.scene.g.removeChild(d.polyline);
-    return;
+    var si = scenes[i];
+    p += si.left + "," + si.top + " ";
   }
 
-  switch (s.state) {
-    case pv.Scene.State.CREATE: {
-      d = s.scene = {};
-      d.polyline = this.create("polyline");
-      s.state = pv.Scene.State.UPDATE;
-      // fall-through
-    }
-    case pv.Scene.State.UPDATE: {
-      // TODO only re-append when created or resorted
-      // TODO title property
-      // TODO don't populate default attributes?
-      if (s.visible) {
-        var p = "";
-        for (var i = 0; i < scenes.length; i++) {
-          var si = scenes[i];
-          if (isNaN(si.left)) si.left = 0;
-          if (isNaN(si.top)) si.top = 0;
-          p += si.left + "," + si.top + " ";
-        }
-        d.polyline.setAttribute("cursor", s.cursor);
-        d.polyline.setAttribute("points", p);
-        var fill = pv.color(s.fillStyle);
-        d.polyline.setAttribute("fill", fill.color);
-        d.polyline.setAttribute("fill-opacity", fill.opacity);
-        var stroke = pv.color(s.strokeStyle);
-        d.polyline.setAttribute("stroke", stroke.color);
-        d.polyline.setAttribute("stroke-opacity", stroke.opacity);
-        d.polyline.setAttribute("stroke-width", s.lineWidth);
-        d.polyline.style.display = "";
-      } else {
-        d.polyline.style.display = "none";
-      }
-      scenes.parent.scene.g.appendChild(d.polyline)
-      break;
-    }
-  }
+  var polyline = scenes.parent.scene.g.appendChild(this.create("polyline"));
+  polyline.setAttribute("cursor", s.cursor);
+  polyline.setAttribute("points", p);
+  polyline.setAttribute("fill", fill.color);
+  polyline.setAttribute("fill-opacity", fill.opacity);
+  polyline.setAttribute("stroke", stroke.color);
+  polyline.setAttribute("stroke-opacity", stroke.opacity);
+  polyline.setAttribute("stroke-width", s.lineWidth);
 };

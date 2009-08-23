@@ -245,3 +245,18 @@ pv.Area.prototype.buildImplied = function(s) {
   if (s.width == null) s.width = 0;
   pv.Mark.prototype.buildImplied.call(this, s);
 };
+
+/** TODO fixed properties */
+pv.Area.prototype.buildInstance = function(s) {
+  if (this.index) {
+    s.left = this.get("left");
+    s.top = this.get("top");
+    s.bottom = this.get("bottom");
+    s.right = this.get("right");
+    s.width = this.get("width");
+    s.height = this.get("height");
+    this.buildImplied(s);
+  } else {
+    pv.Mark.prototype.buildInstance.call(this, s);
+  }
+};

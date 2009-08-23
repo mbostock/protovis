@@ -66,3 +66,16 @@ pv.Line.prototype.defaults = new pv.Line()
     .extend(pv.Mark.prototype.defaults)
     .lineWidth(1.5)
     .strokeStyle(pv.Colors.category10);
+
+/** TODO fixed properties */
+pv.Line.prototype.buildInstance = function(s) {
+  if (this.index) {
+    s.left = this.get("left");
+    s.top = this.get("top");
+    s.bottom = this.get("bottom");
+    s.right = this.get("right");
+    this.buildImplied(s);
+  } else {
+    pv.Mark.prototype.buildInstance.call(this, s);
+  }
+};

@@ -45,6 +45,9 @@
  */
 pv.Mark = function() {};
 
+/** TOOD */
+pv.Mark.prototype.properties = {};
+
 /**
  * Defines and registers a property method for the property with the given name.
  * This method should be called on a mark class prototype to define each exposed
@@ -111,7 +114,7 @@ pv.Mark = function() {};
  */
 pv.Mark.prototype.defineProperty = function(name) {
   if (!this.hasOwnProperty("properties")) {
-    this.properties = pv.extend(this.properties || {});
+    this.properties = pv.extend(this.properties);
   }
   this.properties[name] = true;
   this[name] = function(v) {
@@ -597,27 +600,23 @@ pv.Mark.prototype.build = function(parent) {
     }
   }
 
-  /* Create and update scene nodes. */
+  /* Create, update and delete scene nodes. */
   var data = this.get("data");
   var stack = this.root.scene.data;
   stack.unshift(null);
   this.index = -1;
   this.$$data = data; // XXX TODO use this.scene.data?
+  this.scene.length = data.length;
   for (var i = 0; i < data.length; i++) {
     pv.Mark.prototype.index = this.index = i;
     var s = this.scene[i];
-    if (!s) this.scene[i] = s = {state: pv.Scene.State.CREATE};
+    if (!s) this.scene[i] = s = {};
     s.data = stack[0] = data[i];
     if (s.visible = this.get("visible")) this.buildInstance(s);
   }
   stack.shift();
   delete this.index;
   pv.Mark.prototype.index = -1;
-
-  /* Mark expired scene nodes for deletion. */
-  for (; i < this.scene.length; i++) {
-    this.scene[i].state = pv.Scene.State.DELETE;
-  }
 
   return this;
 };
