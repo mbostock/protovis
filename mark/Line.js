@@ -1,3 +1,5 @@
+// TODO only evaluate fixed properties on the first scene node
+
 /**
  * Constructs a new line mark with default properties. Lines are not typically
  * constructed directly, but by adding to a panel or an existing mark via

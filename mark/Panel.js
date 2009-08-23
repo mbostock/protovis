@@ -149,6 +149,7 @@ pv.Panel.prototype.bind = function() {
  */
 pv.Panel.prototype.buildInstance = function(s) {
   pv.Bar.prototype.buildInstance.call(this, s);
+  if (!s.children) s.children = [];
 
   /*
    * Build each child, passing in the parent (this panel) scene graph node. The
@@ -157,7 +158,7 @@ pv.Panel.prototype.buildInstance = function(s) {
    * reused; this is largely to facilitate the recycling of SVG elements.
    */
   for (var i = 0; i < this.children.length; i++) {
-    this.children[i].scene = s.children[i] || [];
+    this.children[i].scene = s.children[i]; // possibly undefined
     this.children[i].build(s);
   }
 
@@ -173,7 +174,9 @@ pv.Panel.prototype.buildInstance = function(s) {
   }
 
   /* Delete any expired child scenes, should child marks have been removed. */
-  s.children.length = this.children.length; // TODO dispose?
+  for (; i < s.children.length; i++) {
+    s.children[i].state = pv.Scene.State.DELETE;
+  }
 };
 
 /**
@@ -202,7 +205,7 @@ pv.Panel.prototype.buildInstance = function(s) {
  * @param s a node in the scene graph; the instance of the panel to build.
  */
 pv.Panel.prototype.buildImplied = function(s) {
-  if (!s.parent) {
+  if (!this.parent) {
     var c = s.canvas;
     if (c) {
       if (typeof c == "string") c = document.getElementById(c);
@@ -223,6 +226,14 @@ pv.Panel.prototype.buildImplied = function(s) {
         h = parseFloat(pv.css(c, "height"));
         s.height = h - s.top - s.bottom;
       }
+    } else if (s.$canvas) {
+
+      /*
+       * If the canvas property is null, and we previously created a canvas for
+       * this scene node, reuse the previous canvas rather than creating a new
+       * one.
+       */
+      c = s.$canvas;
     } else {
 
       /**
@@ -239,7 +250,7 @@ pv.Panel.prototype.buildImplied = function(s) {
       }
 
       /* Insert a new container into the DOM. */
-      c = document.createElement("span");
+      c = s.$canvas = document.createElement("span");
       this.$dom // script element for text/javascript+protovis
           ? this.$dom.parentNode.insertBefore(c, this.$dom)
           : lastElement().appendChild(c);

@@ -1,3 +1,5 @@
+// TODO see if extending the constants object is faster than copying
+
 /**
  * Constructs a new mark with default properties. Marks, with the exception of
  * the root panel, are not typically constructed directly; instead, they are
@@ -126,10 +128,10 @@ pv.Mark.prototype.defineProperty = function(name) {
 };
 
 /**
- * The mark type; a lowercase hypen-separated name. The type name controls
- * rendering behavior, and unless the rendering engine is extended, must be one
- * of the built-in concrete mark types: area, bar, dot, image, label, line,
- * panel, rule, or wedge.
+ * The mark type; a lower camelCase name. The type name controls rendering
+ * behavior, and unless the rendering engine is extended, must be one of the
+ * built-in concrete mark types: area, bar, dot, image, label, line, panel,
+ * rule, or wedge.
  *
  * @type string
  * @name pv.Mark.prototype.type
@@ -335,9 +337,9 @@ pv.Mark.prototype.defineProperty("reverse");
  * @type pv.Mark
  */
 pv.Mark.prototype.defaults = new pv.Mark()
-  .data([null])
-  .visible(true)
-  .reverse(false);
+    .data([null])
+    .visible(true)
+    .reverse(false);
 
 /**
  * Sets the prototype of this mark to the specified mark. Any properties not
@@ -412,14 +414,7 @@ pv.Mark.Anchor.prototype = pv.extend(pv.Mark);
  * @type string
  * @name pv.Mark.Anchor.prototype.name
  */
-pv.Mark.Anchor.prototype.defineProperty("name");
-
-/** */
-pv.Mark.Anchor.prototype.add = function(type) {
-  var child = pv.Mark.prototype.add.call(this, type);
-  child.defineProperty("name"); // XXX
-  return child;
-};
+pv.Mark.prototype.defineProperty("name"); // XXX pv.Mark.Anchor
 
 /**
  * Returns an anchor with the specified name. While anchor names are typically
@@ -595,38 +590,34 @@ pv.Mark.prototype.bind = function() {
 pv.Mark.prototype.build = function(parent) {
   if (!this.scene) {
     this.scene = [];
+    this.scene.mark = this;
+    this.scene.parent = parent;
     if (!this.parent) {
       this.scene.data = [];
     }
   }
 
+  /* Create and update scene nodes. */
   var data = this.get("data");
   var stack = this.root.scene.data;
   stack.unshift(null);
   this.index = -1;
-  this.$$data = data; // XXX
-
-  for (var i = 0, d; i < data.length; i++) {
-    pv.Mark.prototype.index = ++this.index;
+  this.$$data = data; // XXX TODO use this.scene.data?
+  for (var i = 0; i < data.length; i++) {
+    pv.Mark.prototype.index = this.index = i;
     var s = this.scene[i];
-    if (!s) {
-      this.scene[i] = s = new pv.Sprites[this.type]();
-      s.previousSibling = this.scene[i - 1];
-    }
-    s.index = i;
+    if (!s) this.scene[i] = s = {state: pv.Scene.State.CREATE};
     s.data = stack[0] = data[i];
-    s.parent = parent;
     if (s.visible = this.get("visible")) this.buildInstance(s);
   }
   stack.shift();
   delete this.index;
   pv.Mark.prototype.index = -1;
 
-  /* Clear any old instances from the scene. */
-  for (var i = data.length; i < this.scene.length; i++) {
-    this.scene[i].dispose();
+  /* Mark expired scene nodes for deletion. */
+  for (; i < this.scene.length; i++) {
+    this.scene[i].state = pv.Scene.State.DELETE;
   }
-  this.scene.length = data.length;
 
   return this;
 };
@@ -655,27 +646,27 @@ pv.Mark.prototype.buildInstance = function(s) {
   /* implied properties */
   this.buildImplied(s);
 
-  /* event handlers */
-  var that = this;
-  function dispatch(type) {
-    return function(e) {
-        /* TODO set full scene stack. */
-        var data = [s.data], p = s;
-        while (p = p.parent) data.push(p.data);
-        that.index = s.index;
-        that.scene = s.parent.children[that.childIndex];
-        that.events[type].apply(that, data);
-        if (that.scene) that.update(); // TODO dirty bit
-        delete that.index;
-        delete that.scene;
-        e ? e.preventDefault() : window.event.returnValue = false;
-      };
-  };
+//   /* event handlers */
+//   var that = this;
+//   function dispatch(type) {
+//     return function(e) {
+//         /* TODO set full scene stack. */
+//         var data = [s.data], p = s;
+//         while (p = p.parent) data.push(p.data);
+//         that.index = s.index;
+//         that.scene = s.parent.children[that.childIndex];
+//         that.events[type].apply(that, data);
+//         if (that.scene) that.update(); // TODO dirty bit
+//         delete that.index;
+//         delete that.scene;
+//         e ? e.preventDefault() : window.event.returnValue = false;
+//       };
+//   };
 
-  s.event = {};
-  for (var type in this.events) {
-    s.event[type] = dispatch(type);
-  }
+//   s.event = {};
+//   for (var type in this.events) {
+//     s.event[type] = dispatch(type);
+//   }
 };
 
 /**
@@ -716,7 +707,7 @@ pv.Mark.prototype.buildImplied = function(s) {
   var h = p.height ? s.height : 0;
 
   /* Compute implied width, right and left. */
-  var width = s.parent ? s.parent.width : 0;
+  var width = this.parent ? this.parent.width() : 0;
   if (w == null) {
     w = width - (r = r || 0) - (l = l || 0);
   } else if (r == null) {
@@ -726,7 +717,7 @@ pv.Mark.prototype.buildImplied = function(s) {
   }
 
   /* Compute implied height, bottom and top. */
-  var height = s.parent ? s.parent.height : 0;
+  var height = this.parent ? this.parent.height() : 0;
   if (h == null) {
     h = height - (t = t || 0) - (b = b || 0);
   } else if (b == null) {
@@ -786,7 +777,7 @@ pv.Mark.prototype.get = function(name) {
  * @see #event
  */
 pv.Mark.prototype.update = function() {
-  if (this.scene.length) this.scene[0].updateAll(this.scene);
+  pv.Scene.updateAll(this.scene);
 };
 
 /**

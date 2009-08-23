@@ -160,9 +160,9 @@ pv.Rule.prototype.buildImplied = function(s) {
   /* Determine horizontal or vertical orientation. */
   var l = s.left, r = s.right, t = s.top, b = s.bottom;
   if (((l == null) && (r == null)) || ((r != null) && (l != null))) {
-    s.width = s.parent.width - (l = l || 0) - (r = r || 0);
+    s.width = this.parent.width() - (l = l || 0) - (r = r || 0);
   } else {
-    s.height = s.parent.height - (t = t || 0) - (b = b || 0);
+    s.height = this.parent.height() - (t = t || 0) - (b = b || 0);
   }
 
   s.left = l;
