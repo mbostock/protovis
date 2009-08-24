@@ -532,26 +532,20 @@ pv.Mark.prototype.bind = function() {
   /** TODO */
   function find(mark, name) {
     var dname = "$" + name;
-    do {
-      if (dname in mark) {
-        var value = mark[dname];
-        if (value instanceof Function) {
-          binds.functions[name] = value;
-        } else {
-          binds.constants[name] = value;
-        }
-        return true;
-      }
+    do if (dname in mark) {
+      var value = mark[dname];
+      ((value instanceof Function)
+          ? binds.functions
+          : binds.constants)[name] = value;
+      return true;
     } while (mark = mark.proto);
     return false;
   }
 
   /* Scan the proto chain for all defined properties. */
   var mark = this;
-  do {
-    for (var name in mark.properties) {
-      binds.properties[name] = true;
-    }
+  do for (var name in mark.properties) {
+    binds.properties[name] = true;
   } while (mark = mark.proto);
 
   /* Find the definition of each property for this mark. */
