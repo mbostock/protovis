@@ -417,7 +417,7 @@ pv.Mark.Anchor.prototype = pv.extend(pv.Mark);
  * @type string
  * @name pv.Mark.Anchor.prototype.name
  */
-pv.Mark.prototype.defineProperty("name"); // XXX pv.Mark.Anchor
+pv.Mark.Anchor.prototype.defineProperty("name");
 
 /**
  * Returns an anchor with the specified name. While anchor names are typically
@@ -527,7 +527,7 @@ pv.Mark.prototype.render = function() {
 
 /** TODO */
 pv.Mark.prototype.bind = function() {
-  var binds = {constants: {}, functions: {}};
+  var binds = {properties: {}, constants: {}, functions: {}};
 
   /** TODO */
   function find(mark, name) {
@@ -546,12 +546,24 @@ pv.Mark.prototype.bind = function() {
     return false;
   }
 
-  /* */
-  for (var name in this.properties) {
+  /* Scan the proto chain for all defined properties. */
+  var mark = this;
+  do {
+    for (var name in mark.properties) {
+      binds.properties[name] = true;
+    }
+  } while (mark = mark.proto);
+
+  /* Find the definition of each property for this mark. */
+  for (var name in binds.properties) {
     if (!find(this, name) && !find(this.defaults, name)) {
       binds.constants[name] = null; // default
     }
   }
+
+  /* Delete special variables that are evaluated explicitly. */
+  delete binds.properties.data;
+  delete binds.properties.visible;
 
   this.binds = binds;
 };
@@ -637,8 +649,7 @@ pv.Mark.prototype.build = function(parent) {
 pv.Mark.prototype.buildInstance = function(s) {
 
   /* evaluated properties */
-  for (var name in this.properties) {
-    switch (name) { case "data": case "visible": continue; }
+  for (var name in this.binds.properties) {
     s[name] = this.get(name);
   }
 
