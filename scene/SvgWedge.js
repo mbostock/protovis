@@ -1,5 +1,3 @@
-// TODO don't populate default attributes?
-
 pv.SvgScene.wedge = function(scenes) {
   for (var i = 0; i < scenes.length; i++) {
     var s = scenes[i];

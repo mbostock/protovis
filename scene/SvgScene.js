@@ -1,3 +1,10 @@
+// TODO don't populate default attributes?
+// TODO reverse property
+// TODO events
+
+// TODO If I store firstChild and lastChild for every mark scenes array, will it
+// be possible to find the right insertion point to create new nodes on update?
+
 /**
  * @namespace
  */

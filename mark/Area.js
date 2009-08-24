@@ -1,5 +1,3 @@
-// TODO only evaluate fixed properties on the first scene node
-
 /**
  * Constructs a new area mark with default properties. Areas are not typically
  * constructed directly, but by adding to a panel or an existing mark via

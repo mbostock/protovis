@@ -131,7 +131,7 @@ pv.Panel.prototype.add = function(type) {
   return child;
 };
 
-/** */
+/** TODO */
 pv.Panel.prototype.bind = function() {
   pv.Mark.prototype.bind.call(this);
   for (var i = 0; i < this.children.length; i++) {

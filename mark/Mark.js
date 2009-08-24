@@ -1,5 +1,3 @@
-// TODO see if extending the constants object is faster than copying
-
 /**
  * Constructs a new mark with default properties. Marks, with the exception of
  * the root panel, are not typically constructed directly; instead, they are
@@ -527,11 +525,11 @@ pv.Mark.prototype.render = function() {
   this.update();
 };
 
-/** */
+/** TODO */
 pv.Mark.prototype.bind = function() {
   var binds = {constants: {}, functions: {}};
 
-  /** */
+  /** TODO */
   function find(mark, name) {
     var dname = "$" + name;
     do {

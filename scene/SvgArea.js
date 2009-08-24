@@ -1,5 +1,3 @@
-// TODO don't populate default attributes?
-
 pv.SvgScene.area = function(scenes) {
   if (!scenes.length) return;
   var s = scenes[0];

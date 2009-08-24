@@ -1,5 +1,3 @@
-// TODO don't populate default attributes?
-
 pv.SvgScene.panel = function(scenes) {
   var parent = scenes.parent;
   var previous = null;
