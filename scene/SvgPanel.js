@@ -1,9 +1,13 @@
+// TODO stroke goes over children?
+
 pv.SvgScene.panel = function(scenes) {
   var parent = this.parentNode(scenes);
   var previous = null;
 
   for (var i = 0; i < scenes.length; i++) {
     var s = scenes[i];
+
+    /* visible */
     if (!s.visible) continue;
 
     /* svg */
@@ -36,9 +40,7 @@ pv.SvgScene.panel = function(scenes) {
     } else {
       g = svg;
     }
-
-    /* scene */
-    s.scene = {g: g};
+    (s.scene || (s.scene = {})).g = g;
 
     /* children */
     for (var j = 0; j < s.children.length; j++) {
@@ -48,7 +50,7 @@ pv.SvgScene.panel = function(scenes) {
     /* fill, stroke */
     var fill = pv.color(s.fillStyle), stroke = pv.color(s.strokeStyle);
     if (fill.opacity || stroke.opacity) {
-      var rect = this.create("rect");
+      var rect = this.cache(s, "rect", "fill");
       rect.setAttribute("cursor", s.cursor);
       rect.setAttribute("width", Math.max(1E-10, s.width));
       rect.setAttribute("height", Math.max(1E-10, s.height));

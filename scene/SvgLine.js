@@ -4,8 +4,6 @@ pv.SvgScene.line = function(scenes) {
 
   /* visible */
   if (!s.visible) return;
-
-  /* fill, stroke */
   var fill = pv.color(s.fillStyle), stroke = pv.color(s.strokeStyle);
   if (!fill.opacity && !stroke.opacity) return;
 
@@ -16,7 +14,7 @@ pv.SvgScene.line = function(scenes) {
     p += si.left + "," + si.top + " ";
   }
 
-  var polyline = this.create("polyline");
+  var polyline = this.cache(s, "polyline", "line");
   polyline.setAttribute("cursor", s.cursor);
   polyline.setAttribute("points", p);
   polyline.setAttribute("fill", fill.color);

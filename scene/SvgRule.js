@@ -10,7 +10,7 @@ pv.SvgScene.rule = function(scenes) {
     var stroke = pv.color(s.strokeStyle);
     if (!stroke.opacity) continue;
 
-    var line = this.create("line");
+    var line = this.cache(s, "line", "rule");
     line.setAttribute("cursor", s.cursor);
     line.setAttribute("x1", s.left);
     line.setAttribute("y1", s.top);

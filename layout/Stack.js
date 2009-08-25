@@ -31,8 +31,18 @@
  * @see #cousin
  */
 pv.Layout.stack = function() {
+  var offset = function() { return 0; };
+
+  /* Property function. */
   function layout() {
-    var c = this.cousin();
+
+    /* Find the previous visible parent instance. */
+    var i = this.parent.index, p, c;
+    while ((i-- > 0) && !c) {
+      p = this.parent.scene[i];
+      if (p.visible) c = p.children[this.childIndex][this.index];
+    }
+
     if (c) {
       switch (property) {
         case "bottom": return c.bottom + c.height;
@@ -41,7 +51,14 @@ pv.Layout.stack = function() {
         case "right": return c.right + c.width;
       }
     }
-    return 0;
+
+    return offset.apply(this, arguments);
   }
+
+  layout.offset = function(f) {
+      offset = (f instanceof Function) ? f : function() { return f; };
+      return this;
+    };
+
   return layout;
 };

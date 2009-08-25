@@ -5,12 +5,10 @@ pv.SvgScene.bar = function(scenes) {
 
     /* visible */
     if (!s.visible) continue;
-
-    /* fill, stroke */
     var fill = pv.color(s.fillStyle), stroke = pv.color(s.strokeStyle);
     if (!fill.opacity && !stroke.opacity) continue;
 
-    var rect = this.create("rect");
+    var rect = this.cache(s, "rect", "bar");
     rect.setAttribute("cursor", s.cursor);
     rect.setAttribute("x", s.left);
     rect.setAttribute("y", s.top);

@@ -4,8 +4,6 @@ pv.SvgScene.area = function(scenes) {
 
   /* visible */
   if (!s.visible) return;
-
-  /* fill, stroke */
   var fill = pv.color(s.fillStyle), stroke = pv.color(s.strokeStyle);
   if (!fill.opacity && !stroke.opacity) return;
 
@@ -17,7 +15,7 @@ pv.SvgScene.area = function(scenes) {
     p2 += (sj.left + sj.width) + "," + (sj.top + sj.height) + " ";
   }
 
-  var polygon = this.create("polygon");
+  var polygon = this.cache(s, "polygon", "area");
   polygon.setAttribute("cursor", s.cursor);
   polygon.setAttribute("points", p1 + p2);
   polygon.setAttribute("fill", fill.color);

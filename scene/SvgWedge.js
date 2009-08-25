@@ -5,8 +5,6 @@ pv.SvgScene.wedge = function(scenes) {
 
     /* visible */
     if (!s.visible) continue;
-
-    /* fill, stroke */
     var fill = pv.color(s.fillStyle), stroke = pv.color(s.strokeStyle);
     if (!fill.opacity && !stroke.opacity) continue;
 
@@ -49,7 +47,7 @@ pv.SvgScene.wedge = function(scenes) {
       }
     }
 
-    var path = this.create("path");
+    var path = this.cache(s, "path", "wedge");
     path.setAttribute("fill-rule", "evenodd");
     path.setAttribute("cursor", s.cursor);
     path.setAttribute("transform", "translate(" + s.left + "," + s.top + ")");

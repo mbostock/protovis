@@ -5,8 +5,6 @@ pv.SvgScene.dot = function(scenes) {
 
     /* visible */
     if (!s.visible) continue;
-
-    /* fill, stroke */
     var fill = pv.color(s.fillStyle), stroke = pv.color(s.strokeStyle);
     if (!fill.opacity && !stroke.opacity) continue;
 
@@ -59,7 +57,7 @@ pv.SvgScene.dot = function(scenes) {
       }
     }
 
-    var path = this.create("path");
+    var path = this.cache(s, "path", "dot");
     path.setAttribute("cursor", s.cursor);
     path.setAttribute("d", p);
     path.setAttribute("transform",

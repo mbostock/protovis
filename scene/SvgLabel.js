@@ -5,8 +5,6 @@ pv.SvgScene.label = function(scenes) {
 
     /* visible */
     if (!s.visible) continue;
-
-    /* fill */
     var fill = pv.color(s.textStyle);
     if (!fill.opacity || !s.text) continue;
 
@@ -23,9 +21,8 @@ pv.SvgScene.label = function(scenes) {
       case "left": x = s.textMargin; break;
     }
 
-    var text = this.create("text");
+    var text = this.cache(s, "text", "text");
     text.setAttribute("pointer-events", "none");
-    text.appendChild(document.createTextNode(s.text));
     text.setAttribute("x", x);
     text.setAttribute("y", y);
     text.setAttribute("dy", dy);
@@ -37,6 +34,8 @@ pv.SvgScene.label = function(scenes) {
     text.setAttribute("fill-opacity", fill.opacity);
     text.style.font = s.font;
     text.style.textShadow = s.textShadow;
+    if (text.firstChild) text.firstChild.nodeValue = s.text;
+    else text.appendChild(document.createTextNode(s.text));
     parent.appendChild(text);
   }
 };

@@ -45,6 +45,13 @@ pv.SvgScene.title = function(e, s) {
   return a;
 };
 
+/** TODO */
 pv.SvgScene.parentNode = function(scenes) {
   return scenes.parent ? scenes.parent[scenes.parentIndex].scene.g : null;
+};
+
+/** TODO */
+pv.SvgScene.cache = function(s, type, name) {
+  var cache = s.scene || (s.scene = {});
+  return cache[name] || (cache[name] = this.create(type));
 };
