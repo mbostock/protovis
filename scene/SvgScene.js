@@ -1,5 +1,5 @@
 // TODO don't populate default attributes?
-// TODO reverse property
+// TODO reverse breaks Line and Area, where it should have no effect
 // TODO events
 
 /**
@@ -13,7 +13,9 @@ pv.SvgScene = {};
  * @param scenes {array} an array of scene nodes.
  */
 pv.SvgScene.updateAll = function(scenes) {
-  if (scenes.length) this[scenes.type](scenes);
+  if (!scenes.length) return;
+  if (scenes[0].reverse) scenes.reverse();
+  this[scenes.type](scenes);
 };
 
 /**
