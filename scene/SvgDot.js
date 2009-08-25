@@ -1,4 +1,5 @@
 pv.SvgScene.dot = function(scenes) {
+  var parent = this.parentNode(scenes);
   for (var i = 0; i < scenes.length; i++) {
     var s = scenes[i];
 
@@ -69,6 +70,6 @@ pv.SvgScene.dot = function(scenes) {
     path.setAttribute("stroke", stroke.color);
     path.setAttribute("stroke-opacity", stroke.opacity);
     path.setAttribute("stroke-width", s.lineWidth);
-    scenes.parent.scene.g.appendChild(this.title(path, s));
+    parent.appendChild(this.title(path, s));
   }
 };

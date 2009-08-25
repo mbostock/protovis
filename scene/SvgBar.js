@@ -1,4 +1,5 @@
 pv.SvgScene.bar = function(scenes) {
+  var parent = this.parentNode(scenes);
   for (var i = 0; i < scenes.length; i++) {
     var s = scenes[i];
 
@@ -20,6 +21,6 @@ pv.SvgScene.bar = function(scenes) {
     rect.setAttribute("stroke", stroke.color);
     rect.setAttribute("stroke-opacity", stroke.opacity);
     rect.setAttribute("stroke-width", s.lineWidth);
-    scenes.parent.scene.g.appendChild(this.title(rect, s));
+    parent.appendChild(this.title(rect, s));
   }
 };

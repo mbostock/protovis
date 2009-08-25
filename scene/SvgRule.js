@@ -1,4 +1,5 @@
 pv.SvgScene.rule = function(scenes) {
+  var parent = this.parentNode(scenes);
   for (var i = 0; i < scenes.length; i++) {
     var s = scenes[i];
 
@@ -18,6 +19,6 @@ pv.SvgScene.rule = function(scenes) {
     line.setAttribute("stroke", stroke.color);
     line.setAttribute("stroke-opacity", stroke.opacity);
     line.setAttribute("stroke-width", s.lineWidth);
-    scenes.parent.scene.g.appendChild(this.title(line, s));
+    parent.appendChild(this.title(line, s));
   }
 };

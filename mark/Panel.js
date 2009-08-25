@@ -159,7 +159,7 @@ pv.Panel.prototype.buildInstance = function(s) {
    */
   for (var i = 0; i < this.children.length; i++) {
     this.children[i].scene = s.children[i]; // possibly undefined
-    this.children[i].build(s);
+    this.children[i].build();
   }
 
   /*

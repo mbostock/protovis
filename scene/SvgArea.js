@@ -25,5 +25,5 @@ pv.SvgScene.area = function(scenes) {
   polygon.setAttribute("stroke", stroke.color);
   polygon.setAttribute("stroke-opacity", stroke.opacity);
   polygon.setAttribute("stroke-width", s.lineWidth);
-  scenes.parent.scene.g.appendChild(this.title(polygon, s));
+  this.parentNode(scenes).appendChild(this.title(polygon, s));
 };

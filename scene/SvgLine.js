@@ -24,5 +24,5 @@ pv.SvgScene.line = function(scenes) {
   polyline.setAttribute("stroke", stroke.color);
   polyline.setAttribute("stroke-opacity", stroke.opacity);
   polyline.setAttribute("stroke-width", s.lineWidth);
-  scenes.parent.scene.g.appendChild(this.title(polyline, s));
+  this.parentNode(scenes).appendChild(this.title(polyline, s));
 };

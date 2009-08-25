@@ -1,4 +1,5 @@
 pv.SvgScene.image = function(scenes) {
+  var parent = this.parentNode(scenes);
   for (var i = 0; i < scenes.length; i++) {
     var s = scenes[i];
 
@@ -6,12 +7,10 @@ pv.SvgScene.image = function(scenes) {
     if (!s.visible) continue;
 
     /* left, top */
-    var g;
+    var g = parent;
     if (s.left || s.top) {
-      g = scenes.parent.scene.g.appendChild(this.create("g"));
+      g = g.appendChild(this.create("g"));
       g.setAttribute("transform", "translate(" + s.left + "," + s.top + ")");
-    } else {
-      g = scenes.parent.scene.g;
     }
 
     /* fill */

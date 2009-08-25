@@ -1,5 +1,5 @@
 pv.SvgScene.panel = function(scenes) {
-  var parent = scenes.parent;
+  var parent = this.parentNode(scenes);
   var previous = null;
 
   for (var i = 0; i < scenes.length; i++) {
@@ -29,10 +29,10 @@ pv.SvgScene.panel = function(scenes) {
         g = this.create("g");
         g.setAttribute("transform", "translate(" + s.left + "," + s.top + ")");
         previous = s;
-        append = parent ? parent.scene.g : svg;
+        append = parent || svg;
       }
     } else if (parent) {
-      g = parent.scene.g;
+      g = parent;
     } else {
       g = svg;
     }

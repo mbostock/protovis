@@ -596,12 +596,15 @@ pv.Mark.prototype.bind = function() {
  *
  * @param parent the instance of the parent panel from the scene graph.
  */
-pv.Mark.prototype.build = function(parent) {
+pv.Mark.prototype.build = function() {
   if (!this.scene) {
     this.scene = [];
-    this.scene.mark = this;
-    this.scene.parent = parent;
-    if (!this.parent) {
+    this.scene.type = this.type;
+    this.scene.childIndex = this.childIndex;
+    if (this.parent) {
+      this.scene.parent = this.parent.scene;
+      this.scene.parentIndex = this.parent.index;
+    } else {
       this.scene.data = [];
     }
   }
@@ -767,9 +770,8 @@ var property; // XXX
  */
 pv.Mark.prototype.get = function(name) {
   property = name; // XXX
-  return (name in this.binds.constants)
-      ? this.binds.constants[name]
-      : this.binds.functions[name].apply(this, this.root.scene.data);
+  var f = this.binds.functions[name];
+  return f ? f.apply(this, this.root.scene.data) : this.binds.constants[name];
 };
 
 /**

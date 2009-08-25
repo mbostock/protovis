@@ -2,9 +2,6 @@
 // TODO reverse property
 // TODO events
 
-// TODO If I store firstChild and lastChild for every mark scenes array, will it
-// be possible to find the right insertion point to create new nodes on update?
-
 /**
  * @namespace
  */
@@ -16,7 +13,7 @@ pv.SvgScene = {};
  * @param scenes {array} an array of scene nodes.
  */
 pv.SvgScene.updateAll = function(scenes) {
-  if (scenes.length) this[scenes.mark.type](scenes);
+  if (scenes.length) this[scenes.type](scenes);
 };
 
 /**
@@ -46,4 +43,8 @@ pv.SvgScene.title = function(e, s) {
   a.setAttributeNS(pv.ns.xlink, "title", s.title);
   a.appendChild(e);
   return a;
+};
+
+pv.SvgScene.parentNode = function(scenes) {
+  return scenes.parent ? scenes.parent[scenes.parentIndex].scene.g : null;
 };
