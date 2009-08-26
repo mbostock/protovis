@@ -34,8 +34,7 @@ pv.SvgScene.label = function(scenes) {
     text.setAttribute("fill-opacity", fill.opacity);
     text.style.font = s.font;
     text.style.textShadow = s.textShadow;
-    if (text.firstChild) text.firstChild.nodeValue = s.text;
-    else text.appendChild(document.createTextNode(s.text));
+    text.appendChild(document.createTextNode(s.text));
     parent.appendChild(text);
   }
 };

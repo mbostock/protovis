@@ -16,7 +16,7 @@ pv.SvgScene.panel = function(scenes) {
         var svg = s.canvas.firstChild;
       } else {
         while (s.canvas.firstChild) s.canvas.removeChild(s.canvas.firstChild);
-        var svg = s.canvas.appendChild(this.create("svg"));
+        var svg = s.canvas.appendChild(this.cache(s, "svg", "svg"));
         svg.setAttribute("width", s.width + s.left + s.right);
         svg.setAttribute("height", s.height + s.top + s.bottom);
       }
@@ -30,7 +30,7 @@ pv.SvgScene.panel = function(scenes) {
           && (previous.top == s.top)) {
         g = previous.scene.g;
       } else {
-        g = this.create("g");
+        g = this.cache(s, "g", "panel");
         g.setAttribute("transform", "translate(" + s.left + "," + s.top + ")");
         previous = s;
         append = parent || svg;
