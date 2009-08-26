@@ -77,3 +77,13 @@ pv.Line.prototype.buildInstance = function(s) {
     pv.Mark.prototype.buildInstance.call(this, s);
   }
 };
+
+/** TODO */
+pv.Line.Segment = function() {
+  pv.Line.call(this);
+};
+pv.Line.Segment.prototype = pv.extend(pv.Line);
+pv.Line.Segment.prototype.type = "lineSegment";
+
+/** TODO fixed properties */
+pv.Line.Segment.prototype.buildInstance = pv.Mark.prototype.buildInstance;
