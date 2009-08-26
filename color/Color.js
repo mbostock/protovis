@@ -222,7 +222,7 @@ pv.Color.Hsl.prototype.rgb = function() {
   var m2 = (l < .5) ? (l * (l + s)) : (l + s - l * s);
   var m1 = 2 * l - m2;
   if (s == 0) {
-    return new rgb(l, l, l);
+    return new pv.Color.Rgb(l, l, l, this.a);
   }
   function v(h) {
     if (h > 360) h -= 360;
