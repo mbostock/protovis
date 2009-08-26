@@ -42,11 +42,6 @@ pv.SvgScene.panel = function(scenes) {
     }
     (s.scene || (s.scene = {})).g = g;
 
-    /* children */
-    for (var j = 0; j < s.children.length; j++) {
-      this.updateAll(s.children[j]);
-    }
-
     /* fill, stroke */
     var fill = pv.color(s.fillStyle), stroke = pv.color(s.strokeStyle);
     if (fill.opacity || stroke.opacity) {
@@ -60,6 +55,11 @@ pv.SvgScene.panel = function(scenes) {
       rect.setAttribute("stroke-opacity", stroke.opacity);
       rect.setAttribute("stroke-width", s.lineWidth);
       g.appendChild(this.title(rect, s));
+    }
+
+    /* children */
+    for (var j = 0; j < s.children.length; j++) {
+      this.updateAll(s.children[j]);
     }
 
     /*

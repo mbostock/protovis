@@ -6,7 +6,7 @@ pv.SvgScene.label = function(scenes) {
     /* visible */
     if (!s.visible) continue;
     var fill = pv.color(s.textStyle);
-    if (!fill.opacity || !s.text) continue;
+    if (!fill.opacity) continue;
 
     /* text-baseline, text-align */
     var x = 0, y = 0, dy = 0, anchor = "start";
