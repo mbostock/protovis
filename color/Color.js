@@ -122,6 +122,34 @@ pv.Color = function(color, opacity) {
 };
 
 /**
+ * Returns a new color that is a brighter version of this color. The behavior of
+ * this method may vary slightly depending on the underlying color space.
+ * Although brighter and darker are inverse operations, the results of a series
+ * of invocations of these two methods might be inconsistent because of rounding
+ * errors.
+ *
+ * @param [s] {number} an optional scale factor; defaults to 1.
+ * @see #darker
+ */
+pv.Color.prototype.brighter = function(s) {
+  return this.rgb().brighter(s);
+};
+
+/**
+ * Returns a new color that is a brighter version of this color. The behavior of
+ * this method may vary slightly depending on the underlying color space.
+ * Although brighter and darker are inverse operations, the results of a series
+ * of invocations of these two methods might be inconsistent because of rounding
+ * errors.
+ *
+ * @param [s] {number} an optional scale factor; defaults to 1.
+ * @see #brighter
+ */
+pv.Color.prototype.darker = function(s) {
+  return this.rgb().darker(s);
+};
+
+/**
  * Constructs a new RGB color with the specified channel values.
  *
  * @class Represents a color in RGB space.
@@ -180,6 +208,49 @@ pv.Color.Rgb.prototype = pv.extend(pv.Color);
  * @returns {pv.Color.Rgb} this.
  */
 pv.Color.Rgb.prototype.rgb = function() { return this; };
+
+/**
+ * Returns a new color that is a brighter version of this color. This method
+ * applies an arbitrary scale factor to each of the three RGB components of this
+ * color to create a brighter version of this color. Although brighter and
+ * darker are inverse operations, the results of a series of invocations of
+ * these two methods might be inconsistent because of rounding errors.
+ *
+ * @param [s] {number} an optional scale factor; defaults to 1.
+ * @see #darker
+ */
+pv.Color.Rgb.prototype.brighter = function(s) {
+  s = Math.pow(0.7, arguments.length ? s : 1);
+  var r = this.r, g = this.g, b = this.b, i = 30;
+  if (!r && !g && !b) return new pv.Color.Rgb(i, i, i, this.a);
+  if (r && (r < i)) r = i;
+  if (g && (g < i)) g = i;
+  if (b && (b < i)) b = i;
+  return new pv.Color.Rgb(
+      Math.min(255, Math.floor(r / s)),
+      Math.min(255, Math.floor(g / s)),
+      Math.min(255, Math.floor(b / s)),
+      this.a);
+};
+
+/**
+ * Returns a new color that is a darker version of this color. This method
+ * applies an arbitrary scale factor to each of the three RGB components of this
+ * color to create a darker version of this color. Although brighter and darker
+ * are inverse operations, the results of a series of invocations of these two
+ * methods might be inconsistent because of rounding errors.
+ *
+ * @param [s] {number} an optional scale factor; defaults to 1.
+ * @see #brighter
+ */
+pv.Color.Rgb.prototype.darker = function(s) {
+  s = Math.pow(0.7, arguments.length ? s : 1);
+  return new pv.Color.Rgb(
+      Math.max(0, Math.floor(s * this.r)),
+      Math.max(0, Math.floor(s * this.g)),
+      Math.max(0, Math.floor(s * this.b)),
+      this.a);
+};
 
 /**
  * Constructs a new HSL color with the specified values.
