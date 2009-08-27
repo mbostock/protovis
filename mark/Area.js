@@ -54,7 +54,8 @@ pv.Area.prototype.defineProperty("height");
  * edge. The default value of this property is 1.5, but since the default stroke
  * style is null, area marks are not stroked by default.
  *
- * <p>This property is <i>fixed</i>. See {@link pv.Mark}.
+ * <p>This property is <i>fixed</i> for non-segmented areas. See
+ * {@link pv.Mark}.
  *
  * @type number
  * @name pv.Area.prototype.lineWidth
@@ -67,7 +68,8 @@ pv.Area.prototype.defineProperty("lineWidth");
  * entire perimeter is stroked, rather than just one edge. The default value of
  * this property is null, meaning areas are not stroked by default.
  *
- * <p>This property is <i>fixed</i>. See {@link pv.Mark}.
+ * <p>This property is <i>fixed</i> for non-segmented areas. See
+ * {@link pv.Mark}.
  *
  * @type string
  * @name pv.Area.prototype.strokeStyle
@@ -80,13 +82,26 @@ pv.Area.prototype.defineProperty("strokeStyle");
  * area is filled with the specified color. The default value of this property
  * is a categorical color.
  *
- * <p>This property is <i>fixed</i>. See {@link pv.Mark}.
+ * <p>This property is <i>fixed</i> for non-segmented areas. See
+ * {@link pv.Mark}.
  *
  * @type string
  * @name pv.Area.prototype.fillStyle
  * @see pv.color
  */
 pv.Area.prototype.defineProperty("fillStyle");
+
+/**
+ * Whether the area is segmented; i.e., whether variations in fill style, stroke
+ * style, and the other properties are treated as fixed. Rendering segmented
+ * areas is noticeably slower than non-segmented areas.
+ *
+ * <p>This property is <i>fixed</i>. See {@link pv.Mark}.
+ *
+ * @type boolean
+ * @name pv.Area.prototype.segmented
+ */
+pv.Area.prototype.defineProperty("segmented");
 
 /**
  * Default properties for areas. By default, there is no stroke and the fill
@@ -246,7 +261,7 @@ pv.Area.prototype.buildImplied = function(s) {
 
 /** TODO fixed properties */
 pv.Area.prototype.buildInstance = function(s) {
-  if (this.index) {
+  if (this.index && !this.scene[0].segmented) {
     s.left = this.get("left");
     s.top = this.get("top");
     s.bottom = this.get("bottom");

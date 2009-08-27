@@ -4,6 +4,12 @@ pv.SvgScene.line = function(scenes) {
   if (scenes.length < 2) return;
   var s = scenes[0];
 
+  /* segmented */
+  if (s.segmented) {
+    this.lineSegment(scenes);
+    return;
+  }
+
   /* visible */
   if (!s.visible) return;
   var fill = pv.color(s.fillStyle), stroke = pv.color(s.strokeStyle);
@@ -85,15 +91,14 @@ pv.SvgScene.lineSegment = function(scenes) {
     }
 
     /* points */
-    var p = "M" + a.x + "," + a.y
-      + "L" + b.x + "," + b.y
-      + "L" + c.x + "," + c.y
-      + "L" + d.x + "," + d.y
-      + "Z";
+    var p = a.x + "," + a.y + " "
+      + b.x + "," + b.y + " "
+      + c.x + "," + c.y + " "
+      + d.x + "," + d.y;
 
-    var segment = this.cache(s1, "path", "segment");
+    var segment = this.cache(s1, "polygon", "segment");
     segment.setAttribute("cursor", s1.cursor);
-    segment.setAttribute("d", p);
+    segment.setAttribute("points", p);
     segment.setAttribute("fill", stroke.color);
     segment.setAttribute("fill-opacity", stroke.opacity);
     parent.appendChild(this.title(segment, s1));

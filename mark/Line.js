@@ -55,6 +55,18 @@ pv.Line.prototype.defineProperty("strokeStyle");
 pv.Line.prototype.defineProperty("fillStyle");
 
 /**
+ * Whether the line is segmented; i.e., whether variations in stroke style, line
+ * width and the other properties are treated as fixed. Rendering segmented
+ * lines is noticeably slower than non-segmented lines.
+ *
+ * <p>This property is <i>fixed</i>. See {@link pv.Mark}.
+ *
+ * @type boolean
+ * @name pv.Line.prototype.segmented
+ */
+pv.Line.prototype.defineProperty("segmented");
+
+/**
  * Default properties for lines. By default, there is no fill and the stroke
  * style is a categorical color.
  *
@@ -67,7 +79,7 @@ pv.Line.prototype.defaults = new pv.Line()
 
 /** TODO fixed properties */
 pv.Line.prototype.buildInstance = function(s) {
-  if (this.index) {
+  if (this.index && !this.scene[0].segmented) {
     s.left = this.get("left");
     s.top = this.get("top");
     s.bottom = this.get("bottom");
@@ -77,13 +89,3 @@ pv.Line.prototype.buildInstance = function(s) {
     pv.Mark.prototype.buildInstance.call(this, s);
   }
 };
-
-/** TODO */
-pv.Line.Segment = function() {
-  pv.Line.call(this);
-};
-pv.Line.Segment.prototype = pv.extend(pv.Line);
-pv.Line.Segment.prototype.type = "lineSegment";
-
-/** TODO fixed properties */
-pv.Line.Segment.prototype.buildInstance = pv.Mark.prototype.buildInstance;

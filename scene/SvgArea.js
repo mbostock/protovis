@@ -1,6 +1,14 @@
+// TODO different stroke behavior for area segment?
+
 pv.SvgScene.area = function(scenes) {
   if (!scenes.length) return;
   var s = scenes[0];
+
+  /* segmented */
+  if (s.segmented) {
+    this.areaSegment(scenes);
+    return;
+  }
 
   /* visible */
   if (!s.visible) return;
@@ -24,4 +32,32 @@ pv.SvgScene.area = function(scenes) {
   polygon.setAttribute("stroke-opacity", stroke.opacity);
   polygon.setAttribute("stroke-width", s.lineWidth);
   this.parentNode(scenes).appendChild(this.title(polygon, s));
+};
+
+pv.SvgScene.areaSegment = function(scenes) {
+  var parent = this.parentNode(scenes);
+  for (var i = 0, n = scenes.length - 1; i < n; i++) {
+    var s1 = scenes[i], s2 = scenes[i + 1];
+
+    /* visible */
+    if (!s1.visible || !s2.visible) continue;
+    var fill = pv.color(s1.fillStyle), stroke = pv.color(s1.strokeStyle);
+    if (!fill.opacity && !stroke.opacity) continue;
+
+    /* points */
+    var p = s1.left + "," + s1.top + " "
+        + s2.left + "," + s2.top + " "
+        + (s2.left + s2.width) + "," + (s2.top + s2.height) + " "
+        + (s1.left + s1.width) + "," + (s1.top + s1.height);
+
+    var segment = this.cache(s1, "polygon", "segment");
+    segment.setAttribute("cursor", s1.cursor);
+    segment.setAttribute("points", p);
+    segment.setAttribute("fill", fill.color);
+    segment.setAttribute("fill-opacity", fill.opacity);
+    segment.setAttribute("stroke", stroke.color);
+    segment.setAttribute("stroke-opacity", stroke.opacity);
+    segment.setAttribute("stroke-width", s1.lineWidth);
+    parent.appendChild(this.title(segment, s1));
+  }
 };
