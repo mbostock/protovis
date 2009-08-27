@@ -1,4 +1,5 @@
 // TODO support arbitrary color stops
+// TODO is by function confusing? auto-normalize to min max like scales?
 
 /**
  * Returns a linear color ramp from the specified <tt>start</tt> color to the
