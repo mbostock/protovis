@@ -341,7 +341,7 @@ pv.Mark.prototype.defaults = new pv.Mark()
     .data([null])
     .visible(true)
     .reverse(false)
-    .cursor("auto")
+    .cursor("")
     .title("");
 
 /**

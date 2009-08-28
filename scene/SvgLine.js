@@ -1,4 +1,5 @@
 // TODO fillStyle for lineSegment?
+// TODO lineOffset for flow maps?
 
 pv.SvgScene.line = function(scenes) {
   if (scenes.length < 2) return;
