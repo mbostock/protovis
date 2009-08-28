@@ -32,6 +32,9 @@ pv.SvgScene.area = function(scenes) {
   polygon.setAttribute("stroke-opacity", stroke.opacity);
   polygon.setAttribute("stroke-width", s.lineWidth);
   this.parentNode(scenes).appendChild(this.title(polygon, s));
+
+  /* events */
+  this.listen(polygon, scenes, 0);
 };
 
 pv.SvgScene.areaSegment = function(scenes) {
@@ -59,5 +62,8 @@ pv.SvgScene.areaSegment = function(scenes) {
     segment.setAttribute("stroke-opacity", stroke.opacity);
     segment.setAttribute("stroke-width", s1.lineWidth);
     parent.appendChild(this.title(segment, s1));
+
+    /* events */
+    this.listen(segment, scenes, i);
   }
 };

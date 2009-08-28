@@ -20,5 +20,8 @@ pv.SvgScene.bar = function(scenes) {
     rect.setAttribute("stroke-opacity", stroke.opacity);
     rect.setAttribute("stroke-width", s.lineWidth);
     parent.appendChild(this.title(rect, s));
+
+    /* events */
+    this.listen(rect, scenes, i);
   }
 };

@@ -69,5 +69,8 @@ pv.SvgScene.dot = function(scenes) {
     path.setAttribute("stroke-opacity", stroke.opacity);
     path.setAttribute("stroke-width", s.lineWidth);
     parent.appendChild(this.title(path, s));
+
+    /* events */
+    this.listen(path, scenes, i);
   }
 };

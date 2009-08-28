@@ -1,5 +1,4 @@
 // TODO don't populate default attributes?
-// TODO events
 
 /**
  * @namespace
@@ -64,4 +63,15 @@ pv.SvgScene.cache = function(s, type, name) {
     return e;
   }
   return s.scene[name] = this.create(type);
+};
+
+/** TODO */
+pv.SvgScene.listen = function(e, scenes, index) {
+  e.$scene = {scenes:scenes, index:index};
+};
+
+/** TODO */
+pv.SvgScene.dispatch = function(e) {
+  var t = e.target.$scene;
+  if (t) t.scenes.mark.dispatch(e, t.scenes, t.index);
 };

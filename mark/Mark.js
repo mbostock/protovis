@@ -599,6 +599,7 @@ pv.Mark.prototype.bind = function() {
 pv.Mark.prototype.build = function() {
   if (!this.scene) {
     this.scene = [];
+    this.scene.mark = this;
     this.scene.type = this.type;
     this.scene.childIndex = this.childIndex;
     if (this.parent) {
@@ -652,28 +653,6 @@ pv.Mark.prototype.buildInstance = function(s) {
 
   /* implied properties */
   this.buildImplied(s);
-
-//   /* event handlers */
-//   var that = this;
-//   function dispatch(type) {
-//     return function(e) {
-//         /* TODO set full scene stack. */
-//         var data = [s.data], p = s;
-//         while (p = p.parent) data.push(p.data);
-//         that.index = s.index;
-//         that.scene = s.parent.children[that.childIndex];
-//         that.events[type].apply(that, data);
-//         if (that.scene) that.update(); // TODO dirty bit
-//         delete that.index;
-//         delete that.scene;
-//         e ? e.preventDefault() : window.event.returnValue = false;
-//       };
-//   };
-
-//   s.event = {};
-//   for (var type in this.events) {
-//     s.event[type] = dispatch(type);
-//   }
 };
 
 /**
@@ -738,6 +717,9 @@ pv.Mark.prototype.buildImplied = function(s) {
   s.top = t;
   s.bottom = b;
 
+  /* Compute whether this mark is interactive. */
+  s.events = Boolean(this.$handlers);
+
   /* Only set width and height if they are supported by this mark type. */
   if (p.width) s.width = w;
   if (p.height) s.height = h;
@@ -747,8 +729,8 @@ var property; // XXX
 
 /**
  * Evaluates the property function with the specified name for the current data
- * stack. The data stack, <tt>this.root.scene.data</tt>, contains the current
- * datum, followed by the datum for the enclosing panel, and so on.
+ * stack. The data stack, <tt>root.scene.data</tt>, contains the current datum,
+ * followed by the datum for the enclosing panel, and so on.
  *
  * <p>This method first finds the implementing property function by querying the
  * current mark. If the current mark does not define the property function, the
@@ -838,7 +820,42 @@ pv.Mark.prototype.update = function() {
  * @returns {pv.Mark} this.
  */
 pv.Mark.prototype.event = function(type, handler) {
-  if (!this.events) this.events = {};
-  this.events[type] = handler;
+  if (!this.$handlers) this.$handlers = {};
+  this.$handlers[type] = handler;
   return this;
+};
+
+/** TODO */
+pv.Mark.prototype.dispatch = function(e, scenes, index) {
+  var l = this.$handlers[e.type];
+  if (!l) return;
+  try {
+
+    /* Setup the scene stack. */
+    var mark = this, stack = [];
+    do {
+      stack.push(scenes[index].data);
+      mark.index = index;
+      mark.scene = scenes;
+      index = scenes.parentIndex;
+      scenes = scenes.parent;
+    } while (mark = mark.parent);
+
+    /* Execute the event listener. */
+    l.apply(this, stack);
+    e.preventDefault();
+
+    /* Update the display. TODO dirtying. */
+    var s = this.scene;
+    if (s) pv.Scene.updateChildren(s.parent[s.parentIndex]);
+
+  } finally {
+
+    /* Restore the scene stack. */
+    var mark = this;
+    do {
+      if (mark.parent) delete mark.scene;
+      delete mark.index;
+    } while (mark = mark.parent);
+  }
 };

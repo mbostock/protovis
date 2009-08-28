@@ -45,6 +45,11 @@ pv.SvgScene.image = function(scenes) {
       rect.setAttribute("stroke-width", s.lineWidth);
       rect.setAttribute("cursor", s.cursor);
       g.appendChild(this.title(rect, s));
+
+      /* events */
+      this.listen(rect, scenes, i);
+    } else {
+      this.listen(image, scenes, i);
     }
   }
 };

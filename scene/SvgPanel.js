@@ -15,6 +15,13 @@ pv.SvgScene.panel = function(scenes) {
         var svg = s.canvas.appendChild(this.cache(s, "svg", "svg"));
         svg.setAttribute("width", s.width + s.left + s.right);
         svg.setAttribute("height", s.height + s.top + s.bottom);
+        svg.onclick
+            = svg.onmousedown
+            = svg.onmouseup
+            = svg.onmousemove
+            = svg.onmouseout
+            = svg.onmouseover
+            = pv.SvgScene.dispatch;
       }
     }
 
@@ -32,7 +39,10 @@ pv.SvgScene.panel = function(scenes) {
       rect.setAttribute("pointer-events", "all");
       rect.setAttribute("fill", fill.color);
       rect.setAttribute("fill-opacity", fill.opacity);
-      g.appendChild(this.title(rect, s));
+      g.appendChild(s.scene.fillTitle = this.title(rect, s));
+
+      /* events */
+      this.listen(rect, scenes, i);
     }
 
     /* children */
@@ -51,7 +61,10 @@ pv.SvgScene.panel = function(scenes) {
       rect.setAttribute("stroke", stroke.color);
       rect.setAttribute("stroke-opacity", stroke.opacity);
       rect.setAttribute("stroke-width", s.lineWidth);
-      g.appendChild(this.title(rect, s));
+      g.appendChild(s.scene.strokeTitle = this.title(rect, s));
+
+      /* events */
+      this.listen(rect, scenes, i);
     }
 
     /*
@@ -60,5 +73,23 @@ pv.SvgScene.panel = function(scenes) {
      * first and then appending them solves the problem and is more efficient.
      */
     (parent || svg).appendChild(g);
+  }
+};
+
+/**
+ * Updates the display for the children of the specified panel node.
+ *
+ * @param s a panel scene node.
+ */
+pv.SvgScene.updateChildren = function(s) {
+  var g = this.cache(s, "g", "g");
+  if (s.scene.fillTitle) {
+    g.appendChild(s.scene.fillTitle);
+  }
+  for (var j = 0; j < s.children.length; j++) {
+    this.updateAll(s.children[j]);
+  }
+  if (s.scene.strokeTitle) {
+    g.appendChild(s.scene.strokeTitle);
   }
 };

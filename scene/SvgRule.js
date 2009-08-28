@@ -20,5 +20,8 @@ pv.SvgScene.rule = function(scenes) {
     line.setAttribute("stroke-opacity", stroke.opacity);
     line.setAttribute("stroke-width", s.lineWidth);
     parent.appendChild(this.title(line, s));
+
+    /* events */
+    this.listen(line, scenes, i);
   }
 };

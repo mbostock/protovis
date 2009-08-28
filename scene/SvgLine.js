@@ -32,6 +32,9 @@ pv.SvgScene.line = function(scenes) {
   polyline.setAttribute("stroke-opacity", stroke.opacity);
   polyline.setAttribute("stroke-width", s.lineWidth);
   this.parentNode(scenes).appendChild(this.title(polyline, s));
+
+  /* events */
+  this.listen(polyline, scenes, 0);
 };
 
 pv.SvgScene.lineSegment = function(scenes) {
@@ -103,5 +106,8 @@ pv.SvgScene.lineSegment = function(scenes) {
     segment.setAttribute("fill", stroke.color);
     segment.setAttribute("fill-opacity", stroke.opacity);
     parent.appendChild(this.title(segment, s1));
+
+    /* events */
+    this.listen(segment, scenes, i);
   }
 };
