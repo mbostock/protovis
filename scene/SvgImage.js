@@ -1,5 +1,5 @@
 pv.SvgScene.image = function(scenes) {
-  var parent = this.parentNode(scenes);
+  var g = this.group(scenes);
   for (var i = 0; i < scenes.length; i++) {
     var s = scenes[i];
 
@@ -7,10 +7,11 @@ pv.SvgScene.image = function(scenes) {
     if (!s.visible) continue;
 
     /* left, top */
-    var g = parent;
+    var gi = g;
     if (s.left || s.top) {
-      g = g.appendChild(this.create("g"));
-      g.setAttribute("transform", "translate(" + s.left + "," + s.top + ")");
+      gi = this.cache(s, "g", "g");
+      gi.setAttribute("transform", "translate(" + s.left + "," + s.top + ")");
+      g.appendChild(gi);
     }
 
     /* fill */
@@ -21,7 +22,7 @@ pv.SvgScene.image = function(scenes) {
       rect.setAttribute("height", s.height);
       rect.setAttribute("fill", fill.color);
       rect.setAttribute("fill-opacity", fill.opacity);
-      g.appendChild(rect);
+      gi.appendChild(rect);
     }
 
     /* image */
@@ -30,7 +31,8 @@ pv.SvgScene.image = function(scenes) {
     image.setAttribute("width", s.width);
     image.setAttribute("height", s.height);
     image.setAttributeNS(pv.ns.xlink, "href", s.url);
-    g.appendChild(image);
+    this.listen(image, scenes, i);
+    gi.appendChild(image);
 
     /* stroke */
     var stroke = pv.color(s.strokeStyle);
@@ -44,12 +46,8 @@ pv.SvgScene.image = function(scenes) {
       rect.setAttribute("stroke-opacity", stroke.opacity);
       rect.setAttribute("stroke-width", s.lineWidth);
       rect.setAttribute("cursor", s.cursor);
-      g.appendChild(this.title(rect, s));
-
-      /* events */
       this.listen(rect, scenes, i);
-    } else {
-      this.listen(image, scenes, i);
+      gi.appendChild(this.title(rect, s));
     }
   }
 };

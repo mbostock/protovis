@@ -717,9 +717,6 @@ pv.Mark.prototype.buildImplied = function(s) {
   s.top = t;
   s.bottom = b;
 
-  /* Compute whether this mark is interactive. */
-  s.events = Boolean(this.$handlers);
-
   /* Only set width and height if they are supported by this mark type. */
   if (p.width) s.width = w;
   if (p.height) s.height = h;
@@ -827,7 +824,7 @@ pv.Mark.prototype.event = function(type, handler) {
 
 /** TODO */
 pv.Mark.prototype.dispatch = function(e, scenes, index) {
-  var l = this.$handlers[e.type];
+  var l = this.$handlers && this.$handlers[e.type];
   if (!l) return;
   try {
 
@@ -847,7 +844,7 @@ pv.Mark.prototype.dispatch = function(e, scenes, index) {
 
     /* Update the display. TODO dirtying. */
     var s = this.scene;
-    if (s) pv.Scene.updateChildren(s.parent[s.parentIndex]);
+    if (s) pv.Scene.updateAll(s);
 
   } finally {
 

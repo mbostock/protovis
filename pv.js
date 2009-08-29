@@ -128,6 +128,30 @@ pv.range = function(start, stop, step) {
 };
 
 /**
+ * Returns a random number in the range [<tt>min</tt>, <tt>max</tt>) that is a
+ * multiple of <tt>step</tt>. More specifically, the returned number is of the
+ * form <tt>min</tt> + <i>n</i> * <tt>step</tt>, where <i>n</i> is a nonnegative
+ * integer. If <tt>step</tt> is not specified, it defaults to 1, returning a
+ * random integer if <tt>min</tt> is also an integer.
+ *
+ * @param min {number} minimum value.
+ * @param [max] {number} maximum value.
+ * @param [step] {numbeR} step value.
+ */
+pv.random = function(min, max, step) {
+  if (arguments.length == 1) {
+    max = min;
+    min = 0;
+  }
+  if (step == undefined) {
+    step = 1;
+  }
+  return step
+      ? (Math.floor(Math.random() * (max - min) / step) * step + min)
+      : (Math.random() * (max - min) + min);
+};
+
+/**
  * Given two arrays <tt>a</tt> and <tt>b</tt>, returns an array of all possible
  * pairs of elements [a<sub>i</sub>, b<sub>j</sub>]. The outer loop is on array
  * <i>a</i>, while the inner loop is on <i>b</i>, such that the order of

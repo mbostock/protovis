@@ -1,6 +1,7 @@
 // TODO different stroke behavior for area segment?
 
 pv.SvgScene.area = function(scenes) {
+  var g = this.group(scenes);
   if (!scenes.length) return;
   var s = scenes[0];
 
@@ -31,14 +32,12 @@ pv.SvgScene.area = function(scenes) {
   polygon.setAttribute("stroke", stroke.color);
   polygon.setAttribute("stroke-opacity", stroke.opacity);
   polygon.setAttribute("stroke-width", s.lineWidth);
-  this.parentNode(scenes).appendChild(this.title(polygon, s));
-
-  /* events */
   this.listen(polygon, scenes, 0);
+  g.appendChild(this.title(polygon, s));
 };
 
 pv.SvgScene.areaSegment = function(scenes) {
-  var parent = this.parentNode(scenes);
+  var g = this.group(scenes);
   for (var i = 0, n = scenes.length - 1; i < n; i++) {
     var s1 = scenes[i], s2 = scenes[i + 1];
 
@@ -61,9 +60,7 @@ pv.SvgScene.areaSegment = function(scenes) {
     segment.setAttribute("stroke", stroke.color);
     segment.setAttribute("stroke-opacity", stroke.opacity);
     segment.setAttribute("stroke-width", s1.lineWidth);
-    parent.appendChild(this.title(segment, s1));
-
-    /* events */
     this.listen(segment, scenes, i);
+    g.appendChild(this.title(segment, s1));
   }
 };

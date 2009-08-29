@@ -66,6 +66,22 @@ pv.SvgScene.cache = function(s, type, name) {
 };
 
 /** TODO */
+pv.SvgScene.group = function(scenes) {
+  var g;
+  if (!scenes.scene) {
+    g = this.create("g");
+    scenes.scene = {g: g};
+  } else {
+    g = scenes.scene.g;
+    while (g.lastChild) g.removeChild(g.lastChild);
+  }
+  if (!g.parentNode) {
+    scenes.parent[scenes.parentIndex].scene.g.appendChild(g);
+  }
+  return g;
+};
+
+/** TODO */
 pv.SvgScene.listen = function(e, scenes, index) {
   e.$scene = {scenes:scenes, index:index};
 };

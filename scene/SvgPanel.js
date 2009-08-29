@@ -1,5 +1,7 @@
 pv.SvgScene.panel = function(scenes) {
-  var parent = this.parentNode(scenes);
+  var parent = scenes.parent && this.group(scenes);
+  var previous;
+
   for (var i = 0; i < scenes.length; i++) {
     var s = scenes[i];
 
@@ -7,7 +9,7 @@ pv.SvgScene.panel = function(scenes) {
     if (!s.visible) continue;
 
     /* svg */
-    if (!parent) {
+    if (!scenes.parent) {
       if (i && s.canvas.firstChild) {
         var svg = s.canvas.firstChild;
       } else {
@@ -23,11 +25,23 @@ pv.SvgScene.panel = function(scenes) {
             = svg.onmouseover
             = pv.SvgScene.dispatch;
       }
+      parent = svg;
     }
 
     /* g */
-    var g = this.cache(s, "g", "g");
-    g.setAttribute("transform", "translate(" + s.left + "," + s.top + ")");
+    var g = parent;
+    if (s.left || s.top) {
+      if (previous
+          && (previous.left == s.left)
+          && (previous.top == s.top)) {
+        g = previous.scene.g;
+      } else {
+        g = this.cache(s, "g", "panel");
+        g.setAttribute("transform", "translate(" + s.left + "," + s.top + ")");
+        previous = s;
+      }
+    }
+    (s.scene || (s.scene = {})).g = g;
 
     /* fill */
     var fill = pv.color(s.fillStyle);
@@ -39,10 +53,8 @@ pv.SvgScene.panel = function(scenes) {
       rect.setAttribute("pointer-events", "all");
       rect.setAttribute("fill", fill.color);
       rect.setAttribute("fill-opacity", fill.opacity);
-      g.appendChild(s.scene.fillTitle = this.title(rect, s));
-
-      /* events */
       this.listen(rect, scenes, i);
+      g.appendChild(this.title(rect, s));
     }
 
     /* children */
@@ -61,10 +73,8 @@ pv.SvgScene.panel = function(scenes) {
       rect.setAttribute("stroke", stroke.color);
       rect.setAttribute("stroke-opacity", stroke.opacity);
       rect.setAttribute("stroke-width", s.lineWidth);
-      g.appendChild(s.scene.strokeTitle = this.title(rect, s));
-
-      /* events */
       this.listen(rect, scenes, i);
+      g.appendChild(this.title(rect, s));
     }
 
     /*
@@ -72,24 +82,6 @@ pv.SvgScene.panel = function(scenes) {
      * is appended before it contained any elements. Creating the child elements
      * first and then appending them solves the problem and is more efficient.
      */
-    (parent || svg).appendChild(g);
-  }
-};
-
-/**
- * Updates the display for the children of the specified panel node.
- *
- * @param s a panel scene node.
- */
-pv.SvgScene.updateChildren = function(s) {
-  var g = this.cache(s, "g", "g");
-  if (s.scene.fillTitle) {
-    g.appendChild(s.scene.fillTitle);
-  }
-  for (var j = 0; j < s.children.length; j++) {
-    this.updateAll(s.children[j]);
-  }
-  if (s.scene.strokeTitle) {
-    g.appendChild(s.scene.strokeTitle);
+    if (s.scene.panel) parent.appendChild(g);
   }
 };

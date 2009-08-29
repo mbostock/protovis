@@ -2,6 +2,7 @@
 // TODO lineOffset for flow maps?
 
 pv.SvgScene.line = function(scenes) {
+  var g = this.group(scenes);
   if (scenes.length < 2) return;
   var s = scenes[0];
 
@@ -31,14 +32,12 @@ pv.SvgScene.line = function(scenes) {
   polyline.setAttribute("stroke", stroke.color);
   polyline.setAttribute("stroke-opacity", stroke.opacity);
   polyline.setAttribute("stroke-width", s.lineWidth);
-  this.parentNode(scenes).appendChild(this.title(polyline, s));
-
-  /* events */
   this.listen(polyline, scenes, 0);
+  g.appendChild(this.title(polyline, s));
 };
 
 pv.SvgScene.lineSegment = function(scenes) {
-  var parent = this.parentNode(scenes);
+  var g = this.group(scenes);
   for (var i = 0, n = scenes.length - 1; i < n; i++) {
     var s1 = scenes[i], s2 = scenes[i + 1];
 
@@ -105,9 +104,7 @@ pv.SvgScene.lineSegment = function(scenes) {
     segment.setAttribute("points", p);
     segment.setAttribute("fill", stroke.color);
     segment.setAttribute("fill-opacity", stroke.opacity);
-    parent.appendChild(this.title(segment, s1));
-
-    /* events */
     this.listen(segment, scenes, i);
+    g.appendChild(this.title(segment, s1));
   }
 };
