@@ -2,7 +2,15 @@
 // TODO lineOffset for flow maps?
 
 pv.SvgScene.line = function(scenes) {
-  var g = this.group(scenes);
+
+  /*
+   * Rather than using the default group element, since we know lines only
+   * contain a single polyline element, use that instead. However, since we
+   * won't be appending children to the group element, instead assume it will be
+   * invisible by default.
+   */
+  var line = this.cache(scenes, "polyline", "line");
+  line.setAttribute("display", "none");
   if (scenes.length < 2) return;
   var s = scenes[0];
 
@@ -24,16 +32,18 @@ pv.SvgScene.line = function(scenes) {
     p += si.left + "," + si.top + " ";
   }
 
-  var polyline = this.cache(s, "polyline", "line");
-  polyline.setAttribute("cursor", s.cursor);
-  polyline.setAttribute("points", p);
-  polyline.setAttribute("fill", fill.color);
-  polyline.setAttribute("fill-opacity", fill.opacity);
-  polyline.setAttribute("stroke", stroke.color);
-  polyline.setAttribute("stroke-opacity", stroke.opacity);
-  polyline.setAttribute("stroke-width", s.lineWidth);
-  this.listen(polyline, scenes, 0);
-  g.appendChild(this.title(polyline, s));
+  line.removeAttribute("display");
+  line.setAttribute("cursor", s.cursor);
+  line.setAttribute("points", p);
+  line.setAttribute("fill", fill.color);
+  line.setAttribute("fill-opacity", fill.opacity);
+  line.setAttribute("stroke", stroke.color);
+  line.setAttribute("stroke-opacity", stroke.opacity);
+  line.setAttribute("stroke-width", s.lineWidth);
+  if (!line.parentNode) {
+    this.listen(line, scenes, 0);
+    this.parentNode(scenes).appendChild(this.title(line, s));
+  }
 };
 
 pv.SvgScene.lineSegment = function(scenes) {

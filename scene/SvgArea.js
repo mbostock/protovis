@@ -1,7 +1,15 @@
 // TODO different stroke behavior for area segment?
 
 pv.SvgScene.area = function(scenes) {
-  var g = this.group(scenes);
+
+  /*
+   * Rather than using the default group element, since we know areas only
+   * contain a single polygon element, use that instead. However, since we won't
+   * be appending children to the group element, instead assume it will be
+   * invisible by default.
+   */
+  var area = this.cache(scenes, "polygon", "area");
+  area.setAttribute("display", "none");
   if (!scenes.length) return;
   var s = scenes[0];
 
@@ -24,16 +32,18 @@ pv.SvgScene.area = function(scenes) {
     p2 += (sj.left + sj.width) + "," + (sj.top + sj.height) + " ";
   }
 
-  var polygon = this.cache(s, "polygon", "area");
-  polygon.setAttribute("cursor", s.cursor);
-  polygon.setAttribute("points", p1 + p2);
-  polygon.setAttribute("fill", fill.color);
-  polygon.setAttribute("fill-opacity", fill.opacity);
-  polygon.setAttribute("stroke", stroke.color);
-  polygon.setAttribute("stroke-opacity", stroke.opacity);
-  polygon.setAttribute("stroke-width", s.lineWidth);
-  this.listen(polygon, scenes, 0);
-  g.appendChild(this.title(polygon, s));
+  area.removeAttribute("display");
+  area.setAttribute("cursor", s.cursor);
+  area.setAttribute("points", p1 + p2);
+  area.setAttribute("fill", fill.color);
+  area.setAttribute("fill-opacity", fill.opacity);
+  area.setAttribute("stroke", stroke.color);
+  area.setAttribute("stroke-opacity", stroke.opacity);
+  area.setAttribute("stroke-width", s.lineWidth);
+  if (!area.parentNode) {
+    this.listen(area, scenes, 0);
+    this.parentNode(scenes).appendChild(this.title(area, s));
+  }
 };
 
 pv.SvgScene.areaSegment = function(scenes) {
