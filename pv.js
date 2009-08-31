@@ -595,7 +595,7 @@ pv.version = {
    *
    * @type number
    */
-  minor: 6
+  minor: 7
 };
 
 /**
