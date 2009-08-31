@@ -1,4 +1,5 @@
 // TODO different stroke behavior for area segment?
+// TODO when segmented changes, need insertBefore not appendChild
 
 pv.SvgScene.area = function(scenes) {
 
@@ -8,12 +9,13 @@ pv.SvgScene.area = function(scenes) {
    * be appending children to the group element, instead assume it will be
    * invisible by default.
    */
-  var area = this.cache(scenes, "polygon", "area");
+  var area = this.cache(scenes, "polygon", "area"), g = scenes.scene.g;
   area.setAttribute("display", "none");
-  if (!scenes.length) return;
-  var s = scenes[0];
+  if (g) g.setAttribute("display", "none");
 
   /* segmented */
+  if (!scenes.length) return;
+  var s = scenes[0];
   if (s.segmented) {
     this.areaSegment(scenes);
     return;
@@ -40,9 +42,11 @@ pv.SvgScene.area = function(scenes) {
   area.setAttribute("stroke", stroke.color);
   area.setAttribute("stroke-opacity", stroke.opacity);
   area.setAttribute("stroke-width", s.lineWidth);
-  if (!area.parentNode) {
+
+  var title = this.title(area, s);
+  if (!title.parentNode) {
     this.listen(area, scenes, 0);
-    this.parentNode(scenes).appendChild(this.title(area, s));
+    this.parentNode(scenes).appendChild(title);
   }
 };
 
@@ -73,4 +77,5 @@ pv.SvgScene.areaSegment = function(scenes) {
     this.listen(segment, scenes, i);
     g.appendChild(this.title(segment, s1));
   }
+  g.removeAttribute("display");
 };

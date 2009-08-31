@@ -9,12 +9,13 @@ pv.SvgScene.line = function(scenes) {
    * won't be appending children to the group element, instead assume it will be
    * invisible by default.
    */
-  var line = this.cache(scenes, "polyline", "line");
+  var line = this.cache(scenes, "polyline", "line"), g = scenes.scene.g;
   line.setAttribute("display", "none");
-  if (scenes.length < 2) return;
-  var s = scenes[0];
+  if (g) g.setAttribute("display", "none");
 
   /* segmented */
+  if (scenes.length < 2) return;
+  var s = scenes[0];
   if (s.segmented) {
     this.lineSegment(scenes);
     return;
@@ -40,9 +41,11 @@ pv.SvgScene.line = function(scenes) {
   line.setAttribute("stroke", stroke.color);
   line.setAttribute("stroke-opacity", stroke.opacity);
   line.setAttribute("stroke-width", s.lineWidth);
-  if (!line.parentNode) {
+
+  var title = this.title(line, s);
+  if (!title.parentNode) {
     this.listen(line, scenes, 0);
-    this.parentNode(scenes).appendChild(this.title(line, s));
+    this.parentNode(scenes).appendChild(title);
   }
 };
 
@@ -117,4 +120,5 @@ pv.SvgScene.lineSegment = function(scenes) {
     this.listen(segment, scenes, i);
     g.appendChild(this.title(segment, s1));
   }
+  g.removeAttribute("display");
 };
