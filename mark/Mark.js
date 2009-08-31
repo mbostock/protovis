@@ -117,11 +117,7 @@ pv.Mark.prototype.defineProperty = function(name) {
   this.properties[name] = true;
   this[name] = function(v) {
       if (arguments.length) {
-        if (this.index >= 0) {
-          this.scene[this.index][name] = v;
-        } else {
-          this["$" + name] = v;
-        }
+        this["$" + name] = v;
         return this;
       }
       return this.scene[this.index][name];
@@ -518,11 +514,46 @@ pv.Mark.prototype.cousin = function() {
  * creating and updating elements and attributes in the SVG image. No properties
  * are evaluated during the update phase; instead the values computed previously
  * in the build phase are simply translated into SVG.
+ *
+ * @param [ms] {number} optional time interval during which to interpolate
+ * smoothly to new display.
  */
-pv.Mark.prototype.render = function() {
+pv.Mark.prototype.render = function(ms) {
+
+  /* */
+  if (this.scene) stop(this.scene);
+
+  /* */
   this.bind();
-  this.build();
-  this.update();
+
+  /* */
+  if (ms) {
+
+    /* */
+    var after = this.scene, before = clone(after);
+    this.build();
+    var delta = compare(before, after);
+
+    /* */
+    var t = 0;
+    for (var i = 0; i < delta.length; i++) {
+      delta[i](t);
+    }
+
+    /* */
+    after.timer = setInterval(function() {
+        t = Math.min(1, t + 0.08);
+        for (var i = 0; i < delta.length; i++) {
+          delta[i](t);
+        }
+        pv.Scene.updateAll(after);
+        if (t == 1) stop(after);
+      }, 20);
+
+  } else {
+    this.build();
+    pv.Scene.updateAll(this.scene);
+  }
 };
 
 /** TODO */
@@ -611,7 +642,7 @@ pv.Mark.prototype.build = function() {
   }
 
   /* Create, update and delete scene nodes. */
-  var data = this.get("data");
+  var data = this.$("data");
   var stack = this.root.scene.data;
   stack.unshift(null);
   this.index = -1;
@@ -622,7 +653,7 @@ pv.Mark.prototype.build = function() {
     var s = this.scene[i];
     if (!s) this.scene[i] = s = {};
     s.data = stack[0] = data[i];
-    if (s.visible = this.get("visible")) this.buildInstance(s);
+    if (s.visible = this.$("visible")) this.buildInstance(s);
   }
   stack.shift();
   delete this.index;
@@ -648,7 +679,7 @@ pv.Mark.prototype.buildInstance = function(s) {
 
   /* evaluated properties */
   for (var name in this.binds.properties) {
-    s[name] = this.get(name);
+    s[name] = this.$(name);
   }
 
   /* implied properties */
@@ -747,22 +778,10 @@ var property; // XXX
  * @param {string} name the property name.
  * @returns the evaluated property value.
  */
-pv.Mark.prototype.get = function(name) {
+pv.Mark.prototype.$ = function(name) {
   property = name; // XXX
   var f = this.binds.functions[name];
   return f ? f.apply(this, this.root.scene.data) : this.binds.constants[name];
-};
-
-/**
- * Updates the display, propagating property values computed in the build phase
- * to the SVG image. This method is typically invoked by {@link #render}, but is
- * also invoked after an event handler is triggered to update the display of a
- * specific mark.
- *
- * @see #event
- */
-pv.Mark.prototype.update = function() {
-  pv.Scene.updateAll(this.scene);
 };
 
 /**
@@ -839,16 +858,17 @@ pv.Mark.prototype.dispatch = function(e, scenes, index) {
     } while (mark = mark.parent);
 
     /* Execute the event listener. */
-    l.apply(this, stack);
+    this.root.scene.data = stack.slice(1, stack.length);
+    mark = l.apply(this, stack);
     e.preventDefault();
 
     /* Update the display. TODO dirtying. */
-    var s = this.scene;
-    if (s) pv.Scene.updateAll(s);
+    if (mark) mark.render();
 
   } finally {
 
     /* Restore the scene stack. */
+    this.root.scene.data = [];
     var mark = this;
     do {
       if (mark.parent) delete mark.scene;
@@ -856,3 +876,89 @@ pv.Mark.prototype.dispatch = function(e, scenes, index) {
     } while (mark = mark.parent);
   }
 };
+
+/** TODO */
+pv.Mark.prototype.get = function(name) {
+  return this.scene[name];
+};
+
+/** TODO */
+pv.Mark.prototype.set = function(name, value) {
+  this.scene[name] = value;
+  return this;
+};
+
+/** TODO */
+pv.Mark.prototype.unset = function(name) {
+  delete this.scene[name];
+  return this;
+};
+
+/** TODO */
+function stop(scene) {
+  if (scene.timer) {
+    clearInterval(scene.timer);
+    delete scene.timer;
+  } else {
+    for (var i = 0; i < scene.length; i++) {
+      if (scene[i].children) {
+        for (var j = 0; j < scene[i].children.length; j++) {
+          stop(scene[i].children[j]);
+        }
+      }
+    }
+  }
+}
+
+/** TODO */
+function clone(scene) {
+  var c = new Array(scene.length);
+  for (var i = 0; i < scene.length; i++) {
+    var o = c[i] = {}, s = scene[i];
+    for (var property in scene.mark.properties) {
+      o[property] = s[property];
+    }
+    if (s.children) {
+      o.children = new Array(s.children.length);
+      for (var j = 0; j < s.children.length; j++) {
+        o.children[j] = clone(s.children[j]);
+      }
+    }
+  }
+  return c;
+}
+
+/** TODO */
+function ramp(c1, c2, s, property) {
+  var ramp = pv.ramp(c1, c2);
+  return function(t) { s[property] = ramp.value(t); };
+}
+
+/** TODO */
+function compare(before, after) {
+  var delta = [];
+  for (var i = 0; i < before.length; i++) { // TODO length mismatch
+    var s1 = before[i], s2 = after[i];
+    for (var property in s1) {
+      var p1 = s1[property], p2 = s2[property];
+      if ((p1 == undefined) || (p2 == undefined)) continue;
+      switch (property) { // TODO more types, more generic?
+      case "textStyle":
+      case "strokeStyle":
+      case "fillStyle": {
+        var c1 = pv.color(p1), c2 = pv.color(p2);
+        if ((c1.color != c2.color) || (c1.opacity != c2.opacity)) {
+          delta.push(ramp(c1, c2, s2, property));
+        }
+        break;
+      }
+      }
+    }
+    if (s1.children) {
+      for (var j = 0; j < s1.children.length; j++) { // TODO length mismatch
+        Array.prototype.push.apply(delta, compare(s1.children[j], s2.children[j]));
+      }
+    }
+  }
+  return delta;
+}

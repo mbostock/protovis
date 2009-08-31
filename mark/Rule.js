@@ -103,7 +103,7 @@ pv.Rule.Anchor.prototype = pv.extend(pv.Bar.Anchor);
  * @name pv.Rule.Anchor.prototype.textAlign
  */ /** @private */
 pv.Rule.Anchor.prototype.$textAlign = function(d) {
-  switch (this.get("name")) {
+  switch (this.$("name")) {
     case "left": return "right";
     case "bottom":
     case "top":
@@ -120,7 +120,7 @@ pv.Rule.Anchor.prototype.$textAlign = function(d) {
  * @name pv.Rule.Anchor.prototype.textBaseline
  */ /** @private */
 pv.Rule.Anchor.prototype.$textBaseline = function(d) {
-  switch (this.get("name")) {
+  switch (this.$("name")) {
     case "right":
     case "left":
     case "center": return "middle";

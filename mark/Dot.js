@@ -147,7 +147,7 @@ pv.Dot.Anchor.prototype = pv.extend(pv.Mark.Anchor);
  */ /** @private */
 pv.Dot.Anchor.prototype.$left = function(d) {
   var dot = this.anchorTarget();
-  switch (this.get("name")) {
+  switch (this.$("name")) {
     case "bottom":
     case "top":
     case "center": return dot.left();
@@ -164,7 +164,7 @@ pv.Dot.Anchor.prototype.$left = function(d) {
  */ /** @private */
 pv.Dot.Anchor.prototype.$right = function(d) {
   var dot = this.anchorTarget();
-  switch (this.get("name")) {
+  switch (this.$("name")) {
     case "bottom":
     case "top":
     case "center": return dot.right();
@@ -181,7 +181,7 @@ pv.Dot.Anchor.prototype.$right = function(d) {
  */ /** @private */
 pv.Dot.Anchor.prototype.$top = function(d) {
   var dot = this.anchorTarget();
-  switch (this.get("name")) {
+  switch (this.$("name")) {
     case "left":
     case "right":
     case "center": return dot.top();
@@ -198,7 +198,7 @@ pv.Dot.Anchor.prototype.$top = function(d) {
  */ /** @private */
 pv.Dot.Anchor.prototype.$bottom = function(d) {
   var dot = this.anchorTarget();
-  switch (this.get("name")) {
+  switch (this.$("name")) {
     case "left":
     case "right":
     case "center": return dot.bottom();
@@ -214,7 +214,7 @@ pv.Dot.Anchor.prototype.$bottom = function(d) {
  * @name pv.Dot.Anchor.prototype.textAlign
  */ /** @private */
 pv.Dot.Anchor.prototype.$textAlign = function(d) {
-  switch (this.get("name")) {
+  switch (this.$("name")) {
     case "left": return "right";
     case "bottom":
     case "top":
@@ -231,7 +231,7 @@ pv.Dot.Anchor.prototype.$textAlign = function(d) {
  * @name pv.Dot.Anchor.prototype.textBasline
  */ /** @private */
 pv.Dot.Anchor.prototype.$textBaseline = function(d) {
-  switch (this.get("name")) {
+  switch (this.$("name")) {
     case "right":
     case "left":
     case "center": return "middle";

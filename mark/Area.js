@@ -153,7 +153,7 @@ pv.Area.Anchor.prototype = pv.extend(pv.Mark.Anchor);
  */ /** @private */
 pv.Area.Anchor.prototype.$left = function() {
   var area = this.anchorTarget();
-  switch (this.get("name")) {
+  switch (this.$("name")) {
     case "bottom":
     case "top":
     case "center": return area.left() + area.width() / 2;
@@ -170,7 +170,7 @@ pv.Area.Anchor.prototype.$left = function() {
  */ /** @private */
 pv.Area.Anchor.prototype.$right = function() {
   var area = this.anchorTarget();
-  switch (this.get("name")) {
+  switch (this.$("name")) {
     case "bottom":
     case "top":
     case "center": return area.right() + area.width() / 2;
@@ -187,7 +187,7 @@ pv.Area.Anchor.prototype.$right = function() {
  */ /** @private */
 pv.Area.Anchor.prototype.$top = function() {
   var area = this.anchorTarget();
-  switch (this.get("name")) {
+  switch (this.$("name")) {
     case "left":
     case "right":
     case "center": return area.top() + area.height() / 2;
@@ -204,7 +204,7 @@ pv.Area.Anchor.prototype.$top = function() {
  */ /** @private */
 pv.Area.Anchor.prototype.$bottom = function() {
   var area = this.anchorTarget();
-  switch (this.get("name")) {
+  switch (this.$("name")) {
     case "left":
     case "right":
     case "center": return area.bottom() + area.height() / 2;
@@ -220,7 +220,7 @@ pv.Area.Anchor.prototype.$bottom = function() {
  * @name pv.Area.Anchor.prototype.textAlign
  */ /** @private */
 pv.Area.Anchor.prototype.$textAlign = function() {
-  switch (this.get("name")) {
+  switch (this.$("name")) {
     case "left": return "left";
     case "bottom":
     case "top":
@@ -237,7 +237,7 @@ pv.Area.Anchor.prototype.$textAlign = function() {
  * @name pv.Area.Anchor.prototype.textBasline
  */ /** @private */
 pv.Area.Anchor.prototype.$textBaseline = function() {
-  switch (this.get("name")) {
+  switch (this.$("name")) {
     case "right":
     case "left":
     case "center": return "middle";
@@ -262,12 +262,12 @@ pv.Area.prototype.buildImplied = function(s) {
 /** TODO fixed properties */
 pv.Area.prototype.buildInstance = function(s) {
   if (this.index && !this.scene[0].segmented) {
-    s.left = this.get("left");
-    s.top = this.get("top");
-    s.bottom = this.get("bottom");
-    s.right = this.get("right");
-    s.width = this.get("width");
-    s.height = this.get("height");
+    s.left = this.$("left");
+    s.top = this.$("top");
+    s.bottom = this.$("bottom");
+    s.right = this.$("right");
+    s.width = this.$("width");
+    s.height = this.$("height");
     this.buildImplied(s);
   } else {
     pv.Mark.prototype.buildInstance.call(this, s);

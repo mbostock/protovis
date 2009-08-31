@@ -80,10 +80,10 @@ pv.Line.prototype.defaults = new pv.Line()
 /** TODO fixed properties */
 pv.Line.prototype.buildInstance = function(s) {
   if (this.index && !this.scene[0].segmented) {
-    s.left = this.get("left");
-    s.top = this.get("top");
-    s.bottom = this.get("bottom");
-    s.right = this.get("right");
+    s.left = this.$("left");
+    s.top = this.$("top");
+    s.bottom = this.$("bottom");
+    s.right = this.$("right");
     this.buildImplied(s);
   } else {
     pv.Mark.prototype.buildInstance.call(this, s);

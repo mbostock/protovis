@@ -135,7 +135,7 @@ pv.Bar.Anchor.prototype = pv.extend(pv.Mark.Anchor);
  */ /** @private */
 pv.Bar.Anchor.prototype.$left = function() {
   var bar = this.anchorTarget();
-  switch (this.get("name")) {
+  switch (this.$("name")) {
     case "bottom":
     case "top":
     case "center": return bar.left() + (this.properties.width ? 0 : (bar.width() / 2));
@@ -152,7 +152,7 @@ pv.Bar.Anchor.prototype.$left = function() {
  */ /** @private */
 pv.Bar.Anchor.prototype.$right = function() {
   var bar = this.anchorTarget();
-  switch (this.get("name")) {
+  switch (this.$("name")) {
     case "bottom":
     case "top":
     case "center": return bar.right() + (this.properties.width ? 0 : (bar.width() / 2));
@@ -169,7 +169,7 @@ pv.Bar.Anchor.prototype.$right = function() {
  */ /** @private */
 pv.Bar.Anchor.prototype.$top = function() {
   var bar = this.anchorTarget();
-  switch (this.get("name")) {
+  switch (this.$("name")) {
     case "left":
     case "right":
     case "center": return bar.top() + (this.properties.height ? 0 : (bar.height() / 2));
@@ -186,7 +186,7 @@ pv.Bar.Anchor.prototype.$top = function() {
  */ /** @private */
 pv.Bar.Anchor.prototype.$bottom = function() {
   var bar = this.anchorTarget();
-  switch (this.get("name")) {
+  switch (this.$("name")) {
     case "left":
     case "right":
     case "center": return bar.bottom() + (this.properties.height ? 0 : (bar.height() / 2));
@@ -202,7 +202,7 @@ pv.Bar.Anchor.prototype.$bottom = function() {
  * @name pv.Bar.Anchor.prototype.textAlign
  */ /** @private */
 pv.Bar.Anchor.prototype.$textAlign = function() {
-  switch (this.get("name")) {
+  switch (this.$("name")) {
     case "left": return "left";
     case "bottom":
     case "top":
@@ -219,7 +219,7 @@ pv.Bar.Anchor.prototype.$textAlign = function() {
  * @name pv.Bar.Anchor.prototype.textBaseline
  */ /** @private */
 pv.Bar.Anchor.prototype.$textBaseline = function() {
-  switch (this.get("name")) {
+  switch (this.$("name")) {
     case "right":
     case "left":
     case "center": return "middle";
