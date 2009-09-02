@@ -1,6 +1,7 @@
 // TODO ticks / rule values
 // TODO ordinal scale
 // TODO date scale
+// TODO support for angle ranges?
 
 /** TODO */
 pv.Scale = function() {};
@@ -26,6 +27,11 @@ pv.Scale.prototype.nice = function(nice) {
 };
 
 /** TODO */
+pv.Scale.prototype.round = function(round) {
+  this.round = round;
+};
+
+/** TODO */
 pv.Scale.Impl = function() {};
 pv.Scale.Impl.prototype.type = pv.Scale;
 pv.Scale.Impl.prototype.domain = {};
@@ -39,7 +45,7 @@ pv.Scale.Impl.prototype.getData = function(mark) {
 /** TODO */
 pv.Scale.Impl.prototype.getDomain = function(data, by) {
   var min = this.domain.min, max = this.domain.max;
-  if (min == undefined) min = (by == pv.index) ? 0 : pv.min(data, by);
+  if (min == undefined) min = (by == pv.index) ? 0 : pv.Scale.domainMin(data, by);
   if (max == undefined) max = (by == pv.index) ? (data.length - 1) : pv.max(data, by);
   if (this.nice) {
     var step = Math.pow(10, Math.round(Math.log(max - min) / Math.log(10)) - 1);
@@ -57,6 +63,18 @@ pv.Scale.Impl.prototype.getRange = function(mark) {
 };
 
 /** TODO @method pv.Scale.Impl.prototype.scale */
+
+/** TODO */
+pv.Scale.domainMin = function(data, by) {
+  switch (property) {
+    case "height":
+    case "width": return 0;
+    case "top":
+    case "bottom":
+    case "left":
+    case "right": return pv.min(data, by);
+  }
+};
 
 /** TODO */
 pv.Scale.rangeMax = function(mark) {
@@ -94,7 +112,8 @@ pv.Scale.generic = function(impl) {
         domain = impl.getDomain(impl.getData(this), by);
         range = impl.getRange(this);
       }
-      return impl.scale(by.apply(this, arguments), domain, range);
+      var x = impl.scale(by.apply(this, arguments), domain, range);
+      return impl.round ? Math.round(x) : x;
     }
 
     /* Bind public setters and getters to the property function. */

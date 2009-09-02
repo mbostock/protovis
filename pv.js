@@ -161,6 +161,19 @@ pv.random = function(min, max, step) {
 };
 
 /**
+ * Concatenates the specified array with itself <i>n</i> times. For example,
+ * <tt>pv.repeat([1, 2])</tt> returns [1, 2, 1, 2].
+ *
+ * @param {array} a an array.
+ * @param {number} [n] the number of times to repeat; defaults to two.
+ * @returns {array} an array that repeats the specified array.
+ */
+pv.repeat = function(array, n) {
+  if (arguments.length == 1) n = 2;
+  return pv.blend(pv.range(n).map(function() { return array; }));
+};
+
+/**
  * Given two arrays <tt>a</tt> and <tt>b</tt>, returns an array of all possible
  * pairs of elements [a<sub>i</sub>, b<sub>j</sub>]. The outer loop is on array
  * <i>a</i>, while the inner loop is on <i>b</i>, such that the order of

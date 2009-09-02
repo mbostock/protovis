@@ -842,14 +842,19 @@ var property; // XXX
 pv.Mark.prototype.$ = function(name) {
   var defs = this.scene.defs;
   if (defs && (name in defs.values)) {
-    return defs.values[name];
+    var v = defs.values[name];
+    if (typeof v == "function") {
+      property = name;
+      return v.apply(this, this.root.scene.data);
+    }
+    return v;
   }
   var binds = this.binds;
   if (name in binds.constants) {
     return binds.constants[name];
   }
   if (name in binds.functions) {
-    property = name; // XXX
+    property = name;
     return binds.functions[name].apply(this, this.root.scene.data);
   }
 };
