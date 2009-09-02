@@ -309,18 +309,15 @@ pv.Color.Hsl.prototype.rgb = function() {
   s = Math.max(0, Math.min(s, 1));
   l = Math.max(0, Math.min(l, 1));
 
-  /* From FvD 13.37 */
-  var m2 = (l < .5) ? (l * (l + s)) : (l + s - l * s);
+  /* From FvD 13.37, CSS Color Module Level 3 */
+  var m2 = (l <= .5) ? (l * (1 + s)) : (l + s - l * s);
   var m1 = 2 * l - m2;
-  if (s == 0) {
-    return new pv.Color.Rgb(l, l, l, this.a);
-  }
   function v(h) {
     if (h > 360) h -= 360;
     else if (h < 0) h += 360;
     if (h < 60) return m1 + (m2 - m1) * h / 60;
-    else if (h < 180) return m2;
-    else if (h < 240) return m1 + (m2 - m1) * (240 - h) / 60;
+    if (h < 180) return m2;
+    if (h < 240) return m1 + (m2 - m1) * (240 - h) / 60;
     return m1;
   }
   function vv(h) {
