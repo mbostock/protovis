@@ -370,6 +370,28 @@ pv.Mark.prototype.add = function(type) {
 };
 
 /**
+ * Defines a local variable on this mark. Local variables are initialized once
+ * per mark (i.e., per parent panel instance), and can be used to store local
+ * state for the mark. For instance, a local variable might store a scale, or a
+ * color ramp, that is referenced by multiple properties:
+ *
+ * <pre>.add(pv.Bar)
+ *   .def("ramp", function(c) pv.ramp(c.start, c.end))
+ *   .data(pv.range(0, 1.1, .1))
+ *   .fillStyle(function(d) this.ramp().value(d))</pre>
+ *
+ * Or, a local variable might store interaction state
+ *
+ * @param name {string} the name of the local variable.
+ * @param [value] an optional initializer; may be a constant or a function.
+ */
+pv.Mark.prototype.def = function(name, value) {
+  if (!this.defs) this.defs = [];
+  this.defs.push({name: name, value: value});
+  return this;
+};
+
+/**
  * Constructs a new mark anchor with default properties.
  *
  * @class Represents an anchor on a given mark. An anchor is itself a mark, but
@@ -558,19 +580,37 @@ pv.Mark.prototype.render = function(ms) {
 
 /** TODO */
 pv.Mark.prototype.bind = function() {
-  var binds = {properties: {}, constants: {}, functions: {}};
+  var binds = {properties: {}, constants: {}, functions: {}, defs: []};
 
   /** TODO */
   function find(mark, name) {
     var dname = "$" + name;
     do if (dname in mark) {
       var value = mark[dname];
-      ((value instanceof Function)
+      ((typeof value == "function")
           ? binds.functions
           : binds.constants)[name] = value;
       return true;
     } while (mark = mark.proto);
     return false;
+  }
+
+  /** TODO */
+  function def(name) {
+    return function(v) {
+        var defs = this.scene.defs;
+        if (arguments.length) {
+          if (v == undefined) {
+            delete defs.locked[name];
+          } else {
+            defs.locked[name] = true;
+          }
+          defs.values[name] = v;
+          return this;
+        } else {
+          return defs.values[name];
+        }
+      };
   }
 
   /* Scan the proto chain for all defined properties. */
@@ -585,6 +625,16 @@ pv.Mark.prototype.bind = function() {
       binds.constants[name] = null; // default
     }
   }
+
+  /* Consolidate inherited defs. */
+  mark = this;
+  do if (mark.defs) {
+    for (var i = 0; i < mark.defs.length; i++) {
+      var d = mark.defs[i];
+      binds.defs.push(d);
+      this[d.name] = def(d.name);
+    }
+  } while (mark = mark.proto);
 
   /* Delete special variables that are evaluated explicitly. */
   delete binds.properties.data;
@@ -628,30 +678,45 @@ pv.Mark.prototype.bind = function() {
  * @param parent the instance of the parent panel from the scene graph.
  */
 pv.Mark.prototype.build = function() {
-  if (!this.scene) {
-    this.scene = [];
-    this.scene.mark = this;
-    this.scene.type = this.type;
-    this.scene.childIndex = this.childIndex;
+  var scene = this.scene;
+  if (!scene) {
+    scene = this.scene = [];
+    scene.mark = this;
+    scene.type = this.type;
+    scene.childIndex = this.childIndex;
     if (this.parent) {
-      this.scene.parent = this.parent.scene;
-      this.scene.parentIndex = this.parent.index;
+      scene.parent = this.parent.scene;
+      scene.parentIndex = this.parent.index;
     } else {
-      this.scene.data = [];
+      scene.data = [];
+    }
+  }
+
+  /* Evaluate defs. */
+  var stack = this.root.scene.data;
+  if (this.binds.defs.length) {
+    var defs = scene.defs;
+    if (!defs) scene.defs = defs = {values: {}, locked: {}};
+    for (var i = 0; i < this.binds.defs.length; i++) {
+      var d = this.binds.defs[i];
+      if (!(d.name in defs.locked)) {
+        defs.values[d.name] = (typeof d.value == "function")
+            ? d.value.apply(this, stack)
+            : d.value;
+      }
     }
   }
 
   /* Create, update and delete scene nodes. */
   var data = this.$("data");
-  var stack = this.root.scene.data;
   stack.unshift(null);
   this.index = -1;
-  this.$$data = data; // XXX TODO use this.scene.data?
-  this.scene.length = data.length;
+  this.$$data = data; // XXX TODO use scene.data?
+  scene.length = data.length;
   for (var i = 0; i < data.length; i++) {
     pv.Mark.prototype.index = this.index = i;
-    var s = this.scene[i];
-    if (!s) this.scene[i] = s = {};
+    var s = scene[i];
+    if (!s) scene[i] = s = {};
     s.data = stack[0] = data[i];
     if (s.visible = this.$("visible")) this.buildInstance(s);
   }
@@ -676,13 +741,9 @@ pv.Mark.prototype.build = function() {
  * @param s a node in the scene graph; the instance of the mark to build.
  */
 pv.Mark.prototype.buildInstance = function(s) {
-
-  /* evaluated properties */
   for (var name in this.binds.properties) {
     s[name] = this.$(name);
   }
-
-  /* implied properties */
   this.buildImplied(s);
 };
 
@@ -779,9 +840,18 @@ var property; // XXX
  * @returns the evaluated property value.
  */
 pv.Mark.prototype.$ = function(name) {
-  property = name; // XXX
-  var f = this.binds.functions[name];
-  return f ? f.apply(this, this.root.scene.data) : this.binds.constants[name];
+  var defs = this.scene.defs;
+  if (defs && (name in defs.values)) {
+    return defs.values[name];
+  }
+  var binds = this.binds;
+  if (name in binds.constants) {
+    return binds.constants[name];
+  }
+  if (name in binds.functions) {
+    property = name; // XXX
+    return binds.functions[name].apply(this, this.root.scene.data);
+  }
 };
 
 /**
@@ -875,23 +945,6 @@ pv.Mark.prototype.dispatch = function(e, scenes, index) {
       delete mark.index;
     } while (mark = mark.parent);
   }
-};
-
-/** TODO */
-pv.Mark.prototype.get = function(name) {
-  return this.scene[name];
-};
-
-/** TODO */
-pv.Mark.prototype.set = function(name, value) {
-  this.scene[name] = value;
-  return this;
-};
-
-/** TODO */
-pv.Mark.prototype.unset = function(name) {
-  delete this.scene[name];
-  return this;
 };
 
 /** TODO */

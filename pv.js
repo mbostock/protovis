@@ -91,6 +91,15 @@ try {
  */
 pv.identity = function(x) { return x; };
 
+/** TODO */
+pv.index = function() { return this.index; };
+
+/** TODO */
+pv.child = function() { return this.childIndex; };
+
+/** TODO */
+pv.parent = function() { return this.parent.index; };
+
 /**
  * Returns an array of numbers, starting at <tt>start</tt>, incrementing by
  * <tt>step</tt>, until <tt>stop</tt> is reached. The stop value is exclusive. If

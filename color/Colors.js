@@ -62,7 +62,7 @@ pv.Colors = function(values) {
     return color;
   }
 
-  var c = colors(function() { return this.parent.index; });
+  var c = colors(pv.parent);
 
   /**
    * Allows a new set of colors to be derived from the current set using a
@@ -81,33 +81,12 @@ pv.Colors = function(values) {
   c.by = colors;
 
   /**
-   * A derivative color encoding using the same colors, but allocating unique
-   * colors based on the mark index.
-   *
-   * @name pv.Colors.prototype.index
-   * @type pv.Colors
-   */
-  c.index = c.by(function() { return this.index; });
-
-  /**
-   * A derivative color encoding using the same colors, but allocating unique
-   * colors based on the child index.
-   *
-   * @name pv.Colors.prototype.child
-   * @type pv.Colors
-   */
-  c.child = c.by(function() { return this.childIndex; });
-
-  /**
    * The underlying array of colors.
    *
    * @type string[]
    * @name pv.Colors.prototype.values
    */
   c.values = values;
-
-  c.parent = c; // @deprecated
-  c.unique = c.index; // @deprecated
 
   return c;
 };

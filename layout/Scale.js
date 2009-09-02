@@ -1,93 +1,107 @@
-// TODO allow override of log base
-// TODO zlog, etc.
 // TODO ticks / rule values
 // TODO ordinal scale
 // TODO date scale
 
-// TODO XXX by function is a bit bogus, because when used to compute the min and
-// max values, it is not called using the mark instance as the context. As a
-// result, it's not valid to say by(function() this.index).
+/** TODO */
+pv.Scale = function() {};
 
-// TODO It's also not clear how you would use scales for more complex
-// visualizations, for example stacked area graphs, where the minimum and
-// maximum value are the sum of all the data points.
+/** TODO */
+pv.Scale.prototype.data = function(data) {
+  this.data = data;
+};
 
-pv.Scale = {};
+/** TODO */
+pv.Scale.prototype.domain = function(min, max) {
+  this.domain = {min: min, max: max};
+};
 
+/** TODO */
+pv.Scale.prototype.range = function(min, max) {
+  this.range = {min: min, max: max};
+};
+
+/** TODO */
+pv.Scale.prototype.nice = function(nice) {
+  this.nice = nice;
+};
+
+/** TODO */
+pv.Scale.Impl = function() {};
+pv.Scale.Impl.prototype.type = pv.Scale;
+pv.Scale.Impl.prototype.domain = {};
+pv.Scale.Impl.prototype.range = {};
+
+/** TODO */
+pv.Scale.Impl.prototype.getData = function(mark) {
+  return (this.data == undefined) ? mark.$$data : this.data;
+};
+
+/** TODO */
+pv.Scale.Impl.prototype.getDomain = function(data, by) {
+  var min = this.domain.min, max = this.domain.max;
+  if (min == undefined) min = (by == pv.index) ? 0 : pv.min(data, by);
+  if (max == undefined) max = (by == pv.index) ? (data.length - 1) : pv.max(data, by);
+  if (this.nice) {
+    var step = Math.pow(10, Math.round(Math.log(max - min) / Math.log(10)) - 1);
+    min = Math.floor(min / step) * step;
+    max = Math.ceil(max / step) * step;
+  }
+  return {min: min, max: max};
+};
+
+/** TODO */
+pv.Scale.Impl.prototype.getRange = function(mark) {
+  var min = (this.range.min == undefined) ? 0 : this.range.min,
+      max = (this.range.max == undefined) ? pv.Scale.rangeMax(mark) : this.range.max;
+  return {min: min, max: max};
+};
+
+/** TODO @method pv.Scale.Impl.prototype.scale */
+
+/** TODO */
+pv.Scale.rangeMax = function(mark) {
+  switch (property) {
+    case "height":
+    case "top":
+    case "bottom": return mark.parent.height();
+    case "width":
+    case "left":
+    case "right": return mark.parent.width();
+  }
+};
+
+/** TODO */
 pv.Scale.generic = function(impl) {
-  var p = impl.prototype;
 
-  /* Property function. */
-  function scale() {
-    var s = this.scene[0].$scale;
-    if (!s) s = this.scene[0].$scale = {};
-    if (!s[property]) s[property] = new impl(this);
-    var d = s[property].by.apply(this, arguments);
-    return s[property].scale(d);
+  /** Wrapper method for public methods. */
+  function method(name) {
+    return function() {
+      if (arguments.length) {
+        impl.type.prototype[name].apply(impl, arguments);
+        return this;
+      }
+      return impl[name];
+    };
   }
 
-  // XXX by returns a view, while other methods modify
+  /** Factory method. */
+  function create(by) {
+    var domain, range;
 
-  scale.by = function(v) {
-    function i(mark) { impl.call(this, mark); }
-    i.prototype = pv.extend(impl);
-    i.prototype.by = v;
-    return pv.Scale.generic(i);
-  };
-
-  scale.min = function(v) {
-    p.min = v;
-    return this;
-  };
-
-  scale.max = function(v) {
-    p.max = v;
-    return this;
-  };
-
-  scale.nice = function(v) {
-    p.nice = (arguments.length == 0) ? true : v;
-    return this;
-  };
-
-  scale.range = function() {
-    if (arguments.length == 1) {
-      p.start = 0;
-      p.end = arguments[0];
-    } else {
-      p.start = arguments[0];
-      p.end = arguments[1] - arguments[0];
+    /** Property function. */
+    function scale() {
+      if (!domain) {
+        domain = impl.getDomain(impl.getData(this), by);
+        range = impl.getRange(this);
+      }
+      return impl.scale(by.apply(this, arguments), domain, range);
     }
-    return this;
-  };
 
-  return scale;
-};
-
-pv.Scale.Impl = function(mark) {
-  function range() {
-    switch (property) {
-      case "height":
-      case "top":
-      case "bottom": return this.parent.height();
-      case "width":
-      case "left":
-      case "right": return this.parent.width();
-      default: return 1;
-    }
+    /* Bind public setters and getters to the property function. */
+    scale.by = function(f) { return create(f); };
+    for (var name in impl.type.prototype) scale[name] = method(name);
+    return scale;
   }
 
-  var data = mark.$$data;
-  if (this.min == undefined) this.min = pv.min(data, this.by);
-  if (this.max == undefined) this.max = pv.max(data, this.by);
-  if (this.end == undefined) this.end = range.call(mark);
-  if (this.nice) { // TODO Only "nice" bounds set automatically.
-    var step = Math.pow(10, Math.round(Math.log(this.max - this.min) / Math.log(10)) - 1);
-    this.min = Math.floor(this.min / step) * step;
-    this.max = Math.ceil(this.max / step) * step;
-  }
+  return create(pv.identity);
 };
-
-pv.Scale.Impl.prototype.start = 0;
-
-pv.Scale.Impl.prototype.by = pv.identity;
