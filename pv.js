@@ -57,11 +57,11 @@ try {
         s += js.substring(i, j) + "{return ";
         i = j;
         for (var p = 0; p >= 0 && j < js.length; j++) {
-          switch (js.charAt(j)) {
+          var c = js.charAt(j);
+          switch (c) {
             case '"': case '\'': {
-              var c = js.charAt(j);
-              while (++j < js.length && (js.charAt(j) != c)) {
-                if (js.charAt(j) == '\\') j++;
+              while (++j < js.length && (d = js.charAt(j)) != c) {
+                if (d == '\\') j++;
               }
               break;
             }
