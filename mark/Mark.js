@@ -334,7 +334,7 @@ pv.Mark.prototype.defineProperty("reverse");
  * @type pv.Mark
  */
 pv.Mark.prototype.defaults = new pv.Mark()
-    .data([null])
+    .data(function(d) { return [d]; })
     .visible(true)
     .reverse(false)
     .cursor("")
@@ -919,13 +919,27 @@ pv.Mark.prototype.event = function(type, handler) {
 /** TODO */
 pv.Mark.prototype.dispatch = function(e, scenes, index) {
   var l = this.$handlers && this.$handlers[e.type];
-  if (!l) return;
+  if (!l) {
+    if (this.parent) {
+      this.parent.dispatch(e, scenes.parent, scenes.parentIndex);
+    }
+    return;
+  }
   try {
 
+    /** Computes the root data stack for the specified mark. */
+    function stack(mark) {
+      var stack = [];
+      while (mark) {
+        stack.push(mark.scene[mark.index].data);
+        mark = mark.parent;
+      }
+      return stack;
+    }
+
     /* Setup the scene stack. */
-    var mark = this, stack = [];
+    var mark = this;
     do {
-      stack.push(scenes[index].data);
       mark.index = index;
       mark.scene = scenes;
       index = scenes.parentIndex;
@@ -933,12 +947,15 @@ pv.Mark.prototype.dispatch = function(e, scenes, index) {
     } while (mark = mark.parent);
 
     /* Execute the event listener. */
-    this.root.scene.data = stack.slice(1, stack.length);
-    mark = l.apply(this, stack);
+    this.root.scene.data = stack(this.parent);
+    mark = l.apply(this, stack(this));
     e.preventDefault();
 
     /* Update the display. TODO dirtying. */
-    if (mark) mark.render();
+    if (mark) {
+      this.root.scene.data = stack(mark.parent);
+      mark.render();
+    }
 
   } finally {
 
