@@ -1,7 +1,8 @@
 // TODO ticks / rule values
 // TODO ordinal scale
 // TODO date scale
-// TODO support for angle ranges?
+// TODO support for angle ranges, color ranges?
+// TODO support this.index for domain computation (not just pv.index)?
 
 /** TODO */
 pv.Scale = function() {};
@@ -110,7 +111,7 @@ pv.Scale.generic = function(impl) {
     function scale() {
       if (!domain) {
         domain = impl.getDomain(impl.getData(this), by);
-        range = impl.getRange(this);
+        range = impl.getRange(this, domain);
       }
       var x = impl.scale(by.apply(this, arguments), domain, range);
       return impl.round ? Math.round(x) : x;
