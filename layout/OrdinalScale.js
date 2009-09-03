@@ -39,23 +39,34 @@ pv.Scale.OrdinalImpl.prototype.getDomain = function(data, by) {
 /** TODO */
 pv.Scale.OrdinalImpl.prototype.getRange = function(mark, domain) {
   if (this.range) return this.range;
-  var max = pv.Scale.rangeMax(mark),
-      step = max / domain.length;
-      range = pv.range(0, max, step);
-  range.step = step;
-  return range;
+  var max = pv.Scale.rangeMax(mark);
+  this.step = max / domain.length;
+  return pv.range(0, max, this.step);
 };
 
 /** TODO */
 pv.Scale.OrdinalImpl.prototype.scale = function(value, domain, range) {
+
+  /*
+   * This is a bit of a cludge so that the scale can be plugged into the width
+   * property in addition to the left (or right) property (and equivalently with
+   * height, top and bottom). This, of course, assumes that it would never make
+   * sense to use an ordinal scale for the width or height property, which is
+   * probably correct...
+   *
+   * Note that we can't simply provide an accessor for the step value because
+   * (unless special care is taken) the accessor would be called before the
+   * scale had been initialized.
+   */
   switch (property) {
     case "width":
-    case "height": return range.step;
+    case "height": return this.step;
   }
+
   return range[domain.index[value] % range.length];
 };
 
 /** TODO */
-pv.Scale.ordinal = function() {
-  return this.generic(new pv.Scale.OrdinalImpl());
+pv.Scale.ordinal = function(data) {
+  return this.generic(new pv.Scale.OrdinalImpl()).data(data);
 };
