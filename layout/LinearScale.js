@@ -27,13 +27,28 @@ pv.Scale.LinearImpl.prototype.getDomain = function() {
 /** TODO */
 pv.Scale.LinearImpl.prototype.getRange = function() {
   var range = pv.Scale.Impl.prototype.getRange.apply(this, arguments);
-  this.k = (range.max - range.min) / (this.domain.max - this.domain.min);
+  switch (property) {
+    case "fillStyle":
+    case "strokeStyle":
+    case "textStyle": {
+      this.min = 0;
+      this.k = 1 / (this.domain.max - this.domain.min);
+      this.ramp = pv.ramp(range.min, range.max);
+      break;
+    }
+    default: {
+      this.min = range.min;
+      this.k = (range.max - range.min) / (this.domain.max - this.domain.min);
+      break;
+    }
+  }
   return range;
 };
 
 /** TODO */
 pv.Scale.LinearImpl.prototype.scale = function(value) {
-  return (value - this.domain.min) * this.k + this.range.min;
+  var x = (value - this.domain.min) * this.k + this.min;
+  return this.ramp ? this.ramp.value(x) : x;
 };
 
 /** TODO */

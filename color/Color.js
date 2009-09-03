@@ -27,7 +27,7 @@
  */
 pv.color = function(format) {
   if (!format || (format == "transparent")) {
-    return new pv.Color.Rgb(0, 0, 0, 0);
+    return pv.rgb(0, 0, 0, 0);
   }
   if (format instanceof pv.Color) {
     return format;
@@ -59,7 +59,7 @@ pv.color = function(format) {
           return (c[c.length - 1] == '%') ? Math.round(f * 2.55) : f;
         }
         var r = parse(m2[0]), g = parse(m2[1]), b = parse(m2[2]);
-        return new pv.Color.Rgb(r, g, b, a);
+        return pv.rgb(r, g, b, a);
       }
     }
   }
@@ -79,7 +79,7 @@ pv.color = function(format) {
       g = format.substring(3, 5);
       b = format.substring(5, 7);
     }
-    return new pv.Color.Rgb(parseInt(r, 16), parseInt(g, 16), parseInt(b, 16), 1);
+    return pv.rgb(parseInt(r, 16), parseInt(g, 16), parseInt(b, 16), 1);
   }
 
   /* Otherwise, assume named colors. TODO allow lazy conversion to RGB. */
@@ -152,6 +152,19 @@ pv.Color.prototype.darker = function(s) {
 /**
  * Constructs a new RGB color with the specified channel values.
  *
+ * @param {number} r the red channel, an integer in [0,255].
+ * @param {number} g the green channel, an integer in [0,255].
+ * @param {number} b the blue channel, an integer in [0,255].
+ * @param {number} a the alpha channel, a float in [0,1].
+ * @returns pv.Color.Rgb
+ */
+pv.rgb = function(r, g, b, a) {
+  return new pv.Color.Rgb(r, g, b, a);
+};
+
+/**
+ * Constructs a new RGB color with the specified channel values.
+ *
  * @class Represents a color in RGB space.
  *
  * @param {number} r the red channel, an integer in [0,255].
@@ -194,6 +207,46 @@ pv.Color.Rgb = function(r, g, b, a) {
 pv.Color.Rgb.prototype = pv.extend(pv.Color);
 
 /**
+ * Constructs a new RGB color with the same green, blue and alpha channels as
+ * this color, with the specified red channel.
+ *
+ * @param {number} r the red channel, an integer in [0,255].
+ */
+pv.Color.Rgb.prototype.red = function(r) {
+  return pv.rgb(r, this.g, this.b, this.a);
+};
+
+/**
+ * Constructs a new RGB color with the same red, blue and alpha channels as this
+ * color, with the specified green channel.
+ *
+ * @param {number} g the green channel, an integer in [0,255].
+ */
+pv.Color.Rgb.prototype.green = function(g) {
+  return pv.rgb(this.r, g, this.b, this.a);
+};
+
+/**
+ * Constructs a new RGB color with the same red, green and alpha channels as
+ * this color, with the specified blue channel.
+ *
+ * @param {number} b the blue channel, an integer in [0,255].
+ */
+pv.Color.Rgb.prototype.blue = function(b) {
+  return pv.rgb(this.r, this.g, b, this.a);
+};
+
+/**
+ * Constructs a new RGB color with the same red, green and blue channels as this
+ * color, with the specified alpha channel.
+ *
+ * @param {number} a the alpha channel, a float in [0,1].
+ */
+pv.Color.Rgb.prototype.alpha = function(a) {
+  return pv.rgb(this.r, this.g, this.b, a);
+};
+
+/**
  * Returns the RGB color equivalent to this color. This method is abstract and
  * must be implemented by subclasses.
  *
@@ -222,11 +275,11 @@ pv.Color.Rgb.prototype.rgb = function() { return this; };
 pv.Color.Rgb.prototype.brighter = function(s) {
   s = Math.pow(0.7, arguments.length ? s : 1);
   var r = this.r, g = this.g, b = this.b, i = 30;
-  if (!r && !g && !b) return new pv.Color.Rgb(i, i, i, this.a);
+  if (!r && !g && !b) return pv.rgb(i, i, i, this.a);
   if (r && (r < i)) r = i;
   if (g && (g < i)) g = i;
   if (b && (b < i)) b = i;
-  return new pv.Color.Rgb(
+  return pv.rgb(
       Math.min(255, Math.floor(r / s)),
       Math.min(255, Math.floor(g / s)),
       Math.min(255, Math.floor(b / s)),
@@ -245,11 +298,24 @@ pv.Color.Rgb.prototype.brighter = function(s) {
  */
 pv.Color.Rgb.prototype.darker = function(s) {
   s = Math.pow(0.7, arguments.length ? s : 1);
-  return new pv.Color.Rgb(
+  return pv.rgb(
       Math.max(0, Math.floor(s * this.r)),
       Math.max(0, Math.floor(s * this.g)),
       Math.max(0, Math.floor(s * this.b)),
       this.a);
+};
+
+/**
+ * Constructs a new HSL color with the specified values.
+ *
+ * @param {number} h the hue, an integer in [0, 360].
+ * @param {number} s the saturation, a float in [0, 1].
+ * @param {number} l the lightness, a float in [0, 1].
+ * @param {number} a the opacity, a float in [0, 1].
+ * @returns pv.Color.Hsl
+ */
+pv.hsl = function(h, s, l, a) {
+  return new pv.Color.Hsl(h, s, l, a);
 };
 
 /**
@@ -297,6 +363,46 @@ pv.Color.Hsl = function(h, s, l, a) {
 pv.Color.Hsl.prototype = pv.extend(pv.Color);
 
 /**
+ * Constructs a new HSL color with the same saturation, lightness and alpha as
+ * this color, and the specified hue.
+ *
+ * @param {number} h the hue, an integer in [0, 360].
+ */
+pv.Color.Hsl.prototype.hue = function(h) {
+  return pv.hsl(h, this.s, this.l, this.a);
+};
+
+/**
+ * Constructs a new HSL color with the same hue, lightness and alpha as this
+ * color, and the specified saturation.
+ *
+ * @param {number} s the saturation, a float in [0, 1].
+ */
+pv.Color.Hsl.prototype.saturation = function(s) {
+  return pv.hsl(this.h, s, this.l, this.a);
+};
+
+/**
+ * Constructs a new HSL color with the same hue, saturation and alpha as this
+ * color, and the specified lightness.
+ *
+ * @param {number} l the lightness, a float in [0, 1].
+ */
+pv.Color.Hsl.prototype.lightness = function(l) {
+  return pv.hsl(this.h, this.s, l, this.a);
+};
+
+/**
+ * Constructs a new HSL color with the same hue, saturation and lightness as
+ * this color, and the specified alpha.
+ *
+ * @param {number} a the opacity, a float in [0, 1].
+ */
+pv.Color.Hsl.prototype.alpha = function(a) {
+  return pv.hsl(this.h, this.s, this.l, a);
+};
+
+/**
  * Returns the RGB color equivalent to this HSL color.
  *
  * @returns {pv.Color.Rgb} an RGB color.
@@ -324,7 +430,7 @@ pv.Color.Hsl.prototype.rgb = function() {
     return Math.round(v(h) * 255);
   }
 
-  return new pv.Color.Rgb(vv(h + 120), vv(h), vv(h - 120), this.a);
+  return pv.rgb(vv(h + 120), vv(h), vv(h - 120), this.a);
 };
 
 /**

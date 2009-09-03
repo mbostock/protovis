@@ -1,6 +1,7 @@
 // TODO zlog
 // TODO customizable base
 // TODO override nice behavior; depends on customizable base
+// TODO color ranges?
 
 /** TODO */
 pv.Scale.Log = function() {};

@@ -1,7 +1,8 @@
 // TODO ticks / rule values
 // TODO date scale
-// TODO support for angle ranges, color ranges?
-// TODO support this.index for domain computation (not just pv.index)?
+// TODO angle ranges?
+// TODO this.index for domain computation (not just pv.index)?
+// TODO diverging color scales?
 
 /** TODO */
 pv.Scale = function() {};
@@ -70,11 +71,8 @@ pv.Scale.domainMin = function(data, by) {
   switch (property) {
     case "height":
     case "width": return 0;
-    case "top":
-    case "bottom":
-    case "left":
-    case "right": return pv.min(data, by);
   }
+  return pv.min(data, by);
 };
 
 /** TODO */
