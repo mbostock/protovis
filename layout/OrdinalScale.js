@@ -16,8 +16,6 @@ pv.Scale.Ordinal.prototype.range = function(array) {
 pv.Scale.OrdinalImpl = function() {};
 pv.Scale.OrdinalImpl.prototype = pv.extend(pv.Scale.Impl);
 pv.Scale.OrdinalImpl.prototype.type = pv.Scale.Ordinal;
-pv.Scale.OrdinalImpl.prototype.domain = null;
-pv.Scale.OrdinalImpl.prototype.range = null;
 
 /** TODO */
 pv.Scale.OrdinalImpl.prototype.getDomain = function(data, by) {
@@ -33,19 +31,19 @@ pv.Scale.OrdinalImpl.prototype.getDomain = function(data, by) {
     }
   }
 
-  return {length: ordinals.length, index: pv.numerate(ordinals)};
+  this.index = pv.numerate(ordinals);
+  return ordinals;
 };
 
 /** TODO */
-pv.Scale.OrdinalImpl.prototype.getRange = function(mark, domain) {
+pv.Scale.OrdinalImpl.prototype.getRange = function(mark) {
   if (this.range) return this.range;
-  var max = pv.Scale.rangeMax(mark);
-  this.step = max / domain.length;
-  return pv.range(0, max, this.step);
+  var n = this.domain.length, step = this.step = pv.Scale.rangeMax(mark) / n;
+  return pv.range(n).map(function(i) { return i * step; });
 };
 
 /** TODO */
-pv.Scale.OrdinalImpl.prototype.scale = function(value, domain, range) {
+pv.Scale.OrdinalImpl.prototype.evaluate = function() {
 
   /*
    * This is a bit of a cludge so that the scale can be plugged into the width
@@ -63,7 +61,12 @@ pv.Scale.OrdinalImpl.prototype.scale = function(value, domain, range) {
     case "height": return this.step;
   }
 
-  return range[domain.index[value] % range.length];
+  return pv.Scale.Impl.prototype.evaluate.apply(this, arguments);
+};
+
+/** TODO */
+pv.Scale.OrdinalImpl.prototype.scale = function(value) {
+  return this.range[this.index[value] % this.range.length];
 };
 
 /** TODO */

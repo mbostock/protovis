@@ -13,7 +13,7 @@ pv.Scale.LinearImpl.prototype = pv.extend(pv.Scale.Impl);
 pv.Scale.LinearImpl.prototype.type = pv.Scale.Linear;
 
 /** TODO */
-pv.Scale.LinearImpl.prototype.getDomain = function(data, by) {
+pv.Scale.LinearImpl.prototype.getDomain = function() {
   var domain = pv.Scale.Impl.prototype.getDomain.apply(this, arguments);
   if (this.nice) {
     var min = domain.min, max = domain.max,
@@ -25,9 +25,15 @@ pv.Scale.LinearImpl.prototype.getDomain = function(data, by) {
 };
 
 /** TODO */
-pv.Scale.LinearImpl.prototype.scale = function(value, domain, range) {
-  var k = (range.max - range.min) / (domain.max - domain.min);
-  return (value - domain.min) * k + range.min;
+pv.Scale.LinearImpl.prototype.getRange = function() {
+  var range = pv.Scale.Impl.prototype.getRange.apply(this, arguments);
+  this.k = (range.max - range.min) / (this.domain.max - this.domain.min);
+  return range;
+};
+
+/** TODO */
+pv.Scale.LinearImpl.prototype.scale = function(value) {
+  return (value - this.domain.min) * this.k + this.range.min;
 };
 
 /** TODO */

@@ -35,8 +35,6 @@ pv.Scale.prototype.round = function(round) {
 pv.Scale.Impl = function() {};
 pv.Scale.Impl.prototype.type = pv.Scale;
 pv.Scale.Impl.prototype.by = pv.identity;
-pv.Scale.Impl.prototype.domain = {};
-pv.Scale.Impl.prototype.range = {};
 
 /** TODO */
 pv.Scale.Impl.prototype.getData = function(mark) {
@@ -45,7 +43,7 @@ pv.Scale.Impl.prototype.getData = function(mark) {
 
 /** TODO */
 pv.Scale.Impl.prototype.getDomain = function(data, by) {
-  var min = this.domain.min, max = this.domain.max;
+  var domain = this.domain, min = domain && domain.min, max = domain && domain.max;
   if (min == undefined) min = (by == pv.index) ? 0 : pv.Scale.domainMin(data, by);
   if (max == undefined) max = (by == pv.index) ? (data.length - 1) : pv.max(data, by);
   return {min: min, max: max};
@@ -53,12 +51,19 @@ pv.Scale.Impl.prototype.getDomain = function(data, by) {
 
 /** TODO */
 pv.Scale.Impl.prototype.getRange = function(mark) {
-  var min = (this.range.min == undefined) ? 0 : this.range.min,
-      max = (this.range.max == undefined) ? pv.Scale.rangeMax(mark) : this.range.max;
+  var range = this.range, min = range && range.min, max = range && range.max;
+  if (min == undefined) min = 0;
+  if (max == undefined) max = pv.Scale.rangeMax(mark);
   return {min: min, max: max};
 };
 
 /** TODO @method pv.Scale.Impl.prototype.scale */
+
+/** TODO */
+pv.Scale.Impl.prototype.evaluate = function(mark, arguments, as) {
+  var value = as.apply(mark, arguments), x = this.scale(value);
+  return this.round ? Math.round(x) : x;
+}
 
 /** TODO */
 pv.Scale.domainMin = function(data, by) {
@@ -86,7 +91,7 @@ pv.Scale.rangeMax = function(mark) {
 
 /** TODO */
 pv.Scale.generic = function(impl) {
-  var domain, range;
+  var loaded;
 
   /** Wrapper method for public methods. */
   function method(name) {
@@ -104,18 +109,20 @@ pv.Scale.generic = function(impl) {
 
     /** Property function. */
     function scale() {
-      if (!domain) {
-        domain = impl.getDomain(impl.getData(this), impl.by);
-        range = impl.getRange(this, domain);
+      if (!loaded) {
+        impl.data = impl.getData(this);
+        impl.domain = impl.getDomain(impl.data, impl.by);
+        impl.range = impl.getRange(this);
+        loaded = true;
       }
-      var v = (as || impl.by).apply(this, arguments),
-          x = impl.scale(v, domain, range);
-      return impl.round ? Math.round(x) : x;
+      return impl.evaluate(this, arguments, as || impl.by);
     }
 
     /* Bind public setters and getters to the property function. */
     scale.as = create;
-    for (var name in impl.type.prototype) scale[name] = method(name);
+    for (var name in impl.type.prototype) {
+      scale[name] = method(name);
+    }
     return scale;
   }
 

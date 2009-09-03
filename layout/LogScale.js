@@ -34,9 +34,15 @@ pv.Scale.LogImpl.prototype.getDomain = function(data, by) {
 };
 
 /** TODO */
-pv.Scale.LogImpl.prototype.scale = function(value, domain, range) {
-  var k = (range.max - range.min) / (Math.log(domain.max) - Math.log(domain.min));
-  return (Math.log(value) - Math.log(domain.min)) * k + range.min;
+pv.Scale.LogImpl.prototype.getRange = function() {
+  var range = pv.Scale.Impl.prototype.getRange.apply(this, arguments);
+  this.k = (range.max - range.min) / (Math.log(this.domain.max) - Math.log(this.domain.min));
+  return range;
+};
+
+/** TODO */
+pv.Scale.LogImpl.prototype.scale = function(value) {
+  return (Math.log(value) - Math.log(this.domain.min)) * this.k + this.range.min;
 };
 
 /** TODO */

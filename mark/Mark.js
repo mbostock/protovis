@@ -700,6 +700,7 @@ pv.Mark.prototype.build = function() {
     for (var i = 0; i < this.binds.defs.length; i++) {
       var d = this.binds.defs[i];
       if (!(d.name in defs.locked)) {
+        property = d.name;
         defs.values[d.name] = (typeof d.value == "function")
             ? d.value.apply(this, stack)
             : d.value;
