@@ -608,9 +608,15 @@ pv.Mark.prototype.bind = function() {
           defs.values[name] = v;
           return this;
         } else {
-          return defs.values[name];
+          return this.value(defs.values[name], name);
         }
       };
+  }
+
+  /* If bind is called from an event handler, correct the data stack. */
+  if (this.index >= 0) {
+    delete this.index;
+    this.root.scene.data.shift();
   }
 
   /* Scan the proto chain for all defined properties. */
@@ -693,25 +699,20 @@ pv.Mark.prototype.build = function() {
   }
 
   /* Evaluate defs. */
-  var stack = this.root.scene.data;
   if (this.binds.defs.length) {
     var defs = scene.defs;
     if (!defs) scene.defs = defs = {values: {}, locked: {}};
     for (var i = 0; i < this.binds.defs.length; i++) {
       var d = this.binds.defs[i];
       if (!(d.name in defs.locked)) {
-        property = d.name;
-        defs.values[d.name] = (typeof d.value == "function")
-            ? d.value.apply(this, stack)
-            : d.value;
+        defs.values[d.name] = this.value(d.value, d.name);
       }
     }
   }
 
   /* Create, update and delete scene nodes. */
-  var data = this.$("data");
+  var stack = this.root.scene.data, data = this.get("data");
   stack.unshift(null);
-  this.index = -1;
   this.$$data = data; // XXX TODO use scene.data?
   scene.length = data.length;
   for (var i = 0; i < data.length; i++) {
@@ -719,7 +720,7 @@ pv.Mark.prototype.build = function() {
     var s = scene[i];
     if (!s) scene[i] = s = {};
     s.data = stack[0] = data[i];
-    if (s.visible = this.$("visible")) this.buildInstance(s);
+    if (s.visible = this.get("visible")) this.buildInstance(s);
   }
   stack.shift();
   delete this.index;
@@ -743,7 +744,7 @@ pv.Mark.prototype.build = function() {
  */
 pv.Mark.prototype.buildInstance = function(s) {
   for (var name in this.binds.properties) {
-    s[name] = this.$(name);
+    s[name] = this.get(name);
   }
   this.buildImplied(s);
 };
@@ -818,6 +819,20 @@ pv.Mark.prototype.buildImplied = function(s) {
 var property; // XXX
 
 /**
+ * Evaluates the specified property function <tt>f</tt> with the specified
+ * name. The data stack, <tt>root.scene.data</tt>, contains the current datum,
+ * followed by the datum for the enclosing panel, and so on.
+ *
+ * @param {function} f a property function.
+ * @param {string} name the property name.
+ * @returns the evaluated property value.
+ */
+pv.Mark.prototype.value = function(f, name) {
+  property = name;
+  return (typeof f == "function") ? f.apply(this, this.root.scene.data) : f;
+};
+
+/**
  * Evaluates the property function with the specified name for the current data
  * stack. The data stack, <tt>root.scene.data</tt>, contains the current datum,
  * followed by the datum for the enclosing panel, and so on.
@@ -840,23 +855,17 @@ var property; // XXX
  * @param {string} name the property name.
  * @returns the evaluated property value.
  */
-pv.Mark.prototype.$ = function(name) {
+pv.Mark.prototype.get = function(name) {
   var defs = this.scene.defs;
   if (defs && (name in defs.values)) {
-    var v = defs.values[name];
-    if (typeof v == "function") {
-      property = name;
-      return v.apply(this, this.root.scene.data);
-    }
-    return v;
+    return this.value(defs.values[name], name);
   }
   var binds = this.binds;
   if (name in binds.constants) {
     return binds.constants[name];
   }
   if (name in binds.functions) {
-    property = name;
-    return binds.functions[name].apply(this, this.root.scene.data);
+    return this.value(binds.functions[name], name);
   }
 };
 
@@ -948,13 +957,13 @@ pv.Mark.prototype.dispatch = function(e, scenes, index) {
     } while (mark = mark.parent);
 
     /* Execute the event listener. */
-    this.root.scene.data = stack(this.parent);
-    mark = l.apply(this, stack(this));
+    this.root.scene.data = stack(this);
+    mark = this.value(l);
     e.preventDefault();
 
     /* Update the display. TODO dirtying. */
     if (mark) {
-      this.root.scene.data = stack(mark.parent);
+      this.root.scene.data = stack(mark);
       mark.render();
     }
 
