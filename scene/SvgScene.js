@@ -42,10 +42,20 @@ pv.SvgScene.create = function(type) {
  * @param s a scene node.
  */
 pv.SvgScene.title = function(e, s) {
-  if (!s.title) return e;
-  var a = this.create("a");
-  a.setAttributeNS(pv.ns.xlink, "title", s.title);
-  a.appendChild(e);
+  var a = e.parentNode;
+  if (a && (a.tagName != "a")) a = null;
+  if (s.title) {
+    if (!a) {
+      a = this.create("a");
+      if (e.parentNode) e.parentNode.replaceChild(a, e);
+      a.appendChild(e);
+    }
+    a.setAttributeNS(pv.ns.xlink, "title", s.title);
+  } else if (a) {
+    a.removeAttributeNS(pv.ns.xlink, "title");
+  } else {
+    a = e;
+  }
   return a;
 };
 
