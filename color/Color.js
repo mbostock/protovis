@@ -155,11 +155,11 @@ pv.Color.prototype.darker = function(s) {
  * @param {number} r the red channel, an integer in [0,255].
  * @param {number} g the green channel, an integer in [0,255].
  * @param {number} b the blue channel, an integer in [0,255].
- * @param {number} a the alpha channel, a float in [0,1].
+ * @param {number} [a] the alpha channel, a float in [0,1].
  * @returns pv.Color.Rgb
  */
 pv.rgb = function(r, g, b, a) {
-  return new pv.Color.Rgb(r, g, b, a);
+  return new pv.Color.Rgb(r, g, b, (arguments.length == 4) ? a : 1);
 };
 
 /**
@@ -311,11 +311,11 @@ pv.Color.Rgb.prototype.darker = function(s) {
  * @param {number} h the hue, an integer in [0, 360].
  * @param {number} s the saturation, a float in [0, 1].
  * @param {number} l the lightness, a float in [0, 1].
- * @param {number} a the opacity, a float in [0, 1].
+ * @param {number} [a] the opacity, a float in [0, 1].
  * @returns pv.Color.Hsl
  */
 pv.hsl = function(h, s, l, a) {
-  return new pv.Color.Hsl(h, s, l, a);
+  return new pv.Color.Hsl(h, s, l,  (arguments.length == 4) ? a : 1);
 };
 
 /**
