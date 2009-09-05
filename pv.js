@@ -265,6 +265,16 @@ pv.values = function(map) {
   return array;
 };
 
+/** A private variable to store the index property for map. */
+var that = {};
+
+/** A private variant of Array.prototype.map that supports the index property. */
+function map(array, f) {
+  return f
+      ? array.map(function(d, i) { that.index = i; return f.call(that, d); })
+      : array.slice();
+};
+
 /**
  * Returns a normalized copy of the specified array, such that the sum of the
  * returned elements sum to one. If the specified array is not an array of
@@ -282,9 +292,9 @@ pv.values = function(map) {
  * @returns {number[]} an array of numbers that sums to one.
  */
 pv.normalize = function(array, f) {
-  if (!f) f = pv.identity;
-  var sum = pv.sum(array, f);
-  return array.map(function(d) { return f(d) / sum; });
+  var norm = map(array, f), sum = pv.sum(norm);
+  for (var i = 0; i < norm.length; i++) norm[i] /= sum;
+  return norm;
 };
 
 /**
@@ -297,8 +307,9 @@ pv.normalize = function(array, f) {
  * @returns {number} the sum of the specified array.
  */
 pv.sum = function(array, f) {
-  if (!f) f = pv.identity;
-  return pv.reduce(array, function(p, d) { return p + f(d); }, 0);
+  return array.reduce(f
+      ? function(p, d, i) { that.index = i; return p + f.call(that, d); }
+      : function(p, d) { return p + d; }, 0);
 };
 
 /**
@@ -312,8 +323,8 @@ pv.sum = function(array, f) {
  * @returns {number} the maximum value of the specified array.
  */
 pv.max = function(array, f) {
-  if (!f) f = pv.identity;
-  return pv.reduce(array, function(p, d) { return Math.max(p, f(d)); }, -Infinity);
+  if (f == pv.index) return array.length - 1;
+  return Math.max.apply(null, f ? map(array, f) : array);
 };
 
 /**
@@ -327,10 +338,12 @@ pv.max = function(array, f) {
  * @returns {number} the index of the maximum value of the specified array.
  */
 pv.max.index = function(array, f) {
+  if (f == pv.index) return array.length - 1;
   if (!f) f = pv.identity;
   var maxi = -1, maxx = -Infinity;
   for (var i = 0; i < array.length; i++) {
-    var x = f(array[i]);
+    that.index = i;
+    var x = f.call(that, array[i]);
     if (x > maxx) {
       maxx = x;
       maxi = i;
@@ -350,8 +363,8 @@ pv.max.index = function(array, f) {
  * @returns {number} the minimum value of the specified array.
  */
 pv.min = function(array, f) {
-  if (!f) f = pv.identity;
-  return pv.reduce(array, function(p, d) { return Math.min(p, f(d)); }, Infinity);
+  if (f == pv.index) return 0;
+  return Math.min.apply(null, f ? map(array, f) : array);
 };
 
 /**
@@ -365,10 +378,12 @@ pv.min = function(array, f) {
  * @returns {number} the index of the minimum value of the specified array.
  */
 pv.min.index = function(array, f) {
+  if (f == pv.index) return 0;
   if (!f) f = pv.identity;
   var mini = -1, minx = Infinity;
   for (var i = 0; i < array.length; i++) {
-    var x = f(array[i]);
+    that.index = i;
+    var x = f.call(that, array[i]);
     if (x < minx) {
       minx = x;
       mini = i;
@@ -401,71 +416,19 @@ pv.mean = function(array, f) {
  * @returns {number} the median of the specified array.
  */
 pv.median = function(array, f) {
-  if (!f) f = pv.identity;
-  array = array.map(f).sort(function(a, b) { return a - b; });
+  if (f == pv.index) return (array.length - 1) / 2;
+  array = map(array, f).sort(pv.naturalOrder);
   if (array.length % 2) return array[Math.floor(array.length / 2)];
   var i = array.length / 2;
   return (array[i - 1] + array[i]) / 2;
 };
 
-if (/\[native code\]/.test(Array.prototype.reduce)) {
 /**
- * Applies the specified function <tt>f</tt> against an accumulator and each
- * value of the specified array (from left-ot-right) so as to reduce it to a
- * single value.
- *
- * <p>Array reduce was added in JavaScript 1.8. This implementation uses the native
- * method if provided; otherwise we use our own implementation derived from the
- * JavaScript documentation. Note that we don't want to add it to the Array
- * prototype directly because this breaks certain (bad) for loop idioms.
- *
- * @see <a
- * href="http://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/reduce">Array.reduce</a>.
- * @param {array} array an array.
- * @param {function} [f] a callback function to execute on each value in the array.
- * @param [v] the object to use as the first argument to the first callback.
- * @returns the reduced value.
- */
-  pv.reduce = function(array, f, v) {
-    var p = Array.prototype;
-    return p.reduce.apply(array, p.slice.call(arguments, 1));
-  };
-} else {
-  pv.reduce = function(array, f, v) {
-    var len = array.length;
-    if (!len && (arguments.length == 2)) {
-      throw new Error();
-    }
-
-    var i = 0;
-    if (arguments.length < 3) {
-      while (true) {
-        if (i in array) {
-          v = array[i++];
-          break;
-        }
-        if (++i >= len) {
-          throw new Error();
-        }
-      }
-    }
-
-    for (; i < len; i++) {
-      if (i in array) {
-        v = f.call(null, v, array[i], i, array);
-      }
-    }
-    return v;
-  };
-};
-
-/**
- * Returns a map constructed from the specified <tt>keys</tt>, using the function
- * <tt>f</tt> to compute the value for each key. The arguments to the value
- * function are the same as those used in the built-in array <tt>map</tt>
- * function: the key, the index, and the array itself. The callback is invoked
- * only for indexes of the array which have assigned values; it is not invoked
- * for indexes which have been deleted or which have never been assigned values.
+ * Returns a map constructed from the specified <tt>keys</tt>, using the
+ * function <tt>f</tt> to compute the value for each key. The single argument to
+ * the value function is the key. The callback is invoked only for indexes of
+ * the array which have assigned values; it is not invoked for indexes which
+ * have been deleted or which have never been assigned values.
  *
  * <p>For example, this expression creates a map from strings to string length:
  *
@@ -473,8 +436,6 @@ if (/\[native code\]/.test(Array.prototype.reduce)) {
  *
  * The returned value is <tt>{one: 3, three: 5, seventeen: 9}</tt>.
  *
- * @see <a
- * href="http://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Global_Objects/Array/map">Array.map</a>.
  * @param {array} keys an array.
  * @param {function} f a value function.
  * @returns a map from keys to values.
@@ -484,7 +445,8 @@ pv.dict = function(keys, f) {
   for (var i = 0; i < keys.length; i++) {
     if (i in keys) {
       var k = keys[i];
-      m[k] = f.call(null, k, i, keys);
+      that.index = i;
+      m[k] = f.call(that, k);
     }
   }
   return m;
@@ -510,7 +472,7 @@ pv.dict = function(keys, f) {
 pv.permute = function(array, indexes, f) {
   if (!f) f = pv.identity;
   var p = new Array(indexes.length);
-  indexes.forEach(function(j, i) { p[i] = f(array[j]); });
+  indexes.forEach(function(j, i) { that.index = j; p[i] = f.call(that, array[j]); });
   return p;
 };
 
@@ -533,7 +495,7 @@ pv.permute = function(array, indexes, f) {
 pv.numerate = function(keys, f) {
   if (!f) f = pv.identity;
   var map = {};
-  keys.forEach(function(x, i) { map[f(x)] = i; });
+  keys.forEach(function(x, i) { that.index = i; map[f.call(that, x)] = i; });
   return map;
 };
 

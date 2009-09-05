@@ -1,7 +1,6 @@
 // TODO ticks / rule values
 // TODO date scale
 // TODO angle ranges?
-// TODO this.index for domain computation (not just pv.index)?
 // TODO diverging color scales?
 
 /** TODO */
@@ -45,8 +44,8 @@ pv.Scale.Impl.prototype.getData = function(mark) {
 /** TODO */
 pv.Scale.Impl.prototype.getDomain = function(data, by) {
   var domain = this.domain, min = domain && domain.min, max = domain && domain.max;
-  if (min == undefined) min = (by == pv.index) ? 0 : pv.Scale.domainMin(data, by);
-  if (max == undefined) max = (by == pv.index) ? (data.length - 1) : pv.max(data, by);
+  if (min == undefined) min = pv.Scale.domainMin(data, by);
+  if (max == undefined) max = pv.max(data, by);
   return {min: min, max: max};
 };
 
