@@ -265,13 +265,11 @@ pv.values = function(map) {
   return array;
 };
 
-/** A private variable to store the index property for map. */
-var that = {};
-
 /** A private variant of Array.prototype.map that supports the index property. */
 function map(array, f) {
+  var o = {};
   return f
-      ? array.map(function(d, i) { that.index = i; return f.call(that, d); })
+      ? array.map(function(d, i) { o.index = i; return f.call(o, d); })
       : array.slice();
 };
 
@@ -307,8 +305,9 @@ pv.normalize = function(array, f) {
  * @returns {number} the sum of the specified array.
  */
 pv.sum = function(array, f) {
+  var o = {};
   return array.reduce(f
-      ? function(p, d, i) { that.index = i; return p + f.call(that, d); }
+      ? function(p, d, i) { o.index = i; return p + f.call(o, d); }
       : function(p, d) { return p + d; }, 0);
 };
 
@@ -340,10 +339,10 @@ pv.max = function(array, f) {
 pv.max.index = function(array, f) {
   if (f == pv.index) return array.length - 1;
   if (!f) f = pv.identity;
-  var maxi = -1, maxx = -Infinity;
+  var maxi = -1, maxx = -Infinity, o = {};
   for (var i = 0; i < array.length; i++) {
-    that.index = i;
-    var x = f.call(that, array[i]);
+    o.index = i;
+    var x = f.call(o, array[i]);
     if (x > maxx) {
       maxx = x;
       maxi = i;
@@ -380,10 +379,10 @@ pv.min = function(array, f) {
 pv.min.index = function(array, f) {
   if (f == pv.index) return 0;
   if (!f) f = pv.identity;
-  var mini = -1, minx = Infinity;
+  var mini = -1, minx = Infinity, o = {};
   for (var i = 0; i < array.length; i++) {
-    that.index = i;
-    var x = f.call(that, array[i]);
+    o.index = i;
+    var x = f.call(o, array[i]);
     if (x < minx) {
       minx = x;
       mini = i;
@@ -441,12 +440,12 @@ pv.median = function(array, f) {
  * @returns a map from keys to values.
  */
 pv.dict = function(keys, f) {
-  var m = {};
+  var m = {}, o = {};
   for (var i = 0; i < keys.length; i++) {
     if (i in keys) {
       var k = keys[i];
-      that.index = i;
-      m[k] = f.call(that, k);
+      o.index = i;
+      m[k] = f.call(o, k);
     }
   }
   return m;
@@ -471,8 +470,8 @@ pv.dict = function(keys, f) {
  */
 pv.permute = function(array, indexes, f) {
   if (!f) f = pv.identity;
-  var p = new Array(indexes.length);
-  indexes.forEach(function(j, i) { that.index = j; p[i] = f.call(that, array[j]); });
+  var p = new Array(indexes.length), o = {};
+  indexes.forEach(function(j, i) { o.index = j; p[i] = f.call(o, array[j]); });
   return p;
 };
 
@@ -494,8 +493,8 @@ pv.permute = function(array, indexes, f) {
  */
 pv.numerate = function(keys, f) {
   if (!f) f = pv.identity;
-  var map = {};
-  keys.forEach(function(x, i) { that.index = i; map[f.call(that, x)] = i; });
+  var map = {}, o = {};
+  keys.forEach(function(x, i) { o.index = i; map[f.call(o, x)] = i; });
   return map;
 };
 
