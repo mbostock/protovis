@@ -1,6 +1,3 @@
-// TODO having left / top / right / bottom default to 0 makes this behave
-// differently from bar
-
 /**
  * Constructs a new, empty panel with default properties. Panels, with the
  * exception of the root panel, are not typically constructed directly; instead,
@@ -85,10 +82,6 @@ pv.Panel.prototype.defineProperty("canvas");
  */
 pv.Panel.prototype.defaults = new pv.Panel()
     .extend(pv.Bar.prototype.defaults)
-    .top(0)
-    .left(0)
-    .bottom(0)
-    .right(0)
     .fillStyle(null);
 
 /**

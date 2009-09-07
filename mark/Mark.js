@@ -787,7 +787,7 @@ pv.Mark.prototype.buildImplied = function(s) {
   var h = p.height ? s.height : 0;
 
   /* Compute implied width, right and left. */
-  var width = this.parent ? this.parent.width() : 0;
+  var width = this.parent ? this.parent.width() : (w + l + r);
   if (w == null) {
     w = width - (r = r || 0) - (l = l || 0);
   } else if (r == null) {
@@ -797,7 +797,7 @@ pv.Mark.prototype.buildImplied = function(s) {
   }
 
   /* Compute implied height, bottom and top. */
-  var height = this.parent ? this.parent.height() : 0;
+  var height = this.parent ? this.parent.height() : (h + t + b);
   if (h == null) {
     h = height - (t = t || 0) - (b = b || 0);
   } else if (b == null) {
