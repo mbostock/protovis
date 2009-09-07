@@ -1,5 +1,9 @@
 pv.treemap = function(tree) {
-  var keys = [];
+  var keys = [], round = false;
+
+  function rnd(i) {
+    return round ? Math.round(i) : i;
+  }
 
   function accumulate(map) {
     var node = {size: 0, children: [], keys: keys.slice()};
@@ -47,10 +51,10 @@ pv.treemap = function(tree) {
 
     function position(row) {
       var s = pv.sum(row, function(node) { return node.size; }),
-          hh = (l == 0) ? 0 : (s / l);
+          hh = (l == 0) ? 0 : rnd(s / l);
 
       for (var i = 0, d = 0; i < row.length; i++) {
-        var n = row[i], nw = n.size / hh;
+        var n = row[i], nw = rnd(n.size / hh);
         if (w == l) {
           n.x = x + d;
           n.y = y;
@@ -66,9 +70,11 @@ pv.treemap = function(tree) {
       }
 
       if (w == l) {
+        if (n) n.width += w - d; // correct rounding error
         y += hh;
         h -= hh;
       } else {
+        if (n) n.height += h - d; // correct rounding error
         x += hh;
         w -= hh;
       }
@@ -82,7 +88,6 @@ pv.treemap = function(tree) {
         children.pop();
         continue;
       }
-
       row.push(child);
 
       var k = ratio(row, l);
@@ -99,6 +104,17 @@ pv.treemap = function(tree) {
 
     if (row.length > 0) {
       position(row);
+    }
+
+    /* correct rounding error */
+    if (w == l) {
+      for (var i = 0; i < row.length; i++) {
+        row[i].width += w;
+      }
+    } else {
+      for (var i = 0; i < row.length; i++) {
+        row[i].height += h;
+      }
     }
   }
 
@@ -132,6 +148,11 @@ pv.treemap = function(tree) {
     layout(root);
     return flatten(root, []).reverse();
   }
+
+  data.round = function(r) {
+    round = r;
+    return this;
+  };
 
   return data;
 };
