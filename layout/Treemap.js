@@ -1,16 +1,8 @@
 pv.treemap = function(tree) {
-  return new pv.Treemap(tree);
-};
-
-pv.Treemap = function(tree) {
-  this.tree = tree;
-};
-
-pv.Treemap.prototype.nodes = function() {
   var keys = [];
 
   function accumulate(map) {
-    var node = {size: 0, children: []};
+    var node = {size: 0, children: [], keys: keys.slice()};
     for (var key in map) {
       var child = map[key];
       keys.push(key);
@@ -120,38 +112,26 @@ pv.Treemap.prototype.nodes = function() {
   }
 
   function flatten(node, array) {
-    array.push(node);
     if (node.children) {
       for (var i = 0; i < node.children.length; i++) {
         flatten(node.children[i], array);
       }
+    } else {
+      array.push(node)
     }
     return array;
   }
 
-  var root = accumulate(this.tree);
-  root.x = 0;
-  root.y = 0;
-  root.width = 1;
-  root.height = 1;
-  scale(root, 1 / root.size);
-  layout(root);
+  function data() {
+    var root = accumulate(tree);
+    root.x = 0;
+    root.y = 0;
+    root.width = this.parent.width();
+    root.height = this.parent.height();
+    scale(root, root.width * root.height / root.size);
+    layout(root);
+    return flatten(root, []).reverse();
+  }
 
-  return flatten(root, []);
-};
-
-pv.Treemap.prototype.x = function(node) {
-  return node.x * pv.Scale.rangeMax(this);
-};
-
-pv.Treemap.prototype.y = function(node) {
-  return node.y * pv.Scale.rangeMax(this);
-};
-
-pv.Treemap.prototype.width = function(node) {
-  return node.width * pv.Scale.rangeMax(this);
-};
-
-pv.Treemap.prototype.height = function(node) {
-  return node.height * pv.Scale.rangeMax(this);
+  return data;
 };
