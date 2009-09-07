@@ -15,7 +15,7 @@
  * @see pv.Colors
  */
 pv.colors = function() {
-  return pv.Colors(arguments);
+  return pv.Colors(Array.prototype.slice.call(arguments));
 };
 
 /**

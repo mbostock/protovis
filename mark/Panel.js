@@ -1,3 +1,6 @@
+// TODO having left / top / right / bottom default to 0 makes this behave
+// differently from bar
+
 /**
  * Constructs a new, empty panel with default properties. Panels, with the
  * exception of the root panel, are not typically constructed directly; instead,

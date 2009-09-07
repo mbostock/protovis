@@ -3,6 +3,9 @@
 // TODO angle ranges?
 // TODO diverging color scales?
 
+// TODO scales should ignore undefined values when computing the domain min and
+// max, as might be the case if some of the marks are not visible
+
 /** TODO */
 pv.Scale = function() {};
 
