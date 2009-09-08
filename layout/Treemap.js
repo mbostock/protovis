@@ -166,5 +166,10 @@ pv.treemap = function(tree) {
     return this;
   };
 
+  data.root = function(v) {
+    keys = [v];
+    return this;
+  };
+
   return data;
 };
