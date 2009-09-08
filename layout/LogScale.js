@@ -2,6 +2,7 @@
 // TODO customizable base
 // TODO override nice behavior; depends on customizable base
 // TODO color ranges?
+// TODO evaluation of height property requires knowing bottom/top (if non-zero)
 
 /** TODO */
 pv.Scale.Log = function() {};
@@ -43,7 +44,7 @@ pv.Scale.LogImpl.prototype.getRange = function() {
 
 /** TODO */
 pv.Scale.LogImpl.prototype.scale = function(value) {
-  return (Math.log(value) - Math.log(this.domain.min)) * this.k + this.range.min;
+  return (Math.log(value) - Math.log(this.offset())) * this.k + this.range.min;
 };
 
 /** TODO */

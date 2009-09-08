@@ -40,7 +40,7 @@ pv.Scale.LinearImpl.prototype.getRange = function() {
 
 /** TODO */
 pv.Scale.LinearImpl.prototype.scale = function(value) {
-  var x = (value - this.domain.min) * this.k + this.min;
+  var x = (value - this.offset()) * this.k + this.min;
   return this.ramp ? this.ramp.value(x) : x;
 };
 

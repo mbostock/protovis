@@ -27,33 +27,48 @@ Date.parse = function(s, format) {
     return Date.__parse__(s);
   }
 
-  var d = new Date(1970, 1, 1); // local time
+  var year = 1970, month = 0, date = 1, hour = 0, minute = 0, second = 0;
   var fields = [function() {}];
   format = format.replace(/[\\\^\$\*\+\?\[\]\(\)\.\{\}]/g, "\\$&");
   format = format.replace(/%[a-zA-Z0-9]/g, function(s) {
       switch (s) {
         case '%S': {
-          fields.push(function(x) { d.setSeconds(x); });
+          fields.push(function(x) { second = x; });
           return "([0-9]+)";
         }
         case '%M': {
-          fields.push(function(x) { d.setMinutes(x); });
+          fields.push(function(x) { minute = x; });
           return "([0-9]+)";
         }
         case '%H': {
-          fields.push(function(x) { d.setHours(x); });
+          fields.push(function(x) { hour = x; });
           return "([0-9]+)";
         }
         case '%d': {
-          fields.push(function(x) { d.setDate(x); });
+          fields.push(function(x) { date = x; });
           return "([0-9]+)";
         }
         case '%m': {
-          fields.push(function(x) { d.setMonth(x - 1); });
+          fields.push(function(x) { month = x - 1; });
           return "([0-9]+)";
         }
+        case '%b': {
+          fields.push(function(x) { month = {
+                Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7,
+                Sep: 8, Oct: 9, Nov: 10, Dec: 11
+              }[x]; });
+          return "([A-Za-z]+)";
+        }
+        case '%B': {
+          fields.push(function(x) { month = {
+                January: 0, February: 1, March: 2, April: 3, May: 4, June: 5,
+                July: 6, August: 7, September: 8, October: 9, November: 10,
+                December: 11
+              }[x]; });
+          return "([A-Za-z]+)";
+        }
         case '%Y': {
-          fields.push(function(x) { d.setYear(x); });
+          fields.push(function(x) { year = x; });
           return "([0-9]+)";
         }
         case '%%': {
@@ -63,8 +78,8 @@ Date.parse = function(s, format) {
         case '%y': {
           fields.push(function(x) {
               x = Number(x);
-              d.setYear(x + (((0 <= x) && (x < 69)) ? 2000
-                  : (((x >= 69) && (x < 100) ? 1900 : 0))));
+              year = x + (((0 <= x) && (x < 69)) ? 2000
+                  : (((x >= 69) && (x < 100) ? 1900 : 0)));
             });
           return "([0-9]+)";
         }
@@ -74,7 +89,7 @@ Date.parse = function(s, format) {
 
   var match = s.match(format);
   if (match) match.forEach(function(m, i) { fields[i](m); });
-  return d;
+  return new Date(year, month, date, hour, minute, second);
 };
 
 if (Date.prototype.toLocaleFormat) {

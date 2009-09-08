@@ -49,7 +49,7 @@ pv.Scale.Impl.prototype.getData = function(mark) {
 /** TODO */
 pv.Scale.Impl.prototype.getDomain = function(data, by) {
   var domain = this.domain, min = domain && domain.min, max = domain && domain.max;
-  if (min == undefined) min = pv.Scale.domainMin(data, by);
+  if (min == undefined) min = pv.min(data, by);
   if (max == undefined) max = pv.max(data, by);
   return {min: min, max: max};
 };
@@ -71,12 +71,12 @@ pv.Scale.Impl.prototype.evaluate = function(mark, arguments, as) {
 }
 
 /** TODO */
-pv.Scale.domainMin = function(data, by) {
+pv.Scale.Impl.prototype.offset = function() {
   switch (property) {
     case "height":
     case "width": return 0;
   }
-  return pv.min(data, by);
+  return this.domain.min;
 };
 
 /** TODO */
