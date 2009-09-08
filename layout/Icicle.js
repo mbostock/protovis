@@ -1,7 +1,7 @@
 // TODO share code with Treemap
-// TODO inspect parent panel dimensions to set inner and outer radii
+// TODO vertical / horizontal orientation?
 
-pv.sunburst = function(tree) {
+pv.icicle = function(tree) {
   var keys = [];
 
   function accumulate(map) {
@@ -31,25 +31,34 @@ pv.sunburst = function(tree) {
     }
   }
 
+  function depth(node, i) {
+    i = i ? (i + 1) : 1;
+    return node.children
+        ? pv.max(node.children, function(n) { return depth(n, i); })
+        : i;
+  }
+
   function layout(node) {
     if (node.children) {
-      wedgify(node);
+      icify(node);
       for (var i = 0; i < node.children.length; i++) {
         layout(node.children[i]);
       }
     }
   }
 
-  function wedgify(node) {
-    var startAngle = node.startAngle;
+  function icify(node) {
+    var left = node.left;
     for (var i = 0; i < node.children.length; i++) {
-      var child = node.children[i], angle = (child.size / node.size) * node.angle;
-      child.startAngle = startAngle;
-      child.angle = angle;
+      var child = node.children[i], width = (child.size / node.size) * node.width;
+      child.left = left;
+      child.top = node.top + node.height;
+      child.width = width;
+      child.height = node.height;
       child.depth = node.depth + 1;
-      startAngle += angle;
+      left += width;
       if (child.children) {
-        wedgify(child);
+        icify(child);
       }
     }
   }
@@ -66,8 +75,10 @@ pv.sunburst = function(tree) {
 
   function data() {
     var root = accumulate(tree);
-    root.startAngle = 0;
-    root.angle = 2 * Math.PI;
+    root.top = 0;
+    root.left = 0;
+    root.width = this.parent.width();
+    root.height = this.parent.height() / depth(root);
     root.depth = 0;
     layout(root);
     return flatten(root, []).reverse();
