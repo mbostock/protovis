@@ -166,5 +166,5 @@ pv.treemap = function(tree) {
     return this;
   };
 
-  return data.round(false);
+  return data;
 };

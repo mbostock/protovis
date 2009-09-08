@@ -4,7 +4,9 @@
 // TODO diverging color scales?
 
 // TODO scales should ignore undefined values when computing the domain min and
-// max, as might be the case if some of the marks are not visible
+// max, as might be the case if some of the marks are not visible. On the other
+// hand, it's still possible for a by function to have an error when being
+// evaluated on the data for a mark instance that's invisible.
 
 /** TODO */
 pv.Scale = function() {};
