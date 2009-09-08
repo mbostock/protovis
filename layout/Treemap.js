@@ -47,8 +47,8 @@ pv.treemap = function(tree) {
 
   function squarify(node) {
     var row = [], mink = Infinity;
-    var x = node.x + (inset ? inset.left : 0),
-        y = node.y + (inset ? inset.top : 0),
+    var x = node.left + (inset ? inset.left : 0),
+        y = node.top + (inset ? inset.top : 0),
         w = node.width - (inset ? inset.left + inset.right : 0),
         h = node.height - (inset ? inset.top + inset.bottom : 0),
         l = Math.min(w, h);
@@ -62,13 +62,13 @@ pv.treemap = function(tree) {
       for (var i = 0, d = 0; i < row.length; i++) {
         var n = row[i], nw = rnd(n.size / hh);
         if (w == l) {
-          n.x = x + d;
-          n.y = y;
+          n.left = x + d;
+          n.top = y;
           n.width = nw;
           n.height = hh;
         } else {
-          n.x = x;
-          n.y = y + d;
+          n.left = x;
+          n.top = y + d;
           n.width = hh;
           n.height = nw;
         }
@@ -147,8 +147,8 @@ pv.treemap = function(tree) {
 
   function data() {
     var root = accumulate(tree);
-    root.x = 0;
-    root.y = 0;
+    root.left = 0;
+    root.top = 0;
     root.width = this.parent.width();
     root.height = this.parent.height();
     layout(root);
