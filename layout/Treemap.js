@@ -1,3 +1,5 @@
+// TODO add `by` function for determining size (and children?)
+
 pv.treemap = function(tree) {
   var keys = [], round, inset;
 
