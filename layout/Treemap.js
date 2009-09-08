@@ -1,5 +1,5 @@
 pv.treemap = function(tree) {
-  var keys = [], round = false;
+  var keys = [], round, internal, inset;
 
   function rnd(i) {
     return round ? Math.round(i) : i;
@@ -47,7 +47,13 @@ pv.treemap = function(tree) {
 
   function squarify(node) {
     var row = [], mink = Infinity;
-    var x = node.x, y = node.y, w = node.width, h = node.height, l = Math.min(w, h);
+    var x = node.x + inset.left,
+        y = node.y + inset.top,
+        w = node.width - inset.left - inset.right,
+        h = node.height - inset.top - inset.bottom,
+        l = Math.min(w, h);
+
+    scale(node, w * h / node.size);
 
     function position(row) {
       var s = pv.sum(row, function(node) { return node.size; }),
@@ -132,7 +138,8 @@ pv.treemap = function(tree) {
       for (var i = 0; i < node.children.length; i++) {
         flatten(node.children[i], array);
       }
-    } else {
+    }
+    if (internal || !node.children) {
       array.push(node)
     }
     return array;
@@ -144,15 +151,25 @@ pv.treemap = function(tree) {
     root.y = 0;
     root.width = this.parent.width();
     root.height = this.parent.height();
-    scale(root, root.width * root.height / root.size);
     layout(root);
     return flatten(root, []).reverse();
   }
 
-  data.round = function(r) {
-    round = r;
+  data.round = function(v) {
+    round = v;
     return this;
   };
 
-  return data;
+  data.internal = function(v) {
+    internal = v
+    return this;
+  };
+
+  data.inset = function(top, right, bottom, left) {
+    if (arguments.length == 1) right = bottom = left = top;
+    inset = {top:top, right:right, bottom:bottom, left:left};
+    return this;
+  };
+
+  return data.round(false).internal(false).inset(0, 0, 0, 0);
 };
