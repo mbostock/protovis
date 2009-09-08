@@ -1,6 +1,4 @@
-// TODO zlog
-// TODO customizable base
-// TODO override nice behavior; depends on customizable base
+// TODO adjusted zero-symmetric log (logAdjusted instead of logSymmetric)
 // TODO color ranges?
 // TODO evaluation of height property requires knowing bottom/top (if non-zero)
 
@@ -25,12 +23,17 @@ pv.Scale.LogImpl.prototype.type = pv.Scale.Log;
 pv.Scale.LogImpl.prototype.base = 10;
 
 /** TODO */
+pv.Scale.LogImpl.prototype.log = function(x) {
+  return pv.logSymmetric(x, this.base);
+};
+
+/** TODO */
 pv.Scale.LogImpl.prototype.getDomain = function(data, by) {
   var domain = pv.Scale.Impl.prototype.getDomain.apply(this, arguments);
   if (this.nice) {
-    var min = domain.min, max = domain.max, base = this.base;
-    domain.min = Math.pow(base, Math.floor(Math.log(min) / Math.log(base)));
-    domain.max = Math.pow(base, Math.ceil(Math.log(max) / Math.log(base)));
+    var min = domain.min, max = domain.max;
+    domain.min = pv.logFloor(min, this.base);
+    domain.max = pv.logCeil(max, this.base);
   }
   return domain;
 };
@@ -38,13 +41,14 @@ pv.Scale.LogImpl.prototype.getDomain = function(data, by) {
 /** TODO */
 pv.Scale.LogImpl.prototype.getRange = function() {
   var range = pv.Scale.Impl.prototype.getRange.apply(this, arguments);
-  this.k = (range.max - range.min) / (Math.log(this.domain.max) - Math.log(this.domain.min));
+  this.k = (range.max - range.min)
+      / (this.log(this.domain.max) - this.log(this.domain.min));
   return range;
 };
 
 /** TODO */
 pv.Scale.LogImpl.prototype.scale = function(value) {
-  return (Math.log(value) - Math.log(this.offset())) * this.k + this.range.min;
+  return (this.log(value) - this.log(this.offset())) * this.k + this.range.min;
 };
 
 /** TODO */

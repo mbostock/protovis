@@ -606,3 +606,73 @@ pv.listen = function(target, type, listener) {
     ? target.addEventListener(type, listener, false)
     : target.attachEvent("on" + type, listener);
 };
+
+/**
+ * Returns the logarithm with a given base value.
+ *
+ * @param x the number for which to compute the logarithm
+ * @param b the base of the logarithm
+ * @returns the logarithm value
+ */
+pv.log = function(x, b) {
+  return Math.log(x) / Math.log(b);
+};
+
+/**
+ * Computes a zero-symmetric logarithm. Computes the logarithm of the absolute
+ * value of the input, and determines the sign of the output according to the
+ * sign of the input value.
+ *
+ * @param x the number for which to compute the logarithm
+ * @param b the base of the logarithm
+ * @returns the symmetric log value.
+ */
+pv.logSymmetric = function(x, b) {
+  return (x == 0) ? 0 : ((x < 0) ? -pv.log(-x, b) : pv.log(x, b));
+};
+
+/**
+ * Computes a zero-symmetric logarithm, with adjustment to values between zero
+ * and the logarithm base. This adjustment introduces distortion for values less
+ * than the base number, but enables simultaneous plotting of log-transformed
+ * data involving both positive and negative numbers.
+ *
+ * @param x the number for which to compute the logarithm
+ * @param b the base of the logarithm
+ * @returns the adjusted, symmetric log value.
+ */
+pv.logAdjusted = function(x, b) {
+  var negative = x < 0;
+  if (x < b) x += (b - x) / b;
+  return negative ? -pv.log(x, b) : pv.log(x, b);
+};
+
+/**
+ * Rounds an input value down according to its logarithm. The method takes the
+ * floor of the logarithm of the value and then uses the resulting value as an
+ * exponent for the base value.
+ *
+ * @param x the number for which to compute the logarithm floor
+ * @param base the base of the logarithm
+ * @return the rounded-by-logarithm value
+ */
+pv.logFloor = function(x, b) {
+  return (x > 0)
+      ? Math.pow(b, Math.floor(pv.log(x, b)))
+      : -Math.pow(b, -Math.floor(-pv.log(-x, b)));
+};
+
+/**
+ * Rounds an input value up according to its logarithm. The method takes the
+ * ceiling of the logarithm of the value and then uses the resulting value as an
+ * exponent for the base value.
+ *
+ * @param x the number for which to compute the logarithm ceiling
+ * @param base the base of the logarithm
+ * @return the rounded-by-logarithm value
+ */
+pv.logCeil = function(x, b) {
+  return (x > 0)
+      ? Math.pow(b, Math.ceil(pv.log(x, b)))
+      : -Math.pow(b, -Math.ceil(-pv.log(-x, b)));
+};
