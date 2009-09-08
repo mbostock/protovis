@@ -34,6 +34,7 @@ pv.colors = function() {
  * @see pv.colors
  */
 pv.Colors = function(values) {
+  values = values.map(pv.color);
 
   /**
    * @ignore Each set of colors has an associated (numeric) ID that is used to
