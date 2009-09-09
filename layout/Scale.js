@@ -8,6 +8,10 @@
 // hand, it's still possible for a by function to have an error when being
 // evaluated on the data for a mark instance that's invisible.
 
+// TODO smart inference of domain based on property is dangerous because the
+// left / right / top / bottom property could be evaluated before the width /
+// height property, in the event the scale is used for both.
+
 /** TODO */
 pv.Scale = function() {};
 
@@ -49,7 +53,7 @@ pv.Scale.Impl.prototype.getData = function(mark) {
 /** TODO */
 pv.Scale.Impl.prototype.getDomain = function(data, by) {
   var domain = this.domain, min = domain && domain.min, max = domain && domain.max;
-  if (min == undefined) min = pv.min(data, by);
+  if (min == undefined) min = pv.Scale.domainMin(data, by);
   if (max == undefined) max = pv.max(data, by);
   return {min: min, max: max};
 };
@@ -72,22 +76,21 @@ pv.Scale.Impl.prototype.evaluate = function(mark, arguments, as) {
 
 /** TODO */
 pv.Scale.Impl.prototype.offset = function() {
-  switch (property) {
-    case "height":
-    case "width": return 0;
-  }
+  switch (property) { case "height": case "width": return 0; }
   return this.domain.min;
+};
+
+/** TODO */
+pv.Scale.domainMin = function(data, by) {
+  switch (property) { case "height": case "width": return 0; }
+  return pv.min(data, by);
 };
 
 /** TODO */
 pv.Scale.rangeMax = function(mark) {
   switch (property) {
-    case "height":
-    case "top":
-    case "bottom": return mark.parent.height();
-    case "width":
-    case "left":
-    case "right": return mark.parent.width();
+    case "height": case "top": case "bottom": return mark.parent.height();
+    case "width": case "left": case "right": return mark.parent.width();
   }
 };
 

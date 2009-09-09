@@ -37,6 +37,26 @@ pv.Rule.prototype = pv.extend(pv.Mark);
 pv.Rule.prototype.type = "rule";
 
 /**
+ * The width of the rule, in pixels. If the left position is specified, the rule
+ * extends rightward from the left edge; if the right position is specified, the
+ * rule extends leftward from the right edge.
+ *
+ * @type number
+ * @name pv.Rule.prototype.width
+ */
+pv.Rule.prototype.defineProperty("width");
+
+/**
+ * The height of the rule, in pixels. If the bottom position is specified, the
+ * rule extends upward from the bottom edge; if the top position is specified,
+ * the rule extends downward from the top edge.
+ *
+ * @type number
+ * @name pv.Rule.prototype.height
+ */
+pv.Rule.prototype.defineProperty("height");
+
+/**
  * The width of stroked lines, in pixels; used in conjunction with
  * <tt>strokeStyle</tt> to stroke the rule. The default value is 1 pixel.
  *
@@ -131,44 +151,22 @@ pv.Rule.Anchor.prototype.$textBaseline = function(d) {
 };
 
 /**
- * Returns the pseudo-width of the rule in pixels; read-only.
- *
- * @returns {number} the pseudo-width, in pixels.
- */
-pv.Rule.prototype.width = function() {
-  return this.scene[this.index].width;
-};
-
-/**
- * Returns the pseudo-height of the rule in pixels; read-only.
- *
- * @returns {number} the pseudo-height, in pixels.
- */
-pv.Rule.prototype.height = function() {
-  return this.scene[this.index].height;
-};
-
-/**
  * Overrides the default behavior of {@link Mark#buildImplied} to determine the
  * orientation (vertical or horizontal) of the rule.
  *
  * @param s a node in the scene graph; the instance of the rule to build.
  */
 pv.Rule.prototype.buildImplied = function(s) {
-  s.width = s.height = 0;
+  var l = s.left, r = s.right, t = s.top, b = s.bottom;
 
   /* Determine horizontal or vertical orientation. */
-  var l = s.left, r = s.right, t = s.top, b = s.bottom;
-  if (((l == null) && (r == null)) || ((r != null) && (l != null))) {
-    s.width = this.parent.width() - (l = l || 0) - (r = r || 0);
+  if ((s.width != null)
+      || ((l == null) && (r == null))
+      || ((r != null) && (l != null))) {
+    s.height = 0;
   } else {
-    s.height = this.parent.height() - (t = t || 0) - (b = b || 0);
+    s.width = 0;
   }
-
-  s.left = l;
-  s.right = r;
-  s.top = t;
-  s.bottom = b;
 
   pv.Mark.prototype.buildImplied.call(this, s);
 };
