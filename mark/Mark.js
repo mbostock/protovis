@@ -341,8 +341,8 @@ pv.Mark.prototype.defaults = new pv.Mark()
     .title("");
 
 /* Private categorical colors for default fill & stroke styles. */
-var defaultFillStyle = pv.Colors.category20(),
-    defaultStrokeStyle = pv.Colors.category10();
+var defaultFillStyle = pv.Colors.category20().by(pv.parent),
+    defaultStrokeStyle = pv.Colors.category10().by(pv.parent);
 
 /**
  * Sets the prototype of this mark to the specified mark. Any properties not

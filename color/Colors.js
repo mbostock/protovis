@@ -17,7 +17,7 @@
 pv.colors = function() {
   var scale = pv.Scale.ordinal();
   scale.range.apply(scale, arguments);
-  return scale.by(pv.parent);
+  return scale;
 };
 
 /** @namespace */
