@@ -75,7 +75,7 @@ pv.Line.prototype.defineProperty("segmented");
 pv.Line.prototype.defaults = new pv.Line()
     .extend(pv.Mark.prototype.defaults)
     .lineWidth(1.5)
-    .strokeStyle(pv.Colors.category10);
+    .strokeStyle(defaultStrokeStyle);
 
 /** TODO fixed properties */
 pv.Line.prototype.buildInstance = function(s) {

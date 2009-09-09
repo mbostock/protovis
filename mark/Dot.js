@@ -108,7 +108,7 @@ pv.Dot.prototype.defaults = new pv.Dot()
     .size(20)
     .shape("circle")
     .lineWidth(1.5)
-    .strokeStyle(pv.Colors.category10);
+    .strokeStyle(defaultStrokeStyle);
 
 /**
  * Constructs a new dot anchor with default properties.

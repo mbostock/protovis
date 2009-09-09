@@ -112,7 +112,7 @@ pv.Area.prototype.defineProperty("segmented");
 pv.Area.prototype.defaults = new pv.Area()
     .extend(pv.Mark.prototype.defaults)
     .lineWidth(1.5)
-    .fillStyle(pv.Colors.category20);
+    .fillStyle(defaultFillStyle);
 
 /**
  * Constructs a new area anchor with default properties.

@@ -3,7 +3,7 @@
 /**
  * @namespace
  */
-pv.SvgScene = {};
+pv.Scene = pv.SvgScene = {};
 
 /**
  * Updates the display for the specified array of scene nodes.

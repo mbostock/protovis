@@ -88,7 +88,7 @@ pv.Bar.prototype.defineProperty("fillStyle");
 pv.Bar.prototype.defaults = new pv.Bar()
     .extend(pv.Mark.prototype.defaults)
     .lineWidth(1.5)
-    .fillStyle(pv.Colors.category20);
+    .fillStyle(defaultFillStyle);
 
 /**
  * Constructs a new bar anchor with default properties.
