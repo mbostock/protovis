@@ -1,5 +1,4 @@
 // TODO code-sharing between scales
-// TODO diverging color scales; contiguous domains+ranges
 
 pv.Scale = function() {};
 

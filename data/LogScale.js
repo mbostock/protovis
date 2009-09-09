@@ -1,8 +1,11 @@
 pv.Scale.log = function() {
-  var d = [1, 10], l = [0, 1], b = 10, r = [0, 1], i = pv.identity;
+  var d = [1, 10], l = [0, 1], b = 10, r = [0, 1], i = [pv.identity];
 
   function scale(x) {
-    return i((log(x) - l[0]) / (l[1] - l[0]));
+    var j = pv.search(d, x);
+    if (j < 0) j = -j - 2;
+    if (j >= i.length) j = i.length - 1;
+    return i[j]((log(x) - l[j]) / (l[j + 1] - l[j]));
   }
 
   function log(x) {
@@ -27,9 +30,10 @@ pv.Scale.log = function() {
   scale.range = function(start, end) {
     if (arguments.length) {
       r = Array.prototype.slice.call(arguments);
-      i = (typeof start == "number")
-          ? function(t) { return t * (r[1] - r[0]) + r[0]; }
-          : pv.ramp(start, end);
+      i = [];
+      for (var j = 0; j < r.length - 1; j++) {
+        i.push(pv.Scale.interpolator(r[j], r[j + 1]));
+      }
       return this;
     }
     return r;

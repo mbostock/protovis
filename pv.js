@@ -676,3 +676,32 @@ pv.logCeil = function(x, b) {
       ? Math.pow(b, Math.ceil(pv.log(x, b)))
       : -Math.pow(b, -Math.ceil(-pv.log(-x, b)));
 };
+
+/**
+ * Searches the specified array of numbers for the specified value using the
+ * binary search algorithm. The array must be sorted (as by the <tt>sort</tt>
+ * method) prior to making this call. If it is not sorted, the results are
+ * undefined. If the array contains multiple elements with the specified value,
+ * there is no guarantee which one will be found.
+ *
+ * <p>The <i>insertion point</i> is defined as the point at which the value
+ * would be inserted into the array: the index of the first element greater than
+ * the value, or <tt>array.length</tt>, if all elements in the array are less
+ * than the specified value. Note that this guarantees that the return value
+ * will be nonnegative if and only if the value is found.
+ *
+ * @param {number[]} array the array to be searched.
+ * @param {number} value the value to be searched for.
+ * @returns the index of the search value, if it is contained in the array;
+ * otherwise, (-(<i>insertion point</i>) - 1).
+ */
+pv.search = function(array, value) {
+  var low = 0, high = array.length - 1;
+  while (low <= high) {
+    var mid = (low + high) >> 1, midValue = array[mid];
+    if (midValue < value) low = mid + 1;
+    else if (midValue > value) high = mid - 1;
+    else return mid;
+  }
+  return -low - 1;
+};

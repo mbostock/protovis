@@ -1,8 +1,11 @@
 pv.Scale.linear = function() {
-  var d = [0, 1], r = [0, 1], i = pv.identity;
+  var d = [0, 1], r = [0, 1], i = [pv.identity];
 
   function scale(x) {
-    return i((x - d[0]) / (d[1] - d[0]));
+    var j = pv.search(d, x);
+    if (j < 0) j = -j - 2;
+    if (j >= i.length) j = i.length - 1;
+    return i[j]((x - d[j]) / (d[j + 1] - d[j]));
   }
 
   scale.domain = function(array, min, max) {
@@ -22,24 +25,32 @@ pv.Scale.linear = function() {
   scale.range = function(start, end) {
     if (arguments.length) {
       r = Array.prototype.slice.call(arguments);
-      i = pv.Scale.interpolator(start, end);
+      i = [];
+      for (var j = 0; j < r.length - 1; j++) {
+        i.push(pv.Scale.interpolator(r[j], r[j + 1]));
+      }
       return this;
     }
     return r;
   };
 
   scale.ticks = function() {
-    var span = d[1] - d[0], step = pv.logCeil(span / 10, 10);
+    var min = d[0],
+        max = d[d.length - 1],
+        span = max - min,
+        step = pv.logCeil(span / 10, 10);
     if (span / step < 2) step /= 5;
     else if (span / step < 5) step /= 2;
-    var start = Math.ceil(d[0] / step) * step,
-        end = Math.floor(d[1] / step) * step;
+    var start = Math.ceil(min / step) * step,
+        end = Math.floor(max / step) * step;
     return pv.range(start, end + step, step);
   };
 
   scale.nice = function() {
-    var step = Math.pow(10, Math.round(Math.log(d[1] - d[0]) / Math.log(10)) - 1);
-    d = [Math.floor(d[0] / step) * step, Math.ceil(d[1] / step) * step];
+    var min = d[0],
+        max = d[d.length - 1],
+        step = Math.pow(10, Math.round(Math.log(max - min) / Math.log(10)) - 1);
+    d = [Math.floor(min / step) * step, Math.ceil(max / step) * step];
     return this;
   };
 
