@@ -2,17 +2,17 @@
 // TODO inspect parent panel dimensions to set inner and outer radii
 
 pv.sunburst = function(tree) {
-  var keys = [];
+  var keys = [], sizeof = Number;
 
   function accumulate(map) {
     var node = {size: 0, children: [], keys: keys.slice()};
     for (var key in map) {
-      var child = map[key];
+      var child = map[key], size = sizeof(child);
       keys.push(key);
-      if (typeof child == "object") {
+      if (isNaN(size)) {
         child = accumulate(child);
       } else {
-        child = {size: child, data: child, keys: keys.slice()};
+        child = {size: size, data: child, keys: keys.slice()};
       }
       node.children.push(child);
       node.size += child.size;
@@ -75,6 +75,11 @@ pv.sunburst = function(tree) {
 
   data.root = function(v) {
     keys = [v];
+    return this;
+  };
+
+  data.size = function(f) {
+    sizeof = f;
     return this;
   };
 

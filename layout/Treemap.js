@@ -1,7 +1,7 @@
 // TODO add `by` function for determining size (and children?)
 
 pv.treemap = function(tree) {
-  var keys = [], round, inset;
+  var keys = [], round, inset, sizeof = Number;
 
   function rnd(i) {
     return round ? Math.round(i) : i;
@@ -10,12 +10,12 @@ pv.treemap = function(tree) {
   function accumulate(map) {
     var node = {size: 0, children: [], keys: keys.slice()};
     for (var key in map) {
-      var child = map[key];
+      var child = map[key], size = sizeof(child);
       keys.push(key);
-      if (typeof child == "object") {
+      if (isNaN(size)) {
         child = accumulate(child);
       } else {
-        child = {size: child, data: child, keys: keys.slice()};
+        child = {size: size, data: child, keys: keys.slice()};
       }
       node.children.push(child);
       node.size += child.size;
@@ -170,6 +170,11 @@ pv.treemap = function(tree) {
 
   data.root = function(v) {
     keys = [v];
+    return this;
+  };
+
+  data.size = function(f) {
+    sizeof = f;
     return this;
   };
 
