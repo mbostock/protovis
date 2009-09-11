@@ -138,9 +138,9 @@ Date.prototype.format = function(format) {
         case '%H': return d.getHours();
         case '%d': return d.getDate();
         case '%m': return d.getMonth() + 1;
-        case '%Y': return d.getYear();
+        case '%Y': return d.getFullYear();
         case '%%': return "%";
-        case '%y': return d.getYear() % 100;
+        case '%y': return d.getFullYear() % 100;
       }
       return s;
     });

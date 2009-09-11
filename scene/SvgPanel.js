@@ -1,5 +1,5 @@
 pv.SvgScene.panel = function(scenes) {
-  var parent = scenes.parent && this.group(scenes);
+  var parent = scenes.parent && this.group(scenes), marker = {};
   var previous;
 
   for (var i = 0; i < scenes.length; i++) {
@@ -10,10 +10,14 @@ pv.SvgScene.panel = function(scenes) {
 
     /* svg */
     if (!scenes.parent) {
-      if (i && s.canvas.firstChild) {
+      if (s.canvas.firstChild) {
         var svg = s.canvas.firstChild;
+        if (svg.marker != marker) {
+          while (svg.lastChild) svg.removeChild(svg.lastChild);
+          svg.marker = marker;
+          previous = null;
+        }
       } else {
-        while (s.canvas.firstChild) s.canvas.removeChild(s.canvas.firstChild);
         var svg = s.canvas.appendChild(this.cache(s, "svg", "svg"));
         svg.setAttribute("width", s.width + s.left + s.right);
         svg.setAttribute("height", s.height + s.top + s.bottom);
@@ -24,6 +28,7 @@ pv.SvgScene.panel = function(scenes) {
             = svg.onmouseout
             = svg.onmouseover
             = pv.SvgScene.dispatch;
+        previous = null;
       }
       parent = svg;
     }

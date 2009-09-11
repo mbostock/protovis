@@ -547,6 +547,16 @@ pv.Mark.prototype.render = function() {
   pv.Scene.updateAll(this.scene);
 };
 
+/** Computes the root data stack for the specified mark. */
+function argv(mark) {
+  var stack = [];
+  while (mark) {
+    stack.push(mark.scene[mark.index].data);
+    mark = mark.parent;
+  }
+  return stack;
+}
+
 /** TODO */
 pv.Mark.prototype.bind = function() {
   var binds = {properties: {}, constants: {}, functions: {}, defs: []};
@@ -580,12 +590,6 @@ pv.Mark.prototype.bind = function() {
           return defs.values[name];
         }
       };
-  }
-
-  /* If bind is called from an event handler, correct the data stack. */
-  if (this.index >= 0) {
-    delete this.index;
-    this.root.scene.data.shift();
   }
 
   /* Scan the proto chain for all defined properties. */
@@ -662,10 +666,12 @@ pv.Mark.prototype.build = function() {
     if (this.parent) {
       scene.parent = this.parent.scene;
       scene.parentIndex = this.parent.index;
-    } else {
-      scene.data = [];
     }
   }
+
+  /* Set the data stack. */
+  var stack = this.root.scene.data;
+  if (!stack) this.root.scene.data = stack = argv(this.parent);
 
   /* Evaluate defs. */
   if (this.binds.defs.length) {
@@ -680,7 +686,7 @@ pv.Mark.prototype.build = function() {
   }
 
   /* Create, update and delete scene nodes. */
-  var stack = this.root.scene.data, data = this.get("data");
+  var data = this.get("data");
   stack.unshift(null);
   this.$$data = data; // XXX TODO use scene.data?
   scene.length = data.length;
@@ -694,6 +700,7 @@ pv.Mark.prototype.build = function() {
   stack.shift();
   delete this.index;
   pv.Mark.prototype.index = -1;
+  if (!this.parent) delete scene.data;
 
   return this;
 };
@@ -906,16 +913,6 @@ pv.Mark.prototype.dispatch = function(e, scenes, index) {
   }
   try {
 
-    /** Computes the root data stack for the specified mark. */
-    function stack(mark) {
-      var stack = [];
-      while (mark) {
-        stack.push(mark.scene[mark.index].data);
-        mark = mark.parent;
-      }
-      return stack;
-    }
-
     /* Setup the scene stack. */
     var mark = this;
     do {
@@ -926,20 +923,20 @@ pv.Mark.prototype.dispatch = function(e, scenes, index) {
     } while (mark = mark.parent);
 
     /* Execute the event listener. */
-    this.root.scene.data = stack(this);
-    mark = this.value(l);
-    e.preventDefault();
+    try {
+      this.root.scene.data = argv(this);
+      mark = this.value(l);
+      e.preventDefault();
+    } finally {
+      delete this.root.scene.data;
+    }
 
     /* Update the display. TODO dirtying. */
-    if (mark instanceof pv.Mark) {
-      this.root.scene.data = stack(mark);
-      mark.render();
-    }
+    if (mark instanceof pv.Mark) mark.render();
 
   } finally {
 
     /* Restore the scene stack. */
-    this.root.scene.data = [];
     var mark = this;
     do {
       if (mark.parent) delete mark.scene;
