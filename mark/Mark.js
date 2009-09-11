@@ -801,18 +801,21 @@ pv.Mark.prototype.buildImplied = function(s) {
  */
 var property;
 
-/** The current event. */
-var event;
+/** The current mouse location. */
+var pageX = 0, pageY = 0;
+window.addEventListener("mousemove", function(e) {
+    pageX = e.pageX;
+    pageY = e.pageY;
+  }, false);
 
 /**
  * Returns the current location of the mouse (cursor) relative to this mark's
- * parent. The location is specified in terms of the margins: left, top, bottom
- * and right. The location is undefined if this method is not called from an
- * event handler.
+ * parent.
+ *
+ * @returns {pv.Vector} the mouse location.
  */
 pv.Mark.prototype.mouse = function() {
-  if (!event) return {};
-  var x = 0, y = 0, mark = this.parent;
+  var x = 0, y = 0, mark = (this instanceof pv.Panel) ? this : this.parent;
   do {
     x += mark.left();
     y += mark.top();
@@ -822,7 +825,7 @@ pv.Mark.prototype.mouse = function() {
     x += node.offsetLeft;
     y += node.offsetTop;
   } while (node = node.offsetParent);
-  return {left: event.pageX - x, top: event.pageY - y};
+  return pv.vector(pageX - x, pageY - y);
 };
 
 /**

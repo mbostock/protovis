@@ -12,7 +12,8 @@ pv.Vector.prototype.perp = function() {
 };
 
 pv.Vector.prototype.norm = function() {
-  return this.times(1 / this.length());
+  var l = this.length();
+  return this.times(l ? (1 / l) : 1);
 };
 
 pv.Vector.prototype.length = function() {
