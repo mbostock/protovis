@@ -39,6 +39,14 @@ pv.Scale.log = function() {
     return r;
   };
 
+  scale.invert = function(y) {
+    var j = pv.search(r, y);
+    if (j < 0) j = -j - 2;
+    j = Math.max(0, Math.min(i.length - 1, j));
+    var t = l[j] + (y - r[j]) / (r[j + 1] - r[j]) * (l[j + 1] - l[j]);
+    return (t < 0) ? -Math.pow(b, -t) : Math.pow(b, t);
+  };
+
   scale.ticks = function() {
     var start = Math.floor(l[0]),
         end = Math.ceil(l[1]),

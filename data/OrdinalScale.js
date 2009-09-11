@@ -1,3 +1,6 @@
+// NOTE: ordinal scales are not (at least not yet) invertible, since the domain
+// and range and discontinuous.
+
 pv.Scale.ordinal = function() {
   var d = [], i = {}, r;
 
