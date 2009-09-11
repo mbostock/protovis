@@ -4,7 +4,7 @@ pv.Scale.linear = function() {
   function scale(x) {
     var j = pv.search(d, x);
     if (j < 0) j = -j - 2;
-    if (j >= i.length) j = i.length - 1;
+    j = Math.max(0, Math.min(i.length - 1, j));
     return i[j]((x - d[j]) / (d[j + 1] - d[j]));
   }
 
@@ -32,6 +32,13 @@ pv.Scale.linear = function() {
       return this;
     }
     return r;
+  };
+
+  scale.invert = function(y) {
+    var j = pv.search(r, y);
+    if (j < 0) j = -j - 2;
+    j = Math.max(0, Math.min(i.length - 1, j));
+    return (y - r[j]) / (r[j + 1] - r[j]) * (d[j + 1] - d[j]) + d[j];
   };
 
   scale.ticks = function() {

@@ -4,7 +4,7 @@ pv.Scale.log = function() {
   function scale(x) {
     var j = pv.search(d, x);
     if (j < 0) j = -j - 2;
-    if (j >= i.length) j = i.length - 1;
+    j = Math.max(0, Math.min(i.length - 1, j));
     return i[j]((log(x) - l[j]) / (l[j + 1] - l[j]));
   }
 

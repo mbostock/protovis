@@ -688,7 +688,6 @@ pv.Mark.prototype.build = function() {
   /* Create, update and delete scene nodes. */
   var data = this.get("data");
   stack.unshift(null);
-  this.$$data = data; // XXX TODO use scene.data?
   scene.length = data.length;
   for (var i = 0; i < data.length; i++) {
     pv.Mark.prototype.index = this.index = i;
@@ -792,7 +791,39 @@ pv.Mark.prototype.buildImplied = function(s) {
   if (p.height) s.height = h;
 };
 
-var property; // XXX
+/**
+ * The name of the property being evaluated, for so-called "smart" functions
+ * that change behavior depending on which property is being evaluated. This
+ * functionality is somewhat magical, so for now, this feature is not exposed
+ * outside the library.
+ *
+ * @type string
+ */
+var property;
+
+/** The current event. */
+var event;
+
+/**
+ * Returns the current location of the mouse (cursor) relative to this mark's
+ * parent. The location is specified in terms of the margins: left, top, bottom
+ * and right. The location is undefined if this method is not called from an
+ * event handler.
+ */
+pv.Mark.prototype.mouse = function() {
+  if (!event) return {};
+  var x = 0, y = 0, mark = this.parent;
+  do {
+    x += mark.left();
+    y += mark.top();
+  } while (mark = mark.parent);
+  var node = this.root.canvas();
+  do {
+    x += node.offsetLeft;
+    y += node.offsetTop;
+  } while (node = node.offsetParent);
+  return {left: event.pageX - x, top: event.pageY - y};
+};
 
 /**
  * Evaluates the specified property function <tt>f</tt> with the specified
@@ -924,10 +955,12 @@ pv.Mark.prototype.dispatch = function(e, scenes, index) {
 
     /* Execute the event listener. */
     try {
+      event = e;
       this.root.scene.data = argv(this);
       mark = this.value(l);
       e.preventDefault();
     } finally {
+      event = undefined;
       delete this.root.scene.data;
     }
 

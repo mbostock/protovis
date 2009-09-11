@@ -10,6 +10,7 @@ pv.SvgScene.panel = function(scenes) {
 
     /* svg */
     if (!scenes.parent) {
+      s.canvas.style.display = "inline-block";
       if (s.canvas.firstChild) {
         var svg = s.canvas.firstChild;
         if (svg.marker != marker) {
