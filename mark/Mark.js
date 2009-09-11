@@ -803,10 +803,7 @@ var property;
 
 /** The current mouse location. */
 var pageX = 0, pageY = 0;
-window.addEventListener("mousemove", function(e) {
-    pageX = e.pageX;
-    pageY = e.pageY;
-  }, false);
+pv.listen(window, "mousemove", function(e) { pageX = e.pageX; pageY = e.pageY; });
 
 /**
  * Returns the current location of the mouse (cursor) relative to this mark's
