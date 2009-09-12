@@ -15,7 +15,6 @@ pv.SvgScene.panel = function(scenes) {
         var svg = s.canvas.firstChild;
         if (svg.marker != marker) {
           while (svg.lastChild) svg.removeChild(svg.lastChild);
-          svg.marker = marker;
           previous = null;
         }
       } else {
@@ -31,6 +30,7 @@ pv.SvgScene.panel = function(scenes) {
             = pv.SvgScene.dispatch;
         previous = null;
       }
+      svg.marker = marker;
       parent = svg;
     }
 
