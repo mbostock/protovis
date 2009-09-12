@@ -571,14 +571,14 @@ pv.version = {
    *
    * @type number
    */
-  major: 2,
+  major: 3,
 
   /**
    * The minor version number.
    *
    * @type number
    */
-  minor: 7
+  minor: 0
 };
 
 /**
