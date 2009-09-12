@@ -21,7 +21,17 @@
 pv.Wedge = function() {
   pv.Mark.call(this);
 };
-pv.Wedge.prototype = pv.extend(pv.Mark);
+
+pv.Wedge.prototype = pv.extend(pv.Mark)
+    .property("startAngle")
+    .property("endAngle")
+    .property("angle")
+    .property("innerRadius")
+    .property("outerRadius")
+    .property("lineWidth")
+    .property("strokeStyle")
+    .property("fillStyle");
+
 pv.Wedge.prototype.type = "wedge";
 
 /**
@@ -34,7 +44,6 @@ pv.Wedge.prototype.type = "wedge";
  * @type number
  * @name pv.Wedge.prototype.startAngle
  */
-pv.Wedge.prototype.defineProperty("startAngle");
 
 /**
  * The end angle of the wedge, in radians. If not specified, the end angle is
@@ -43,7 +52,6 @@ pv.Wedge.prototype.defineProperty("startAngle");
  * @type number
  * @name pv.Wedge.prototype.endAngle
  */
-pv.Wedge.prototype.defineProperty("endAngle");
 
 /**
  * The angular span of the wedge, in radians. This property is used if end angle
@@ -52,7 +60,6 @@ pv.Wedge.prototype.defineProperty("endAngle");
  * @type number
  * @name pv.Wedge.prototype.angle
  */
-pv.Wedge.prototype.defineProperty("angle");
 
 /**
  * The inner radius of the wedge, in pixels. The default value of this property
@@ -62,7 +69,6 @@ pv.Wedge.prototype.defineProperty("angle");
  * @type number
  * @name pv.Wedge.prototype.innerRadius
  */
-pv.Wedge.prototype.defineProperty("innerRadius");
 
 /**
  * The outer radius of the wedge, in pixels. This property is required. For
@@ -72,7 +78,6 @@ pv.Wedge.prototype.defineProperty("innerRadius");
  * @type number
  * @name pv.Wedge.prototype.outerRadius
  */
-pv.Wedge.prototype.defineProperty("outerRadius");
 
 /**
  * The width of stroked lines, in pixels; used in conjunction with
@@ -81,7 +86,6 @@ pv.Wedge.prototype.defineProperty("outerRadius");
  * @type number
  * @name pv.Wedge.prototype.lineWidth
  */
-pv.Wedge.prototype.defineProperty("lineWidth");
 
 /**
  * The style of stroked lines; used in conjunction with <tt>lineWidth</tt> to
@@ -92,7 +96,6 @@ pv.Wedge.prototype.defineProperty("lineWidth");
  * @name pv.Wedge.prototype.strokeStyle
  * @see pv.color
  */
-pv.Wedge.prototype.defineProperty("strokeStyle");
 
 /**
  * The wedge fill style; if non-null, the interior of the wedge is filled with
@@ -103,7 +106,6 @@ pv.Wedge.prototype.defineProperty("strokeStyle");
  * @name pv.Wedge.prototype.fillStyle
  * @see pv.color
  */
-pv.Wedge.prototype.defineProperty("fillStyle");
 
 /**
  * Default properties for wedges. By default, there is no stroke and the fill

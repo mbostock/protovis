@@ -119,7 +119,7 @@ pv.Mark.prototype.properties = {};
  *
  * @param {string} name the property name.
  */
-pv.Mark.prototype.defineProperty = function(name) {
+pv.Mark.prototype.property = function(name) {
   if (!this.hasOwnProperty("properties")) {
     this.properties = pv.extend(this.properties);
   }
@@ -143,7 +143,21 @@ pv.Mark.prototype.defineProperty = function(name) {
       }
       return this.scene[this.index][name];
     };
+
+  return this;
 };
+
+/* Define all global properties. */
+pv.Mark.prototype
+    .property("data")
+    .property("visible")
+    .property("left")
+    .property("right")
+    .property("top")
+    .property("bottom")
+    .property("cursor")
+    .property("title")
+    .property("reverse");
 
 /**
  * The mark type; a lower camelCase name. The type name controls rendering
@@ -258,7 +272,6 @@ pv.Mark.prototype.index = -1;
  * @type array
  * @name pv.Mark.prototype.data
  */
-pv.Mark.prototype.defineProperty("data");
 
 /**
  * The visible property; a boolean determining whether or not the mark instance
@@ -268,7 +281,6 @@ pv.Mark.prototype.defineProperty("data");
  * @type boolean
  * @name pv.Mark.prototype.visible
  */
-pv.Mark.prototype.defineProperty("visible");
 
 /**
  * The left margin; the distance, in pixels, between the left edge of the
@@ -279,7 +291,6 @@ pv.Mark.prototype.defineProperty("visible");
  * @type number
  * @name pv.Mark.prototype.left
  */
-pv.Mark.prototype.defineProperty("left");
 
 /**
  * The right margin; the distance, in pixels, between the right edge of the
@@ -290,7 +301,6 @@ pv.Mark.prototype.defineProperty("left");
  * @type number
  * @name pv.Mark.prototype.right
  */
-pv.Mark.prototype.defineProperty("right");
 
 /**
  * The top margin; the distance, in pixels, between the top edge of the
@@ -301,7 +311,6 @@ pv.Mark.prototype.defineProperty("right");
  * @type number
  * @name pv.Mark.prototype.top
  */
-pv.Mark.prototype.defineProperty("top");
 
 /**
  * The bottom margin; the distance, in pixels, between the bottom edge of the
@@ -312,7 +321,6 @@ pv.Mark.prototype.defineProperty("top");
  * @type number
  * @name pv.Mark.prototype.bottom
  */
-pv.Mark.prototype.defineProperty("bottom");
 
 /**
  * The cursor property; corresponds to the CSS cursor property. This is
@@ -322,7 +330,6 @@ pv.Mark.prototype.defineProperty("bottom");
  * @name pv.Mark.prototype.cursor
  * @see <a href="http://www.w3.org/TR/CSS2/ui.html#propdef-cursor">CSS2 cursor</a>.
  */
-pv.Mark.prototype.defineProperty("cursor");
 
 /**
  * The title property; corresponds to the HTML/SVG title property, allowing the
@@ -331,7 +338,6 @@ pv.Mark.prototype.defineProperty("cursor");
  * @type string
  * @name pv.Mark.prototype.title
  */
-pv.Mark.prototype.defineProperty("title");
 
 /**
  * The reverse property; a boolean determining whether marks are ordered from
@@ -344,7 +350,6 @@ pv.Mark.prototype.defineProperty("title");
  * @type boolean
  * @name pv.Mark.prototype.reverse
  */
-pv.Mark.prototype.defineProperty("reverse");
 
 /**
  * Default properties for all mark types. By default, the data array is the

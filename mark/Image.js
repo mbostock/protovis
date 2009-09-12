@@ -24,7 +24,10 @@
 pv.Image = function() {
   pv.Bar.call(this);
 };
-pv.Image.prototype = pv.extend(pv.Bar);
+
+pv.Image.prototype = pv.extend(pv.Bar)
+    .property("url");
+
 pv.Image.prototype.type = "image";
 
 /**
@@ -34,7 +37,6 @@ pv.Image.prototype.type = "image";
  * @type string
  * @name pv.Image.prototype.url
  */
-pv.Image.prototype.defineProperty("url");
 
 /**
  * Default properties for images. By default, there is no stroke or fill style.

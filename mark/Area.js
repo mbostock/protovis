@@ -22,7 +22,15 @@
 pv.Area = function() {
   pv.Mark.call(this);
 };
-pv.Area.prototype = pv.extend(pv.Mark);
+
+pv.Area.prototype = pv.extend(pv.Mark)
+    .property("width")
+    .property("height")
+    .property("lineWidth")
+    .property("strokeStyle")
+    .property("fillStyle")
+    .property("segmented");
+
 pv.Area.prototype.type = "area";
 
 /**
@@ -34,7 +42,6 @@ pv.Area.prototype.type = "area";
  * @type number
  * @name pv.Area.prototype.width
  */
-pv.Area.prototype.defineProperty("width");
 
 /**
  * The height of a given span, in pixels; used for vertical spans. If the height
@@ -45,7 +52,6 @@ pv.Area.prototype.defineProperty("width");
  * @type number
  * @name pv.Area.prototype.height
  */
-pv.Area.prototype.defineProperty("height");
 
 /**
  * The width of stroked lines, in pixels; used in conjunction with
@@ -60,7 +66,6 @@ pv.Area.prototype.defineProperty("height");
  * @type number
  * @name pv.Area.prototype.lineWidth
  */
-pv.Area.prototype.defineProperty("lineWidth");
 
 /**
  * The style of stroked lines; used in conjunction with <tt>lineWidth</tt> to
@@ -75,7 +80,6 @@ pv.Area.prototype.defineProperty("lineWidth");
  * @name pv.Area.prototype.strokeStyle
  * @see pv.color
  */
-pv.Area.prototype.defineProperty("strokeStyle");
 
 /**
  * The area fill style; if non-null, the interior of the polygon forming the
@@ -89,7 +93,6 @@ pv.Area.prototype.defineProperty("strokeStyle");
  * @name pv.Area.prototype.fillStyle
  * @see pv.color
  */
-pv.Area.prototype.defineProperty("fillStyle");
 
 /**
  * Whether the area is segmented; i.e., whether variations in fill style, stroke
@@ -101,7 +104,6 @@ pv.Area.prototype.defineProperty("fillStyle");
  * @type boolean
  * @name pv.Area.prototype.segmented
  */
-pv.Area.prototype.defineProperty("segmented");
 
 /**
  * Default properties for areas. By default, there is no stroke and the fill

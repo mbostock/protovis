@@ -54,7 +54,10 @@ pv.Panel = function() {
    */
   this.$dom = pv.Panel.$dom;
 };
-pv.Panel.prototype = pv.extend(pv.Bar);
+
+pv.Panel.prototype = pv.extend(pv.Bar)
+    .property("canvas");
+
 pv.Panel.prototype.type = "panel";
 
 /**
@@ -72,7 +75,6 @@ pv.Panel.prototype.type = "panel";
  * @type string
  * @name pv.Panel.prototype.canvas
  */
-pv.Panel.prototype.defineProperty("canvas");
 
 /**
  * Default properties for panels. By default, the margins are zero, the fill

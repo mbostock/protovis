@@ -22,7 +22,9 @@
 pv.Anchor = function() {
   pv.Mark.call(this);
 };
-pv.Anchor.prototype = pv.extend(pv.Mark);
+
+pv.Anchor.prototype = pv.extend(pv.Mark)
+    .property("name");
 
 /**
  * The anchor name. The set of supported anchor names is dependent on the
@@ -41,4 +43,3 @@ pv.Anchor.prototype = pv.extend(pv.Mark);
  * @type string
  * @name pv.Anchor.prototype.name
  */
-pv.Anchor.prototype.defineProperty("name");

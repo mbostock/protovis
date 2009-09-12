@@ -26,7 +26,14 @@
 pv.Bar = function() {
   pv.Mark.call(this);
 };
-pv.Bar.prototype = pv.extend(pv.Mark);
+
+pv.Bar.prototype = pv.extend(pv.Mark)
+    .property("width")
+    .property("height")
+    .property("lineWidth")
+    .property("strokeStyle")
+    .property("fillStyle");
+
 pv.Bar.prototype.type = "bar";
 
 /**
@@ -37,7 +44,6 @@ pv.Bar.prototype.type = "bar";
  * @type number
  * @name pv.Bar.prototype.width
  */
-pv.Bar.prototype.defineProperty("width");
 
 /**
  * The height of the bar, in pixels. If the bottom position is specified, the
@@ -47,7 +53,6 @@ pv.Bar.prototype.defineProperty("width");
  * @type number
  * @name pv.Bar.prototype.height
  */
-pv.Bar.prototype.defineProperty("height");
 
 /**
  * The width of stroked lines, in pixels; used in conjunction with
@@ -56,7 +61,6 @@ pv.Bar.prototype.defineProperty("height");
  * @type number
  * @name pv.Bar.prototype.lineWidth
  */
-pv.Bar.prototype.defineProperty("lineWidth");
 
 /**
  * The style of stroked lines; used in conjunction with <tt>lineWidth</tt> to
@@ -67,7 +71,6 @@ pv.Bar.prototype.defineProperty("lineWidth");
  * @name pv.Bar.prototype.strokeStyle
  * @see pv.color
  */
-pv.Bar.prototype.defineProperty("strokeStyle");
 
 /**
  * The bar fill style; if non-null, the interior of the bar is filled with the
@@ -77,7 +80,6 @@ pv.Bar.prototype.defineProperty("strokeStyle");
  * @name pv.Bar.prototype.fillStyle
  * @see pv.color
  */
-pv.Bar.prototype.defineProperty("fillStyle");
 
 /**
  * Default properties for bars. By default, there is no stroke and the fill

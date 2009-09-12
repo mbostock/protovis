@@ -33,7 +33,13 @@
 pv.Rule = function() {
   pv.Mark.call(this);
 };
-pv.Rule.prototype = pv.extend(pv.Mark);
+
+pv.Rule.prototype = pv.extend(pv.Mark)
+    .property("width")
+    .property("height")
+    .property("lineWidth")
+    .property("strokeStyle");
+
 pv.Rule.prototype.type = "rule";
 
 /**
@@ -44,7 +50,6 @@ pv.Rule.prototype.type = "rule";
  * @type number
  * @name pv.Rule.prototype.width
  */
-pv.Rule.prototype.defineProperty("width");
 
 /**
  * The height of the rule, in pixels. If the bottom position is specified, the
@@ -54,7 +59,6 @@ pv.Rule.prototype.defineProperty("width");
  * @type number
  * @name pv.Rule.prototype.height
  */
-pv.Rule.prototype.defineProperty("height");
 
 /**
  * The width of stroked lines, in pixels; used in conjunction with
@@ -63,7 +67,6 @@ pv.Rule.prototype.defineProperty("height");
  * @type number
  * @name pv.Rule.prototype.lineWidth
  */
-pv.Rule.prototype.defineProperty("lineWidth");
 
 /**
  * The style of stroked lines; used in conjunction with <tt>lineWidth</tt> to
@@ -73,7 +76,6 @@ pv.Rule.prototype.defineProperty("lineWidth");
  * @name pv.Rule.prototype.strokeStyle
  * @see pv.color
  */
-pv.Rule.prototype.defineProperty("strokeStyle");
 
 /**
  * Default properties for rules. By default, a single-pixel black line is

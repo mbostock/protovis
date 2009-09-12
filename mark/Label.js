@@ -26,7 +26,17 @@
 pv.Label = function() {
   pv.Mark.call(this);
 };
-pv.Label.prototype = pv.extend(pv.Mark);
+
+pv.Label.prototype = pv.extend(pv.Mark)
+    .property("text")
+    .property("font")
+    .property("textAngle")
+    .property("textStyle")
+    .property("textAlign")
+    .property("textBaseline")
+    .property("textMargin")
+    .property("textShadow");
+
 pv.Label.prototype.type = "label";
 
 /**
@@ -37,7 +47,6 @@ pv.Label.prototype.type = "label";
  * @type string
  * @name pv.Label.prototype.text
  */
-pv.Label.prototype.defineProperty("text");
 
 /**
  * The font format, per the CSS Level 2 specification. The default font is "10px
@@ -50,7 +59,6 @@ pv.Label.prototype.defineProperty("text");
  * @type string
  * @name pv.Label.prototype.font
  */
-pv.Label.prototype.defineProperty("font");
 
 /**
  * The rotation angle, in radians. Text is rotated clockwise relative to the
@@ -60,7 +68,6 @@ pv.Label.prototype.defineProperty("font");
  * @type number
  * @name pv.Label.prototype.textAngle
  */
-pv.Label.prototype.defineProperty("textAngle");
 
 /**
  * The text color. The name "textStyle" is used for consistency with "fillStyle"
@@ -71,7 +78,6 @@ pv.Label.prototype.defineProperty("textAngle");
  * @name pv.Label.prototype.textStyle
  * @see pv.color
  */
-pv.Label.prototype.defineProperty("textStyle");
 
 /**
  * The horizontal text alignment. One of:<ul>
@@ -85,7 +91,6 @@ pv.Label.prototype.defineProperty("textStyle");
  * @type string
  * @name pv.Label.prototype.textAlign
  */
-pv.Label.prototype.defineProperty("textAlign");
 
 /**
  * The vertical text alignment. One of:<ul>
@@ -99,7 +104,6 @@ pv.Label.prototype.defineProperty("textAlign");
  * @type string
  * @name pv.Label.prototype.textBaseline
  */
-pv.Label.prototype.defineProperty("textBaseline");
 
 /**
  * The text margin; may be specified in pixels, or in font-dependent units
@@ -111,7 +115,6 @@ pv.Label.prototype.defineProperty("textBaseline");
  * @type number
  * @name pv.Label.prototype.textMargin
  */
-pv.Label.prototype.defineProperty("textMargin");
 
 /**
  * A list of shadow effects to be applied to text, per the CSS Text Level 3
@@ -123,7 +126,6 @@ pv.Label.prototype.defineProperty("textMargin");
  * @type string
  * @name pv.Label.prototype.textShadow
  */
-pv.Label.prototype.defineProperty("textShadow");
 
 /**
  * Default properties for labels. See the individual properties for the default

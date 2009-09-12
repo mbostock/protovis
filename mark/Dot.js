@@ -17,7 +17,15 @@
 pv.Dot = function() {
   pv.Mark.call(this);
 };
-pv.Dot.prototype = pv.extend(pv.Mark);
+
+pv.Dot.prototype = pv.extend(pv.Mark)
+    .property("size")
+    .property("shape")
+    .property("angle")
+    .property("lineWidth")
+    .property("strokeStyle")
+    .property("fillStyle");
+
 pv.Dot.prototype.type = "dot";
 
 /**
@@ -29,7 +37,6 @@ pv.Dot.prototype.type = "dot";
  * @type number
  * @name pv.Dot.prototype.size
  */
-pv.Dot.prototype.defineProperty("size");
 
 /**
  * The shape name. Several shapes are supported:<ul>
@@ -55,7 +62,6 @@ pv.Dot.prototype.defineProperty("size");
  * @type string
  * @name pv.Dot.prototype.shape
  */
-pv.Dot.prototype.defineProperty("shape");
 
 /**
  * The rotation angle, in radians. Used to rotate shapes, such as to turn a
@@ -64,7 +70,6 @@ pv.Dot.prototype.defineProperty("shape");
  * @type number
  * @name pv.Dot.prototype.angle
  */
-pv.Dot.prototype.defineProperty("angle");
 
 /**
  * The width of stroked lines, in pixels; used in conjunction with
@@ -73,7 +78,6 @@ pv.Dot.prototype.defineProperty("angle");
  * @type number
  * @name pv.Dot.prototype.lineWidth
  */
-pv.Dot.prototype.defineProperty("lineWidth");
 
 /**
  * The style of stroked lines; used in conjunction with <tt>lineWidth</tt> to
@@ -84,7 +88,6 @@ pv.Dot.prototype.defineProperty("lineWidth");
  * @name pv.Dot.prototype.strokeStyle
  * @see pv.color
  */
-pv.Dot.prototype.defineProperty("strokeStyle");
 
 /**
  * The fill style; if non-null, the interior of the dot is filled with the
@@ -95,7 +98,6 @@ pv.Dot.prototype.defineProperty("strokeStyle");
  * @name pv.Dot.prototype.fillStyle
  * @see pv.color
  */
-pv.Dot.prototype.defineProperty("fillStyle");
 
 /**
  * Default properties for dots. By default, there is no fill and the stroke

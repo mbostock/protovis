@@ -21,7 +21,13 @@
 pv.Line = function() {
   pv.Mark.call(this);
 };
-pv.Line.prototype = pv.extend(pv.Mark);
+
+pv.Line.prototype = pv.extend(pv.Mark)
+    .property("lineWidth")
+    .property("strokeStyle")
+    .property("fillStyle")
+    .property("segmented");
+
 pv.Line.prototype.type = "line";
 
 /**
@@ -31,7 +37,6 @@ pv.Line.prototype.type = "line";
  * @type number
  * @name pv.Line.prototype.lineWidth
  */
-pv.Line.prototype.defineProperty("lineWidth");
 
 /**
  * The style of stroked lines; used in conjunction with <tt>lineWidth</tt> to
@@ -41,7 +46,6 @@ pv.Line.prototype.defineProperty("lineWidth");
  * @name pv.Line.prototype.strokeStyle
  * @see pv.color
  */
-pv.Line.prototype.defineProperty("strokeStyle");
 
 /**
  * The line fill style; if non-null, the interior of the line is closed and
@@ -52,7 +56,6 @@ pv.Line.prototype.defineProperty("strokeStyle");
  * @name pv.Line.prototype.fillStyle
  * @see pv.color
  */
-pv.Line.prototype.defineProperty("fillStyle");
 
 /**
  * Whether the line is segmented; i.e., whether variations in stroke style, line
@@ -64,7 +67,6 @@ pv.Line.prototype.defineProperty("fillStyle");
  * @type boolean
  * @name pv.Line.prototype.segmented
  */
-pv.Line.prototype.defineProperty("segmented");
 
 /**
  * Default properties for lines. By default, there is no fill and the stroke
