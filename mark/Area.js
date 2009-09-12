@@ -210,7 +210,7 @@ pv.Area.prototype.buildImplied = function(s) {
   pv.Mark.prototype.buildImplied.call(this, s);
 };
 
-var pv_Area_specials = {left:1, top:1, right:1, bottom:1, width:1, height:1};
+var pv_Area_specials = {left:1, top:1, right:1, bottom:1, width:1, height:1, name:1};
 
 pv.Area.prototype.bind = function() {
   pv.Mark.prototype.bind.call(this);

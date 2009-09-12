@@ -77,7 +77,7 @@ pv.Line.prototype.defaults = new pv.Line()
     .lineWidth(1.5)
     .strokeStyle(defaultStrokeStyle);
 
-var pv_Line_specials = {left:1, top:1, right:1, bottom:1};
+var pv_Line_specials = {left:1, top:1, right:1, bottom:1, name:1};
 
 pv.Line.prototype.bind = function() {
   pv.Mark.prototype.bind.call(this);
