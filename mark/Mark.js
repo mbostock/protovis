@@ -916,11 +916,11 @@ pv.Mark.prototype.event = function(type, handler) {
 };
 
 /** TODO */
-pv.Mark.prototype.dispatch = function(e, scenes, index) {
-  var l = this.$handlers && this.$handlers[e.type];
+pv.Mark.prototype.dispatch = function(type, scenes, index) {
+  var l = this.$handlers && this.$handlers[type];
   if (!l) {
     if (this.parent) {
-      this.parent.dispatch(e, scenes.parent, scenes.parentIndex);
+      this.parent.dispatch(type, scenes.parent, scenes.parentIndex);
     }
     return;
   }
@@ -937,11 +937,8 @@ pv.Mark.prototype.dispatch = function(e, scenes, index) {
 
     /* Execute the event listener. */
     try {
-      event = e;
       mark = l.apply(this, this.root.scene.data = argv(this));
-      e.preventDefault();
     } finally {
-      event = undefined;
       delete this.root.scene.data;
     }
 
