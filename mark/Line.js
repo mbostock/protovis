@@ -77,13 +77,22 @@ pv.Line.prototype.defaults = new pv.Line()
     .lineWidth(1.5)
     .strokeStyle(defaultStrokeStyle);
 
-/** TODO fixed properties */
+var pv_Line_specials = {left:1, top:1, right:1, bottom:1};
+
+pv.Line.prototype.bind = function() {
+  pv.Mark.prototype.bind.call(this);
+  var binds = this.binds,
+      properties = binds.properties,
+      specials = binds.specials = [];
+  for (var i = 0, n = properties.length; i < n; i++) {
+    var p = properties[i];
+    if (p.name in pv_Line_specials) specials.push(p);
+  }
+};
+
 pv.Line.prototype.buildInstance = function(s) {
   if (this.index && !this.scene[0].segmented) {
-    s.left = this.get("left");
-    s.top = this.get("top");
-    s.bottom = this.get("bottom");
-    s.right = this.get("right");
+    this.buildProperties(s, this.binds.specials);
     this.buildImplied(s);
   } else {
     pv.Mark.prototype.buildInstance.call(this, s);

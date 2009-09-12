@@ -133,112 +133,63 @@ pv.Dot.prototype.defaults = new pv.Dot()
  *
  * @extends pv.Mark.Anchor
  */
-pv.Dot.Anchor = function() {
-  pv.Mark.Anchor.call(this);
-};
-pv.Dot.prototype.Anchor = pv.Dot.Anchor;
-pv.Dot.Anchor.prototype = pv.extend(pv.Mark.Anchor);
-
-/**
- * The left property; null for "left" anchors, non-null otherwise.
- *
- * @type number
- * @name pv.Dot.Anchor.prototype.left
- */ /** @private */
-pv.Dot.Anchor.prototype.$left = function(d) {
-  var dot = this.anchorTarget();
-  switch (this.get("name")) {
-    case "bottom":
-    case "top":
-    case "center": return dot.left();
-    case "right": return dot.left() + dot.radius();
-  }
-  return null;
-};
-
-/**
- * The right property; null for "right" anchors, non-null otherwise.
- *
- * @type number
- * @name pv.Dot.Anchor.prototype.right
- */ /** @private */
-pv.Dot.Anchor.prototype.$right = function(d) {
-  var dot = this.anchorTarget();
-  switch (this.get("name")) {
-    case "bottom":
-    case "top":
-    case "center": return dot.right();
-    case "left": return dot.right() + dot.radius();
-  }
-  return null;
-};
-
-/**
- * The top property; null for "top" anchors, non-null otherwise.
- *
- * @type number
- * @name pv.Dot.Anchor.prototype.top
- */ /** @private */
-pv.Dot.Anchor.prototype.$top = function(d) {
-  var dot = this.anchorTarget();
-  switch (this.get("name")) {
-    case "left":
-    case "right":
-    case "center": return dot.top();
-    case "bottom": return dot.top() + dot.radius();
-  }
-  return null;
-};
-
-/**
- * The bottom property; null for "bottom" anchors, non-null otherwise.
- *
- * @type number
- * @name pv.Dot.Anchor.prototype.bottom
- */ /** @private */
-pv.Dot.Anchor.prototype.$bottom = function(d) {
-  var dot = this.anchorTarget();
-  switch (this.get("name")) {
-    case "left":
-    case "right":
-    case "center": return dot.bottom();
-    case "top": return dot.bottom() + dot.radius();
-  }
-  return null;
-};
-
-/**
- * The text-align property, for horizontal alignment outside the dot.
- *
- * @type string
- * @name pv.Dot.Anchor.prototype.textAlign
- */ /** @private */
-pv.Dot.Anchor.prototype.$textAlign = function(d) {
-  switch (this.get("name")) {
-    case "left": return "right";
-    case "bottom":
-    case "top":
-    case "center": return "center";
-    case "right": return "left";
-  }
-  return null;
-};
-
-/**
- * The text-baseline property, for vertical alignment outside the dot.
- *
- * @type string
- * @name pv.Dot.Anchor.prototype.textBasline
- */ /** @private */
-pv.Dot.Anchor.prototype.$textBaseline = function(d) {
-  switch (this.get("name")) {
-    case "right":
-    case "left":
-    case "center": return "middle";
-    case "top": return "bottom";
-    case "bottom": return "top";
-  }
-  return null;
+pv.Dot.prototype.anchor = function(name) {
+  var dot = this;
+  return pv.Mark.prototype.anchor.call(this, name)
+    .left(function(d) {
+        switch (this.name()) {
+          case "bottom":
+          case "top":
+          case "center": return dot.left();
+          case "right": return dot.left() + dot.radius();
+        }
+        return null;
+      })
+    .right(function(d) {
+        switch (this.name()) {
+          case "bottom":
+          case "top":
+          case "center": return dot.right();
+          case "left": return dot.right() + dot.radius();
+        }
+        return null;
+      })
+    .top(function(d) {
+        switch (this.name()) {
+          case "left":
+          case "right":
+          case "center": return dot.top();
+          case "bottom": return dot.top() + dot.radius();
+        }
+        return null;
+      })
+    .bottom(function(d) {
+        switch (this.name()) {
+          case "left":
+          case "right":
+          case "center": return dot.bottom();
+          case "top": return dot.bottom() + dot.radius();
+        }
+        return null;
+      })
+    .textAlign(function(d) {
+        switch (this.name()) {
+          case "left": return "right";
+          case "bottom":
+          case "top":
+          case "center": return "center";
+        }
+        return "left";
+      })
+    .textBaseline(function(d) {
+        switch (this.name()) {
+          case "right":
+          case "left":
+          case "center": return "middle";
+          case "bottom": return "top";
+        }
+        return "bottom";
+      });
 };
 
 /**

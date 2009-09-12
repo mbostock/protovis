@@ -139,112 +139,63 @@ pv.Area.prototype.defaults = new pv.Area()
  *
  * @extends pv.Mark.Anchor
  */
-pv.Area.Anchor = function() {
-  pv.Mark.Anchor.call(this);
-};
-pv.Area.prototype.Anchor = pv.Area.Anchor;
-pv.Area.Anchor.prototype = pv.extend(pv.Mark.Anchor);
-
-/**
- * The left property; null for "left" anchors, non-null otherwise.
- *
- * @type number
- * @name pv.Area.Anchor.prototype.left
- */ /** @private */
-pv.Area.Anchor.prototype.$left = function() {
-  var area = this.anchorTarget();
-  switch (this.get("name")) {
-    case "bottom":
-    case "top":
-    case "center": return area.left() + area.width() / 2;
-    case "right": return area.left() + area.width();
-  }
-  return null;
-};
-
-/**
- * The right property; null for "right" anchors, non-null otherwise.
- *
- * @type number
- * @name pv.Area.Anchor.prototype.right
- */ /** @private */
-pv.Area.Anchor.prototype.$right = function() {
-  var area = this.anchorTarget();
-  switch (this.get("name")) {
-    case "bottom":
-    case "top":
-    case "center": return area.right() + area.width() / 2;
-    case "left": return area.right() + area.width();
-  }
-  return null;
-};
-
-/**
- * The top property; null for "top" anchors, non-null otherwise.
- *
- * @type number
- * @name pv.Area.Anchor.prototype.top
- */ /** @private */
-pv.Area.Anchor.prototype.$top = function() {
-  var area = this.anchorTarget();
-  switch (this.get("name")) {
-    case "left":
-    case "right":
-    case "center": return area.top() + area.height() / 2;
-    case "bottom": return area.top() + area.height();
-  }
-  return null;
-};
-
-/**
- * The bottom property; null for "bottom" anchors, non-null otherwise.
- *
- * @type number
- * @name pv.Area.Anchor.prototype.bottom
- */ /** @private */
-pv.Area.Anchor.prototype.$bottom = function() {
-  var area = this.anchorTarget();
-  switch (this.get("name")) {
-    case "left":
-    case "right":
-    case "center": return area.bottom() + area.height() / 2;
-    case "top": return area.bottom() + area.height();
-  }
-  return null;
-};
-
-/**
- * The text-align property, for horizontal alignment inside the area.
- *
- * @type string
- * @name pv.Area.Anchor.prototype.textAlign
- */ /** @private */
-pv.Area.Anchor.prototype.$textAlign = function() {
-  switch (this.get("name")) {
-    case "left": return "left";
-    case "bottom":
-    case "top":
-    case "center": return "center";
-    case "right": return "right";
-  }
-  return null;
-};
-
-/**
- * The text-baseline property, for vertical alignment inside the area.
- *
- * @type string
- * @name pv.Area.Anchor.prototype.textBasline
- */ /** @private */
-pv.Area.Anchor.prototype.$textBaseline = function() {
-  switch (this.get("name")) {
-    case "right":
-    case "left":
-    case "center": return "middle";
-    case "top": return "top";
-    case "bottom": return "bottom";
-  }
-  return null;
+pv.Area.prototype.anchor = function(name) {
+  var area = this;
+  return pv.Mark.prototype.anchor.call(this, name)
+    .left(function() {
+        switch (this.name()) {
+          case "bottom":
+          case "top":
+          case "center": return area.left() + area.width() / 2;
+          case "right": return area.left() + area.width();
+        }
+        return null;
+      })
+    .right(function() {
+        switch (this.name()) {
+          case "bottom":
+          case "top":
+          case "center": return area.right() + area.width() / 2;
+          case "left": return area.right() + area.width();
+        }
+        return null;
+      })
+    .top(function() {
+        switch (this.name()) {
+          case "left":
+          case "right":
+          case "center": return area.top() + area.height() / 2;
+          case "bottom": return area.top() + area.height();
+        }
+        return null;
+      })
+    .bottom(function() {
+        switch (this.name()) {
+          case "left":
+          case "right":
+          case "center": return area.bottom() + area.height() / 2;
+          case "top": return area.bottom() + area.height();
+        }
+        return null;
+      })
+    .textAlign(function() {
+        switch (this.name()) {
+          case "bottom":
+          case "top":
+          case "center": return "center";
+          case "right": return "right";
+        }
+        return "left";
+      })
+    .textBaseline(function() {
+        switch (this.name()) {
+          case "right":
+          case "left":
+          case "center": return "middle";
+          case "top": return "top";
+        }
+        return "bottom";
+      });
 };
 
 /**
@@ -259,15 +210,22 @@ pv.Area.prototype.buildImplied = function(s) {
   pv.Mark.prototype.buildImplied.call(this, s);
 };
 
-/** TODO fixed properties */
+var pv_Area_specials = {left:1, top:1, right:1, bottom:1, width:1, height:1};
+
+pv.Area.prototype.bind = function() {
+  pv.Mark.prototype.bind.call(this);
+  var binds = this.binds,
+      properties = binds.properties,
+      specials = binds.specials = [];
+  for (var i = 0, n = properties.length; i < n; i++) {
+    var p = properties[i];
+    if (p.name in pv_Area_specials) specials.push(p);
+  }
+};
+
 pv.Area.prototype.buildInstance = function(s) {
   if (this.index && !this.scene[0].segmented) {
-    s.left = this.get("left");
-    s.top = this.get("top");
-    s.bottom = this.get("bottom");
-    s.right = this.get("right");
-    s.width = this.get("width");
-    s.height = this.get("height");
+    this.buildProperties(s, this.binds.specials);
     this.buildImplied(s);
   } else {
     pv.Mark.prototype.buildInstance.call(this, s);

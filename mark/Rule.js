@@ -110,44 +110,26 @@ pv.Rule.prototype.defaults = new pv.Rule()
  *
  * @extends pv.Bar.Anchor
  */
-pv.Rule.Anchor = function() {
-  pv.Bar.Anchor.call(this);
-};
-pv.Rule.prototype.Anchor = pv.Rule.Anchor;
-pv.Rule.Anchor.prototype = pv.extend(pv.Bar.Anchor);
-
-/**
- * The text-align property, for horizontal alignment outside the rule.
- *
- * @type string
- * @name pv.Rule.Anchor.prototype.textAlign
- */ /** @private */
-pv.Rule.Anchor.prototype.$textAlign = function(d) {
-  switch (this.get("name")) {
-    case "left": return "right";
-    case "bottom":
-    case "top":
-    case "center": return "center";
-    case "right": return "left";
-  }
-  return null;
-};
-
-/**
- * The text-baseline property, for vertical alignment outside the rule.
- *
- * @type string
- * @name pv.Rule.Anchor.prototype.textBaseline
- */ /** @private */
-pv.Rule.Anchor.prototype.$textBaseline = function(d) {
-  switch (this.get("name")) {
-    case "right":
-    case "left":
-    case "center": return "middle";
-    case "top": return "bottom";
-    case "bottom": return "top";
-  }
-  return null;
+pv.Rule.prototype.anchor = function(name) {
+  return pv.Bar.prototype.anchor.call(this, name)
+    .textAlign(function(d) {
+        switch (this.name()) {
+          case "left": return "right";
+          case "bottom":
+          case "top":
+          case "center": return "center";
+          case "right": return "left";
+        }
+      })
+    .textBaseline(function(d) {
+        switch (this.name()) {
+          case "right":
+          case "left":
+          case "center": return "middle";
+          case "top": return "bottom";
+          case "bottom": return "top";
+        }
+      });
 };
 
 /**

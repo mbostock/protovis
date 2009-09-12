@@ -41,7 +41,16 @@
  *
  * <p>See also the <a href="../../api/">Protovis guide</a>.
  */
-pv.Mark = function() {};
+pv.Mark = function() {
+  /*
+   * TYPE 0 constant defs
+   * TYPE 1 function defs
+   * TYPE 2 constant properties
+   * TYPE 3 function properties
+   * in order of evaluation!
+   */
+  this.$properties = [];
+};
 
 /** TOOD */
 pv.Mark.prototype.properties = {};
@@ -115,9 +124,21 @@ pv.Mark.prototype.defineProperty = function(name) {
     this.properties = pv.extend(this.properties);
   }
   this.properties[name] = true;
-  this[name] = function(v) {
+
+  /*
+   * Define the setter-getter globally, since the default behavior should be the
+   * same for all properties, and since the Protovis inheritance chain is
+   * independent of the JavaScript inheritance chain. For example, anchors
+   * define a "name" property that is evaluated on derived marks, even though
+   * those marks don't normally have a name.
+   */
+  pv.Mark.prototype[name] = function(v) {
       if (arguments.length) {
-        this["$" + name] = v;
+        this.$properties.push({
+            name: name,
+            type: (typeof v == "function") ? 3 : 2,
+            value: v
+          });
         return this;
       }
       return this.scene[this.index][name];
@@ -135,7 +156,7 @@ pv.Mark.prototype.defineProperty = function(name) {
  */
 
 /**
- * The mark prototype, possibly null, from which to inherit property
+ * The mark prototype, possibly undefined, from which to inherit property
  * functions. The mark prototype is not necessarily of the same type as this
  * mark. Any properties defined on this mark will override properties inherited
  * either from the prototype or from the type-specific defaults.
@@ -145,9 +166,9 @@ pv.Mark.prototype.defineProperty = function(name) {
  */
 
 /**
- * The enclosing parent panel. The parent panel is generally null only for the
- * root panel; however, it is possible to create "offscreen" marks that are used
- * only for inheritance purposes.
+ * The enclosing parent panel. The parent panel is generally undefined only for
+ * the root panel; however, it is possible to create "offscreen" marks that are
+ * used only for inheritance purposes.
  *
  * @type pv.Panel
  * @name pv.Mark.prototype.parent
@@ -213,7 +234,7 @@ pv.Mark.prototype.index = -1;
  */
 
 /**
- * The root parent panel. This may be null for "offscreen" marks that are
+ * The root parent panel. This may be undefined for "offscreen" marks that are
  * created for inheritance purposes only.
  *
  * @type pv.Panel
@@ -326,10 +347,11 @@ pv.Mark.prototype.defineProperty("title");
 pv.Mark.prototype.defineProperty("reverse");
 
 /**
- * Default properties for all mark types. By default, the data array is a single
- * null element; if the data property is not specified, this causes each mark to
- * be instantiated as a singleton. The visible property is true by default, and
- * the reverse property is false.
+ * Default properties for all mark types. By default, the data array is the
+ * parent data as a single-element array; if the data property is not specified,
+ * this causes each mark to be instantiated as a singleton with the parents
+ * datum. The visible property is true by default, and the reverse property is
+ * false.
  *
  * @type pv.Mark
  */
@@ -380,9 +402,8 @@ pv.Mark.prototype.add = function(type) {
  * color ramp, that is referenced by multiple properties:
  *
  * <pre>.add(pv.Bar)
- *   .def("ramp", function(c) pv.ramp(c.start, c.end))
- *   .data(pv.range(0, 1.1, .1))
- *   .fillStyle(function(d) this.ramp().value(d))</pre>
+ *   .def("fillStyle", function(c) pv.ramp(c.start, c.end))
+ *   .data(pv.range(0, 1.1, .1))</pre>
  *
  * Or, a local variable might store interaction state
  *
@@ -390,68 +411,25 @@ pv.Mark.prototype.add = function(type) {
  * @param [value] an optional initializer; may be a constant or a function.
  */
 pv.Mark.prototype.def = function(name, value) {
-  if (!this.defs) this.defs = [];
-  this.defs.push({name: name, value: value});
+  this.$properties.push({
+      name: name,
+      type: (typeof value == "function") ? 1 : 0,
+      value: value
+    });
   return this;
 };
-
-/**
- * Constructs a new mark anchor with default properties.
- *
- * @class Represents an anchor on a given mark. An anchor is itself a mark, but
- * without a visual representation. It serves only to provide useful default
- * properties that can be inherited by other marks. Each type of mark can define
- * any number of named anchors for convenience. If the concrete mark type does
- * not define an anchor implementation specifically, one will be inherited from
- * the mark's parent class.
- *
- * <p>For example, the bar mark provides anchors for its four sides: left,
- * right, top and bottom. Adding a label to the top anchor of a bar,
- *
- * <pre>bar.anchor("top").add(pv.Label);</pre>
- *
- * will render a text label on the top edge of the bar; the top anchor defines
- * the appropriate position properties (top and left), as well as text-rendering
- * properties for convenience (textAlign and textBaseline).
- *
- * @extends pv.Mark
- */
-pv.Mark.Anchor = function() {
-  pv.Mark.call(this);
-};
-pv.Mark.prototype.Anchor = pv.Mark.Anchor;
-pv.Mark.Anchor.prototype = pv.extend(pv.Mark);
-
-/**
- * The anchor name. The set of supported anchor names is dependent on the
- * concrete mark type; see the mark type for details. For example, bars support
- * left, right, top and bottom anchors.
- *
- * <p>While anchor names are typically constants, the anchor name is a true
- * property, which means you can specify a function to compute the anchor name
- * dynamically. For instance, if you wanted to alternate top and bottom anchors,
- * saying
- *
- * <pre>m.anchor(function() (this.index % 2) ? "top" : "bottom").add(pv.Dot);</pre>
- *
- * would have the desired effect.
- *
- * @type string
- * @name pv.Mark.Anchor.prototype.name
- */
-pv.Mark.Anchor.prototype.defineProperty("name");
 
 /**
  * Returns an anchor with the specified name. While anchor names are typically
  * constants, the anchor name is a true property, which means you can specify a
  * function to compute the anchor name dynamically. See the
- * {@link pv.Mark.Anchor#name} property for details.
+ * {@link pv.Anchor#name} property for details.
  *
  * @param {string} name the anchor name; either a string or a property function.
- * @returns {pv.Mark.Anchor} the new anchor.
+ * @returns {pv.Anchor} the new anchor.
  */
 pv.Mark.prototype.anchor = function(name) {
-  var anchor = new this.Anchor().extend(this).name(name);
+  var anchor = new pv.Anchor().extend(this).name(name);
   anchor.parent = this.parent;
   return anchor;
 };
@@ -470,7 +448,7 @@ pv.Mark.prototype.anchor = function(name) {
  */
 pv.Mark.prototype.anchorTarget = function() {
   var target = this;
-  while (!(target instanceof pv.Mark.Anchor)) {
+  while (!(target instanceof pv.Anchor)) {
     target = target.proto;
     if (!target) return null;
   }
@@ -559,67 +537,73 @@ function argv(mark) {
 
 /** TODO */
 pv.Mark.prototype.bind = function() {
-  var binds = {properties: {}, constants: {}, functions: {}, defs: []};
+  var seen = {}, types = [[], [], [], []], data, visible;
 
   /** TODO */
-  function find(mark, name) {
-    var dname = "$" + name;
-    do if (dname in mark) {
-      var value = mark[dname];
-      ((typeof value == "function")
-          ? binds.functions
-          : binds.constants)[name] = value;
-      return true;
+  function bind(mark) {
+    do {
+      var properties = mark.$properties;
+      for (var i = properties.length - 1; i >= 0 ; i--) {
+        var p = properties[i];
+        if (!(p.name in seen)) {
+          seen[p.name] = 1;
+          switch (p.name) {
+            case "data": data = p; break;
+            case "visible": visible = p; break;
+            default: types[p.type].push(p); break;
+          }
+        }
+      }
     } while (mark = mark.proto);
-    return false;
   }
 
   /** TODO */
   function def(name) {
     return function(v) {
-        var defs = this.scene.defs;
-        if (arguments.length) {
-          if (v == undefined) {
-            delete defs.locked[name];
-          } else {
-            defs.locked[name] = true;
-          }
-          defs.values[name] = v;
-          return this;
+      var defs = this.scene.defs;
+      if (arguments.length) {
+        if (v == undefined) {
+          delete defs.locked[name];
         } else {
-          return defs.values[name];
+          defs.locked[name] = true;
         }
-      };
+        defs.values[name] = v;
+        return this;
+      } else {
+        return defs.values[name];
+      }
+    };
   }
 
   /* Scan the proto chain for all defined properties. */
+  bind(this);
+  bind(this.defaults);
+  types[1].reverse();
+  types[3].reverse();
+
+  /* Any undefined properties are null. */
   var mark = this;
   do for (var name in mark.properties) {
-    binds.properties[name] = true;
+    if (!(name in seen)) {
+      seen[name] = 1;
+      types[2].push({name: name, type: 2, value: null});
+    }
   } while (mark = mark.proto);
 
-  /* Find the definition of each property for this mark. */
-  for (var name in binds.properties) {
-    if (!find(this, name) && !find(this.defaults, name)) {
-      binds.constants[name] = null; // default
-    }
+  /* Define setter-getter for inherited defs. */
+  var defs = types[0].concat(types[1]);
+  for (var i = 0; i < defs.length; i++) {
+    var d = defs[i];
+    this[d.name] = def(d.name);
   }
 
-  /* Consolidate inherited defs. */
-  mark = this;
-  do if (mark.defs) {
-    for (var i = 0; i < mark.defs.length; i++) {
-      var d = mark.defs[i];
-      binds.defs.push(d);
-      this[d.name] = def(d.name);
-    }
-  } while (mark = mark.proto);
-
-  /* Delete special variables that are evaluated explicitly. */
-  delete binds.properties.data;
-  delete binds.properties.visible;
-
-  this.binds = binds;
+  /* Setup binds to evaluate constants before functions. */
+  this.binds = {
+    data: data,
+    visible: visible,
+    defs: defs,
+    properties: pv.blend(types)
+  };
 };
 
 /**
@@ -680,13 +664,29 @@ pv.Mark.prototype.build = function() {
     for (var i = 0; i < this.binds.defs.length; i++) {
       var d = this.binds.defs[i];
       if (!(d.name in defs.locked)) {
-        defs.values[d.name] = this.value(d.value, d.name);
+        var v = d.value;
+        if (d.type == 1) {
+          property = d.name;
+          v = v.apply(this, stack);
+        }
+        defs.values[d.name] = v;
       }
     }
   }
 
+  /* Evaluate special data property. */
+  var data = this.binds.data;
+  switch (data.type) {
+    case 0: case 1: data = defs.values.data; break;
+    case 2: data = data.value; break;
+    case 3: {
+      property = "data";
+      data = data.value.apply(this, stack);
+      break;
+    }
+  }
+
   /* Create, update and delete scene nodes. */
-  var data = this.get("data");
   stack.unshift(null);
   scene.length = data.length;
   for (var i = 0; i < data.length; i++) {
@@ -694,7 +694,20 @@ pv.Mark.prototype.build = function() {
     var s = scene[i];
     if (!s) scene[i] = s = {};
     s.data = stack[0] = data[i];
-    if (s.visible = this.get("visible")) this.buildInstance(s);
+
+    /* Evaluate special visible property. */
+    var visible = this.binds.visible;
+    switch (visible.type) {
+      case 0: case 1: visible = defs.values.visible; break;
+      case 2: visible = visible.value; break;
+      case 3: {
+        property = "visible";
+        visible = visible.value.apply(this, stack);
+        break;
+      }
+    }
+
+    if (s.visible = visible) this.buildInstance(s);
   }
   stack.shift();
   delete this.index;
@@ -702,6 +715,28 @@ pv.Mark.prototype.build = function() {
   if (!this.parent) delete scene.data;
 
   return this;
+};
+
+/**
+ * Evaluates the specified array of properties for the specified instance
+ * <tt>s</tt> in the scene graph.
+ *
+ * @param s a node in the scene graph; the instance of the mark to build.
+ * @param properties an array of properties.
+ */
+pv.Mark.prototype.buildProperties = function(s, properties) {
+  for (var i = 0, n = properties.length; i < n; i++) {
+    var p = properties[i], v = p.value;
+    switch (p.type) {
+      case 0: case 1: v = this.scene.defs.values[p.name]; break;
+      case 3: {
+        property = p.name;
+        v = v.apply(this, this.root.scene.data);
+        break;
+      }
+    }
+    s[p.name] = v;
+  }
 };
 
 /**
@@ -718,9 +753,7 @@ pv.Mark.prototype.build = function() {
  * @param s a node in the scene graph; the instance of the mark to build.
  */
 pv.Mark.prototype.buildInstance = function(s) {
-  for (var name in this.binds.properties) {
-    s[name] = this.get(name);
-  }
+  this.buildProperties(s, this.binds.properties);
   this.buildImplied(s);
 };
 
@@ -734,13 +767,13 @@ pv.Mark.prototype.buildInstance = function(s) {
  * <p>The default implementation computes the implied CSS box model properties.
  * The prioritization of redundant properties is as follows:<ol>
  *
- * <li>If the <tt>width</tt> property is not specified (i.e., null), its value is
- * the width of the parent panel, minus this mark's left and right margins; the
- * left and right margins are zero if not specified.
+ * <li>If the <tt>width</tt> property is not specified (i.e., null), its value
+ * is the width of the parent panel, minus this mark's left and right margins;
+ * the left and right margins are zero if not specified.
  *
- * <li>Otherwise, if the <tt>right</tt> margin is not specified, its value is the
- * width of the parent panel, minus this mark's width and left margin; the left
- * margin is zero if not specified.
+ * <li>Otherwise, if the <tt>right</tt> margin is not specified, its value is
+ * the width of the parent panel, minus this mark's width and left margin; the
+ * left margin is zero if not specified.
  *
  * <li>Otherwise, if the <tt>left</tt> property is not specified, its value is
  * the width of the parent panel, minus this mark's width and the right margin.
@@ -826,57 +859,6 @@ pv.Mark.prototype.mouse = function() {
 };
 
 /**
- * Evaluates the specified property function <tt>f</tt> with the specified
- * name. The data stack, <tt>root.scene.data</tt>, contains the current datum,
- * followed by the datum for the enclosing panel, and so on.
- *
- * @param {function} f a property function.
- * @param {string} name the property name.
- * @returns the evaluated property value.
- */
-pv.Mark.prototype.value = function(f, name) {
-  property = name;
-  return (typeof f == "function") ? f.apply(this, this.root.scene.data) : f;
-};
-
-/**
- * Evaluates the property function with the specified name for the current data
- * stack. The data stack, <tt>root.scene.data</tt>, contains the current datum,
- * followed by the datum for the enclosing panel, and so on.
- *
- * <p>This method first finds the implementing property function by querying the
- * current mark. If the current mark does not define the property function, the
- * prototype mark is queried, and so on. If none of the mark prototypes define a
- * property function with the given name, the type default function is used. If
- * no default function is provided, this method returns null.
- *
- * <p>The context of the property function is <tt>this</tt> instance (i.e., the
- * leaf-level mark), rather than whatever mark defined the property function.
- * Because of this behavior, a property function may be called on an object of a
- * different "class" (e.g., a Dot inheriting the fill style from a Line). Also
- * note that properties are not inherited statically; inheritance happens at the
- * property function / mark level, not per property value / mark instance. Thus,
- * even if a Dot extends from a Line, if the Line's fill style is defined using
- * a function that generates a random color, the Dot may get a different color.
- *
- * @param {string} name the property name.
- * @returns the evaluated property value.
- */
-pv.Mark.prototype.get = function(name) {
-  var defs = this.scene.defs;
-  if (defs && (name in defs.values)) {
-    return defs.values[name];
-  }
-  var binds = this.binds;
-  if (name in binds.constants) {
-    return binds.constants[name];
-  }
-  if (name in binds.functions) {
-    return this.value(binds.functions[name], name);
-  }
-};
-
-/**
  * Registers an event handler for the specified event type with this mark. When
  * an event of the specified type is triggered, the specified handler will be
  * invoked. The handler is invoked in a similar method to property functions:
@@ -956,8 +938,7 @@ pv.Mark.prototype.dispatch = function(e, scenes, index) {
     /* Execute the event listener. */
     try {
       event = e;
-      this.root.scene.data = argv(this);
-      mark = this.value(l);
+      mark = l.apply(this, this.root.scene.data = argv(this));
       e.preventDefault();
     } finally {
       event = undefined;

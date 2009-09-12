@@ -121,110 +121,61 @@ pv.Bar.prototype.defaults = new pv.Bar()
  *
  * @extends pv.Mark.Anchor
  */
-pv.Bar.Anchor = function() {
-  pv.Mark.Anchor.call(this);
-};
-pv.Bar.prototype.Anchor = pv.Bar.Anchor;
-pv.Bar.Anchor.prototype = pv.extend(pv.Mark.Anchor);
-
-/**
- * The left property; null for "left" anchors, non-null otherwise.
- *
- * @type number
- * @name pv.Bar.Anchor.prototype.left
- */ /** @private */
-pv.Bar.Anchor.prototype.$left = function() {
-  var bar = this.anchorTarget();
-  switch (this.get("name")) {
-    case "bottom":
-    case "top":
-    case "center": return bar.left() + (this.properties.width ? 0 : (bar.width() / 2));
-    case "right": return bar.left() + bar.width();
-  }
-  return null;
-};
-
-/**
- * The right property; null for "right" anchors, non-null otherwise.
- *
- * @type number
- * @name pv.Bar.Anchor.prototype.right
- */ /** @private */
-pv.Bar.Anchor.prototype.$right = function() {
-  var bar = this.anchorTarget();
-  switch (this.get("name")) {
-    case "bottom":
-    case "top":
-    case "center": return bar.right() + (this.properties.width ? 0 : (bar.width() / 2));
-    case "left": return bar.right() + bar.width();
-  }
-  return null;
-};
-
-/**
- * The top property; null for "top" anchors, non-null otherwise.
- *
- * @type number
- * @name pv.Bar.Anchor.prototype.top
- */ /** @private */
-pv.Bar.Anchor.prototype.$top = function() {
-  var bar = this.anchorTarget();
-  switch (this.get("name")) {
-    case "left":
-    case "right":
-    case "center": return bar.top() + (this.properties.height ? 0 : (bar.height() / 2));
-    case "bottom": return bar.top() + bar.height();
-  }
-  return null;
-};
-
-/**
- * The bottom property; null for "bottom" anchors, non-null otherwise.
- *
- * @type number
- * @name pv.Bar.Anchor.prototype.bottom
- */ /** @private */
-pv.Bar.Anchor.prototype.$bottom = function() {
-  var bar = this.anchorTarget();
-  switch (this.get("name")) {
-    case "left":
-    case "right":
-    case "center": return bar.bottom() + (this.properties.height ? 0 : (bar.height() / 2));
-    case "top": return bar.bottom() + bar.height();
-  }
-  return null;
-};
-
-/**
- * The text-align property, for horizontal alignment inside the bar.
- *
- * @type string
- * @name pv.Bar.Anchor.prototype.textAlign
- */ /** @private */
-pv.Bar.Anchor.prototype.$textAlign = function() {
-  switch (this.get("name")) {
-    case "left": return "left";
-    case "bottom":
-    case "top":
-    case "center": return "center";
-    case "right": return "right";
-  }
-  return null;
-};
-
-/**
- * The text-baseline property, for vertical alignment inside the bar.
- *
- * @type string
- * @name pv.Bar.Anchor.prototype.textBaseline
- */ /** @private */
-pv.Bar.Anchor.prototype.$textBaseline = function() {
-  switch (this.get("name")) {
-    case "right":
-    case "left":
-    case "center": return "middle";
-    case "top": return "top";
-    case "bottom": return "bottom";
-  }
-  return null;
+pv.Bar.prototype.anchor = function(name) {
+  var bar = this;
+  return pv.Mark.prototype.anchor.call(this, name)
+    .left(function() {
+        switch (this.name()) {
+          case "bottom":
+          case "top":
+          case "center": return bar.left() + (this.properties.width ? 0 : (bar.width() / 2));
+          case "right": return bar.left() + bar.width();
+        }
+        return null;
+      })
+    .right(function() {
+        switch (this.name()) {
+          case "bottom":
+          case "top":
+          case "center": return bar.right() + (this.properties.width ? 0 : (bar.width() / 2));
+          case "left": return bar.right() + bar.width();
+        }
+        return null;
+      })
+    .top(function() {
+        switch (this.name()) {
+          case "left":
+          case "right":
+          case "center": return bar.top() + (this.properties.height ? 0 : (bar.height() / 2));
+          case "bottom": return bar.top() + bar.height();
+        }
+        return null;
+      })
+    .bottom(function() {
+        switch (this.name()) {
+          case "left":
+          case "right":
+          case "center": return bar.bottom() + (this.properties.height ? 0 : (bar.height() / 2));
+          case "top": return bar.bottom() + bar.height();
+        }
+        return null;
+      })
+    .textAlign(function() {
+        switch (this.name()) {
+          case "bottom":
+          case "top":
+          case "center": return "center";
+          case "right": return "right";
+        }
+        return "left";
+      })
+    .textBaseline(function() {
+        switch (this.name()) {
+          case "right":
+          case "left":
+          case "center": return "middle";
+          case "top": return "top";
+        }
+        return "bottom";
+      });
 };
