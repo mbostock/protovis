@@ -862,7 +862,8 @@ pv.listen(window, "mousemove", function(e) { pageX = e.pageX; pageY = e.pageY; }
 
 /**
  * Returns the current location of the mouse (cursor) relative to this mark's
- * parent.
+ * parent. The <i>x</i> coordinate corresponds to the left margin, while the
+ * <i>y</i> coordinate corresponds to the top margin.
  *
  * @returns {pv.Vector} the mouse location.
  */
