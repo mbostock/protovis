@@ -9,21 +9,33 @@
  * rules. Rules can also be used as thin bars. The visual style is controlled in
  * the same manner as lines.
  *
- * <p>Rules are positioned exclusively using the four margins. The following
- * combinations of properties are supported:<ul>
+ * <p>Rules are positioned exclusively the standard box model properties. The
+ * following combinations of properties are supported:
  *
- * <li>left (vertical)
- * <li>right (vertical)
- * <li>left, bottom, top (vertical)
- * <li>right, bottom, top (vertical)
- * <li>top (horizontal)
- * <li>bottom (horizontal)
- * <li>top, left, right (horizontal)
- * <li>bottom, left, right (horizontal)
+ * <table>
+ * <thead><th style="width:12em;">Properties</th><th>Orientation</th></thead>
+ * <tbody>
+ * <tr><td>left</td><td>vertical</td></tr>
+ * <tr><td>right</td><td>vertical</td></tr>
+ * <tr><td>left, bottom, top</td><td>vertical</td></tr>
+ * <tr><td>right, bottom, top</td><td>vertical</td></tr>
+ * <tr><td>top</td><td>horizontal</td></tr>
+ * <tr><td>bottom</td><td>horizontal</td></tr>
+ * <tr><td>top, left, right</td><td>horizontal</td></tr>
+ * <tr><td>bottom, left, right</td><td>horizontal</td></tr>
+ * <tr><td>left, top, height</td><td>vertical</td></tr>
+ * <tr><td>left, bottom, height</td><td>vertical</td></tr>
+ * <tr><td>right, top, height</td><td>vertical</td></tr>
+ * <tr><td>right, bottom, height</td><td>vertical</td></tr>
+ * <tr><td>left, top, width</td><td>horizontal</td></tr>
+ * <tr><td>left, bottom, width</td><td>horizontal</td></tr>
+ * <tr><td>right, top, width</td><td>horizontal</td></tr>
+ * <tr><td>right, bottom, width</td><td>horizontal</td></tr>
+ * </tbody>
+ * </table>
  *
- * </ul>TODO If rules supported width (for horizontal) and height (for vertical)
- * properties, it might be easier to place them. Small rules can be used as tick
- * marks; alternatively, a {@link Dot} with the "tick" shape can be used.
+ * <p>Small rules can be used as tick marks; alternatively, a {@link Dot} with
+ * the "tick" shape can be used.
  *
  * <p>See also the <a href="../../api/Rule.html">Rule guide</a>.
  *
@@ -134,8 +146,8 @@ pv.Rule.prototype.anchor = function(name) {
 };
 
 /**
- * Overrides the default behavior of {@link Mark#buildImplied} to determine the
- * orientation (vertical or horizontal) of the rule.
+ * @private Overrides the default behavior of {@link pv.Mark.buildImplied} to
+ * determine the orientation (vertical or horizontal) of the rule.
  *
  * @param s a node in the scene graph; the instance of the rule to build.
  */

@@ -2,7 +2,7 @@
  * Parses the Protovis specifications on load, allowing the use of JavaScript
  * 1.8 function expressions on browsers that only support JavaScript 1.6.
  *
- * @see pv#parse
+ * @see pv.parse
  */
 pv.listen(window, "load", function() {
     var scripts = document.getElementsByTagName("script");

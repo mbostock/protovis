@@ -68,7 +68,7 @@ pv.Scale.ordinal = function() {
   /**
    * @function
    * @name pv.Scale.ordinal.prototype.by
-   * @param {function f
+   * @param {function} f
    * @returns {pv.Scale.ordinal} the new view.
    */
   scale.by = function(f) {

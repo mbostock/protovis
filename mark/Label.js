@@ -55,7 +55,7 @@ pv.Label.prototype.type = "label";
  * ignored. The other font-style, font-variant, font-weight, font-size and
  * font-family properties are supported.
  *
- * @see <a href="http://www.w3.org/TR/CSS2/fonts.html#font-shorthand">CSS2 fonts</a>.
+ * @see <a href="http://www.w3.org/TR/CSS2/fonts.html#font-shorthand">CSS2 fonts</a>
  * @type string
  * @name pv.Label.prototype.font
  */
@@ -106,9 +106,9 @@ pv.Label.prototype.type = "label";
  */
 
 /**
- * The text margin; may be specified in pixels, or in font-dependent units
- * (e.g., ".1ex"). The margin can be used to pad text away from its anchor
- * location, in a direction dependent on the horizontal and vertical alignment
+ * The text margin; may be specified in pixels, or in font-dependent units (such
+ * as ".1ex"). The margin can be used to pad text away from its anchor location,
+ * in a direction dependent on the horizontal and vertical alignment
  * properties. For example, if the text is left- and middle-aligned, the margin
  * shifts the text to the right. The default margin is 3 pixels.
  *
@@ -122,7 +122,7 @@ pv.Label.prototype.type = "label";
  * rgba(0,0,0,.5)"; the first length is the horizontal offset, the second the
  * vertical offset, and the third the blur radius.
  *
- * @see <a href="http://www.w3.org/TR/css3-text/#text-shadow">CSS3 text</a>.
+ * @see <a href="http://www.w3.org/TR/css3-text/#text-shadow">CSS3 text</a>
  * @type string
  * @name pv.Label.prototype.textShadow
  */

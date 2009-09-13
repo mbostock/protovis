@@ -129,7 +129,7 @@ pv.Panel.prototype.add = function(type) {
   return child;
 };
 
-/** TODO */
+/** @private TODO */
 pv.Panel.prototype.bind = function() {
   pv.Mark.prototype.bind.call(this);
   for (var i = 0; i < this.children.length; i++) {
@@ -138,9 +138,9 @@ pv.Panel.prototype.bind = function() {
 };
 
 /**
- * Evaluates all of the properties for this panel for the specified instance
- * <tt>s</tt> in the scene graph, including recursively building the scene graph
- * for child marks.
+ * @private Evaluates all of the properties for this panel for the specified
+ * instance <tt>s</tt> in the scene graph, including recursively building the
+ * scene graph for child marks.
  *
  * @param s a node in the scene graph; the instance of the panel to build.
  * @see Mark#scene
@@ -176,8 +176,9 @@ pv.Panel.prototype.buildInstance = function(s) {
 };
 
 /**
- * Computes the implied properties for this panel for the specified instance
- * <tt>s</tt> in the scene graph. Panels have two implied properties:<ul>
+ * @private Computes the implied properties for this panel for the specified
+ * instance <tt>s</tt> in the scene graph. Panels have two implied
+ * properties:<ul>
  *
  * <li>The <tt>canvas</tt> property references the DOM element, typically a DIV,
  * that contains the SVG element that is used to display the visualization. This

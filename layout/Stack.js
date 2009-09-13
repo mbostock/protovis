@@ -1,7 +1,7 @@
 /**
- * A property function for stacking marks vertically or horizontally, using the
- * cousin instance. This property function changes behavior depending on the
- * property being evaluated:<ul>
+ * @class A property function for stacking marks vertically or horizontally,
+ * using the cousin instance. This property function changes behavior depending
+ * on the property being evaluated:<ul>
  *
  * <li>bottom: cousin.bottom + cousin.height
  * <li>top: cousin.top + cousin.height

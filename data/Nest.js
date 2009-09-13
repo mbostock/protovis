@@ -11,7 +11,8 @@ pv.nest = function(array) {
 };
 
 /**
- * Constructs a nest operator for the specified array.
+ * Constructs a nest operator for the specified array. This constructor should
+ * not be invoked directly; use {@link pv.nest} instead.
  *
  * @class Represents a {@link Nest} operator for the specified array. Nesting
  * allows elements in an array to be grouped into a hierarchical tree
@@ -46,13 +47,13 @@ pv.nest = function(array) {
  *       { yield: 48.87, variety: "Manchuria", year: 1931, site: "Waseca" },
  *       { yield: 27.43, variety: "Manchuria", year: 1931, site: "Morris" },
  *       ...
- *     ]},
+ *     ] },
  *   { key: "Glabron", values: [
  *       { yield: 43.07, variety: "Glabron", year: 1931, site: "University Farm" },
  *       { yield: 55.20, variety: "Glabron", year: 1931, site: "Waseca" },
  *       ...
- *     ]},
- *   ]},
+ *     ] },
+ *   ] },
  * { key: 1932, values: ... }</pre>
  *
  * Further details, including sorting and rollup, is provided below on the
@@ -183,7 +184,7 @@ pv.Nest.prototype.map = function() {
 
 /**
  * Returns a hierarchical nested array. This method is similar to
- * {@link pv#entries}, but works recursively on the entire hierarchy. Rather
+ * {@link pv.entries}, but works recursively on the entire hierarchy. Rather
  * than returning a map like {@link #map}, this method returns a nested
  * array. Each element of the array has a <tt>key</tt> and <tt>values</tt>
  * field. For leaf nodes, the <tt>values</tt> array will be a subset of the

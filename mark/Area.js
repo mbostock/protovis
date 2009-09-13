@@ -95,7 +95,7 @@ pv.Area.prototype.type = "area";
  */
 
 /**
- * Whether the area is segmented; i.e., whether variations in fill style, stroke
+ * Whether the area is segmented; whether variations in fill style, stroke
  * style, and the other properties are treated as fixed. Rendering segmented
  * areas is noticeably slower than non-segmented areas.
  *
@@ -200,8 +200,8 @@ pv.Area.prototype.anchor = function(name) {
 };
 
 /**
- * Overrides the default behavior of {@link pv.Mark#buildImplied} such that the
- * width and height are set to zero if null.
+ * @private Overrides the default behavior of {@link pv.Mark.buildImplied} such
+ * that the width and height are set to zero if null.
  *
  * @param s a node in the scene graph; the instance of the mark to build.
  */
@@ -211,8 +211,10 @@ pv.Area.prototype.buildImplied = function(s) {
   pv.Mark.prototype.buildImplied.call(this, s);
 };
 
+/** @private */
 var pv_Area_specials = {left:1, top:1, right:1, bottom:1, width:1, height:1, name:1};
 
+/** @private */
 pv.Area.prototype.bind = function() {
   pv.Mark.prototype.bind.call(this);
   var binds = this.binds,
@@ -224,6 +226,7 @@ pv.Area.prototype.bind = function() {
   }
 };
 
+/** @private */
 pv.Area.prototype.buildInstance = function(s) {
   if (this.index && !this.scene[0].segmented) {
     this.buildProperties(s, this.binds.specials);

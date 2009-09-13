@@ -1,7 +1,8 @@
 // TODO share code with Treemap
 // TODO inspect parent panel dimensions to set inner and outer radii
 
-pv.sunburst = function(tree) {
+/** @class */
+pv.Layout.sunburst = function(tree) {
   var keys = [], sizeof = Number;
 
   function accumulate(map) {

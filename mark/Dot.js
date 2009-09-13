@@ -7,8 +7,8 @@
  * point that can also be stroked and filled. The <tt>size</tt> property is
  * proportional to the area of the rendered glyph to encourage meaningful visual
  * encodings. Dots can visually encode up to eight dimensions of data, though
- * this may be unwise due to integrality. See {@link pv.Mark#buildImplied} for
- * details on the prioritization of redundant positioning properties.
+ * this may be unwise due to integrality. See {@link pv.Mark} for details on the
+ * prioritization of redundant positioning properties.
  *
  * <p>See also the <a href="../../api/Dot.html">Dot guide</a>.
  *
@@ -54,10 +54,9 @@ pv.Dot.prototype.type = "dot";
  * some shapes (cross and tick) do not have interior areas, and thus do not
  * support fill style meaningfully.
  *
- * <p>TODO It's probably better to use the Rule mark type rather than a
- * tick-shaped Dot. However, the Rule mark doesn't support the width and height
- * properties, so it's a bit clumsy to use. It should be possible to add support
- * for width and height to rule, and then remove the tick shape.
+ * <p>Note: it may be more natural to use the {@link pv.Rule} mark for
+ * horizontal and vertical ticks. The tick shape is only necessary if angled
+ * ticks are needed.
  *
  * @type string
  * @name pv.Dot.prototype.shape

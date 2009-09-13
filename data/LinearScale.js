@@ -102,7 +102,7 @@ pv.Scale.linear = function() {
   /**
    * @function
    * @name pv.Scale.linear.prototype.by
-   * @param {function f
+   * @param {function} f
    * @returns {pv.Scale.linear} the new view.
    */
   scale.by = function(f) {

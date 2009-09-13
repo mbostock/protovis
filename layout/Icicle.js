@@ -1,7 +1,8 @@
 // TODO share code with Treemap
 // TODO vertical / horizontal orientation?
 
-pv.icicle = function(tree) {
+/** @class */
+pv.Layout.icicle = function(tree) {
   var keys = [], sizeof = Number;
 
   function accumulate(map) {

@@ -10,7 +10,7 @@
 var pv = {};
 
 /**
- * Returns a prototype object suitable for extending the given class
+ * @private Returns a prototype object suitable for extending the given class
  * <tt>f</tt>. Rather than constructing a new instance of <tt>f</tt> to serve as
  * the prototype (which unnecessarily runs the constructor on the created
  * prototype object, potentially polluting it), an anonymous function is
@@ -94,25 +94,46 @@ pv.identity = function(x) { return x; };
 
 /**
  * Returns <tt>this.index</tt>. This method is provided for convenience for use
- * with scales.
+ * with scales. For example, to color bars by their index, say:
+ *
+ * <pre>.fillStyle(pv.Colors.category10().by(pv.index))</pre>
+ *
+ * This method is equivalent to <tt>function() this.index</tt>, but more
+ * succinct. Note that the <tt>index</tt> property is also supported for
+ * accessor functions with {@link pv.max}, {@link pv.min} and other array
+ * utility methods.
  *
  * @see pv.Scale
+ * @see pv.Mark#index
  */
 pv.index = function() { return this.index; };
 
 /**
  * Returns <tt>this.childIndex</tt>. This method is provided for convenience for
- * use with scales.
+ * use with scales. For example, to color bars by their child index, say:
+ *
+ * <pre>.fillStyle(pv.Colors.category10().by(pv.child))</pre>
+ *
+ * This method is equivalent to <tt>function() this.childIndex</tt>, but more
+ * succinct.
  *
  * @see pv.Scale
+ * @see pv.Mark#childIndex
  */
 pv.child = function() { return this.childIndex; };
 
 /**
  * Returns <tt>this.parent.index</tt>. This method is provided for convenience
- * for use with scales.
+ * for use with scales. This method is provided for convenience for use with
+ * scales. For example, to color bars by their parent index, say:
+ *
+ * <pre>.fillStyle(pv.Colors.category10().by(pv.parent))</pre>
+ *
+ * Tthis method is equivalent to <tt>function() this.parent.index</tt>, but more
+ * succinct.
  *
  * @see pv.Scale
+ * @see pv.Mark#index
  */
 pv.parent = function() { return this.parent.index; };
 
@@ -126,7 +147,7 @@ pv.parent = function() { return this.parent.index; };
  * <p>The method is modeled after the built-in <tt>range</tt> method from
  * Python. See the Python documentation for more details.
  *
- * @see <a href="http://docs.python.org/library/functions.html#range">Python range</a>.
+ * @see <a href="http://docs.python.org/library/functions.html#range">Python range</a>
  * @param {number} [start] the start value.
  * @param {number} stop the stop value.
  * @param {number} [step] the step value.
@@ -302,7 +323,8 @@ function map(array, f) {
  * <pre>pv.normalize(array, function(d) d.foo)</pre>
  *
  * returns a normalized array on the "foo" property. If an accessor function is
- * not specified, the identity function is used.
+ * not specified, the identity function is used. Accessor functions can refer to
+ * <tt>this.index</tt>.
  *
  * @param {array} array an array of objects, or numbers.
  * @param {function} [f] an optional accessor function.
@@ -318,6 +340,7 @@ pv.normalize = function(array, f) {
  * Returns the sum of the specified array. If the specified array is not an
  * array of numbers, an optional accessor function <tt>f</tt> can be specified
  * to map the elements to numbers. See {@link #normalize} for an example.
+ * Accessor functions can refer to <tt>this.index</tt>.
  *
  * @param {array} array an array of objects, or numbers.
  * @param {function} [f] an optional accessor function.
@@ -334,7 +357,7 @@ pv.sum = function(array, f) {
  * Returns the maximum value of the specified array. If the specified array is
  * not an array of numbers, an optional accessor function <tt>f</tt> can be
  * specified to map the elements to numbers. See {@link #normalize} for an
- * example.
+ * example. Accessor functions can refer to <tt>this.index</tt>.
  *
  * @param {array} array an array of objects, or numbers.
  * @param {function} [f] an optional accessor function.
@@ -349,7 +372,8 @@ pv.max = function(array, f) {
  * Returns the index of the maximum value of the specified array. If the
  * specified array is not an array of numbers, an optional accessor function
  * <tt>f</tt> can be specified to map the elements to numbers. See
- * {@link #normalize} for an example.
+ * {@link #normalize} for an example. Accessor functions can refer to
+ * <tt>this.index</tt>.
  *
  * @param {array} array an array of objects, or numbers.
  * @param {function} [f] an optional accessor function.
@@ -374,7 +398,7 @@ pv.max.index = function(array, f) {
  * Returns the minimum value of the specified array of numbers. If the specified
  * array is not an array of numbers, an optional accessor function <tt>f</tt>
  * can be specified to map the elements to numbers. See {@link #normalize} for
- * an example.
+ * an example. Accessor functions can refer to <tt>this.index</tt>.
  *
  * @param {array} array an array of objects, or numbers.
  * @param {function} [f] an optional accessor function.
@@ -389,7 +413,8 @@ pv.min = function(array, f) {
  * Returns the index of the minimum value of the specified array. If the
  * specified array is not an array of numbers, an optional accessor function
  * <tt>f</tt> can be specified to map the elements to numbers. See
- * {@link #normalize} for an example.
+ * {@link #normalize} for an example. Accessor functions can refer to
+ * <tt>this.index</tt>.
  *
  * @param {array} array an array of objects, or numbers.
  * @param {function} [f] an optional accessor function.
@@ -414,7 +439,8 @@ pv.min.index = function(array, f) {
  * Returns the arithmetic mean, or average, of the specified array. If the
  * specified array is not an array of numbers, an optional accessor function
  * <tt>f</tt> can be specified to map the elements to numbers. See
- * {@link #normalize} for an example.
+ * {@link #normalize} for an example. Accessor functions can refer to
+ * <tt>this.index</tt>.
  *
  * @param {array} array an array of objects, or numbers.
  * @param {function} [f] an optional accessor function.
@@ -428,6 +454,7 @@ pv.mean = function(array, f) {
  * Returns the median of the specified array. If the specified array is not an
  * array of numbers, an optional accessor function <tt>f</tt> can be specified
  * to map the elements to numbers. See {@link #normalize} for an example.
+ * Accessor functions can refer to <tt>this.index</tt>.
  *
  * @param {array} array an array of objects, or numbers.
  * @param {function} [f] an optional accessor function.
@@ -452,7 +479,8 @@ pv.median = function(array, f) {
  *
  * <pre>pv.dict(["one", "three", "seventeen"], function(s) s.length)</pre>
  *
- * The returned value is <tt>{one: 3, three: 5, seventeen: 9}</tt>.
+ * The returned value is <tt>{one: 3, three: 5, seventeen: 9}</tt>. Accessor
+ * functions can refer to <tt>this.index</tt>.
  *
  * @param {array} keys an array.
  * @param {function} f a value function.
@@ -480,7 +508,8 @@ pv.dict = function(keys, f) {
  * returns <tt>["b", "c", "a"]</tt>. It is acceptable for the array of indexes
  * to be a different length from the array of elements, and for indexes to be
  * duplicated or omitted. The optional accessor function <tt>f</tt> can be used
- * to perform a simultaneous mapping of the array elements.
+ * to perform a simultaneous mapping of the array elements. Accessor functions
+ * can refer to <tt>this.index</tt>.
  *
  * @param {array} array an array.
  * @param {number[]} indexes an array of indexes into <tt>array</tt>.
@@ -504,7 +533,7 @@ pv.permute = function(array, indexes, f) {
  * support string keys, <tt>keys</tt> must contain strings, or other values that
  * naturally map to distinct string values. Alternatively, an optional accessor
  * function <tt>f</tt> can be specified to compute the string key for the given
- * element.
+ * element. Accessor functions can refer to <tt>this.index</tt>.
  *
  * @param {array} keys an array, usually of string keys.
  * @param {function} [f] an optional key function.
@@ -563,36 +592,48 @@ pv.css = function(e, p) {
       : e.currentStyle[p];
 };
 
-/** @namespace Namespace constants for SVG, XMLNS, and XLINK. */
+/**
+ * Namespace constants for SVG, XMLNS, and XLINK.
+ *
+ * @namespace Namespace constants for SVG, XMLNS, and XLINK.
+ */
 pv.ns = {
- /**
-  * The SVG namespace, "http://www.w3.org/2000/svg".
-  *
-  * @type string
-  */
- svg: "http://www.w3.org/2000/svg",
+  /**
+   * The SVG namespace, "http://www.w3.org/2000/svg".
+   *
+   * @type string
+   * @constant
+   */
+  svg: "http://www.w3.org/2000/svg",
 
- /**
-  * The XMLNS namespace, "http://www.w3.org/2000/xmlns".
-  *
-  * @type string
-  */
- xmlns: "http://www.w3.org/2000/xmlns",
+  /**
+   * The XMLNS namespace, "http://www.w3.org/2000/xmlns".
+   *
+   * @type string
+   * @constant
+   */
+  xmlns: "http://www.w3.org/2000/xmlns",
 
- /**
-  * The XLINK namespace, "http://www.w3.org/1999/xlink".
-  *
-  * @type string
-  */
- xlink: "http://www.w3.org/1999/xlink"
+  /**
+   * The XLINK namespace, "http://www.w3.org/1999/xlink".
+   *
+   * @type string
+   * @constant
+   */
+  xlink: "http://www.w3.org/1999/xlink"
 };
 
-/** @namespace Protovis major and minor version numbers. */
+/**
+ * Protovis major and minor version numbers.
+ *
+ * @namespace Protovis major and minor version numbers.
+ */
 pv.version = {
   /**
    * The major version number.
    *
    * @type number
+   * @constant
    */
   major: 3,
 
@@ -600,6 +641,7 @@ pv.version = {
    * The minor version number.
    *
    * @type number
+   * @constant
    */
   minor: 0
 };
@@ -616,8 +658,8 @@ pv.error = function(e) {
 };
 
 /**
- * Registers the specified listener for events of the specified type on the
- * specified target. For standards-compliant browsers, this method uses
+ * @private Registers the specified listener for events of the specified type on
+ * the specified target. For standards-compliant browsers, this method uses
  * <tt>addEventListener</tt>; for Internet Explorer, <tt>attachEvent</tt>.
  *
  * @param target a DOM element.
@@ -633,9 +675,9 @@ pv.listen = function(target, type, listener) {
 /**
  * Returns the logarithm with a given base value.
  *
- * @param x the number for which to compute the logarithm
- * @param b the base of the logarithm
- * @returns the logarithm value
+ * @param {number} x the number for which to compute the logarithm.
+ * @param {number} b the base of the logarithm.
+ * @returns {number} the logarithm value.
  */
 pv.log = function(x, b) {
   return Math.log(x) / Math.log(b);
@@ -646,9 +688,9 @@ pv.log = function(x, b) {
  * value of the input, and determines the sign of the output according to the
  * sign of the input value.
  *
- * @param x the number for which to compute the logarithm
- * @param b the base of the logarithm
- * @returns the symmetric log value.
+ * @param {number} x the number for which to compute the logarithm.
+ * @param {number} b the base of the logarithm.
+ * @returns {number} the symmetric log value.
  */
 pv.logSymmetric = function(x, b) {
   return (x == 0) ? 0 : ((x < 0) ? -pv.log(-x, b) : pv.log(x, b));
@@ -660,9 +702,9 @@ pv.logSymmetric = function(x, b) {
  * than the base number, but enables simultaneous plotting of log-transformed
  * data involving both positive and negative numbers.
  *
- * @param x the number for which to compute the logarithm
- * @param b the base of the logarithm
- * @returns the adjusted, symmetric log value.
+ * @param {number} x the number for which to compute the logarithm.
+ * @param {number} b the base of the logarithm.
+ * @returns {number} the adjusted, symmetric log value.
  */
 pv.logAdjusted = function(x, b) {
   var negative = x < 0;
@@ -675,9 +717,9 @@ pv.logAdjusted = function(x, b) {
  * floor of the logarithm of the value and then uses the resulting value as an
  * exponent for the base value.
  *
- * @param x the number for which to compute the logarithm floor
- * @param base the base of the logarithm
- * @return the rounded-by-logarithm value
+ * @param {number} x the number for which to compute the logarithm floor.
+ * @param {number} b the base of the logarithm.
+ * @return {number} the rounded-by-logarithm value.
  */
 pv.logFloor = function(x, b) {
   return (x > 0)
@@ -690,9 +732,9 @@ pv.logFloor = function(x, b) {
  * ceiling of the logarithm of the value and then uses the resulting value as an
  * exponent for the base value.
  *
- * @param x the number for which to compute the logarithm ceiling
- * @param base the base of the logarithm
- * @return the rounded-by-logarithm value
+ * @param {number} x the number for which to compute the logarithm ceiling.
+ * @param {number} b the base of the logarithm.
+ * @return {number} the rounded-by-logarithm value.
  */
 pv.logCeil = function(x, b) {
   return (x > 0)

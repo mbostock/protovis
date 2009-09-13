@@ -1,1 +1,5 @@
+/**
+ * @ignore
+ * @namespace
+ */
 pv.Layout = {};

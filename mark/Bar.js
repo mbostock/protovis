@@ -16,8 +16,8 @@
  * then extends to the right, while the height extends to the top. As an
  * alternative to the four corners, a bar can be positioned exclusively using
  * margins; this is convenient as an inset from the containing panel, for
- * example. See {@link pv.Mark#buildImplied} for details on the prioritization
- * of redundant positioning properties.
+ * example. See {@link pv.Mark} for details on the prioritization of redundant
+ * positioning properties.
  *
  * <p>See also the <a href="../../api/Bar.html">Bar guide</a>.
  *

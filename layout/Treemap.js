@@ -1,6 +1,7 @@
 // TODO add `by` function for determining size (and children?)
 
-pv.treemap = function(tree) {
+/** @class */
+pv.Layout.treemap = function(tree) {
   var keys = [], round, inset, sizeof = Number;
 
   function rnd(i) {

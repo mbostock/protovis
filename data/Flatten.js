@@ -11,11 +11,13 @@ pv.flatten = function(map) {
 };
 
 /**
- * Constructs a flatten operator for the specified map.
+ * Constructs a flatten operator for the specified map. This constructor should
+ * not be invoked directly; use {@link pv.flatten} instead.
  *
  * @class Represents a flatten operator for the specified array. Flattening
  * allows hierarchical maps to be flattened into an array. The levels in the
- * input tree are specified by <i>key</i> functions.
+ * input tree are specified by <i>key</i> functions. The flatten operator is
+ * roughly the inverse of the {@link pv.Nest} operator.
  *
  * @param map a map to flatten.
  */
@@ -29,6 +31,44 @@ pv.Flatten = function(map) {
  * flatten; the tiers of the underlying tree must correspond to the specified
  * keys, in order.
  *
+ * <p>For example, consider the following hierarchical data structure of Barley
+ * yields, from various sites in Minnesota during 1931-2:
+ *
+ * <pre>{ 1931: {
+ *     Manchuria: {
+ *       "University Farm": 27.00,
+ *       "Waseca": 48.87,
+ *       "Morris": 27.43,
+ *       ... },
+ *     Glabron: {
+ *       "University Farm": 43.07,
+ *       "Waseca": 55.20,
+ *       ... } },
+ *   1932: {
+ *     ... } }</pre>
+ *
+ * To facilitate visualization, it may be useful to flatten the tree into a
+ * tabular array:
+ *
+ * <pre>var array = pv.flatten(yields)
+ *     .key("year")
+ *     .key("variety")
+ *     .key("site")
+ *     .key("yield")
+ *     .array();</pre>
+ *
+ * This returns an array of object elements. Each element in the array has
+ * attributes corresponding to this flatten operator's keys:
+ *
+ * <pre>[ { site: "University Farm", variety: "Manchuria", year: 1931, yield: 27 },
+ *   { site: "Waseca", variety: "Manchuria", year: 1931, yield: 48.87 },
+ *   { site: "Morris", variety: "Manchuria", year: 1931, yield: 27.43 },
+ *   { site: "University Farm", variety: "Glabron", year: 1931, yield: 43.07 },
+ *   { site: "Waseca", variety: "Glabron", year: 1931, yield: 55.2 }, ... ]</pre>
+ *
+ * The order of the returned array is undefined; however, you can easily sort
+ * it.
+ *
  * @param {string} key the key name.
  * @param {function} [f] an optional value map function.
  * @return {pv.Nest} this.
@@ -40,7 +80,8 @@ pv.Flatten.prototype.key = function(key, f) {
 
 /**
  * Returns the flattened array. Each entry in the array is an object; each
- * object has attributes corresponding to this flatten operator's keys.
+ * object has attributes corresponding to this flatten operator's keys. See
+ * {@link #key} for an example.
  *
  * @returns an array of elements from the flattened map.
  */

@@ -123,7 +123,7 @@ pv.Scale.log = function() {
   /**
    * @function
    * @name pv.Scale.log.prototype.by
-   * @param {function f
+   * @param {function} f
    * @returns {pv.Scale.log} the new view.
    */
   scale.by = function(f) {

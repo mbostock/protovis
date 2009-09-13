@@ -49,6 +49,6 @@ pv.Scale.interpolator = function(start, end) {
 /**
  * @function
  * @name pv.Scale.prototype.by
- * @param {function f
+ * @param {function} f
  * @returns {pv.Scale} the new view.
  */

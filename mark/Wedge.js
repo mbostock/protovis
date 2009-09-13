@@ -247,9 +247,9 @@ pv.Wedge.upright = function(angle) {
 };
 
 /**
- * Overrides the default behavior of {@link Mark#buildImplied} such that the end
- * angle is computed from the start angle and angle (angular span) if not
- * specified.
+ * @private Overrides the default behavior of {@link pv.Mark.buildImplied} such
+ * that the end angle is computed from the start angle and angle (angular span)
+ * if not specified.
  *
  * @param s a node in the scene graph; the instance of the wedge to build.
  */

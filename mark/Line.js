@@ -58,9 +58,9 @@ pv.Line.prototype.type = "line";
  */
 
 /**
- * Whether the line is segmented; i.e., whether variations in stroke style, line
- * width and the other properties are treated as fixed. Rendering segmented
- * lines is noticeably slower than non-segmented lines.
+ * Whether the line is segmented; whether variations in stroke style, line width
+ * and the other properties are treated as fixed. Rendering segmented lines is
+ * noticeably slower than non-segmented lines.
  *
  * <p>This property is <i>fixed</i>. See {@link pv.Mark}.
  *
@@ -79,8 +79,10 @@ pv.Line.prototype.defaults = new pv.Line()
     .lineWidth(1.5)
     .strokeStyle(defaultStrokeStyle);
 
+/** @private */
 var pv_Line_specials = {left:1, top:1, right:1, bottom:1, name:1};
 
+/** @private */
 pv.Line.prototype.bind = function() {
   pv.Mark.prototype.bind.call(this);
   var binds = this.binds,
@@ -92,6 +94,7 @@ pv.Line.prototype.bind = function() {
   }
 };
 
+/** @private */
 pv.Line.prototype.buildInstance = function(s) {
   if (this.index && !this.scene[0].segmented) {
     this.buildProperties(s, this.binds.specials);

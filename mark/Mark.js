@@ -24,6 +24,29 @@
  * can be specified succinctly using anonymous functions. Special properties
  * called event handlers can be registered to add interactivity.
  *
+ * <p>Protovis uses <b>inheritance</b> to simplify the specification of related
+ * marks: a new mark can be derived from an existing mark, inheriting its
+ * properties. The new mark can then override properties to specify new
+ * behavior, potentially in terms of the old behavior. In this way, the old mark
+ * serves as the <b>prototype</b> for the new mark. Most mark types share the
+ * same basic properties for consistency and to facilitate inheritance.
+ *
+ * <p>The prioritization of redundant properties is as follows:<ol>
+ *
+ * <li>If the <tt>width</tt> property is not specified (i.e., null), its value
+ * is the width of the parent panel, minus this mark's left and right margins;
+ * the left and right margins are zero if not specified.
+ *
+ * <li>Otherwise, if the <tt>right</tt> margin is not specified, its value is
+ * the width of the parent panel, minus this mark's width and left margin; the
+ * left margin is zero if not specified.
+ *
+ * <li>Otherwise, if the <tt>left</tt> property is not specified, its value is
+ * the width of the parent panel, minus this mark's width and the right margin.
+ *
+ * </ol>This prioritization is then duplicated for the <tt>height</tt>,
+ * <tt>bottom</tt> and <tt>top</tt> properties, respectively.
+ *
  * <p>While most properties are <i>variable</i>, some mark types, such as lines
  * and areas, generate a single visual element rather than a distinct visual
  * element per datum. With these marks, some properties may be <b>fixed</b>.
@@ -31,13 +54,6 @@
  * properties are evaluated solely for the first (0-index) datum, and typically
  * are specified as a constant. However, it is valid to use a function if the
  * property varies between panels or is dynamically generated.
- *
- * <p>Protovis uses <b>inheritance</b> to simplify the specification of related
- * marks: a new mark can be derived from an existing mark, inheriting its
- * properties. The new mark can then override properties to specify new
- * behavior, potentially in terms of the old behavior. In this way, the old mark
- * serves as the <b>prototype</b> for the new mark. Most mark types share the
- * same basic properties for consistency and to facilitate inheritance.
  *
  * <p>See also the <a href="../../api/">Protovis guide</a>.
  */
@@ -52,7 +68,7 @@ pv.Mark = function() {
   this.$properties = [];
 };
 
-/** TOOD */
+/** @private TOOD */
 pv.Mark.prototype.properties = {};
 
 /**
@@ -74,24 +90,12 @@ pv.Mark.prototype.properties = {};
  * <pre>m.height(function(d) d * 100);</pre>
  *
  * The expression <tt>d * 100</tt> will be evaluated for the height property of
- * each mark instance. This function is stored in the <tt>$height</tt> field. The
- * return value of the property method (e.g., <tt>m.height</tt>) is this mark
- * (<tt>m</tt>)).<p>
+ * each mark instance. The return value of the property method (e.g.,
+ * <tt>m.height</tt>) is this mark (<tt>m</tt>)).<p>
  *
  * <li>If invoked with a non-function argument, the property is treated as a
- * constant, and wrapped with an accessor function. This wrapper function is
- * stored in the equivalent internal (<tt>$</tt>-prefixed) field. The return
- * value of the property method (e.g., <tt>m.height</tt>) is this mark.<p>
- *
- * <li>If invoked from an event handler, the property is set to the specified
- * value on the current instance (i.e., the instance that triggered the event,
- * such as a mouse click). In this case, the value should be a constant and not
- * a function. The return value is this mark. For example, saying
- *
- * <pre>this.fillStyle("red").strokeStyle("black");</pre>
- *
- * from a "click" event handler will set the fill color to red, and the stroke
- * color to black, for any marks that are clicked.<p>
+ * constant. The return value of the property method (e.g., <tt>m.height</tt>)
+ * is this mark.<p>
  *
  * <li>If invoked with no arguments, the computed property value for the current
  * mark instance in the scene graph is returned. This facilitates <i>property
@@ -113,10 +117,10 @@ pv.Mark.prototype.properties = {};
  * conventions, using lowerCamel-style capitalization.
  *
  * <p>In addition to creating the property method, every property is registered
- * in the {@link #properties} array on the <tt>prototype</tt>. Although this
- * array is an instance field, it is considered immutable and shared by all
- * instances of a given mark type. The <tt>properties</tt> array can be queried
- * to see if a mark type defines a particular property, such as width or height.
+ * in the {@link #properties} map on the <tt>prototype</tt>. Although this is an
+ * instance field, it is considered immutable and shared by all instances of a
+ * given mark type. The <tt>properties</tt> map can be queried to see if a mark
+ * type defines a particular property, such as width or height.
  *
  * @param {string} name the property name.
  */
@@ -329,7 +333,7 @@ pv.Mark.prototype.index = -1;
  *
  * @type string
  * @name pv.Mark.prototype.cursor
- * @see <a href="http://www.w3.org/TR/CSS2/ui.html#propdef-cursor">CSS2 cursor</a>.
+ * @see <a href="http://www.w3.org/TR/CSS2/ui.html#propdef-cursor">CSS2 cursor</a>
  */
 
 /**
@@ -541,7 +545,7 @@ function argv(mark) {
   return stack;
 }
 
-/** TODO */
+/** @private TODO */
 pv.Mark.prototype.bind = function() {
   var seen = {}, types = [[], [], [], []], data, visible;
 
@@ -613,8 +617,8 @@ pv.Mark.prototype.bind = function() {
 };
 
 /**
- * Evaluates properties and computes implied properties. Properties are stored
- * in the {@link #scene} array for each instance of this mark.
+ * @private Evaluates properties and computes implied properties. Properties are
+ * stored in the {@link #scene} array for each instance of this mark.
  *
  * <p>As marks are built recursively, the {@link #index} property is updated to
  * match the current index into the data array for each mark. Note that the
@@ -724,8 +728,8 @@ pv.Mark.prototype.build = function() {
 };
 
 /**
- * Evaluates the specified array of properties for the specified instance
- * <tt>s</tt> in the scene graph.
+ * @private Evaluates the specified array of properties for the specified
+ * instance <tt>s</tt> in the scene graph.
  *
  * @param s a node in the scene graph; the instance of the mark to build.
  * @param properties an array of properties.
@@ -746,11 +750,12 @@ pv.Mark.prototype.buildProperties = function(s, properties) {
 };
 
 /**
- * Evaluates all of the properties for this mark for the specified instance
- * <tt>s</tt> in the scene graph. The set of properties to evaluate is retrieved
- * from the {@link #properties} array for this mark type (see {@link #type}).
- * After these properties are evaluated, any <b>implied</b> properties may be
- * computed by the mark and set on the scene graph; see {@link #buildImplied}.
+ * @private Evaluates all of the properties for this mark for the specified
+ * instance <tt>s</tt> in the scene graph. The set of properties to evaluate is
+ * retrieved from the {@link #properties} array for this mark type (see {@link
+ * #type}).  After these properties are evaluated, any <b>implied</b> properties
+ * may be computed by the mark and set on the scene graph; see
+ * {@link #buildImplied}.
  *
  * <p>For panels, this method recursively builds the scene graph for all child
  * marks as well. In general, this method should not need to be overridden by
@@ -764,28 +769,12 @@ pv.Mark.prototype.buildInstance = function(s) {
 };
 
 /**
- * Computes the implied properties for this mark for the specified instance
- * <tt>s</tt> in the scene graph. Implied properties are those with dependencies
- * on multiple other properties; for example, the width property may be implied
- * if the left and right properties are set. This method can be overridden by
- * concrete mark types to define new implied properties, if necessary.
- *
- * <p>The default implementation computes the implied CSS box model properties.
- * The prioritization of redundant properties is as follows:<ol>
- *
- * <li>If the <tt>width</tt> property is not specified (i.e., null), its value
- * is the width of the parent panel, minus this mark's left and right margins;
- * the left and right margins are zero if not specified.
- *
- * <li>Otherwise, if the <tt>right</tt> margin is not specified, its value is
- * the width of the parent panel, minus this mark's width and left margin; the
- * left margin is zero if not specified.
- *
- * <li>Otherwise, if the <tt>left</tt> property is not specified, its value is
- * the width of the parent panel, minus this mark's width and the right margin.
- *
- * </ol>This prioritization is then duplicated for the <tt>height</tt>,
- * <tt>bottom</tt> and <tt>top</tt> properties, respectively.
+ * @private Computes the implied properties for this mark for the specified
+ * instance <tt>s</tt> in the scene graph. Implied properties are those with
+ * dependencies on multiple other properties; for example, the width property
+ * may be implied if the left and right properties are set. This method can be
+ * overridden by concrete mark types to define new implied properties, if
+ * necessary.
  *
  * @param s a node in the scene graph; the instance of the mark to build.
  */
@@ -882,11 +871,8 @@ pv.Mark.prototype.mouse = function() {
  *     vis.render();
  *   });</pre>
  *
- * TODO In the current event handler implementation, only the mark instance that
- * triggered the event is updated, even if the event handler dirties the rest of
- * the scene. While this can be ameliorated by explicitly re-rendering, it would
- * be better and more efficient for the event dispatcher to handle dirtying and
- * redraw automatically.
+ * The return value of the event handler determines which mark gets re-rendered.
+ * Use defs ({@link #def}) to set temporary state from event handlers.
  *
  * <p>The complete set of event types is defined by SVG; see the reference
  * below. The set of supported event types is:<ul>
@@ -910,7 +896,7 @@ pv.Mark.prototype.mouse = function() {
  * specifying multiple event handlers for the same type, only the last one will
  * be used.
  *
- * @see <a href="http://www.w3.org/TR/SVGTiny12/interact.html#SVGEvents">SVG events</a>.
+ * @see <a href="http://www.w3.org/TR/SVGTiny12/interact.html#SVGEvents">SVG events</a>
  * @param {string} type the event type.
  * @param {function} handler the event handler.
  * @returns {pv.Mark} this.
@@ -921,7 +907,7 @@ pv.Mark.prototype.event = function(type, handler) {
   return this;
 };
 
-/** TODO */
+/** @private TODO */
 pv.Mark.prototype.dispatch = function(type, scenes, index) {
   var l = this.$handlers && this.$handlers[type];
   if (!l) {

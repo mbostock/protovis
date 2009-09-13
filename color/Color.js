@@ -13,17 +13,17 @@
  * <li>hsla(120, 100%, 50%, 1)
  *
  * </ul>The SVG 1.0 color keywords names are also supported, such as "aliceblue"
- * and "yellowgreen". The "transparent" keyword is also supported for a
+ * and "yellowgreen". The "transparent" keyword is supported for a
  * fully-transparent color.
  *
  * <p>If the <tt>format</tt> argument is already an instance of <tt>Color</tt>,
  * the argument is returned with no further processing.
  *
- * @param {string} format the color specification string, e.g., "#f00".
+ * @param {string} format the color specification string, such as "#f00".
  * @returns {pv.Color} the corresponding <tt>Color</tt>.
  * @see <a href="http://www.w3.org/TR/SVG/types.html#ColorKeywords">SVG color
- * keywords</a>.
- * @see <a href="http://www.w3.org/TR/css3-color/">CSS3 color module</a>.
+ * keywords</a>
+ * @see <a href="http://www.w3.org/TR/css3-color/">CSS3 color module</a>
  */
 pv.color = function(format) {
   if (!format || (format == "transparent")) {
@@ -108,8 +108,8 @@ pv.Color = function(color, opacity) {
    *
    * @type string
    * @see <a href="http://www.w3.org/TR/SVG/types.html#ColorKeywords">SVG color
-   * keywords</a>.
-   * @see <a href="http://www.w3.org/TR/css3-color/">CSS3 color module</a>.
+   * keywords</a>
+   * @see <a href="http://www.w3.org/TR/css3-color/">CSS3 color module</a>
    */
   this.color = color;
 
@@ -128,11 +128,12 @@ pv.Color = function(color, opacity) {
  * of invocations of these two methods might be inconsistent because of rounding
  * errors.
  *
- * @param [s] {number} an optional scale factor; defaults to 1.
+ * @param [k] {number} an optional scale factor; defaults to 1.
  * @see #darker
+ * @returns {pv.Color} a brighter color.
  */
-pv.Color.prototype.brighter = function(s) {
-  return this.rgb().brighter(s);
+pv.Color.prototype.brighter = function(k) {
+  return this.rgb().brighter(k);
 };
 
 /**
@@ -142,11 +143,12 @@ pv.Color.prototype.brighter = function(s) {
  * of invocations of these two methods might be inconsistent because of rounding
  * errors.
  *
- * @param [s] {number} an optional scale factor; defaults to 1.
+ * @param [k] {number} an optional scale factor; defaults to 1.
  * @see #brighter
+ * @returns {pv.Color} a darker color.
  */
-pv.Color.prototype.darker = function(s) {
-  return this.rgb().darker(s);
+pv.Color.prototype.darker = function(k) {
+  return this.rgb().darker(k);
 };
 
 /**
@@ -269,20 +271,21 @@ pv.Color.Rgb.prototype.rgb = function() { return this; };
  * darker are inverse operations, the results of a series of invocations of
  * these two methods might be inconsistent because of rounding errors.
  *
- * @param [s] {number} an optional scale factor; defaults to 1.
+ * @param [k] {number} an optional scale factor; defaults to 1.
  * @see #darker
+ * @returns {pv.Color.Rgb} a brighter color.
  */
-pv.Color.Rgb.prototype.brighter = function(s) {
-  s = Math.pow(0.7, arguments.length ? s : 1);
+pv.Color.Rgb.prototype.brighter = function(k) {
+  k = Math.pow(0.7, arguments.length ? k : 1);
   var r = this.r, g = this.g, b = this.b, i = 30;
   if (!r && !g && !b) return pv.rgb(i, i, i, this.a);
   if (r && (r < i)) r = i;
   if (g && (g < i)) g = i;
   if (b && (b < i)) b = i;
   return pv.rgb(
-      Math.min(255, Math.floor(r / s)),
-      Math.min(255, Math.floor(g / s)),
-      Math.min(255, Math.floor(b / s)),
+      Math.min(255, Math.floor(r / k)),
+      Math.min(255, Math.floor(g / k)),
+      Math.min(255, Math.floor(b / k)),
       this.a);
 };
 
@@ -293,15 +296,16 @@ pv.Color.Rgb.prototype.brighter = function(s) {
  * are inverse operations, the results of a series of invocations of these two
  * methods might be inconsistent because of rounding errors.
  *
- * @param [s] {number} an optional scale factor; defaults to 1.
+ * @param [k] {number} an optional scale factor; defaults to 1.
  * @see #brighter
+ * @returns {pv.Color.Rgb} a darker color.
  */
-pv.Color.Rgb.prototype.darker = function(s) {
-  s = Math.pow(0.7, arguments.length ? s : 1);
+pv.Color.Rgb.prototype.darker = function(k) {
+  k = Math.pow(0.7, arguments.length ? k : 1);
   return pv.rgb(
-      Math.max(0, Math.floor(s * this.r)),
-      Math.max(0, Math.floor(s * this.g)),
-      Math.max(0, Math.floor(s * this.b)),
+      Math.max(0, Math.floor(k * this.r)),
+      Math.max(0, Math.floor(k * this.g)),
+      Math.max(0, Math.floor(k * this.b)),
       this.a);
 };
 
@@ -434,10 +438,10 @@ pv.Color.Hsl.prototype.rgb = function() {
 };
 
 /**
- * SVG color keywords, per CSS Color Module Level 3.
+ * @private SVG color keywords, per CSS Color Module Level 3.
  *
  * @see <a href="http://www.w3.org/TR/SVG/types.html#ColorKeywords">SVG color
- * keywords</a>.
+ * keywords</a>
  */
 pv.Color.names = {
   aliceblue: "#f0f8ff",
