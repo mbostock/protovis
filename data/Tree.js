@@ -19,22 +19,11 @@ pv.tree = function(array) {
  * the {@link pv.Nest} operator, except the hierarchy is derived dynamically
  * from the array elements.
  *
- * @param {array} array an array from which to construct a tree.
- */
-pv.Tree = function(array) {
-  this.array = array;
-};
-
-/**
- * Assigns a <i>keys</i> function to this operator; required. The keys function
- * returns an array of <tt>string</tt>s for each element in the associated
- * array; these keys determine how the elements are nested in the tree.
- *
  * <p>For example, given an array of size information for Java classes:
  *
- * <pre>[ { name: "flare.flex.FlareVis", size: 4116 },
- *   { name: "flare.physics.DragForce", size: 1082 },
- *   { name: "flare.physics.GravityForce", size: 1336 }, ... ]</pre>
+ * <pre>{ name: "flare.flex.FlareVis", size: 4116 },
+ * { name: "flare.physics.DragForce", size: 1082 },
+ * { name: "flare.physics.GravityForce", size: 1336 }, ...</pre>
  *
  * To facilitate visualization, it may be useful to nest the elements by their
  * Java package hierarchy:
@@ -59,8 +48,39 @@ pv.Tree = function(array) {
  *         size: 1336 } },
  *     ... } }</pre>
  *
- * The returned keys should be unique for each element in the array; otherwise,
- * the behavior of this operator is undefined.
+ * By specifying a value function,
+ *
+ * <pre>var tree = pv.tree(classes)
+ *     .keys(function(d) d.name.split("."))
+ *     .value(function(d) d.size)
+ *     .map();</pre>
+ *
+ * we can further eliminate redundant data:
+ *
+ * <pre>{ flare: {
+ *     flex: {
+ *       FlareVis: 4116 },
+ *     physics: {
+ *       DragForce: 1082,
+ *       GravityForce: 1336 },
+ *   ... } }</pre>
+ *
+ * For visualizations with large data sets, performance improvements may be seen
+ * by storing the data in a tree format, and then flattening it into an array at
+ * runtime with {@link pv.Flatten}.
+ *
+ * @param {array} array an array from which to construct a tree.
+ */
+pv.Tree = function(array) {
+  this.array = array;
+};
+
+/**
+ * Assigns a <i>keys</i> function to this operator; required. The keys function
+ * returns an array of <tt>string</tt>s for each element in the associated
+ * array; these keys determine how the elements are nested in the tree. The
+ * returned keys should be unique for each element in the array; otherwise, the
+ * behavior of this operator is undefined.
  *
  * @param {function} k the keys function.
  * @returns {pv.Tree} this.
@@ -73,26 +93,8 @@ pv.Tree.prototype.keys = function(k) {
 /**
  * Assigns a <i>value</i> function to this operator; optional. The value
  * function specifies an optional transformation of the element in the array
- * before it is inserted into the map. Continuing the example from
- * {@link #keys}:
- *
- * <pre>var tree = pv.tree(classes)
- *     .keys(function(d) d.name.split("."))
- *     .value(function(d) d.size)
- *     .map();</pre>
- *
- * The resulting tree is:
- *
- * <pre>{ flare: {
- *     flex: {
- *       FlareVis: 4116 },
- *     physics: {
- *       DragForce: 1082,
- *       GravityForce: 1336 },
- *   ... } }</pre>
- *
- * If no value function is specified, it is equivalent to using the identity
- * function.
+ * before it is inserted into the map. If no value function is specified, it is
+ * equivalent to using the identity function.
  *
  * @param {function} k the value function.
  * @returns {pv.Tree} this.
@@ -104,8 +106,7 @@ pv.Tree.prototype.value = function(v) {
 
 /**
  * Returns a hierarchical map of values. The hierarchy is determined by the keys
- * function; see {@link #keys}. The values in the map are determined by the
- * value function; see {@link #value}.
+ * function; the values in the map are determined by the value function.
  *
  * @returns a hierarchical map of values.
  */
