@@ -1,6 +1,16 @@
+/**
+ * Returns a linear scale for the specified domain.
+ *
+ * @class Represents a linear scale.
+ *
+ * @param {number...} domain... domain values.
+ * @returns {pv.Scale.linear} a linear scale.
+ * @extends pv.Scale
+ */
 pv.Scale.linear = function() {
   var d = [0, 1], r = [0, 1], i = [pv.identity];
 
+  /** @private */
   function scale(x) {
     var j = pv.search(d, x);
     if (j < 0) j = -j - 2;
@@ -8,6 +18,12 @@ pv.Scale.linear = function() {
     return i[j]((x - d[j]) / (d[j + 1] - d[j]));
   }
 
+  /**
+   * @function
+   * @name pv.Scale.linear.prototype.domain
+   * @param {number...} domain... domain values.
+   * @returns {pv.Scale.linear} <tt>this</tt>.
+   */
   scale.domain = function(array, min, max) {
     if (arguments.length) {
       if (array instanceof Array) {
@@ -22,6 +38,12 @@ pv.Scale.linear = function() {
     return d;
   };
 
+  /**
+   * @function
+   * @name pv.Scale.linear.prototype.range
+   * @param {...} range... range values.
+   * @returns {pv.Scale.linear} <tt>this</tt>.
+   */
   scale.range = function(start, end) {
     if (arguments.length) {
       r = Array.prototype.slice.call(arguments);
@@ -34,6 +56,12 @@ pv.Scale.linear = function() {
     return r;
   };
 
+  /**
+   * @function
+   * @name pv.Scale.linear.prototype.invert
+   * @param {number} y
+   * @returns {number}
+   */
   scale.invert = function(y) {
     var j = pv.search(r, y);
     if (j < 0) j = -j - 2;
@@ -41,6 +69,11 @@ pv.Scale.linear = function() {
     return (y - r[j]) / (r[j + 1] - r[j]) * (d[j + 1] - d[j]) + d[j];
   };
 
+  /**
+   * @function
+   * @name pv.Scale.linear.prototype.ticks
+   * @returns {number[]}
+   */
   scale.ticks = function() {
     var min = d[0],
         max = d[d.length - 1],
@@ -53,6 +86,11 @@ pv.Scale.linear = function() {
     return pv.range(start, end + step, step);
   };
 
+  /**
+   * @function
+   * @name pv.Scale.linear.prototype.nice
+   * @returns {pv.Scale.linear} <tt>this</tt>.
+   */
   scale.nice = function() {
     var min = d[0],
         max = d[d.length - 1],
@@ -61,6 +99,12 @@ pv.Scale.linear = function() {
     return this;
   };
 
+  /**
+   * @function
+   * @name pv.Scale.linear.prototype.by
+   * @param {function f
+   * @returns {pv.Scale.linear} the new view.
+   */
   scale.by = function(f) {
     function by() { return scale(f.apply(this, arguments)); }
     for (var method in scale) by[method] = scale[method];

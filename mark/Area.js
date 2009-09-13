@@ -117,10 +117,8 @@ pv.Area.prototype.defaults = new pv.Area()
     .fillStyle(defaultFillStyle);
 
 /**
- * Constructs a new area anchor with default properties.
- *
- * @class Represents an anchor for an area mark. Areas support five different
- * anchors:<ul>
+ * Constructs a new area anchor with default properties. Areas support five
+ * different anchors:<ul>
  *
  * <li>top
  * <li>left
@@ -139,7 +137,8 @@ pv.Area.prototype.defaults = new pv.Area()
  * more robust to use panels and the cousin accessor to define stacked area
  * marks; see {@link pv.Mark#scene} for an example.
  *
- * @extends pv.Mark.Anchor
+ * @param {string} name the anchor name; either a string or a property function.
+ * @returns {pv.Anchor}
  */
 pv.Area.prototype.anchor = function(name) {
   var area = this;

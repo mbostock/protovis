@@ -93,10 +93,8 @@ pv.Bar.prototype.defaults = new pv.Bar()
     .fillStyle(defaultFillStyle);
 
 /**
- * Constructs a new bar anchor with default properties.
- *
- * @class Represents an anchor for a bar mark. Bars support five different
- * anchors:<ul>
+ * Constructs a new bar anchor with default properties. Bars support five
+ * different anchors:<ul>
  *
  * <li>top
  * <li>left
@@ -121,7 +119,8 @@ pv.Bar.prototype.defaults = new pv.Bar()
  * position will be centered on the corresponding edge. Otherwise (e.g., bars),
  * the position will be in the opposite side.
  *
- * @extends pv.Mark.Anchor
+ * @param {string} name the anchor name; either a string or a property function.
+ * @returns {pv.Anchor}
  */
 pv.Bar.prototype.anchor = function(name) {
   var bar = this;

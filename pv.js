@@ -1,10 +1,11 @@
 /**
- * @namespace The Protovis namespace, <tt>pv</tt>. All public methods and fields
- * should be registered on this object. Note that core Protovis source is
- * surrounded by an anonymous function, so any other declared globals will not
- * be visible outside of core methods. This also allows multiple versions of
- * Protovis to coexist, since each version will see their own <tt>pv</tt>
- * namespace.
+ * The top-level Protovis namespace. All public methods and fields should be
+ * registered on this object. Note that core Protovis source is surrounded by an
+ * anonymous function, so any other declared globals will not be visible outside
+ * of core methods. This also allows multiple versions of Protovis to coexist,
+ * since each version will see their own <tt>pv</tt> namespace.
+ *
+ * @namespace The top-level Protovis namespace, <tt>pv</tt>.
  */
 var pv = {};
 
@@ -38,11 +39,11 @@ try {
 } catch (e) {
 
 /**
- * Parses a Protovis specification, which may use JavaScript 1.8 function
- * expresses, replacing those function expressions with proper functions such
- * that the code can be run by a JavaScript 1.6 interpreter. This hack only
- * supports function expressions (using clumsy regular expressions, no less),
- * and not other JavaScript 1.8 features such as let expressions.
+ * @private Parses a Protovis specification, which may use JavaScript 1.8
+ * function expresses, replacing those function expressions with proper
+ * functions such that the code can be run by a JavaScript 1.6 interpreter. This
+ * hack only supports function expressions (using clumsy regular expressions, no
+ * less), and not other JavaScript 1.8 features such as let expressions.
  *
  * @param {string} s a Protovis specification (i.e., a string of JavaScript 1.8
  * source code).
@@ -91,13 +92,28 @@ try {
  */
 pv.identity = function(x) { return x; };
 
-/** TODO */
+/**
+ * Returns <tt>this.index</tt>. This method is provided for convenience for use
+ * with scales.
+ *
+ * @see pv.Scale
+ */
 pv.index = function() { return this.index; };
 
-/** TODO */
+/**
+ * Returns <tt>this.childIndex</tt>. This method is provided for convenience for
+ * use with scales.
+ *
+ * @see pv.Scale
+ */
 pv.child = function() { return this.childIndex; };
 
-/** TODO */
+/**
+ * Returns <tt>this.parent.index</tt>. This method is provided for convenience
+ * for use with scales.
+ *
+ * @see pv.Scale
+ */
 pv.parent = function() { return this.parent.index; };
 
 /**
@@ -198,10 +214,10 @@ pv.cross = function(a, b) {
 };
 
 /**
- * Given the specified array of <tt>arrays</tt>, concatenates the arrays into a
- * single array. If the individual arrays are explicitly known, an alternative
- * to blend is to use JavaScript's <tt>concat</tt> method directly. These two
- * equivalent expressions:<ul>
+ * Given the specified array of arrays, concatenates the arrays into a single
+ * array. If the individual arrays are explicitly known, an alternative to blend
+ * is to use JavaScript's <tt>concat</tt> method directly. These two equivalent
+ * expressions:<ul>
  *
  * <li><tt>pv.blend([[1, 2, 3], ["a", "b", "c"]])</tt>
  * <li><tt>[1, 2, 3].concat(["a", "b", "c"])</tt>
@@ -265,7 +281,10 @@ pv.values = function(map) {
   return array;
 };
 
-/** A private variant of Array.prototype.map that supports the index property. */
+/**
+ * @private A private variant of Array.prototype.map that supports the index
+ * property.
+ */
 function map(array, f) {
   var o = {};
   return f
@@ -532,7 +551,11 @@ pv.reverseOrder = function(b, a) {
 };
 
 /**
- * TODO
+ * @private Computes the value of the specified CSS property <tt>p</tt> on the
+ * specified element <tt>e</tt>.
+ *
+ * @param {string} p the name of the CSS property.
+ * @param e the element on which to compute the CSS property.
  */
 pv.css = function(e, p) {
   return window.getComputedStyle
@@ -582,9 +605,9 @@ pv.version = {
 };
 
 /**
- * Reports the specified error to the JavaScript console. Mozilla only allows
- * logging to the console for privileged code; if the console is unavailable,
- * the alert dialog box is used instead.
+ * @private Reports the specified error to the JavaScript console. Mozilla only
+ * allows logging to the console for privileged code; if the console is
+ * unavailable, the alert dialog box is used instead.
  *
  * @param e the exception that triggered the error.
  */

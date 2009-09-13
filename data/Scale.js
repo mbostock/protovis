@@ -1,10 +1,11 @@
 // TODO code-sharing between scales
 
+/** @class */
 pv.Scale = function() {};
 
 /**
- * Returns a function that interpolators from the start value to the end value,
- * given a parameter <i>t</i> in [0, 1].
+ * @private Returns a function that interpolators from the start value to the
+ * end value, given a parameter <i>t</i> in [0, 1].
  *
  * @param start the start value.
  * @param end the end value.
@@ -30,3 +31,24 @@ pv.Scale.interpolator = function(start, end) {
             Math.round(start.b * (1 - t) + end.b * t), a));
   };
 };
+
+/**
+ * @function
+ * @name pv.Scale.prototype.domain
+ * @param {number...} domain... domain values.
+ * @returns {pv.Scale} <tt>this</tt>.
+ */
+
+/**
+ * @function
+ * @name pv.Scale.prototype.range
+ * @param {...} range... range values.
+ * @returns {pv.Scale} <tt>this</tt>.
+ */
+
+/**
+ * @function
+ * @name pv.Scale.prototype.by
+ * @param {function f
+ * @returns {pv.Scale} the new view.
+ */

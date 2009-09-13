@@ -56,10 +56,11 @@ pv.Mark = function() {
 pv.Mark.prototype.properties = {};
 
 /**
- * Defines and registers a property method for the property with the given name.
- * This method should be called on a mark class prototype to define each exposed
- * property. (Note this refers to the JavaScript <tt>prototype</tt>, not the
- * Protovis mark prototype, which is the {@link #proto} field.)
+ * @private Defines and registers a property method for the property with the
+ * given name.  This method should be called on a mark class prototype to define
+ * each exposed property. (Note this refers to the JavaScript
+ * <tt>prototype</tt>, not the Protovis mark prototype, which is the {@link
+ * #proto} field.)
  *
  * <p>The created property method supports several modes of invocation: <ol>
  *
@@ -530,7 +531,7 @@ pv.Mark.prototype.render = function() {
   pv.Scene.updateAll(this.scene);
 };
 
-/** Computes the root data stack for the specified mark. */
+/** @private Computes the root data stack for the specified mark. */
 function argv(mark) {
   var stack = [];
   while (mark) {
@@ -830,16 +831,16 @@ pv.Mark.prototype.buildImplied = function(s) {
 };
 
 /**
- * The name of the property being evaluated, for so-called "smart" functions
- * that change behavior depending on which property is being evaluated. This
- * functionality is somewhat magical, so for now, this feature is not exposed
- * outside the library.
+ * @private The name of the property being evaluated, for so-called "smart"
+ * functions that change behavior depending on which property is being
+ * evaluated. This functionality is somewhat magical, so for now, this feature
+ * is not exposed outside the library.
  *
  * @type string
  */
 var property;
 
-/** The current mouse location. */
+/** @private The current mouse location. */
 var pageX = 0, pageY = 0;
 pv.listen(window, "mousemove", function(e) { pageX = e.pageX; pageY = e.pageY; });
 

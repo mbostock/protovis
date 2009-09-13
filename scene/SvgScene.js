@@ -1,6 +1,7 @@
 // TODO don't populate default attributes?
 
 /**
+ * @private
  * @namespace
  */
 pv.Scene = pv.SvgScene = {};

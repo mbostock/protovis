@@ -94,7 +94,7 @@ pv.Panel.prototype.defaults = new pv.Panel()
  * that the margins are zero.
  *
  * @param {string} name the anchor name; either a string or a property function.
- * @returns {pv.Mark.Anchor} the new anchor.
+ * @returns {pv.Anchor} the new anchor.
  */
 pv.Panel.prototype.anchor = function(name) {
 

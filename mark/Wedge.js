@@ -149,10 +149,8 @@ pv.Wedge.prototype.midAngle = function() {
 };
 
 /**
- * Constructs a new wedge anchor with default properties.
- *
- * @class Represents an anchor for a wedge mark. Wedges support five different
- * anchors:<ul>
+ * Constructs a new wedge anchor with default properties. Wedges support five
+ * different anchors:<ul>
  *
  * <li>outer
  * <li>inner
@@ -164,7 +162,8 @@ pv.Wedge.prototype.midAngle = function() {
  * anchors support text rendering properties (text-align, text-baseline,
  * textAngle). Text is rendered to appear inside the wedge.
  *
- * @extends pv.Mark.Anchor
+ * @param {string} name the anchor name; either a string or a property function.
+ * @returns {pv.Anchor}
  */
 pv.Wedge.prototype.anchor = function(name) {
   var w = this;

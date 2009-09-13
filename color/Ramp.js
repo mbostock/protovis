@@ -6,6 +6,7 @@
  * @param {string} start the start color; may be a <tt>pv.Color</tt>.
  * @param {string} end the end color; may be a <tt>pv.Color</tt>.
  * @returns {Function} a color ramp from <tt>start</tt> to <tt>end</tt>.
+ * @see pv.Scale.linear
  */
 pv.ramp = function(start, end) {
   var scale = pv.Scale.linear();

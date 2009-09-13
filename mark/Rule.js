@@ -89,10 +89,8 @@ pv.Rule.prototype.defaults = new pv.Rule()
     .strokeStyle("black");
 
 /**
- * Constructs a new rule anchor with default properties.
- *
- * @class Represents an anchor for a rule mark. Rules support five different
- * anchors:<ul>
+ * Constructs a new rule anchor with default properties. Rules support five
+ * different anchors:<ul>
  *
  * <li>top
  * <li>left
@@ -110,7 +108,8 @@ pv.Rule.prototype.defaults = new pv.Rule()
  * defined in terms of their opposite edge. For example, the top anchor defines
  * the bottom property, such that a bar added to the top anchor grows upward.
  *
- * @extends pv.Bar.Anchor
+ * @param {string} name the anchor name; either a string or a property function.
+ * @returns {pv.Anchor}
  */
 pv.Rule.prototype.anchor = function(name) {
   return pv.Bar.prototype.anchor.call(this, name)

@@ -13,7 +13,7 @@
  * <li>hsla(120, 100%, 50%, 1)
  *
  * </ul>The SVG 1.0 color keywords names are also supported, such as "aliceblue"
- * and yellowgreen". The "transparent" keyword is also supported for a
+ * and "yellowgreen". The "transparent" keyword is also supported for a
  * fully-transparent color.
  *
  * <p>If the <tt>format</tt> argument is already an instance of <tt>Color</tt>,

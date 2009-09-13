@@ -1,6 +1,16 @@
+/**
+ * Returns a log scale for the specified domain.
+ *
+ * @class Represents a log scale.
+ *
+ * @param {number...} domain... domain values.
+ * @returns {pv.Scale.log} a log scale.
+ * @extends pv.Scale
+ */
 pv.Scale.log = function() {
   var d = [1, 10], l = [0, 1], b = 10, r = [0, 1], i = [pv.identity];
 
+  /** @private */
   function scale(x) {
     var j = pv.search(d, x);
     if (j < 0) j = -j - 2;
@@ -8,10 +18,17 @@ pv.Scale.log = function() {
     return i[j]((log(x) - l[j]) / (l[j + 1] - l[j]));
   }
 
+  /** @private */
   function log(x) {
     return pv.logSymmetric(x, b);
   }
 
+  /**
+   * @function
+   * @name pv.Scale.log.prototype.domain
+   * @param {number...} domain... domain values.
+   * @returns {pv.Scale.log} <tt>this</tt>.
+   */
   scale.domain = function(array, min, max) {
     if (arguments.length) {
       if (array instanceof Array) {
@@ -27,6 +44,12 @@ pv.Scale.log = function() {
     return d;
   };
 
+  /**
+   * @function
+   * @name pv.Scale.log.prototype.range
+   * @param {...} range... range values.
+   * @returns {pv.Scale.log} <tt>this</tt>.
+   */
   scale.range = function(start, end) {
     if (arguments.length) {
       r = Array.prototype.slice.call(arguments);
@@ -39,6 +62,12 @@ pv.Scale.log = function() {
     return r;
   };
 
+  /**
+   * @function
+   * @name pv.Scale.log.prototype.invert
+   * @param {number} y
+   * @returns {number}
+   */
   scale.invert = function(y) {
     var j = pv.search(r, y);
     if (j < 0) j = -j - 2;
@@ -47,6 +76,11 @@ pv.Scale.log = function() {
     return (t < 0) ? -Math.pow(b, -t) : Math.pow(b, t);
   };
 
+  /**
+   * @function
+   * @name pv.Scale.log.prototype.ticks
+   * @returns {number[]}
+   */
   scale.ticks = function() {
     var start = Math.floor(l[0]),
         end = Math.ceil(l[1]),
@@ -63,18 +97,35 @@ pv.Scale.log = function() {
     return ticks;
   };
 
+  /**
+   * @function
+   * @name pv.Scale.log.prototype.nice
+   * @returns {pv.Scale.log} <tt>this</tt>.
+   */
   scale.nice = function() {
     d = [pv.logFloor(d[0], b), pv.logCeil(d[1], b)];
     l = d.map(log);
     return this;
   };
 
+  /**
+   * @function
+   * @name pv.Scale.log.prototype.base
+   * @param {number} v the new base.
+   * @returns {pv.Scale.log} <tt>this</tt>.
+   */
   scale.base = function(v) {
     b = v;
     l = d.map(log);
     return this;
   };
 
+  /**
+   * @function
+   * @name pv.Scale.log.prototype.by
+   * @param {function f
+   * @returns {pv.Scale.log} the new view.
+   */
   scale.by = function(f) {
     function by() { return scale(f.apply(this, arguments)); }
     for (var method in scale) by[method] = scale[method];

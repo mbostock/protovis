@@ -2,6 +2,7 @@ pv.tree = function(array) {
   return new pv.Tree(array);
 };
 
+/** @class */
 pv.Tree = function(array) {
   this.array = array;
 };

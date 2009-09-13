@@ -113,10 +113,8 @@ pv.Dot.prototype.defaults = new pv.Dot()
     .strokeStyle(defaultStrokeStyle);
 
 /**
- * Constructs a new dot anchor with default properties.
- *
- * @class Represents an anchor for a dot mark. Dots support five different
- * anchors:<ul>
+ * Constructs a new dot anchor with default properties. Dots support five
+ * different anchors:<ul>
  *
  * <li>top
  * <li>left
@@ -133,7 +131,8 @@ pv.Dot.prototype.defaults = new pv.Dot()
  * defined in terms of their opposite edge. For example, the top anchor defines
  * the bottom property, such that a bar added to the top anchor grows upward.
  *
- * @extends pv.Mark.Anchor
+ * @param {string} name the anchor name; either a string or a property function.
+ * @returns {pv.Anchor}
  */
 pv.Dot.prototype.anchor = function(name) {
   var dot = this;

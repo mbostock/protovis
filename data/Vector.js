@@ -2,6 +2,7 @@ pv.vector = function(x, y) {
   return new pv.Vector(x, y);
 };
 
+/** @class */
 pv.Vector = function(x, y) {
   this.x = x;
   this.y = y;
