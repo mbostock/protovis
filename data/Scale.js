@@ -1,6 +1,9 @@
 // TODO code-sharing between scales
 
-/** @class */
+/**
+ * @ignore
+ * @class
+ */
 pv.Scale = function() {};
 
 /**
@@ -31,24 +34,3 @@ pv.Scale.interpolator = function(start, end) {
             Math.round(start.b * (1 - t) + end.b * t), a));
   };
 };
-
-/**
- * @function
- * @name pv.Scale.prototype.domain
- * @param {number...} domain... domain values.
- * @returns {pv.Scale} <tt>this</tt>.
- */
-
-/**
- * @function
- * @name pv.Scale.prototype.range
- * @param {...} range... range values.
- * @returns {pv.Scale} <tt>this</tt>.
- */
-
-/**
- * @function
- * @name pv.Scale.prototype.by
- * @param {function} f
- * @returns {pv.Scale} the new view.
- */

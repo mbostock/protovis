@@ -408,17 +408,44 @@ pv.Mark.prototype.add = function(type) {
 /**
  * Defines a local variable on this mark. Local variables are initialized once
  * per mark (i.e., per parent panel instance), and can be used to store local
- * state for the mark. For instance, a local variable might store a scale, or a
- * color ramp, that is referenced by multiple properties:
+ * state for the mark. Here are a few reasons you might want to use
+ * <tt>def</tt>:
  *
- * <pre>.add(pv.Bar)
- *   .def("fillStyle", function(c) pv.ramp(c.start, c.end))
- *   .data(pv.range(0, 1.1, .1))</pre>
+ * <p>1. To store local state. For example, say you were visualizing employment
+ * statistics, and your root panel had an array of occupations. In a child
+ * panel, you might want to initialize a local scale, and reference it from a
+ * property function:
  *
- * Or, a local variable might store interaction state
+ * <pre>.def("y", function(d) pv.Scale.linear(0, pv.max(d.values)).range(0, h))
+ * .height(function(d) this.y()(d))</pre>
  *
- * @param name {string} the name of the local variable.
- * @param [value] an optional initializer; may be a constant or a function.
+ * In this example, <tt>this.y()</tt> returns the defined local scale. We then
+ * invoke the scale function, passing in the datum, to compute the height.
+ * Alternatively, we can omit the height property, and rename the def to
+ * "height" for the same effect.
+ *
+ * <p>2. To store temporary state for interaction. Say you have an array of
+ * bars, and you want to color the bar differently if the mouse is over it. Use
+ * <tt>def</tt> to define a local variable, and event handlers to override this
+ * variable interactively:
+ *
+ * <pre>.def("i", -1)
+ * .event("mouseover", function() this.i(this.index))
+ * .event("mouseout", function() this.i(-1))
+ * .fillStyle(function() this.i() == this.index ? "red" : "blue")</pre>
+ *
+ * Notice that <tt>this.i()</tt> can be used both to set the value of <i>i</i>
+ * (when an argument is specified), and to get the value of <i>i</i> (when no
+ * arguments are specified). In this way, it's like other property methods.
+ *
+ * <p>3. To specify fixed properties efficiently. Sometimes, the value of a
+ * property may be locally a constant, but dependent on parent panel data which
+ * is variable. In this scenario, you can use <tt>def</tt> to define a property;
+ * it will only get computed once per mark, rather than once per datum.
+ *
+ * @param {string} name the name of the local variable.
+ * @param {function} [value] an optional initializer; may be a constant or a
+ * function.
  */
 pv.Mark.prototype.def = function(name, value) {
   this.$properties.push({
@@ -515,21 +542,21 @@ pv.Mark.prototype.cousin = function() {
 
 /**
  * Renders this mark, including recursively rendering all child marks if this is
- * a panel. Rendering consists of two phases: <b>build</b> and <b>update</b>. In
- * the future, the update phase could conceivably be decoupled to allow
- * different rendering engines. Similarly, future work is needed to allow
- * dynamic rebuilding based on interaction. (For example, dynamic expansion of a
- * tree visualization.)
- *
- * <p>In the build phase (see {@link #build}), all properties are evaluated, and
- * the scene graph is generated. However, nothing is rendered.
- *
- * <p>In the update phase (see {@link #update}), the mark is rendered by
- * creating and updating elements and attributes in the SVG image. No properties
- * are evaluated during the update phase; instead the values computed previously
- * in the build phase are simply translated into SVG.
+ * a panel.
  */
 pv.Mark.prototype.render = function() {
+  /*
+   * Rendering consists of three phases: bind, build and update. The update
+   * phase is decoupled to allow different rendering engines.
+   *
+   * In the bind phase, inherited property definitions are cached so they do not
+   * need to be queried during build. In the build phase, properties are
+   * evaluated, and the scene graph is generated. In the update phase, the scene
+   * is rendered by creating and updating elements and attributes in the SVG
+   * image. No properties are evaluated during the update phase; instead the
+   * values computed previously in the build phase are simply translated into
+   * SVG.
+   */
   this.bind();
   this.build();
   pv.Scene.updateAll(this.scene);

@@ -5,7 +5,6 @@
  *
  * @param {number...} domain... domain values.
  * @returns {pv.Scale.log} a log scale.
- * @extends pv.Scale
  */
 pv.Scale.log = function() {
   var d = [1, 10], l = [0, 1], b = 10, r = [0, 1], i = [pv.identity];

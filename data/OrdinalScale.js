@@ -8,7 +8,6 @@
  *
  * @param {...} domain... domain values.
  * @returns {pv.Scale.ordinal} an ordinal scale.
- * @extends pv.Scale
  */
 pv.Scale.ordinal = function() {
   var d = [], i = {}, r;

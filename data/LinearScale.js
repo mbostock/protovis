@@ -5,7 +5,6 @@
  *
  * @param {number...} domain... domain values.
  * @returns {pv.Scale.linear} a linear scale.
- * @extends pv.Scale
  */
 pv.Scale.linear = function() {
   var d = [0, 1], r = [0, 1], i = [pv.identity];
