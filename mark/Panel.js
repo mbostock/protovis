@@ -103,9 +103,9 @@ pv.Panel.prototype.anchor = function(name) {
   z.prototype = this;
   z.prototype.left = z.prototype.right = z.prototype.top = z.prototype.bottom = z;
 
-  var anchor = pv.Mark.prototype.anchor.call(this, name);
+  var anchor = pv.Bar.prototype.anchor.call(new z(), name)
+      .data(function(d) { return [d]; });
   anchor.parent = this;
-  anchor.proto = new z();
   return anchor;
 };
 
