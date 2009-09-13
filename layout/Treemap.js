@@ -1,13 +1,34 @@
 // TODO add `by` function for determining size (and children?)
 
-/** @class */
+/**
+ * @class
+ *
+ * Supported node attributes:
+ *
+ * <ul>
+ * <li>left
+ * <li>top
+ * <li>width
+ * <li>height
+ * <li>keys
+ * <li>size
+ * <li>children
+ * <li>data
+ * </ul>
+ *
+ * TODO depth?
+ *
+ * @param tree
+ */
 pv.Layout.treemap = function(tree) {
   var keys = [], round, inset, sizeof = Number;
 
+  /** @private */
   function rnd(i) {
     return round ? Math.round(i) : i;
   }
 
+  /** @private */
   function accumulate(map) {
     var node = {size: 0, children: [], keys: keys.slice()};
     for (var key in map) {
@@ -26,6 +47,7 @@ pv.Layout.treemap = function(tree) {
     return node;
   }
 
+  /** @private */
   function scale(node, k) {
     node.size *= k;
     if (node.children) {
@@ -35,6 +57,7 @@ pv.Layout.treemap = function(tree) {
     }
   }
 
+  /** @private */
   function ratio(row, l) {
     var rmax = -Infinity, rmin = Infinity, s = 0;
     for (var i = 0; i < row.length; i++) {
@@ -48,6 +71,7 @@ pv.Layout.treemap = function(tree) {
     return Math.max(l * rmax / s, s / (l * rmin));
   }
 
+  /** @private */
   function squarify(node) {
     var row = [], mink = Infinity;
     var x = node.left + (inset ? inset.left : 0),
@@ -127,6 +151,7 @@ pv.Layout.treemap = function(tree) {
     }
   }
 
+  /** @private */
   function layout(node) {
     if (node.children) {
       squarify(node);
@@ -136,6 +161,7 @@ pv.Layout.treemap = function(tree) {
     }
   }
 
+  /** @private */
   function flatten(node, array) {
     if (node.children) {
       for (var i = 0; i < node.children.length; i++) {
@@ -148,6 +174,7 @@ pv.Layout.treemap = function(tree) {
     return array;
   }
 
+  /** @private */
   function data() {
     var root = accumulate(tree);
     root.left = 0;
@@ -158,22 +185,49 @@ pv.Layout.treemap = function(tree) {
     return flatten(root, []).reverse();
   }
 
+  /**
+   * @param {boolean} v
+   * @function
+   * @name pv.Layout.treemap.prototype.round
+   * @returns {pv.Layout.treemap} this.
+   */
   data.round = function(v) {
     round = v;
     return this;
   };
 
+  /**
+   * @param {number} top
+   * @param {number} [right]
+   * @param {number} [bottom]
+   * @param {number} [left]
+   * @function
+   * @name pv.Layout.treemap.prototype.inset
+   * @returns {pv.Layout.treemap} this.
+   */
   data.inset = function(top, right, bottom, left) {
     if (arguments.length == 1) right = bottom = left = top;
     inset = {top:top, right:right, bottom:bottom, left:left};
     return this;
   };
 
+  /**
+   * @param {string} v
+   * @function
+   * @name pv.Layout.treemap.prototype.root
+   * @returns {pv.Layout.treemap} this.
+   */
   data.root = function(v) {
     keys = [v];
     return this;
   };
 
+  /**
+   * @param {function} f
+   * @function
+   * @name pv.Layout.treemap.prototype.size
+   * @returns {pv.Layout.treemap} this.
+   */
   data.size = function(f) {
     sizeof = f;
     return this;

@@ -1,10 +1,29 @@
 // TODO share code with Treemap
 // TODO inspect parent panel dimensions to set inner and outer radii
 
-/** @class */
+/**
+ * @class
+ *
+ * Supported node attributes:
+ *
+ * <ul>
+ * <li>startAngle
+ * <li>angle
+ * <li>depth
+ * <li>keys
+ * <li>size
+ * <li>children
+ * <li>data
+ * </ul>
+ *
+ * TODO left, top, innerRadius, outerRadius, endAngle?
+ *
+ * @param tree
+ */
 pv.Layout.sunburst = function(tree) {
   var keys = [], sizeof = Number;
 
+  /** @private */
   function accumulate(map) {
     var node = {size: 0, children: [], keys: keys.slice()};
     for (var key in map) {
@@ -23,6 +42,7 @@ pv.Layout.sunburst = function(tree) {
     return node;
   }
 
+  /** @private */
   function scale(node, k) {
     node.size *= k;
     if (node.children) {
@@ -32,6 +52,7 @@ pv.Layout.sunburst = function(tree) {
     }
   }
 
+  /** @private */
   function layout(node) {
     if (node.children) {
       wedgify(node);
@@ -41,6 +62,7 @@ pv.Layout.sunburst = function(tree) {
     }
   }
 
+  /** @private */
   function wedgify(node) {
     var startAngle = node.startAngle;
     for (var i = 0; i < node.children.length; i++) {
@@ -55,6 +77,7 @@ pv.Layout.sunburst = function(tree) {
     }
   }
 
+  /** @private */
   function flatten(node, array) {
     if (node.children) {
       for (var i = 0; i < node.children.length; i++) {
@@ -65,6 +88,7 @@ pv.Layout.sunburst = function(tree) {
     return array;
   }
 
+  /** @private */
   function data() {
     var root = accumulate(tree);
     root.startAngle = 0;
@@ -74,11 +98,23 @@ pv.Layout.sunburst = function(tree) {
     return flatten(root, []).reverse();
   }
 
+  /**
+   * @param {string} v
+   * @function
+   * @name pv.Layout.sunburst.prototype.root
+   * @returns {pv.Layout.sunburst} this.
+   */
   data.root = function(v) {
     keys = [v];
     return this;
   };
 
+  /**
+   * @param {function} f
+   * @function
+   * @name pv.Layout.sunburst.prototype.size
+   * @returns {pv.Layout.sunburst} this.
+   */
   data.size = function(f) {
     sizeof = f;
     return this;

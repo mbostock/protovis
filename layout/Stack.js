@@ -1,4 +1,6 @@
 /**
+ * Returns a new stack layout property function.
+ *
  * @class A property function for stacking marks vertically or horizontally,
  * using the cousin instance. This property function changes behavior depending
  * on the property being evaluated:<ul>
@@ -27,13 +29,14 @@
  *
  * specifies a vertically-stacked area chart.
  *
- * @return [number] the property value; either bottom, top, left or right.
- * @see #cousin
+ * @returns {pv.Layout.stack} a stack property function.
+ * @see pv.Mark#cousin
  */
 pv.Layout.stack = function() {
+  /** @private */
   var offset = function() { return 0; };
 
-  /* Property function. */
+  /** @private */
   function layout() {
 
     /* Find the previous visible parent instance. */
@@ -55,6 +58,12 @@ pv.Layout.stack = function() {
     return offset.apply(this, arguments);
   }
 
+  /**
+   * @function
+   * @name pv.Layout.stack.prototype.offset
+   * @param {function} f offset function, or constant value.
+   * @returns {pv.Layout.stack} this.
+   */
   layout.offset = function(f) {
       offset = (f instanceof Function) ? f : function() { return f; };
       return this;

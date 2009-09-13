@@ -529,10 +529,10 @@ pv.Mark.prototype.sibling = function() {
 /**
  * Returns the current instance in the scene graph of this mark, in the previous
  * instance of the enclosing parent panel. May return null if this instance
- * could not be found. See the {@link pv.Layout#stack} function for an example
+ * could not be found. See the {@link pv.Layout.stack} function for an example
  * property function using cousin.
  *
- * @see pv.Layout#stack
+ * @see pv.Layout.stack
  * @returns a node in the scene graph, or null.
  */
 pv.Mark.prototype.cousin = function() {

@@ -1,10 +1,29 @@
 // TODO share code with Treemap
 // TODO vertical / horizontal orientation?
 
-/** @class */
+/**
+ * @class
+ *
+ * Supported node attributes:
+ *
+ * <ul>
+ * <li>left
+ * <li>top
+ * <li>width
+ * <li>height
+ * <li>depth
+ * <li>keys
+ * <li>size
+ * <li>children
+ * <li>data
+ * </ul>
+ *
+ * @param tree
+ */
 pv.Layout.icicle = function(tree) {
   var keys = [], sizeof = Number;
 
+  /** @private */
   function accumulate(map) {
     var node = {size: 0, children: [], keys: keys.slice()};
     for (var key in map) {
@@ -23,6 +42,7 @@ pv.Layout.icicle = function(tree) {
     return node;
   }
 
+  /** @private */
   function scale(node, k) {
     node.size *= k;
     if (node.children) {
@@ -32,6 +52,7 @@ pv.Layout.icicle = function(tree) {
     }
   }
 
+  /** @private */
   function depth(node, i) {
     i = i ? (i + 1) : 1;
     return node.children
@@ -39,6 +60,7 @@ pv.Layout.icicle = function(tree) {
         : i;
   }
 
+  /** @private */
   function layout(node) {
     if (node.children) {
       icify(node);
@@ -48,6 +70,7 @@ pv.Layout.icicle = function(tree) {
     }
   }
 
+  /** @private */
   function icify(node) {
     var left = node.left;
     for (var i = 0; i < node.children.length; i++) {
@@ -64,6 +87,7 @@ pv.Layout.icicle = function(tree) {
     }
   }
 
+  /** @private */
   function flatten(node, array) {
     if (node.children) {
       for (var i = 0; i < node.children.length; i++) {
@@ -74,6 +98,7 @@ pv.Layout.icicle = function(tree) {
     return array;
   }
 
+  /** @private */
   function data() {
     var root = accumulate(tree);
     root.top = 0;
@@ -85,11 +110,23 @@ pv.Layout.icicle = function(tree) {
     return flatten(root, []).reverse();
   }
 
+  /**
+   * @param {string} v
+   * @function
+   * @name pv.Layout.icicle.prototype.root
+   * @returns {pv.Layout.icicle} this.
+   */
   data.root = function(v) {
     keys = [v];
     return this;
   };
 
+  /**
+   * @param {function} f
+   * @function
+   * @name pv.Layout.icicle.prototype.size
+   * @returns {pv.Layout.icicle} this.
+   */
   data.size = function(f) {
     sizeof = f;
     return this;
