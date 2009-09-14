@@ -28,7 +28,9 @@ pv.colors = function() {
 pv.Colors = {};
 
 /**
- * Returns a new 10-color scheme. The following colors are used:
+ * Returns a new 10-color scheme. The arguments to this constructor are
+ * optional, and equivalent to calling {@link pv.Scale.OrdinalScale#domain}. The
+ * following colors are used:
  *
  * <div style="background:#1f77b4;">#1f77b4</div>
  * <div style="background:#ff7f0e;">#ff7f0e</div>
@@ -41,17 +43,22 @@ pv.Colors = {};
  * <div style="background:#bcbd22;">#bcbd22</div>
  * <div style="background:#17becf;">#17becf</div>
  *
+ * @param {number...} domain... domain values.
  * @returns {pv.Scale.ordinal} a new ordinal color scale.
  * @see pv.color
  */
 pv.Colors.category10 = function() {
-  return pv.colors(
+  var scale = pv.colors(
       "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd",
       "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf");
+  scale.domain.apply(scale, arguments);
+  return scale;
 };
 
 /**
- * Returns a new 20-color scheme. The following colors are used:
+ * Returns a new 20-color scheme. The arguments to this constructor are
+ * optional, and equivalent to calling {@link pv.Scale.OrdinalScale#domain}. The
+ * following colors are used:
  *
  * <div style="background:#1f77b4;">#1f77b4</div>
  * <div style="background:#aec7e8;">#aec7e8</div>
@@ -74,19 +81,24 @@ pv.Colors.category10 = function() {
  * <div style="background:#17becf;">#17becf</div>
  * <div style="background:#9edae5;">#9edae5</div>
  *
+ * @param {number...} domain... domain values.
  * @returns {pv.Scale.ordinal} a new ordinal color scale.
  * @see pv.color
 */
 pv.Colors.category20 = function() {
-  return pv.colors(
+  var scale = pv.colors(
       "#1f77b4", "#aec7e8", "#ff7f0e", "#ffbb78", "#2ca02c",
       "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5",
       "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f",
       "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5");
+  scale.domain.apply(scale, arguments);
+  return scale;
 };
 
 /**
- * Returns a new alternative 19-color scheme. The following colors are used:
+ * Returns a new alternative 19-color scheme. The arguments to this constructor
+ * are optional, and equivalent to calling
+ * {@link pv.Scale.OrdinalScale#domain}. The following colors are used:
  *
  * <div style="background:#9c9ede;">#9c9ede</div>
  * <div style="background:#7375b5;">#7375b5</div>
@@ -108,13 +120,16 @@ pv.Colors.category20 = function() {
  * <div style="background:#a55194;">#a55194</div>
  * <div style="background:#7b4173;">#7b4173</div>
  *
+ * @param {number...} domain... domain values.
  * @returns {pv.Scale.ordinal} a new ordinal color scale.
  * @see pv.color
  */
 pv.Colors.category19 = function() {
-  return pv.colors(
+  var scale = pv.colors(
       "#9c9ede", "#7375b5", "#4a5584", "#cedb9c", "#b5cf6b",
       "#8ca252", "#637939", "#e7cb94", "#e7ba52", "#bd9e39",
       "#8c6d31", "#e7969c", "#d6616b", "#ad494a", "#843c39",
       "#de9ed6", "#ce6dbd", "#a55194", "#7b4173");
+  scale.domain.apply(scale, arguments);
+  return scale;
 };

@@ -167,7 +167,7 @@ pv.Scale.linear = function() {
    * @param {...} range... range values.
    * @returns {pv.Scale.linear} <tt>this</tt>, or the current range.
    */
-  scale.range = function(start, end) {
+  scale.range = function() {
     if (arguments.length) {
       r = Array.prototype.slice.call(arguments);
       i = [];

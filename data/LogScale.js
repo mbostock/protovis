@@ -154,7 +154,7 @@ pv.Scale.log = function() {
    * @param {...} range... range values.
    * @returns {pv.Scale.log} <tt>this</tt>.
    */
-  scale.range = function(start, end) {
+  scale.range = function() {
     if (arguments.length) {
       r = Array.prototype.slice.call(arguments);
       i = [];
