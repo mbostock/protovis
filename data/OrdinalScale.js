@@ -37,10 +37,10 @@
  * recommended that the domain and the range contain the same number of
  * elements.
  *
- * <p>The range can alternatively be specified as a continuous range (e.g., for
- * pixel positioning) by using exactly two numeric values. For example, if
- * <tt>states</tt> is an array of the fifty U.S. state names, the state name can
- * be encoded in the left position:
+ * <p>When the domain is specified explicitly, the range can be specified as a
+ * continuous interval (e.g., for pixel positioning) by using exactly two
+ * numeric values. For example, if <tt>states</tt> is an array of the fifty
+ * U.S. state names, the state name can be encoded in the left position:
  *
  * <pre>.left(pv.Scale.ordinal(states)
  *     .range(0, 640)
@@ -139,7 +139,8 @@ pv.Scale.ordinal = function() {
    * <p>If the output range is continuous, specify exactly two numeric arguments
    * to this function. The output range will be interpolated, similar to a
    * linear scale. This method is equivalent to specifying the range as
-   * <tt>{@link pv.range}(min, max, (max - min) / domain.length)</tt>.
+   * <tt>{@link pv.range}(min, max, (max - min) / domain.length)</tt>. This
+   * method requires setting the domain explicitly!
    *
    * <p>4. <tt>range()</tt>
    *

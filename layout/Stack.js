@@ -1,8 +1,9 @@
 /**
- * Returns a new stack layout property function.
+ * Returns a new stack layout.
  *
- * @class A property function for stacking marks vertically or horizontally,
- * using the cousin instance. This property function changes behavior depending
+ * @class A layout for stacking marks vertically or horizontally, using the
+ * <i>cousin</i> instance. This layout is designed to be used for one of the
+ * four positional properties in the box model, and changes behavior depending
  * on the property being evaluated:<ul>
  *
  * <li>bottom: cousin.bottom + cousin.height
@@ -59,6 +60,12 @@ pv.Layout.stack = function() {
   }
 
   /**
+   * Sets the offset for this stack layout. The offset can either be specified
+   * as a function or as a constant. If a function, the function is invoked in
+   * the same context as a normal property function: <tt>this</tt> refers to the
+   * mark, and the arguments are the full data stack. By default the offset is
+   * zero.
+   *
    * @function
    * @name pv.Layout.stack.prototype.offset
    * @param {function} f offset function, or constant value.

@@ -1,24 +1,62 @@
 // TODO add `by` function for determining size (and children?)
 
 /**
- * @class
+ * Returns a new treemap tree layout.
  *
- * Supported node attributes:
+ * @class A tree layout in the form of an treemap. <img
+ * src="../../ex/treemap.png" width="160" height="160" align="right"> Treemaps
+ * are a form of space-filling layout that represents nodes as boxes, with child
+ * nodes placed within parent boxes. The size of each box is proportional to the
+ * size of the node in the tree.
+ *
+ * <p>This particular algorithm is taken from Bruls, D.M., C. Huizing, and
+ * J.J. van Wijk, <a href="http://www.win.tue.nl/~vanwijk/stm.pdf">"Squarified
+ * Treemaps"</a> in <i>Data Visualization 2000, Proceedings of the Joint
+ * Eurographics and IEEE TCVG Sumposium on Visualization</i>, 2000,
+ * pp. 33-42.
+ *
+ * <p>This tree layout is intended to be extended (see {@link pv.Mark#extend})
+ * by a {@link pv.Bar}. The data property returns an array of nodes for use by
+ * other property functions. The following node attributes are supported:
  *
  * <ul>
- * <li>left
- * <li>top
- * <li>width
- * <li>height
- * <li>keys
- * <li>size
- * <li>children
- * <li>data
+ * <li><tt>left</tt> - the cell left position.
+ * <li><tt>top</tt> - the cell top position.
+ * <li><tt>width</tt> - the cell width.
+ * <li><tt>height</tt> - the cell height.
+ * <li><tt>depth</tt> - the node depth (tier; the root is 0).
+ * <li><tt>keys</tt> - an array of string keys for the node.
+ * <li><tt>size</tt> - the aggregate node size.
+ * <li><tt>children</tt> - child nodes, if any.
+ * <li><tt>data</tt> - the associated tree element, for leaf nodes.
  * </ul>
  *
- * TODO depth?
+ * To produce a default treemap layout, say:
  *
- * @param tree
+ * <pre>.add(pv.Bar)
+ *   .extend(pv.Layout.treemap(tree))</pre>
+ *
+ * To display internal nodes, and color by depth, say:
+ *
+ * <pre>.add(pv.Bar)
+ *   .extend(pv.Layout.icicle(tree).inset(10))
+ *   .fillStyle(pv.Colors.category19().by(function(n) n.depth))</pre>
+ *
+ * The format of the <tt>tree</tt> argument is a hierarchical object whose leaf
+ * nodes are numbers corresponding to their size. For an example, and
+ * information on how to convert tabular data into such a tree, see
+ * {@link pv.Tree}. If the leaf nodes are not numbers, a {@link #size} function
+ * can be specified to override how the tree is interpreted. This size function
+ * can also be used to transform the data.
+ *
+ * <p>By default, the treemap fills the full width and height of the parent
+ * panel, and only leaf nodes are rendered. If an {@link #inset} is specified,
+ * internal nodes will be rendered, each inset from their parent by the
+ * specified margins. Rounding can be enabled using {@link #round}. Finally, an
+ * optional root key can be specified using {@link #root} for convenience.
+ *
+ * @param tree a tree (an object) who leaf attributes have sizes.
+ * @returns {pv.Layout.treemap} a data property function.
  */
 pv.Layout.treemap = function(tree) {
   var keys = [], round, inset, sizeof = Number;
@@ -156,7 +194,9 @@ pv.Layout.treemap = function(tree) {
     if (node.children) {
       squarify(node);
       for (var i = 0; i < node.children.length; i++) {
-        layout(node.children[i]);
+        var child = node.children[i];
+        child.depth = node.depth + 1;
+        layout(child);
       }
     }
   }
@@ -181,57 +221,99 @@ pv.Layout.treemap = function(tree) {
     root.top = 0;
     root.width = this.parent.width();
     root.height = this.parent.height();
+    root.depth = 0;
     layout(root);
     return flatten(root, []).reverse();
   }
 
+  /* A dummy mark, like an anchor, which the caller extends. */
+  var mark = new pv.Mark()
+      .data(data)
+      .left(function(n) { return n.left; })
+      .top(function(n) { return n.top; })
+      .width(function(n) { return n.width; })
+      .height(function(n) { return n.height; });
+
   /**
-   * @param {boolean} v
+   * Enables or disables rounding. When rounding is enabled, the left, top,
+   * width and height properties will be rounded to integer pixel values. The
+   * rounding algorithm uses error accumulation to ensure an exact fit.
+   *
+   * @param {boolean} v whether rounding should be enabled.
    * @function
    * @name pv.Layout.treemap.prototype.round
    * @returns {pv.Layout.treemap} this.
    */
-  data.round = function(v) {
+  mark.round = function(v) {
     round = v;
     return this;
   };
 
   /**
-   * @param {number} top
-   * @param {number} [right]
-   * @param {number} [bottom]
-   * @param {number} [left]
+   * Specifies the margins to inset child nodes from their parents; as a side
+   * effect, this also enables the display of internal nodes, which are hidden
+   * by default. If only a single argument is specified, this value is used to
+   * inset all four sides.
+   *
+   * @param {number} top the top margin.
+   * @param {number} [right] the right margin.
+   * @param {number} [bottom] the bottom margin.
+   * @param {number} [left] the left margin.
    * @function
    * @name pv.Layout.treemap.prototype.inset
    * @returns {pv.Layout.treemap} this.
    */
-  data.inset = function(top, right, bottom, left) {
+  mark.inset = function(top, right, bottom, left) {
     if (arguments.length == 1) right = bottom = left = top;
     inset = {top:top, right:right, bottom:bottom, left:left};
     return this;
   };
 
   /**
-   * @param {string} v
+   * Specifies the root key; optional. The root key is prepended to the
+   * <tt>keys</tt> attribute for all generated nodes. This method is provided
+   * for convenience and does not affect layout.
+   *
+   * @param {string} v the root key.
    * @function
    * @name pv.Layout.treemap.prototype.root
    * @returns {pv.Layout.treemap} this.
    */
-  data.root = function(v) {
+  mark.root = function(v) {
     keys = [v];
     return this;
   };
 
   /**
-   * @param {function} f
+   * Specifies the sizing function. By default, the sizing function is
+   * <tt>Number</tt>. The sizing function is invoked for each node in the tree
+   * (passed to the constructor): the sizing function must return
+   * <tt>undefined</tt> or <tt>NaN</tt> for internal nodes, and a number for
+   * leaf nodes. The aggregate sizes of internal nodes will be automatically
+   * computed by the layout.
+   *
+   * <p>For example, if the tree data structure represents a file system, with
+   * files as leaf nodes, and each file has a <tt>bytes</tt> attribute, you can
+   * specify a size function as:
+   *
+   * <pre>.size(function(d) d.bytes)</pre>
+   *
+   * This function will return <tt>undefined</tt> for internal nodes (since
+   * these do not have a <tt>bytes</tt> attribute), and a number for leaf nodes.
+   *
+   * <p>Note that the built-in <tt>Math.sqrt</tt> and <tt>Math.log</tt> methods
+   * can be used as sizing functions. These function similarly to
+   * <tt>Number</tt>, except perform a root and log scale, respectively.
+   *
+   * @param {function} f the new sizing function.
    * @function
    * @name pv.Layout.treemap.prototype.size
    * @returns {pv.Layout.treemap} this.
    */
-  data.size = function(f) {
+  mark.size = function(f) {
     sizeof = f;
     return this;
   };
 
-  return data;
+  return mark;
 };
