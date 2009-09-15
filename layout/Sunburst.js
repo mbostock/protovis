@@ -5,7 +5,7 @@
  * Returns a new sunburst tree layout.
  *
  * @class A tree layout in the form of a sunburst. <img
- * src="../../ex/sunburst.png" width="160" height="160" align="right"> The
+ * src="../sunburst.png" width="160" height="160" align="right"> The
  * center circle corresponds to the root of the tree; subsequent rings
  * correspond to each tier. Rings are subdivided into wedges based on the size
  * of nodes, per {@link #size}. Within a ring, wedges are sorted by size.

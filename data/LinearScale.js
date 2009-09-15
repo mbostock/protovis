@@ -3,7 +3,7 @@
  * constructor are optional, and equivalent to calling {@link #domain}.
  *
  * @class Represents a linear scale. <style
- * type="text/css">sub{line-height:0}</style> <img src="../../ex/linear.png"
+ * type="text/css">sub{line-height:0}</style> <img src="../linear.png"
  * width="180" height="175" align="right"> Most commonly, a linear scale
  * represents a 1-dimensional linear transformation from a numeric domain of
  * input data [<i>d<sub>0</sub></i>, <i>d<sub>1</sub></i>] to a numeric range of

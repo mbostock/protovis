@@ -3,7 +3,7 @@
  * constructor are optional, and equivalent to calling {@link #domain}.
  *
  * @class Represents a log scale. <style
- * type="text/css">sub{line-height:0}</style> <img src="../../ex/log.png"
+ * type="text/css">sub{line-height:0}</style> <img src="../log.png"
  * width="190" height="175" align="right"> Most commonly, a log scale represents
  * a 1-dimensional log transformation from a numeric domain of input data
  * [<i>d<sub>0</sub></i>, <i>d<sub>1</sub></i>] to a numeric range of pixels

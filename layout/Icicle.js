@@ -4,7 +4,7 @@
 /**
  * Returns a new icicle tree layout.
  *
- * @class A tree layout in the form of an icicle. <img src="../../ex/icicle.png"
+ * @class A tree layout in the form of an icicle. <img src="../icicle.png"
  * width="160" height="160" align="right"> The first row corresponds to the root
  * of the tree; subsequent rows correspond to each tier. Rows are subdivided
  * into cells based on the size of nodes, per {@link #size}. Within a row, cells

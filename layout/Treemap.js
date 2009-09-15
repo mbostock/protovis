@@ -4,7 +4,7 @@
  * Returns a new treemap tree layout.
  *
  * @class A tree layout in the form of an treemap. <img
- * src="../../ex/treemap.png" width="160" height="160" align="right"> Treemaps
+ * src="../treemap.png" width="160" height="160" align="right"> Treemaps
  * are a form of space-filling layout that represents nodes as boxes, with child
  * nodes placed within parent boxes. The size of each box is proportional to the
  * size of the node in the tree.
