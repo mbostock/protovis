@@ -36,8 +36,8 @@
  *
  * To only show nodes at a depth of two or greater, you might say:
  *
- * <pre>.add(pv.Bar)
- *   .extend(pv.Layout.icicle(tree))
+ * <pre>.add(pv.Wedge)
+ *   .extend(pv.Layout.sunburst(tree))
  *   .visible(function(n) n.depth > 1)</pre>
  *
  * The format of the <tt>tree</tt> argument is a hierarchical object whose leaf

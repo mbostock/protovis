@@ -236,7 +236,7 @@ pv.Nest.prototype.entries = function() {
  *
  * @see #map
  * @param {function} f a rollup function.
- * @returns a hierarhical map, with the leaf values computed by <tt>f</tt>.
+ * @returns a hierarchical map, with the leaf values computed by <tt>f</tt>.
  */
 pv.Nest.prototype.rollup = function(f) {
 

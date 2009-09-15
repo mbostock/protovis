@@ -19,14 +19,14 @@ pv.tree = function(array) {
  * the {@link pv.Nest} operator, except the hierarchy is derived dynamically
  * from the array elements.
  *
- * <p>For example, given an array of size information for Java classes:
+ * <p>For example, given an array of size information for ActionScript classes:
  *
  * <pre>{ name: "flare.flex.FlareVis", size: 4116 },
  * { name: "flare.physics.DragForce", size: 1082 },
  * { name: "flare.physics.GravityForce", size: 1336 }, ...</pre>
  *
  * To facilitate visualization, it may be useful to nest the elements by their
- * Java package hierarchy:
+ * package hierarchy:
  *
  * <pre>var tree = pv.tree(classes)
  *     .keys(function(d) d.name.split("."))

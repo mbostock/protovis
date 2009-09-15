@@ -39,7 +39,7 @@
  * To display internal nodes, and color by depth, say:
  *
  * <pre>.add(pv.Bar)
- *   .extend(pv.Layout.icicle(tree).inset(10))
+ *   .extend(pv.Layout.treemap(tree).inset(10))
  *   .fillStyle(pv.Colors.category19().by(function(n) n.depth))</pre>
  *
  * The format of the <tt>tree</tt> argument is a hierarchical object whose leaf
