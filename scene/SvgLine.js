@@ -31,6 +31,21 @@ pv.SvgScene.line = function(scenes) {
   for (var i = 0; i < scenes.length; i++) {
     var si = scenes[i];
     p += si.left + "," + si.top + " ";
+
+    /* interpolate (assume linear by default) */
+    if (i < scenes.length - 1) {
+      var sj = scenes[i + 1];
+      switch (s.interpolate) {
+        case "step-before": {
+          p += si.left + "," + sj.top + " ";
+          break;
+        }
+        case "step-after": {
+          p += sj.left + "," + si.top + " ";
+          break;
+        }
+      }
+    }
   }
 
   line.removeAttribute("display");

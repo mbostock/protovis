@@ -26,7 +26,8 @@ pv.Line.prototype = pv.extend(pv.Mark)
     .property("lineWidth")
     .property("strokeStyle")
     .property("fillStyle")
-    .property("segmented");
+    .property("segmented")
+    .property("interpolate");
 
 pv.Line.prototype.type = "line";
 
@@ -69,15 +70,30 @@ pv.Line.prototype.type = "line";
  */
 
 /**
+ * How to interpolate between values. Linear interpolation ("linear") is the
+ * default, producing a straight line between points. For piecewise constant
+ * functions (i.e., step functions), either "step-before" or "step-after" can be
+ * specified.
+ *
+ * <p>Note: this property is currently supported only on non-segmented lines.
+ *
+ * <p>This property is <i>fixed</i>. See {@link pv.Mark}.
+ *
+ * @type string
+ * @name pv.Line.prototype.interpolate
+ */
+
+/**
  * Default properties for lines. By default, there is no fill and the stroke
- * style is a categorical color.
+ * style is a categorical color. The default interpolation is linear.
  *
  * @type pv.Line
  */
 pv.Line.prototype.defaults = new pv.Line()
     .extend(pv.Mark.prototype.defaults)
     .lineWidth(1.5)
-    .strokeStyle(defaultStrokeStyle);
+    .strokeStyle(defaultStrokeStyle)
+    .interpolate("linear");
 
 /** @private */
 var pv_Line_specials = {left:1, top:1, right:1, bottom:1, name:1};

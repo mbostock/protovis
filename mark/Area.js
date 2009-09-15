@@ -29,7 +29,8 @@ pv.Area.prototype = pv.extend(pv.Mark)
     .property("lineWidth")
     .property("strokeStyle")
     .property("fillStyle")
-    .property("segmented");
+    .property("segmented")
+    .property("interpolate");
 
 pv.Area.prototype.type = "area";
 
@@ -106,6 +107,20 @@ pv.Area.prototype.type = "area";
  */
 
 /**
+ * How to interpolate between values. Linear interpolation ("linear") is the
+ * default, producing a straight line between points. For piecewise constant
+ * functions (i.e., step functions), either "step-before" or "step-after" can be
+ * specified.
+ *
+ * <p>Note: this property is currently supported only on non-segmented areas.
+ *
+ * <p>This property is <i>fixed</i>. See {@link pv.Mark}.
+ *
+ * @type string
+ * @name pv.Area.prototype.interpolate
+ */
+
+/**
  * Default properties for areas. By default, there is no stroke and the fill
  * style is a categorical color.
  *
@@ -114,7 +129,8 @@ pv.Area.prototype.type = "area";
 pv.Area.prototype.defaults = new pv.Area()
     .extend(pv.Mark.prototype.defaults)
     .lineWidth(1.5)
-    .fillStyle(defaultFillStyle);
+    .fillStyle(defaultFillStyle)
+    .interpolate("linear");
 
 /**
  * Constructs a new area anchor with default properties. Areas support five
