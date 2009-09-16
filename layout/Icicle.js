@@ -50,7 +50,7 @@
  * convenience.
  *
  * @param tree a tree (an object) who leaf attributes have sizes.
- * @returns {pv.Layout.icicle} a data property function.
+ * @returns {pv.Layout.icicle} a tree layout.
  */
 pv.Layout.icicle = function(tree) {
   var keys = [], sizeof = Number;

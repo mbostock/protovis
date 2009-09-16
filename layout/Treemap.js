@@ -56,7 +56,7 @@
  * optional root key can be specified using {@link #root} for convenience.
  *
  * @param tree a tree (an object) who leaf attributes have sizes.
- * @returns {pv.Layout.treemap} a data property function.
+ * @returns {pv.Layout.treemap} a tree layout.
  */
 pv.Layout.treemap = function(tree) {
   var keys = [], round, inset, sizeof = Number;

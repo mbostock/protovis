@@ -52,7 +52,7 @@
  * convenience.
  *
  * @param tree a tree (an object) who leaf attributes have sizes.
- * @returns {pv.Layout.sunburst} a data property function.
+ * @returns {pv.Layout.sunburst} a tree layout.
  */
 pv.Layout.sunburst = function(tree) {
   var keys = [], sizeof = Number, w, h, r;

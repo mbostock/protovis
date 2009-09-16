@@ -211,7 +211,8 @@ pv.repeat = function(array, n) {
 };
 
 /**
- * Given two arrays <tt>a</tt> and <tt>b</tt>, returns an array of all possible
+ * Given two arrays <tt>a</tt> and <tt>b</tt>, <style
+ * type="text/css">sub{line-height:0}</style> returns an array of all possible
  * pairs of elements [a<sub>i</sub>, b<sub>j</sub>]. The outer loop is on array
  * <i>a</i>, while the inner loop is on <i>b</i>, such that the order of
  * returned elements is [a<sub>0</sub>, b<sub>0</sub>], [a<sub>0</sub>,
@@ -251,6 +252,53 @@ pv.cross = function(a, b) {
  */
 pv.blend = function(arrays) {
   return Array.prototype.concat.apply([], arrays);
+};
+
+/**
+ * Given the specified array of arrays, <style
+ * type="text/css">sub{line-height:0}</style> transposes each element
+ * array<sub>ij</sub> with array<sub>ji</sub>. If the array has dimensions
+ * <i>n</i>&times;<i>m</i>, it will have dimensions <i>m</i>&times;<i>n</i>
+ * after this method returns. This method transposes the elements of the array
+ * in place, mutating the array, and returning a reference to the array.
+ *
+ * @param {array[]} arrays an array of arrays.
+ * @returns {array[]} the passed-in array, after transposing the elements.
+ */
+pv.transpose = function(arrays) {
+  var n = arrays.length, m = pv.max(arrays, function(d) { return d.length; });
+
+  if (m > n) {
+    arrays.length = m;
+    for (var i = n; i < m; i++) {
+      arrays[i] = new Array(n);
+    }
+    for (var i = 0; i < n; i++) {
+      for (var j = i + 1; j < m; j++) {
+        var t = arrays[i][j];
+        arrays[i][j] = arrays[j][i];
+        arrays[j][i] = t;
+      }
+    }
+  } else {
+    for (var i = 0; i < m; i++) {
+      arrays[i].length = n;
+    }
+    for (var i = 0; i < n; i++) {
+      for (var j = 0; j < i; j++) {
+        var t = arrays[i][j];
+        arrays[i][j] = arrays[j][i];
+        arrays[j][i] = t;
+      }
+    }
+  }
+
+  arrays.length = m;
+  for (var i = 0; i < m; i++) {
+    arrays[i].length = n;
+  }
+
+  return arrays;
 };
 
 /**
