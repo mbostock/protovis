@@ -81,7 +81,7 @@ pv.Layout.treemap = function(tree) {
       node.size += child.size;
       keys.pop();
     }
-    node.children.sort(function(a, b) { return b.size - a.size; });
+    node.children.sort(function(a, b) { return a.size - b.size; });
     return node;
   }
 

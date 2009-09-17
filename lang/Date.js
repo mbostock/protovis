@@ -115,6 +115,7 @@ if (Date.prototype.toLocaleFormat) {
  * @returns {string} the formatted date.
  */
 Date.prototype.format = function(format) {
+  function pad(n) { return (n < 10) ? "0" + n : n; }
   var d = this;
   return format.replace(/%[a-zA-Z0-9]/g, function(s) {
       switch (s) {
@@ -133,14 +134,18 @@ Date.prototype.format = function(format) {
             "January", "February", "March", "April", "May", "June", "July",
             "August", "September", "October", "November", "December",
           ][d.getMonth()];
-        case '%S': return d.getSeconds();
-        case '%M': return d.getMinutes();
-        case '%H': return d.getHours();
-        case '%d': return d.getDate();
-        case '%m': return d.getMonth() + 1;
+        case '%S': return pad(d.getSeconds());
+        case '%M': return pad(d.getMinutes());
+        case '%H': return pad(d.getHours());
+        case '%I': {
+          var h = d.getHours() % 12;
+          return h ? pad(h) : 12;
+        }
+        case '%d': return pad(d.getDate());
+        case '%m': return pad(d.getMonth() + 1);
         case '%Y': return d.getFullYear();
         case '%%': return "%";
-        case '%y': return d.getFullYear() % 100;
+        case '%y': return pad(d.getFullYear() % 100);
       }
       return s;
     });
