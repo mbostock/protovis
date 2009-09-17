@@ -16,7 +16,11 @@ pv.SvgScene.updateAll = function(scenes) {
   if ((scenes[0].reverse)
       && (scenes.type != "line")
       && (scenes.type != "area")) {
-    scenes.reverse();
+    var reversed = pv.extend(scenes);
+    for (var i = 0, j = scenes.length - 1; j >= 0; i++, j--) {
+      reversed[i] = scenes[j];
+    }
+    scenes = reversed;
   }
   this[scenes.type](scenes);
 };
