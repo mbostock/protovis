@@ -38,9 +38,10 @@
  * elements.
  *
  * <p>A range can be discretized from a continuous interval (e.g., for pixel
- * positioning) by using {@link #split} or {@link #splitFlush} after the domain
- * has been set. For example, if <tt>states</tt> is an array of the fifty
- * U.S. state names, the state name can be encoded in the left position:
+ * positioning) by using {@link #split}, {@link #splitFlush} or
+ * {@link #splitBanded} after the domain has been set. For example, if
+ * <tt>states</tt> is an array of the fifty U.S. state names, the state name can
+ * be encoded in the left position:
  *
  * <pre>.left(pv.Scale.ordinal(states)
  *     .split(0, 640)
@@ -180,7 +181,7 @@ pv.Scale.ordinal = function() {
    * <p>This method must be called <i>after</i> the domain is set.
    *
    * @function
-   * @name pv.Scale.ordinal.prototype.split
+   * @name pv.Scale.ordinal.prototype.splitFlush
    * @param {number} min minimum value of the output range.
    * @param {number} max maximum value of the output range.
    * @returns {pv.Scale.ordinal} <tt>this</tt>.
@@ -198,12 +199,14 @@ pv.Scale.ordinal = function() {
    * [<i>min</i>, <i>max</i>] is subdivided into <i>n</i> equispaced bands,
    * where <i>n</i> is the number of (unique) values in the domain. The first
    * and last band are offset from the edge of the range by the distance between
-   * band.
+   * bands.
    *
-   * <p>The band width argument, <tt>band</tt> is typically in the range [0, 1]
+   * <p>The band width argument, <tt>band</tt>, is typically in the range [0, 1]
    * and defaults to 1. This fraction corresponds to the amount of space in the
    * range to allocate to the bands, as opposed to padding. A value of 0.5 means
-   * that the band width will be equal to the padding width.
+   * that the band width will be equal to the padding width. The computed
+   * absolute band width can be retrieved from the range as
+   * <tt>scale.range().band</tt>.
    *
    * <p>If the band width argument is negative, this method will allocate bands
    * of a <i>fixed</i> width <tt>-band</tt>, rather than a relative fraction of
@@ -213,13 +216,10 @@ pv.Scale.ordinal = function() {
    * value of <tt>min + p</tt> (or simply <tt>p</tt>, if <tt>min</tt> is
    * 0). Then set the mark width to <tt>scale.range().band - p</tt>.
    *
-   * <p>The computed absolute band width can be retrieved from the range as
-   * <tt>scale.range().band</tt>.
-   *
    * <p>This method must be called <i>after</i> the domain is set.
    *
    * @function
-   * @name pv.Scale.ordinal.prototype.split
+   * @name pv.Scale.ordinal.prototype.splitBanded
    * @param {number} min minimum value of the output range.
    * @param {number} max maximum value of the output range.
    * @param {number} [band] the fractional band width in [0, 1]; defaults to 1.
