@@ -37,36 +37,29 @@
  * recommended that the domain and the range contain the same number of
  * elements.
  *
- * <p>When the domain is specified explicitly, the range can be specified as a
- * continuous interval (e.g., for pixel positioning) by using exactly two
- * numeric values. For example, if <tt>states</tt> is an array of the fifty
+ * <p>A range can be discretized from a continuous interval (e.g., for pixel
+ * positioning) by using {@link #split} or {@link #splitFlush} after the domain
+ * has been set. For example, if <tt>states</tt> is an array of the fifty
  * U.S. state names, the state name can be encoded in the left position:
  *
  * <pre>.left(pv.Scale.ordinal(states)
- *     .range(0, 640)
+ *     .split(0, 640)
  *     .by(function(d) d.state))</pre>
  *
- * This is equivalent to specifying the range as <tt>pv.range(0, 640, 640 /
- * states.length)</tt>.
- *
- * If no range is specified, the range defaults to [0, 1].
- *
- * <p>NOTE: ordinal scales are not (yet) invertible, since the domain and range
- * and discontinuous.
+ * <p>N.B.: ordinal scales are not invertible (at least not yet), since the
+ * domain and range and discontinuous. A workaround is to use a linear scale.
  *
  * @param {...} domain... domain values.
  * @returns {pv.Scale.ordinal} an ordinal scale.
  * @see pv.colors
  */
 pv.Scale.ordinal = function() {
-  var d = [], i = {}, r, rmin = 0, rmax = 1;
+  var d = [], i = {}, r = [], band = 0;
 
   /** @private */
   function scale(x) {
     if (!(x in i)) i[x] = d.push(x) - 1;
-    return r
-        ? r[i[x] % r.length]
-        : (i[x] / d.length) * (rmax - rmin) + rmin;
+    return r[i[x] % r.length];
   }
 
   /**
@@ -134,15 +127,7 @@ pv.Scale.ordinal = function() {
    * specify an optional accessor function to extract the range values from the
    * array.
    *
-   * <p>3. <tt>range(min, max)</tt>
-   *
-   * <p>If the output range is continuous, specify exactly two numeric arguments
-   * to this function. The output range will be interpolated, similar to a
-   * linear scale. This method is equivalent to specifying the range as
-   * <tt>{@link pv.range}(min, max, (max - min) / domain.length)</tt>. This
-   * method requires setting the domain explicitly!
-   *
-   * <p>4. <tt>range()</tt>
+   * <p>3. <tt>range()</tt>
    *
    * <p>Invoking the <tt>range</tt> method with no arguments returns the
    * current range as an array.
@@ -152,23 +137,110 @@ pv.Scale.ordinal = function() {
    * @param {...} range... range values.
    * @returns {pv.Scale.ordinal} <tt>this</tt>, or the current range.
    */
-  scale.range = function(min, max) {
+  scale.range = function(array, f) {
     if (arguments.length) {
-      if ((arguments.length == 2)
-          && (typeof min == "number")
-          && (typeof max == "number")) {
-        r = undefined;
-        rmin = min;
-        rmax = max;
-      } else { // array, f
-        r = (min instanceof Array)
-            ? ((arguments.length > 1) ? min.map(max) : min)
-            : Array.prototype.slice.call(arguments);
-        if (typeof r[0] == "string") r = r.map(pv.color);
-      }
+      r = (array instanceof Array)
+          ? ((arguments.length > 1) ? array.map(f) : array)
+          : Array.prototype.slice.call(arguments);
+      if (typeof r[0] == "string") r = r.map(pv.color);
       return this;
     }
-    return r || [rmin, rmax];
+    return r;
+  };
+
+  /**
+   * Sets the range from the given continuous interval. The interval
+   * [<i>min</i>, <i>max</i>] is subdivided into <i>n</i> equispaced points,
+   * where <i>n</i> is the number of (unique) values in the domain. The first
+   * and last point are offset from the edge of the range by half the distance
+   * between points.
+   *
+   * <p>This method must be called <i>after</i> the domain is set.
+   *
+   * @function
+   * @name pv.Scale.ordinal.prototype.split
+   * @param {number} min minimum value of the output range.
+   * @param {number} max maximum value of the output range.
+   * @returns {pv.Scale.ordinal} <tt>this</tt>.
+   * @see #splitFlush
+   * @see #splitBanded
+   */
+  scale.split = function(min, max) {
+    var step = (max - min) / this.domain().length;
+    r = pv.range(min + step / 2, max, step);
+    return this;
+  };
+
+  /**
+   * Sets the range from the given continuous interval. The interval
+   * [<i>min</i>, <i>max</i>] is subdivided into <i>n</i> equispaced points,
+   * where <i>n</i> is the number of (unique) values in the domain. The first
+   * and last point are exactly on the edge of the range.
+   *
+   * <p>This method must be called <i>after</i> the domain is set.
+   *
+   * @function
+   * @name pv.Scale.ordinal.prototype.split
+   * @param {number} min minimum value of the output range.
+   * @param {number} max maximum value of the output range.
+   * @returns {pv.Scale.ordinal} <tt>this</tt>.
+   * @see #split
+   */
+  scale.splitFlush = function(min, max) {
+    var n = this.domain().length, step = (max - min) / (n - 1);
+    r = (n == 1) ? [(min + max) / 2]
+        : pv.range(min, max + step / 2, step);
+    return this;
+  };
+
+  /**
+   * Sets the range from the given continuous interval. The interval
+   * [<i>min</i>, <i>max</i>] is subdivided into <i>n</i> equispaced bands,
+   * where <i>n</i> is the number of (unique) values in the domain. The first
+   * and last band are offset from the edge of the range by the distance between
+   * band.
+   *
+   * <p>The band width argument, <tt>band</tt> is typically in the range [0, 1]
+   * and defaults to 1. This fraction corresponds to the amount of space in the
+   * range to allocate to the bands, as opposed to padding. A value of 0.5 means
+   * that the band width will be equal to the padding width.
+   *
+   * <p>If the band width argument is negative, this method will allocate bands
+   * of a <i>fixed</i> width <tt>-band</tt>, rather than a relative fraction of
+   * the available space.
+   *
+   * <p>Tip: to inset the bands by a fixed amount <tt>p</tt>, specify a minimum
+   * value of <tt>min + p</tt> (or simply <tt>p</tt>, if <tt>min</tt> is
+   * 0). Then set the mark width to <tt>scale.range().band - p</tt>.
+   *
+   * <p>The computed absolute band width can be retrieved from the range as
+   * <tt>scale.range().band</tt>.
+   *
+   * <p>This method must be called <i>after</i> the domain is set.
+   *
+   * @function
+   * @name pv.Scale.ordinal.prototype.split
+   * @param {number} min minimum value of the output range.
+   * @param {number} max maximum value of the output range.
+   * @param {number} [band] the fractional band width in [0, 1]; defaults to 1.
+   * @returns {pv.Scale.ordinal} <tt>this</tt>.
+   * @see #split
+   */
+  scale.splitBanded = function(min, max, band) {
+    if (arguments.length < 3) band = 1;
+    if (band < 0) {
+      var n = this.domain().length,
+          total = -band * n,
+          remaining = max - min - total,
+          padding = remaining / (n + 1);
+      r = pv.range(min + padding, max, padding - band);
+      r.band = -band;
+    } else {
+      var step = (max - min) / (this.domain().length + (1 - band));
+      r = pv.range(min + step * (1 - band), max, step);
+      r.band = step * band;
+    }
+    return this;
   };
 
   /**
