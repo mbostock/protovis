@@ -420,9 +420,10 @@ pv.Mark.prototype.add = function(type) {
  * .height(function(d) this.y()(d))</pre>
  *
  * In this example, <tt>this.y()</tt> returns the defined local scale. We then
- * invoke the scale function, passing in the datum, to compute the height.
- * Alternatively, we can omit the height property, and rename the def to
- * "height" for the same effect.
+ * invoke the scale function, passing in the datum, to compute the height.  Note
+ * that defs are similar to fixed properties: they are only evaluated once per
+ * parent panel, and <tt>this.y()</tt> returns a function, rather than
+ * automatically evaluating this function as a property.
  *
  * <p>2. To store temporary state for interaction. Say you have an array of
  * bars, and you want to color the bar differently if the mouse is over it. Use
