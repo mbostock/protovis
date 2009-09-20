@@ -750,7 +750,7 @@ pv.Mark.prototype.build = function() {
   stack.shift();
   delete this.index;
   pv.Mark.prototype.index = -1;
-  if (!this.parent) delete scene.data;
+  if (!this.parent) scene.data = null;
 
   return this;
 };
@@ -960,7 +960,7 @@ pv.Mark.prototype.dispatch = function(type, scenes, index) {
     try {
       mark = l.apply(this, this.root.scene.data = argv(this));
     } finally {
-      delete this.root.scene.data;
+      this.root.scene.data = null;
     }
 
     /* Update the display. TODO dirtying. */

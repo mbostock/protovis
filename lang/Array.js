@@ -85,19 +85,19 @@ if (!Array.prototype.reduce) {
    */
   Array.prototype.reduce = function(f, v) {
       var len = this.length;
-      if (!len && (arguments.length == 2)) {
-        throw new Error();
+      if (!len && (arguments.length == 1)) {
+        throw new Error("reduce: empty array, no initial value");
       }
 
       var i = 0;
-      if (arguments.length < 3) {
+      if (arguments.length < 2) {
         while (true) {
           if (i in this) {
             v = this[i++];
             break;
           }
           if (++i >= len) {
-            throw new Error();
+            throw new Error("reduce: no values, no initial value");
           }
         }
       }
