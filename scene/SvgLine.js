@@ -74,7 +74,7 @@ pv.SvgScene.lineSegment = function(scenes) {
     var stroke = pv.color(s1.strokeStyle);
     if (!stroke.opacity) continue;
 
-    /* Line-line intersection, per Akenine-Möller 16.16.1. */
+    /* Line-line intersection, per Akenine-Moller 16.16.1. */
     function intersect(o1, d1, o2, d2) {
       return o1.plus(d1.times(o2.minus(o1).dot(d2.perp()) / d1.dot(d2.perp())));
     }

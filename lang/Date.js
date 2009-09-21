@@ -213,20 +213,20 @@ Date.prototype.format = function(format) {
   return format.replace(/%[a-zA-Z0-9]/g, function(s) {
       switch (s) {
         case '%a': return [
-            "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat",
+            "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
           ][d.getDay()];
         case '%A': return [
             "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
-            "Saturday",
+            "Saturday"
           ][d.getDay()];
         case '%h':
         case '%b': return [
             "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep",
-            "Oct", "Nov", "Dec",
+            "Oct", "Nov", "Dec"
           ][d.getMonth()];
         case '%B': return [
             "January", "February", "March", "April", "May", "June", "July",
-            "August", "September", "October", "November", "December",
+            "August", "September", "October", "November", "December"
           ][d.getMonth()];
         case '%c': return d.toLocaleString();
         case '%C': return pad(Math.floor(d.getFullYear() / 100) % 100);
