@@ -71,7 +71,7 @@
  * @returns {pv.Scale.linear} a linear scale.
  */
 pv.Scale.linear = function() {
-  var d = [0, 1], r = [0, 1], i = [pv.identity];
+  var d = [0, 1], r = [0, 1], i = [pv.identity], precision = 0;
 
   /** @private */
   function scale(x) {
@@ -221,7 +221,21 @@ pv.Scale.linear = function() {
     else if (span / step < 5) step /= 2;
     var start = Math.ceil(min / step) * step,
         end = Math.floor(max / step) * step;
+    precision = Math.max(0, -Math.floor(pv.log(step, 10) + .01));
     return pv.range(start, end + step, step);
+  };
+
+  /**
+   * Formats the specified tick value using the appropriate precision, based on
+   * the step interval between tick marks.
+   *
+   * @function
+   * @name pv.Scale.linear.prototype.tickFormat
+   * @param {number} t a tick value.
+   * @return {string} a formatted tick value.
+   */
+  scale.tickFormat = function(t) {
+    return t.toFixed(precision);
   };
 
   /**

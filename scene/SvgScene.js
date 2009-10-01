@@ -92,31 +92,10 @@ pv.SvgScene.listen = function(e, scenes, index) {
   e.$scene = {scenes:scenes, index:index};
 };
 
-var pv_SvgScene_mouseover;
-
 /** TODO */
 pv.SvgScene.dispatch = function(e) {
-  var t;
-
-  /*
-   * Firefox doesn't track the mouseout target very well, so here we do some
-   * bookkeeping to ensure that when a mouseover event triggers, the previous
-   * mouseover target gets a mouseout event.
-   */
-  if (pv_SvgScene_mouseover) {
-    t = pv_SvgScene_mouseover;
-    if (e.type == "mouseover") {
-      t.scenes.mark.dispatch("mouseout", t.scenes, t.index);
-      t = e.target.$scene;
-    } else if (e.type == "mouseout") {
-      pv_SvgScene_mouseover = null;
-    }
-  } else {
-    t = e.target.$scene;
-  }
-
+  var t = e.target.$scene;
   if (t) {
-    if (e.type == "mouseover") pv_SvgScene_mouseover = t;
     t.scenes.mark.dispatch(e.type, t.scenes, t.index);
     e.preventDefault();
   }
