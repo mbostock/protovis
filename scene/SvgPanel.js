@@ -23,7 +23,7 @@ pv.SvgScene.panel = function(scenes) {
       scenes.$g = g;
       g.setAttribute("width", s.width + s.left + s.right);
       g.setAttribute("height", s.height + s.top + s.bottom);
-      e = g.firstChild;
+      if (typeof e == "undefined") e = g.firstChild;
     }
 
     /* fill */
