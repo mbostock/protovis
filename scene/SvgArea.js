@@ -1,30 +1,17 @@
-// TODO different stroke behavior for area segment?
-// TODO when segmented changes, need insertBefore not appendChild
+// TODO strokeStyle for areaSegment?
 
 pv.SvgScene.area = function(scenes) {
-
-  /*
-   * Rather than using the default group element, since we know areas only
-   * contain a single polygon element, use that instead. However, since we won't
-   * be appending children to the group element, instead assume it will be
-   * invisible by default.
-   */
-  var area = this.cache(scenes, "polygon", "area"), g = scenes.scene.g;
-  area.setAttribute("display", "none");
-  if (g) g.setAttribute("display", "none");
+  var g = scenes.$g, e = g.firstChild;
+  if (!scenes.length) return e;
+  var s = scenes[0];
 
   /* segmented */
-  if (!scenes.length) return;
-  var s = scenes[0];
-  if (s.segmented) {
-    this.areaSegment(scenes);
-    return;
-  }
+  if (s.segmented) return this.areaSegment(scenes);
 
   /* visible */
-  if (!s.visible) return;
+  if (!s.visible) return e;
   var fill = pv.color(s.fillStyle), stroke = pv.color(s.strokeStyle);
-  if (!fill.opacity && !stroke.opacity) return;
+  if (!fill.opacity && !stroke.opacity) return e;
 
   /* points */
   var p1 = "", p2 = "";
@@ -51,24 +38,25 @@ pv.SvgScene.area = function(scenes) {
     }
   }
 
-  area.removeAttribute("display");
-  area.setAttribute("cursor", s.cursor);
-  area.setAttribute("points", p1 + p2);
-  area.setAttribute("fill", fill.color);
-  area.setAttribute("fill-opacity", fill.opacity);
-  area.setAttribute("stroke", stroke.color);
-  area.setAttribute("stroke-opacity", stroke.opacity);
-  area.setAttribute("stroke-width", s.lineWidth);
+  e = this.expect("polygon", e);
+  e.setAttribute("cursor", s.cursor);
+  e.setAttribute("points", p1 + p2);
+  var fill = pv.color(s.fillStyle);
+  e.setAttribute("fill", fill.color);
+  e.setAttribute("fill-opacity", fill.opacity);
+  var stroke = pv.color(s.strokeStyle);
+  e.setAttribute("stroke", stroke.color);
+  e.setAttribute("stroke-opacity", stroke.opacity);
+  e.setAttribute("stroke-width", s.lineWidth);
+  this.listen(e, scenes, 0);
+  // TODO title
 
-  var title = this.title(area, s);
-  if (!title.parentNode) {
-    this.listen(area, scenes, 0);
-    this.parentNode(scenes).appendChild(title);
-  }
+  if (!e.parentNode) g.appendChild(e);
+  return e.nextSibling;
 };
 
 pv.SvgScene.areaSegment = function(scenes) {
-  var g = this.group(scenes), s = scenes[0];
+  var g = scenes.$g, e = g.firstChild;
   for (var i = 0, n = scenes.length - 1; i < n; i++) {
     var s1 = scenes[i], s2 = scenes[i + 1];
 
@@ -83,16 +71,19 @@ pv.SvgScene.areaSegment = function(scenes) {
         + (s2.left + s2.width) + "," + (s2.top + s2.height) + " "
         + (s1.left + s1.width) + "," + (s1.top + s1.height);
 
-    var segment = this.cache(s1, "polygon", "segment");
-    segment.setAttribute("cursor", s1.cursor);
-    segment.setAttribute("points", p);
-    segment.setAttribute("fill", fill.color);
-    segment.setAttribute("fill-opacity", fill.opacity);
-    segment.setAttribute("stroke", stroke.color);
-    segment.setAttribute("stroke-opacity", stroke.opacity);
-    segment.setAttribute("stroke-width", s1.lineWidth);
-    this.listen(segment, scenes, i);
-    g.appendChild(this.title(segment, s1));
+    e = this.expect("polygon", e);
+    e.setAttribute("cursor", s1.cursor);
+    e.setAttribute("points", p);
+    e.setAttribute("fill", fill.color);
+    e.setAttribute("fill-opacity", fill.opacity);
+    e.setAttribute("stroke", stroke.color);
+    e.setAttribute("stroke-opacity", stroke.opacity);
+    e.setAttribute("stroke-width", s1.lineWidth);
+    this.listen(e, scenes, i);
+    // TODO title
+
+    if (!e.parentNode) g.appendChild(e);
+    e = e.nextSibling;
   }
-  g.removeAttribute("display");
+  return e;
 };

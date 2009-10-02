@@ -22,7 +22,7 @@ pv.SvgScene.updateAll = function(scenes) {
     }
     scenes = reversed;
   }
-  this[scenes.type](scenes);
+  this.removeSiblings(this[scenes.type](scenes));
 };
 
 /**
@@ -33,6 +33,22 @@ pv.SvgScene.updateAll = function(scenes) {
  */
 pv.SvgScene.create = function(type) {
   return document.createElementNS(pv.ns.svg, type);
+};
+
+/**
+ * Expects the element <i>e</i> to be the specified type. If the element does
+ * not exist, a new one is created. If the element does exist but is the wrong
+ * type, it is replaced with the specified element.
+ *
+ * @param type {string} an SVG element type, such as "rect".
+ * @return a new SVG element.
+ */
+pv.SvgScene.expect = function(type, e) {
+  if (!e) return this.create(type);
+  if (e.tagName == type) return e;
+  var n = this.create(type);
+  e.parentNode.replaceChild(n, e);
+  return n;
 };
 
 /**
@@ -65,29 +81,6 @@ pv.SvgScene.title = function(e, s) {
 };
 
 /** TODO */
-pv.SvgScene.parentNode = function(scenes) {
-  return scenes.parent[scenes.parentIndex].scene.g;
-};
-
-/** TODO */
-pv.SvgScene.cache = function(s, type, name) {
-  if (!s.scene) return (s.scene = {})[name] = this.create(type);
-  var e = s.scene[name];
-  if (e) {
-    while (e.lastChild) e.removeChild(e.lastChild);
-    return e;
-  }
-  return s.scene[name] = this.create(type);
-};
-
-/** TODO */
-pv.SvgScene.group = function(scenes) {
-  var g = this.cache(scenes, "g", "g");
-  if (!g.parentNode) this.parentNode(scenes).appendChild(g);
-  return g;
-};
-
-/** TODO */
 pv.SvgScene.listen = function(e, scenes, index) {
   e.$scene = {scenes:scenes, index:index};
 };
@@ -98,5 +91,14 @@ pv.SvgScene.dispatch = function(e) {
   if (t) {
     t.scenes.mark.dispatch(e.type, t.scenes, t.index);
     e.preventDefault();
+  }
+};
+
+/** TODO */
+pv.SvgScene.removeSiblings = function(e) {
+  while (e) {
+    var n = e.nextSibling;
+    e.parentNode.removeChild(e);
+    e = n;
   }
 };

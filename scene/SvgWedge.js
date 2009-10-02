@@ -1,5 +1,5 @@
 pv.SvgScene.wedge = function(scenes) {
-  var g = this.group(scenes);
+  var g = scenes.$g, e = g.firstChild;
   for (var i = 0; i < scenes.length; i++) {
     var s = scenes[i];
 
@@ -47,17 +47,22 @@ pv.SvgScene.wedge = function(scenes) {
       }
     }
 
-    var path = this.cache(s, "path", "wedge");
-    path.setAttribute("fill-rule", "evenodd");
-    path.setAttribute("cursor", s.cursor);
-    path.setAttribute("transform", "translate(" + s.left + "," + s.top + ")");
-    path.setAttribute("d", p);
-    path.setAttribute("fill", fill.color);
-    path.setAttribute("fill-opacity", fill.opacity);
-    path.setAttribute("stroke", stroke.color);
-    path.setAttribute("stroke-opacity", stroke.opacity);
-    path.setAttribute("stroke-width", s.lineWidth);
-    g.appendChild(this.title(path, s));
-    this.listen(path, scenes, i);
+    e = this.expect("path", e);
+    e.setAttribute("fill-rule", "evenodd");
+    e.setAttribute("cursor", s.cursor);
+    e.setAttribute("transform", "translate(" + s.left + "," + s.top + ")");
+    e.setAttribute("d", p);
+    e.setAttribute("fill", fill.color);
+    e.setAttribute("fill-opacity", fill.opacity);
+    e.setAttribute("stroke", stroke.color);
+    e.setAttribute("stroke-opacity", stroke.opacity);
+    e.setAttribute("stroke-width", s.lineWidth);
+    this.listen(e, scenes, i);
+    // TODO title
+
+    if (!e.parentNode) g.appendChild(e);
+    e = e.nextSibling;
   }
+
+  this.removeSiblings(e);
 };

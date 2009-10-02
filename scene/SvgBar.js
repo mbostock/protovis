@@ -1,5 +1,5 @@
 pv.SvgScene.bar = function(scenes) {
-  var g = this.group(scenes);
+  var g = scenes.$g, e = g.firstChild;
   for (var i = 0; i < scenes.length; i++) {
     var s = scenes[i];
 
@@ -8,18 +8,22 @@ pv.SvgScene.bar = function(scenes) {
     var fill = pv.color(s.fillStyle), stroke = pv.color(s.strokeStyle);
     if (!fill.opacity && !stroke.opacity) continue;
 
-    var rect = this.cache(s, "rect", "bar");
-    rect.setAttribute("cursor", s.cursor);
-    rect.setAttribute("x", s.left);
-    rect.setAttribute("y", s.top);
-    rect.setAttribute("width", Math.max(1E-10, s.width));
-    rect.setAttribute("height", Math.max(1E-10, s.height));
-    rect.setAttribute("fill", fill.color);
-    rect.setAttribute("fill-opacity", fill.opacity);
-    rect.setAttribute("stroke", stroke.color);
-    rect.setAttribute("stroke-opacity", stroke.opacity);
-    rect.setAttribute("stroke-width", s.lineWidth);
-    this.listen(rect, scenes, i);
-    g.appendChild(this.title(rect, s));
+    e = this.expect("rect", e);
+    e.setAttribute("cursor", s.cursor);
+    e.setAttribute("x", s.left);
+    e.setAttribute("y", s.top);
+    e.setAttribute("width", Math.max(1E-10, s.width));
+    e.setAttribute("height", Math.max(1E-10, s.height));
+    e.setAttribute("fill", fill.color);
+    e.setAttribute("fill-opacity", fill.opacity);
+    e.setAttribute("stroke", stroke.color);
+    e.setAttribute("stroke-opacity", stroke.opacity);
+    e.setAttribute("stroke-width", s.lineWidth);
+    this.listen(e, scenes, i);
+    // TODO title
+
+    if (!e.parentNode) g.appendChild(e);
+    e = e.nextSibling;
   }
+  return e;
 };

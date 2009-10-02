@@ -2,29 +2,17 @@
 // TODO lineOffset for flow maps?
 
 pv.SvgScene.line = function(scenes) {
-
-  /*
-   * Rather than using the default group element, since we know lines only
-   * contain a single polyline element, use that instead. However, since we
-   * won't be appending children to the group element, instead assume it will be
-   * invisible by default.
-   */
-  var line = this.cache(scenes, "polyline", "line"), g = scenes.scene.g;
-  line.setAttribute("display", "none");
-  if (g) g.setAttribute("display", "none");
+  var g = scenes.$g, e = g.firstChild;
+  if (scenes.length < 2) return e;
+  var s = scenes[0];
 
   /* segmented */
-  if (scenes.length < 2) return;
-  var s = scenes[0];
-  if (s.segmented) {
-    this.lineSegment(scenes);
-    return;
-  }
+  if (s.segmented) return this.lineSegment(scenes);
 
   /* visible */
-  if (!s.visible) return;
+  if (!s.visible) return e;
   var fill = pv.color(s.fillStyle), stroke = pv.color(s.strokeStyle);
-  if (!fill.opacity && !stroke.opacity) return;
+  if (!fill.opacity && !stroke.opacity) return e;
 
   /* points */
   var p = "";
@@ -48,24 +36,24 @@ pv.SvgScene.line = function(scenes) {
     }
   }
 
-  line.removeAttribute("display");
-  line.setAttribute("cursor", s.cursor);
-  line.setAttribute("points", p);
-  line.setAttribute("fill", fill.color);
-  line.setAttribute("fill-opacity", fill.opacity);
-  line.setAttribute("stroke", stroke.color);
-  line.setAttribute("stroke-opacity", stroke.opacity);
-  line.setAttribute("stroke-width", s.lineWidth);
 
-  var title = this.title(line, s);
-  if (!title.parentNode) {
-    this.listen(line, scenes, 0);
-    this.parentNode(scenes).appendChild(title);
-  }
+  e = this.expect("polyline", e);
+  e.setAttribute("cursor", s.cursor);
+  e.setAttribute("points", p);
+  e.setAttribute("fill", fill.color);
+  e.setAttribute("fill-opacity", fill.opacity);
+  e.setAttribute("stroke", stroke.color);
+  e.setAttribute("stroke-opacity", stroke.opacity);
+  e.setAttribute("stroke-width", s.lineWidth);
+  this.listen(e, scenes, 0);
+  // TODO title
+
+  if (!e.parentNode) g.appendChild(e);
+  return e.nextSibling;
 };
 
 pv.SvgScene.lineSegment = function(scenes) {
-  var g = this.group(scenes);
+  var g = scenes.$g, e = g.firstChild;
   for (var i = 0, n = scenes.length - 1; i < n; i++) {
     var s1 = scenes[i], s2 = scenes[i + 1];
 
@@ -127,13 +115,16 @@ pv.SvgScene.lineSegment = function(scenes) {
       + c.x + "," + c.y + " "
       + d.x + "," + d.y;
 
-    var segment = this.cache(s1, "polygon", "segment");
-    segment.setAttribute("cursor", s1.cursor);
-    segment.setAttribute("points", p);
-    segment.setAttribute("fill", stroke.color);
-    segment.setAttribute("fill-opacity", stroke.opacity);
-    this.listen(segment, scenes, i);
-    g.appendChild(this.title(segment, s1));
+    e = this.expect("polygon", e);
+    e.setAttribute("cursor", s1.cursor);
+    e.setAttribute("points", p);
+    e.setAttribute("fill", stroke.color);
+    e.setAttribute("fill-opacity", stroke.opacity);
+    this.listen(e, scenes, i);
+    // TODO title
+
+    if (!e.parentNode) g.appendChild(e);
+    e = e.nextSibling;
   }
-  g.removeAttribute("display");
+  return e;
 };

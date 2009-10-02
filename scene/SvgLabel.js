@@ -1,5 +1,5 @@
 pv.SvgScene.label = function(scenes) {
-  var g = this.group(scenes);
+  var g = scenes.$g, e = g.firstChild;
   for (var i = 0; i < scenes.length; i++) {
     var s = scenes[i];
 
@@ -21,20 +21,24 @@ pv.SvgScene.label = function(scenes) {
       case "left": x = s.textMargin; break;
     }
 
-    var text = this.cache(s, "text", "text");
-    text.setAttribute("pointer-events", "none");
-    text.setAttribute("x", x);
-    text.setAttribute("y", y);
-    text.setAttribute("dy", dy);
-    text.setAttribute("text-anchor", anchor);
-    text.setAttribute("transform",
+    e = this.expect("text", e);
+    e.setAttribute("pointer-events", "none");
+    e.setAttribute("x", x);
+    e.setAttribute("y", y);
+    e.setAttribute("dy", dy);
+    e.setAttribute("text-anchor", anchor);
+    e.setAttribute("transform",
         "translate(" + s.left + "," + s.top + ")"
         + (s.textAngle ? " rotate(" + 180 * s.textAngle / Math.PI + ")" : ""));
-    text.setAttribute("fill", fill.color);
-    text.setAttribute("fill-opacity", fill.opacity);
-    text.style.font = s.font;
-    text.style.textShadow = s.textShadow;
-    text.appendChild(document.createTextNode(s.text));
-    g.appendChild(text);
+    e.setAttribute("fill", fill.color);
+    e.setAttribute("fill-opacity", fill.opacity);
+    e.style.font = s.font;
+    e.style.textShadow = s.textShadow;
+    if (e.firstChild) e.firstChild.nodeValue = s.text;
+    else e.appendChild(document.createTextNode(s.text));
+
+    if (!e.parentNode) g.appendChild(e);
+    e = e.nextSibling;
   }
+  return e;
 };

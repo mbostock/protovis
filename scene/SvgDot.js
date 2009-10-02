@@ -1,5 +1,5 @@
 pv.SvgScene.dot = function(scenes) {
-  var g = this.group(scenes);
+  var g = scenes.$g, e = g.firstChild;
   for (var i = 0; i < scenes.length; i++) {
     var s = scenes[i];
 
@@ -65,32 +65,39 @@ pv.SvgScene.dot = function(scenes) {
         + (s.angle ? " rotate(" + 180 * s.angle / Math.PI + ")" : "");
 
     /* The normal fill path. */
-    var path = this.cache(s, "path", "fill");
-    path.setAttribute("d", fillPath);
-    path.setAttribute("transform", transform);
-    path.setAttribute("fill", fill.color);
-    path.setAttribute("fill-opacity", fill.opacity);
-    path.setAttribute("cursor", s.cursor);
+    e = this.expect("path", e);
+    e.setAttribute("d", fillPath);
+    e.setAttribute("transform", transform);
+    e.setAttribute("fill", fill.color);
+    e.setAttribute("fill-opacity", fill.opacity);
+    e.setAttribute("cursor", s.cursor);
     if (strokePath) {
-      path.setAttribute("stroke", "none");
+      e.setAttribute("stroke", "none");
     } else {
-      path.setAttribute("stroke", stroke.color);
-      path.setAttribute("stroke-opacity", stroke.opacity);
-      path.setAttribute("stroke-width", s.lineWidth);
+      e.setAttribute("stroke", stroke.color);
+      e.setAttribute("stroke-opacity", stroke.opacity);
+      e.setAttribute("stroke-width", s.lineWidth);
     }
-    this.listen(path, scenes, i);
-    g.appendChild(this.title(path, s));
+    this.listen(e, scenes, i);
+    // TODO title
+
+    if (!e.parentNode) g.appendChild(e);
+    e = e.nextSibling;
 
     /* The special-case stroke path. */
     if (strokePath) {
-      path = this.cache(s, "path", "stroke");
-      path.setAttribute("d", strokePath);
-      path.setAttribute("transform", transform);
-      path.setAttribute("fill", stroke.color);
-      path.setAttribute("fill-opacity", stroke.opacity);
-      path.setAttribute("cursor", s.cursor);
-      this.listen(path, scenes, i);
-      g.appendChild(this.title(path, s));
+      e = this.expect("path", e);
+      e.setAttribute("d", strokePath);
+      e.setAttribute("transform", transform);
+      e.setAttribute("fill", stroke.color);
+      e.setAttribute("fill-opacity", stroke.opacity);
+      e.setAttribute("cursor", s.cursor);
+      this.listen(e, scenes, i);
+      // TODO title
+
+      if (!e.parentNode) g.appendChild(e);
+      e = e.nextSibling;
     }
   }
+  return e;
 };
