@@ -1,7 +1,7 @@
 // TODO strokeStyle for areaSegment?
 
 pv.SvgScene.area = function(scenes) {
-  var g = scenes.$g, e = g.firstChild;
+  var e = scenes.$g.firstChild;
   if (!scenes.length) return e;
   var s = scenes[0];
 
@@ -48,15 +48,11 @@ pv.SvgScene.area = function(scenes) {
   e.setAttribute("stroke", stroke.color);
   e.setAttribute("stroke-opacity", stroke.opacity);
   e.setAttribute("stroke-width", s.lineWidth);
-  this.listen(e, scenes, 0);
-  // TODO title
-
-  if (!e.parentNode) g.appendChild(e);
-  return e.nextSibling;
+  return this.append(e, scenes, 0);
 };
 
 pv.SvgScene.areaSegment = function(scenes) {
-  var g = scenes.$g, e = g.firstChild;
+  var e = scenes.$g.firstChild;
   for (var i = 0, n = scenes.length - 1; i < n; i++) {
     var s1 = scenes[i], s2 = scenes[i + 1];
 
@@ -79,11 +75,7 @@ pv.SvgScene.areaSegment = function(scenes) {
     e.setAttribute("stroke", stroke.color);
     e.setAttribute("stroke-opacity", stroke.opacity);
     e.setAttribute("stroke-width", s1.lineWidth);
-    this.listen(e, scenes, i);
-    // TODO title
-
-    if (!e.parentNode) g.appendChild(e);
-    e = e.nextSibling;
+    e = this.append(e, scenes, i);
   }
   return e;
 };

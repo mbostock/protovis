@@ -45,10 +45,19 @@ pv.SvgScene.create = function(type) {
  */
 pv.SvgScene.expect = function(type, e) {
   if (!e) return this.create(type);
+  if (e.tagName == "a") e = e.firstChild;
   if (e.tagName == type) return e;
   var n = this.create(type);
   e.parentNode.replaceChild(n, e);
   return n;
+};
+
+/** TODO */
+pv.SvgScene.append = function(e, scenes, index) {
+  e.$scene = {scenes:scenes, index:index};
+  e = this.title(e, scenes[index]);
+  if (!e.parentNode) scenes.$g.appendChild(e);
+  return e.nextSibling;
 };
 
 /**
@@ -72,17 +81,10 @@ pv.SvgScene.title = function(e, s) {
       a.appendChild(e);
     }
     a.setAttributeNS(pv.ns.xlink, "title", t);
-  } else if (a) {
-    a.removeAttributeNS(pv.ns.xlink, "title");
-  } else {
-    a = e;
+    return a;
   }
-  return a;
-};
-
-/** TODO */
-pv.SvgScene.listen = function(e, scenes, index) {
-  e.$scene = {scenes:scenes, index:index};
+  if (a) a.parentNode.replaceChild(e, a);
+  return e;
 };
 
 /** TODO */

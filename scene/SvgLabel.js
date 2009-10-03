@@ -1,5 +1,5 @@
 pv.SvgScene.label = function(scenes) {
-  var g = scenes.$g, e = g.firstChild;
+  var e = scenes.$g.firstChild;
   for (var i = 0; i < scenes.length; i++) {
     var s = scenes[i];
 
@@ -36,9 +36,7 @@ pv.SvgScene.label = function(scenes) {
     e.style.textShadow = s.textShadow;
     if (e.firstChild) e.firstChild.nodeValue = s.text;
     else e.appendChild(document.createTextNode(s.text));
-
-    if (!e.parentNode) g.appendChild(e);
-    e = e.nextSibling;
+    e = this.append(e, scenes, i);
   }
   return e;
 };

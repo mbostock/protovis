@@ -1,5 +1,5 @@
 pv.SvgScene.dot = function(scenes) {
-  var g = scenes.$g, e = g.firstChild;
+  var e = scenes.$g.firstChild;
   for (var i = 0; i < scenes.length; i++) {
     var s = scenes[i];
 
@@ -78,11 +78,7 @@ pv.SvgScene.dot = function(scenes) {
       e.setAttribute("stroke-opacity", stroke.opacity);
       e.setAttribute("stroke-width", s.lineWidth);
     }
-    this.listen(e, scenes, i);
-    // TODO title
-
-    if (!e.parentNode) g.appendChild(e);
-    e = e.nextSibling;
+    e = this.append(e, scenes, i);
 
     /* The special-case stroke path. */
     if (strokePath) {
@@ -92,11 +88,7 @@ pv.SvgScene.dot = function(scenes) {
       e.setAttribute("fill", stroke.color);
       e.setAttribute("fill-opacity", stroke.opacity);
       e.setAttribute("cursor", s.cursor);
-      this.listen(e, scenes, i);
-      // TODO title
-
-      if (!e.parentNode) g.appendChild(e);
-      e = e.nextSibling;
+      e = this.append(e, scenes, i);
     }
   }
   return e;

@@ -34,9 +34,7 @@ pv.SvgScene.panel = function(scenes) {
       s.children[j].$g = e = this.expect("g", e);
       e.setAttribute("transform", "translate(" + s.left + "," + s.top + ")");
       this.updateAll(s.children[j]);
-
-      if (!e.parentNode) g.appendChild(e);
-      e = e.nextSibling;
+      e = this.append(e, scenes, i);
     }
 
     /* stroke */
@@ -56,11 +54,7 @@ pv.SvgScene.fill = function(e, scenes, i) {
     e.setAttribute("cursor", s.cursor);
     e.setAttribute("fill", fill.color);
     e.setAttribute("fill-opacity", fill.opacity);
-    this.listen(e, scenes, i);
-    // TODO title
-
-    if (!e.parentNode) scenes.$g.appendChild(e);
-    e = e.nextSibling;
+    e = this.append(e, scenes, i);
   }
   return e;
 };
@@ -78,11 +72,7 @@ pv.SvgScene.stroke = function(e, scenes, i) {
     e.setAttribute("stroke", stroke.color);
     e.setAttribute("stroke-opacity", stroke.opacity);
     e.setAttribute("stroke-width", s.lineWidth);
-    this.listen(e, scenes, i);
-    // TODO title
-
-    if (!e.parentNode) scenes.$g.appendChild(e);
-    e = e.nextSibling;
+    e = this.append(e, scenes, i);
   }
   return e;
 };

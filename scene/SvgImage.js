@@ -1,5 +1,5 @@
 pv.SvgScene.image = function(scenes) {
-  var g = scenes.$g, e = g.firstChild;
+  var e = scenes.$g.firstChild;
   for (var i = 0; i < scenes.length; i++) {
     var s = scenes[i];
 
@@ -18,11 +18,7 @@ pv.SvgScene.image = function(scenes) {
     e.setAttribute("height", s.height);
     e.setAttribute("cursor", s.cursor);
     e.setAttributeNS(pv.ns.xlink, "href", s.url);
-    this.listen(e, scenes, i);
-    // TODO title
-
-    if (!e.parentNode) g.appendChild(e);
-    e = e.nextSibling;
+    e = this.append(e, scenes, i);
 
     /* stroke */
     e = this.stroke(e, scenes, i);
