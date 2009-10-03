@@ -56,7 +56,8 @@ pv.Panel = function() {
 };
 
 pv.Panel.prototype = pv.extend(pv.Bar)
-    .property("canvas");
+    .property("canvas")
+    .property("overflow");
 
 pv.Panel.prototype.type = "panel";
 
@@ -84,7 +85,8 @@ pv.Panel.prototype.type = "panel";
  */
 pv.Panel.prototype.defaults = new pv.Panel()
     .extend(pv.Bar.prototype.defaults)
-    .fillStyle(null);
+    .fillStyle(null)
+    .overflow("visible");
 
 /**
  * Returns an anchor with the specified name. This method is overridden since

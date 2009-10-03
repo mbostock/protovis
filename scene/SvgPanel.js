@@ -26,12 +26,26 @@ pv.SvgScene.panel = function(scenes) {
       if (typeof e == "undefined") e = g.firstChild;
     }
 
+    /* clip */
+    if (s.overflow == "hidden") {
+      e = this.expect("clipPath", e);
+      e.setAttribute("id", "clip");
+      var r = e.firstChild ||  e.appendChild(this.create("rect"));
+      r.setAttribute("x", s.left);
+      r.setAttribute("y", s.top);
+      r.setAttribute("width", s.width);
+      r.setAttribute("height", s.height);
+      e = this.append(e, scenes, i);
+    }
+
     /* fill */
     e = this.fill(e, scenes, i);
 
     /* children */
     for (var j = 0; j < s.children.length; j++) {
       s.children[j].$g = e = this.expect("g", e);
+      if (s.overflow == "hidden") g.setAttribute("clip-path", "url(#clip)");
+      else g.removeAttribute("clip-path");
       e.setAttribute("transform", "translate(" + s.left + "," + s.top + ")");
       this.updateAll(s.children[j]);
       e = this.append(e, scenes, i);
