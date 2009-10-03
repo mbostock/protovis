@@ -31,8 +31,6 @@ pv.SvgScene.panel = function(scenes) {
       e = this.expect("clipPath", e);
       e.setAttribute("id", "clip");
       var r = e.firstChild ||  e.appendChild(this.create("rect"));
-      r.setAttribute("x", s.left);
-      r.setAttribute("y", s.top);
       r.setAttribute("width", s.width);
       r.setAttribute("height", s.height);
       e = this.append(e, scenes, i);
@@ -44,8 +42,8 @@ pv.SvgScene.panel = function(scenes) {
     /* children */
     for (var j = 0; j < s.children.length; j++) {
       s.children[j].$g = e = this.expect("g", e);
-      if (s.overflow == "hidden") g.setAttribute("clip-path", "url(#clip)");
-      else g.removeAttribute("clip-path");
+      if (s.overflow == "hidden") e.setAttribute("clip-path", "url(#clip)");
+      else e.removeAttribute("clip-path");
       e.setAttribute("transform", "translate(" + s.left + "," + s.top + ")");
       this.updateAll(s.children[j]);
       e = this.append(e, scenes, i);
