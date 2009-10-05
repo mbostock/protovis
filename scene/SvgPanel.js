@@ -1,3 +1,5 @@
+var guid = 0;
+
 pv.SvgScene.panel = function(scenes) {
   var g = scenes.$g, e = g && g.firstChild;
   for (var i = 0; i < scenes.length; i++) {
@@ -26,14 +28,23 @@ pv.SvgScene.panel = function(scenes) {
       if (typeof e == "undefined") e = g.firstChild;
     }
 
-    /* clip */
+    /* clip (nest children) */
     if (s.overflow == "hidden") {
+      var c = this.expect("g", e), id = (guid++).toString(36);
+      c.setAttribute("clip-path", "url(#" + id + ")");
+      if (!c.parentNode) g.appendChild(c);
+      scenes.$g = g = c;
+      e = c.firstChild;
+
       e = this.expect("clipPath", e);
-      e.setAttribute("id", "clip");
+      e.setAttribute("id", id);
       var r = e.firstChild ||  e.appendChild(this.create("rect"));
+      r.setAttribute("x", s.left);
+      r.setAttribute("y", s.top);
       r.setAttribute("width", s.width);
       r.setAttribute("height", s.height);
-      e = this.append(e, scenes, i);
+      if (!e.parentNode) g.appendChild(e);
+      e = e.nextSibling;
     }
 
     /* fill */
@@ -42,15 +53,20 @@ pv.SvgScene.panel = function(scenes) {
     /* children */
     for (var j = 0; j < s.children.length; j++) {
       s.children[j].$g = e = this.expect("g", e);
-      if (s.overflow == "hidden") e.setAttribute("clip-path", "url(#clip)");
-      else e.removeAttribute("clip-path");
       e.setAttribute("transform", "translate(" + s.left + "," + s.top + ")");
       this.updateAll(s.children[j]);
-      e = this.append(e, scenes, i);
+      if (!e.parentNode) g.appendChild(e);
+      e = e.nextSibling;
     }
 
     /* stroke */
     e = this.stroke(e, scenes, i);
+
+    /* clip (restore group) */
+    if (s.overflow == "hidden") {
+      scenes.$g = g = c.parentNode;
+      e = c.nextSibling;
+    }
   }
   return e;
 };
