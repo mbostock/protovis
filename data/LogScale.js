@@ -229,6 +229,19 @@ pv.Scale.log = function() {
   };
 
   /**
+   * Formats the specified tick value using the appropriate precision, assuming
+   * base 10.
+   *
+   * @function
+   * @name pv.Scale.log.prototype.tickFormat
+   * @param {number} t a tick value.
+   * @return {string} a formatted tick value.
+   */
+  scale.tickFormat = function(t) {
+    return t.toPrecision(1);
+  };
+
+  /**
    * "Nices" this scale, extending the bounds of the input domain to
    * evenly-rounded values. This method uses {@link pv.logFloor} and {@link
    * pv.logCeil}. Nicing is useful if the domain is computed dynamically from
