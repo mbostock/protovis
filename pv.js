@@ -806,14 +806,21 @@ pv.logCeil = function(x, b) {
  * @param {number} value the value to be searched for.
  * @returns the index of the search value, if it is contained in the array;
  * otherwise, (-(<i>insertion point</i>) - 1).
+ * @param {function} [f] an optional key function.
  */
-pv.search = function(array, value) {
+pv.search = function(array, value, f) {
+  if (!f) f = pv.identity;
   var low = 0, high = array.length - 1;
   while (low <= high) {
-    var mid = (low + high) >> 1, midValue = array[mid];
+    var mid = (low + high) >> 1, midValue = f(array[mid]);
     if (midValue < value) low = mid + 1;
     else if (midValue > value) high = mid - 1;
     else return mid;
   }
   return -low - 1;
+};
+
+pv.search.index = function(array, value, f) {
+  var i = pv.search(array, value, f);
+  return (i < 0) ? (-i - 1) : i;
 };
