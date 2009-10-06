@@ -189,7 +189,7 @@ pv.Scale.log = function() {
    * range as an array of numbers or colors.
    *
    * @function
-   * @name pv.Scale.log.prototype.range
+   * @name pv.Scale.log.prototype.invert
    * @param {...} range... range values.
    * @returns {pv.Scale.log} <tt>this</tt>, or the current range.
    */
