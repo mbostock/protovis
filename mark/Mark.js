@@ -139,6 +139,12 @@ pv.Mark.prototype.property = function(name) {
    */
   pv.Mark.prototype[name] = function(v) {
       if (arguments.length) {
+        for (var i = 0; i < this.$properties.length; i++) {
+          if (this.$properties[i].name == name) {
+            this.$properties.splice(i, 1);
+            break;
+          }
+        }
         this.$properties.push({
             name: name,
             type: (typeof v == "function") ? 3 : 2,

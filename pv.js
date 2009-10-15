@@ -690,7 +690,7 @@ pv.version = {
    * @type number
    * @constant
    */
-  minor: 1
+  minor: 2
 };
 
 /**
