@@ -102,7 +102,7 @@ pv.Panel.prototype.anchor = function(name) {
 
   /* A "view" of this panel whose margins appear to be zero. */
   function z() { return 0; }
-  z.prototype = this;
+  z.prototype = pv.extend(this);
   z.prototype.left = z.prototype.right = z.prototype.top = z.prototype.bottom = z;
 
   var anchor = pv.Bar.prototype.anchor.call(new z(), name)
