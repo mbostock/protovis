@@ -35,6 +35,7 @@ pv.Label.prototype = pv.extend(pv.Mark)
     .property("textAlign")
     .property("textBaseline")
     .property("textMargin")
+    .property("textDecoration")
     .property("textShadow");
 
 pv.Label.prototype.type = "label";
@@ -125,6 +126,15 @@ pv.Label.prototype.type = "label";
  * @see <a href="http://www.w3.org/TR/css3-text/#text-shadow">CSS3 text</a>
  * @type string
  * @name pv.Label.prototype.textShadow
+ */
+
+/**
+ * A list of decoration to be applied to text, per the CSS Text Level 3
+ * text-decoration property. An example specification is "underline".
+ *
+ * @see <a href="http://www.w3.org/TR/css3-text/#text-decoration">CSS3 text</a>
+ * @type string
+ * @name pv.Label.prototype.textDecoration
  */
 
 /**

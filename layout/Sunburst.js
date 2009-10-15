@@ -131,7 +131,7 @@ pv.Layout.sunburst = function(tree) {
         flatten(node.children[i], array);
       }
     }
-    array.push(node)
+    array.push(node);
     return array;
   }
 
@@ -150,7 +150,9 @@ pv.Layout.sunburst = function(tree) {
     root.outerRadius = r;
     root.depth = 0;
     layout(root);
-    return flatten(root, []).reverse();
+    var nodes = flatten(root, []).reverse();
+    nodes.forEach(function(n, i) { n.index = i; });
+    return nodes;
   }
 
   /* A dummy mark, like an anchor, which the caller extends. */

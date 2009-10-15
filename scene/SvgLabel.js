@@ -34,6 +34,7 @@ pv.SvgScene.label = function(scenes) {
     e.setAttribute("fill-opacity", fill.opacity);
     e.style.font = s.font;
     e.style.textShadow = s.textShadow;
+    e.style.textDecoration = s.textDecoration;
     if (e.firstChild) e.firstChild.nodeValue = s.text;
     else e.appendChild(document.createTextNode(s.text));
     e = this.append(e, scenes, i);
