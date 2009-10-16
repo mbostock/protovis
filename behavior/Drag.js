@@ -43,12 +43,14 @@ pv.Behavior.drag = function(f) {
     if (!target) return;
     setup();
     var m2 = target.mouse(), dx = m2.x - m1.x, dy = m2.y - m1.y;
-    region.left = Math.max(0, Math.min(bounds.width, original.left + dx));
-    region.right = Math.max(0, Math.min(bounds.width, original.right - dx));
-    region.top = Math.max(0, Math.min(bounds.height, original.top + dy));
-    region.bottom = Math.max(0, Math.min(bounds.height, original.bottom - dy));
-    region.width = Math.max(0, bounds.width - region.left - region.right);
-    region.height = Math.max(0, bounds.height - region.top - region.bottom);
+    if ((original.left + dx) < 0) dx = -original.left;
+    else if ((original.right - dx) < 0) dx = original.right;
+    if ((original.top + dy) < 0) dy = -original.top;
+    else if ((original.bottom - dy) < 0) dy = original.bottom;
+    region.left = original.left + dx;
+    region.right = original.right - dx;
+    region.top = original.top + dy;
+    region.bottom = original.bottom - dy;
     f.apply(target, args);
   }
 

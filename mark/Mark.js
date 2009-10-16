@@ -552,6 +552,13 @@ pv.Mark.prototype.cousin = function() {
  * a panel.
  */
 pv.Mark.prototype.render = function() {
+  var indexes = [], m = this;
+  while (m.parent) {
+    indexes.push(m.childIndex);
+    m = m.parent;
+  }
+  indexes.reverse();
+
   /*
    * Rendering consists of three phases: bind, build and update. The update
    * phase is decoupled to allow different rendering engines.
@@ -564,9 +571,30 @@ pv.Mark.prototype.render = function() {
    * values computed previously in the build phase are simply translated into
    * SVG.
    */
+
+  /* Finds all instances of this marks and renders them. */
+  function render(mark, depth) {
+    if (depth < indexes.length) {
+      var childIndex = indexes[depth], child = mark.children[childIndex];
+      for (var i = 0; i < mark.scene.length; i++) {
+        if (mark.scene[i].visible) {
+          mark.index = i;
+          child.scene = mark.scene[i].children[childIndex];
+          render(child, depth + 1);
+          delete child.scene;
+        }
+      }
+      return;
+    }
+
+    mark.build();
+    pv.Scene.updateAll(mark.scene);
+    delete mark.root.scene.data;
+  }
+
   this.bind();
-  this.build();
-  pv.Scene.updateAll(this.scene);
+  if (this.root.scene) delete this.root.scene.data;
+  render(this.root, 0);
 };
 
 /** @private Computes the root data stack for the specified mark. */
