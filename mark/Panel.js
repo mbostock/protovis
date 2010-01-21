@@ -152,6 +152,12 @@ pv.Panel.prototype.buildInstance = function(s) {
   if (!s.children) s.children = [];
 
   /*
+   * The default index should be cleared as we recurse into child marks. It will
+   * be reset to the current index when the next panel instance is built.
+   */
+  pv.Mark.prototype.index = -1;
+
+  /*
    * Build each child, passing in the parent (this panel) scene graph node. The
    * child mark's scene is initialized from the corresponding entry in the
    * existing scene graph, such that properties from the previous build can be
