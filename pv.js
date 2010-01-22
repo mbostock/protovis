@@ -516,6 +516,41 @@ pv.median = function(array, f) {
 };
 
 /**
+ * Returns the variance of the specified array. If the specified array is not an
+ * array of numbers, an optional accessor function <tt>f</tt> can be specified
+ * to map the elements to numbers. See {@link #normalize} for an
+ * example. Accessor functions can refer to <tt>this.index</tt>.
+ *
+ * @param {array} array an array of objects, or numbers.
+ * @param {function} [f] an optional accessor function.
+ * @returns {number} the variance of the specified array.
+ */
+pv.variance = function(array, f) {
+  var mean = pv.mean(array, f), sum = 0, o = {};
+  if (!f) f = pv.identity;
+  for (var i = 0; i < array.length; i++) {
+    o.index = i;
+    var d = f.call(o, array[i]) - mean;
+    sum += d * d;
+  }
+  return sum;
+};
+
+/**
+ * Returns the standard deviation of the specified array. If the specified array
+ * is not an array of numbers, an optional accessor function <tt>f</tt> can be
+ * specified to map the elements to numbers. See {@link #normalize} for an
+ * example. Accessor functions can refer to <tt>this.index</tt>.
+ *
+ * @param {array} array an array of objects, or numbers.
+ * @param {function} [f] an optional accessor function.
+ * @returns {number} the standard deviation of the specified array.
+ */
+pv.stddev = function(array, f) {
+  return Math.sqrt(pv.variance(array, f) / (array.length - 1));
+};
+
+/**
  * Returns a map constructed from the specified <tt>keys</tt>, using the
  * function <tt>f</tt> to compute the value for each key. The single argument to
  * the value function is the key. The callback is invoked only for indexes of
