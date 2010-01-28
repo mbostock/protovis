@@ -65,20 +65,22 @@ pv.SvgScene.dot = function(scenes) {
         + (s.angle ? " rotate(" + 180 * s.angle / Math.PI + ")" : "");
 
     /* The normal fill path. */
-    e = this.expect("path", e);
-    e.setAttribute("d", fillPath);
-    e.setAttribute("transform", transform);
-    e.setAttribute("fill", fill.color);
-    e.setAttribute("fill-opacity", fill.opacity);
-    e.setAttribute("cursor", s.cursor);
-    if (strokePath) {
-      e.setAttribute("stroke", "none");
-    } else {
-      e.setAttribute("stroke", stroke.color);
-      e.setAttribute("stroke-opacity", stroke.opacity);
-      e.setAttribute("stroke-width", s.lineWidth);
+    if (fill.opacity || !strokePath) {
+      e = this.expect("path", e);
+      e.setAttribute("d", fillPath);
+      e.setAttribute("transform", transform);
+      e.setAttribute("fill", fill.color);
+      e.setAttribute("fill-opacity", fill.opacity);
+      e.setAttribute("cursor", s.cursor);
+      if (strokePath) {
+        e.setAttribute("stroke", "none");
+      } else {
+        e.setAttribute("stroke", stroke.color);
+        e.setAttribute("stroke-opacity", stroke.opacity);
+        e.setAttribute("stroke-width", s.lineWidth);
+      }
+      e = this.append(e, scenes, i);
     }
-    e = this.append(e, scenes, i);
 
     /* The special-case stroke path. */
     if (strokePath) {
@@ -87,6 +89,7 @@ pv.SvgScene.dot = function(scenes) {
       e.setAttribute("transform", transform);
       e.setAttribute("fill", stroke.color);
       e.setAttribute("fill-opacity", stroke.opacity);
+      e.setAttribute("stroke", "none");
       e.setAttribute("cursor", s.cursor);
       e = this.append(e, scenes, i);
     }
