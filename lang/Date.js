@@ -93,11 +93,11 @@ Date.parse = function(s, format) {
           return "([0-9]+)";
         }
         // TODO %D: same as %m/%d/%y
+        case '%I':
         case '%H': {
           fields.push(function(x) { hour = x; });
           return "([0-9]+)";
         }
-        // TODO %I: hour (12-hour clock) [1,12]
         // TODO %j: day number [1,366]
         case '%m': {
           fields.push(function(x) { month = x - 1; });
@@ -109,6 +109,16 @@ Date.parse = function(s, format) {
         }
         // TODO %n: any white space
         // TODO %p: locale's equivalent of a.m. or p.m.
+        case '%p': { // TODO this is a hack
+          fields.push(function(x) {
+            if (hour == 12) {
+              if (x == "am") hour = 0;
+            } else if (x == "pm") {
+              hour = Number(hour) + 12;
+            }
+          });
+          return "(am|pm)";
+        }
         // TODO %r: %I:%M:%S %p
         // TODO %R: %H:%M
         case '%S': {

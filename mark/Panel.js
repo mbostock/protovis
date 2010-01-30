@@ -78,6 +78,13 @@ pv.Panel.prototype.type = "panel";
  */
 
 /**
+ * TODO overflow documentation
+ *
+ * @type string
+ * @name pv.Panel.prototype.overflow
+ */
+
+/**
  * Default properties for panels. By default, the margins are zero, the fill
  * style is transparent.
  *
