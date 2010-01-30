@@ -1,79 +1,121 @@
+/**
+ * Constructs a new empty simulation.
+ */
 pv.simulation = function() {
   return new pv.Simulation();
 };
 
+/**
+ * A particle simulation.
+ *
+ * @constructor Constructs a new empty simulation.
+ */
 pv.Simulation = function() {};
 
+/**
+ * @type pv.Particle
+ * @field pv.Simulation.prototype.particles
+ */
+
+/**
+ * @type pv.Constraint
+ * @field pv.Simulation.prototype.constraint
+ */
+
+/**
+ * @type pv.Force
+ * @field pv.Simulation.prototype.forces
+ */
+
+/**
+ * Adds a new particle to the simulation.
+ *
+ * @return {pv.Particle} the new particle.
+ */
 pv.Simulation.prototype.particle = function() {
   var p = new pv.Particle();
-  p.$n = this.$p;
-  return this.$p = p;
+  p.next = this.particles;
+  return this.particles = p;
 };
 
-pv.Simulation.prototype.force = function(type) {
-  var f = new type();
-  f.$n = this.$f;
-  return this.$f = f;
+/**
+ * Adds a new spring force to the simulation.
+ *
+ * @return {pv.Force} the spring force.
+ */
+pv.Simulation.prototype.spring = function() {
+  var f = new pv.Force.Spring();
+  f.next = this.forces;
+  return this.forces = f;
 };
 
-pv.Simulation.prototype.constraint = function(type) {
-  var c = new type();
-  c.$n = this.$c;
-  return this.$c = c;
+/**
+ * Adds a new charge force to the simulation.
+ *
+ * @return {pv.Force} the charge force.
+ */
+pv.Simulation.prototype.charge = function() {
+  var f = new pv.Force.Charge();
+  f.next = this.forces;
+  return this.forces = f;
 };
 
-/** Randomize all particle positions with zero velocity. */
-pv.Simulation.prototype.randomize = function() {
-  var p = this.$p;
-  while (p) {
-    var p0 = p.$p0, p1 = p.$p1;
-    p0.x = p1.x = Math.random();
-    p0.y = p1.y = Math.random();
-    p = p.$n;
-  }
+/**
+ * Adds a new position constraint to the simulation.
+ *
+ * @param {number} x the <i>x</i>-coordinate of the position constraint.
+ * @param {number} y the <i>y</i>-coordinate of the position constraint.
+ * @return {pv.Constraint} the position constraint.
+ */
+pv.Simulation.prototype.position = function(x, y) {
+  var c = new pv.Constraint.Position(x, y);
+  c.next = this.constraints;
+  return this.constraints = c;
 };
 
+/**
+ * Advances the simulation one time-step.
+ */
 pv.Simulation.prototype.step = function() {
   var p, f, c;
 
   /* Reset forces. */
-  p = this.$p;
+  p = this.particles;
   while (p) {
-    f = p.$f;
-    f.x = f.y = 0;
-    p = p.$n;
+    p.fx = p.fy = 0;
+    p = p.next;
   }
 
   /* Accumulate new forces. */
-  f = this.$f;
+  f = this.forces;
   while (f) {
-    f.apply(this.$p);
-    f = f.$n;
+    f.apply(this.particles);
+    f = f.next;
   }
 
   /* Integrate using position verlet. */
-  p = this.$p;
+  p = this.particles;
   var i = 0;
   while (p) {
-    var p0 = p.$p0,
-        p1 = p.$p1,
-        f = p.$f,
-        x = p1.x,
-        y = p1.y,
-        z = p.$im * timeStepSquared;
-    p1.x += x - p0.x + f.x * z,
-    p1.y += y - p0.y + f.y * z;
-    p0.x = x;
-    p0.y = y;
-    p = p.$n;
+    var x = p.x,
+        y = p.y,
+        z = p.im * timeStepSquared;
+    p.x = 2 * p.x - p.px + p.fx * z;
+    p.y = 2 * p.y - p.py + p.fy * z;
+    p.px = x;
+    p.py = y;
+    p = p.next;
   }
 
   /* Apply constraints. */
-  c = this.$c;
+  c = this.constraints;
   while (c) {
-    c.apply(this.$p);
-    c = c.$n;
+    c.apply(this.particles);
+    c = c.next;
   }
 };
 
-var timeStep = 1e-1, timeStepSquared = timeStep * timeStep;
+/* TODO Make these configurable. */
+var epsilon = 1e-2,
+    timeStep = 1e-1,
+    timeStepSquared = timeStep * timeStep;
