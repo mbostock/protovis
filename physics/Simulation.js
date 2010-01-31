@@ -30,10 +30,11 @@ pv.Simulation = function() {};
 /**
  * Adds a new particle to the simulation.
  *
+ * @param {number} [m] optional mass; defaults to 1.
  * @return {pv.Particle} the new particle.
  */
-pv.Simulation.prototype.particle = function() {
-  var p = new pv.Particle();
+pv.Simulation.prototype.particle = function(m) {
+  var p = new pv.Particle(m);
   p.next = this.particles;
   return this.particles = p;
 };
@@ -41,10 +42,11 @@ pv.Simulation.prototype.particle = function() {
 /**
  * Adds a new spring force to the simulation.
  *
+ * @param {number} [k] optional spring constant; defaults to 1.
  * @return {pv.Force} the spring force.
  */
-pv.Simulation.prototype.spring = function() {
-  var f = new pv.Force.Spring();
+pv.Simulation.prototype.spring = function(k) {
+  var f = new pv.Force.Spring(k);
   f.next = this.forces;
   return this.forces = f;
 };
@@ -52,10 +54,11 @@ pv.Simulation.prototype.spring = function() {
 /**
  * Adds a new charge force to the simulation.
  *
+ * @param {number} [k] optional charge constant; defaults to 1.
  * @return {pv.Force} the charge force.
  */
-pv.Simulation.prototype.charge = function() {
-  var f = new pv.Force.Charge();
+pv.Simulation.prototype.charge = function(k) {
+  var f = new pv.Force.Charge(k);
   f.next = this.forces;
   return this.forces = f;
 };

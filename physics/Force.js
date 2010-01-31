@@ -2,10 +2,18 @@ pv.Force = {};
 
 /**
  * A spring force as defined by Hooke's law plus a velocity damping term.
+ *
+ * @param {number} [k] optional spring constant; defaults to 1.
  */
-pv.Force.Spring = function() {};
+pv.Force.Spring = function(k) {
+  this.$k = k || 1;
+};
 
-pv.Force.Spring.prototype.$k = 1;
+/**
+ * @type number
+ * @field pv.Force.Spring.prototype.$k
+ */
+
 pv.Force.Spring.prototype.$d = 0;
 pv.Force.Spring.prototype.$l = 1;
 
@@ -125,10 +133,17 @@ pv.Force.Spring.prototype.apply = function() {
  * associated particles, and that the particles do not have charges of varying
  * magnitude; instead, the charge of all particles is global, specified as the
  * charge {@link #constant}.
+ *
+ * @param {number} [k] optional charge constant; defaults to 1.
  */
-pv.Force.Charge = function() {};
+pv.Force.Charge = function(k) {
+  this.$k = k || 1;
+};
 
-pv.Force.Charge.prototype.$k = -1;
+/**
+ * @type number
+ * @field pv.Force.Charge.prototype.$k
+ */
 
 /**
  * Sets or gets the charge constant of this charge force. Positive values

@@ -4,11 +4,14 @@
  * @constructor Constructs a new particle with an initial mass of 1, an initial
  * random position in the range [0, 1] in <i>x</i> and <i>y</i>, zero initial
  * velocity and zero initial force.
+ *
+ * @param {number} [m] optional mass; defaults to 1.
  */
-pv.Particle = function() {
+pv.Particle = function(m) {
   this.x = this.px = Math.random();
   this.y = this.py = Math.random();
   this.fx = this.fy = 0;
+  this.im = m ? (1 / m) : 1;
 };
 
 /**
@@ -62,9 +65,9 @@ pv.Particle = function() {
  * The inverse mass of the particle.
  *
  * @type number
+ * @field pv.Particle.prototype.im
  * @see #mass()
  */
-pv.Particle.prototype.im = 1;
 
 /**
  * Sets or gets the mass of the particle.
