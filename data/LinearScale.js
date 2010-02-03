@@ -71,7 +71,12 @@
  * @returns {pv.Scale.linear} a linear scale.
  */
 pv.Scale.linear = function() {
-  var d = [0, 1], r = [0, 1], i = [pv.identity], precision = 0;
+  var d = [0, 1], r = [0, 1], i = [pv.identity], type = Number;
+
+  /** @private */
+  function newDate(x) {
+    return new Date(x);
+  }
 
   /** @private */
   function scale(x) {
@@ -128,16 +133,20 @@ pv.Scale.linear = function() {
    */
   scale.domain = function(array, min, max) {
     if (arguments.length) {
+      var o; // the object we use to infer the domain type
       if (array instanceof Array) {
         if (arguments.length < 2) min = pv.identity;
         if (arguments.length < 3) max = min;
+        o = array.length && min(array[0]);
         d = [pv.min(array, min), pv.max(array, max)];
       } else {
-        d = Array.prototype.slice.call(arguments);
+        o = array;
+        d = Array.prototype.map.call(arguments, Number);
       }
+      type = (o instanceof Date) ? newDate : Number;
       return this;
     }
-    return d;
+    return d.map(type);
   };
 
   /**
@@ -199,7 +208,7 @@ pv.Scale.linear = function() {
     var j = pv.search(r, y);
     if (j < 0) j = -j - 2;
     j = Math.max(0, Math.min(i.length - 1, j));
-    return (y - r[j]) / (r[j + 1] - r[j]) * (d[j + 1] - d[j]) + d[j];
+    return type((y - r[j]) / (r[j + 1] - r[j]) * (d[j + 1] - d[j]) + d[j]);
   };
 
   /**
@@ -215,28 +224,142 @@ pv.Scale.linear = function() {
   scale.ticks = function() {
     var min = d[0],
         max = d[d.length - 1],
-        span = max - min,
-        step = pv.logCeil(span / 10, 10);
+        span = max - min;
+
+    /* Special case: dates. */
+    if (type == newDate) {
+      var MILLISECONDS = 1,
+          SECONDS = 1000,
+          MINUTES = SECONDS * 60,
+          HOURS = MINUTES * 60,
+          DAYS = HOURS * 24,
+          WEEKS = DAYS * 7,
+          MONTHS = DAYS * 30,
+          YEARS = DAYS * 365;
+
+      /* Floor the date d given the precision p. */
+      function floor(d, p) {
+        switch (p) {
+          case YEARS: d.setMonth(0);
+          case MONTHS: d.setDate(1);
+          case WEEKS: if (p == WEEKS) d.setDate(d.getDate() - d.getDay());
+          case DAYS: d.setHours(0);
+          case HOURS: d.setMinutes(0);
+          case MINUTES: d.setSeconds(0);
+          case SECONDS: d.setMilliseconds(0);
+        }
+      }
+
+      var precision, format, increment, step = 1;
+      if (span >= 2 * YEARS) {
+        precision = YEARS;
+        format = "%Y";
+        increment = function(d) { d.setFullYear(d.getFullYear() + step); };
+      } else if (span >= 2 * MONTHS) {
+        precision = MONTHS;
+        format = "%m/%Y";
+        increment = function(d) { d.setMonth(d.getMonth() + step); };
+      } else if (span >= 2 * WEEKS) {
+        precision = WEEKS;
+        format = "%m/%d/%y";
+        increment = function(d) { d.setDate(d.getDate() + 7 * step); };
+      } else if (span >= 2 * DAYS) {
+        precision = DAYS;
+        format = "%m/%d";
+        increment = function(d) { d.setDate(d.getDate() + step); };
+      } else if (span >= 2 * HOURS) {
+        precision = HOURS;
+        format = "%I:%M %p";
+        increment = function(d) { d.setHours(d.getHours() + step); };
+      } else if (span >= 3 * MINUTES) {
+        precision = MINUTES;
+        format = "%I:%M %p";
+        increment = function(d) { d.setMinutes(d.getMinutes() + step); };
+      } else if (span >= 3 * SECONDS) {
+        precision = SECONDS;
+        format = "%I:%M:%S";
+        increment = function(d) { d.setSeconds(d.getSeconds() + step); };
+      } else {
+        precision = MILLISECONDS;
+        format = "%S.%Qs";
+        increment = function(d) { d.setTime(d.getTime() + step); };
+      }
+
+      var date = new Date(min), dates = [];
+      floor(date, precision);
+
+      /* If we'd generate too many ticks, skip some!. */
+      var n = span / precision;
+      if (n > 10) {
+        switch (precision) {
+          case HOURS: {
+            step = (n > 20) ? 6 : 3;
+            date.setHours(Math.floor(date.getHours() / step) * step);
+            break;
+          }
+          case MONTHS: {
+            step = 3; // seasons
+            date.setMonth(Math.floor(date.getMonth() / step) * step);
+            break;
+          }
+          case MINUTES: {
+            step = (n > 30) ? 15 : ((n > 15) ? 10 : 5);
+            date.setMinutes(Math.floor(date.getMinutes() / step) * step);
+            break;
+          }
+          case SECONDS: {
+            step = (n > 90) ? 15 : ((n > 60) ? 10 : 5);
+            date.setSeconds(Math.floor(date.getSeconds() / step) * step);
+            break;
+          }
+          case MILLISECONDS: {
+            step = (n > 1000) ? 250 : ((n > 200) ? 100 : ((n > 100) ? 50 : ((n > 50) ? 25 : 5)));
+            date.setMilliseconds(Math.floor(date.getMilliseconds() / step) * step);
+            break;
+          }
+          default: {
+            step = pv.logCeil(n / 15, 10);
+            if (n / step < 2) step /= 2;
+            else if (n / step < 5) step /= 2;
+            date.setFullYear(Math.floor(date.getFullYear() / step) * step);
+            break;
+          }
+        }
+      }
+
+      format = pv.Format.date(format);
+      scale.tickFormat = function(x) { return format.format(x); };
+
+      while (true) {
+        increment(date);
+        if (date > max) break;
+        dates.push(new Date(date));
+      }
+      return dates;
+    }
+
+    /* Normal case: numbers. */
+    var step = pv.logCeil(span / 15, 10);
     if (span / step < 2) step /= 5;
     else if (span / step < 5) step /= 2;
     var start = Math.ceil(min / step) * step,
-        end = Math.floor(max / step) * step;
-    precision = Math.max(0, -Math.floor(pv.log(step, 10) + .01));
+        end = Math.floor(max / step) * step,
+        precision = Math.max(0, -Math.floor(pv.log(step, 10) + .01));
+    scale.tickFormat = function(x) { return x.toFixed(precision); };
     return pv.range(start, end + step, step);
   };
 
   /**
    * Formats the specified tick value using the appropriate precision, based on
-   * the step interval between tick marks.
+   * the step interval between tick marks. This method is only defined after
+   * {@link #ticks} has been called, since tick generation determines the
+   * formatting.
    *
    * @function
    * @name pv.Scale.linear.prototype.tickFormat
    * @param {number} t a tick value.
    * @return {string} a formatted tick value.
    */
-  scale.tickFormat = function(t) {
-    return t.toFixed(precision);
-  };
 
   /**
    * "Nices" this scale, extending the bounds of the input domain to
