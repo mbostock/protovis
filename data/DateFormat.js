@@ -1,3 +1,12 @@
+var MILLISECONDS = 1,
+    SECONDS = 1000,
+    MINUTES = SECONDS * 60,
+    HOURS = MINUTES * 60,
+    DAYS = HOURS * 24,
+    WEEKS = DAYS * 7,
+    MONTHS = DAYS * 30,
+    YEARS = DAYS * 365;
+
 /**
  * The format string is in the same format expected by the <tt>strftime</tt>
  * function in C. The following conversion specifications are supported:<ul>
@@ -73,10 +82,6 @@ pv.Format.date = function(pattern) {
 
 pv.DateFormat = function(pattern) {
   this.pattern = pattern;
-};
-
-pv.DateFormat.prototype.toString = function() {
-  return this.pattern;
 };
 
 /**
@@ -185,11 +190,6 @@ pv.DateFormat.prototype.parse = function(s) {
   if (match) match.forEach(function(m, i) { fields[i](m); });
   return new Date(year, month, date, hour, minute, second);
 };
-
-/* Various padders used by DateFormat. */
-var padz2 = pv.Format.pad("0", 2),
-    padz3 = pv.Format.pad("0", 3),
-    pads2 = pv.Format.pad(" ", 2);
 
 /**
  * Converts a date to a string using the associated formatting pattern.

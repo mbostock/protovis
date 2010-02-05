@@ -28,6 +28,18 @@ pv.Quadtree = function(particles) {
   else x2 = x1 + dy;
 
   /**
+   *
+   */
+  function node() {
+//     if (pv.Quadtree.$cache) {
+//       var n = pv.Quadtree.$cache;
+//       pv.Quadtree.$cache = n.next;
+//       return n;
+//     }
+    return new pv.Quadtree.Node();
+  }
+
+  /**
    * Recursively inserts the specified particle <i>p</i> at the node <i>n</i> or
    * one of its descendants. The bounds are defined by [<i>x1</i>, <i>x2</i>]
    * and [<i>y1</i>, <i>y2</i>].
@@ -78,16 +90,16 @@ pv.Quadtree = function(particles) {
     /* Recursively insert into the child node. */
     n.leaf = false;
     switch (c) {
-      case 0: n = n.c1 || (n.c1 = new pv.Quadtree.Node()); break;
-      case 1: n = n.c2 || (n.c2 = new pv.Quadtree.Node()); break;
-      case 2: n = n.c3 || (n.c3 = new pv.Quadtree.Node()); break;
-      default: n = n.c4 || (n.c4 = new pv.Quadtree.Node()); break;
+      case 0: n = n.c1 || (n.c1 = node()); break;
+      case 1: n = n.c2 || (n.c2 = node()); break;
+      case 2: n = n.c3 || (n.c3 = node()); break;
+      default: n = n.c4 || (n.c4 = node()); break;
     }
     insert(n, p, x1, y1, x2, y2);
   }
 
   /* Insert all particles. */
-  this.root = new pv.Quadtree.Node();
+  this.root = node();
   p = particles;
   while (p) {
     insert(this.root, p, x1, y1, x2, y2);
@@ -98,6 +110,23 @@ pv.Quadtree = function(particles) {
   this.yMin = y1;
   this.xMax = x2;
   this.yMax = y2;
+};
+
+/**
+ *
+ */
+pv.Quadtree.prototype.dispose = function() {
+  function dispose(n) {
+    if (n.c1) dispose(n.c1);
+    if (n.c2) dispose(n.c2);
+    if (n.c3) dispose(n.c3);
+    if (n.c4) dispose(n.c4);
+    n.leaf = true;
+    n.c1 = n.c2 = n.c3 = n.c4 = n.p = null;
+    n.next = pv.Quadtree.$cache;
+    pv.Quadtree.$cache = n;
+  }
+  dispose(this.root);
 };
 
 /**
@@ -142,6 +171,11 @@ pv.Quadtree.Node = function() {};
  * @type boolean
  */
 pv.Quadtree.Node.prototype.leaf = true;
+
+/**
+ * @type pv.Quadtree.Node
+ * @field pv.Quadtree.Node.prototype.next
+ */
 
 /**
  * The particle associated with this node, if any.

@@ -18,3 +18,8 @@ pv.Format.pad = function(c, n) {
 };
 
 pv.Format.pad.$cache = [];
+
+/* Various padders used internally. */
+var padz2 = pv.Format.pad("0", 2),
+    padz3 = pv.Format.pad("0", 3),
+    pads2 = pv.Format.pad(" ", 2);

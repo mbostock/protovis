@@ -243,7 +243,10 @@ pv.Force.Charge.prototype.apply = function(particles) {
     forces(q.root, p, q.xMin, q.yMin, q.xMax, q.yMax);
     p = p.next;
   }
+
+  /* Dispose of the quadtree nodes for recycling. */
+  q.dispose();
 };
 
 /* TODO Make these configurable. */
-var theta = 0.9;
+var theta = 1.5;
