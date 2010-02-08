@@ -473,9 +473,12 @@ pv.Mark.prototype.def = function(name, value) {
  * @returns {pv.Anchor} the new anchor.
  */
 pv.Mark.prototype.anchor = function(name) {
-  var anchor = new pv.Anchor().extend(this).name(name);
+  var mark = this, anchor = new pv.Anchor().name(name);
   anchor.parent = this.parent;
-  return anchor;
+  return anchor.data(function() {
+        return mark.scene.map(function(s) { return s.data; });
+      })
+    .visible(function() { return mark.visible(); });
 };
 
 /**
