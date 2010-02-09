@@ -1,4 +1,4 @@
-pv.Layout.tree = function(tree) {
+pv.Layout.tree = function(map) {
   var nodes,
       orient = "top",
       size = 10,
@@ -6,8 +6,7 @@ pv.Layout.tree = function(tree) {
       bspace = 5,
       tspace = 25,
       ax,
-      ay,
-      leaf = function(n) { return !isNaN(n); };
+      ay;
 
   // TODO support expanded / non-expanded nodes
 
@@ -209,7 +208,7 @@ pv.Layout.tree = function(tree) {
   /** @private */
   function data() {
     if (nodes) return nodes;
-    nodes = pv.dom(tree).nodes();
+    nodes = pv.dom(map).nodes();
     switch (orient) {
       case "left": {
         ax = dspace + size;
