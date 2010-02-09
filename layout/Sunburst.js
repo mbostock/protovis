@@ -77,18 +77,8 @@ pv.Layout.sunburst = function(tree) {
   }
 
   /** @private */
-  function scale(node, k) {
-    node.size *= k;
-    if (node.children) {
-      for (var i = 0; i < node.children.length; i++) {
-        scale(node.children[i], k);
-      }
-    }
-  }
-
-  /** @private */
   function depth(node, i) {
-    i = i ? (i + 1) : 1;
+    i++;
     return node.children
         ? pv.max(node.children, function(n) { return depth(n, i); })
         : i;
@@ -140,7 +130,7 @@ pv.Layout.sunburst = function(tree) {
     var root = accumulate(tree);
     w = this.parent.width();
     h = this.parent.height();
-    r = Math.min(w, h) / 2 / (depth(root) - .5);
+    r = Math.min(w, h) / 2 / (depth(root, 0) - .5);
     root.left = w / 2;
     root.top = h / 2;
     root.startAngle = 0;
