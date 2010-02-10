@@ -1,5 +1,5 @@
 pv.Layout.pack = function(map) {
-  var nodes, spacing = 1;
+  var nodes, spacing = 1, radius = function() { return 1; };
 
   // TODO is it possible for spacing to operate in pixel space?
   // Right now it appears to be multiples of the smallest radius.
@@ -8,7 +8,7 @@ pv.Layout.pack = function(map) {
   function packTree(n) {
     var nodes = [];
     for (var c = n.firstChild; c; c = c.nextSibling) {
-      c.r = c.childNodes ? packTree(c) : 1;
+      c.r = c.childNodes ? packTree(c) : radius(c.nodeValue);
       c.n = c.p = c;
       nodes.push(c);
     }
@@ -188,6 +188,27 @@ pv.Layout.pack = function(map) {
       .top(function(n) { return n.y; })
       .strokeStyle("rgb(31, 119, 180)")
       .fillStyle("rgba(31, 119, 180, .25)");
+
+  /**
+   * Specifies the sizing function. By default, a sizing function is disabled
+   * and all nodes are given constant size. The sizing function is invoked for
+   * each leaf node in the tree (passed to the constructor).
+   *
+   * <p>For example, if the tree data structure represents a file system, with
+   * files as leaf nodes, and each file has a <tt>bytes</tt> attribute, you can
+   * specify a size function as:
+   *
+   * <pre>.size(function(d) d.bytes)</pre>
+   *
+   * @param {function} f the new sizing function.
+   * @function
+   * @name pv.Layout.sunburst.prototype.size
+   * @returns {pv.Layout.sunburst} this.
+   */
+  mark.size = function(f) {
+    radius = function(x) { return Math.sqrt(f(x)); };
+    return this;
+  };
 
   mark.nodes = data;
 
