@@ -1,5 +1,5 @@
 pv.Layout.circle = function(map) {
-  var nodes;
+  var nodes, sort;
 
   /** @private */
   function depth(n) {
@@ -27,8 +27,8 @@ pv.Layout.circle = function(map) {
         }
       });
 
-    var inc = -2 * Math.PI / (leaves + parents),
-        angle = Math.PI / 2;
+    var inc = 2 * Math.PI / (leaves + parents),
+        angle = -Math.PI / 2;
 
     /* Set the angles. */
     p = undefined;
@@ -73,6 +73,7 @@ pv.Layout.circle = function(map) {
     nodes = pv.dom(map).nodes();
 
     var root = nodes[0];
+    if (sort) pv.Dom.sort(root, sort);
     setTreeAngles(root);
     setTreeRadii(root);
 
@@ -92,6 +93,11 @@ pv.Layout.circle = function(map) {
   var layout = {};
 
   layout.nodes = data;
+
+  layout.sort = function(f) {
+    sort = f;
+    return this;
+  };
 
   /* A dummy mark, like an anchor, which the caller extends. */
   layout.node = new pv.Mark()

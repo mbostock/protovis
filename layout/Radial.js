@@ -1,5 +1,5 @@
 pv.Layout.radial = function(map) {
-  var nodes;
+  var nodes, sort;
 
   /** @private */
   function size(n) {
@@ -36,6 +36,7 @@ pv.Layout.radial = function(map) {
     root.angle = 2 * Math.PI;
     root.depth = 0;
     size(root);
+    if (sort) pv.Dom.sort(root, sort);
     divide(root);
 
     /* Scale the positions. */
@@ -54,6 +55,11 @@ pv.Layout.radial = function(map) {
   var layout = {};
 
   layout.nodes = data;
+
+  layout.sort = function(f) {
+    sort = f;
+    return this;
+  };
 
   /* A dummy mark, like an anchor, which the caller extends. */
   layout.node = new pv.Mark()
