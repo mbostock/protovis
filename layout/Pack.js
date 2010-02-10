@@ -12,7 +12,7 @@ pv.Layout.pack = function(map) {
       c.n = c.p = c;
       nodes.push(c);
     }
-    nodes.sort(function(b, a) { return a.r - b.r; });
+    nodes.sort(function(a, b) { return a.r - b.r; });
     return packCircle(nodes);
   }
 
@@ -52,7 +52,7 @@ pv.Layout.pack = function(map) {
       var dx = b.x - a.x,
           dy = b.y - a.y,
           dr = a.r + b.r;
-      return (dx * dx + dy * dy) < (dr * dr - 0.001); // within epsilon
+      return (dr * dr - dx * dx - dy * dy) > .001; // within epsilon
     }
 
     /* Create first node. */
@@ -84,14 +84,14 @@ pv.Layout.pack = function(map) {
 
           /* Search for the closest intersection. */
           var isect = 0, s1 = 1, s2 = 1;
-          for (j = b.n; j && j != b; j = j.n, s1++) {
+          for (j = b.n; j != b; j = j.n, s1++) {
             if (intersects(j, c)) {
               isect = 1;
               break;
             }
           }
           if (isect == 1) {
-            for (k = a.p; k && k != j.p; k = k.p, s2++) {
+            for (k = a.p; k != j.p; k = k.p, s2++) {
               if (intersects(k, c)) {
                 if (s2 < s1) {
                   isect = -1;

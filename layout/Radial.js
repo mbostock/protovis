@@ -15,7 +15,7 @@ pv.Layout.radial = function(map) {
   function divide(n) {
     var startAngle = n.startAngle;
     for (var c = n.firstChild; c; c = c.nextSibling) {
-      var angle = (c.size / n.size) * n.angle;
+      var angle = (c.size / (n.size - 1)) * n.angle;
       c.startAngle = startAngle;
       c.angle = angle;
       c.midAngle = startAngle + angle / 2;
@@ -31,7 +31,7 @@ pv.Layout.radial = function(map) {
     nodes = pv.dom(map).nodes();
 
     var root = nodes[0];
-    root.startAngle = 0;
+    root.startAngle = -Math.PI / 2;
     root.midAngle = 0;
     root.angle = 2 * Math.PI;
     root.depth = 0;
