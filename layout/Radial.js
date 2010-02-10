@@ -18,11 +18,8 @@ pv.Layout.radial = function(map) {
       var child = n.childNodes[i], angle = (child.size / n.size) * n.angle;
       child.startAngle = startAngle;
       child.angle = angle;
-      child.endAngle = startAngle + angle;
       child.midAngle = startAngle + angle / 2;
       child.depth = n.depth + 1;
-      child.innerRadius = Math.max(0, child.depth - .5);
-      child.outerRadius = (child.depth + .5);
       startAngle += angle;
       if (child.childNodes) {
         divide(child);
@@ -39,9 +36,6 @@ pv.Layout.radial = function(map) {
     root.startAngle = 0;
     root.midAngle = 0;
     root.angle = 2 * Math.PI;
-    root.endAngle = 2 * Math.PI;
-    root.innerRadius = 0;
-    root.outerRadius = .5;
     root.depth = 0;
     size(root);
     divide(root);
@@ -51,9 +45,9 @@ pv.Layout.radial = function(map) {
         h = this.parent.height(),
         r = Math.min(w, h) / (2 * depth(root) - 1);
     for (var i = 0; i < nodes.length; i++) {
-      var n = nodes[i];
-      n.left = w / 2 + r * n.innerRadius * Math.cos(n.midAngle);
-      n.top = h / 2 + r * n.innerRadius * Math.sin(n.midAngle);
+      var n = nodes[i], d = r * Math.max(0, n.depth - .5);
+      n.left = w / 2 + d * Math.cos(n.midAngle);
+      n.top = h / 2 + d * Math.sin(n.midAngle);
     }
 
     return nodes;
@@ -84,7 +78,9 @@ pv.Layout.radial = function(map) {
         })
       .textMargin(7)
       .textBaseline("middle")
-      .textAlign(function(n) { return pv.Wedge.upright(n.midAngle) ? "left" : "right"; })
+      .textAlign(function(n) {
+          return pv.Wedge.upright(n.midAngle) ? "left" : "right";
+        })
       .text(function(n) { return n.parentNode ? n.nodeName : "root"; });
 
   return layout;
