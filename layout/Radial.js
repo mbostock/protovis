@@ -68,7 +68,8 @@ pv.Layout.radial = function(map) {
   /* A dummy mark, like an anchor, which the caller extends. */
   layout.link = new pv.Mark().extend(layout.node)
       .data(function(n) { return n.parentNode ? [n, n.parentNode] : []; })
-      .fillStyle(null);
+      .fillStyle(null)
+      .strokeStyle("#ccc");
 
   /* A dummy mark, like an anchor, which the caller extends. */
   layout.label = new pv.Mark().extend(layout.node)

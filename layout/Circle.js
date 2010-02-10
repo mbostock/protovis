@@ -1,31 +1,10 @@
 pv.Layout.circle = function(map) {
   var nodes;
 
-//   /** @private */
-//   function size(n) {
-//     return n.size = n.childNodes ? (1 + pv.sum(n.childNodes, size)) : 1;
-//   }
-
   /** @private */
   function depth(n) {
     return n.childNodes ? (1 + pv.max(n.childNodes, depth)) : 0;
   }
-
-//   /** @private */
-//   function divide(n) {
-//     var startAngle = n.startAngle;
-//     for (var i = 0; i < n.childNodes.length; i++) {
-//       var child = n.childNodes[i], angle = (child.size / n.size) * n.angle;
-//       child.startAngle = startAngle;
-//       child.angle = angle;
-//       child.midAngle = startAngle + angle / 2;
-//       child.depth = n.depth + 1;
-//       startAngle += angle;
-//       if (child.childNodes) {
-//         divide(child);
-//       }
-//     }
-//   }
 
   /** @private */
   function visit(n, f, i) {
@@ -125,7 +104,8 @@ pv.Layout.circle = function(map) {
   /* A dummy mark, like an anchor, which the caller extends. */
   layout.link = new pv.Mark().extend(layout.node)
       .data(function(n) { return n.parentNode ? [n, n.parentNode] : []; })
-      .fillStyle(null);
+      .fillStyle(null)
+      .strokeStyle("#ccc");
 
   /* A dummy mark, like an anchor, which the caller extends. */
   layout.label = new pv.Mark().extend(layout.node)

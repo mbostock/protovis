@@ -48,6 +48,7 @@ pv.Layout.indent = function(map) {
       .data(function(n) { return n.parentNode ? [n, n.parentNode] : []; })
       .interpolate("step-after")
       .lineWidth(1)
+      .strokeStyle("#ccc")
       .fillStyle(null);
 
   return layout;
