@@ -14,16 +14,14 @@ pv.Layout.radial = function(map) {
   /** @private */
   function divide(n) {
     var startAngle = n.startAngle;
-    for (var i = 0; i < n.childNodes.length; i++) {
-      var child = n.childNodes[i], angle = (child.size / n.size) * n.angle;
-      child.startAngle = startAngle;
-      child.angle = angle;
-      child.midAngle = startAngle + angle / 2;
-      child.depth = n.depth + 1;
+    for (var c = n.firstChild; c; c = c.nextSibling) {
+      var angle = (c.size / n.size) * n.angle;
+      c.startAngle = startAngle;
+      c.angle = angle;
+      c.midAngle = startAngle + angle / 2;
+      c.depth = n.depth + 1;
       startAngle += angle;
-      if (child.childNodes) {
-        divide(child);
-      }
+      if (c.childNodes) divide(c);
     }
   }
 
