@@ -27,15 +27,13 @@ pv.Quadtree = function(particles) {
   if (dx > dy) y2 = y1 + dx;
   else x2 = x1 + dy;
 
-  /**
-   *
-   */
+  /** @private Caches quadtree nodes. */
   function node() {
-//     if (pv.Quadtree.$cache) {
-//       var n = pv.Quadtree.$cache;
-//       pv.Quadtree.$cache = n.next;
-//       return n;
-//     }
+    if (pv.Quadtree.$cache) {
+      var n = pv.Quadtree.$cache;
+      pv.Quadtree.$cache = n.next;
+      return n;
+    }
     return new pv.Quadtree.Node();
   }
 
@@ -112,9 +110,7 @@ pv.Quadtree = function(particles) {
   this.yMax = y2;
 };
 
-/**
- *
- */
+/** Disposes all quadtree nodes so they can be recycled. */
 pv.Quadtree.prototype.dispose = function() {
   function dispose(n) {
     if (n.c1) dispose(n.c1);
