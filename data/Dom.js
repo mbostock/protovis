@@ -18,16 +18,8 @@ pv.Dom.prototype.leaf = function(f) {
   return this.$leaf;
 };
 
-pv.Dom.prototype.sort = function(f) {
-  if (arguments.length) {
-    this.$sort = f;
-    return this;
-  }
-  return this.$sort;
-};
-
 pv.Dom.prototype.root = function() {
-  var leaf = this.$leaf, sort = this.$sort;
+  var leaf = this.$leaf;
 
   /** @private */
   function recurse(map) {
@@ -37,28 +29,17 @@ pv.Dom.prototype.root = function() {
       child = leaf(value) ? {nodeValue: value} : recurse(value);
       child.nodeName = key;
       child.parentNode = node;
-//       if (previousChild) {
-//         child.previousSibling = previousChild;
-//         previousChild.nextSibling = child;
-//         node.childNodes.push(child);
-//       } else {
-//         node.childNodes = [child];
-//       }
-      previousChild ? node.childNodes.push(child) : node.childNodes = [child];
+      if (previousChild) {
+        child.previousSibling = previousChild;
+        previousChild.nextSibling = child;
+        node.childNodes.push(child);
+      } else {
+        node.childNodes = [child];
+      }
       previousChild = child;
     }
-    if (node.childNodes) {
-      if (sort) node.childNodes.sort(sort);
-      node.firstChild = previousChild = node.childNodes[0];
-      for (var i = 1; i < node.childNodes.length; i++) {
-        previousChild.nextSibling = child = node.childNodes[i];
-        child.prevousSibling = previousChild;
-        previousChild = child;
-      }
-      // node.firstChild = node.childNodes[0];
-      node.lastChild = child;
-    }
-
+    node.firstChild = node.childNodes[0];
+    node.lastChild = child;
     return node;
   }
 
