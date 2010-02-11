@@ -318,8 +318,7 @@ pv.Scale.linear = function() {
         }
       }
 
-      format = pv.Format.date(format);
-      scale.tickFormat = function(x) { return format.format(x); };
+      scale.tickFormat = pv.Format.date(format);
 
       while (true) {
         increment(date);
