@@ -575,21 +575,30 @@ pv.Mark.prototype.render = function() {
    * SVG.
    */
 
-  /* Finds all instances of this marks and renders them. */
+  /* Finds all instances of this mark and renders them. */
   function render(mark, depth) {
     if (depth < indexes.length) {
-      var childIndex = indexes[depth], child = mark.children[childIndex];
-      for (var i = 0; i < mark.scene.length; i++) {
+      var childIndex = indexes[depth],
+          child = mark.children[childIndex];
+      if (mark.hasOwnProperty("index")) {
+        var i = mark.index;
         if (mark.scene[i].visible) {
-          mark.index = i;
           child.scene = mark.scene[i].children[childIndex];
           render(child, depth + 1);
-          delete child.scene;
         }
+      } else {
+        for (var i = 0; i < mark.scene.length; i++) {
+          if (mark.scene[i].visible) {
+            mark.index = i;
+            child.scene = mark.scene[i].children[childIndex];
+            render(child, depth + 1);
+          }
+        }
+        delete mark.index;
       }
+      delete child.scene;
       return;
     }
-
     mark.build();
     pv.Scene.updateAll(mark.scene);
     delete mark.root.scene.data;
