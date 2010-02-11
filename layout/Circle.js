@@ -94,6 +94,12 @@ pv.Layout.circle = function(map) {
 
   layout.nodes = data;
 
+  layout.links = function() {
+    return data.call(this)
+        .filter(function(n) { return n.parentNode; })
+        .map(function(n) { return [n, n.parentNode]; });
+  };
+
   layout.sort = function(f) {
     sort = f;
     return this;
@@ -109,7 +115,7 @@ pv.Layout.circle = function(map) {
 
   /* A dummy mark, like an anchor, which the caller extends. */
   layout.link = new pv.Mark().extend(layout.node)
-      .data(function(n) { return n.parentNode ? [n, n.parentNode] : []; })
+      .data(pv.identity)
       .fillStyle(null)
       .strokeStyle("#ccc");
 
