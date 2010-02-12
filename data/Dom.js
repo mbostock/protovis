@@ -21,6 +21,18 @@ pv.Dom.prototype.leaf = function(f) {
 pv.Dom.prototype.root = function() {
   var leaf = this.$leaf;
 
+  /*
+   * TODO childNodes should be an empty array rather than null for nodes with no
+   * children. Checking whether a child has children can be done by checking
+   * firstChild (or perhaps we should support hasChildNodes?). Nodes should
+   * support various manipulation methods specified by W3C:
+   *
+   * insertBefore(newChild, refChild)
+   * replaceChild(newChild, oldChild)
+   * removeChild(oldChild)
+   * appendChild(newChild)
+   */
+
   /** @private */
   function recurse(map) {
     var node = {}, child, previousChild;

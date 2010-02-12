@@ -83,8 +83,8 @@ pv.Layout.circle = function(map) {
         r = Math.min(w, h) / 2;
     for (var i = 0; i < nodes.length; i++) {
       var n = nodes[i], d = r * n.radius;
-      n.left = w / 2 + d * Math.cos(n.midAngle);
-      n.top = h / 2 + d * Math.sin(n.midAngle);
+      n.x = w / 2 + d * Math.cos(n.midAngle);
+      n.y = h / 2 + d * Math.sin(n.midAngle);
     }
 
     return nodes;
@@ -110,8 +110,8 @@ pv.Layout.circle = function(map) {
       .data(data)
       .strokeStyle("#1f77b4")
       .fillStyle("white")
-      .left(function(n) { return n.left; })
-      .top(function(n) { return n.top; });
+      .left(function(n) { return n.x; })
+      .top(function(n) { return n.y; });
 
   /* A dummy mark, like an anchor, which the caller extends. */
   layout.link = new pv.Mark().extend(layout.node)

@@ -9,20 +9,16 @@ pv.Quadtree = function(particles) {
   var p;
 
   /* Compute bounds. */
-  var x1 = Number.POSITIVE_INFINITY,
-      y1 = x1,
-      x2 = Number.NEGATIVE_INFINITY,
-      y2 = x2;
-  p = particles;
-  while (p) {
+  var x1 = Number.POSITIVE_INFINITY, y1 = x1,
+      x2 = Number.NEGATIVE_INFINITY, y2 = x2;
+  for (p = particles; p; p = p.next) {
     if (p.x < x1) x1 = p.x;
     if (p.y < y1) y1 = p.y;
     if (p.x > x2) x2 = p.x;
     if (p.y > y2) y2 = p.y;
-    p = p.next;
   }
 
-  /* Square the bounds. */
+  /* Squarify the bounds. */
   var dx = x2 - x1, dy = y2 - y1;
   if (dx > dy) y2 = y1 + dx;
   else x2 = x1 + dy;
@@ -43,7 +39,12 @@ pv.Quadtree = function(particles) {
    * and [<i>y1</i>, <i>y2</i>].
    */
   function insert(n, p, x1, y1, x2, y2) {
-    if (isNaN(p.x) || isNaN(p.y)) return; // ignore NaN
+
+    if (isNaN(p.x) || isNaN(p.y)) {
+      fail();
+      return; // ignore NaN TODO??
+    }
+
     if (n.leaf) {
       if (n.p) {
         /*
@@ -52,7 +53,7 @@ pv.Quadtree = function(particles) {
          * internal node while adding the new particle to a child node. This
          * avoids infinite recursion.
          */
-        if ((Math.abs(n.p.x - p.x) + Math.abs(n.p.y - p.y)) < epsilon) {
+        if ((Math.abs(n.p.x - p.x) + Math.abs(n.p.y - p.y)) < .01) {
           insertChild(n, p, x1, y1, x2, y2);
         } else {
           var v = n.p;
@@ -80,10 +81,8 @@ pv.Quadtree = function(particles) {
         c = (p.x >= sx) + (p.y >= sy) * 2;
 
     /* Update the bounds as we recurse. */
-    if ((c == 1) || (c == 3)) x1 = sx;
-    else x2 = sx;
-    if (c > 1) y1 = sy;
-    else y2 = sy;
+    if ((c == 1) || (c == 3)) x1 = sx; else x2 = sx;
+    if (c > 1) y1 = sy; else y2 = sy;
 
     /* Recursively insert into the child node. */
     n.leaf = false;
@@ -98,11 +97,7 @@ pv.Quadtree = function(particles) {
 
   /* Insert all particles. */
   this.root = node();
-  p = particles;
-  while (p) {
-    insert(this.root, p, x1, y1, x2, y2);
-    p = p.next;
-  }
+  for (p = particles; p; p = p.next) insert(this.root, p, x1, y1, x2, y2);
 
   this.xMin = x1;
   this.yMin = y1;

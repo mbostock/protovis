@@ -7,8 +7,8 @@ pv.Layout.indent = function(map) {
 
   /** @private */
   function position(n, breadth, depth) {
-    n.left = ax + depth++ * dspace;
-    n.top = ay + breadth++ * bspace;
+    n.x = ax + depth++ * dspace;
+    n.y = ay + breadth++ * bspace;
     for (var c = n.firstChild; c; c = c.nextSibling) {
       breadth = position(c, breadth, depth);
     }
@@ -46,8 +46,8 @@ pv.Layout.indent = function(map) {
       .data(data)
       .strokeStyle("#1f77b4")
       .fillStyle("white")
-      .left(function(n) { return n.left; })
-      .top(function(n) { return n.top; });
+      .left(function(n) { return n.x; })
+      .top(function(n) { return n.y; });
 
   /* A dummy mark, like an anchor, which the caller extends. */
   layout.link = new pv.Mark().extend(layout.node)

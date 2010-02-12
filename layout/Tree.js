@@ -21,8 +21,8 @@ pv.Layout.tree = function(map) {
    * n.mod
    *
    * Public attributes (from pv.Tree):
-   * n.top
-   * n.left
+   * n.y
+   * n.x
    *
    * Public attributes (from pv.Dom):
    * n.nodeName - the key
@@ -93,12 +93,12 @@ pv.Layout.tree = function(map) {
     switch (orient) {
       case "left":
       case "right": {
-        n.top = ay + b;
+        n.y = ay + b;
         break;
       }
       case "top":
       case "bottom": {
-        n.left = ax + b;
+        n.x = ax + b;
         break;
       }
     }
@@ -107,10 +107,10 @@ pv.Layout.tree = function(map) {
   /** @private */
   function setDepth(n, p, d) {
     switch (orient) {
-      case "left": n.left = ax + d; break;
-      case "right": n.left = ax - d; break;
-      case "top": n.top = ay + d; break;
-      case "bottom": n.top = ay - d; break;
+      case "left": n.x = ax + d; break;
+      case "right": n.x = ax - d; break;
+      case "top": n.y = ay + d; break;
+      case "bottom": n.y = ay - d; break;
     }
   }
 
@@ -264,8 +264,8 @@ pv.Layout.tree = function(map) {
       .data(data)
       .strokeStyle("#1f77b4")
       .fillStyle("white")
-      .left(function(n) { return n.left; })
-      .top(function(n) { return n.top; });
+      .left(function(n) { return n.x; })
+      .top(function(n) { return n.y; });
 
   /* A dummy mark, like an anchor, which the caller extends. */
   layout.link = new pv.Mark().extend(layout.node)
