@@ -1,10 +1,18 @@
 pv.Layout.force = function(nodes, links) {
-  var sim;
+  var layout = {
+          charge: pv.Force.charge(),
+          drag: pv.Force.drag(),
+          spring: pv.Force.spring()
+        },
+      sim;
+
+  // TODO enforce panel bounds
+  // TODO allow user to drag and drop nodes
+  // TODO allow panning, zooming, rotating
 
   /** @private */
   function data() {
     if (!sim) {
-
       /* Initialize position using a random walk from the center. */
       var x = this.parent.width() / 2,
           y = this.parent.height() / 2;
@@ -16,26 +24,26 @@ pv.Layout.force = function(nodes, links) {
       }
 
       sim = pv.simulation(nodes);
-      sim.force(pv.Force.charge());
-      sim.force(pv.Force.drag());
-      sim.force(pv.Force.spring(links));
+      sim.force(layout.charge);
+      sim.force(layout.drag);
+      sim.force(layout.spring.links(links));
       sim.step();
     }
     return nodes;
   }
 
-  nodes = nodes.map(function(d, i) { return {
-      nodeName: i,
-      nodeValue: d
-    }; });
+  layout.nodes = nodes = nodes.map(function(d, i) {
+      return {nodeName: i, nodeValue: d, linkDegree: 0};
+    });
 
-  links = links.map(function(d) { return {
-      sourceNode: nodes[d.source],
-      targetNode: nodes[d.target],
-      linkValue: isNaN(d.value) ? 1 : d.value
-    }; });
-
-  var layout = {};
+  layout.links = links = links.map(function(d) {
+      var s = nodes[d.source],
+          t = nodes[d.target],
+          v = isNaN(d.value) ? 1 : d.value;
+      s.linkDegree += v;
+      t.linkDegree += v;
+      return {sourceNode: s, targetNode: t, linkValue: v};
+    });
 
   layout.node = new pv.Mark()
       .data(data)
@@ -50,8 +58,6 @@ pv.Layout.force = function(nodes, links) {
       .lineWidth(function(d, p) { return Math.sqrt(p.linkValue) * 1.5; })
       .strokeStyle("rgba(0,0,0,.2)");
 
-  layout.nodes = function() { return nodes; };
-  layout.links = function() { data.call(this); return links; };
   layout.step = function() { sim.step(); };
 
   return layout;

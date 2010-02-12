@@ -20,6 +20,7 @@ pv.SvgScene.panel = function(scenes) {
             = g.onmousemove
             = g.onmouseout
             = g.onmouseover
+            = g.onmousewheel
             = pv.SvgScene.dispatch;
       }
       scenes.$g = g;

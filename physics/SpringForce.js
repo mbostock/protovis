@@ -1,26 +1,22 @@
-pv.Force.spring = function(links) {
+pv.Force.spring = function() {
   var k = .01, // default spring constant (tension)
       d = .01, // default damping factor
-      l = 10, // default rest length
-      kl = normalize(), // per-spring normalization
+      l = 20, // default rest length
+      kl, // per-spring normalization
       force = {};
 
-  /** @private Normalize tension based on link degree. */
-  function normalize() {
-    var i, p, l, a, b, n = {};
-    for (i = 0; i < links.length; i++) {
-      l = links[i];
-      a = l.sourceNode.nodeName;
-      b = l.targetNode.nodeName;
-      n[a] = (n[a] || 0) + l.linkValue;
-      n[b] = (n[b] || 0) + l.linkValue;
+  force.links = function(x) {
+    if (arguments.length) {
+      links = x;
+      kl = x.map(function(l) {
+          return 1 / Math.sqrt(Math.max(
+              l.sourceNode.linkDegree,
+              l.targetNode.linkDegree));
+        });
+      return force;
     }
-    return links.map(function(l) {
-        return 1 / Math.sqrt(Math.max(
-            n[l.sourceNode.nodeName],
-            n[l.targetNode.nodeName]))
-      });
-  }
+    return links;
+  };
 
   force.constant = function(x) {
     if (arguments.length) { k = x; return force; }
