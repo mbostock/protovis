@@ -38,6 +38,11 @@ pv.Simulation = function(particles) {
  */
 pv.Simulation.prototype.particle = function(p) {
   p.next = this.particles;
+  /* Default velocities and forces to zero if unset. */
+  if (isNaN(p.vx)) p.vx = 0;
+  if (isNaN(p.vy)) p.vy = 0;
+  if (isNaN(p.fx)) p.fx = 0;
+  if (isNaN(p.fy)) p.fy = 0;
   return this.particles = p;
 };
 
