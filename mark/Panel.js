@@ -52,7 +52,7 @@ pv.Panel = function() {
    *
    * @private
    */
-  this.$dom = pv.Panel.$dom;
+  this.$dom = pv.$ && pv.$.s;
 };
 
 pv.Panel.prototype = pv.extend(pv.Bar)

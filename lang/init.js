@@ -5,17 +5,22 @@
  * @see pv.parse
  */
 pv.listen(window, "load", function() {
-    var scripts = document.getElementsByTagName("script");
-    for (var i = 0; i < scripts.length; i++) {
-      var s = scripts[i];
-      if (s.type == "text/javascript+protovis") {
+   /*
+    * Note: any variables declared here may be visible to the eval'd script
+    * below. Even worse, any global variables declared by the script could
+    * overwrite local variables here (such as the index, `i`)! To protect
+    * against this, all variables are explicitly scoped on a pv.$ object.
+    */
+    pv.$ = {i:0, x:document.getElementsByTagName("script")};
+    for (; pv.$.i < pv.$.x.length; pv.$.i++) {
+      pv.$.s = pv.$.x[pv.$.i];
+      if (pv.$.s.type == "text/javascript+protovis") {
         try {
-          pv.Panel.$dom = s;
-          window.eval(pv.parse(s.textContent || s.innerHTML)); // IE
+          window.eval(pv.parse(pv.$.s.textContent || pv.$.s.innerHTML));
         } catch (e) {
           pv.error(e);
         }
-        delete pv.Panel.$dom;
       }
     }
+    delete pv.$;
   });
