@@ -4,13 +4,17 @@ pv.Layout.force = function(nodes, links) {
   /** @private */
   function data() {
     if (!sim) {
-      /* Initialize particle positions randomly. */
-      var w = this.parent.width(), h = this.parent.height();
-      for (var i = 0, n; i < nodes.length; i++) {
+
+      /* Initialize position using a random walk from the center. */
+      var x = this.parent.width() / 2,
+          y = this.parent.height() / 2;
+      for (var i = 0, n, a; i < nodes.length; i++) {
         n = nodes[i];
-        n.x = w * Math.random();
-        n.y = h * Math.random();
+        a = Math.random() * 2 * Math.PI;
+        n.x = x += 4 * Math.cos(a);
+        n.y = y += 4 * Math.sin(a);
       }
+
       sim = pv.simulation(nodes);
       sim.force(pv.Force.charge());
       sim.force(pv.Force.drag());
