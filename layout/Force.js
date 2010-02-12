@@ -47,7 +47,7 @@ pv.Layout.force = function(nodes, links) {
   layout.link = new pv.Mark().extend(layout.node)
       .data(function(p) { return [p.sourceNode, p.targetNode]; })
       .fillStyle(null)
-      .lineWidth(function(d, p) { return p.linkValue * 1.5; })
+      .lineWidth(function(d, p) { return Math.sqrt(p.linkValue) * 1.5; })
       .strokeStyle("rgba(0,0,0,.2)");
 
   layout.nodes = function() { return nodes; };
