@@ -1,0 +1,62 @@
+<html>
+  <head>
+    <title>Physics Test</title>
+    <script type="text/javascript" src="../protovis-d3.2.js"></script>
+    <style type="text/css">
+
+body {
+  margin: 0;
+  display: table;
+  height: 100%;
+  width: 100%;
+  font: 14px/134% Helvetica Neue, sans-serif;
+  background: #222;
+}
+
+#center {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+#fig {
+  position: relative;
+  margin: auto;
+  width: 768px;
+  height: 768px;
+}
+
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <script type="text/javascript+protovis">
+
+var w = 800,
+    h = 800,
+    nodes = pv.range(200).map(function(i) {
+      return {x: w * Math.random(), y: h * Math.random()};
+    });
+
+var sim = pv.simulation(nodes);
+sim.force(pv.Force.charge().constant(2));
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(h);
+
+vis.add(pv.Dot)
+    .data(nodes)
+    .left(function(d) d.x)
+    .top(function(d) d.y)
+    .fillStyle("white")
+    .strokeStyle(null);
+
+vis.render();
+
+setInterval(function() {
+  sim.step();
+  vis.render();
+}, 30);
+
+    </script>
+  </div></div></body>
+</html>

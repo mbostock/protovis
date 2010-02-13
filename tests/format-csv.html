@@ -1,0 +1,17 @@
+<html>
+  <head>
+    <title>CSV Test</title>
+    <script type="text/javascript" src="../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <pre id="pre"></pre>
+    <script type="text/javascript+protovis">
+
+var csv = pv.Format.csv().header(true);
+var a = csv.parse("foo,\"bar\"\n1,2\n3,4");
+pre.innerHTML += csv.format([{foo:1,bar:2},{foo:3,bar:4}]) + "\n";
+pre.innerHTML += JSON.stringify(a) + "\n";
+
+    </script>
+  </body>
+</html>

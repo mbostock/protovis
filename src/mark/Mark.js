@@ -474,10 +474,10 @@ pv.Mark.prototype.def = function(name, value) {
  */
 pv.Mark.prototype.anchor = function(name) {
   var mark = this, anchor = new pv.Anchor().name(name);
+  anchor.anchorTarget = function() { return mark; };
   anchor.parent = this.parent;
-  return anchor.data(function() {
-        return mark.scene.map(function(s) { return s.data; });
-      })
+  return anchor
+    .data(function() { return mark.scene.map(function(s) { return s.data; }); })
     .visible(function() { return mark.visible(); });
 };
 
@@ -494,12 +494,7 @@ pv.Mark.prototype.anchor = function(name) {
  * @returns {pv.Mark} the anchor target of this mark; possibly null.
  */
 pv.Mark.prototype.anchorTarget = function() {
-  var target = this;
-  while (!(target instanceof pv.Anchor)) {
-    target = target.proto;
-    if (!target) return null;
-  }
-  return target.proto;
+  return this.proto.anchorTarget();
 };
 
 /**
