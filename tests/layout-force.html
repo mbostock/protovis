@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <title>Miserables</title>
+    <script type="text/javascript" src="../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="miserables.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var graph = pv.Layout.force(miserables.vertices, miserables.edges),
+    transform = pv.Behavior.transform(),
+    w = 400,
+    h = 400;
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .fillStyle("white")
+    .strokeStyle("#ccc")
+    .event("mousedown", transform.pan)
+    .event("mousewheel", transform.zoom);
+
+/* Links. */
+vis.add(pv.Panel)
+    .data(graph.links)
+  .add(pv.Line)
+    .extend(graph.link)
+    .left(transform.x)
+    .top(transform.y);
+
+/* Nodes. */
+vis.add(pv.Dot)
+    .extend(graph.node)
+    .left(transform.x)
+    .top(transform.y)
+    .size(function(d) d.linkDegree / 2)
+    .title(function(d) d.nodeValue);
+
+setInterval(function() {
+    vis.render();
+    graph.step();
+  }, 50);
+
+    </script>
+  </body>
+</html>

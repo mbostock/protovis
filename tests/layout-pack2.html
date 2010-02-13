@@ -1,0 +1,31 @@
+<html>
+  <head>
+    <title>Flare Pack</title>
+    <script type="text/javascript" src="../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="diamond.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(800)
+    .height(800)
+    .top(2)
+    .left(2)
+    .right(2)
+    .bottom(2);
+
+vis.add(pv.Dot)
+    .extend(pv.Layout.pack(diamond(3, 4, 4)))
+    .def("active", -1)
+    .strokeStyle(function() this.index == this.active() ? "red" : "white")
+    .lineWidth(function() this.index == this.active() ? 1.5 : 1)
+    .fillStyle("rgba(0, 0, 0, .1)")
+    .event("mouseover", function() this.active(this.index))
+    .event("mouseout", function() this.active(-1));
+
+vis.render();
+
+    </script>
+  </body>
+</html>
