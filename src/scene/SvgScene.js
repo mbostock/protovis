@@ -1,6 +1,37 @@
 // TODO don't populate default attributes?
 
 /**
+ * @private Namespace constants for SVG, XMLNS, and XLINK.
+ *
+ * @namespace Namespace constants for SVG, XMLNS, and XLINK.
+ */
+var ns = {
+  /**
+   * The SVG namespace, "http://www.w3.org/2000/svg".
+   *
+   * @type string
+   * @constant
+   */
+  svg: "http://www.w3.org/2000/svg",
+
+  /**
+   * The XMLNS namespace, "http://www.w3.org/2000/xmlns".
+   *
+   * @type string
+   * @constant
+   */
+  xmlns: "http://www.w3.org/2000/xmlns",
+
+  /**
+   * The XLINK namespace, "http://www.w3.org/1999/xlink".
+   *
+   * @type string
+   * @constant
+   */
+  xlink: "http://www.w3.org/1999/xlink"
+};
+
+/**
  * @private
  * @namespace
  */
@@ -32,7 +63,7 @@ pv.SvgScene.updateAll = function(scenes) {
  * @return a new SVG element.
  */
 pv.SvgScene.create = function(type) {
-  return document.createElementNS(pv.ns.svg, type);
+  return document.createElementNS(ns.svg, type);
 };
 
 /**
@@ -80,7 +111,7 @@ pv.SvgScene.title = function(e, s) {
       if (e.parentNode) e.parentNode.replaceChild(a, e);
       a.appendChild(e);
     }
-    a.setAttributeNS(pv.ns.xlink, "title", t);
+    a.setAttributeNS(ns.xlink, "title", t);
     return a;
   }
   if (a) a.parentNode.replaceChild(e, a);

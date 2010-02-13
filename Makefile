@@ -3,11 +3,15 @@ JS_LANG_FILES = \
 
 JS_PV_FILES = \
 	src/pv.js \
+	src/pv-internals.js \
 	src/text/Format.js \
 	src/text/PadFormat.js \
 	src/text/DateFormat.js \
 	src/text/TimeFormat.js \
 	src/text/CsvFormat.js \
+	src/data/Arrays.js \
+	src/data/Numbers.js \
+	src/data/Objects.js \
 	src/data/Dom.js \
 	src/data/Tree.js \
 	src/data/Nest.js \
