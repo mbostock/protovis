@@ -1,26 +1,23 @@
 <html>
   <head>
-    <title>Flare Dendrogram</title>
-    <script type="text/javascript" src="../protovis-d3.2.js"></script>
-    <script type="text/javascript" src="diamond.js"></script>
+    <title>Diamond Indent</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../diamond.js"></script>
   </head>
   <body>
     <script type="text/javascript+protovis">
 
 var vis = new pv.Panel()
-    .width(800)
-    .height(300)
-    .top(10)
-    .bottom(10)
-    .left(10)
-    .right(10);
+    .width(400)
+    .height(1000);
 
-var tree = pv.Layout.dendrogram(diamond(3, 4, 4));
+var tree = pv.Layout.indent(diamond(3, 4, 4))
+    .spacing(22, 22);
 
 vis.add(pv.Dot)
     .extend(tree.node)
     .def("active", -1)
-    .size(100)
+    .size(80)
     .strokeStyle(function() this.index == this.active() ? "red" : null)
     .fillStyle("#ccc")
     .event("mouseover", function() this.active(this.index))
@@ -29,7 +26,9 @@ vis.add(pv.Dot)
 vis.add(pv.Panel)
     .data(tree.links)
   .add(pv.Line)
-    .extend(tree.link);
+    .extend(tree.link)
+    .lineWidth(1)
+    .strokeStyle("#999");
 
 vis.render();
 

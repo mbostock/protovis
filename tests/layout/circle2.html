@@ -1,20 +1,21 @@
 <html>
   <head>
-    <title>Flare Tree</title>
-    <script type="text/javascript" src="../protovis-d3.2.js"></script>
-    <script type="text/javascript" src="flare.js"></script>
-    <script type="text/javascript" src="diamond.js"></script>
+    <title>Diamond Circle</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../diamond.js"></script>
   </head>
   <body>
     <script type="text/javascript+protovis">
 
 var vis = new pv.Panel()
-    .width(400)
-    .height(400);
+    .width(800)
+    .height(800)
+    .top(10)
+    .bottom(10)
+    .left(10)
+    .right(10);
 
-var tree = pv.Layout.tree(diamond(3, 4, 4))
-    .spacing(30, 15, 30)
-    .orient("top");
+var tree = pv.Layout.circle(diamond(3, 4, 4));
 
 vis.add(pv.Dot)
     .extend(tree.node)

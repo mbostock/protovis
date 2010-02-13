@@ -1,21 +1,21 @@
 <html>
   <head>
-    <title>Flare Circle</title>
-    <script type="text/javascript" src="../protovis-d3.2.js"></script>
-    <script type="text/javascript" src="diamond.js"></script>
+    <title>Diamond Dendrogram</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../diamond.js"></script>
   </head>
   <body>
     <script type="text/javascript+protovis">
 
 var vis = new pv.Panel()
     .width(800)
-    .height(800)
+    .height(300)
     .top(10)
     .bottom(10)
     .left(10)
     .right(10);
 
-var tree = pv.Layout.circle(diamond(3, 4, 4));
+var tree = pv.Layout.dendrogram(diamond(3, 4, 4));
 
 vis.add(pv.Dot)
     .extend(tree.node)
@@ -29,9 +29,7 @@ vis.add(pv.Dot)
 vis.add(pv.Panel)
     .data(tree.links)
   .add(pv.Line)
-    .extend(tree.link)
-    .lineWidth(1)
-    .strokeStyle("#999");
+    .extend(tree.link);
 
 vis.render();
 
