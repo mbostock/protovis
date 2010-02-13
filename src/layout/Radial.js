@@ -3,12 +3,12 @@ pv.Layout.radial = function(map) {
 
   /** @private */
   function size(n) {
-    return n.size = n.childNodes ? (1 + pv.sum(n.childNodes, size)) : 1;
+    return n.size = n.firstChild ? (1 + pv.sum(n.childNodes, size)) : 1;
   }
 
   /** @private */
   function depth(n) {
-    return n.childNodes ? (1 + pv.max(n.childNodes, depth)) : 0;
+    return n.firstChild ? (1 + pv.max(n.childNodes, depth)) : 0;
   }
 
   /** @private */
@@ -36,7 +36,7 @@ pv.Layout.radial = function(map) {
     root.angle = 2 * Math.PI;
     root.depth = 0;
     size(root);
-    if (sort) pv.Dom.sort(root, sort);
+    if (sort) root.sort(sort);
     divide(root);
 
     /* Scale the positions. */

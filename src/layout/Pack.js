@@ -8,7 +8,7 @@ pv.Layout.pack = function(map) {
   function packTree(n) {
     var nodes = [];
     for (var c = n.firstChild; c; c = c.nextSibling) {
-      c.r = c.childNodes ? packTree(c) : radius(c.nodeValue);
+      c.r = c.firstChild ? packTree(c) : radius(c.nodeValue);
       c.n = c.p = c;
       nodes.push(c);
     }

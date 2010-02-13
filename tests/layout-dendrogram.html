@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Flare Tree</title>
+    <title>Flare Dendrogram</title>
     <script type="text/javascript" src="../protovis-d3.2.js"></script>
     <script type="text/javascript" src="flare.js"></script>
   </head>
@@ -8,11 +8,15 @@
     <script type="text/javascript+protovis">
 
 var vis = new pv.Panel()
-    .width(400)
-    .height(2300)
-    .bottom(540);
+    .width(300)
+    .height(2200)
+    .top(10)
+    .left(40)
+    .bottom(10)
+    .right(100);
 
-var tree = pv.Layout.tree(flare)
+var tree = pv.Layout.dendrogram(flare)
+    .sort(function(a, b) a.nodeName - b.nodeName)
     .orient("left");
 
 vis.add(pv.Panel)
@@ -20,9 +24,10 @@ vis.add(pv.Panel)
   .add(pv.Line)
     .extend(tree.link);
 
-vis.add(pv.Dot)
+vis.add(pv.Label)
     .extend(tree.node)
-  .anchor(function(n) n.firstChild ? "left" : "right").add(pv.Label)
+    .textBaseline("middle")
+    .textAlign(function(n) n.firstChild ? "right" : "left")
     .text(function(n) n.parentNode ? n.nodeName : "flare");
 
 vis.render();

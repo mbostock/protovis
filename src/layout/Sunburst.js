@@ -58,6 +58,11 @@ pv.Layout.sunburst = function(tree) {
   var keys = [], sizeof = Number, w, h, r;
 
   /** @private */
+  function depth(n) {
+    return n.firstChild ? (1 + pv.max(n.childNodes, depth)) : 0;
+  }
+
+  /** @private */
   function accumulate(map) {
     var node = {size: 0, children: [], keys: keys.slice()};
     for (var key in map) {
@@ -74,14 +79,6 @@ pv.Layout.sunburst = function(tree) {
     }
     node.children.sort(function(a, b) { return b.size - a.size; });
     return node;
-  }
-
-  /** @private */
-  function depth(node, i) {
-    i++;
-    return node.children
-        ? pv.max(node.children, function(n) { return depth(n, i); })
-        : i;
   }
 
   /** @private */
@@ -130,7 +127,7 @@ pv.Layout.sunburst = function(tree) {
     var root = accumulate(tree);
     w = this.parent.width();
     h = this.parent.height();
-    r = Math.min(w, h) / 2 / (depth(root, 0) - .5);
+    r = Math.min(w, h) / 2 / (depth(root) + .5);
     root.left = w / 2;
     root.top = h / 2;
     root.startAngle = 0;

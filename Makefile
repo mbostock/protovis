@@ -61,6 +61,7 @@ JS_PV_FILES = \
 	src/layout/Circle.js \
 	src/layout/Pack.js \
 	src/layout/Force.js \
+	src/layout/Dendrogram.js \
 	src/behavior/Behavior.js \
 	src/behavior/Drag.js \
 	src/behavior/Select.js \

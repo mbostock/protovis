@@ -49,7 +49,7 @@ pv.Layout.tree = function(map) {
       n.shift = 0;
     }
     n.number = num;
-    if (!n.childNodes) {
+    if (!n.firstChild) {
       var l = n.previousSibling;
       n.prelim = l ? (l.prelim + spacing(l, n, true)) : 0;
     } else {
@@ -78,7 +78,6 @@ pv.Layout.tree = function(map) {
 
   /** @private */
   function secondWalk(n, p, m, depth) {
-    // console.log(n.prelim + " + " + m);
     setBreadth(n, p, n.prelim + m);
     setDepth(n, p, depth * dspace);
     var b = n.mod + m;

@@ -1,0 +1,38 @@
+<html>
+  <head>
+    <title>Flare Dendrogram</title>
+    <script type="text/javascript" src="../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="diamond.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(800)
+    .height(300)
+    .top(10)
+    .bottom(10)
+    .left(10)
+    .right(10);
+
+var tree = pv.Layout.dendrogram(diamond(3, 4, 4));
+
+vis.add(pv.Dot)
+    .extend(tree.node)
+    .def("active", -1)
+    .size(100)
+    .strokeStyle(function() this.index == this.active() ? "red" : null)
+    .fillStyle("#ccc")
+    .event("mouseover", function() this.active(this.index))
+    .event("mouseout", function() this.active(-1));
+
+vis.add(pv.Panel)
+    .data(tree.links)
+  .add(pv.Line)
+    .extend(tree.link);
+
+vis.render();
+
+    </script>
+  </body>
+</html>

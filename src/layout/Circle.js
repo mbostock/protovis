@@ -3,13 +3,7 @@ pv.Layout.circle = function(map) {
 
   /** @private */
   function depth(n) {
-    return n.childNodes ? (1 + pv.max(n.childNodes, depth)) : 0;
-  }
-
-  /** @private */
-  function visit(n, f, i) {
-    for (var c = n.firstChild; c; c = c.nextSibling) visit(c, f, i + 1);
-    f(n, i);
+    return n.firstChild ? (1 + pv.max(n.childNodes, depth)) : 0;
   }
 
   /** @private */
@@ -17,8 +11,8 @@ pv.Layout.circle = function(map) {
     var p, leaves = 0, parents = 0;
 
     /* Count the number of leaves and internal nodes. */
-    visit(root, function(n) {
-        if (!n.childNodes) {
+    root.visitAfter(function(n) {
+        if (!n.firstChild) {
           if (p != n.parentNode) {
             p = n.parentNode;
             parents++;
@@ -32,9 +26,9 @@ pv.Layout.circle = function(map) {
 
     /* Set the angles. */
     p = undefined;
-    visit(root, function(n) {
+    root.visitAfter(function(n) {
         var a = 0, b;
-        if (!n.childNodes) {
+        if (!n.firstChild) {
           if (p != n.parentNode) {
             p = n.parentNode;
             angle += inc;
@@ -55,9 +49,9 @@ pv.Layout.circle = function(map) {
   /** @private */
   function setTreeRadii(root) {
     var d = depth(root);
-    visit(root, function(n, i) {
+    root.visitAfter(function(n, i) {
         n.radius = n.childNodes ? (i / d) : 1;
-      }, 0);
+      });
   }
 
   /** @private */
@@ -73,7 +67,7 @@ pv.Layout.circle = function(map) {
     nodes = pv.dom(map).nodes();
 
     var root = nodes[0];
-    if (sort) pv.Dom.sort(root, sort);
+    if (sort) root.sort(sort);
     setTreeAngles(root);
     setTreeRadii(root);
 
