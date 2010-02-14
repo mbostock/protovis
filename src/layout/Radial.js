@@ -19,7 +19,6 @@ pv.Layout.radial = function(map) {
       c.startAngle = startAngle;
       c.angle = angle;
       c.midAngle = startAngle + angle / 2;
-      c.depth = n.depth + 1;
       startAngle += angle;
       divide(c);
     }
@@ -34,20 +33,19 @@ pv.Layout.radial = function(map) {
     root.startAngle = -Math.PI / 2;
     root.midAngle = 0;
     root.angle = 2 * Math.PI;
-    root.depth = 0;
     size(root);
     if (sort) root.sort(sort);
     divide(root);
 
-    /* Scale the positions. */
-    var w = this.parent.width(),
-        h = this.parent.height(),
-        r = Math.min(w, h) / (2 * depth(root) - 1);
-    for (var i = 0; i < nodes.length; i++) {
-      var n = nodes[i], d = r * Math.max(0, n.depth - .5);
-      n.x = w / 2 + d * Math.cos(n.midAngle);
-      n.y = h / 2 + d * Math.sin(n.midAngle);
-    }
+    /* Compute the radius and position. */
+    var w = this.parent.width() / 2,
+        h = this.parent.height() / 2,
+        r = Math.min(w, h) / depth(root);
+    root.visitAfter(function(n, i) {
+        var d = r * i;
+        n.x = w + d * Math.cos(n.midAngle);
+        n.y = h + d * Math.sin(n.midAngle);
+      });
 
     return nodes;
   }

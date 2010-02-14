@@ -8,11 +8,12 @@
     <script type="text/javascript+protovis">
 
 var vis = new pv.Panel()
-    .width(1000)
-    .height(1000)
-    .top(100)
-    .bottom(-100)
-    .left(100);
+    .width(800)
+    .height(800)
+    .top(120)
+    .left(100)
+    .bottom(100)
+    .right(120);
 
 var tree = pv.Layout.radial(flare)
     .sort(function(b, a) a.size - b.size);

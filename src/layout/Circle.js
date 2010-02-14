@@ -47,14 +47,6 @@ pv.Layout.circle = function(map) {
   }
 
   /** @private */
-  function setTreeRadii(root) {
-    var d = depth(root);
-    root.visitAfter(function(n, i) {
-        n.radius = n.firstChild ? (i / d) : 1;
-      });
-  }
-
-  /** @private */
   function minAngle(a, b) {
     var k = ((a > b) ? 2 : -2) * Math.PI;
     for (; Math.abs(a - b) > Math.PI; b += k);
@@ -69,17 +61,17 @@ pv.Layout.circle = function(map) {
     var root = nodes[0];
     if (sort) root.sort(sort);
     setTreeAngles(root);
-    setTreeRadii(root);
 
-    /* Scale the positions. */
-    var w = this.parent.width(),
-        h = this.parent.height(),
-        r = Math.min(w, h) / 2;
-    for (var i = 0; i < nodes.length; i++) {
-      var n = nodes[i], d = r * n.radius;
-      n.x = w / 2 + d * Math.cos(n.midAngle);
-      n.y = h / 2 + d * Math.sin(n.midAngle);
-    }
+    /* Compute the radius and position. */
+    var w = this.parent.width() / 2,
+        h = this.parent.height() / 2,
+        r = Math.min(w, h),
+        j = depth(root);
+    root.visitAfter(function(n, i) {
+        var d = n.firstChild ? (r * i / j) : r;
+        n.x = w + d * Math.cos(n.midAngle);
+        n.y = h + d * Math.sin(n.midAngle);
+      });
 
     return nodes;
   }
