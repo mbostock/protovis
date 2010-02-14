@@ -50,7 +50,7 @@ pv.Layout.circle = function(map) {
   function setTreeRadii(root) {
     var d = depth(root);
     root.visitAfter(function(n, i) {
-        n.radius = n.childNodes ? (i / d) : 1;
+        n.radius = n.firstChild ? (i / d) : 1;
       });
   }
 

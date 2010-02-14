@@ -21,7 +21,7 @@ pv.Layout.radial = function(map) {
       c.midAngle = startAngle + angle / 2;
       c.depth = n.depth + 1;
       startAngle += angle;
-      if (c.childNodes) divide(c);
+      divide(c);
     }
   }
 

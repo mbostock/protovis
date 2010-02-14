@@ -27,7 +27,7 @@ pv.Layout.tree = function(map) {
    * Public attributes (from pv.Dom):
    * n.nodeName - the key
    * n.nodeValue - the data value (for leaf nodes)
-   * n.childNodes - undefined for leaf nodes (XXX TODO)
+   * n.childNodes
    * n.firstChild
    * n.lastChild
    * n.previousSibling
