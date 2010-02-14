@@ -5,7 +5,7 @@ pv.SvgScene.dot = function(scenes) {
 
     /* visible */
     if (!s.visible) continue;
-    var fill = pv.color(s.fillStyle), stroke = pv.color(s.strokeStyle);
+    var fill = s.fillStyle || none, stroke = s.strokeStyle || none;
     if (!fill.opacity && !stroke.opacity) continue;
 
     /* points */

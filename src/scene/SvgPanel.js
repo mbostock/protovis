@@ -77,7 +77,7 @@ pv.SvgScene.panel = function(scenes) {
 };
 
 pv.SvgScene.fill = function(e, scenes, i) {
-  var s = scenes[i], fill = pv.color(s.fillStyle);
+  var s = scenes[i], fill = s.fillStyle || none;
   if (fill.opacity) {
     e = this.expect("rect", e);
     e.setAttribute("shape-rendering", s.antialias ? "auto" : "crispEdges");
@@ -94,7 +94,7 @@ pv.SvgScene.fill = function(e, scenes, i) {
 };
 
 pv.SvgScene.stroke = function(e, scenes, i) {
-  var s = scenes[i], stroke = pv.color(s.strokeStyle);
+  var s = scenes[i], stroke = s.strokeStyle || none;
   if (stroke.opacity) {
     e = this.expect("rect", e);
     e.setAttribute("shape-rendering", s.antialias ? "auto" : "crispEdges");

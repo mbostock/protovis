@@ -10,7 +10,7 @@ pv.SvgScene.area = function(scenes) {
 
   /* visible */
   if (!s.visible) return e;
-  var fill = pv.color(s.fillStyle), stroke = pv.color(s.strokeStyle);
+  var fill = s.fillStyle || none, stroke = s.strokeStyle || none;
   if (!fill.opacity && !stroke.opacity) return e;
 
   /* points */
@@ -42,10 +42,10 @@ pv.SvgScene.area = function(scenes) {
   e.setAttribute("shape-rendering", s.antialias ? "auto" : "crispEdges");
   e.setAttribute("cursor", s.cursor);
   e.setAttribute("points", p1 + p2);
-  var fill = pv.color(s.fillStyle);
+  var fill = s.fillStyle || none;
   e.setAttribute("fill", fill.color);
   e.setAttribute("fill-opacity", fill.opacity);
-  var stroke = pv.color(s.strokeStyle);
+  var stroke = s.strokeStyle || none;
   e.setAttribute("stroke", stroke.color);
   e.setAttribute("stroke-opacity", stroke.opacity);
   e.setAttribute("stroke-width", s.lineWidth);
@@ -59,7 +59,7 @@ pv.SvgScene.areaSegment = function(scenes) {
 
     /* visible */
     if (!s1.visible || !s2.visible) continue;
-    var fill = pv.color(s1.fillStyle), stroke = pv.color(s1.strokeStyle);
+    var fill = s1.fillStyle || none, stroke = s1.strokeStyle || none;
     if (!fill.opacity && !stroke.opacity) continue;
 
     /* points */

@@ -26,12 +26,8 @@
  * @see <a href="http://www.w3.org/TR/css3-color/">CSS3 color module</a>
  */
 pv.color = function(format) {
-  if (!format || (format == "transparent")) {
-    return pv.rgb(0, 0, 0, 0);
-  }
-  if (format instanceof pv.Color) {
-    return format;
-  }
+  if (format == "transparent") return none;
+  if (format instanceof pv.Color) return format;
 
   /* Handle hsl, rgb. */
   var m1 = /([a-z]+)\((.*)\)/i.exec(format);
@@ -41,6 +37,7 @@ pv.color = function(format) {
       case "hsla":
       case "rgba": {
         a = parseFloat(m2[3]);
+        if (!a) return none;
         break;
       }
     }
@@ -592,3 +589,6 @@ pv.Color.names = {
   yellow: "#ffff00",
   yellowgreen: "#9acd32"
 };
+
+/** @private */
+var none = pv.rgb(0, 0, 0, 0);
