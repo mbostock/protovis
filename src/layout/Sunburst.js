@@ -1,5 +1,4 @@
 // TODO share code with Treemap
-// TODO inspect parent panel dimensions to set inner and outer radii
 
 /**
  * Returns a new sunburst tree layout.

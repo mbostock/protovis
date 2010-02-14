@@ -1,0 +1,57 @@
+data/Matrix.js
+- documentation
+
+data/PowerScale.js
+- finish implementation
+
+data/Scale.js
+- consolidate code between scale implementations
+
+data/?
+- AJAX helper? or refer to jQuery
+
+layout/Layot.js
+- consolidate code between layout implementations
+- documentation across implementations
+- allow or require pv.Dom.Node as input, rather than maps?
+
+layout/Force.js
+- enforce panel bounds
+- allow user to drag and drop nodes
+
+layout/Icicle.js
+- orient property
+
+layout/Stack.js
+- make class rather than property
+
+layout/Tree.js (and others?)
+- allow interactive expanding / collapsing of nodes
+
+mark/Mark.js
+- allow mixin rather than single inheritance?
+- linear and radial gradient fills
+- pattern fills
+- drop shadows, blurring, other graphical effects?
+- animation
+- faster incremental rendering (detect properties)
+- rendering optimizations / minimal SVG?
+- remove first, last, cousin, sibling methods?
+- standardize window.event access for event handlers?
+
+mark/Bar.js
+- rounded corners
+
+mark/Line.js
+- support fillStyle on segmented lines
+- spline interpolation
+- arrows (markers)?
+
+mark/Label.js
+- text metrics API for smart label placement
+
+mark/Panel.js
+- overflow documentation
+
+mark/Area.js
+- spline interpolation
