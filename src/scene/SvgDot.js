@@ -62,7 +62,7 @@ pv.SvgScene.dot = function(scenes) {
       e.setAttribute("r", radius);
     }
 
-    e.setAttribute("shape-rendering", s.rendering);
+    e.setAttribute("shape-rendering", s.antialias ? "auto" : "crispEdges");
     e.setAttribute("transform", transform);
     e.setAttribute("fill", fill.color);
     e.setAttribute("fill-opacity", fill.opacity);

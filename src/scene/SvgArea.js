@@ -39,6 +39,7 @@ pv.SvgScene.area = function(scenes) {
   }
 
   e = this.expect("polygon", e);
+  e.setAttribute("shape-rendering", s.antialias ? "auto" : "crispEdges");
   e.setAttribute("cursor", s.cursor);
   e.setAttribute("points", p1 + p2);
   var fill = pv.color(s.fillStyle);
@@ -68,6 +69,7 @@ pv.SvgScene.areaSegment = function(scenes) {
         + (s1.left + s1.width) + "," + (s1.top + s1.height);
 
     e = this.expect("polygon", e);
+    e.setAttribute("shape-rendering", s1.antialias ? "auto" : "crispEdges");
     e.setAttribute("cursor", s1.cursor);
     e.setAttribute("points", p);
     e.setAttribute("fill", fill.color);

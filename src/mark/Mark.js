@@ -181,7 +181,8 @@ pv.Mark.prototype
     .property("bottom", Number)
     .property("cursor", String)
     .property("title", String)
-    .property("reverse", Boolean);
+    .property("reverse", Boolean)
+    .property("antialias", Boolean);
 
 /**
  * The mark type; a lower camelCase name. The type name controls rendering
@@ -389,7 +390,8 @@ pv.Mark.prototype.defaults = new pv.Mark()
     .visible(true)
     .reverse(false)
     .cursor("")
-    .title("");
+    .title("")
+    .antialias(true);
 
 /* Private categorical colors for default fill & stroke styles. */
 var defaultFillStyle = pv.Colors.category20().by(pv.parent),

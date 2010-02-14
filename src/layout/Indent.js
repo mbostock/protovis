@@ -19,8 +19,8 @@ pv.Layout.indent = function(map) {
   function data() {
     if (nodes) return nodes;
     nodes = pv.dom(map).nodes();
-    ax = dspace - .5;
-    ay = bspace - .5;
+    ax = dspace;
+    ay = bspace;
     position(nodes[0], 0, 0);
     return nodes;
   }
@@ -52,8 +52,8 @@ pv.Layout.indent = function(map) {
   /* A dummy mark, like an anchor, which the caller extends. */
   layout.link = new pv.Mark().extend(layout.node)
       .data(pv.identity)
+      .antialias(false)
       .interpolate("step-after")
-      .lineWidth(1)
       .strokeStyle("#ccc")
       .fillStyle(null);
 

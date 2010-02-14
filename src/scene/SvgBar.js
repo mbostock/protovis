@@ -9,6 +9,7 @@ pv.SvgScene.bar = function(scenes) {
     if (!fill.opacity && !stroke.opacity) continue;
 
     e = this.expect("rect", e);
+    e.setAttribute("shape-rendering", s.antialias ? "auto" : "crispEdges");
     e.setAttribute("cursor", s.cursor);
     e.setAttribute("x", s.left);
     e.setAttribute("y", s.top);

@@ -48,6 +48,7 @@ pv.SvgScene.wedge = function(scenes) {
     }
 
     e = this.expect("path", e);
+    e.setAttribute("shape-rendering", s.antialias ? "auto" : "crispEdges");
     e.setAttribute("fill-rule", "evenodd");
     e.setAttribute("cursor", s.cursor);
     e.setAttribute("transform", "translate(" + s.left + "," + s.top + ")");

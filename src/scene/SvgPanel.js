@@ -80,6 +80,7 @@ pv.SvgScene.fill = function(e, scenes, i) {
   var s = scenes[i], fill = pv.color(s.fillStyle);
   if (fill.opacity) {
     e = this.expect("rect", e);
+    e.setAttribute("shape-rendering", s.antialias ? "auto" : "crispEdges");
     e.setAttribute("x", s.left);
     e.setAttribute("y", s.top);
     e.setAttribute("width", s.width);
@@ -96,6 +97,7 @@ pv.SvgScene.stroke = function(e, scenes, i) {
   var s = scenes[i], stroke = pv.color(s.strokeStyle);
   if (stroke.opacity) {
     e = this.expect("rect", e);
+    e.setAttribute("shape-rendering", s.antialias ? "auto" : "crispEdges");
     e.setAttribute("x", s.left);
     e.setAttribute("y", s.top);
     e.setAttribute("width", Math.max(1E-10, s.width));

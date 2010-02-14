@@ -91,16 +91,14 @@ pv.Layout.dendrogram = function(map) {
   /* A dummy mark, like an anchor, which the caller extends. */
   layout.link = new pv.Mark().extend(layout.node)
       .data(pv.identity)
+      .antialias(false)
       .interpolate(function() {
           switch (orient) {
             case "top": case "bottom": return "step-before";
             case "left": case "right": return "step-after";
           }
         })
-      .lineWidth(1)
-      .strokeStyle("#999")
-      .left(function(n) { return Math.round(n.x) - .5; })
-      .top(function(n) { return Math.round(n.y) - .5; })
+      .strokeStyle("#ccc")
       .fillStyle(null);
 
   return layout;

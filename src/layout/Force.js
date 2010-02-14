@@ -8,7 +8,6 @@ pv.Layout.force = function(nodes, links) {
 
   // TODO enforce panel bounds
   // TODO allow user to drag and drop nodes
-  // TODO allow panning, zooming, rotating
 
   /** @private */
   function data() {

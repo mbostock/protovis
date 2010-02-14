@@ -22,6 +22,7 @@ pv.SvgScene.label = function(scenes) {
     }
 
     e = this.expect("text", e);
+    e.setAttribute("text-rendering", s.antialias ? "auto" : "crispEdges");
     e.setAttribute("pointer-events", "none");
     e.setAttribute("x", x);
     e.setAttribute("y", y);

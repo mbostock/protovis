@@ -38,6 +38,7 @@ pv.SvgScene.line = function(scenes) {
 
 
   e = this.expect("polyline", e);
+  e.setAttribute("shape-rendering", s.antialias ? "auto" : "crispEdges");
   e.setAttribute("cursor", s.cursor);
   e.setAttribute("points", p);
   e.setAttribute("fill", fill.color);
@@ -112,6 +113,7 @@ pv.SvgScene.lineSegment = function(scenes) {
       + d.x + "," + d.y;
 
     e = this.expect("polygon", e);
+    e.setAttribute("shape-rendering", s1.antialias ? "auto" : "crispEdges");
     e.setAttribute("cursor", s1.cursor);
     e.setAttribute("points", p);
     e.setAttribute("fill", stroke.color);

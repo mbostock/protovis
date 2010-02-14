@@ -9,6 +9,7 @@ pv.SvgScene.rule = function(scenes) {
     if (!stroke.opacity) continue;
 
     e = this.expect("line", e);
+    e.setAttribute("shape-rendering", s.antialias ? "auto" : "crispEdges");
     e.setAttribute("cursor", s.cursor);
     e.setAttribute("x1", s.left);
     e.setAttribute("y1", s.top);
