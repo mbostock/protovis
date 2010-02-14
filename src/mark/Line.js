@@ -23,11 +23,11 @@ pv.Line = function() {
 };
 
 pv.Line.prototype = pv.extend(pv.Mark)
-    .property("lineWidth")
-    .property("strokeStyle")
-    .property("fillStyle")
-    .property("segmented")
-    .property("interpolate");
+    .property("lineWidth", Number)
+    .property("strokeStyle", pv.color)
+    .property("fillStyle", pv.color)
+    .property("segmented", Boolean)
+    .property("interpolate", String);
 
 pv.Line.prototype.type = "line";
 

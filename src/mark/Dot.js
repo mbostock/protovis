@@ -19,12 +19,12 @@ pv.Dot = function() {
 };
 
 pv.Dot.prototype = pv.extend(pv.Mark)
-    .property("size")
-    .property("shape")
-    .property("angle")
-    .property("lineWidth")
-    .property("strokeStyle")
-    .property("fillStyle");
+    .property("size", Number)
+    .property("shape", String)
+    .property("angle", Number)
+    .property("lineWidth", Number)
+    .property("strokeStyle", pv.color)
+    .property("fillStyle", pv.color);
 
 pv.Dot.prototype.type = "dot";
 

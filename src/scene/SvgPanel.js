@@ -11,9 +11,13 @@ pv.SvgScene.panel = function(scenes) {
     /* svg */
     if (!scenes.parent) {
       s.canvas.style.display = "inline-block";
-      g = s.canvas.firstChild;
+      if (g && (g.parentNode != s.canvas)) {
+        g = s.canvas.firstChild;
+        e = g && g.firstChild;
+      }
       if (!g) {
         g = s.canvas.appendChild(this.create("svg"));
+        g.style.display = "inline-block";
         g.onclick
             = g.onmousedown
             = g.onmouseup
@@ -22,11 +26,11 @@ pv.SvgScene.panel = function(scenes) {
             = g.onmouseover
             = g.onmousewheel
             = pv.SvgScene.dispatch;
+        e = g.firstChild;
       }
       scenes.$g = g;
       g.setAttribute("width", s.width + s.left + s.right);
       g.setAttribute("height", s.height + s.top + s.bottom);
-      if (typeof e == "undefined") e = g.firstChild;
     }
 
     /* clip (nest children) */

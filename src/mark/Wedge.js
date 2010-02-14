@@ -23,14 +23,14 @@ pv.Wedge = function() {
 };
 
 pv.Wedge.prototype = pv.extend(pv.Mark)
-    .property("startAngle")
-    .property("endAngle")
-    .property("angle")
-    .property("innerRadius")
-    .property("outerRadius")
-    .property("lineWidth")
-    .property("strokeStyle")
-    .property("fillStyle");
+    .property("startAngle", Number)
+    .property("endAngle", Number)
+    .property("angle", Number)
+    .property("innerRadius", Number)
+    .property("outerRadius", Number)
+    .property("lineWidth", Number)
+    .property("strokeStyle", pv.color)
+    .property("fillStyle", pv.color);
 
 pv.Wedge.prototype.type = "wedge";
 

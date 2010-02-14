@@ -24,13 +24,13 @@ pv.Area = function() {
 };
 
 pv.Area.prototype = pv.extend(pv.Mark)
-    .property("width")
-    .property("height")
-    .property("lineWidth")
-    .property("strokeStyle")
-    .property("fillStyle")
-    .property("segmented")
-    .property("interpolate");
+    .property("width", Number)
+    .property("height", Number)
+    .property("lineWidth", String)
+    .property("strokeStyle", String)
+    .property("fillStyle", pv.color)
+    .property("segmented", Boolean)
+    .property("interpolate", String);
 
 pv.Area.prototype.type = "area";
 

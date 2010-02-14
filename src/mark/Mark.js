@@ -123,8 +123,9 @@ pv.Mark.prototype.properties = {};
  * type defines a particular property, such as width or height.
  *
  * @param {string} name the property name.
+ * @param {function} [cast] the cast function for this property.
  */
-pv.Mark.prototype.property = function(name) {
+pv.Mark.prototype.property = function(name, cast) {
   if (!this.hasOwnProperty("properties")) {
     this.properties = pv.extend(this.properties);
   }
@@ -139,16 +140,28 @@ pv.Mark.prototype.property = function(name) {
    */
   pv.Mark.prototype[name] = function(v) {
       if (arguments.length) {
+        /* Replace existing property definition, if found. */
         for (var i = 0; i < this.$properties.length; i++) {
           if (this.$properties[i].name == name) {
             this.$properties.splice(i, 1);
             break;
           }
         }
+
+        /*
+         * If a cast function is specified, the property function is wrapped by
+         * the cast function, or if a constant is specified, the constant is
+         * immediately cast. Note, however, that if the property value is null,
+         * the cast function is not invoked.
+         */
+        var f = typeof v == "function";
         this.$properties.push({
             name: name,
-            type: (typeof v == "function") ? 3 : 2,
-            value: v
+            type: f ? 3 : 2,
+            value: (f && cast) ? function() {
+                var x = v.apply(this, arguments);
+                return (x != null) ? cast(x) : null;
+              } : (((v != null) && cast) ? cast(v) : v)
           });
         return this;
       }
@@ -161,14 +174,14 @@ pv.Mark.prototype.property = function(name) {
 /* Define all global properties. */
 pv.Mark.prototype
     .property("data")
-    .property("visible")
-    .property("left")
-    .property("right")
-    .property("top")
-    .property("bottom")
-    .property("cursor")
-    .property("title")
-    .property("reverse");
+    .property("visible", Boolean)
+    .property("left", Number)
+    .property("right", Number)
+    .property("top", Number)
+    .property("bottom", Number)
+    .property("cursor", String)
+    .property("title", String)
+    .property("reverse", Boolean);
 
 /**
  * The mark type; a lower camelCase name. The type name controls rendering

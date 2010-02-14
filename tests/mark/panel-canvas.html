@@ -1,0 +1,114 @@
+<html>
+  <head>
+    <title>Panel Canvas</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <style type="text/css">
+
+body {
+  max-width: 8in;
+  margin: .25in;
+  font: 14px/134% Helvetica Neue, sans-serif;
+}
+
+.canvas {
+  display: block !important;
+  width: 300px;
+  padding-bottom: 1em;
+}
+
+p {
+  padding-bottom: 2em;
+}
+
+#canvas1 {
+  height: 300px;
+}
+
+    </style>
+  </head>
+  <body>
+
+    <div class="canvas" id="canvas1"></div>
+
+    This canvas is 300&times;300 pixels, with a 10-pixel black border. The black
+    border is clipped because it extends beyond the canvas. The canvas is
+    specified using a string ID, and the width and height are inferred from the
+    DOM. Clicking on the panel makes it brighter.
+    <p>
+
+    <div class="canvas" id="canvas2"></div>
+
+    This canvas is 300&times;100 pixels, with no border. The canvas is specified
+    using an explicit DOM reference. The height is specified as a property,
+    while the width is inferred from the DOM. Clicking on the panel makes it
+    darker.
+    <p>
+
+    <div class="canvas" id="canvas3"></div>
+
+    This canvas is 30&times;10 pixels, with no border. The canvas is specified
+    using an explicit DOM reference. The height is specified as a property,
+    while the width is inferred from the DOM. The root panel has an associated
+    10-element array of data, so ten root panels are generated, making the total
+    width 300&times;10; however, since a canvas property was specified, the
+    panels are generated overlapping in a single SVG element, rather than
+    creating multiple canvases. Clicking on the panel should increment the
+    displayed click count.
+    <p>
+
+    <div class="canvas" id="canvas4">
+      <script type="text/javascript+protovis">
+
+new pv.Panel()
+    .canvas("canvas1")
+    .strokeStyle("black")
+    .lineWidth(10)
+    .fillStyle("green")
+    .event("click", function() this.fillStyle(this.fillStyle().brighter()))
+    .render();
+
+new pv.Panel()
+    .canvas(canvas2)
+    .fillStyle("green")
+    .height(100)
+    .event("click", function() this.fillStyle(this.fillStyle().darker()))
+    .render();
+
+new pv.Panel()
+    .def("clicks", 0)
+    .canvas(canvas3)
+    .data(pv.range(0, 10))
+    .fillStyle(function(d) "hsl(" + d * 12 + ",60,50)")
+    .left(function(d) d * 30)
+    .width(30)
+    .height(10)
+    .event("click", function() this.clicks(this.clicks() + 1))
+  .anchor("center").add(pv.Label)
+    .text(function(d) this.root.clicks())
+  .root.render();
+
+new pv.Panel()
+    .def("clicks", 0)
+    .data(pv.range(0, 10))
+    .fillStyle(function(d) "hsl(" + d * 12 + ",60,50)")
+    .width(50)
+    .height(50)
+    .event("click", function() this.clicks(this.clicks() + 1))
+  .anchor("center").add(pv.Label)
+    .text(function(d) this.root.clicks())
+  .root.render();
+
+      </script>
+    </div>
+    This canvas is 50&times;50 pixels, with no border. The root panel has an
+    associated 10-element array of data, so ten root panels are generated,
+    wrapping for a total canvas size of 300&times;100. Since no canvas is
+    specified, multiple SVG elements are generated and added to the DOM. The
+    height is specified as a property, while the width is inferred from the
+    DOM. Clicking on the panel makes it darker.
+    <p>
+
+<div>foo</div>
+
+  </body>
+</html>

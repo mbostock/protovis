@@ -56,8 +56,12 @@ pv.Panel = function() {
 };
 
 pv.Panel.prototype = pv.extend(pv.Bar)
-    .property("canvas")
-    .property("overflow");
+    .property("overflow", String)
+    .property("canvas", function(c) {
+        return (typeof c == "string")
+            ? document.getElementById(c)
+            : c; // assume that c is the passed-in element
+      });
 
 pv.Panel.prototype.type = "panel";
 
@@ -220,12 +224,10 @@ pv.Panel.prototype.buildImplied = function(s) {
   if (!this.parent) {
     var c = s.canvas;
     if (c) {
-      if (typeof c == "string") c = document.getElementById(c);
-
       /* Clear the container if it's not associated with this panel. */
       if (c.$panel != this) {
         c.$panel = this;
-        c.innerHTML = "";
+        while (c.lastChild) c.removeChild(c.lastChild);
       }
 
       /* If width and height weren't specified, inspect the container. */
@@ -238,36 +240,29 @@ pv.Panel.prototype.buildImplied = function(s) {
         h = parseFloat(pv.css(c, "height"));
         s.height = h - s.top - s.bottom;
       }
-    } else if (s.$canvas) {
-
-      /*
-       * If the canvas property is null, and we previously created a canvas for
-       * this scene node, reuse the previous canvas rather than creating a new
-       * one.
-       */
-      c = s.$canvas;
     } else {
-
-      /**
-       * Returns the last element in the current document's body. The canvas
-       * element is appended to this last element if another DOM element has not
-       * already been specified via the <tt>$dom</tt> field.
-       */
-      function lastElement() {
-        var node = document.body;
-        while (node.lastChild && node.lastChild.tagName) {
-          node = node.lastChild;
-        }
-        return (node == document.body) ? node : node.parentNode;
+      var cache = this.$canvas || (this.$canvas = []);
+      if (!(c = cache[this.index])) {
+        c = cache[this.index] = document.createElement("span");
+        this.$dom // script element for text/javascript+protovis
+            ? this.$dom.parentNode.insertBefore(c, this.$dom)
+            : lastElement().appendChild(c);
       }
-
-      /* Insert a new container into the DOM. */
-      c = s.$canvas = document.createElement("span");
-      this.$dom // script element for text/javascript+protovis
-          ? this.$dom.parentNode.insertBefore(c, this.$dom)
-          : lastElement().appendChild(c);
     }
     s.canvas = c;
   }
   pv.Bar.prototype.buildImplied.call(this, s);
 };
+
+/**
+ * @private Returns the last element in the current document's body. The canvas
+ * element is appended to this last element if another DOM element has not
+ * already been specified via the <tt>$dom</tt> field.
+ */
+function lastElement() {
+  var node = document.body;
+  while (node.lastChild && node.lastChild.tagName) {
+    node = node.lastChild;
+  }
+  return (node == document.body) ? node : node.parentNode;
+}

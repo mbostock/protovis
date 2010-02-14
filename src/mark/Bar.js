@@ -28,11 +28,11 @@ pv.Bar = function() {
 };
 
 pv.Bar.prototype = pv.extend(pv.Mark)
-    .property("width")
-    .property("height")
-    .property("lineWidth")
-    .property("strokeStyle")
-    .property("fillStyle");
+    .property("width", Number)
+    .property("height", Number)
+    .property("lineWidth", Number)
+    .property("strokeStyle", pv.color)
+    .property("fillStyle", pv.color);
 
 pv.Bar.prototype.type = "bar";
 

@@ -26,7 +26,7 @@ pv.Image = function() {
 };
 
 pv.Image.prototype = pv.extend(pv.Bar)
-    .property("url");
+    .property("url", String);
 
 pv.Image.prototype.type = "image";
 

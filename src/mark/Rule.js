@@ -47,10 +47,10 @@ pv.Rule = function() {
 };
 
 pv.Rule.prototype = pv.extend(pv.Mark)
-    .property("width")
-    .property("height")
-    .property("lineWidth")
-    .property("strokeStyle");
+    .property("width", Number)
+    .property("height", Number)
+    .property("lineWidth", Number)
+    .property("strokeStyle", pv.color);
 
 pv.Rule.prototype.type = "rule";
 

@@ -28,15 +28,15 @@ pv.Label = function() {
 };
 
 pv.Label.prototype = pv.extend(pv.Mark)
-    .property("text")
-    .property("font")
-    .property("textAngle")
-    .property("textStyle")
-    .property("textAlign")
-    .property("textBaseline")
-    .property("textMargin")
-    .property("textDecoration")
-    .property("textShadow");
+    .property("text", String)
+    .property("font", String)
+    .property("textAngle", Number)
+    .property("textStyle", pv.color)
+    .property("textAlign", String)
+    .property("textBaseline", String)
+    .property("textMargin", Number)
+    .property("textDecoration", String)
+    .property("textShadow", String);
 
 pv.Label.prototype.type = "label";
 

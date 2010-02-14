@@ -24,7 +24,7 @@ pv.Anchor = function() {
 };
 
 pv.Anchor.prototype = pv.extend(pv.Mark)
-    .property("name");
+    .property("name", String);
 
 /**
  * The anchor name. The set of supported anchor names is dependent on the
