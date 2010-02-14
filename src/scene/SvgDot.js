@@ -9,10 +9,10 @@ pv.SvgScene.dot = function(scenes) {
     if (!fill.opacity && !stroke.opacity) continue;
 
     /* points */
-    var radius = Math.sqrt(s.size), fillPath = "", strokePath = "";
+    var radius = Math.sqrt(s.size), path;
     switch (s.shape) {
       case "cross": {
-        fillPath = "M" + -radius + "," + -radius
+        path = "M" + -radius + "," + -radius
             + "L" + radius + "," + radius
             + "M" + radius + "," + -radius
             + "L" + -radius + "," + radius;
@@ -20,7 +20,7 @@ pv.SvgScene.dot = function(scenes) {
       }
       case "triangle": {
         var h = radius, w = radius * 2 / Math.sqrt(3);
-        fillPath = "M0," + h
+        path = "M0," + h
             + "L" + w +"," + -h
             + " " + -w + "," + -h
             + "Z";
@@ -28,7 +28,7 @@ pv.SvgScene.dot = function(scenes) {
       }
       case "diamond": {
         radius *= Math.sqrt(2);
-        fillPath = "M0," + -radius
+        path = "M0," + -radius
             + "L" + radius + ",0"
             + " 0," + radius
             + " " + -radius + ",0"
@@ -36,7 +36,7 @@ pv.SvgScene.dot = function(scenes) {
         break;
       }
       case "square": {
-        fillPath = "M" + -radius + "," + -radius
+        path = "M" + -radius + "," + -radius
             + "L" + radius + "," + -radius
             + " " + radius + "," + radius
             + " " + -radius + "," + radius
@@ -44,55 +44,33 @@ pv.SvgScene.dot = function(scenes) {
         break;
       }
       case "tick": {
-        fillPath = "M0,0L0," + -s.size;
-        break;
-      }
-      default: {
-        function circle(r) {
-          return "M0," + r
-              + "A" + r + "," + r + " 0 1,1 0," + (-r)
-              + "A" + r + "," + r + " 0 1,1 0," + r
-              + "Z";
-        }
-        if (s.lineWidth / 2 > radius) strokePath = circle(s.lineWidth);
-        fillPath = circle(radius);
+        path = "M0,0L0," + -s.size;
         break;
       }
     }
 
     /* transform */
-    var transform = "translate(" + s.left + "," + s.top + ")"
-        + (s.angle ? " rotate(" + 180 * s.angle / Math.PI + ")" : "");
+    var transform = "translate(" + s.left + "," + s.top + ")";
 
-    /* The normal fill path. */
-    if (fill.opacity || !strokePath) {
+    /* Use <circle> for circles, <path> for everything else. */
+    if (path) {
+      if (s.angle) transform += " rotate(" + 180 * s.angle / Math.PI + ")";
       e = this.expect("path", e);
-      e.setAttribute("d", fillPath);
-      e.setAttribute("transform", transform);
-      e.setAttribute("fill", fill.color);
-      e.setAttribute("fill-opacity", fill.opacity);
-      e.setAttribute("cursor", s.cursor);
-      if (strokePath) {
-        e.setAttribute("stroke", "none");
-      } else {
-        e.setAttribute("stroke", stroke.color);
-        e.setAttribute("stroke-opacity", stroke.opacity);
-        e.setAttribute("stroke-width", s.lineWidth);
-      }
-      e = this.append(e, scenes, i);
+      e.setAttribute("d", path);
+    } else {
+      e = this.expect("circle", e);
+      e.setAttribute("r", radius);
     }
 
-    /* The special-case stroke path. */
-    if (strokePath) {
-      e = this.expect("path", e);
-      e.setAttribute("d", strokePath);
-      e.setAttribute("transform", transform);
-      e.setAttribute("fill", stroke.color);
-      e.setAttribute("fill-opacity", stroke.opacity);
-      e.setAttribute("stroke", "none");
-      e.setAttribute("cursor", s.cursor);
-      e = this.append(e, scenes, i);
-    }
+    e.setAttribute("shape-rendering", s.rendering);
+    e.setAttribute("transform", transform);
+    e.setAttribute("fill", fill.color);
+    e.setAttribute("fill-opacity", fill.opacity);
+    e.setAttribute("cursor", s.cursor);
+    e.setAttribute("stroke", stroke.color);
+    e.setAttribute("stroke-opacity", stroke.opacity);
+    e.setAttribute("stroke-width", s.lineWidth);
+    e = this.append(e, scenes, i);
   }
   return e;
 };

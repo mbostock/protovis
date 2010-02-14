@@ -1,0 +1,50 @@
+<html>
+  <head>
+    <title>Panel Fill</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(300)
+    .height(200)
+    .top(100)
+    .bottom(100)
+    .left(100)
+    .right(100);
+
+vis.anchor("top").add(pv.Dot)
+    .size(1000)
+    .fillStyle("#ccc")
+    .strokeStyle(null)
+  .anchor("center").add(pv.Label)
+    .text("BELOW");
+
+var panel = vis.add(pv.Panel)
+    .fillStyle("hsl(0,50%,50%)")
+    .strokeStyle("hsla(220,50%,50%,.5)")
+    .lineWidth(20);
+
+panel.anchor("bottom").add(pv.Dot)
+    .size(1000)
+    .fillStyle("#ccc")
+    .strokeStyle(null)
+  .anchor("center").add(pv.Label)
+    .text("INSIDE");
+
+panel.anchor("center").add(pv.Label)
+    .text("This is a red panel with a translucent blue border.");
+
+vis.anchor("right").add(pv.Dot)
+    .size(1000)
+    .fillStyle("#ccc")
+    .strokeStyle(null)
+  .anchor("center").add(pv.Label)
+    .text("ABOVE");
+
+vis.render();
+
+    </script>
+  </body>
+</html>
