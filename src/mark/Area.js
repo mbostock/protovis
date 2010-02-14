@@ -27,7 +27,7 @@ pv.Area.prototype = pv.extend(pv.Mark)
     .property("width", Number)
     .property("height", Number)
     .property("lineWidth", String)
-    .property("strokeStyle", String)
+    .property("strokeStyle", pv.color)
     .property("fillStyle", pv.color)
     .property("segmented", Boolean)
     .property("interpolate", String);
