@@ -6,34 +6,19 @@
 
 body {
   margin: 0;
-  display: table;
-  height: 100%;
-  width: 100%;
-  font: 14px/134% Helvetica Neue, sans-serif;
   background: #222;
-}
-
-#center {
-  display: table-cell;
-  vertical-align: middle;
-}
-
-#fig {
-  position: relative;
-  margin: auto;
-  width: 768px;
-  height: 768px;
 }
 
     </style>
   </head>
-  <body><div id="center"><div id="fig">
+  <body>
     <script type="text/javascript+protovis">
 
-var w = 800,
-    h = 800,
+var w = window.innerWidth,
+    h = window.innerHeight,
     nodes = pv.range(200).map(function(i) {
-      return {x: w * Math.random(), y: h * Math.random()};
+      return {x: w / 2 * (Math.random() + .5),
+              y: h / 2 * (Math.random() + .5)};
     });
 
 var sim = pv.simulation(nodes);
@@ -47,8 +32,15 @@ vis.add(pv.Dot)
     .data(nodes)
     .left(function(d) d.x)
     .top(function(d) d.y)
-    .fillStyle("white")
-    .strokeStyle(null);
+    .strokeStyle(pv.ramp("steelblue", "brown").by(function(d) d.vx * d.vx + d.vy * d.vy));
+
+vis.add(pv.Panel)
+    .data(nodes)
+  .add(pv.Line)
+    .data(pv.range(2))
+    .strokeStyle("white")
+    .left(function(i, d) d.x + i * 10 * d.vx)
+    .top(function(i, d) d.y + i * 10 * d.vy);
 
 vis.render();
 
@@ -58,5 +50,5 @@ setInterval(function() {
 }, 30);
 
     </script>
-  </div></div></body>
+  </body>
 </html>
