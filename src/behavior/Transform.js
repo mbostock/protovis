@@ -27,13 +27,9 @@ pv.Behavior.transform = function() {
   };
 
   transform.zoom = function() {
-    var v = this.mouse();
+    var v = this.mouse(), k = window.event.wheelDelta;
     m = m.translate(-v.x, -v.y);
-    if (window.event.wheelDelta > 0) { // zoom in
-      m = m.scale(1.2);
-    } else { // zoom out
-      m = m.scale(1 / 1.2);
-    }
+    m = m.scale((k < 0) ? (1000 / (1000 - k)) : ((1000 + k) / 1000));
     m = m.translate(v.x, v.y);
   };
 
