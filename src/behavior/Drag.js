@@ -27,9 +27,9 @@ pv.Behavior.drag = function(transform) {
     if (!target) return;
     setup();
     var m = target.mouse();
-    if (transform) m2 = transform.invert(m2);
-    p.x = v1.x + m2.x;
-    p.y = v1.y + m2.y;
+    if (transform) m = transform.invert(m);
+    p.x = v1.x + m.x;
+    p.y = v1.y + m.y;
   }
 
   function mouseup() {
