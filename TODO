@@ -38,6 +38,7 @@ mark/Mark.js
 - rendering optimizations / minimal SVG?
 - remove first, last, cousin, sibling methods?
 - standardize window.event access for event handlers?
+- antialias doesn't always work as expected; requires pixel rounding?
 
 mark/Bar.js
 - rounded corners
@@ -55,3 +56,9 @@ mark/Panel.js
 
 mark/Area.js
 - spline interpolation
+
+behavior/*
+- documentation, implementation, etc.
+
+physics/Simulation.js
+- use a constraint rather than `fixed` property to allow dragging?

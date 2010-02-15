@@ -71,6 +71,7 @@ pv.Simulation.prototype.step = function() {
 
   /* Compute position at +dt; compute velocity at +dt/2. */
   for (p = this.particles; p; p = p.next) {
+    if (p.fixed) continue;
     p.x += p.vx + p.fx * .5;
     p.y += p.vy + p.fy * .5;
     p.pvx = p.vx + p.fx * .5;
@@ -83,6 +84,7 @@ pv.Simulation.prototype.step = function() {
 
   /* Compute velocity at +dt. */
   for (p = this.particles; p; p = p.next) {
+    if (p.fixed) continue;
     p.vx = p.pvx + p.fx * .5;
     p.vy = p.pvy + p.fy * .5;
   }

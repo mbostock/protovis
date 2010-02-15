@@ -76,3 +76,14 @@ pv.Matrix.prototype.scale = function(k) {
   v.y = this.y * k;
   return v;
 };
+
+pv.Matrix.prototype.invert = function() {
+  var v = new pv.Matrix(), di = 1 / (this.a * this.d - this.b * this.c);
+  v.a = this.d * di;
+  v.b = this.b * -di;
+  v.c = this.c * -di;
+  v.d = this.a * di;
+  v.x = (this.y * this.c - this.x * this.d) * di;
+  v.y = (this.x * this.b - this.y * this.a) * di;
+  return v;
+};

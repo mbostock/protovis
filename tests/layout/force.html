@@ -40,8 +40,10 @@ vis.add(pv.Dot)
     .extend(graph.node)
     .left(transform.x)
     .top(transform.y)
-    .size(function(d) d.linkDegree / 2)
-    .title(function(d) d.nodeValue);
+    .size(function(d) d.linkDegree + 4)
+    .fillStyle(function(d) d.fixed ? "orange" : "white")
+    .title(function(d) d.nodeValue)
+    .event("mousedown", pv.Behavior.drag(transform));
 
 setInterval(function() {
     vis.render();

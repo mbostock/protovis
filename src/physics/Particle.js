@@ -15,6 +15,14 @@
  */
 
 /**
+ * If true, the particle's position and velocity are fixed and will not be
+ * modified during the simulation. (This allows interactive drag and drop.)
+ *
+ * @type boolean
+ * @field pv.Particle.prototype.fixed
+ */
+
+/**
  * The <i>x</i>-position of the particle.
  *
  * @type number

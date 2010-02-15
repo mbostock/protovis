@@ -1,9 +1,9 @@
-pv.Behavior.drag = function(f) {
-  var target, m1, index, scenes, args, region, original, bounds;
+pv.Behavior.drag = function(transform) {
+  var target, scene, index, p, m1, v1;
 
   /* Setup the scene stack. */
   function setup() {
-    var m = target, s = scenes, i = index;
+    var m = target, s = scene, i = index;
     do {
       m.index = i;
       m.scene = s;
@@ -12,50 +12,31 @@ pv.Behavior.drag = function(f) {
     } while (m = m.parent);
   }
 
-  function mousedown() {
+  function mousedown(d) {
     target = this;
     index = target.index;
-    scenes = target.scene;
+    scene = target.scene;
     m1 = this.mouse();
-    region = {
-      left: target.left(),
-      top: target.top(),
-      right: target.right(),
-      bottom: target.bottom(),
-      width: target.width(),
-      height: target.height()
-    };
-    original = {
-      left: region.left,
-      top: region.top,
-      right: region.right,
-      bottom: region.bottom
-    };
-    bounds = {
-      width: target.parent.width(),
-      height: target.parent.height()
-    };
-    args = Array.prototype.concat.apply([region], arguments);
-    f.apply(this, args);
+    if (transform) m1 = transform.invert(m1);
+    v1 = pv.vector(d.x, d.y);
+    p = d;
+    p.fixed = true;
   }
 
   function mousemove() {
     if (!target) return;
     setup();
-    var m2 = target.mouse(), dx = m2.x - m1.x, dy = m2.y - m1.y;
-    if ((original.left + dx) < 0) dx = -original.left;
-    else if ((original.right - dx) < 0) dx = original.right;
-    if ((original.top + dy) < 0) dy = -original.top;
-    else if ((original.bottom - dy) < 0) dy = original.bottom;
-    region.left = original.left + dx;
-    region.right = original.right - dx;
-    region.top = original.top + dy;
-    region.bottom = original.bottom - dy;
-    f.apply(target, args);
+    var m2 = target.mouse();
+    if (transform) m2 = transform.invert(m2);
+    p.x = v1.x - m1.x + m2.x;
+    p.y = v1.y - m1.y + m2.y;
   }
 
   function mouseup() {
+    if (!target) return;
     mousemove();
+    p.fixed = false;
+    p = null;
     target = null;
   }
 

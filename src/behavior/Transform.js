@@ -4,6 +4,7 @@ pv.Behavior.transform = function() {
       scene,
       index,
       m = pv.Matrix.identity(),
+      mi,
       m1,
       v1;
 
@@ -31,6 +32,7 @@ pv.Behavior.transform = function() {
     m = m.translate(-v.x, -v.y);
     m = m.scale((k < 0) ? (1000 / (1000 - k)) : ((1000 + k) / 1000));
     m = m.translate(v.x, v.y);
+    mi = null;
   };
 
   function mousemove() {
@@ -38,12 +40,20 @@ pv.Behavior.transform = function() {
     setup();
     var v2 = target.mouse();
     m = m1.translate(v2.x - v1.x, v2.y - v1.y);
+    mi = null;
   }
 
   function mouseup() {
     mousemove();
     target = null;
   }
+
+  transform.invert = function(n) {
+    if (!mi) mi = m.invert();
+    return pv.vector(
+        mi.a * n.x + mi.b * n.y + mi.x,
+        mi.c * n.x + mi.d * n.y + mi.y);
+  };
 
   transform.x = function(n) {
     return m.a * n.x + m.b * n.y + m.x;
