@@ -1,5 +1,5 @@
 pv.Behavior.drag = function(transform) {
-  var target, scene, index, p, m1, v1;
+  var target, scene, index, p, v1;
 
   /* Setup the scene stack. */
   function setup() {
@@ -16,9 +16,9 @@ pv.Behavior.drag = function(transform) {
     target = this;
     index = target.index;
     scene = target.scene;
-    m1 = this.mouse();
-    if (transform) m1 = transform.invert(m1);
-    v1 = pv.vector(d.x, d.y);
+    var m = this.mouse();
+    if (transform) m = transform.invert(m);
+    v1 = pv.vector(d.x, d.y).minus(m);
     p = d;
     p.fixed = true;
   }
@@ -26,10 +26,10 @@ pv.Behavior.drag = function(transform) {
   function mousemove() {
     if (!target) return;
     setup();
-    var m2 = target.mouse();
+    var m = target.mouse();
     if (transform) m2 = transform.invert(m2);
-    p.x = v1.x - m1.x + m2.x;
-    p.y = v1.y - m1.y + m2.y;
+    p.x = v1.x + m2.x;
+    p.y = v1.y + m2.y;
   }
 
   function mouseup() {

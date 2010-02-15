@@ -18,6 +18,7 @@ layout/Layot.js
 layout/Force.js
 - enforce panel bounds
 - allow user to drag and drop nodes
+- specify nodes and links using methods, rather than ctor arguments?
 
 layout/Icicle.js
 - orient property
