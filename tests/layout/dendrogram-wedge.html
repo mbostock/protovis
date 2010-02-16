@@ -16,7 +16,7 @@ var vis = new pv.Panel()
     .right(100);
 
 var tree = pv.Layout.dendrogram(flare)
-    .sort(function(a, b) a.nodeName - b.nodeName)
+    .sort(function(a, b) pv.naturalOrder(a.nodeName, b.nodeName))
     .orient("radial");
 
 vis.add(pv.Wedge)
