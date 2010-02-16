@@ -8,12 +8,8 @@
     <script type="text/javascript+protovis">
 
 var vis = new pv.Panel()
-    .width(600)
-    .height(2200)
-    .left(10)
-    .right(60)
-    .top(10)
-    .bottom(10);
+    .width(700)
+    .height(2220);
 
 var tree = pv.Layout.dendrogram(flare)
     .sort(function(a, b) pv.naturalOrder(a.nodeName, b.nodeName))
