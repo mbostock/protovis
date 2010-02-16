@@ -142,7 +142,6 @@ pv.Layout.icicle = function(tree) {
     return flatten(root, []).reverse();
   }
 
-  /* A dummy mark, like an anchor, which the caller extends. */
   var mark = new pv.Mark()
       .data(data)
       .left(function(n) { return n.left; })

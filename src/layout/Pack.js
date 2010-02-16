@@ -180,7 +180,6 @@ pv.Layout.pack = function(map) {
     return nodes;
   }
 
-  /* A dummy mark, like an anchor, which the caller extends. */
   var mark = new pv.Mark()
       .data(data)
       .size(function(n) { return n.r * n.r; })

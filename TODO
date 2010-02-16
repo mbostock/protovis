@@ -25,7 +25,10 @@ layout/Icicle.js
 - use pv.Dom.Node
 
 layout/Radial.js
-- support variable sizing of leaf nodes (size function, pass-through to leaf)
+- support customized inner/outer radius
+
+layout/Circle.js
+- support customized inner/outer radius
 
 layout/Treemap.js
 - use pv.Dom.Node

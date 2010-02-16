@@ -58,7 +58,6 @@ JS_PV_FILES = \
 	src/layout/Grid.js \
 	src/layout/Stack.js \
 	src/layout/Icicle.js \
-	src/layout/Sunburst.js \
 	src/layout/Treemap.js \
 	src/layout/Tree.js \
 	src/layout/Indent.js \

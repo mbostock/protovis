@@ -16,17 +16,14 @@ var vis = new pv.Panel()
     .right(100);
 
 var tree = pv.Layout.radial(flare)
-    .sort(function(a, b) pv.naturalOrder(a.nodeName, b.nodeName));
+    .sort(function(a, b) b.size - a.size)
+    .size(Number);
 
-vis.add(pv.Panel)
-    .data(tree.links)
-  .add(pv.Line)
-    .extend(tree.link);
-
-vis.add(pv.Dot)
-    .extend(tree.node)
-  .add(pv.Label)
-    .extend(tree.label);
+vis.add(pv.Wedge)
+    .extend(tree.wedge)
+  .anchor("center").add(pv.Label)
+    .visible(function(d) d.nodeName && (d.angle > .03))
+    .text(function(d) d.nodeName);
 
 vis.render();
 

@@ -80,7 +80,6 @@ pv.Layout.dendrogram = function(map) {
         .map(function(n) { return [n, n.parentNode]; });
   };
 
-  /* A dummy mark, like an anchor, which the caller extends. */
   layout.node = new pv.Mark()
       .data(data)
       .strokeStyle("#1f77b4")
@@ -88,7 +87,6 @@ pv.Layout.dendrogram = function(map) {
       .left(function(n) { return n.x; })
       .top(function(n) { return n.y; });
 
-  /* A dummy mark, like an anchor, which the caller extends. */
   layout.link = new pv.Mark().extend(layout.node)
       .data(pv.identity)
       .antialias(false)

@@ -39,7 +39,6 @@ pv.Layout.grid = function(arrays) {
   /** @private */
   function h() { return this.parent.height() / rows; }
 
-  /* A dummy mark, like an anchor, which the caller extends. */
   return new pv.Mark()
       .data(pv.blend(arrays))
       .left(function() { return w.call(this) * (this.index % cols); })

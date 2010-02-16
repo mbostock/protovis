@@ -7,7 +7,7 @@ pv.Layout.circle = function(map) {
   }
 
   /** @private */
-  function setTreeAngles(root) {
+  function divide(root) {
     var p, leaves = 0, parents = 0;
 
     /* Count the number of leaves and internal nodes. */
@@ -35,12 +35,16 @@ pv.Layout.circle = function(map) {
           }
           a = angle;
           angle += inc;
+          n.angle = inc;
+          n.startAngle = a;
         } else if (n.parentNode) {
           a = n.firstChild.midAngle;
           b = n.lastChild.midAngle - a;
           while (b > Math.PI) b -= 2 * Math.PI;
           while (b < -Math.PI) b += 2 * Math.PI;
           a += b / 2;
+          n.startAngle = n.firstChild.startAngle;
+          n.angle = n.lastChild.startAngle + n.lastChild.angle - n.startAngle;
         }
         n.midAngle = minAngle(n.midAngle, a);
       });
@@ -59,18 +63,23 @@ pv.Layout.circle = function(map) {
     nodes = pv.dom(map).nodes();
 
     var root = nodes[0];
+    root.startAngle = -Math.PI / 2;
+    root.midAngle = 0;
+    root.angle = 2 * Math.PI;
     if (sort) root.sort(sort);
-    setTreeAngles(root);
+    divide(root);
 
     /* Compute the radius and position. */
     var w = this.parent.width() / 2,
         h = this.parent.height() / 2,
-        r = Math.min(w, h),
-        j = depth(root);
-    root.visitAfter(function(n, i) {
-        var d = n.firstChild ? (r * i / j) : r;
-        n.x = w + d * Math.cos(n.midAngle);
-        n.y = h + d * Math.sin(n.midAngle);
+        j = depth(root) + .5,
+        r = Math.min(w, h) / j;
+    root.visitBefore(function(n, i) {
+        i = n.firstChild ? i : (j - .5);
+        n.x = w + r * i * Math.cos(n.midAngle);
+        n.y = h + r * i * Math.sin(n.midAngle);
+        n.innerRadius = n.parentNode ? n.parentNode.outerRadius : 0;
+        n.outerRadius = (i + .5) * r;
       });
 
     return nodes;
@@ -91,7 +100,6 @@ pv.Layout.circle = function(map) {
     return this;
   };
 
-  /* A dummy mark, like an anchor, which the caller extends. */
   layout.node = new pv.Mark()
       .data(data)
       .strokeStyle("#1f77b4")
@@ -99,13 +107,22 @@ pv.Layout.circle = function(map) {
       .left(function(n) { return n.x; })
       .top(function(n) { return n.y; });
 
-  /* A dummy mark, like an anchor, which the caller extends. */
   layout.link = new pv.Mark().extend(layout.node)
       .data(pv.identity)
       .fillStyle(null)
       .strokeStyle("#ccc");
 
-  /* A dummy mark, like an anchor, which the caller extends. */
+  layout.wedge = new pv.Mark()
+      .data(data)
+      .strokeStyle("white")
+      .fillStyle("#ccc")
+      .left(function(n) { return this.parent.width() / 2; })
+      .top(function(n) { return this.parent.height() / 2; })
+      .startAngle(function(n) { return n.startAngle; })
+      .angle(function(n) { return n.angle; })
+      .innerRadius(function(n) { return n.innerRadius; })
+      .outerRadius(function(n) { return n.outerRadius; });
+
   layout.label = new pv.Mark().extend(layout.node)
       .textAngle(function(n) {
           var a = n.midAngle;
