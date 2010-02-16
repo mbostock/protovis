@@ -69,10 +69,9 @@ pv.Layout.radial = function(map) {
   };
 
   /**
-   * Specifies the sizing function. By default, the sizing function is
-   * <tt>Number</tt>. The sizing function is invoked for leaf nodes. The
-   * aggregate sizes of internal nodes will be automatically computed by the
-   * layout.
+   * Specifies the sizing function. By default, the size of all leaf nodes is
+   * constant. The aggregate sizes of internal (non-leaf) nodes is computed
+   * automatically by the layout.
    *
    * <p>For example, if the tree data structure represents a file system, with
    * files as leaf nodes, and each file has a <tt>bytes</tt> attribute, you can
@@ -80,21 +79,21 @@ pv.Layout.radial = function(map) {
    *
    * <pre>.size(function(d) d.bytes)</pre>
    *
-   * This function will return <tt>undefined</tt> for internal nodes (since
-   * these do not have a <tt>bytes</tt> attribute), and a number for leaf nodes.
-   *
-   * <p>Note that the built-in <tt>Math.sqrt</tt> and <tt>Math.log</tt> methods
-   * can be used as sizing functions. These function similarly to
-   * <tt>Number</tt>, except perform a root and log scale, respectively.
+   * <p>Note that the built-in <tt>Number</tt>, <tt>Math.sqrt</tt> and
+   * <tt>Math.log</tt> methods can be used as sizing functions, provided the
+   * node values are numbers.
    *
    * @param {function} f the new sizing function.
    * @function
-   * @name pv.Layout.sunburst.prototype.size
-   * @returns {pv.Layout.sunburst} this.
+   * @name pv.Layout.radial.prototype.size
+   * @returns {pv.Layout.radial} this.
    */
   layout.size = function(f) {
-    sizeof = f;
-    return this;
+    if (arguments.length) {
+      sizeof = f;
+      return this;
+    }
+    return sizeof;
   };
 
   layout.node = new pv.Mark()
