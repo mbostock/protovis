@@ -44,7 +44,7 @@ pv.Layout.indent = function(map) {
   layout.node = new pv.Mark()
       .data(data)
       .strokeStyle("#1f77b4")
-      .fillStyle("white")
+      .fillStyle("#fff")
       .left(function(n) { return n.x; })
       .top(function(n) { return n.y; });
 

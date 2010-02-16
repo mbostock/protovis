@@ -19,15 +19,10 @@ var tree = pv.Layout.dendrogram(flare)
     .sort(function(a, b) a.nodeName - b.nodeName)
     .orient("left");
 
-vis.add(pv.Panel)
-    .data(tree.links)
-  .add(pv.Line)
-    .extend(tree.link);
-
-vis.add(pv.Dot)
-    .extend(tree.node)
-  .add(pv.Label)
-    .extend(tree.label);
+vis.add(pv.Bar)
+    .extend(tree.fill)
+  .anchor("center").add(pv.Label)
+    .text(function(n) n.parentNode ? n.nodeName : "flare");
 
 vis.render();
 

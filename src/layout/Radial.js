@@ -99,7 +99,7 @@ pv.Layout.radial = function(map) {
   layout.node = new pv.Mark()
       .data(data)
       .strokeStyle("#1f77b4")
-      .fillStyle("white")
+      .fillStyle("#fff")
       .left(function(n) { return n.x; })
       .top(function(n) { return n.y; });
 
@@ -110,7 +110,7 @@ pv.Layout.radial = function(map) {
 
   layout.wedge = new pv.Mark()
       .data(data)
-      .strokeStyle("white")
+      .strokeStyle("#fff")
       .fillStyle("#ccc")
       .left(function(n) { return this.parent.width() / 2; })
       .top(function(n) { return this.parent.height() / 2; })
