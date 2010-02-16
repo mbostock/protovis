@@ -71,3 +71,7 @@ behavior/*
 
 physics/Simulation.js
 - use a constraint rather than `fixed` property to allow dragging?
+
+text/CsvFormat.js
+- return an object with a .format method, or the format function?
+- should other Formats return a function with a self-reference .format method?

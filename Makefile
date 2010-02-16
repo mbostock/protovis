@@ -8,6 +8,7 @@ JS_PV_FILES = \
 	src/text/PadFormat.js \
 	src/text/DateFormat.js \
 	src/text/TimeFormat.js \
+	src/text/NumberFormat.js \
 	src/text/CsvFormat.js \
 	src/data/Arrays.js \
 	src/data/Numbers.js \

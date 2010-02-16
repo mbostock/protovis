@@ -162,11 +162,8 @@ pv.Format.date = function(pattern) {
     var year = 1970, month = 0, date = 1, hour = 0, minute = 0, second = 0;
     var fields = [function() {}];
 
-    /* Escape any regular expression characters in the format pattern. */
-    var re = pattern.replace(/[\\\^\$\*\+\?\[\]\(\)\.\{\}]/g, "\\$&");
-
     /* Register callbacks for each field in the format pattern. */
-    re = re.replace(/%[a-zA-Z0-9]/g, function(s) {
+    var re = re_quote(pattern).replace(/%[a-zA-Z0-9]/g, function(s) {
         switch (s) {
           // TODO %a: day of week, either abbreviated or full name
           // TODO %A: same as %a

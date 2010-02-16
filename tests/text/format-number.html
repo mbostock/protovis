@@ -1,0 +1,67 @@
+<html>
+  <head>
+    <title>Number Format</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <pre id="pre"></pre>
+    <script type="text/javascript+protovis">
+
+// 1,235
+pre.innerHTML += pv.Format.number()
+    (1234.56) + "\n";
+
+// 12,345,678.90
+pre.innerHTML += pv.Format.number()
+    .fractionDigits(2)
+    (12345678.90) + "\n";
+
+// 12,345,678.9
+pre.innerHTML += pv.Format.number()
+    .fractionDigits(0, Infinity)
+    (12345678.90) + "\n";
+
+// 12,345,6789.01
+pre.innerHTML += pv.Format.number()
+    .fractionDigits(0, Infinity)
+    (123456789.01) + "\n";
+
+// 12 345 678,90
+pre.innerHTML += pv.Format.number()
+    .group(" ")
+    .decimal(",")
+    .fractionDigits(2)
+    (12345678.90) + "\n";
+
+// 99.99
+pre.innerHTML += pv.Format.number()
+    .integerDigits(2)
+    .fractionDigits(2)
+    (999.9949) + "\n";
+
+// 04,999.90
+pre.innerHTML += pv.Format.number()
+    .integerDigits(5)
+    .integerPad("0")
+    .fractionDigits(2)
+    (4999.9) + "\n";
+
+//  4,999.90
+pre.innerHTML += pv.Format.number()
+    .integerDigits(5)
+    .integerPad(" ")
+    .fractionDigits(2)
+    (4999.9) + "\n";
+
+// 100
+pre.innerHTML += pv.Format.number()
+    .integerDigits(2)
+    .parse(999.9949) + "\n";
+
+// 1000
+pre.innerHTML += pv.Format.number()
+    .parse(999.9949) + "\n";
+
+    </script>
+  </body>
+</html>
