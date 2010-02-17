@@ -11,19 +11,14 @@ var vis = new pv.Panel()
     .width(1200)
     .height(600);
 
-var icicle = pv.Layout.icicle(flare)
-    .root("flare")
-//     .orient("left");
+var tree = pv.Layout.partition(flare)
+    .sort(function(a, b) pv.naturalOrder(a.nodeName, b.nodeName));
 
 vis.add(pv.Bar)
-    .extend(icicle)
-    .fillStyle(pv.Colors.category19()
-        .by(function(n) n.children ? n.keys : n.keys.slice(0, -1)))
-    .strokeStyle("white")
+    .extend(tree.fill)
   .anchor("center").add(pv.Label)
-     .visible(function(n) n.width >= 10)
-     .textAngle(-Math.PI / 2)
-     .text(function(n) n.keys[n.keys.length - 1]);
+    .textAngle(-Math.PI / 2)
+    .text(function(n) n.parentNode ? n.nodeName : "flare");
 
 vis.render();
 

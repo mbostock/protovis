@@ -57,15 +57,13 @@ JS_PV_FILES = \
 	src/layout/Layout.js \
 	src/layout/Grid.js \
 	src/layout/Stack.js \
-	src/layout/Icicle.js \
 	src/layout/Treemap.js \
 	src/layout/Tree.js \
 	src/layout/Indent.js \
-	src/layout/Radial.js \
-	src/layout/Circle.js \
 	src/layout/Pack.js \
 	src/layout/Force.js \
 	src/layout/Dendrogram.js \
+	src/layout/Partition.js \
 	src/behavior/Behavior.js \
 	src/behavior/Drag.js \
 	src/behavior/Select.js \

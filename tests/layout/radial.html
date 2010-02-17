@@ -15,8 +15,9 @@ var vis = new pv.Panel()
     .bottom(100)
     .right(100);
 
-var tree = pv.Layout.radial(flare)
-    .sort(function(a, b) pv.naturalOrder(a.nodeName, b.nodeName));
+var tree = pv.Layout.partition(flare)
+    .sort(function(a, b) pv.naturalOrder(a.nodeName, b.nodeName))
+    .orient("radial");
 
 vis.add(pv.Panel)
     .data(tree.links)

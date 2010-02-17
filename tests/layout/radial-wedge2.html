@@ -15,15 +15,17 @@ var vis = new pv.Panel()
     .bottom(100)
     .right(100);
 
-var tree = pv.Layout.radial(flare)
+var tree = pv.Layout.partition(flare)
+    .size(Number)
     .sort(function(a, b) b.size - a.size)
-    .size(Number);
+    .orient("radial");
 
 vis.add(pv.Wedge)
-    .extend(tree.wedge)
+    .extend(tree.fill)
+    .title(function(d) d.nodeName || "flare")
   .anchor("center").add(pv.Label)
-    .visible(function(d) d.nodeName && (d.angle > .03))
-    .text(function(d) d.nodeName);
+    .visible(function(d) d.size > 8000)
+    .text(function(d) d.nodeName || "flare");
 
 vis.render();
 

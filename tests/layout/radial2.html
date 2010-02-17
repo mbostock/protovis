@@ -13,7 +13,8 @@ var vis = new pv.Panel()
     .left(10)
     .right(10);
 
-var tree = pv.Layout.radial(diamond(3, 4, 4));
+var tree = pv.Layout.partition(diamond(3, 4, 4))
+    .orient("radial");
 
 vis.add(pv.Dot)
     .extend(tree.node)
