@@ -171,7 +171,7 @@ pv.Layout.partition = function(map) {
   }
 
   /** @private Scales the specified depth for a space-filling layout. */
-  function scale(d) {
+  function scale(d, ds) {
     return (d + ds) / (1 + ds);
   }
 
@@ -259,8 +259,8 @@ pv.Layout.partition = function(map) {
       .fillStyle("#ccc")
       .left(function(n) {
           switch (orient) {
-            case "left": return scale(n.minDepth) * w;
-            case "right": return (1 - scale(n.maxDepth)) * w;
+            case "left": return scale(n.minDepth, ds) * w;
+            case "right": return (1 - scale(n.maxDepth, ds)) * w;
             case "top": return n.minBreadth * w;
             case "bottom": return (1 - n.maxBreadth) * w;
             case "radial": return w / 2;
@@ -270,8 +270,8 @@ pv.Layout.partition = function(map) {
           switch (orient) {
             case "left": return n.minBreadth * h;
             case "right": return (1 - n.maxBreadth) * h;
-            case "top": return scale(n.minDepth) * h;
-            case "bottom": return (1 - scale(n.maxDepth)) * h;
+            case "top": return scale(n.minDepth, ds) * h;
+            case "bottom": return (1 - scale(n.maxDepth, ds)) * h;
             case "radial": return h / 2;
           }
         })
@@ -291,8 +291,8 @@ pv.Layout.partition = function(map) {
             case "bottom": return (n.maxDepth - n.minDepth) / (1 + ds) * h;
           }
         })
-      .innerRadius(function(n) { return scale(n.minDepth) * r; })
-      .outerRadius(function(n) { return scale(n.maxDepth) * r; })
+      .innerRadius(function(n) { return Math.max(0, scale(n.minDepth, ds / 2)) * r; })
+      .outerRadius(function(n) { return scale(n.maxDepth, ds / 2) * r; })
       .startAngle(function(n) { return (n.minBreadth - .25) * 2 * Math.PI; })
       .endAngle(function(n) { return (n.maxBreadth - .25) * 2 * Math.PI; });
 

@@ -21,14 +21,7 @@ layout/Force.js
 - specify nodes and links using methods, rather than ctor arguments?
 - behaves differently from pv.dom, kind of confusing
 
-layout/Icicle.js
-- orient property
-- use pv.Dom.Node
-
-layout/Radial.js
-- support customized inner/outer radius
-
-layout/Circle.js
+layout/{Partition,Cluster}.js
 - support customized inner/outer radius
 
 layout/Treemap.js
