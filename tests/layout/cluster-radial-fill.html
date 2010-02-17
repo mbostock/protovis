@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Flare Circle</title>
+    <title>Flare Dendrogram</title>
     <script type="text/javascript" src="../../protovis-d3.2.js"></script>
     <script type="text/javascript" src="../flare.js"></script>
   </head>
@@ -15,20 +15,15 @@ var vis = new pv.Panel()
     .bottom(100)
     .right(100);
 
-var tree = pv.Layout.dendrogram(flare)
+var tree = pv.Layout.cluster(flare)
     .sort(function(a, b) pv.naturalOrder(a.nodeName, b.nodeName))
-    .groupLeaves(true)
     .orient("radial");
 
-vis.add(pv.Panel)
-    .data(tree.links)
-  .add(pv.Line)
-    .extend(tree.link);
-
-vis.add(pv.Dot)
-    .extend(tree.node)
-  .add(pv.Label)
-    .extend(tree.label);
+vis.add(pv.Wedge)
+    .extend(tree.fill)
+  .anchor("center").add(pv.Label)
+    .visible(function(n) n.nodeName)
+    .text(function(n) n.nodeName);
 
 vis.render();
 

@@ -62,7 +62,7 @@ JS_PV_FILES = \
 	src/layout/Indent.js \
 	src/layout/Pack.js \
 	src/layout/Force.js \
-	src/layout/Dendrogram.js \
+	src/layout/Cluster.js \
 	src/layout/Partition.js \
 	src/behavior/Behavior.js \
 	src/behavior/Drag.js \

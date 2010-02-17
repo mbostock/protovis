@@ -1,4 +1,4 @@
-pv.Layout.dendrogram = function(map) {
+pv.Layout.cluster = function(map) {
   var nodes, // cached pv.dom(map).nodes()
       sort, // optional sort function
       orient = "top", // default orientation
@@ -95,8 +95,8 @@ pv.Layout.dendrogram = function(map) {
    *
    * @param {string} v the new orientation.
    * @function
-   * @name pv.Layout.dendrogram.prototype.orient
-   * @returns {pv.Layout.dendrogram} this, or the current orientation.
+   * @name pv.Layout.cluster.prototype.orient
+   * @returns {pv.Layout.cluster} this, or the current orientation.
    */
   layout.orient = function(v) {
     if (arguments.length) {
@@ -116,8 +116,8 @@ pv.Layout.dendrogram = function(map) {
    *
    * @param {function} f the new sort function.
    * @function
-   * @name pv.Layout.dendrogram.prototype.sort
-   * @returns {pv.Layout.dendrogram} this, or the current sort function.
+   * @name pv.Layout.cluster.prototype.sort
+   * @returns {pv.Layout.cluster} this, or the current sort function.
    * @see pv.naturalOrder
    * @see pv.Dom.Node.prototype.sort
    */
@@ -137,8 +137,8 @@ pv.Layout.dendrogram = function(map) {
    *
    * @param {number} x the new group spacing.
    * @function
-   * @name pv.Layout.dendrogram.prototype.groupLeaves
-   * @returns {pv.Layout.dendrogram} this, or the current group spacing.
+   * @name pv.Layout.cluster.prototype.groupLeaves
+   * @returns {pv.Layout.cluster} this, or the current group spacing.
    */
   layout.groupLeaves = function(x) {
     if (arguments.length) {
@@ -152,7 +152,7 @@ pv.Layout.dendrogram = function(map) {
    * Returns the nodes associated with this layout.
    *
    * @function
-   * @name pv.Layout.dendrogram.prototype.nodes
+   * @name pv.Layout.cluster.prototype.nodes
    * @returns {array}
    */
   layout.nodes = data;
@@ -163,7 +163,7 @@ pv.Layout.dendrogram = function(map) {
    * element is the parent node.
    *
    * @function
-   * @name pv.Layout.dendrogram.prototype.links
+   * @name pv.Layout.cluster.prototype.links
    * @returns {array}
    */
   layout.links = function() {
@@ -192,7 +192,7 @@ pv.Layout.dendrogram = function(map) {
    * in conjunction with the link prototype.
    *
    * @type pv.Mark
-   * @name pv.Layout.dendrogram.prototype.node
+   * @name pv.Layout.cluster.prototype.node
    */
   layout.node = new pv.Mark()
       .data(data)
@@ -223,7 +223,7 @@ pv.Layout.dendrogram = function(map) {
    * conjunction with the node prototype.
    *
    * @type pv.Mark
-   * @name pv.Layout.dendrogram.prototype.link
+   * @name pv.Layout.cluster.prototype.link
    */
   layout.link = new pv.Mark()
       .extend(layout.node)
@@ -248,7 +248,7 @@ pv.Layout.dendrogram = function(map) {
    * angle.
    *
    * @type pv.Mark
-   * @name pv.Layout.dendrogram.prototype.label
+   * @name pv.Layout.cluster.prototype.label
    */
   layout.label = new pv.Mark()
       .extend(layout.node)
@@ -272,7 +272,7 @@ pv.Layout.dendrogram = function(map) {
    * orientation), a Wedge mark is used instead.
    *
    * @type pv.Mark
-   * @name pv.Layout.dendrogram.prototype.bar
+   * @name pv.Layout.cluster.prototype.bar
    */
   layout.fill = new pv.Mark()
       .data(data)

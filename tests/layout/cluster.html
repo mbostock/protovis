@@ -8,17 +8,26 @@
     <script type="text/javascript+protovis">
 
 var vis = new pv.Panel()
-    .width(700)
-    .height(2220);
+    .width(500)
+    .height(2200)
+    .left(40)
+    .right(160)
+    .top(10)
+    .bottom(10);
 
-var tree = pv.Layout.dendrogram(flare)
+var tree = pv.Layout.cluster(flare)
     .sort(function(a, b) pv.naturalOrder(a.nodeName, b.nodeName))
     .orient("left");
 
-vis.add(pv.Bar)
-    .extend(tree.fill)
-  .anchor("center").add(pv.Label)
-    .text(function(n) n.parentNode ? n.nodeName : "flare");
+vis.add(pv.Panel)
+    .data(tree.links)
+  .add(pv.Line)
+    .extend(tree.link);
+
+vis.add(pv.Dot)
+    .extend(tree.node)
+  .add(pv.Label)
+    .extend(tree.label);
 
 vis.render();
 

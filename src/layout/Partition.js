@@ -39,7 +39,8 @@ pv.Layout.partition = function(map) {
 
     /* Compute the unit breadth and depth of each node. */
     root.minBreadth = 0;
-    root.maxBreadth = root.breadth = 1;
+    root.breadth = .5;
+    root.maxBreadth = 1;
     root.visitBefore(function(n) {
         var b = n.minBreadth, s = n.maxBreadth - b;
         for (var c = n.firstChild; c; c = c.nextSibling) {

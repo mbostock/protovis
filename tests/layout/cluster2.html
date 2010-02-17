@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Diamond Circle</title>
+    <title>Diamond Dendrogram</title>
     <script type="text/javascript" src="../../protovis-d3.2.js"></script>
     <script type="text/javascript" src="../diamond.js"></script>
   </head>
@@ -9,14 +9,18 @@
 
 var vis = new pv.Panel()
     .width(800)
-    .height(800)
-    .top(10)
-    .bottom(10)
-    .left(10)
-    .right(10);
+    .height(300)
+    .top(12)
+    .bottom(12)
+    .left(12)
+    .right(12);
 
-var tree = pv.Layout.dendrogram(diamond(3, 4, 4))
-    .orient("radial");
+var tree = pv.Layout.cluster(diamond(3, 4, 4));
+
+vis.add(pv.Panel)
+    .data(tree.links)
+  .add(pv.Line)
+    .extend(tree.link);
 
 vis.add(pv.Dot)
     .extend(tree.node)
@@ -26,13 +30,6 @@ vis.add(pv.Dot)
     .fillStyle("#ccc")
     .event("mouseover", function() this.active(this.index))
     .event("mouseout", function() this.active(-1));
-
-vis.add(pv.Panel)
-    .data(tree.links)
-  .add(pv.Line)
-    .extend(tree.link)
-    .lineWidth(1)
-    .strokeStyle("#999");
 
 vis.render();
 
