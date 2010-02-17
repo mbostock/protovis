@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Flare Dendrogram</title>
+    <title>Flare Icicle</title>
     <script type="text/javascript" src="../../protovis-d3.2.js"></script>
     <script type="text/javascript" src="../flare.js"></script>
   </head>
@@ -8,22 +8,19 @@
     <script type="text/javascript+protovis">
 
 var vis = new pv.Panel()
-    .width(800)
-    .height(800)
-    .top(100)
-    .left(100)
-    .bottom(100)
-    .right(100);
+    .width(600)
+    .height(1200);
 
-var tree = pv.Layout.dendrogram(flare)
-    .sort(function(a, b) pv.naturalOrder(a.nodeName, b.nodeName))
-    .orient("radial");
+var tree = pv.Layout.partition(flare)
+    .size(Number)
+    .sort(function(a, b) b.size - a.size)
+    .orient("left");
 
-vis.add(pv.Wedge)
+vis.add(pv.Bar)
     .extend(tree.fill)
   .anchor("center").add(pv.Label)
-    .visible(function(n) n.nodeName)
-    .text(function(n) n.nodeName);
+    .visible(function(n) this.anchorTarget().height() > 10)
+    .text(function(n) n.parentNode ? n.nodeName : "flare");
 
 vis.render();
 

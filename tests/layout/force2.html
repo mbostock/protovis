@@ -1,0 +1,58 @@
+<html>
+  <head>
+    <title>Diamond Force</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../diamond.js"></script>
+    <style type="text/css">
+
+body {
+  margin: 0;
+}
+
+    </style>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vertices = pv.dom(diamond(3, 4, 4)).nodes(),
+    edges = vertices.slice(1).map(function(n) {
+        return {source: n.nodeName, target: n.parentNode.nodeName || 0};
+      });
+
+var graph = pv.Layout.force(vertices, edges),
+    transform = pv.Behavior.transform(),
+    w = window.innerWidth,
+    h = window.innerHeight;
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .fillStyle("white")
+    .strokeStyle("#ccc")
+    .event("mousedown", transform.pan)
+    .event("mousewheel", transform.zoom);
+
+/* Links. */
+vis.add(pv.Panel)
+    .data(graph.links)
+  .add(pv.Line)
+    .extend(graph.link)
+    .left(transform.x)
+    .top(transform.y);
+
+/* Nodes. */
+vis.add(pv.Dot)
+    .extend(graph.node)
+    .left(transform.x)
+    .top(transform.y)
+    .fillStyle(function(d) d.fixed ? "orange" : "white")
+    .event("mousedown", pv.Behavior.drag(transform));
+
+setInterval(function() {
+    vis.render();
+    graph.step();
+  }, 50);
+
+    </script>
+  </body>
+</html>

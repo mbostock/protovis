@@ -1,0 +1,38 @@
+<html>
+  <head>
+    <title>Flare Dendrogram</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../flare.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(200)
+    .height(2200)
+    .left(40)
+    .right(160)
+    .top(10)
+    .bottom(10);
+
+var tree = pv.Layout.cluster(flare)
+    .sort(function(a, b) pv.naturalOrder(a.nodeName, b.nodeName))
+    .groupLeaves(true)
+    .orient("left");
+
+vis.add(pv.Panel)
+    .data(tree.links)
+  .add(pv.Line)
+    .extend(tree.link)
+    .lineWidth(1);
+
+vis.add(pv.Dot)
+    .extend(tree.node)
+  .add(pv.Label)
+    .extend(tree.label);
+
+vis.render();
+
+    </script>
+  </body>
+</html>

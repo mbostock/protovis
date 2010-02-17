@@ -1,0 +1,60 @@
+<html>
+  <head>
+    <title>Flare Force</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../flare.js"></script>
+    <style type="text/css">
+
+body {
+  margin: 0;
+}
+
+    </style>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vertices = pv.dom(flare).nodes();
+vertices.forEach(function(n, i) n.id = i);
+var edges = vertices.slice(1).map(function(n) ({source: n.id, target: n.parentNode.id}));
+
+var graph = pv.Layout.force(vertices, edges),
+    transform = pv.Behavior.transform(),
+    w = window.innerWidth,
+    h = window.innerHeight;
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .fillStyle("white")
+    .strokeStyle("#ccc")
+    .event("mousedown", transform.pan)
+    .event("mousewheel", transform.zoom);
+
+/* Links. */
+vis.add(pv.Panel)
+    .data(graph.links)
+  .add(pv.Line)
+    .extend(graph.link)
+    .left(transform.x)
+    .top(transform.y);
+
+/* Nodes. */
+vis.add(pv.Dot)
+    .extend(graph.node)
+    .left(transform.x)
+    .top(transform.y)
+    .title(function(d) d.nodeValue.nodeName)
+    .size(function(d) (d.nodeValue.nodeValue / 100) || 10)
+    .fillStyle(function(d) d.fixed ? "orange"
+        : (d.nodeValue.nodeValue ? "white" : "steelblue"))
+    .event("mousedown", pv.Behavior.drag(transform));
+
+setInterval(function() {
+    vis.render();
+    graph.step();
+  }, 50);
+
+    </script>
+  </body>
+</html>

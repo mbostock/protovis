@@ -14,7 +14,7 @@ layout/Tree.js
 - should support "radial" orientation
 
 layout/{Cluster,Partition}.js
-- should allow custom inner/outer radius for radial
+- support customized inner/outer radius
 - document/standardize/hide (e.g., n.size) extra attributes on nodes
 - allow interactive expanding / collapsing of nodes
 - other algorithms: ballon, dig-cola, attribute graph, matrix, arc diagram?
@@ -22,6 +22,7 @@ layout/{Cluster,Partition}.js
 layout/Force.js
 - enforce panel bounds? or unnecessary given pan and zoom?
 - specify nodes and links using methods, rather than ctor arguments?
+- behaves differently from pv.dom, kind of confusing
 
 layout/Treemap.js
 - use pv.Dom.Node

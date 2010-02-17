@@ -1,22 +1,26 @@
-pv.Layout.dendrogram = function(map) {
+pv.Layout.partition = function(map) {
   var nodes, // cached pv.dom(map).nodes()
       sort, // optional sort function
+      sizeof = function(n) { return 1; }, // default size function
       orient = "top", // default orientation
       w, // cached parent panel width
       h, // cached parent panel height
       r, // cached Math.min(w, h) / 2
       ds; // cached depth step (inverse depth of tree)
 
-  /** @private Compute the maximum depth of descendants for each node. */
-  function depth(n) {
-    var d = 0;
-    for (var c = n.firstChild; c; c = c.nextSibling) {
-      d = Math.max(d, 1 + depth(c));
-    }
-    return n.depth = d;
+  /** @private */
+  function size(n) {
+    return n.size = n.firstChild
+        ? pv.sum(n.childNodes, size)
+        : sizeof(n.nodeValue);
   }
 
-  /** @private The layout is computed as a side-effect of the data property. */
+  /** @private Compute the maximum depth of descendants for each node. */
+  function depth(n) {
+    return n.firstChild ? (1 + pv.max(n.childNodes, depth)) : 0;
+  }
+
+  /** @private */
   function data() {
     /* Cache the parent panel dimensions to avoid repeated lookup. */
     w = this.parent.width();
@@ -29,38 +33,26 @@ pv.Layout.dendrogram = function(map) {
 
     /* Sort the tree and compute the initial depth of each node. */
     var root = nodes[0];
+    size(root);
     if (sort) root.sort(sort);
     ds = 1 / depth(root);
 
-    /* Count the number of leaf nodes. */
-    var leafCount = 0;
-    root.visitAfter(function(n) { if (!n.firstChild) leafCount++; });
-
     /* Compute the unit breadth and depth of each node. */
-    var leafIndex = 0, step = 1 / leafCount;
-    root.visitAfter(function(n) {
-        var d = n.depth / root.depth;
-        if (n.firstChild) {
-          var b = 0;
-          for (var c = n.firstChild; c; c = c.nextSibling) b += c.breadth;
-          b /= n.childNodes.length;
-        } else {
-          b = step * (.5 + leafIndex++);
-        }
-        n.breadth = b;
-        n.depth = 1 - d;
-      });
-
-    /* Compute breadth and depth ranges for space-filling layouts. */
-    root.visitAfter(function(n) {
-        n.minBreadth = n.firstChild ? n.firstChild.minBreadth : (n.breadth - step / 2);
-        n.maxBreadth = n.firstChild ? n.lastChild.maxBreadth : (n.breadth + step / 2);
-      });
+    root.minBreadth = 0;
+    root.breadth = .5;
+    root.maxBreadth = 1;
     root.visitBefore(function(n) {
-        n.minDepth = n.parentNode ? n.parentNode.maxDepth : 0;
-        n.maxDepth = n.parentNode ? (n.depth + root.depth) : (n.minDepth + 2 * root.depth);
+        var b = n.minBreadth, s = n.maxBreadth - b;
+        for (var c = n.firstChild; c; c = c.nextSibling) {
+          c.minBreadth = b;
+          c.maxBreadth = b += (c.size / n.size) * s;
+          c.breadth = (b + c.minBreadth) / 2;
+        }
       });
-    root.minDepth = -ds;
+    root.visitAfter(function(n, i) {
+        n.minDepth = (i - 1) * ds;
+        n.maxDepth = n.depth = i * ds;
+      });
 
     return nodes;
   }
@@ -82,8 +74,8 @@ pv.Layout.dendrogram = function(map) {
    *
    * @param {string} v the new orientation.
    * @function
-   * @name pv.Layout.dendrogram.prototype.orient
-   * @returns {pv.Layout.dendrogram} this, or the current orientation.
+   * @name pv.Layout.partition.prototype.orient
+   * @returns {pv.Layout.partition} this, or the current orientation.
    */
   layout.orient = function(v) {
     if (arguments.length) {
@@ -103,8 +95,8 @@ pv.Layout.dendrogram = function(map) {
    *
    * @param {funtion} f the new sort function.
    * @function
-   * @name pv.Layout.dendrogram.prototype.sort
-   * @returns {pv.Layout.dendrogram} this, or the current sort function.
+   * @name pv.Layout.partition.prototype.sort
+   * @returns {pv.Layout.partition} this, or the current sort function.
    * @see pv.naturalOrder
    * @see pv.Dom.Node.prototype.sort
    */
@@ -120,7 +112,7 @@ pv.Layout.dendrogram = function(map) {
    * Returns the nodes associated with this layout.
    *
    * @function
-   * @name pv.Layout.dendrogram.prototype.nodes
+   * @name pv.Layout.partition.prototype.nodes
    * @returns {array}
    */
   layout.nodes = data;
@@ -131,13 +123,41 @@ pv.Layout.dendrogram = function(map) {
    * element is the parent node.
    *
    * @function
-   * @name pv.Layout.dendrogram.prototype.links
+   * @name pv.Layout.partition.prototype.links
    * @returns {array}
    */
   layout.links = function() {
     return data.call(this)
         .filter(function(n) { return n.parentNode; })
         .map(function(n) { return [n, n.parentNode]; });
+  };
+
+  /**
+   * Sets or gets the sizing function. By default, the size of all leaf nodes is
+   * constant. The aggregate sizes of internal (non-leaf) nodes is computed
+   * automatically by the layout.
+   *
+   * <p>For example, if the tree data structure represents a file system, with
+   * files as leaf nodes, and each file has a <tt>bytes</tt> attribute, you can
+   * specify a size function as:
+   *
+   * <pre>.size(function(d) d.bytes)</pre>
+   *
+   * <p>Note that the built-in <tt>Number</tt>, <tt>Math.sqrt</tt> and
+   * <tt>Math.log</tt> methods can be used as sizing functions, provided the
+   * node values are numbers.
+   *
+   * @param {function} f the new sizing function.
+   * @function
+   * @name pv.Layout.partition.prototype.size
+   * @returns {pv.Layout.partition} this.
+   */
+  layout.size = function(f) {
+    if (arguments.length) {
+      sizeof = f;
+      return this;
+    }
+    return sizeof;
   };
 
   /** @private Returns the radius of the given node. */
@@ -151,7 +171,7 @@ pv.Layout.dendrogram = function(map) {
   }
 
   /** @private Scales the specified depth for a space-filling layout. */
-  function scale(d) {
+  function scale(d, ds) {
     return (d + ds) / (1 + ds);
   }
 
@@ -160,12 +180,12 @@ pv.Layout.dendrogram = function(map) {
    * in conjunction with the link prototype.
    *
    * @type pv.Mark
-   * @name pv.Layout.dendrogram.prototype.node
+   * @name pv.Layout.partition.prototype.node
    */
   layout.node = new pv.Mark()
       .data(data)
       .strokeStyle("#1f77b4")
-      .fillStyle("white")
+      .fillStyle("#fff")
       .left(function(n) {
           switch (orient) {
             case "left": return n.depth * w;
@@ -191,20 +211,11 @@ pv.Layout.dendrogram = function(map) {
    * conjunction with the node prototype.
    *
    * @type pv.Mark
-   * @name pv.Layout.dendrogram.prototype.link
+   * @name pv.Layout.partition.prototype.link
    */
   layout.link = new pv.Mark()
       .extend(layout.node)
       .data(pv.identity)
-      .antialias(function() { return orient == "radial"; })
-      .interpolate(function() {
-          switch (orient) {
-            case "top":
-            case "bottom": return "step-before";
-            case "left":
-            case "right": return "step-after";
-          }
-        })
       .strokeStyle("#ccc")
       .fillStyle(null);
 
@@ -216,7 +227,7 @@ pv.Layout.dendrogram = function(map) {
    * angle.
    *
    * @type pv.Mark
-   * @name pv.Layout.dendrogram.prototype.label
+   * @name pv.Layout.partition.prototype.label
    */
   layout.label = new pv.Mark()
       .extend(layout.node)
@@ -234,13 +245,13 @@ pv.Layout.dendrogram = function(map) {
         });
 
   /**
-   * The fill prototype, used for a space-filling dendrogram. In Cartesian
+   * The fill prototype, used for a space-filling partition. In Cartesian
    * coordinates (i.e., if the orientation is not "radial"), a Bar mark is
    * typically used to fill the space; in polar coordinates ("radial"
    * orientation), a Wedge mark is used instead.
    *
    * @type pv.Mark
-   * @name pv.Layout.dendrogram.prototype.bar
+   * @name pv.Layout.partition.prototype.bar
    */
   layout.fill = new pv.Mark()
       .data(data)
@@ -248,8 +259,8 @@ pv.Layout.dendrogram = function(map) {
       .fillStyle("#ccc")
       .left(function(n) {
           switch (orient) {
-            case "left": return scale(n.minDepth) * w;
-            case "right": return (1 - scale(n.maxDepth)) * w;
+            case "left": return scale(n.minDepth, ds) * w;
+            case "right": return (1 - scale(n.maxDepth, ds)) * w;
             case "top": return n.minBreadth * w;
             case "bottom": return (1 - n.maxBreadth) * w;
             case "radial": return w / 2;
@@ -259,8 +270,8 @@ pv.Layout.dendrogram = function(map) {
           switch (orient) {
             case "left": return n.minBreadth * h;
             case "right": return (1 - n.maxBreadth) * h;
-            case "top": return scale(n.minDepth) * h;
-            case "bottom": return (1 - scale(n.maxDepth)) * h;
+            case "top": return scale(n.minDepth, ds) * h;
+            case "bottom": return (1 - scale(n.maxDepth, ds)) * h;
             case "radial": return h / 2;
           }
         })
@@ -280,8 +291,8 @@ pv.Layout.dendrogram = function(map) {
             case "bottom": return (n.maxDepth - n.minDepth) / (1 + ds) * h;
           }
         })
-      .innerRadius(function(n) { return scale(n.minDepth) * r; })
-      .outerRadius(function(n) { return scale(n.maxDepth) * r; })
+      .innerRadius(function(n) { return Math.max(0, scale(n.minDepth, ds / 2)) * r; })
+      .outerRadius(function(n) { return scale(n.maxDepth, ds / 2) * r; })
       .startAngle(function(n) { return (n.minBreadth - .25) * 2 * Math.PI; })
       .endAngle(function(n) { return (n.maxBreadth - .25) * 2 * Math.PI; });
 
