@@ -8,7 +8,7 @@
     <script type="text/javascript+protovis">
 
 var vis = new pv.Panel()
-    .width(500)
+    .width(200)
     .height(2200)
     .left(40)
     .right(160)
@@ -17,12 +17,14 @@ var vis = new pv.Panel()
 
 var tree = pv.Layout.cluster(flare)
     .sort(function(a, b) pv.naturalOrder(a.nodeName, b.nodeName))
+    .groupLeaves(true)
     .orient("left");
 
 vis.add(pv.Panel)
     .data(tree.links)
   .add(pv.Line)
-    .extend(tree.link);
+    .extend(tree.link)
+    .lineWidth(1);
 
 vis.add(pv.Dot)
     .extend(tree.node)
