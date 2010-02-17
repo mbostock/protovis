@@ -19,6 +19,7 @@ layout/Layot.js
 layout/Force.js
 - enforce panel bounds? or unnecessary given pan and zoom?
 - specify nodes and links using methods, rather than ctor arguments?
+- behaves differently from pv.dom, kind of confusing
 
 layout/Icicle.js
 - orient property
