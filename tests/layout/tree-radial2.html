@@ -8,13 +8,12 @@
     <script type="text/javascript+protovis">
 
 var vis = new pv.Panel()
-    .width(400)
-    .height(400)
-    .top(20);
+    .width(500)
+    .height(500);
 
 var tree = pv.Layout.tree(diamond(3, 4, 4))
     .offset(30, 25)
-    .orient("top");
+    .orient("radial");
 
 vis.add(pv.Dot)
     .extend(tree.node)
