@@ -19,7 +19,7 @@ layout/Layot.js
 - other algorithms: ballon, dig-cola, attribute graph, matrix, arc diagram?
 
 layout/Tree.js
-- should support "radial" orientation
+- allow depth and breadth offset to be computed automatically
 
 layout/{Cluster,Partition}.js
 - support customized inner/outer radius

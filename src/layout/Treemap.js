@@ -263,9 +263,12 @@ pv.Layout.treemap = function(tree) {
    * @returns {pv.Layout.treemap} this.
    */
   mark.inset = function(top, right, bottom, left) {
-    if (arguments.length == 1) right = bottom = left = top;
-    inset = {top:top, right:right, bottom:bottom, left:left};
-    return this;
+    if (arguments.length) {
+      if (arguments.length == 1) right = bottom = left = top;
+      inset = {top:top, right:right, bottom:bottom, left:left};
+      return this;
+    }
+    return inset;
   };
 
   /**
