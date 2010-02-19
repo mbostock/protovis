@@ -48,6 +48,9 @@ mark/Mark.js
 - standardize window.event access for event handlers?
 - antialias doesn't always work as expected; requires pixel rounding?
 
+mark/Panel.js
+- support transform on panel directly, making pv.Behavior.transform more useful
+
 mark/Bar.js
 - rounded corners
 

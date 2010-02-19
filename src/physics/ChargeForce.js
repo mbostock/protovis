@@ -84,8 +84,7 @@ pv.Force.charge = function() {
       p.fx += fx;
       p.fy += fy;
     } else if (!n.leaf) {
-      var sx = (x1 + x2) / 2,
-          sy = (y1 + y2) / 2;
+      var sx = (x1 + x2) / 2, sy = (y1 + y2) / 2;
       if (n.c1) forces(n.c1, p, x1, y1, sx, sy);
       if (n.c2) forces(n.c2, p, sx, y1, x2, sy);
       if (n.c3) forces(n.c3, p, x1, sy, sx, y2);
@@ -102,13 +101,11 @@ pv.Force.charge = function() {
     }
   }
 
-  force.apply = function(particles) {
-    var q = new pv.Quadtree(particles);
+  force.apply = function(particles, q) {
     accumulate(q.root);
     for (var p = particles; p; p = p.next) {
       forces(q.root, p, q.xMin, q.yMin, q.xMax, q.yMax);
     }
-    q.dispose();
   };
 
   return force;
