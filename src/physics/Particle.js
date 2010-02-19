@@ -51,17 +51,17 @@
  */
 
 /**
- * The <i>x</i>-velocity of the particle at -dt/2.
+ * The <i>x</i>-position of the particle at -dt.
  *
  * @type number
- * @field pv.Particle.prototype.pvx
+ * @field pv.Particle.prototype.px
  */
 
 /**
- * The <i>y</i>-velocity of the particle at -dt/2.
+ * The <i>y</i>-position of the particle at -dt.
  *
  * @type number
- * @field pv.Particle.prototype.pvy
+ * @field pv.Particle.prototype.py
  */
 
 /**

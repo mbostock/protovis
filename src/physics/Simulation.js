@@ -31,37 +31,59 @@ pv.Simulation = function(particles) {
  */
 
 /**
+ * The constraints in the simulation. Constraints are stored as a linked list;
+ * this field represents the first constraint in the simulation.
+ *
+ * @type pv.Constraint
+ * @field pv.Simulation.prototype.constraints
+ */
+
+/**
  * Adds the specified particle to the simulation.
  *
  * @param {pv.Particle} p the new particle.
- * @return {pv.Particle} the new particle.
+ * @return {pv.Simulation} this.
  */
 pv.Simulation.prototype.particle = function(p) {
   p.next = this.particles;
   /* Default velocities and forces to zero if unset. */
-  if (isNaN(p.vx)) p.vx = 0;
-  if (isNaN(p.vy)) p.vy = 0;
+  if (isNaN(p.px)) p.px = p.x;
+  if (isNaN(p.py)) p.py = p.y;
   if (isNaN(p.fx)) p.fx = 0;
   if (isNaN(p.fy)) p.fy = 0;
-  return this.particles = p;
+  this.particles = p;
+  return this;
 };
 
 /**
  * Adds the specified force to the simulation.
  *
  * @param {pv.Force} f the new force.
- * @return {pv.Force} the new force.
+ * @return {pv.Simulation} this.
  */
 pv.Simulation.prototype.force = function(f) {
   f.next = this.forces;
-  return this.forces = f;
+  this.forces = f;
+  return this;
+};
+
+/**
+ * Adds the specified constraint to the simulation.
+ *
+ * @param {pv.Constraint} c the new constraint.
+ * @return {pv.Simulation} this.
+ */
+pv.Simulation.prototype.constraint = function(c) {
+  c.next = this.constraints;
+  this.constraints = c;
+  return this;
 };
 
 /**
  * Advances the simulation one time-step.
  */
 pv.Simulation.prototype.step = function() {
-  var p, f;
+  var p, f, c;
 
   /*
    * Assumptions:
@@ -69,23 +91,22 @@ pv.Simulation.prototype.step = function() {
    * - The time step (dt) is 1.
    */
 
-  /* Compute position at +dt; compute velocity at +dt/2. */
+  /* Position Verlet integration. */
   for (p = this.particles; p; p = p.next) {
+    var px = p.px, py = p.py;
+    p.px = p.x;
+    p.py = p.y;
     if (p.fixed) continue;
-    p.x += p.vx + p.fx * .5;
-    p.y += p.vy + p.fy * .5;
-    p.pvx = p.vx + p.fx * .5;
-    p.pvy = p.vy + p.fy * .5;
+    p.x += p.vx = ((p.x - px) + p.fx);
+    p.y += p.vy = ((p.y - py) + p.fy);
   }
 
   /* Reset and accumulate new forces. */
+  var q = new pv.Quadtree(this.particles);
   for (p = this.particles; p; p = p.next) p.fx = p.fy = 0;
-  for (f = this.forces; f; f = f.next) f.apply(this.particles);
+  for (f = this.forces; f; f = f.next) f.apply(this.particles, q);
 
-  /* Compute velocity at +dt. */
-  for (p = this.particles; p; p = p.next) {
-    if (p.fixed) continue;
-    p.vx = p.pvx + p.fx * .5;
-    p.vy = p.pvy + p.fy * .5;
-  }
+  /* Apply constraints. */
+  for (c = this.constraints; c; c = c.next) c.apply(this.particles, q);
+  q.dispose();
 };

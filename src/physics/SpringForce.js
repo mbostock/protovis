@@ -1,9 +1,10 @@
-pv.Force.spring = function() {
-  var k = .01, // default spring constant (tension)
-      d = .01, // default damping factor
+pv.Force.spring = function(k) {
+  var d = .01, // default damping factor
       l = 20, // default rest length
       kl, // per-spring normalization
       force = {};
+
+  if (!arguments.length) k = .01; // default spring constant (tension)
 
   force.links = function(x) {
     if (arguments.length) {

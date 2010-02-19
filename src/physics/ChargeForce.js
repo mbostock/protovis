@@ -6,12 +6,13 @@
  * attraction or repulsion of all particles is globally specified as the charge
  * {@link #constant}.
  */
-pv.Force.charge = function() {
-  var k = -10, // charge constant (negative = repulsion, positive = attraction)
-      min = 2, // minimum distance at which to observe forces
+pv.Force.charge = function(k) {
+  var min = 2, // minimum distance at which to observe forces
       max = 500, // maximum distance at which to observe forces
       theta = .9, // Barnes-Hut theta approximation constant
       force = {};
+
+  if (!arguments.length) k = -10; // default charge constant (repulsion)
 
   force.constant = function(x) {
     if (arguments.length) { k = x; return force; }
@@ -84,8 +85,7 @@ pv.Force.charge = function() {
       p.fx += fx;
       p.fy += fy;
     } else if (!n.leaf) {
-      var sx = (x1 + x2) / 2,
-          sy = (y1 + y2) / 2;
+      var sx = (x1 + x2) / 2, sy = (y1 + y2) / 2;
       if (n.c1) forces(n.c1, p, x1, y1, sx, sy);
       if (n.c2) forces(n.c2, p, sx, y1, x2, sy);
       if (n.c3) forces(n.c3, p, x1, sy, sx, y2);
@@ -102,13 +102,11 @@ pv.Force.charge = function() {
     }
   }
 
-  force.apply = function(particles) {
-    var q = new pv.Quadtree(particles);
+  force.apply = function(particles, q) {
     accumulate(q.root);
     for (var p = particles; p; p = p.next) {
       forces(q.root, p, q.xMin, q.yMin, q.xMax, q.yMax);
     }
-    q.dispose();
   };
 
   return force;
