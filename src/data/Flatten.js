@@ -71,7 +71,7 @@ pv.Flatten = function(map) {
  *
  * @param {string} key the key name.
  * @param {function} [f] an optional value map function.
- * @return {pv.Nest} this.
+ * @returns {pv.Nest} this.
  */
 pv.Flatten.prototype.key = function(key, f) {
   this.keys.push({name: key, value: f});
