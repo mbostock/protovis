@@ -405,7 +405,7 @@ var defaultFillStyle = pv.Colors.category20().by(pv.parent),
  * the same name on different mark types should have equivalent meaning.)
  *
  * @param {pv.Mark} proto the new prototype.
- * @return {pv.Mark} this mark.
+ * @returns {pv.Mark} this mark.
  * @see #add
  */
 pv.Mark.prototype.extend = function(proto) {
@@ -419,7 +419,7 @@ pv.Mark.prototype.extend = function(proto) {
  *
  * @param {function} type the type of mark to add; a constructor, such as
  * <tt>pv.Bar</tt>.
- * @return {pv.Mark} the new mark.
+ * @returns {pv.Mark} the new mark.
  * @see #extend
  */
 pv.Mark.prototype.add = function(type) {
@@ -565,31 +565,32 @@ pv.Mark.prototype.cousin = function() {
  * a panel.
  */
 pv.Mark.prototype.render = function() {
-  var indexes = [], m = this;
-  while (m.parent) {
-    indexes.push(m.childIndex);
-    m = m.parent;
+  if (!this.root.scene) {
+    /* For the first render, take it from the top. */
+    if (this.parent) {
+      this.root.render();
+      return;
+    }
+  } else {
+    /* Clear the data stack if called from an event handler. */
+    delete this.root.scene.data;
   }
-  indexes.reverse();
 
-  /*
-   * Rendering consists of three phases: bind, build and update. The update
-   * phase is decoupled to allow different rendering engines.
+  /**
+   * @private Finds all instances of this mark and renders them. This method
+   * descends recursively to the level of the mark to be rendered, finding all
+   * visible instances of the mark. After the marks are rendered, the scene and
+   * index attributes are removed from the mark to restore them to a clean
+   * state.
    *
-   * In the bind phase, inherited property definitions are cached so they do not
-   * need to be queried during build. In the build phase, properties are
-   * evaluated, and the scene graph is generated. In the update phase, the scene
-   * is rendered by creating and updating elements and attributes in the SVG
-   * image. No properties are evaluated during the update phase; instead the
-   * values computed previously in the build phase are simply translated into
-   * SVG.
+   * <p>If an enclosing panel has an index property set (as is the case inside
+   * in an event handler), then only instances of this mark inside the given
+   * instance of the panel will be rendered; otherwise, all visible instances of
+   * the mark will be rendered.
    */
-
-  /* Finds all instances of this mark and renders them. */
   function render(mark, depth) {
     if (depth < indexes.length) {
-      var childIndex = indexes[depth],
-          child = mark.children[childIndex];
+      var childIndex = indexes[depth], child = mark.children[childIndex];
       if (mark.hasOwnProperty("index")) {
         var i = mark.index;
         if (mark.scene[i].visible) {
@@ -609,13 +610,27 @@ pv.Mark.prototype.render = function() {
       delete child.scene;
       return;
     }
+
+    /* Now that the scene stack is set, evaluate the properties. */
     mark.build();
+
+    /*
+     * In the update phase, the scene is rendered by creating and updating
+     * elements and attributes in the SVG image. No properties are evaluated
+     * during the update phase; instead the values computed previously in the
+     * build phase are simply translated into SVG. The update phase is decoupled
+     * (see pv.Scene) to allow different rendering engines.
+     */
     pv.Scene.updateAll(mark.scene);
     delete mark.root.scene.data;
   }
 
+  /* Bind this mark's property definitions. */
   this.bind();
-  if (this.root.scene) delete this.root.scene.data;
+
+  /* Recursively render all instances of this mark. */
+  var indexes = [];
+  for (var m = this; m.parent; m = m.parent) indexes.unshift(m.childIndex);
   render(this.root, 0);
 };
 
@@ -629,7 +644,10 @@ function argv(mark) {
   return stack;
 }
 
-/** @private TODO */
+/**
+ * @private In the bind phase, inherited property definitions are cached so they
+ * do not need to be queried during build.
+ */
 pv.Mark.prototype.bind = function() {
   var seen = {}, types = [[], [], [], []], data, visible;
 

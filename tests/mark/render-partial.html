@@ -1,0 +1,38 @@
+<html>
+  <head>
+    <title>Mark Render</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(200)
+    .height(200);
+
+var panel1 = vis.add(pv.Panel)
+    .top(0)
+    .height(20);
+
+panel1.add(pv.Label)
+    .textBaseline("top")
+    .text(function() "render 1: " + (panel1.count++ || (panel1.count = 1)));
+
+var panel2 = panel1.add(pv.Panel)
+    .top(20)
+    .height(20);
+
+panel2.add(pv.Label)
+    .textBaseline("top")
+    .text(function() "render 2: " + (panel2.count++ || (panel2.count = 1)));
+
+vis.render();
+panel1.render();
+panel1.render();
+panel2.render();
+vis.render();
+vis.render();
+
+    </script>
+  </body>
+</html>
