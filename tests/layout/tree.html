@@ -8,13 +8,14 @@
     <script type="text/javascript+protovis">
 
 var vis = new pv.Panel()
-    .width(400)
+    .width(600)
     .height(2300)
     .left(40)
-    .top(-40)
-    .bottom(480);
+    .top(-400)
+    .bottom(-50);
 
 var tree = pv.Layout.tree(flare)
+    .offset(120, 10)
     .orient("left");
 
 vis.add(pv.Panel)
