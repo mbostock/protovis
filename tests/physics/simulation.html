@@ -17,16 +17,20 @@ body {
 var w = window.innerWidth,
     h = window.innerHeight,
     nodes = pv.range(200).map(function(i) {
-      return {x: w / 2 * (Math.random() + .5),
-              y: h / 2 * (Math.random() + .5),
+      return {x: w * Math.random(),
+              y: h * Math.random(),
               r: 2 + Math.random() * 12};
     });
 
-var sim = pv.simulation(nodes);
-sim.force(pv.Force.charge().constant(2));
-sim.constraint(pv.Constraint.distance()
-    .radius(50)
-    .min(function(a, b) a.r + b.r));
+var sim = pv.simulation(nodes)
+    .force(pv.Force.charge(6))
+    .constraint(pv.Constraint.distance(28).min(function(a, b) a.r + b.r));
+
+/* Stablize initial positions by stepping and zeroing velocities. */
+for (var i = 0; i < 10; i++) {
+  sim.step();
+  nodes.forEach(function(n) { n.px = n.x; n.py = n.y; });
+}
 
 var vis = new pv.Panel()
     .width(w)
@@ -46,8 +50,6 @@ vis.add(pv.Panel)
     .strokeStyle("white")
     .left(function(i, d) d.x + i * 10 * d.vx)
     .top(function(i, d) d.y + i * 10 * d.vy);
-
-vis.render();
 
 setInterval(function() {
   sim.step();

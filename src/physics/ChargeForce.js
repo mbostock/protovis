@@ -6,12 +6,13 @@
  * attraction or repulsion of all particles is globally specified as the charge
  * {@link #constant}.
  */
-pv.Force.charge = function() {
-  var k = -10, // charge constant (negative = repulsion, positive = attraction)
-      min = 2, // minimum distance at which to observe forces
+pv.Force.charge = function(k) {
+  var min = 2, // minimum distance at which to observe forces
       max = 500, // maximum distance at which to observe forces
       theta = .9, // Barnes-Hut theta approximation constant
       force = {};
+
+  if (!arguments.length) k = -10; // default charge constant (repulsion)
 
   force.constant = function(x) {
     if (arguments.length) { k = x; return force; }

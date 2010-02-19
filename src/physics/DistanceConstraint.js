@@ -1,11 +1,12 @@
-pv.Constraint.distance = function() {
+pv.Constraint.distance = function(r) {
   var min = function() { return 10; },
-      r = 10, // search radius
       px1,
       py1,
       px2,
       py2,
       constraint = {};
+
+  if (!arguments.length) r = 10; // default search radius
 
   /** @private */
   function constrain(n, p, x1, y1, x2, y2) {

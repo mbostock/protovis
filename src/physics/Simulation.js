@@ -42,7 +42,7 @@ pv.Simulation = function(particles) {
  * Adds the specified particle to the simulation.
  *
  * @param {pv.Particle} p the new particle.
- * @return {pv.Particle} the new particle.
+ * @return {pv.Simulation} this.
  */
 pv.Simulation.prototype.particle = function(p) {
   p.next = this.particles;
@@ -51,29 +51,32 @@ pv.Simulation.prototype.particle = function(p) {
   if (isNaN(p.py)) p.py = p.y;
   if (isNaN(p.fx)) p.fx = 0;
   if (isNaN(p.fy)) p.fy = 0;
-  return this.particles = p;
+  this.particles = p;
+  return this;
 };
 
 /**
  * Adds the specified force to the simulation.
  *
  * @param {pv.Force} f the new force.
- * @return {pv.Force} the new force.
+ * @return {pv.Simulation} this.
  */
 pv.Simulation.prototype.force = function(f) {
   f.next = this.forces;
-  return this.forces = f;
+  this.forces = f;
+  return this;
 };
 
 /**
  * Adds the specified constraint to the simulation.
  *
  * @param {pv.Constraint} c the new constraint.
- * @return {pv.Constraint} the new constraint.
+ * @return {pv.Simulation} this.
  */
 pv.Simulation.prototype.constraint = function(c) {
   c.next = this.constraints;
-  return this.constraints = c;
+  this.constraints = c;
+  return this;
 };
 
 /**

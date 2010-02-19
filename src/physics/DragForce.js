@@ -1,6 +1,7 @@
-pv.Force.drag = function() {
-  var k = .1,
-      force = {};
+pv.Force.drag = function(k) {
+  var force = {};
+
+  if (!arguments.length) k = .1;
 
   force.constant = function(x) {
     if (arguments.length) { k = x; return force; }
