@@ -22,16 +22,10 @@ pv.Quadtree = function(particles) {
   var dx = x2 - x1, dy = y2 - y1;
   if (dx > dy) y2 = y1 + dx;
   else x2 = x1 + dy;
-
-  /** @private Caches quadtree nodes. */
-  function node() {
-    if (pv.Quadtree.$cache) {
-      var n = pv.Quadtree.$cache;
-      pv.Quadtree.$cache = n.next;
-      return n;
-    }
-    return new pv.Quadtree.Node();
-  }
+  this.xMin = x1;
+  this.yMin = y1;
+  this.xMax = x2;
+  this.yMax = y2;
 
   /**
    * Recursively inserts the specified particle <i>p</i> at the node <i>n</i> or
@@ -39,7 +33,6 @@ pv.Quadtree = function(particles) {
    * and [<i>y1</i>, <i>y2</i>].
    */
   function insert(n, p, x1, y1, x2, y2) {
-    if (isNaN(p.x) || isNaN(p.y)) return; // avoid infinite recursion if NaN
     if (n.leaf) {
       if (n.p) {
         /*
@@ -71,48 +64,29 @@ pv.Quadtree = function(particles) {
    */
   function insertChild(n, p, x1, y1, x2, y2) {
     /* Compute the split point, and the quadrant in which to insert p. */
-    var sx = (x1 + x2) / 2,
-        sy = (y1 + y2) / 2,
-        c = (p.x >= sx) + (p.y >= sy) * 2;
-
-    /* Update the bounds as we recurse. */
-    if ((c == 1) || (c == 3)) x1 = sx; else x2 = sx;
-    if (c > 1) y1 = sy; else y2 = sy;
+    var sx = (x1 + x2) * .5,
+        sy = (y1 + y2) * .5,
+        right = p.x >= sx,
+        bottom = p.y >= sy;
 
     /* Recursively insert into the child node. */
     n.leaf = false;
-    switch (c) {
-      case 0: n = n.c1 || (n.c1 = node()); break;
-      case 1: n = n.c2 || (n.c2 = node()); break;
-      case 2: n = n.c3 || (n.c3 = node()); break;
-      default: n = n.c4 || (n.c4 = node()); break;
+    switch ((bottom << 1) + right) {
+      case 0: n = n.c1 || (n.c1 = new pv.Quadtree.Node()); break;
+      case 1: n = n.c2 || (n.c2 = new pv.Quadtree.Node()); break;
+      case 2: n = n.c3 || (n.c3 = new pv.Quadtree.Node()); break;
+      case 3: n = n.c4 || (n.c4 = new pv.Quadtree.Node()); break;
     }
+
+    /* Update the bounds as we recurse. */
+    if (right) x1 = sx; else x2 = sx;
+    if (bottom) y1 = sy; else y2 = sy;
     insert(n, p, x1, y1, x2, y2);
   }
 
   /* Insert all particles. */
-  this.root = node();
+  this.root = new pv.Quadtree.Node();
   for (p = particles; p; p = p.next) insert(this.root, p, x1, y1, x2, y2);
-
-  this.xMin = x1;
-  this.yMin = y1;
-  this.xMax = x2;
-  this.yMax = y2;
-};
-
-/** Disposes all quadtree nodes so they can be recycled. */
-pv.Quadtree.prototype.dispose = function() {
-  function dispose(n) {
-    if (n.c1) dispose(n.c1);
-    if (n.c2) dispose(n.c2);
-    if (n.c3) dispose(n.c3);
-    if (n.c4) dispose(n.c4);
-    n.leaf = true;
-    n.c1 = n.c2 = n.c3 = n.c4 = n.p = null;
-    n.next = pv.Quadtree.$cache;
-    pv.Quadtree.$cache = n;
-  }
-  dispose(this.root);
 };
 
 /**
@@ -143,10 +117,22 @@ pv.Quadtree.prototype.dispose = function() {
 /**
  * A node in a quadtree.
  *
- * @constructor Constructs a new node. TODO Use a node pool to avoid constructor
- * overhead?
+ * @constructor Constructs a new node.
  */
-pv.Quadtree.Node = function() {};
+pv.Quadtree.Node = function() {
+  /*
+   * Prepopulating all attributes significantly increases performance! Also,
+   * letting the language interpreter manage garbage collection was moderately
+   * faster than creating a cache pool.
+   */
+  this.leaf = true;
+  this.next = null;
+  this.c1 = null;
+  this.c2 = null;
+  this.c3 = null;
+  this.c4 = null;
+  this.p = null;
+};
 
 /**
  * True if this node is a leaf node; i.e., it has no children. Note that both
@@ -155,8 +141,8 @@ pv.Quadtree.Node = function() {};
  * {@link #c3} or {@link #c4} is guaranteed to be non-null.
  *
  * @type boolean
+ * @field pv.Quadtree.Node.prototype.leaf
  */
-pv.Quadtree.Node.prototype.leaf = true;
 
 /**
  * @type pv.Quadtree.Node

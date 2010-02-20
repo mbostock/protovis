@@ -1,7 +1,7 @@
 <html>
   <head>
     <title>Simulation</title>
-    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../../protovis-r3.2.js"></script>
     <style type="text/css">
 
 body {
@@ -19,18 +19,13 @@ var w = window.innerWidth,
     nodes = pv.range(200).map(function(i) {
       return {x: w * Math.random(),
               y: h * Math.random(),
-              r: 2 + Math.random() * 12};
+              r: 2 + Math.random() * 8};
     });
 
 var sim = pv.simulation(nodes)
-    .force(pv.Force.charge(6))
-    .constraint(pv.Constraint.distance(28).min(function(a, b) a.r + b.r));
-
-/* Stablize initial positions by stepping and zeroing velocities. */
-for (var i = 0; i < 10; i++) {
-  sim.step();
-  nodes.forEach(function(n) { n.px = n.x; n.py = n.y; });
-}
+    .force(pv.Force.charge(3))
+    .constraint(pv.Constraint.distance(function(d) d.r))
+    .stabilize();
 
 var vis = new pv.Panel()
     .width(w)
@@ -51,10 +46,10 @@ vis.add(pv.Panel)
     .left(function(i, d) d.x + i * 10 * d.vx)
     .top(function(i, d) d.y + i * 10 * d.vy);
 
-setInterval(function() {
-  sim.step();
-  vis.render();
-}, 30);
+setInterval(function() { 
+    sim.step();
+    vis.render();
+  }, 42);
 
     </script>
   </body>
