@@ -129,7 +129,7 @@ pv.Mark.prototype.property = function(name, cast) {
   if (!this.hasOwnProperty("properties")) {
     this.properties = pv.extend(this.properties);
   }
-  this.properties[name] = true;
+  this.properties[name] = cast || Object;
 
   /*
    * Define the setter-getter globally, since the default behavior should be the
@@ -140,35 +140,44 @@ pv.Mark.prototype.property = function(name, cast) {
    */
   pv.Mark.prototype[name] = function(v) {
       if (arguments.length) {
-        /* Replace existing property definition, if found. */
-        for (var i = 0; i < this.$properties.length; i++) {
-          if (this.$properties[i].name == name) {
-            this.$properties.splice(i, 1);
-            break;
-          }
-        }
-
-        /*
-         * If a cast function is specified, the property function is wrapped by
-         * the cast function, or if a constant is specified, the constant is
-         * immediately cast. Note, however, that if the property value is null,
-         * the cast function is not invoked.
-         */
-        var f = typeof v == "function";
-        this.$properties.push({
-            name: name,
-            type: f ? 3 : 2,
-            value: (f && cast) ? function() {
-                var x = v.apply(this, arguments);
-                return (x != null) ? cast(x) : null;
-              } : (((v != null) && cast) ? cast(v) : v)
-          });
+        this.propertyValue(name, v);
         return this;
       }
       return this.scene[this.index][name];
     };
 
   return this;
+};
+
+/** @private Sets the value of the property <i>name</i> to <i>v</i>. */
+pv.Mark.prototype.propertyValue = function(name, v) {
+  var cast = this.properties[name];
+  if (cast == Object) cast = null;
+
+  /* Replace existing property definition, if found. */
+  for (var i = 0; i < this.$properties.length; i++) {
+    if (this.$properties[i].name == name) {
+      this.$properties.splice(i, 1);
+      break;
+    }
+  }
+
+  /*
+   * If a cast function is specified, the property function is wrapped by the
+   * cast function, or, if a constant is specified, the constant is immediately
+   * cast. Note, however, that if the property value is null, the cast function
+   * is not invoked.
+   */
+  var f = typeof v == "function", p = {
+      name: name,
+      type: f ? 3 : 2,
+      value: (f && cast) ? function() {
+          var x = v.apply(this, arguments);
+          return (x != null) ? cast(x) : null;
+        } : (((v != null) && cast) ? cast(v) : v)
+    };
+  this.$properties.push(p);
+  return p;
 };
 
 /* Define all global properties. */
@@ -466,15 +475,11 @@ pv.Mark.prototype.add = function(type) {
  * it will only get computed once per mark, rather than once per datum.
  *
  * @param {string} name the name of the local variable.
- * @param {function} [value] an optional initializer; may be a constant or a
+ * @param {function} [v] an optional initializer; may be a constant or a
  * function.
  */
-pv.Mark.prototype.def = function(name, value) {
-  this.$properties.push({
-      name: name,
-      type: (typeof value == "function") ? 1 : 0,
-      value: value
-    });
+pv.Mark.prototype.def = function(name, v) {
+  this.propertyValue(name, v).type -= 2;
   return this;
 };
 
@@ -679,7 +684,8 @@ pv.Mark.prototype.bind = function() {
         } else {
           defs.locked[name] = true;
         }
-        defs.values[name] = v;
+        var cast = this.properties[name];
+        defs.values[name] = ((v != null) && cast) ? cast(v) : v;
         return this;
       } else {
         return defs.values[name];
