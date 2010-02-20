@@ -1,0 +1,23 @@
+<html>
+  <head>
+    <title>Def Type</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(200)
+    .height(200)
+    .def("fillStyle", "green")
+    .event("mouseover", function() this.fillStyle("lightgreen"))
+    .event("mouseout", function() this.fillStyle("darkgreen"));
+
+vis.anchor("center").add(pv.Label)
+    .text("This panel should be green!");
+
+vis.render();
+
+    </script>
+  </body>
+</html>

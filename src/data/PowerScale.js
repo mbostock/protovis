@@ -235,7 +235,7 @@ pv.Scale.power = function() {
 //    * @function
 //    * @name pv.Scale.power.prototype.tickFormat
 //    * @param {number} t a tick value.
-//    * @return {string} a formatted tick value.
+//    * @returns {string} a formatted tick value.
 //    */
 //   scale.tickFormat = function(t) {
 //     return t.toPrecision(1);

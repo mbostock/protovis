@@ -42,7 +42,7 @@ pv.Simulation = function(particles) {
  * Adds the specified particle to the simulation.
  *
  * @param {pv.Particle} p the new particle.
- * @return {pv.Simulation} this.
+ * @returns {pv.Simulation} this.
  */
 pv.Simulation.prototype.particle = function(p) {
   p.next = this.particles;
@@ -59,7 +59,7 @@ pv.Simulation.prototype.particle = function(p) {
  * Adds the specified force to the simulation.
  *
  * @param {pv.Force} f the new force.
- * @return {pv.Simulation} this.
+ * @returns {pv.Simulation} this.
  */
 pv.Simulation.prototype.force = function(f) {
   f.next = this.forces;
@@ -71,11 +71,28 @@ pv.Simulation.prototype.force = function(f) {
  * Adds the specified constraint to the simulation.
  *
  * @param {pv.Constraint} c the new constraint.
- * @return {pv.Simulation} this.
+ * @returns {pv.Simulation} this.
  */
 pv.Simulation.prototype.constraint = function(c) {
   c.next = this.constraints;
   this.constraints = c;
+  return this;
+};
+
+/**
+ * Apply constraints, and then set the velocities to zero.
+ *
+ * @returns {pv.Simulation} this.
+ */
+pv.Simulation.prototype.stabilize = function() {
+  for (var i = 0; i < 3; i++) {
+    var q = new pv.Quadtree(this.particles);
+    for (c = this.constraints; c; c = c.next) c.apply(this.particles, q);
+  }
+  for (var p = this.particles; p; p = p.next) {
+    p.px = p.x;
+    p.py = p.y;
+  }
   return this;
 };
 
@@ -101,12 +118,17 @@ pv.Simulation.prototype.step = function() {
     p.y += p.vy = ((p.y - py) + p.fy);
   }
 
-  /* Reset and accumulate new forces. */
+  /* Apply constraints, then accumulate new forces. */
   var q = new pv.Quadtree(this.particles);
+  for (c = this.constraints; c; c = c.next) c.apply(this.particles, q);
   for (p = this.particles; p; p = p.next) p.fx = p.fy = 0;
   for (f = this.forces; f; f = f.next) f.apply(this.particles, q);
 
-  /* Apply constraints. */
-  for (c = this.constraints; c; c = c.next) c.apply(this.particles, q);
-  q.dispose();
+  /* Restore fixed positions, if necessary. */
+  for (p = this.particles; p; p = p.next) {
+    if (p.fixed) {
+      p.x = p.px;
+      p.y = p.py;
+    }
+  }
 };

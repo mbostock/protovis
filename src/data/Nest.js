@@ -72,7 +72,7 @@ pv.Nest = function(array) {
  *
  * @param {function} key a key function; must return a string or suitable map
  * key.
- * @return {pv.Nest} this.
+ * @returns {pv.Nest} this.
  */
 pv.Nest.prototype.key = function(key) {
   this.keys.push(key);
@@ -127,7 +127,7 @@ pv.Nest.prototype.sortKeys = function(order) {
  * {@link #map}. It has no effect on {@link #rollup}.
  *
  * @param {function} [order] an optional comparator function.
- * @return {pv.Nest} this.
+ * @returns {pv.Nest} this.
  */
 pv.Nest.prototype.sortValues = function(order) {
   this.order = order || pv.naturalOrder;

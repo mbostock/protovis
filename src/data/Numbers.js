@@ -272,7 +272,7 @@ pv.logAdjusted = function(x, b) {
  *
  * @param {number} x the number for which to compute the logarithm floor.
  * @param {number} b the base of the logarithm.
- * @return {number} the rounded-by-logarithm value.
+ * @returns {number} the rounded-by-logarithm value.
  */
 pv.logFloor = function(x, b) {
   return (x > 0)
@@ -287,7 +287,7 @@ pv.logFloor = function(x, b) {
  *
  * @param {number} x the number for which to compute the logarithm ceiling.
  * @param {number} b the base of the logarithm.
- * @return {number} the rounded-by-logarithm value.
+ * @returns {number} the rounded-by-logarithm value.
  */
 pv.logCeil = function(x, b) {
   return (x > 0)

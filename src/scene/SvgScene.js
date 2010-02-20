@@ -60,7 +60,7 @@ pv.SvgScene.updateAll = function(scenes) {
  * Creates a new SVG element of the specified type.
  *
  * @param type {string} an SVG element type, such as "rect".
- * @return a new SVG element.
+ * @returns a new SVG element.
  */
 pv.SvgScene.create = function(type) {
   return document.createElementNS(ns.svg, type);
@@ -72,7 +72,7 @@ pv.SvgScene.create = function(type) {
  * type, it is replaced with the specified element.
  *
  * @param type {string} an SVG element type, such as "rect".
- * @return a new SVG element.
+ * @returns a new SVG element.
  */
 pv.SvgScene.expect = function(type, e) {
   if (!e) return this.create(type);

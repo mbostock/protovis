@@ -1,5 +1,5 @@
-pv.Constraint.distance = function(r) {
-  var min = function() { return 10; },
+pv.Constraint.distance = function(radius) {
+  var r1,
       px1,
       py1,
       px2,
@@ -11,8 +11,8 @@ pv.Constraint.distance = function(r) {
   /** @private */
   function constrain(n, p, x1, y1, x2, y2) {
     if (!n.leaf) {
-      var sx = (x1 + x2) / 2,
-          sy = (y1 + y2) / 2,
+      var sx = (x1 + x2) * .5,
+          sy = (y1 + y2) * .5,
           top = sy > py1,
           bottom = sy < py2,
           left = sx > px1,
@@ -30,10 +30,11 @@ pv.Constraint.distance = function(r) {
       var dx = p.x - n.p.x,
           dy = p.y - n.p.y,
           l = Math.sqrt(dx * dx + dy * dy),
-          d = min(p, n.p);
+          d = r1 + radius(n.p);
       if (l < d) {
-        dx *= (l - d) / (2 * l);
-        dy *= (l - d) / (2 * l);
+        var k = (l - d) / l * .5;
+        dx *= k;
+        dy *= k;
         p.x -= dx;
         p.y -= dy;
         n.p.x += dx;
@@ -42,31 +43,67 @@ pv.Constraint.distance = function(r) {
     }
   }
 
-  /** Specifies the search radius. */
-  constraint.radius = function(x) {
+  /** Specifies the radius function, given a particle. */
+  constraint.radius = function(f) {
     if (arguments.length) {
-      r = Number(x);
+      radius = f;
       return this;
     }
-    return r;
-  };
-
-  /** Specifies the minimum-distance function, given two particles. */
-  constraint.min = function(f) {
-    if (arguments.length) {
-      min = f;
-      return this;
-    }
-    return min;
+    return radius;
   };
 
   constraint.apply = function(particles, q) {
-    for (var p = particles; p; p = p.next) {
+    var p, r, max = -Infinity;
+    for (p = particles; p; p = p.next) {
+      r = radius(p);
+      if (r > max) max = r;
+    }
+    for (p = particles; p; p = p.next) {
+      r = (r1 = radius(p)) + max;
       px1 = p.x - r;
       px2 = p.x + r;
       py1 = p.y - r;
       py2 = p.y + r;
       constrain(q.root, p, q.xMin, q.yMin, q.xMax, q.yMax);
+    }
+  };
+
+  return constraint;
+};
+
+// TODO rename exact?
+pv.Constraint.spring = function(d) {
+  var constraint = {};
+
+  if (!arguments.length) d = 20; // default rest length
+
+  constraint.links = function(x) {
+    if (arguments.length) {
+      links = x;
+      return constraint;
+    }
+    return links;
+  };
+
+  constraint.length = function(x) {
+    if (arguments.length) { d = x; return constraint; }
+    return d;
+  };
+
+  constraint.apply = function(particles) {
+    for (var i = 0; i < links.length; i++) {
+      var a = links[i].sourceNode,
+          b = links[i].targetNode,
+          dx = a.x - b.x,
+          dy = a.y - b.y,
+          l = Math.sqrt(dx * dx + dy * dy),
+          k = (l - d) / l * .5;
+      dx *= k;
+      dy *= k;
+      a.x -= dx;
+      a.y -= dy;
+      b.x += dx;
+      b.y += dy;
     }
   };
 

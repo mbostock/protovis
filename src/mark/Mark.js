@@ -68,8 +68,11 @@ pv.Mark = function() {
   this.$properties = [];
 };
 
-/** @private TOOD */
+/** @private Records which properties are defined on this mark type. */
 pv.Mark.prototype.properties = {};
+
+/** @private Records which the cast function for each property. */
+pv.Mark.cast = {};
 
 /**
  * @private Defines and registers a property method for the property with the
@@ -140,35 +143,41 @@ pv.Mark.prototype.property = function(name, cast) {
    */
   pv.Mark.prototype[name] = function(v) {
       if (arguments.length) {
-        /* Replace existing property definition, if found. */
-        for (var i = 0; i < this.$properties.length; i++) {
-          if (this.$properties[i].name == name) {
-            this.$properties.splice(i, 1);
-            break;
-          }
-        }
-
-        /*
-         * If a cast function is specified, the property function is wrapped by
-         * the cast function, or if a constant is specified, the constant is
-         * immediately cast. Note, however, that if the property value is null,
-         * the cast function is not invoked.
-         */
-        var f = typeof v == "function";
-        this.$properties.push({
-            name: name,
-            type: f ? 3 : 2,
-            value: (f && cast) ? function() {
-                var x = v.apply(this, arguments);
-                return (x != null) ? cast(x) : null;
-              } : (((v != null) && cast) ? cast(v) : v)
-          });
+        this.propertyValue(name, v);
         return this;
       }
       return this.scene[this.index][name];
     };
-
+  pv.Mark.cast[name] = cast;
   return this;
+};
+
+/** @private Sets the value of the property <i>name</i> to <i>v</i>. */
+pv.Mark.prototype.propertyValue = function(name, v) {
+  /* Replace existing property definition, if found. */
+  for (var i = 0; i < this.$properties.length; i++) {
+    if (this.$properties[i].name == name) {
+      this.$properties.splice(i, 1);
+      break;
+    }
+  }
+
+  /*
+   * If a cast function is specified, the property function is wrapped by the
+   * cast function, or, if a constant is specified, the constant is immediately
+   * cast. Note, however, that if the property value is null, the cast function
+   * is not invoked.
+   */
+  var c = pv.Mark.cast[name], f = typeof v == "function", p = {
+      name: name,
+      type: f ? 3 : 2,
+      value: (f && c) ? function() {
+          var x = v.apply(this, arguments);
+          return (x != null) ? c(x) : null;
+        } : (((v != null) && c) ? c(v) : v)
+    };
+  this.$properties.push(p);
+  return p;
 };
 
 /* Define all global properties. */
@@ -405,7 +414,7 @@ var defaultFillStyle = pv.Colors.category20().by(pv.parent),
  * the same name on different mark types should have equivalent meaning.)
  *
  * @param {pv.Mark} proto the new prototype.
- * @return {pv.Mark} this mark.
+ * @returns {pv.Mark} this mark.
  * @see #add
  */
 pv.Mark.prototype.extend = function(proto) {
@@ -419,7 +428,7 @@ pv.Mark.prototype.extend = function(proto) {
  *
  * @param {function} type the type of mark to add; a constructor, such as
  * <tt>pv.Bar</tt>.
- * @return {pv.Mark} the new mark.
+ * @returns {pv.Mark} the new mark.
  * @see #extend
  */
 pv.Mark.prototype.add = function(type) {
@@ -466,15 +475,11 @@ pv.Mark.prototype.add = function(type) {
  * it will only get computed once per mark, rather than once per datum.
  *
  * @param {string} name the name of the local variable.
- * @param {function} [value] an optional initializer; may be a constant or a
+ * @param {function} [v] an optional initializer; may be a constant or a
  * function.
  */
-pv.Mark.prototype.def = function(name, value) {
-  this.$properties.push({
-      name: name,
-      type: (typeof value == "function") ? 1 : 0,
-      value: value
-    });
+pv.Mark.prototype.def = function(name, v) {
+  this.propertyValue(name, v).type -= 2;
   return this;
 };
 
@@ -565,31 +570,32 @@ pv.Mark.prototype.cousin = function() {
  * a panel.
  */
 pv.Mark.prototype.render = function() {
-  var indexes = [], m = this;
-  while (m.parent) {
-    indexes.push(m.childIndex);
-    m = m.parent;
+  if (!this.root.scene) {
+    /* For the first render, take it from the top. */
+    if (this.parent) {
+      this.root.render();
+      return;
+    }
+  } else {
+    /* Clear the data stack if called from an event handler. */
+    delete this.root.scene.data;
   }
-  indexes.reverse();
 
-  /*
-   * Rendering consists of three phases: bind, build and update. The update
-   * phase is decoupled to allow different rendering engines.
+  /**
+   * @private Finds all instances of this mark and renders them. This method
+   * descends recursively to the level of the mark to be rendered, finding all
+   * visible instances of the mark. After the marks are rendered, the scene and
+   * index attributes are removed from the mark to restore them to a clean
+   * state.
    *
-   * In the bind phase, inherited property definitions are cached so they do not
-   * need to be queried during build. In the build phase, properties are
-   * evaluated, and the scene graph is generated. In the update phase, the scene
-   * is rendered by creating and updating elements and attributes in the SVG
-   * image. No properties are evaluated during the update phase; instead the
-   * values computed previously in the build phase are simply translated into
-   * SVG.
+   * <p>If an enclosing panel has an index property set (as is the case inside
+   * in an event handler), then only instances of this mark inside the given
+   * instance of the panel will be rendered; otherwise, all visible instances of
+   * the mark will be rendered.
    */
-
-  /* Finds all instances of this mark and renders them. */
   function render(mark, depth) {
     if (depth < indexes.length) {
-      var childIndex = indexes[depth],
-          child = mark.children[childIndex];
+      var childIndex = indexes[depth], child = mark.children[childIndex];
       if (mark.hasOwnProperty("index")) {
         var i = mark.index;
         if (mark.scene[i].visible) {
@@ -609,13 +615,27 @@ pv.Mark.prototype.render = function() {
       delete child.scene;
       return;
     }
+
+    /* Now that the scene stack is set, evaluate the properties. */
     mark.build();
+
+    /*
+     * In the update phase, the scene is rendered by creating and updating
+     * elements and attributes in the SVG image. No properties are evaluated
+     * during the update phase; instead the values computed previously in the
+     * build phase are simply translated into SVG. The update phase is decoupled
+     * (see pv.Scene) to allow different rendering engines.
+     */
     pv.Scene.updateAll(mark.scene);
     delete mark.root.scene.data;
   }
 
+  /* Bind this mark's property definitions. */
   this.bind();
-  if (this.root.scene) delete this.root.scene.data;
+
+  /* Recursively render all instances of this mark. */
+  var indexes = [];
+  for (var m = this; m.parent; m = m.parent) indexes.unshift(m.childIndex);
   render(this.root, 0);
 };
 
@@ -629,7 +649,10 @@ function argv(mark) {
   return stack;
 }
 
-/** @private TODO */
+/**
+ * @private In the bind phase, inherited property definitions are cached so they
+ * do not need to be queried during build.
+ */
 pv.Mark.prototype.bind = function() {
   var seen = {}, types = [[], [], [], []], data, visible;
 
@@ -661,7 +684,8 @@ pv.Mark.prototype.bind = function() {
         } else {
           defs.locked[name] = true;
         }
-        defs.values[name] = v;
+        var c = pv.Mark.cast[name];
+        defs.values[name] = ((v != null) && c) ? c(v) : v;
         return this;
       } else {
         return defs.values[name];

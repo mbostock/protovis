@@ -8,24 +8,38 @@
  */
 pv.Force.charge = function(k) {
   var min = 2, // minimum distance at which to observe forces
+      min1 = 1 / min,
       max = 500, // maximum distance at which to observe forces
+      max1 = 1 / max,
       theta = .9, // Barnes-Hut theta approximation constant
       force = {};
 
-  if (!arguments.length) k = -10; // default charge constant (repulsion)
+  if (!arguments.length) k = -40; // default charge constant (repulsion)
 
   force.constant = function(x) {
-    if (arguments.length) { k = x; return force; }
+    if (arguments.length) {
+      k = Number(x);
+      return force;
+    }
     return k;
   };
 
   force.domain = function(a, b) {
-    if (arguments.length) { min = a; max = b; return force; }
+    if (arguments.length) {
+      min = Number(a);
+      min1 = 1 / min;
+      max = Number(b);
+      max1 = 1 / max;
+      return force;
+    }
     return [min, max];
   };
 
   force.theta = function(x) {
-    if (arguments.length) { theta = x; return force; }
+    if (arguments.length) {
+      theta = Number(x);
+      return force;
+    }
     return theta;
   };
 
@@ -50,9 +64,9 @@ pv.Force.charge = function(k) {
       if (n.c4) accumulateChild(n.c4);
     }
     if (n.p) {
-      n.cn++;
-      cx += n.p.x;
-      cy += n.p.y;
+      n.cn += k;
+      cx += k * n.p.x;
+      cy += k * n.p.y;
     }
     n.cx = cx / n.cn;
     n.cy = cy / n.cn;
@@ -67,33 +81,27 @@ pv.Force.charge = function(k) {
   function forces(n, p, x1, y1, x2, y2) {
     var dx = n.cx - p.x,
         dy = n.cy - p.y,
-        dn = Math.sqrt(dx * dx + dy * dy);
-
-    /* Treat coincident particles as slightly apart. */
-    if (!dn) {
-      dx = .01 * (.5 - Math.random());
-      dy = .01 * (.5 - Math.random());
-    }
+        dn = 1 / Math.sqrt(dx * dx + dy * dy);
 
     /* Barnes-Hut criterion. */
-    if ((n.leaf && (n.p != p)) || ((x2 - x1) / dn < theta)) {
-      if (dn > max) return;
-      if (dn < min) dn = min;
-      var kc = n.cn * k / (dn * dn * dn),
+    if ((n.leaf && (n.p != p)) || ((x2 - x1) * dn < theta)) {
+      if (dn < max1) return;
+      if (dn > min1) dn = min1;
+      var kc = n.cn * dn * dn * dn,
           fx = dx * kc,
           fy = dy * kc;
       p.fx += fx;
       p.fy += fy;
     } else if (!n.leaf) {
-      var sx = (x1 + x2) / 2, sy = (y1 + y2) / 2;
+      var sx = (x1 + x2) * .5, sy = (y1 + y2) * .5;
       if (n.c1) forces(n.c1, p, x1, y1, sx, sy);
       if (n.c2) forces(n.c2, p, sx, y1, x2, sy);
       if (n.c3) forces(n.c3, p, x1, sy, sx, y2);
       if (n.c4) forces(n.c4, p, sx, sy, x2, y2);
-      if (dn > max) return;
-      if (dn < min) dn = min;
+      if (dn < max1) return;
+      if (dn > min1) dn = min1;
       if (n.p && (n.p != p)) {
-        var kc = k / (dn * dn * dn),
+        var kc = k * dn * dn * dn,
             fx = dx * kc,
             fy = dy * kc;
         p.fx += fx;

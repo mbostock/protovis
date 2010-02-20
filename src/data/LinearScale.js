@@ -348,7 +348,7 @@ pv.Scale.linear = function() {
    * @function
    * @name pv.Scale.linear.prototype.tickFormat
    * @param {number} t a tick value.
-   * @return {string} a formatted tick value.
+   * @returns {string} a formatted tick value.
    */
 
   /**
