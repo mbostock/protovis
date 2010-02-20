@@ -11,6 +11,7 @@ data/?
 - AJAX helper? or refer to jQuery
 
 layout/Layot.js
+- use def("init") to initialize rather than depend on data (link inheritance)
 - consolidate code between layout implementations
 - documentation across implementations
 - allow or require pv.Dom.Node as input, rather than maps?

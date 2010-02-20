@@ -1,0 +1,37 @@
+<html>
+  <head>
+    <title>Miserables Arc</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../miserables.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var graph = pv.Layout.arc(miserables.vertices, miserables.edges)
+    .orient("bottom");
+
+var vis = new pv.Panel()
+    .width(1000)
+    .height(400)
+    .top(100)
+    .left(100)
+    .right(100)
+    .bottom(100);
+
+vis.add(pv.Panel)
+    .data(graph.links)
+  .add(pv.Wedge)
+    .extend(graph.link);
+
+vis.add(pv.Dot)
+    .extend(graph.node)
+    .size(function(d) d.linkDegree + 4)
+  .add(pv.Label)
+    .extend(graph.label)
+    .text(function(d) d.nodeValue);
+
+vis.render();
+
+    </script>
+  </body>
+</html>

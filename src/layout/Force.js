@@ -6,9 +6,6 @@ pv.Layout.force = function(nodes, links) {
         },
       sim;
 
-  // TODO enforce panel bounds
-  // TODO allow user to drag and drop nodes
-
   /** @private */
   function data() {
     if (!sim) {
