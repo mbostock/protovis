@@ -68,8 +68,11 @@ pv.Mark = function() {
   this.$properties = [];
 };
 
-/** @private TOOD */
+/** @private Records which properties are defined on this mark type. */
 pv.Mark.prototype.properties = {};
+
+/** @private Records which the cast function for each property. */
+pv.Mark.cast = {};
 
 /**
  * @private Defines and registers a property method for the property with the
@@ -129,7 +132,7 @@ pv.Mark.prototype.property = function(name, cast) {
   if (!this.hasOwnProperty("properties")) {
     this.properties = pv.extend(this.properties);
   }
-  this.properties[name] = cast || Object;
+  this.properties[name] = true;
 
   /*
    * Define the setter-getter globally, since the default behavior should be the
@@ -145,15 +148,12 @@ pv.Mark.prototype.property = function(name, cast) {
       }
       return this.scene[this.index][name];
     };
-
+  pv.Mark.cast[name] = cast;
   return this;
 };
 
 /** @private Sets the value of the property <i>name</i> to <i>v</i>. */
 pv.Mark.prototype.propertyValue = function(name, v) {
-  var cast = this.properties[name];
-  if (cast == Object) cast = null;
-
   /* Replace existing property definition, if found. */
   for (var i = 0; i < this.$properties.length; i++) {
     if (this.$properties[i].name == name) {
@@ -168,13 +168,13 @@ pv.Mark.prototype.propertyValue = function(name, v) {
    * cast. Note, however, that if the property value is null, the cast function
    * is not invoked.
    */
-  var f = typeof v == "function", p = {
+  var c = pv.Mark.cast[name], f = typeof v == "function", p = {
       name: name,
       type: f ? 3 : 2,
-      value: (f && cast) ? function() {
+      value: (f && c) ? function() {
           var x = v.apply(this, arguments);
-          return (x != null) ? cast(x) : null;
-        } : (((v != null) && cast) ? cast(v) : v)
+          return (x != null) ? c(x) : null;
+        } : (((v != null) && c) ? c(v) : v)
     };
   this.$properties.push(p);
   return p;
@@ -684,8 +684,8 @@ pv.Mark.prototype.bind = function() {
         } else {
           defs.locked[name] = true;
         }
-        var cast = this.properties[name];
-        defs.values[name] = ((v != null) && cast) ? cast(v) : v;
+        var c = pv.Mark.cast[name];
+        defs.values[name] = ((v != null) && c) ? c(v) : v;
         return this;
       } else {
         return defs.values[name];
