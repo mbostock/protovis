@@ -1,7 +1,6 @@
 pv.Layout.arc = function(nodes, links) {
   var orient = "top",
       directed = false,
-      step, // the spacing between nodes, given the orientation
       w, // the cached parent panel width
       h, // cached parent panel height
       r; // cached Math.min(w, h) / 2
@@ -11,12 +10,8 @@ pv.Layout.arc = function(nodes, links) {
     w = this.parent.width();
     h = this.parent.height();
     r = Math.min(w, h) / 2;
-    switch (orient) {
-      case "top":
-      case "bottom": step = w / nodes.length; break;
-      case "left":
-      case "right": step = h / nodes.length; break;
-      case "radial": step = 2 * Math.PI / nodes.length; break;
+    for (var i = 0, n = nodes.length; i < n; i++) {
+      nodes[i].breadth = (i + .5) / n;
     }
   }
 
@@ -100,6 +95,11 @@ pv.Layout.arc = function(nodes, links) {
       return l;
     });
 
+  /** @private Returns the angle of the given node. */
+  function angle(n) {
+    return (n.breadth - .25) * 2 * Math.PI;
+  }
+
   /**
    * The node prototype. This prototype is intended to be used with a Dot mark
    * in conjunction with the link prototype.
@@ -115,10 +115,10 @@ pv.Layout.arc = function(nodes, links) {
       .left(function(n) {
           switch (orient) {
             case "top":
-            case "bottom": return (n.nodeName + .5) * step;
+            case "bottom": return n.breadth * w;
             case "left": return 0;
             case "right": return w;
-            case "radial": return w / 2 + r * Math.cos(n.nodeName * step);
+            case "radial": return w / 2 + r * Math.cos(angle(n));
           }
         })
       .top(function top(n) {
@@ -126,8 +126,8 @@ pv.Layout.arc = function(nodes, links) {
             case "top": return 0;
             case "bottom": return h;
             case "left":
-            case "right": return (n.nodeName + .5) * step;
-            case "radial": return h / 2 + r * Math.sin(n.nodeName * step);
+            case "right": return n.breadth * h;
+            case "radial": return h / 2 + r * Math.sin(angle(n));
           }
         });
 
@@ -145,7 +145,7 @@ pv.Layout.arc = function(nodes, links) {
           return (orient == "radial") ? "linear" : "polar";
         })
       .data(function(p) {
-          return (directed || (p[0].nodeName < p[1].nodeName))
+          return (directed || (p[0].breadth < p[1].breadth))
               ? p // no reverse necessary, arc will be drawn as intended
               : [p[1], p[0]];
         })
@@ -174,7 +174,7 @@ pv.Layout.arc = function(nodes, links) {
             case "left":
             case "right": return 0;
           }
-          var a = n.nodeName * step;
+          var a = angle(n);
           return pv.Wedge.upright(a) ? a : (a + Math.PI);
         })
       .textAlign(function(n) {
@@ -184,7 +184,7 @@ pv.Layout.arc = function(nodes, links) {
             case "bottom":
             case "left": return "right";
           }
-          return pv.Wedge.upright(n.nodeName * step) ? "left" : "right";
+          return pv.Wedge.upright(angle(n)) ? "left" : "right";
         });
 
   return layout;

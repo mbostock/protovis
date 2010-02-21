@@ -48,7 +48,7 @@ pv.Layout.cluster = function(map) {
       });
 
     /* Compute the unit breadth and depth of each node. */
-    var leafIndex = 0, step = 1 / leafCount, p = undefined;
+    var leafIndex = .5 - g / 2, step = 1 / leafCount, p = undefined;
     root.visitAfter(function(n) {
         if (n.firstChild) {
           var b = 0;
@@ -59,7 +59,7 @@ pv.Layout.cluster = function(map) {
             p = n.parentNode;
             leafIndex += g;
           }
-          b = step * (.5 + leafIndex++);
+          b = step * leafIndex++;
         }
         n.breadth = b;
         n.depth = 1 - n.depth / root.depth;
@@ -75,7 +75,6 @@ pv.Layout.cluster = function(map) {
         n.maxDepth = n.parentNode ? (n.depth + root.depth) : (n.minDepth + 2 * root.depth);
       });
     root.minDepth = -ds;
-    root.minBreadth = 0;
     return nodes;
   }
 
@@ -311,8 +310,8 @@ pv.Layout.cluster = function(map) {
         })
       .innerRadius(function(n) { return Math.max(0, scale(n.minDepth, ds / 2)) * r; })
       .outerRadius(function(n) { return scale(n.maxDepth, ds / 2) * r; })
-      .startAngle(function(n) { return (n.minBreadth - .25) * 2 * Math.PI; })
-      .endAngle(function(n) { return (n.maxBreadth - .25) * 2 * Math.PI; });
+      .startAngle(function(n) { return (n.parentNode ? n.minBreadth - .25 : 0) * 2 * Math.PI; })
+      .endAngle(function(n) { return (n.parentNode ? n.maxBreadth - .25 : 1) * 2 * Math.PI; });
 
   return layout;
 };

@@ -27,8 +27,7 @@ vis.add(pv.Dot)
     .extend(graph.node)
     .size(function(d) d.linkDegree + 4)
   .add(pv.Label)
-    .extend(graph.label)
-    .text(function(d) d.nodeValue);
+    .extend(graph.label);
 
 vis.render();
 
