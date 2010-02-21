@@ -75,9 +75,7 @@ JS_PV_FILES = \
 
 JS_FILES = \
 	$(JS_LANG_FILES) \
-	src/pv-start.js \
 	$(JS_PV_FILES) \
-	src/pv-end.js \
 	src/lang/init.js
 
 all: protovis-d3.2.js protovis-r3.2.js
@@ -91,9 +89,7 @@ protovis-d3.2.js: $(JS_FILES) Makefile
 protovis-r3.2.js: $(JS_FILES) Makefile
 	rm -f $@
 	cat $(JS_LANG_FILES) | java -jar lib/yuicompressor-2.4.2.jar --charset UTF-8 --type js >> $@
-	cat src/pv-start.js >> $@
 	cat $(JS_PV_FILES) | java -jar lib/yuicompressor-2.4.2.jar --charset UTF-8 --type js >> $@
-	cat src/pv-end.js >> $@
 	cat src/lang/init.js | java -jar lib/yuicompressor-2.4.2.jar --charset UTF-8 --type js >> $@
 
 clean:

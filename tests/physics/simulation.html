@@ -46,7 +46,7 @@ vis.add(pv.Panel)
     .left(function(i, d) d.x + i * 10 * d.vx)
     .top(function(i, d) d.y + i * 10 * d.vy);
 
-setInterval(function() { 
+setInterval(function() {
     sim.step();
     vis.render();
   }, 42);
