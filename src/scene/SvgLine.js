@@ -15,21 +15,30 @@ pv.SvgScene.line = function(scenes) {
   if (!fill.opacity && !stroke.opacity) return e;
 
   /* points */
-  var p = "";
+  var d = "", t = "M";
   for (var i = 0; i < scenes.length; i++) {
     var si = scenes[i];
-    p += si.left + "," + si.top + " ";
+    d += t + si.left + " " + si.top + " ";
 
     /* interpolate (assume linear by default) */
     if (i < scenes.length - 1) {
+      t = "L";
       var sj = scenes[i + 1];
       switch (s.interpolate) {
+        case "polar": {
+          var dx = sj.left - si.left,
+              dy = sj.top - si.top,
+              r = Math.sqrt(dx * dx + dy * dy) / 2;
+          d += "A" + r + " " + r + " 0 1 1 ";
+          t = "";
+          break;
+        }
         case "step-before": {
-          p += si.left + "," + sj.top + " ";
+          d += "V" + sj.top + " ";
           break;
         }
         case "step-after": {
-          p += sj.left + "," + si.top + " ";
+          d += "H" + sj.left + " ";
           break;
         }
       }
@@ -37,10 +46,10 @@ pv.SvgScene.line = function(scenes) {
   }
 
 
-  e = this.expect("polyline", e);
+  e = this.expect("path", e);
   e.setAttribute("shape-rendering", s.antialias ? "auto" : "crispEdges");
   e.setAttribute("cursor", s.cursor);
-  e.setAttribute("points", p);
+  e.setAttribute("d", d);
   e.setAttribute("fill", fill.color);
   e.setAttribute("fill-opacity", fill.opacity);
   e.setAttribute("stroke", stroke.color);

@@ -66,6 +66,7 @@ JS_PV_FILES = \
 	src/layout/Force.js \
 	src/layout/Cluster.js \
 	src/layout/Partition.js \
+	src/layout/Arc.js \
 	src/behavior/Behavior.js \
 	src/behavior/Drag.js \
 	src/behavior/Select.js \

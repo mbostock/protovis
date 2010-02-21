@@ -1,0 +1,24 @@
+<html>
+  <head>
+    <title>Line Fill</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(150)
+    .height(150);
+
+vis.add(pv.Line)
+    .data(pv.range(-.1, 2 * Math.PI, .1))
+    .left(function(d) Math.cos(d) * (Math.cos(d * 5) + 5) * 10 + 75)
+    .top(function(d) Math.sin(d) * (Math.cos(d * 5) + 5) * 10 + 75)
+    .fillStyle("orange")
+    .interpolate("polar");
+
+vis.render();
+
+    </script>
+  </body>
+</html>

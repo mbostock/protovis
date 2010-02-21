@@ -17,13 +17,15 @@ pv.Layout.cluster = function(map) {
     return n.depth = d;
   }
 
-  /** @private The layout is computed as a side-effect of the data property. */
-  function data() {
-    /* Cache the parent panel dimensions to avoid repeated lookup. */
+  /** @private Cache the parent panel dimensions to avoid repeated lookup. */
+  function init() {
     w = this.parent.width();
     h = this.parent.height();
     r = Math.min(w, h) / 2;
+  }
 
+  /** @private The layout, on which all public methods are registered. */
+  function layout() {
     /* If the layout was previously computed, use that. */
     if (nodes) return nodes;
     nodes = pv.dom(map).nodes();
@@ -46,7 +48,7 @@ pv.Layout.cluster = function(map) {
       });
 
     /* Compute the unit breadth and depth of each node. */
-    var leafIndex = 0, step = 1 / leafCount, p = undefined;
+    var leafIndex = .5 - g / 2, step = 1 / leafCount, p = undefined;
     root.visitAfter(function(n) {
         if (n.firstChild) {
           var b = 0;
@@ -57,7 +59,7 @@ pv.Layout.cluster = function(map) {
             p = n.parentNode;
             leafIndex += g;
           }
-          b = step * (.5 + leafIndex++);
+          b = step * leafIndex++;
         }
         n.breadth = b;
         n.depth = 1 - n.depth / root.depth;
@@ -73,13 +75,8 @@ pv.Layout.cluster = function(map) {
         n.maxDepth = n.parentNode ? (n.depth + root.depth) : (n.minDepth + 2 * root.depth);
       });
     root.minDepth = -ds;
-    root.minBreadth = 0;
-
     return nodes;
   }
-
-  /** @private The layout, on which all public methods are registered. */
-  var layout = {};
 
   /**
    * Sets or gets the orientation. The default orientation is "left", which
@@ -100,7 +97,7 @@ pv.Layout.cluster = function(map) {
    */
   layout.orient = function(v) {
     if (arguments.length) {
-      orient = v;
+      orient = String(v);
       return this;
     }
     return orient;
@@ -155,7 +152,7 @@ pv.Layout.cluster = function(map) {
    * @name pv.Layout.cluster.prototype.nodes
    * @returns {array}
    */
-  layout.nodes = data;
+  layout.nodes = layout;
 
   /**
    * Returns the links associated with this layout. Each link is represented as
@@ -167,9 +164,7 @@ pv.Layout.cluster = function(map) {
    * @returns {array}
    */
   layout.links = function() {
-    return data.call(this)
-        .filter(function(n) { return n.parentNode; })
-        .map(function(n) { return [n, n.parentNode]; });
+    return layout().slice(1).map(function(n) { return [n, n.parentNode]; });
   };
 
   /** @private Returns the radius of the given node. */
@@ -195,7 +190,8 @@ pv.Layout.cluster = function(map) {
    * @name pv.Layout.cluster.prototype.node
    */
   layout.node = new pv.Mark()
-      .data(data)
+      .def("init", init)
+      .data(layout)
       .strokeStyle("#1f77b4")
       .fillStyle("white")
       .left(function(n) {
@@ -275,7 +271,7 @@ pv.Layout.cluster = function(map) {
    * @name pv.Layout.cluster.prototype.bar
    */
   layout.fill = new pv.Mark()
-      .data(data)
+      .extend(layout.node)
       .strokeStyle("#fff")
       .fillStyle("#ccc")
       .left(function(n) {
@@ -314,8 +310,8 @@ pv.Layout.cluster = function(map) {
         })
       .innerRadius(function(n) { return Math.max(0, scale(n.minDepth, ds / 2)) * r; })
       .outerRadius(function(n) { return scale(n.maxDepth, ds / 2) * r; })
-      .startAngle(function(n) { return (n.minBreadth - .25) * 2 * Math.PI; })
-      .endAngle(function(n) { return (n.maxBreadth - .25) * 2 * Math.PI; });
+      .startAngle(function(n) { return (n.parentNode ? n.minBreadth - .25 : 0) * 2 * Math.PI; })
+      .endAngle(function(n) { return (n.parentNode ? n.maxBreadth - .25 : 1) * 2 * Math.PI; });
 
   return layout;
 };
