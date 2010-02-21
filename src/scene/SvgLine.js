@@ -18,7 +18,7 @@ pv.SvgScene.line = function(scenes) {
   var d = "", t = "M";
   for (var i = 0; i < scenes.length; i++) {
     var si = scenes[i];
-    d += t + si.left + " " + si.top + " ";
+    d += t + si.left + "," + si.top;
 
     /* interpolate (assume linear by default) */
     if (i < scenes.length - 1) {
@@ -29,16 +29,16 @@ pv.SvgScene.line = function(scenes) {
           var dx = sj.left - si.left,
               dy = sj.top - si.top,
               r = Math.sqrt(dx * dx + dy * dy) / 2;
-          d += "A" + r + " " + r + " 0 1 1 ";
-          t = "";
+          d += "A" + r + "," + r + " 0 1,1";
+          t = " ";
           break;
         }
         case "step-before": {
-          d += "V" + sj.top + " ";
+          d += "V" + sj.top;
           break;
         }
         case "step-after": {
-          d += "H" + sj.left + " ";
+          d += "H" + sj.left;
           break;
         }
       }
