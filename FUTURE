@@ -1,0 +1,32 @@
+data/PowerScale.js
+- finish implementation
+
+data/?
+- AJAX helper? or refer to jQuery
+
+layout/Layot.js
+- other algorithms: ballon, dig-cola, attribute graph, matrix, arc diagram?
+
+mark/Mark.js
+- allow mixin rather than single inheritance?
+- linear and radial gradient fills
+- pattern fills
+- drop shadows, blurring, other graphical effects?
+- animation
+- faster incremental rendering (detect properties)
+- rendering optimizations / minimal SVG?
+- remove first, last, cousin, sibling methods?
+
+mark/Bar.js
+- rounded corners
+
+mark/Line.js
+- support fillStyle on segmented lines
+- spline interpolation
+- arrows (markers)?
+
+mark/Label.js
+- text metrics API for smart label placement
+
+mark/Area.js
+- spline interpolation

@@ -1,14 +1,8 @@
 data/Matrix.js
 - documentation
 
-data/PowerScale.js
-- finish implementation
-
 data/Scale.js
 - consolidate code between scale implementations
-
-data/?
-- AJAX helper? or refer to jQuery
 
 layout/Layot.js
 - use def("init") to initialize rather than depend on data (link inheritance)
@@ -17,7 +11,6 @@ layout/Layot.js
 - allow or require pv.Dom.Node as input, rather than maps?
 - standardize node.depth, node.size? otherwise hide internal attributes?
 - allow interactive expanding / collapsing of tree nodes?
-- other algorithms: ballon, dig-cola, attribute graph, matrix, arc diagram?
 
 layout/Tree.js
 - allow depth and breadth offset to be computed automatically
@@ -26,10 +19,11 @@ layout/{Cluster,Partition}.js
 - support customized inner/outer radius
 
 layout/Force.js
-- enforce panel bounds? or unnecessary given pan and zoom?
 - specify nodes and links using methods, rather than ctor arguments?
 - behaves differently from pv.dom, kind of confusing
 - Dorling Cartogram example
+- cooling schedule to reduce cpu usage as layout stabilizes
+- automatic support for computing layout statically
 
 layout/Treemap.js
 - use pv.Dom.Node
@@ -38,14 +32,6 @@ layout/Stack.js
 - make class rather than property
 
 mark/Mark.js
-- allow mixin rather than single inheritance?
-- linear and radial gradient fills
-- pattern fills
-- drop shadows, blurring, other graphical effects?
-- animation
-- faster incremental rendering (detect properties)
-- rendering optimizations / minimal SVG?
-- remove first, last, cousin, sibling methods?
 - standardize window.event access for event handlers?
 - antialias doesn't always work as expected; requires pixel rounding?
 - event("ignore") to disable pointer-events?
@@ -53,26 +39,13 @@ mark/Mark.js
 mark/Panel.js
 - support transform on panel directly, making pv.Behavior.transform more useful
 
-mark/Bar.js
-- rounded corners
-
-mark/Line.js
-- support fillStyle on segmented lines
-- spline interpolation
-- arrows (markers)?
-
-mark/Label.js
-- text metrics API for smart label placement
-
 mark/Panel.js
 - overflow documentation
-
-mark/Area.js
-- spline interpolation
 
 behavior/*
 - documentation, implementation, etc.
 - pv.Mark.context to encapsulate item reference, evaluation state?
+- should pv.Behavior.{drag,transform} automatically redraw?
 
 physics/Simulation.js
 - use a constraint rather than `fixed` property to allow dragging?
