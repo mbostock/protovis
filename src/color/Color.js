@@ -27,7 +27,7 @@
  */
 pv.color = function(format) {
   if (format == "transparent") return none;
-  if (format instanceof pv.Color) return format;
+  if (format instanceof pv.Color) return format.rgb();
 
   /* Handle hsl, rgb. */
   var m1 = /([a-z]+)\((.*)\)/i.exec(format);
