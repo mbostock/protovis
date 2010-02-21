@@ -1,5 +1,6 @@
 pv.Layout.arc = function(nodes, links) {
   var orient = "top",
+      directed = false,
       step, // the spacing between nodes, given the orientation
       w, // the cached parent panel width
       h, // cached parent panel height
@@ -41,12 +42,40 @@ pv.Layout.arc = function(nodes, links) {
    */
   layout.orient = function(v) {
     if (arguments.length) {
-      orient = v;
+      orient = String(v);
       return this;
     }
     return orient;
   };
 
+  /**
+   * Sets or gets whether this arc digram is directed (bidirectional). By
+   * default, arc digrams are undirected, such that all arcs will appear on one
+   * side (for non-radial orientations). If the arc digram is directed, then
+   * forward links will exist on the conventional side (the same as as
+   * undirected links--right, left, bottom and top for left, right, top and
+   * bottom, respectively), while reverse links exist on the opposite side.
+   *
+   * @param {boolean} x whether or not this arc digram is directed.
+   * @function
+   * @name pv.Layout.arc.prototype.directed
+   * @returns {pv.Layout.arc} this, or the current directedness.
+   */
+  layout.directed = function(x) {
+    if (arguments.length) {
+      directed = Boolean(x);
+      return this;
+    }
+    return directed;
+  };
+
+  /**
+   * Returns the nodes associated with this layout.
+   *
+   * @function
+   * @name pv.Layout.arc.prototype.nodes
+   * @returns {array}
+   */
   layout.nodes = nodes = nodes.map(function(d, i) {
       return {nodeName: i, nodeValue: d, linkDegree: 0};
     });
@@ -63,35 +92,13 @@ pv.Layout.arc = function(nodes, links) {
   layout.links = links = links.map(function(d) {
       var s = nodes[d.source],
           t = nodes[d.target],
+          l = [s, t],
           v = isNaN(d.value) ? 1 : d.value;
-      var l = (d.source < d.target) ? [s, t] : [t, s];
       s.linkDegree += v;
       t.linkDegree += v;
       l.linkValue = v;
       return l;
     });
-
-  /** @private Computes the left-coordinate of the given node. */
-  function left(n) {
-    switch (orient) {
-      case "top":
-      case "bottom": return n.nodeName * step;
-      case "left": return 0;
-      case "right": return w;
-      case "radial": return w / 2 + r * Math.cos(n.nodeName * step);
-    }
-  }
-
-  /** @private Computes the top-coordinate of the given node. */
-  function top(n) {
-    switch (orient) {
-      case "top": return 0;
-      case "bottom": return h;
-      case "left":
-      case "right": return n.nodeName * step;
-      case "radial": return h / 2 + r * Math.sin(n.nodeName * step);
-    }
-  }
 
   /**
    * The node prototype. This prototype is intended to be used with a Dot mark
@@ -105,8 +112,24 @@ pv.Layout.arc = function(nodes, links) {
       .data(nodes)
       .strokeStyle("#1f77b4")
       .fillStyle("#fff")
-      .left(left)
-      .top(top);
+      .left(function(n) {
+          switch (orient) {
+            case "top":
+            case "bottom": return (n.nodeName + .5) * step;
+            case "left": return 0;
+            case "right": return w;
+            case "radial": return w / 2 + r * Math.cos(n.nodeName * step);
+          }
+        })
+      .top(function top(n) {
+          switch (orient) {
+            case "top": return 0;
+            case "bottom": return h;
+            case "left":
+            case "right": return (n.nodeName + .5) * step;
+            case "radial": return h / 2 + r * Math.sin(n.nodeName * step);
+          }
+        });
 
   /**
    * The link prototype, which renders edges between child nodes and their
@@ -116,43 +139,19 @@ pv.Layout.arc = function(nodes, links) {
    * @type pv.Mark
    * @name pv.Layout.arc.prototype.link
    */
-  layout.link = new pv.Mark().extend(layout.node)
+  layout.link = new pv.Mark()
+      .extend(layout.node)
+      .interpolate(function() {
+          return (orient == "radial") ? "linear" : "polar";
+        })
       .data(function(p) {
-          return (orient == "radial")
-              ? p
-              : [p]; // only need a single wedge to draw the arc
+          return (directed || (p[0].nodeName < p[1].nodeName))
+              ? p // no reverse necessary, arc will be drawn as intended
+              : [p[1], p[0]];
         })
       .fillStyle(null)
-      .lineWidth(function(d, p) { return p.linkValue; })
-      .strokeStyle("rgba(0,0,0,.2)")
-      .left(function(d) {
-          return (orient == "radial")
-              ? left(d)
-              : (left(d[0]) + left(d[1])) / 2;
-        })
-      .top(function(d) {
-          return (orient == "radial")
-              ? top(d)
-              : (top(d[0]) + top(d[1])) / 2;
-        })
-      .angle(Math.PI)
-      .startAngle(function(d) {
-          switch (orient) {
-            case "top": return -Math.PI;
-            case "bottom": return 0;
-            case "left": return Math.PI / 2;
-            case "right": return -Math.PI / 2;
-          }
-        })
-      .outerRadius(function(d) {
-          switch (orient) {
-            case "top":
-            case "bottom": return (left(d[0]) - left(d[1])) / 2;
-            case "left":
-            case "right": return (top(d[0]) - top(d[1])) / 2;
-          }
-        })
-      .innerRadius(function() { return this.outerRadius(); });
+      .lineWidth(function(d, p) { return p.linkValue * 1.5; })
+      .strokeStyle("rgba(0,0,0,.2)");
 
   /**
    * The node label prototype, which renders the node name adjacent to the node.
@@ -167,7 +166,7 @@ pv.Layout.arc = function(nodes, links) {
       .extend(layout.node)
       .textMargin(7)
       .textBaseline("middle")
-      .text(function(n) { return n.parentNode ? n.nodeName : "root"; })
+      .text(function(n) { return n.nodeValue; })
       .textAngle(function(n) {
           switch (orient) {
             case "top":

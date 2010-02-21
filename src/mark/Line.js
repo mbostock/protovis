@@ -73,7 +73,7 @@ pv.Line.prototype.type = "line";
  * How to interpolate between values. Linear interpolation ("linear") is the
  * default, producing a straight line between points. For piecewise constant
  * functions (i.e., step functions), either "step-before" or "step-after" can be
- * specified.
+ * specified. To draw a clockwise circular arc between points, specify "polar".
  *
  * <p>Note: this property is currently supported only on non-segmented lines.
  *

@@ -1,0 +1,38 @@
+<html>
+  <head>
+    <title>Diamond Arc</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../diamond.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vertices = pv.dom(diamond(3, 4, 4)).nodes(),
+    edges = vertices.slice(1).map(function(n) {
+        return {source: n.nodeName, target: n.parentNode.nodeName || 0};
+      });
+
+var graph = pv.Layout.arc(vertices, edges)
+    .orient("left");
+
+var vis = new pv.Panel()
+    .width(400)
+    .height(400)
+    .top(10)
+    .left(10)
+    .right(10)
+    .bottom(10);
+
+vis.add(pv.Panel)
+    .data(graph.links)
+  .add(pv.Line)
+    .extend(graph.link);
+
+vis.add(pv.Dot)
+    .extend(graph.node);
+
+vis.render();
+
+    </script>
+  </body>
+</html>

@@ -38,6 +38,7 @@ layout/Stack.js
 - make class rather than property
 
 mark/Mark.js
+- onmousewheel interferes with scrolling if not handled
 - allow mixin rather than single inheritance?
 - linear and radial gradient fills
 - pattern fills

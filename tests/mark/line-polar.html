@@ -1,0 +1,36 @@
+<html>
+  <head>
+    <title>Line Fill</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(400)
+    .height(400)
+    .left(10)
+    .top(10)
+    .bottom(10)
+    .right(10);
+
+vis.add(pv.Line)
+    .data([{x:0,y:100},{x:100,y:100}])
+    .strokeStyle("red")
+    .fillStyle(function() this.strokeStyle().darker().alpha(.5))
+    .lineWidth(10)
+    .left(function(d) d.x)
+    .top(function(d) d.y)
+    .interpolate("polar")
+  .add(pv.Line)
+    .strokeStyle("green")
+    .data([{x:200,y:100},{x:100,y:100}])
+  .add(pv.Line)
+    .strokeStyle("blue")
+    .data([{x:200,y:0},{x:200,y:100}]);
+
+vis.render();
+
+    </script>
+  </body>
+</html>

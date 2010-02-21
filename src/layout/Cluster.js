@@ -17,13 +17,15 @@ pv.Layout.cluster = function(map) {
     return n.depth = d;
   }
 
-  /** @private The layout is computed as a side-effect of the data property. */
-  function data() {
-    /* Cache the parent panel dimensions to avoid repeated lookup. */
+  /** @private Cache the parent panel dimensions to avoid repeated lookup. */
+  function init() {
     w = this.parent.width();
     h = this.parent.height();
     r = Math.min(w, h) / 2;
+  }
 
+  /** @private The layout, on which all public methods are registered. */
+  function layout() {
     /* If the layout was previously computed, use that. */
     if (nodes) return nodes;
     nodes = pv.dom(map).nodes();
@@ -74,12 +76,8 @@ pv.Layout.cluster = function(map) {
       });
     root.minDepth = -ds;
     root.minBreadth = 0;
-
     return nodes;
   }
-
-  /** @private The layout, on which all public methods are registered. */
-  var layout = {};
 
   /**
    * Sets or gets the orientation. The default orientation is "left", which
@@ -100,7 +98,7 @@ pv.Layout.cluster = function(map) {
    */
   layout.orient = function(v) {
     if (arguments.length) {
-      orient = v;
+      orient = String(v);
       return this;
     }
     return orient;
@@ -155,7 +153,7 @@ pv.Layout.cluster = function(map) {
    * @name pv.Layout.cluster.prototype.nodes
    * @returns {array}
    */
-  layout.nodes = data;
+  layout.nodes = layout;
 
   /**
    * Returns the links associated with this layout. Each link is represented as
@@ -167,9 +165,7 @@ pv.Layout.cluster = function(map) {
    * @returns {array}
    */
   layout.links = function() {
-    return data.call(this)
-        .filter(function(n) { return n.parentNode; })
-        .map(function(n) { return [n, n.parentNode]; });
+    return layout().slice(1).map(function(n) { return [n, n.parentNode]; });
   };
 
   /** @private Returns the radius of the given node. */
@@ -195,7 +191,8 @@ pv.Layout.cluster = function(map) {
    * @name pv.Layout.cluster.prototype.node
    */
   layout.node = new pv.Mark()
-      .data(data)
+      .def("init", init)
+      .data(layout)
       .strokeStyle("#1f77b4")
       .fillStyle("white")
       .left(function(n) {
@@ -275,7 +272,7 @@ pv.Layout.cluster = function(map) {
    * @name pv.Layout.cluster.prototype.bar
    */
   layout.fill = new pv.Mark()
-      .data(data)
+      .extend(layout.node)
       .strokeStyle("#fff")
       .fillStyle("#ccc")
       .left(function(n) {
