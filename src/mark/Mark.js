@@ -1019,14 +1019,11 @@ pv.Mark.prototype.event = function(type, handler) {
 /** @private TODO */
 pv.Mark.prototype.dispatch = function(type, scenes, index) {
   var l = this.$handlers && this.$handlers[type];
-  if (!l) {
-    if (this.parent) {
-      this.parent.dispatch(type, scenes.parent, scenes.parentIndex);
-    }
-    return;
-  }
-  try {
+  if (!l) return this.parent
+      ? this.parent.dispatch(type, scenes.parent, scenes.parentIndex)
+      : false;
 
+  try {
     /* Setup the scene stack. */
     var mark = this;
     do {
@@ -1045,9 +1042,7 @@ pv.Mark.prototype.dispatch = function(type, scenes, index) {
 
     /* Update the display. TODO dirtying. */
     if (mark instanceof pv.Mark) mark.render();
-
   } finally {
-
     /* Restore the scene stack. */
     var mark = this;
     do {
@@ -1055,4 +1050,6 @@ pv.Mark.prototype.dispatch = function(type, scenes, index) {
       delete mark.index;
     } while (mark = mark.parent);
   }
+
+  return true;
 };

@@ -121,8 +121,7 @@ pv.SvgScene.title = function(e, s) {
 /** TODO */
 pv.SvgScene.dispatch = function(e) {
   var t = e.target.$scene;
-  if (t) {
-    t.scenes.mark.dispatch(e.type, t.scenes, t.index);
+  if (t && t.scenes.mark.dispatch(e.type, t.scenes, t.index)) {
     e.preventDefault();
   }
 };
