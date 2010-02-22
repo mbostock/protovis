@@ -27,7 +27,7 @@ vis.anchor("top").add(pv.Dot)
     .fillStyle("lightcoral")
     .strokeStyle("hsla(240,50%,50%,.5)")
     .lineWidth(10)
-    .event("click", function() this.lineWidth(this.lineWidth() + 20))
+    .event("mousedown", function() this.lineWidth(this.lineWidth() + 20))
   .anchor("center").add(pv.Label)
     .text("DO NOT PUSH");
 
@@ -37,7 +37,7 @@ vis.anchor("bottom").add(pv.Dot)
     .fillStyle("lightcoral")
     .strokeStyle("hsla(240,50%,50%,.5)")
     .lineWidth(10)
-    .event("click", function() this.lineWidth(this.lineWidth() + 20));
+    .event("mousedown", function() this.lineWidth(this.lineWidth() + 20));
 
 vis.render();
 
