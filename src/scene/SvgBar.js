@@ -9,18 +9,19 @@ pv.SvgScene.bar = function(scenes) {
         stroke = s.strokeStyle || pv.Color.none;
     if (!fill.opacity && !stroke.opacity) continue;
 
-    e = this.expect("rect", e);
-    e.setAttribute("shape-rendering", s.antialias ? "auto" : "crispEdges");
-    e.setAttribute("cursor", s.cursor);
-    e.setAttribute("x", s.left);
-    e.setAttribute("y", s.top);
-    e.setAttribute("width", Math.max(1E-10, s.width));
-    e.setAttribute("height", Math.max(1E-10, s.height));
-    e.setAttribute("fill", fill.color);
-    e.setAttribute("fill-opacity", fill.opacity);
-    e.setAttribute("stroke", stroke.color);
-    e.setAttribute("stroke-opacity", stroke.opacity);
-    e.setAttribute("stroke-width", s.lineWidth);
+    e = this.expect(e, "rect", {
+        "shape-rendering": s.antialias ? null : "crispEdges",
+        "cursor": s.cursor,
+        "x": s.left,
+        "y": s.top,
+        "width": Math.max(1E-10, s.width),
+        "height": Math.max(1E-10, s.height),
+        "fill": fill.color,
+        "fill-opacity": fill.opacity || null,
+        "stroke": stroke.color,
+        "stroke-opacity": stroke.opacity || null,
+        "stroke-width": stroke.opacity ? s.lineWidth : null
+      });
     e = this.append(e, scenes, i);
   }
   return e;

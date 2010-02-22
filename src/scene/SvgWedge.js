@@ -48,17 +48,17 @@ pv.SvgScene.wedge = function(scenes) {
       }
     }
 
-    e = this.expect("path", e);
-    e.setAttribute("shape-rendering", s.antialias ? "auto" : "crispEdges");
-    e.setAttribute("fill-rule", "evenodd");
-    e.setAttribute("cursor", s.cursor);
-    e.setAttribute("transform", "translate(" + s.left + "," + s.top + ")");
-    e.setAttribute("d", p);
-    e.setAttribute("fill", fill.color);
-    e.setAttribute("fill-opacity", fill.opacity);
-    e.setAttribute("stroke", stroke.color);
-    e.setAttribute("stroke-opacity", stroke.opacity);
-    e.setAttribute("stroke-width", s.lineWidth);
+    e = this.expect(e, "path", {
+        "shape-rendering": s.antialias ? null : "crispEdges",
+        "cursor": s.cursor,
+        "transform": "translate(" + s.left + "," + s.top + ")",
+        "d": p,
+        "fill": fill.color,
+        "fill-opacity": fill.opacity || null,
+        "stroke": stroke.color,
+        "stroke-opacity": stroke.opacity || null,
+        "stroke-width": stroke.opacity ? s.lineWidth : null
+      });
     e = this.append(e, scenes, i);
   }
   return e;

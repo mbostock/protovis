@@ -17,6 +17,11 @@ pv.SvgScene.panel = function(scenes) {
       }
       if (!g) {
         g = s.canvas.appendChild(this.create("svg"));
+        g.setAttribute("font-size", "10px");
+        g.setAttribute("font-family", "sans-serif");
+        g.setAttribute("fill", "none");
+        g.setAttribute("stroke", "none");
+        g.setAttribute("stroke-width", 1.5);
         g.style.display = "inline-block";
         g.onclick
             = g.onmousedown
@@ -35,15 +40,14 @@ pv.SvgScene.panel = function(scenes) {
 
     /* clip (nest children) */
     if (s.overflow == "hidden") {
-      var c = this.expect("g", e), id = (guid++).toString(36);
-      c.setAttribute("clip-path", "url(#" + id + ")");
+      var id = (guid++).toString(36),
+          c = this.expect(e, "g", {"clip-path": "url(#" + id + ")"});
       if (!c.parentNode) g.appendChild(c);
       scenes.$g = g = c;
       e = c.firstChild;
 
-      e = this.expect("clipPath", e);
-      e.setAttribute("id", id);
-      var r = e.firstChild ||  e.appendChild(this.create("rect"));
+      e = this.expect(e, "clipPath", {"id": id});
+      var r = e.firstChild || e.appendChild(this.create("rect"));
       r.setAttribute("x", s.left);
       r.setAttribute("y", s.top);
       r.setAttribute("width", s.width);
@@ -57,8 +61,9 @@ pv.SvgScene.panel = function(scenes) {
 
     /* children */
     for (var j = 0; j < s.children.length; j++) {
-      s.children[j].$g = e = this.expect("g", e);
-      e.setAttribute("transform", "translate(" + s.left + "," + s.top + ")");
+      s.children[j].$g = e = this.expect(e, "g", {
+          "transform": "translate(" + s.left + "," + s.top + ")"
+        });
       this.updateAll(s.children[j]);
       if (!e.parentNode) g.appendChild(e);
       e = e.nextSibling;
@@ -79,15 +84,17 @@ pv.SvgScene.panel = function(scenes) {
 pv.SvgScene.fill = function(e, scenes, i) {
   var s = scenes[i], fill = s.fillStyle || pv.Color.none;
   if (fill.opacity) {
-    e = this.expect("rect", e);
-    e.setAttribute("shape-rendering", s.antialias ? "auto" : "crispEdges");
-    e.setAttribute("x", s.left);
-    e.setAttribute("y", s.top);
-    e.setAttribute("width", s.width);
-    e.setAttribute("height", s.height);
-    e.setAttribute("cursor", s.cursor);
-    e.setAttribute("fill", fill.color);
-    e.setAttribute("fill-opacity", fill.opacity);
+    e = this.expect(e, "rect", {
+        "shape-rendering": s.antialias ? null : "crispEdges",
+        "cursor": s.cursor,
+        "x": s.left,
+        "y": s.top,
+        "width": s.width,
+        "height": s.height,
+        "fill": fill.color,
+        "fill-opacity": fill.opacity || null,
+        "stroke": null
+      });
     e = this.append(e, scenes, i);
   }
   return e;
@@ -96,17 +103,18 @@ pv.SvgScene.fill = function(e, scenes, i) {
 pv.SvgScene.stroke = function(e, scenes, i) {
   var s = scenes[i], stroke = s.strokeStyle || pv.Color.none;
   if (stroke.opacity) {
-    e = this.expect("rect", e);
-    e.setAttribute("shape-rendering", s.antialias ? "auto" : "crispEdges");
-    e.setAttribute("x", s.left);
-    e.setAttribute("y", s.top);
-    e.setAttribute("width", Math.max(1E-10, s.width));
-    e.setAttribute("height", Math.max(1E-10, s.height));
-    e.setAttribute("cursor", s.cursor);
-    e.setAttribute("fill", "none");
-    e.setAttribute("stroke", stroke.color);
-    e.setAttribute("stroke-opacity", stroke.opacity);
-    e.setAttribute("stroke-width", s.lineWidth);
+    e = this.expect(e, "rect", {
+        "shape-rendering": s.antialias ? null : "crispEdges",
+        "cursor": s.cursor,
+        "x": s.left,
+        "y": s.top,
+        "width": Math.max(1E-10, s.width),
+        "height": Math.max(1E-10, s.height),
+        "fill": null,
+        "stroke": stroke.color,
+        "stroke-opacity": stroke.opacity || null,
+        "stroke-width": stroke.opacity ? s.lineWidth : null
+      });
     e = this.append(e, scenes, i);
   }
   return e;

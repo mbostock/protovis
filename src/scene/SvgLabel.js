@@ -21,20 +21,21 @@ pv.SvgScene.label = function(scenes) {
       case "left": x = s.textMargin; break;
     }
 
-    e = this.expect("text", e);
-    e.setAttribute("pointer-events", "none");
-    e.setAttribute("x", x);
-    e.setAttribute("y", y);
-    e.setAttribute("dy", dy);
-    e.setAttribute("text-anchor", anchor);
-    e.setAttribute("transform",
-        "translate(" + s.left + "," + s.top + ")"
-        + (s.textAngle ? " rotate(" + 180 * s.textAngle / Math.PI + ")" : ""));
-    e.setAttribute("fill", fill.color);
-    e.setAttribute("fill-opacity", fill.opacity);
-    e.style.font = s.font;
-    e.style.textShadow = s.textShadow;
-    e.style.textDecoration = s.textDecoration;
+    e = this.expect(e, "text", {
+        "pointer-events": "none",
+        "x": x,
+        "y": y,
+        "dy": dy,
+        "transform": "translate(" + s.left + "," + s.top + ")"
+            + (s.textAngle ? " rotate(" + 180 * s.textAngle / Math.PI + ")" : ""),
+        "fill": fill.color,
+        "fill-opacity": fill.opacity || null,
+        "text-anchor": anchor
+      }, {
+        "font": s.font,
+        "text-shadow": s.textShadow,
+        "text-decoration": s.textDecoration
+      });
     if (e.firstChild) e.firstChild.nodeValue = s.text;
     else e.appendChild(document.createTextNode(s.text));
     e = this.append(e, scenes, i);

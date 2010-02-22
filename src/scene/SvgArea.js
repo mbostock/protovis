@@ -39,17 +39,16 @@ pv.SvgScene.area = function(scenes) {
     }
   }
 
-  e = this.expect("polygon", e);
-  e.setAttribute("shape-rendering", s.antialias ? "auto" : "crispEdges");
-  e.setAttribute("cursor", s.cursor);
-  e.setAttribute("points", p1 + p2);
-  var fill = s.fillStyle || pv.Color.none;
-  e.setAttribute("fill", fill.color);
-  e.setAttribute("fill-opacity", fill.opacity);
-  var stroke = s.strokeStyle || pv.Color.none;
-  e.setAttribute("stroke", stroke.color);
-  e.setAttribute("stroke-opacity", stroke.opacity);
-  e.setAttribute("stroke-width", s.lineWidth);
+  e = this.expect(e, "polygon", {
+      "shape-rendering": s.antialias ? null : "crispEdges",
+      "cursor": s.cursor,
+      "points": p1 + p2,
+      "fill": fill.color,
+      "fill-opacity": fill.opacity || null,
+      "stroke": stroke.color,
+      "stroke-opacity": stroke.opacity || null,
+      "stroke-width": stroke.opacity ? s.lineWidth : null
+    });
   return this.append(e, scenes, 0);
 };
 
@@ -70,15 +69,16 @@ pv.SvgScene.areaSegment = function(scenes) {
         + (s2.left + s2.width) + "," + (s2.top + s2.height) + " "
         + (s1.left + s1.width) + "," + (s1.top + s1.height);
 
-    e = this.expect("polygon", e);
-    e.setAttribute("shape-rendering", s1.antialias ? "auto" : "crispEdges");
-    e.setAttribute("cursor", s1.cursor);
-    e.setAttribute("points", p);
-    e.setAttribute("fill", fill.color);
-    e.setAttribute("fill-opacity", fill.opacity);
-    e.setAttribute("stroke", stroke.color);
-    e.setAttribute("stroke-opacity", stroke.opacity);
-    e.setAttribute("stroke-width", s1.lineWidth);
+    e = this.expect(e, "polygon", {
+        "shape-rendering": s1.antialias ? null : "crispEdges",
+        "cursor": s1.cursor,
+        "points": p,
+        "fill": fill.color,
+        "fill-opacity": fill.opacity || null,
+        "stroke": stroke.color,
+        "stroke-opacity": stroke.opacity || null,
+        "stroke-width": stroke.opacity ? s1.lineWidth : null
+      });
     e = this.append(e, scenes, i);
   }
   return e;

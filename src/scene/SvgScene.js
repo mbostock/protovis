@@ -71,16 +71,36 @@ pv.SvgScene.create = function(type) {
  * not exist, a new one is created. If the element does exist but is the wrong
  * type, it is replaced with the specified element.
  *
+ * @param e the current SVG element.
  * @param type {string} an SVG element type, such as "rect".
+ * @param attributes an optional attribute map.
+ * @param style an optional style map.
  * @returns a new SVG element.
  */
-pv.SvgScene.expect = function(type, e) {
-  if (!e) return this.create(type);
-  if (e.tagName == "a") e = e.firstChild;
-  if (e.tagName == type) return e;
-  var n = this.create(type);
-  e.parentNode.replaceChild(n, e);
-  return n;
+pv.SvgScene.expect = function(e, type, attributes, style) {
+  if (e) {
+    if (e.tagName == "a") e = e.firstChild;
+    if (e.tagName != type) {
+      var n = this.create(type);
+      e.parentNode.replaceChild(n, e);
+      e = n;
+    }
+  } else {
+    e = this.create(type);
+  }
+  for (var name in attributes) {
+    var value = attributes[name];
+    if (value == pv.SvgScene.implicit.svg[name]) value = null;
+    if (value == null) e.removeAttribute(name);
+    else e.setAttribute(name, value);
+  }
+  for (var name in style) {
+    var value = style[name];
+    if (value == pv.SvgScene.implicit.css[name]) value = null;
+    if (value == null) e.style.removeProperty(name);
+    else e.style.setProperty(name, value);
+  }
+  return e;
 };
 
 /** TODO */
@@ -132,5 +152,28 @@ pv.SvgScene.removeSiblings = function(e) {
     var n = e.nextSibling;
     e.parentNode.removeChild(e);
     e = n;
+  }
+};
+
+/** @private */
+pv.SvgScene.implicit = {
+  svg: {
+    "shape-rendering": "auto",
+    "x": 0,
+    "y": 0,
+    "dy": 0,
+    "text-anchor": "start",
+    "cursor": "",
+    "transform": "translate(0,0)",
+    "fill": "none",
+    "fill-opacity": 1,
+    "stroke": "none",
+    "stroke-opacity": 1,
+    "stroke-width": 1.5
+  },
+  css: {
+    "font": "10px sans-serif",
+    "text-shadow": "",
+    "text-decoration": ""
   }
 };

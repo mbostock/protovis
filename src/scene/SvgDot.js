@@ -50,27 +50,24 @@ pv.SvgScene.dot = function(scenes) {
       }
     }
 
-    /* transform */
-    var transform = "translate(" + s.left + "," + s.top + ")";
-
     /* Use <circle> for circles, <path> for everything else. */
+    var svg = {
+      "transform": "translate(" + s.left + "," + s.top + ")",
+      "shape-rendering": s.antialias ? null : "crispEdges",
+      "fill": fill.color,
+      "fill-opacity": fill.opacity || null,
+      "stroke": stroke.color,
+      "stroke-opacity": stroke.opacity || null,
+      "stroke-width": stroke.opacity ? s.lineWidth : null
+    };
     if (path) {
-      if (s.angle) transform += " rotate(" + 180 * s.angle / Math.PI + ")";
-      e = this.expect("path", e);
-      e.setAttribute("d", path);
+      if (s.angle) svg.transform += " rotate(" + 180 * s.angle / Math.PI + ")";
+      svg.d = path;
+      e = this.expect(e, "path", svg);
     } else {
-      e = this.expect("circle", e);
-      e.setAttribute("r", radius);
+      svg.r = radius;
+      e = this.expect(e, "circle", svg);
     }
-
-    e.setAttribute("shape-rendering", s.antialias ? "auto" : "crispEdges");
-    e.setAttribute("transform", transform);
-    e.setAttribute("fill", fill.color);
-    e.setAttribute("fill-opacity", fill.opacity);
-    e.setAttribute("cursor", s.cursor);
-    e.setAttribute("stroke", stroke.color);
-    e.setAttribute("stroke-opacity", stroke.opacity);
-    e.setAttribute("stroke-width", s.lineWidth);
     e = this.append(e, scenes, i);
   }
   return e;

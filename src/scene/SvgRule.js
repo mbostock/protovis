@@ -8,16 +8,17 @@ pv.SvgScene.rule = function(scenes) {
     var stroke = s.strokeStyle || pv.Color.none;
     if (!stroke.opacity) continue;
 
-    e = this.expect("line", e);
-    e.setAttribute("shape-rendering", s.antialias ? "auto" : "crispEdges");
-    e.setAttribute("cursor", s.cursor);
-    e.setAttribute("x1", s.left);
-    e.setAttribute("y1", s.top);
-    e.setAttribute("x2", s.left + s.width);
-    e.setAttribute("y2", s.top + s.height);
-    e.setAttribute("stroke", stroke.color);
-    e.setAttribute("stroke-opacity", stroke.opacity);
-    e.setAttribute("stroke-width", s.lineWidth);
+    e = this.expect(e, "line", {
+        "shape-rendering": s.antialias ? null : "crispEdges",
+        "cursor": s.cursor,
+        "x1": s.left,
+        "y1": s.top,
+        "x2": s.left + s.width,
+        "y2": s.top + s.height,
+        "stroke": stroke.color,
+        "stroke-opacity": stroke.opacity || null,
+        "stroke-width": stroke.opacity ? s.lineWidth : null
+      });
     e = this.append(e, scenes, i);
   }
   return e;

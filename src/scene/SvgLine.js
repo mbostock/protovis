@@ -47,15 +47,16 @@ pv.SvgScene.line = function(scenes) {
   }
 
 
-  e = this.expect("path", e);
-  e.setAttribute("shape-rendering", s.antialias ? "auto" : "crispEdges");
-  e.setAttribute("cursor", s.cursor);
-  e.setAttribute("d", d);
-  e.setAttribute("fill", fill.color);
-  e.setAttribute("fill-opacity", fill.opacity);
-  e.setAttribute("stroke", stroke.color);
-  e.setAttribute("stroke-opacity", stroke.opacity);
-  e.setAttribute("stroke-width", s.lineWidth);
+  e = this.expect(e, "path", {
+      "shape-rendering": s.antialias ? null : "crispEdges",
+      "cursor": s.cursor,
+      "d": d,
+      "fill": fill.color,
+      "fill-opacity": fill.opacity || null,
+      "stroke": stroke.color,
+      "stroke-opacity": stroke.opacity || null,
+      "stroke-width": stroke.opacity ? s.lineWidth : null
+    });
   return this.append(e, scenes, 0);
 };
 
@@ -122,12 +123,13 @@ pv.SvgScene.lineSegment = function(scenes) {
       + c.x + "," + c.y + " "
       + d.x + "," + d.y;
 
-    e = this.expect("polygon", e);
-    e.setAttribute("shape-rendering", s1.antialias ? "auto" : "crispEdges");
-    e.setAttribute("cursor", s1.cursor);
-    e.setAttribute("points", p);
-    e.setAttribute("fill", stroke.color);
-    e.setAttribute("fill-opacity", stroke.opacity);
+    e = this.expect(e, "polygon", {
+        "shape-rendering": s1.antialias ? null : "crispEdges",
+        "cursor": s1.cursor,
+        "points": p,
+        "fill": stroke.color,
+        "fill-opacity": stroke.opacity || null
+      });
     e = this.append(e, scenes, i);
   }
   return e;

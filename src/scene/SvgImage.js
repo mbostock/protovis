@@ -10,13 +10,14 @@ pv.SvgScene.image = function(scenes) {
     e = this.fill(e, scenes, i);
 
     /* image */
-    e = this.expect("image", e);
-    e.setAttribute("preserveAspectRatio", "none");
-    e.setAttribute("x", s.left);
-    e.setAttribute("y", s.top);
-    e.setAttribute("width", s.width);
-    e.setAttribute("height", s.height);
-    e.setAttribute("cursor", s.cursor);
+    e = this.expect(e, "image", {
+        "preserveAspectRatio": "none",
+        "cursor": s.cursor,
+        "x": s.left,
+        "y": s.top,
+        "width": s.width,
+        "height": s.height,
+      });
     e.setAttributeNS(ns.xlink, "href", s.url);
     e = this.append(e, scenes, i);
 
