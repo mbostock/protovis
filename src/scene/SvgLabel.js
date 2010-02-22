@@ -5,7 +5,7 @@ pv.SvgScene.label = function(scenes) {
 
     /* visible */
     if (!s.visible) continue;
-    var fill = s.textStyle || none;
+    var fill = s.textStyle || pv.Color.none;
     if (!fill.opacity) continue;
 
     /* text-baseline, text-align */

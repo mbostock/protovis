@@ -5,7 +5,7 @@ pv.SvgScene.rule = function(scenes) {
 
     /* visible */
     if (!s.visible) continue;
-    var stroke = s.strokeStyle || none;
+    var stroke = s.strokeStyle || pv.Color.none;
     if (!stroke.opacity) continue;
 
     e = this.expect("line", e);
