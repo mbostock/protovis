@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <title>Title</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(300)
+    .height(300);
+
+vis.add(pv.Bar)
+    .height(100)
+    .fillStyle("brown")
+    .title("Hello, world!")
+  .anchor("center").add(pv.Label)
+    .text("I HAS A TITLE");
+
+vis.add(pv.Bar)
+    .top(100)
+    .height(100)
+    .fillStyle("orange")
+    .title(0)
+  .anchor("center").add(pv.Label)
+    .text("I HAS A 0 TITLE");
+
+vis.add(pv.Bar)
+    .top(200)
+    .height(100)
+    .fillStyle("steelblue")
+    .title("")
+  .anchor("center").add(pv.Label)
+    .text("I HAS AN EMPTY TITLE");
+
+vis.render();
+
+    </script>
+  </body>
+</html>

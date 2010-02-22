@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <title>Cursor</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(300)
+    .height(300);
+
+vis.add(pv.Bar)
+    .height(100)
+    .fillStyle("brown")
+    .cursor("hand")
+  .anchor("center").add(pv.Label)
+    .text("I HAS A CURSOR");
+
+vis.add(pv.Bar)
+    .top(100)
+    .height(100)
+    .fillStyle("orange")
+    .cursor(0)
+  .anchor("center").add(pv.Label)
+    .text("I HAS THE 0 CURSOR");
+
+vis.add(pv.Bar)
+    .top(200)
+    .height(100)
+    .fillStyle("steelblue")
+    .cursor("")
+  .anchor("center").add(pv.Label)
+    .text("I HAS THE \"\" CURSOR");
+
+vis.render();
+
+    </script>
+  </body>
+</html>

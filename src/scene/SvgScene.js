@@ -123,15 +123,15 @@ pv.SvgScene.append = function(e, scenes, index) {
  * @param s a scene node.
  */
 pv.SvgScene.title = function(e, s) {
-  var a = e.parentNode, t = String(s.title);
+  var a = e.parentNode;
   if (a && (a.tagName != "a")) a = null;
-  if (t) {
+  if (s.title) {
     if (!a) {
       a = this.create("a");
       if (e.parentNode) e.parentNode.replaceChild(a, e);
       a.appendChild(e);
     }
-    a.setAttributeNS(ns.xlink, "title", t);
+    a.setAttributeNS(ns.xlink, "title", s.title);
     return a;
   }
   if (a) a.parentNode.replaceChild(e, a);
@@ -163,7 +163,6 @@ pv.SvgScene.implicit = {
     "y": 0,
     "dy": 0,
     "text-anchor": "start",
-    "cursor": "",
     "transform": "translate(0,0)",
     "fill": "none",
     "fill-opacity": 1,
@@ -172,8 +171,6 @@ pv.SvgScene.implicit = {
     "stroke-width": 1.5
   },
   css: {
-    "font": "10px sans-serif",
-    "text-shadow": "",
-    "text-decoration": ""
+    "font": "10px sans-serif"
   }
 };

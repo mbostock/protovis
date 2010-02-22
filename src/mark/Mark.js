@@ -398,8 +398,6 @@ pv.Mark.prototype.defaults = new pv.Mark()
     .data(function(d) { return [d]; })
     .visible(true)
     .reverse(false)
-    .cursor("")
-    .title("")
     .antialias(true);
 
 /* Private categorical colors for default fill & stroke styles. */
