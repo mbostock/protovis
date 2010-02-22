@@ -34,7 +34,12 @@ pv.CsvFormat.prototype.header = function(x) {
  * @param {array} an array of elements parsed from CSV.
  */
 pv.CsvFormat.prototype.parse = function(s) {
-  var elements = [], re = /[,\n]/g, eol, t;
+  var EOL = {}, // sentinel value for end-of-line
+      EOF = {}, // sentinel value for end-of-file
+      rows = [], // output rows
+      re = /[,\n]/g, // field separator regex
+      t, // the current token
+      eol; // is the current token followed by EOL?
 
   /* Returns the next token. */
   function token() {
@@ -73,28 +78,28 @@ pv.CsvFormat.prototype.parse = function(s) {
 
   if (this.$header) {
     var keys = [];
-    while (((t = token()) != EOL) && (t != EOF)) keys.push(t);
+    while (((t = token()) !== EOL) && (t !== EOF)) keys.push(t);
     var k = 0;
-    while ((t = token()) != EOF) {
+    while ((t = token()) !== EOF) {
       var o = {}, j = 0;
-      elements.push(o);
-      while ((t != EOL) && (t != EOF)) {
+      rows.push(o);
+      while ((t !== EOL) && (t !== EOF)) {
         o[keys[j++]] = t;
         t = token();
       }
     }
   } else {
-    while ((t = token()) != EOF) {
+    while ((t = token()) !== EOF) {
       var a = [];
-      elements.push(a);
-      while ((t != EOL) && (t != EOF)) {
+      rows.push(a);
+      while ((t !== EOL) && (t !== EOF)) {
         a.push(t);
         t = token();
       }
     }
   }
 
-  return elements;
+  return rows;
 };
 
 /**
@@ -124,9 +129,6 @@ pv.CsvFormat.prototype.format = function(a) {
   }
   return lines.join("\n");
 };
-
-/* Sentinel values for parsing. */
-var EOL = {}, EOF = {};
 
 /**
  * Quotes the specified string <i>s</i>, but only if necessary. Quoting is
