@@ -64,14 +64,14 @@ new pv.Panel()
     .strokeStyle("black")
     .lineWidth(10)
     .fillStyle("green")
-    .event("click", function() this.fillStyle(this.fillStyle().brighter()))
+    .event("mousedown", function() this.fillStyle(this.fillStyle().brighter()))
     .render();
 
 new pv.Panel()
     .canvas(canvas2)
     .fillStyle("green")
     .height(100)
-    .event("click", function() this.fillStyle(this.fillStyle().darker()))
+    .event("mousedown", function() this.fillStyle(this.fillStyle().darker()))
     .render();
 
 new pv.Panel()
@@ -82,7 +82,7 @@ new pv.Panel()
     .left(function(d) d * 30)
     .width(30)
     .height(10)
-    .event("click", function() this.clicks(this.clicks() + 1))
+    .event("mousedown", function() this.clicks(this.clicks() + 1))
   .anchor("center").add(pv.Label)
     .text(function(d) this.root.clicks())
   .root.render();
@@ -93,7 +93,7 @@ new pv.Panel()
     .fillStyle(function(d) "hsl(" + d * 12 + ",60,50)")
     .width(50)
     .height(50)
-    .event("click", function() this.clicks(this.clicks() + 1))
+    .event("mousedown", function() this.clicks(this.clicks() + 1))
   .anchor("center").add(pv.Label)
     .text(function(d) this.root.clicks())
   .root.render();
@@ -107,8 +107,6 @@ new pv.Panel()
     height is specified as a property, while the width is inferred from the
     DOM. Clicking on the panel makes it darker.
     <p>
-
-<div>foo</div>
 
   </body>
 </html>
