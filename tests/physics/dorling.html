@@ -1,0 +1,57 @@
+<html>
+  <head>
+    <title>Dorling Cartogram</title>
+    <script type="text/javascript" src="../../protovis-r3.2.js"></script>
+    <style type="text/css">
+
+body {
+  margin: 0;
+}
+
+    </style>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var w = window.innerWidth,
+    h = window.innerHeight,
+    nodes = pv.range(40).map(function(i) {
+      var x = w * (.5 + Math.random()) / 2,
+          y = h * (.5 + Math.random()) / 2,
+          r = 4 + Math.random() * 80;
+      return {x: x, y: y, p: {x: x, y: y}, r: r};
+    });
+
+var sim = pv.simulation(nodes)
+    .constraint(pv.Constraint.distance(function(d) d.r))
+    .stabilize(10);
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(h);
+
+vis.add(pv.Dot)
+    .data(nodes)
+    .left(function(d) d.x)
+    .top(function(d) d.y)
+    .size(function(d) d.r * d.r)
+    .fillStyle("steelblue")
+    .strokeStyle("black")
+  .add(pv.Dot)
+    .size(20)
+    .fillStyle("brown")
+    .strokeStyle(null);
+
+vis.add(pv.Panel)
+    .data(nodes)
+  .add(pv.Line)
+    .data(function(d) [d, d.p])
+    .left(function(d) d.x)
+    .top(function(d) d.y)
+    .strokeStyle("brown");
+
+vis.render();
+
+    </script>
+  </body>
+</html>

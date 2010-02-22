@@ -84,8 +84,9 @@ pv.Simulation.prototype.constraint = function(c) {
  *
  * @returns {pv.Simulation} this.
  */
-pv.Simulation.prototype.stabilize = function() {
-  for (var i = 0; i < 3; i++) {
+pv.Simulation.prototype.stabilize = function(n) {
+  if (!arguments.length) n = 3; // TODO use cooling schedule
+  for (var i = 0; i < n; i++) {
     var q = new pv.Quadtree(this.particles);
     for (c = this.constraints; c; c = c.next) c.apply(this.particles, q);
   }
