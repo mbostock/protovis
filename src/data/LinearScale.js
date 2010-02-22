@@ -231,47 +231,47 @@ pv.Scale.linear = function() {
       /* Floor the date d given the precision p. */
       function floor(d, p) {
         switch (p) {
-          case YEARS: d.setMonth(0);
-          case MONTHS: d.setDate(1);
-          case WEEKS: if (p == WEEKS) d.setDate(d.getDate() - d.getDay());
-          case DAYS: d.setHours(0);
-          case HOURS: d.setMinutes(0);
-          case MINUTES: d.setSeconds(0);
-          case SECONDS: d.setMilliseconds(0);
+          case 31536e6: d.setMonth(0);
+          case 2592e6: d.setDate(1);
+          case 6048e5: if (p == 6048e5) d.setDate(d.getDate() - d.getDay());
+          case 864e5: d.setHours(0);
+          case 36e5: d.setMinutes(0);
+          case 6e4: d.setSeconds(0);
+          case 1e3: d.setMilliseconds(0);
         }
       }
 
       var precision, format, increment, step = 1;
-      if (span >= 2 * YEARS) {
-        precision = YEARS;
+      if (span >= 2 * 31536e6) {
+        precision = 31536e6;
         format = "%Y";
         increment = function(d) { d.setFullYear(d.getFullYear() + step); };
-      } else if (span >= 2 * MONTHS) {
-        precision = MONTHS;
+      } else if (span >= 2 * 2592e6) {
+        precision = 2592e6;
         format = "%m/%Y";
         increment = function(d) { d.setMonth(d.getMonth() + step); };
-      } else if (span >= 2 * WEEKS) {
-        precision = WEEKS;
+      } else if (span >= 2 * 6048e5) {
+        precision = 6048e5;
         format = "%m/%d";
         increment = function(d) { d.setDate(d.getDate() + 7 * step); };
-      } else if (span >= 2 * DAYS) {
-        precision = DAYS;
+      } else if (span >= 2 * 864e5) {
+        precision = 864e5;
         format = "%m/%d";
         increment = function(d) { d.setDate(d.getDate() + step); };
-      } else if (span >= 2 * HOURS) {
-        precision = HOURS;
+      } else if (span >= 2 * 36e5) {
+        precision = 36e5;
         format = "%I:%M %p";
         increment = function(d) { d.setHours(d.getHours() + step); };
-      } else if (span >= 3 * MINUTES) {
-        precision = MINUTES;
+      } else if (span >= 3 * 6e4) {
+        precision = 6e4;
         format = "%I:%M %p";
         increment = function(d) { d.setMinutes(d.getMinutes() + step); };
-      } else if (span >= 3 * SECONDS) {
-        precision = SECONDS;
+      } else if (span >= 3 * 1e3) {
+        precision = 1e3;
         format = "%I:%M:%S";
         increment = function(d) { d.setSeconds(d.getSeconds() + step); };
       } else {
-        precision = MILLISECONDS;
+        precision = 1;
         format = "%S.%Qs";
         increment = function(d) { d.setTime(d.getTime() + step); };
       }
@@ -283,27 +283,27 @@ pv.Scale.linear = function() {
       var n = span / precision;
       if (n > 10) {
         switch (precision) {
-          case HOURS: {
+          case 36e5: {
             step = (n > 20) ? 6 : 3;
             date.setHours(Math.floor(date.getHours() / step) * step);
             break;
           }
-          case MONTHS: {
+          case 2592e6: {
             step = 3; // seasons
             date.setMonth(Math.floor(date.getMonth() / step) * step);
             break;
           }
-          case MINUTES: {
+          case 6e4: {
             step = (n > 30) ? 15 : ((n > 15) ? 10 : 5);
             date.setMinutes(Math.floor(date.getMinutes() / step) * step);
             break;
           }
-          case SECONDS: {
+          case 1e3: {
             step = (n > 90) ? 15 : ((n > 60) ? 10 : 5);
             date.setSeconds(Math.floor(date.getSeconds() / step) * step);
             break;
           }
-          case MILLISECONDS: {
+          case 1: {
             step = (n > 1000) ? 250 : ((n > 200) ? 100 : ((n > 100) ? 50 : ((n > 50) ? 25 : 5)));
             date.setMilliseconds(Math.floor(date.getMilliseconds() / step) * step);
             break;

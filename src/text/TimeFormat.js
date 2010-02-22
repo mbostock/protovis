@@ -1,34 +1,45 @@
 pv.Format.time = function(type) {
 
+  /*
+   * MILLISECONDS = 1
+   * SECONDS = 1e3
+   * MINUTES = 6e4
+   * HOURS = 36e5
+   * DAYS = 864e5
+   * WEEKS = 6048e5
+   * MONTHS = 2592e6
+   * YEARS = 31536e6
+   */
+
   /** @private */
   function format(t) {
     t = Number(t); // force conversion from Date
     switch (type) {
       case "short": {
-        if (t >= YEARS) {
-          return (t / YEARS).toFixed(1) + " years";
-        } else if (t >= WEEKS) {
-          return (t / WEEKS).toFixed(1) + " weeks";
-        } else if (t >= DAYS) {
-          return (t / DAYS).toFixed(1) + " days";
-        } else if (t >= HOURS) {
-          return (t / HOURS).toFixed(1) + " hours";
-        } else if (t >= MINUTES) {
-          return (t / MINUTES).toFixed(1) + " minutes";
+        if (t >= 31536e6) {
+          return (t / 31536e6).toFixed(1) + " years";
+        } else if (t >= 6048e5) {
+          return (t / 6048e5).toFixed(1) + " weeks";
+        } else if (t >= 864e5) {
+          return (t / 864e5).toFixed(1) + " days";
+        } else if (t >= 36e5) {
+          return (t / 36e5).toFixed(1) + " hours";
+        } else if (t >= 6e4) {
+          return (t / 6e4).toFixed(1) + " minutes";
         }
-        return (t / SECONDS).toFixed(1) + " seconds";
+        return (t / 1e3).toFixed(1) + " seconds";
       }
       case "long": {
         var a = [],
-            s = ((t % MINUTES) / SECONDS) >> 0,
-            m = ((t % HOURS) / MINUTES) >> 0;
+            s = ((t % 6e4) / 1e3) >> 0,
+            m = ((t % 36e5) / 6e4) >> 0;
         a.push(padz2(s));
-        if (t >= HOURS) {
-          var h = ((t % DAYS) / HOURS) >> 0;
+        if (t >= 36e5) {
+          var h = ((t % 864e5) / 36e5) >> 0;
           a.push(padz2(m));
-          if (t >= DAYS) {
+          if (t >= 864e5) {
             a.push(padz2(h));
-            a.push(Math.floor(t / DAYS).toFixed());
+            a.push(Math.floor(t / 864e5).toFixed());
           } else {
             a.push(h.toFixed());
           }
@@ -47,12 +58,12 @@ pv.Format.time = function(type) {
         while (a = re.exec(s)) {
           var f = parseFloat(a[0].replace(",", "")), u = 0;
           switch (a[2].toLowerCase()) {
-            case "year": case "years": u = YEARS; break;
-            case "week": case "weeks": u = WEEKS; break;
-            case "day": case "days": u = DAYS; break;
-            case "hour": case "hours": u = HOURS; break;
-            case "minute": case "minutes": u = MINUTES; break;
-            case "second": case "seconds": u = SECONDS; break;
+            case "year": case "years": u = 31536e6; break;
+            case "week": case "weeks": u = 6048e5; break;
+            case "day": case "days": u = 864e5; break;
+            case "hour": case "hours": u = 36e5; break;
+            case "minute": case "minutes": u = 6e4; break;
+            case "second": case "seconds": u = 1e3; break;
           }
           t += f * u;
         }
@@ -60,10 +71,10 @@ pv.Format.time = function(type) {
       }
       case "long": {
         var a = s.replace(",", "").split(":").reverse(), t = 0;
-        if (a.length) t += parseFloat(a[0]) * SECONDS;
-        if (a.length > 1) t += parseFloat(a[1]) * MINUTES;
-        if (a.length > 2) t += parseFloat(a[2]) * HOURS;
-        if (a.length > 3) t += parseFloat(a[3]) * DAYS;
+        if (a.length) t += parseFloat(a[0]) * 1e3;
+        if (a.length > 1) t += parseFloat(a[1]) * 6e4;
+        if (a.length > 2) t += parseFloat(a[2]) * 36e5;
+        if (a.length > 3) t += parseFloat(a[3]) * 864e5;
         return t;
       }
     }
