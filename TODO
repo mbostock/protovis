@@ -35,6 +35,7 @@ mark/Mark.js
 - standardize window.event access for event handlers?
 - antialias doesn't always work as expected; requires pixel rounding?
 - event("ignore") to disable pointer-events?
+- dot-dash strokes
 
 mark/Panel.js
 - support transform on panel directly, making pv.Behavior.transform more useful
