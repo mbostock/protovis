@@ -1,0 +1,22 @@
+<html>
+  <head>
+    <title>Label Decoration</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(200)
+    .height(200);
+
+vis.anchor("center").add(pv.Label)
+    .textDecoration("underline")
+    .textShadow("0.1em 0.1em 0.1em rgba(255,0,0,.5)")
+    .text("Hello, world!");
+
+vis.render();
+
+    </script>
+  </body>
+</html>
