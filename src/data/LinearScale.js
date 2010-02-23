@@ -141,7 +141,7 @@ pv.Scale.linear = function() {
         d = [pv.min(array, min), pv.max(array, max)];
       } else {
         o = array;
-        d = Array.prototype.map.call(arguments, Number);
+        d = Array.prototype.slice.call(arguments).map(Number);
       }
       type = (o instanceof Date) ? newDate : Number;
       return this;
