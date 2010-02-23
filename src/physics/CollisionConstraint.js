@@ -1,4 +1,4 @@
-pv.Constraint.distance = function(radius) {
+pv.Constraint.collision = function(radius) {
   var r1,
       px1,
       py1,
@@ -43,15 +43,6 @@ pv.Constraint.distance = function(radius) {
     }
   }
 
-  /** Specifies the radius function, given a particle. */
-  constraint.radius = function(f) {
-    if (arguments.length) {
-      radius = f;
-      return this;
-    }
-    return radius;
-  };
-
   constraint.apply = function(particles, q) {
     var p, r, max = -Infinity;
     for (p = particles; p; p = p.next) {
@@ -65,45 +56,6 @@ pv.Constraint.distance = function(radius) {
       py1 = p.y - r;
       py2 = p.y + r;
       constrain(q.root, p, q.xMin, q.yMin, q.xMax, q.yMax);
-    }
-  };
-
-  return constraint;
-};
-
-// TODO rename exact?
-pv.Constraint.spring = function(d) {
-  var constraint = {};
-
-  if (!arguments.length) d = 20; // default rest length
-
-  constraint.links = function(x) {
-    if (arguments.length) {
-      links = x;
-      return constraint;
-    }
-    return links;
-  };
-
-  constraint.length = function(x) {
-    if (arguments.length) { d = x; return constraint; }
-    return d;
-  };
-
-  constraint.apply = function(particles) {
-    for (var i = 0; i < links.length; i++) {
-      var a = links[i].sourceNode,
-          b = links[i].targetNode,
-          dx = a.x - b.x,
-          dy = a.y - b.y,
-          l = Math.sqrt(dx * dx + dy * dy),
-          k = (l - d) / l * .5;
-      dx *= k;
-      dy *= k;
-      a.x -= dx;
-      a.y -= dy;
-      b.x += dx;
-      b.y += dy;
     }
   };
 

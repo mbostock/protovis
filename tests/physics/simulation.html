@@ -24,7 +24,7 @@ var w = window.innerWidth,
 
 var sim = pv.simulation(nodes)
     .force(pv.Force.charge(3))
-    .constraint(pv.Constraint.distance(function(d) d.r))
+    .constraint(pv.Constraint.collision(function(d) d.r))
     .stabilize();
 
 var vis = new pv.Panel()

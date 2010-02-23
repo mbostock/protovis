@@ -20,17 +20,26 @@ pv.Force.spring = function(k) {
   };
 
   force.constant = function(x) {
-    if (arguments.length) { k = x; return force; }
+    if (arguments.length) {
+      k = Number(x);
+      return force;
+    }
     return k;
   };
 
   force.damping = function(x) {
-    if (arguments.length) { d = x; return force; }
+    if (arguments.length) {
+      d = Number(x);
+      return force;
+    }
     return d;
   };
 
   force.length = function(x) {
-    if (arguments.length) { l = x; return force; }
+    if (arguments.length) {
+      l = Number(x);
+      return force;
+    }
     return l;
   };
 

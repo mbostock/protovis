@@ -55,7 +55,9 @@ JS_PV_FILES = \
 	src/physics/DragForce.js \
 	src/physics/SpringForce.js \
 	src/physics/Constraint.js \
-	src/physics/DistanceConstraint.js \
+	src/physics/CollisionConstraint.js \
+	src/physics/LinkConstraint.js \
+	src/physics/PositionConstraint.js \
 	src/layout/Layout.js \
 	src/layout/Grid.js \
 	src/layout/Stack.js \
