@@ -1,0 +1,24 @@
+<html>
+  <head>
+    <title>Anchor</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(200)
+    .height(200)
+
+vis.add(pv.Bar)
+    .fillStyle("#ccc")
+  .anchor("top").add(pv.Label)
+    .text("top")
+  .anchorTarget().anchor("bottom").add(pv.Label)
+    .text("bottom");
+
+vis.render();
+
+    </script>
+  </body>
+</html>
