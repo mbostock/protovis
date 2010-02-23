@@ -1,5 +1,6 @@
 pv.Constraint.collision = function(radius) {
-  var r1,
+  var n = 1, // number of times to repeat the constraint
+      r1,
       px1,
       py1,
       px2,
@@ -7,6 +8,14 @@ pv.Constraint.collision = function(radius) {
       constraint = {};
 
   if (!arguments.length) r = 10; // default search radius
+
+  constraint.repeat = function(x) {
+    if (arguments.length) {
+      n = Number(x);
+      return constraint;
+    }
+    return n;
+  };
 
   /** @private */
   function constrain(n, p, x1, y1, x2, y2) {
@@ -49,13 +58,15 @@ pv.Constraint.collision = function(radius) {
       r = radius(p);
       if (r > max) max = r;
     }
-    for (p = particles; p; p = p.next) {
-      r = (r1 = radius(p)) + max;
-      px1 = p.x - r;
-      px2 = p.x + r;
-      py1 = p.y - r;
-      py2 = p.y + r;
-      constrain(q.root, p, q.xMin, q.yMin, q.xMax, q.yMax);
+    for (var i = 0; i < n; i++) {
+      for (p = particles; p; p = p.next) {
+        r = (r1 = radius(p)) + max;
+        px1 = p.x - r;
+        px2 = p.x + r;
+        py1 = p.y - r;
+        py2 = p.y + r;
+        constrain(q.root, p, q.xMin, q.yMin, q.xMax, q.yMax);
+      }
     }
   };
 
