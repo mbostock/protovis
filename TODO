@@ -21,7 +21,6 @@ layout/{Cluster,Partition}.js
 layout/Force.js
 - specify nodes and links using methods, rather than ctor arguments?
 - behaves differently from pv.dom, kind of confusing
-- Dorling Cartogram example
 - cooling schedule to reduce cpu usage as layout stabilizes
 - automatic support for computing layout statically
 
@@ -39,8 +38,6 @@ mark/Mark.js
 
 mark/Panel.js
 - support transform on panel directly, making pv.Behavior.transform more useful
-
-mark/Panel.js
 - overflow documentation
 
 behavior/*
