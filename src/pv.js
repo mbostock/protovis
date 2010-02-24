@@ -86,3 +86,10 @@ pv.child = function() { return this.childIndex; };
  * @see pv.Mark#index
  */
 pv.parent = function() { return this.parent.index; };
+
+/**
+ * Stores the current event. This field is only set within event handlers.
+ *
+ * @type Event
+ * @name pv.event
+ */

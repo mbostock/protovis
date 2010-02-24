@@ -101,10 +101,29 @@ pv.error = function(e) {
  *
  * @param target a DOM element.
  * @param {string} type the type of event, such as "click".
- * @param {function} the listener callback function.
+ * @param {function} the event handler callback.
  */
 pv.listen = function(target, type, listener) {
+  listener = pv.listener(listener);
   return target.addEventListener
-    ? target.addEventListener(type, listener, false)
-    : target.attachEvent("on" + type, listener);
+      ? target.addEventListener(type, listener, false)
+      : target.attachEvent("on" + type, listener);
+};
+
+/**
+ * @private Returns a wrapper for the specified listener function such that the
+ * {@link pv.event} is set for the duration of the listener's invocation.
+ *
+ * @param {function} an event handler.
+ * @returns {function} the wrapped event handler.
+ */
+pv.listener = function(listener) {
+  return function(e) {
+      try {
+        pv.event = e;
+        return listener(e);
+      } finally {
+        delete pv.event;
+      }
+    };
 };

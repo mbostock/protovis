@@ -921,10 +921,6 @@ pv.Mark.prototype.buildImplied = function(s) {
  */
 var property;
 
-/** @private The current mouse location. */
-var pageX = 0, pageY = 0;
-pv.listen(window, "mousemove", function(e) { pageX = e.pageX; pageY = e.pageY; });
-
 /**
  * Returns the current location of the mouse (cursor) relative to this mark's
  * parent. The <i>x</i> coordinate corresponds to the left margin, while the
@@ -943,7 +939,7 @@ pv.Mark.prototype.mouse = function() {
     x += node.offsetLeft;
     y += node.offsetTop;
   } while (node = node.offsetParent);
-  return pv.vector(pageX - x, pageY - y);
+  return pv.vector(pv.event.pageX - x, pv.event.pageY - y);
 };
 
 /**
@@ -1001,11 +997,10 @@ pv.Mark.prototype.event = function(type, handler) {
 };
 
 /** @private TODO */
-pv.Mark.prototype.dispatch = function(type, scenes, index) {
-  var l = this.$handlers && this.$handlers[type];
+pv.Mark.prototype.dispatch = function(e, scenes, index) {
+  var l = this.$handlers && this.$handlers[e.type];
   if (!l) return this.parent
-      ? this.parent.dispatch(type, scenes.parent, scenes.parentIndex)
-      : false;
+      && this.parent.dispatch(e, scenes.parent, scenes.parentIndex);
 
   try {
     /* Setup the scene stack. */
@@ -1021,6 +1016,7 @@ pv.Mark.prototype.dispatch = function(type, scenes, index) {
     try {
       mark = l.apply(this, this.root.scene.data = argv(this));
     } finally {
+      e.preventDefault();
       this.root.scene.data = null;
     }
 
@@ -1034,6 +1030,4 @@ pv.Mark.prototype.dispatch = function(type, scenes, index) {
       delete mark.index;
     } while (mark = mark.parent);
   }
-
-  return true;
 };
