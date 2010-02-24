@@ -716,9 +716,9 @@ pv.Mark.prototype.bind = function() {
   /* Setup binds to evaluate constants before functions. */
   this.binds = {
     data: data,
-    visible: visible,
     defs: defs,
-    properties: pv.blend(types)
+    required: [visible],
+    optional: pv.blend(types)
   };
 };
 
@@ -810,20 +810,7 @@ pv.Mark.prototype.build = function() {
     var s = scene[i];
     if (!s) scene[i] = s = {};
     s.data = stack[0] = data[i];
-
-    /* Evaluate special visible property. */
-    var visible = this.binds.visible;
-    switch (visible.type) {
-      case 0: case 1: visible = defs.values.visible; break;
-      case 2: visible = visible.value; break;
-      case 3: {
-        property = "visible";
-        visible = visible.value.apply(this, stack);
-        break;
-      }
-    }
-
-    if (s.visible = visible) this.buildInstance(s);
+    this.buildInstance(s);
   }
   stack.shift();
   delete this.index;
@@ -842,7 +829,7 @@ pv.Mark.prototype.build = function() {
  */
 pv.Mark.prototype.buildProperties = function(s, properties) {
   for (var i = 0, n = properties.length; i < n; i++) {
-    var p = properties[i], v = p.value;
+    var p = properties[i], v = p.value; // assume case 2 (constant)
     switch (p.type) {
       case 0: case 1: v = this.scene.defs.values[p.name]; break;
       case 3: {
@@ -870,8 +857,11 @@ pv.Mark.prototype.buildProperties = function(s, properties) {
  * @param s a node in the scene graph; the instance of the mark to build.
  */
 pv.Mark.prototype.buildInstance = function(s) {
-  this.buildProperties(s, this.binds.properties);
-  this.buildImplied(s);
+  this.buildProperties(s, this.binds.required);
+  if (s.visible) {
+    this.buildProperties(s, this.binds.optional);
+    this.buildImplied(s);
+  }
 };
 
 /**

@@ -227,27 +227,75 @@ pv.Area.prototype.buildImplied = function(s) {
   pv.Mark.prototype.buildImplied.call(this, s);
 };
 
-/** @private */
-var pv_Area_specials = {left:1, top:1, right:1, bottom:1, width:1, height:1, name:1};
+/** @private Records which properties may be fixed. */
+pv.Area.fixed = {
+  lineWidth: 1,
+  strokeStyle: 1,
+  fillStyle: 1,
+  segmented: 1,
+  interpolate: 1
+};
 
-/** @private */
+/**
+ * @private Make segmented required, such that this fixed property is always
+ * evaluated, even if the first segment is not visible. Also cache which
+ * properties are normally fixed.
+ */
 pv.Area.prototype.bind = function() {
   pv.Mark.prototype.bind.call(this);
   var binds = this.binds,
-      properties = binds.properties,
-      specials = binds.specials = [];
-  for (var i = 0, n = properties.length; i < n; i++) {
-    var p = properties[i];
-    if (p.name in pv_Area_specials) specials.push(p);
+      required = binds.required,
+      optional = binds.optional;
+  for (var i = 0, n = optional.length; i < n; i++) {
+    var p = optional[i];
+    p.fixed = p.name in pv.Area.fixed;
+    if (p.name == "segmented") {
+      required.push(p);
+      optional.splice(i, 1);
+      i--;
+      n--;
+    }
   }
+
+  /* Cache the original arrays so they can be restored on build. */
+  this.binds.$required = required;
+  this.binds.$optional = optional;
 };
 
-/** @private */
+/**
+ * @private Override the default build behavior such that fixed properties are
+ * determined dynamically, based on the value of the (always) fixed segmented
+ * property. Any fixed properties are only evaluated on the first instance,
+ * although their values are propagated to subsequent instances, so that they
+ * are available for property chaining and the like.
+ */
 pv.Area.prototype.buildInstance = function(s) {
-  if (this.index && !this.scene[0].segmented) {
-    this.buildProperties(s, this.binds.specials);
-    this.buildImplied(s);
-  } else {
-    pv.Mark.prototype.buildInstance.call(this, s);
+  var binds = this.binds;
+
+  /* Handle fixed properties on secondary instances. */
+  if (this.index) {
+    var fixed = binds.fixed;
+
+    /* Determine which properties are fixed. */
+    if (!fixed) {
+      fixed = binds.fixed = [];
+      function f(p) { return !p.fixed || (fixed.push(p), false); }
+      binds.required = binds.required.filter(f);
+      if (!this.scene[0].segmented) binds.optional = binds.optional.filter(f);
+    }
+
+    /* Copy fixed property values from the first instance. */
+    for (var i = 0, n = fixed.length; i < n; i++) {
+      var p = fixed[i].name;
+      s[p] = this.scene[0][p];
+    }
   }
+
+  /* Evaluate all properties on the first instance. */
+  else {
+    binds.required = binds.$required;
+    binds.optional = binds.$optional;
+  }
+
+  pv.Mark.prototype.buildInstance.call(this, s);
 };

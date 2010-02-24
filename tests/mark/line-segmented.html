@@ -20,7 +20,8 @@ vis.add(pv.Line)
     .left(function() this.index / 59 * 500)
     .bottom(function(d) (d + 1) / 2 * 200)
     .strokeStyle(function(d) "hsl(" + (d + 1) * 180 + ",50,50)")
-    .lineWidth(function(d) 50 * (d * d) + 10);
+    .lineWidth(function(d) 50 * (d * d) + 10)
+    .visible(pv.index);
 
 vis.render();
 

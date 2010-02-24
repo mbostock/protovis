@@ -54,3 +54,6 @@ text/CsvFormat.js
 
 *
 - remove all global variables, then remove pv-{start,end}.js
+- use Object.create instead of pv.extend, if available
+- use === and !== instead of == and !=
+- force type conversion of input arguments in public API?
