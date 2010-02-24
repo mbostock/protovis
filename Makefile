@@ -87,10 +87,13 @@ protovis-d3.2.js: $(JS_FILES) Makefile
 	grep '	' -Hn $(JS_FILES) && echo "ERROR: tab" && exit 1 || true
 	grep '' -Hn $(JS_FILES) && echo "ERROR: dos newline" && exit 1 || true
 	grep ' $$' -Hn $(JS_FILES) && echo "ERROR: trailing space" && exit 1 || true
-	cat $(JS_FILES) > $@
+	rm -f $@
+	echo "// $(shell git rev-parse HEAD)" >> $@
+	cat $(JS_FILES) >> $@
 
 protovis-r3.2.js: $(JS_FILES) Makefile
 	rm -f $@
+	echo "// $(shell git rev-parse --short HEAD)" >> $@
 	cat $(JS_LANG_FILES) | java -jar lib/yuicompressor-2.4.2.jar --charset UTF-8 --type js >> $@
 	cat $(JS_PV_FILES) | java -jar lib/yuicompressor-2.4.2.jar --charset UTF-8 --type js >> $@
 	cat src/lang/init.js | java -jar lib/yuicompressor-2.4.2.jar --charset UTF-8 --type js >> $@

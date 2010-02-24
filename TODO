@@ -11,6 +11,8 @@ layout/Layot.js
 - allow or require pv.Dom.Node as input, rather than maps?
 - standardize node.depth, node.size? otherwise hide internal attributes?
 - allow interactive expanding / collapsing of tree nodes?
+- layouts should allow user to change the associated data
+- layouts should not cache by default
 
 layout/Tree.js
 - allow depth and breadth offset to be computed automatically
@@ -34,7 +36,7 @@ mark/Mark.js
 - standardize window.event access for event handlers?
 - antialias doesn't always work as expected; requires pixel rounding?
 - event("ignore") to disable pointer-events?
-- dot-dash strokes
+- dot-dash strokes using stroke-dasharray
 
 mark/Panel.js
 - support transform on panel directly, making pv.Behavior.transform more useful
@@ -47,6 +49,9 @@ behavior/*
 
 physics/Simulation.js
 - use a constraint rather than `fixed` property to allow dragging?
+
+physics/LinkConstraint.js
+- should support an alpha parameter, like pv.Constraint.position
 
 text/CsvFormat.js
 - return an object with a .format method, or the format function?
