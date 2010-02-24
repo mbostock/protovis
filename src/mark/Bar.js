@@ -90,7 +90,7 @@ pv.Bar.prototype.type = "bar";
 pv.Bar.prototype.defaults = new pv.Bar()
     .extend(pv.Mark.prototype.defaults)
     .lineWidth(1.5)
-    .fillStyle(defaultFillStyle);
+    .fillStyle(pv.Colors.category20().by(pv.parent));
 
 /**
  * Constructs a new bar anchor with default properties. Bars support five

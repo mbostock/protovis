@@ -92,7 +92,7 @@ pv.Line.prototype.type = "line";
 pv.Line.prototype.defaults = new pv.Line()
     .extend(pv.Mark.prototype.defaults)
     .lineWidth(1.5)
-    .strokeStyle(defaultStrokeStyle)
+    .strokeStyle(pv.Colors.category10().by(pv.parent))
     .interpolate("linear");
 
 /** @private Reuse Area's implementation for segmented bind & build. */

@@ -129,7 +129,7 @@ pv.Area.prototype.type = "area";
 pv.Area.prototype.defaults = new pv.Area()
     .extend(pv.Mark.prototype.defaults)
     .lineWidth(1.5)
-    .fillStyle(defaultFillStyle)
+    .fillStyle(pv.Colors.category20().by(pv.parent))
     .interpolate("linear");
 
 /**

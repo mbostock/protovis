@@ -122,7 +122,7 @@ pv.Wedge.prototype.defaults = new pv.Wedge()
     .innerRadius(0)
     .lineWidth(1.5)
     .strokeStyle(null)
-    .fillStyle(defaultFillStyle.by(pv.index));
+    .fillStyle(pv.Colors.category20().by(pv.index));
 
 /**
  * Returns the mid-radius of the wedge, which is defined as half-way between the

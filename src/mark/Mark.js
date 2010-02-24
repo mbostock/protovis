@@ -400,10 +400,6 @@ pv.Mark.prototype.defaults = new pv.Mark()
     .reverse(false)
     .antialias(true);
 
-/* Private categorical colors for default fill & stroke styles. */
-var defaultFillStyle = pv.Colors.category20().by(pv.parent),
-    defaultStrokeStyle = pv.Colors.category10().by(pv.parent);
-
 /**
  * Sets the prototype of this mark to the specified mark. Any properties not
  * defined on this mark may be inherited from the specified prototype mark, or
