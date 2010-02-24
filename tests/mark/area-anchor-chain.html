@@ -15,6 +15,7 @@ var data = pv.range(0, 10, .1).map(function(x) {
     y = pv.Scale.linear(0, 4).range(0, h);
 
 var vis = new pv.Panel()
+    .data(pv.range(2))
     .width(w)
     .height(h)
     .bottom(20)
@@ -24,6 +25,7 @@ var vis = new pv.Panel()
     .strokeStyle("#ccc");
 
 vis.add(pv.Area)
+    .segmented(pv.parent)
     .data(data)
     .left(function(d) x(d.x))
     .bottom(0)

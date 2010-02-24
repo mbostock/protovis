@@ -295,6 +295,7 @@ pv.Area.prototype.buildInstance = function(s) {
   else {
     binds.required = binds.$required;
     binds.optional = binds.$optional;
+    binds.fixed = null;
   }
 
   pv.Mark.prototype.buildInstance.call(this, s);
