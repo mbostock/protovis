@@ -37,6 +37,7 @@ mark/Mark.js
 - antialias doesn't always work as expected; requires pixel rounding?
 - event("ignore") to disable pointer-events?
 - dot-dash strokes using stroke-dasharray
+- expose `this.scale` for transform-aware property functions?
 
 mark/Panel.js
 - BUG: panel fill and stroke and not transformed
@@ -47,6 +48,7 @@ behavior/*
 - documentation, implementation, etc.
 - pv.Mark.context to encapsulate item reference, evaluation state?
 - should pv.Behavior.{drag,transform} automatically redraw?
+- split pv.Behavior.transform into pan+zoom.
 
 physics/Simulation.js
 - use a constraint rather than `fixed` property to allow dragging?

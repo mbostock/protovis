@@ -194,10 +194,22 @@ pv.Dot.prototype.anchor = function(name) {
 
 /**
  * Returns the radius of the dot, which is defined to be the square root of the
- * {@link #size} property.
+ * {@link #size} property. This method can also be used as an alias to set the
+ * size of the dot; it works as a pass-through to the size property.
  *
  * @returns {number} the radius.
  */
-pv.Dot.prototype.radius = function() {
+pv.Dot.prototype.radius = function(r) {
+  if (arguments.length) {
+    if (typeof r == "function") {
+      function s() {
+        var v = r.apply(this, arguments);
+        return v * v;
+      }
+    } else {
+      s = r * r;
+    }
+    return this.size(s);
+  }
   return Math.sqrt(this.size());
 };
