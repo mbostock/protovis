@@ -18,7 +18,7 @@ JS_PV_FILES = \
 	src/data/Nest.js \
 	src/data/Flatten.js \
 	src/data/Vector.js \
-	src/data/Matrix.js \
+	src/data/Transform.js \
 	src/data/Scale.js \
 	src/data/LinearScale.js \
 	src/data/LogScale.js \

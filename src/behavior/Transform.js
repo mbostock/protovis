@@ -3,7 +3,7 @@ pv.Behavior.transform = function() {
       target,
       scene,
       index,
-      m = pv.Matrix.identity(),
+      m = pv.Transform.identity,
       mi,
       m1,
       v1;
@@ -51,16 +51,16 @@ pv.Behavior.transform = function() {
   transform.invert = function(n) {
     if (!mi) mi = m.invert();
     return pv.vector(
-        mi.a * n.x + mi.b * n.y + mi.x,
-        mi.c * n.x + mi.d * n.y + mi.y);
+        mi.k * n.x + mi.x,
+        mi.k * n.y + mi.y);
   };
 
   transform.x = function(n) {
-    return m.a * n.x + m.b * n.y + m.x;
+    return m.k * n.x + m.x;
   };
 
   transform.y = function(n) {
-    return m.c * n.x + m.d * n.y + m.y;
+    return m.k * n.y + m.y;
   };
 
   pv.listen(window, "mousemove", mousemove);
