@@ -10,8 +10,7 @@ pv.SvgScene.area = function(scenes) {
 
   /* visible */
   if (!s.visible) return e;
-  var fill = s.fillStyle || pv.Color.none,
-      stroke = s.strokeStyle || pv.Color.none;
+  var fill = s.fillStyle, stroke = s.strokeStyle;
   if (!fill.opacity && !stroke.opacity) return e;
 
   /* points */
@@ -59,8 +58,7 @@ pv.SvgScene.areaSegment = function(scenes) {
 
     /* visible */
     if (!s1.visible || !s2.visible) continue;
-    var fill = s1.fillStyle || pv.Color.none,
-        stroke = s1.strokeStyle || pv.Color.none;
+    var fill = s1.fillStyle, stroke = s1.strokeStyle;
     if (!fill.opacity && !stroke.opacity) continue;
 
     /* points */

@@ -11,8 +11,7 @@ pv.SvgScene.line = function(scenes) {
 
   /* visible */
   if (!s.visible) return e;
-  var fill = s.fillStyle || pv.Color.none,
-      stroke = s.strokeStyle || pv.Color.none;
+  var fill = s.fillStyle, stroke = s.strokeStyle;
   if (!fill.opacity && !stroke.opacity) return e;
 
   /* points */
@@ -67,7 +66,7 @@ pv.SvgScene.lineSegment = function(scenes) {
 
     /* visible */
     if (!s1.visible || !s2.visible) continue;
-    var stroke = s1.strokeStyle || pv.Color.none;
+    var stroke = s1.strokeStyle;
     if (!stroke.opacity) continue;
 
     /* Line-line intersection, per Akenine-Moller 16.16.1. */

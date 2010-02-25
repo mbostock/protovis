@@ -909,6 +909,11 @@ pv.Mark.prototype.buildImplied = function(s) {
   /* Only set width and height if they are supported by this mark type. */
   if (p.width) s.width = w;
   if (p.height) s.height = h;
+
+  /* Set any null colors to pv.Color.transparent. */
+  if (p.textStyle && !s.textStyle) s.textStyle = pv.Color.transparent;
+  if (p.fillStyle && !s.fillStyle) s.fillStyle = pv.Color.transparent;
+  if (p.strokeStyle && !s.strokeStyle) s.strokeStyle = pv.Color.transparent;
 };
 
 /**

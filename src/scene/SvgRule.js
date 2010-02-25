@@ -5,7 +5,7 @@ pv.SvgScene.rule = function(scenes) {
 
     /* visible */
     if (!s.visible) continue;
-    var stroke = s.strokeStyle || pv.Color.none;
+    var stroke = s.strokeStyle;
     if (!stroke.opacity) continue;
 
     e = this.expect(e, "line", {
@@ -16,8 +16,8 @@ pv.SvgScene.rule = function(scenes) {
         "x2": s.left + s.width,
         "y2": s.top + s.height,
         "stroke": stroke.color,
-        "stroke-opacity": stroke.opacity || null,
-        "stroke-width": stroke.opacity ? s.lineWidth : null
+        "stroke-opacity": stroke.opacity,
+        "stroke-width": s.lineWidth
       });
     e = this.append(e, scenes, i);
   }

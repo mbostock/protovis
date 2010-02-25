@@ -96,7 +96,7 @@ pv.Panel.prototype.type = "panel";
  */
 pv.Panel.prototype.defaults = new pv.Panel()
     .extend(pv.Bar.prototype.defaults)
-    .fillStyle(null)
+    .fillStyle(null) // override Bar default
     .overflow("visible");
 
 /**

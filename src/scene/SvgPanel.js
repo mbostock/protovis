@@ -82,7 +82,7 @@ pv.SvgScene.panel = function(scenes) {
 };
 
 pv.SvgScene.fill = function(e, scenes, i) {
-  var s = scenes[i], fill = s.fillStyle || pv.Color.none;
+  var s = scenes[i], fill = s.fillStyle;
   if (fill.opacity) {
     e = this.expect(e, "rect", {
         "shape-rendering": s.antialias ? null : "crispEdges",
@@ -92,7 +92,7 @@ pv.SvgScene.fill = function(e, scenes, i) {
         "width": s.width,
         "height": s.height,
         "fill": fill.color,
-        "fill-opacity": fill.opacity || null,
+        "fill-opacity": fill.opacity,
         "stroke": null
       });
     e = this.append(e, scenes, i);
@@ -101,7 +101,7 @@ pv.SvgScene.fill = function(e, scenes, i) {
 };
 
 pv.SvgScene.stroke = function(e, scenes, i) {
-  var s = scenes[i], stroke = s.strokeStyle || pv.Color.none;
+  var s = scenes[i], stroke = s.strokeStyle;
   if (stroke.opacity) {
     e = this.expect(e, "rect", {
         "shape-rendering": s.antialias ? null : "crispEdges",
@@ -112,8 +112,8 @@ pv.SvgScene.stroke = function(e, scenes, i) {
         "height": Math.max(1E-10, s.height),
         "fill": null,
         "stroke": stroke.color,
-        "stroke-opacity": stroke.opacity || null,
-        "stroke-width": stroke.opacity ? s.lineWidth : null
+        "stroke-opacity": stroke.opacity,
+        "stroke-width": s.lineWidth
       });
     e = this.append(e, scenes, i);
   }
