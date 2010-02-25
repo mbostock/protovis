@@ -19,7 +19,7 @@ pv.SvgScene.bar = function(scenes) {
         "fill-opacity": fill.opacity || null,
         "stroke": stroke.color,
         "stroke-opacity": stroke.opacity || null,
-        "stroke-width": stroke.opacity ? s.lineWidth : null
+        "stroke-width": stroke.opacity ? s.lineWidth / this.scale : null
       });
     e = this.append(e, scenes, i);
   }

@@ -35,20 +35,16 @@ var vis = new pv.Panel()
 vis.add(pv.Panel)
     .data(graph.links)
   .add(pv.Line)
-    .extend(graph.link)
-    .left(transform.x)
-    .top(transform.y);
+    .extend(graph.link);
 
 /* Nodes. */
 vis.add(pv.Dot)
     .extend(graph.node)
-    .left(transform.x)
-    .top(transform.y)
     .title(function(d) d.nodeValue.nodeName)
     .size(function(d) (d.nodeValue.nodeValue / 100) || 10)
     .fillStyle(function(d) d.fixed ? "orange"
         : (d.nodeValue.nodeValue ? "white" : "steelblue"))
-    .event("mousedown", pv.Behavior.drag(transform));
+    .event("mousedown", pv.Behavior.drag());
 
 setInterval(function() {
     vis.render();

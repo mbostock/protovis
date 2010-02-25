@@ -16,7 +16,7 @@ pv.SvgScene.image = function(scenes) {
         "x": s.left,
         "y": s.top,
         "width": s.width,
-        "height": s.height,
+        "height": s.height
       });
     e.setAttributeNS(ns.xlink, "href", s.url);
     e = this.append(e, scenes, i);

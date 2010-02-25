@@ -3,10 +3,9 @@ pv.Behavior.transform = function() {
       target,
       scene,
       index,
-      m = pv.Transform.identity,
-      mi,
-      m1,
-      v1;
+      m = pv.Transform.identity, // current transformation matrix
+      m1, // transformation matrix at the start of panning
+      v1; // mouse location at the start of panning
 
   /* Setup the scene stack. */
   function setup() {
@@ -23,45 +22,28 @@ pv.Behavior.transform = function() {
     target = this;
     index = this.index;
     scene = this.scene;
-    v1 = this.mouse();
+    v1 = pv.vector(pv.event.pageX, pv.event.pageY);
     m1 = m;
   };
 
   transform.zoom = function() {
     var v = this.mouse(), k = window.event.wheelDelta;
-    m = m.translate(-v.x, -v.y);
-    m = m.scale((k < 0) ? (1000 / (1000 - k)) : ((1000 + k) / 1000));
-    m = m.translate(v.x, v.y);
-    mi = null;
+    this.transform(m = m.translate(v.x, v.y)
+        .scale((k < 0) ? (1000 / (1000 - k)) : ((1000 + k) / 1000))
+        .translate(-v.x, -v.y)).render();
   };
 
   function mousemove() {
     if (!target) return;
     setup();
-    var v2 = target.mouse();
-    m = m1.translate(v2.x - v1.x, v2.y - v1.y);
-    mi = null;
+    var x = (pv.event.pageX - v1.x) / m.k, y = (pv.event.pageY - v1.y) / m.k;
+    target.transform(m = m1.translate(x, y)).render();
   }
 
   function mouseup() {
     mousemove();
     target = null;
   }
-
-  transform.invert = function(n) {
-    if (!mi) mi = m.invert();
-    return pv.vector(
-        mi.k * n.x + mi.x,
-        mi.k * n.y + mi.y);
-  };
-
-  transform.x = function(n) {
-    return m.k * n.x + m.x;
-  };
-
-  transform.y = function(n) {
-    return m.k * n.y + m.y;
-  };
 
   pv.listen(window, "mousemove", mousemove);
   pv.listen(window, "mouseup", mouseup);

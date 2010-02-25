@@ -27,7 +27,8 @@ pv.SvgScene.label = function(scenes) {
         "y": y,
         "dy": dy,
         "transform": "translate(" + s.left + "," + s.top + ")"
-            + (s.textAngle ? " rotate(" + 180 * s.textAngle / Math.PI + ")" : ""),
+            + (s.textAngle ? " rotate(" + 180 * s.textAngle / Math.PI + ")" : "")
+            + (this.scale != 1 ? " scale(" + 1 / this.scale + ")" : ""),
         "fill": fill.color,
         "fill-opacity": fill.opacity || null,
         "text-anchor": anchor

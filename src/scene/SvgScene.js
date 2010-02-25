@@ -1,5 +1,3 @@
-// TODO don't populate default attributes?
-
 /**
  * @private Namespace constants for SVG, XMLNS, and XLINK.
  *
@@ -43,6 +41,7 @@ pv.Scene = pv.SvgScene = {};
  * @param scenes {array} an array of scene nodes.
  */
 pv.SvgScene.updateAll = function(scenes) {
+  /* TODO setup transform if not rendering on the root panel */
   if (!scenes.length) return;
   if ((scenes[0].reverse)
       && (scenes.type != "line")
@@ -90,13 +89,13 @@ pv.SvgScene.expect = function(e, type, attributes, style) {
   }
   for (var name in attributes) {
     var value = attributes[name];
-    if (value == pv.SvgScene.implicit.svg[name]) value = null;
+    if (value == this.implicit.svg[name]) value = null;
     if (value == null) e.removeAttribute(name);
     else e.setAttribute(name, value);
   }
   for (var name in style) {
     var value = style[name];
-    if (value == pv.SvgScene.implicit.css[name]) value = null;
+    if (value == this.implicit.css[name]) value = null;
     if (value == null) e.style.removeProperty(name);
     else e.style.setProperty(name, value);
   }
@@ -152,6 +151,8 @@ pv.SvgScene.removeSiblings = function(e) {
     e = n;
   }
 };
+
+pv.SvgScene.scale = 1;
 
 /** @private */
 pv.SvgScene.implicit = {

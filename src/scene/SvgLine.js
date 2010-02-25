@@ -54,7 +54,7 @@ pv.SvgScene.line = function(scenes) {
       "fill-opacity": fill.opacity || null,
       "stroke": stroke.color,
       "stroke-opacity": stroke.opacity || null,
-      "stroke-width": stroke.opacity ? s.lineWidth : null
+      "stroke-width": stroke.opacity ? s.lineWidth / this.scale : null
     });
   return this.append(e, scenes, 0);
 };
@@ -84,7 +84,7 @@ pv.SvgScene.lineSegment = function(scenes) {
         p2 = pv.vector(s2.left, s2.top),
         p = p2.minus(p1),
         v = p.perp().norm(),
-        w = v.times(s1.lineWidth / 2),
+        w = v.times(s1.lineWidth / (2 * this.scale)),
         a = p1.plus(w),
         b = p2.plus(w),
         c = p2.minus(w),

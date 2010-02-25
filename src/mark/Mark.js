@@ -934,17 +934,20 @@ var property;
  * @returns {pv.Vector} the mouse location.
  */
 pv.Mark.prototype.mouse = function() {
-  var x = 0, y = 0, mark = (this instanceof pv.Panel) ? this : this.parent;
+  var x = pv.event.pageX,
+      y = pv.event.pageY,
+      t = pv.Transform.identity,
+      panel = (this instanceof pv.Panel) ? this : this.parent,
+      node = this.root.canvas();
   do {
-    x += mark.left();
-    y += mark.top();
-  } while (mark = mark.parent);
-  var node = this.root.canvas();
-  do {
-    x += node.offsetLeft;
-    y += node.offsetTop;
+    x -= node.offsetLeft;
+    y -= node.offsetTop;
   } while (node = node.offsetParent);
-  return pv.vector(pv.event.pageX - x, pv.event.pageY - y);
+  do {
+    t = t.translate(panel.left(), panel.top()).times(panel.transform());
+  } while (panel = panel.parent);
+  t = t.invert();
+  return pv.vector(x * t.k + t.x, y * t.k + t.y);
 };
 
 /**

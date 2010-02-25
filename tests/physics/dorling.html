@@ -19,9 +19,8 @@ var i = 0,
     nodes = pv.range(40).map(function(i) {
       var x = w * (.5 + Math.random()) / 2,
           y = h * (.5 + Math.random()) / 2,
-          r = 4 + Math.random() * 80,
-          s = (r - .75) * (r - .75);
-      return {x: x, y: y, p: {x: x, y: y}, r: r, s: s};
+          r = 4 + Math.random() * 80;
+      return {x: x, y: y, p: {x: x, y: y}, r: r};
     });
 
 var sim = pv.simulation(nodes)
@@ -29,9 +28,14 @@ var sim = pv.simulation(nodes)
     .constraint(pv.Constraint.position(function(d) d.p))
     .force(pv.Force.drag());
 
+var transform = pv.Behavior.transform();
+
 var vis = new pv.Panel()
     .width(w)
-    .height(h);
+    .height(h)
+    .event("mousedown", transform.pan)
+    .event("mousewheel", transform.zoom)
+    .fillStyle("white");
 
 vis.add(pv.Dot)
     .data(nodes)
@@ -52,7 +56,7 @@ vis.add(pv.Dot)
     .data(nodes)
     .left(function(d) d.x)
     .top(function(d) d.y)
-    .size(function(d) d.s)
+    .size(function(d) d.r * d.r)
     .fillStyle(pv.color("steelblue").alpha(.8))
     .strokeStyle("black");
 

@@ -30,7 +30,7 @@ pv.SvgScene.panel = function(scenes) {
             = g.onmouseout
             = g.onmouseover
             = g.onmousewheel
-            = pv.SvgScene.dispatch;
+            = this.dispatch;
         e = g.firstChild;
       }
       scenes.$g = g;
@@ -59,15 +59,26 @@ pv.SvgScene.panel = function(scenes) {
     /* fill */
     e = this.fill(e, scenes, i);
 
+    /* transform (push) */
+    var k = this.scale,
+        t = s.transform,
+        x = s.left + t.x,
+        y = s.top + t.y;
+    this.scale *= t.k;
+
     /* children */
     for (var j = 0; j < s.children.length; j++) {
       s.children[j].$g = e = this.expect(e, "g", {
-          "transform": "translate(" + s.left + "," + s.top + ")"
+          "transform": "translate(" + x + "," + y + ")"
+              + (t.k != 1 ? " scale(" + t.k + ")" : "")
         });
       this.updateAll(s.children[j]);
       if (!e.parentNode) g.appendChild(e);
       e = e.nextSibling;
     }
+
+    /* transform (pop) */
+    this.scale = k;
 
     /* stroke */
     e = this.stroke(e, scenes, i);
@@ -113,7 +124,7 @@ pv.SvgScene.stroke = function(e, scenes, i) {
         "fill": null,
         "stroke": stroke.color,
         "stroke-opacity": stroke.opacity,
-        "stroke-width": s.lineWidth
+        "stroke-width": s.lineWidth / this.scale
       });
     e = this.append(e, scenes, i);
   }

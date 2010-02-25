@@ -56,6 +56,7 @@ pv.Panel = function() {
 };
 
 pv.Panel.prototype = pv.extend(pv.Bar)
+    .property("transform")
     .property("overflow", String)
     .property("canvas", function(c) {
         return (typeof c == "string")
@@ -251,6 +252,7 @@ pv.Panel.prototype.buildImplied = function(s) {
     }
     s.canvas = c;
   }
+  if (!s.transform) s.transform = pv.Transform.identity;
   pv.Bar.prototype.buildImplied.call(this, s);
 };
 

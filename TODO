@@ -39,7 +39,8 @@ mark/Mark.js
 - dot-dash strokes using stroke-dasharray
 
 mark/Panel.js
-- support transform on panel directly, making pv.Behavior.transform more useful
+- BUG: panel fill and stroke and not transformed
+- BUG: pv.SvgScene.scale is not set correctly if not rendered from root
 - overflow documentation
 
 behavior/*
