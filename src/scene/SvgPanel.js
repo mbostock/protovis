@@ -22,7 +22,6 @@ pv.SvgScene.panel = function(scenes) {
         g.setAttribute("fill", "none");
         g.setAttribute("stroke", "none");
         g.setAttribute("stroke-width", 1.5);
-        g.style.display = "inline-block";
         g.onclick
             = g.onmousedown
             = g.onmouseup
