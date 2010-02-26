@@ -87,7 +87,7 @@ pv.sum = function(array, f) {
  */
 pv.max = function(array, f) {
   if (f == pv.index) return array.length - 1;
-  return Math.max.apply(null, f ? map(array, f) : array);
+  return Math.max.apply(null, f ? pv.map(array, f) : array);
 };
 
 /**
@@ -128,7 +128,7 @@ pv.max.index = function(array, f) {
  */
 pv.min = function(array, f) {
   if (f == pv.index) return 0;
-  return Math.min.apply(null, f ? map(array, f) : array);
+  return Math.min.apply(null, f ? pv.map(array, f) : array);
 };
 
 /**
@@ -184,7 +184,7 @@ pv.mean = function(array, f) {
  */
 pv.median = function(array, f) {
   if (f == pv.index) return (array.length - 1) / 2;
-  array = map(array, f).sort(pv.naturalOrder);
+  array = pv.map(array, f).sort(pv.naturalOrder);
   if (array.length % 2) return array[Math.floor(array.length / 2)];
   var i = array.length / 2;
   return (array[i - 1] + array[i]) / 2;

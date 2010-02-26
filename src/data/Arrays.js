@@ -2,7 +2,7 @@
  * @private A private variant of Array.prototype.map that supports the index
  * property.
  */
-function map(array, f) {
+pv.map = function(array, f) {
   var o = {};
   return f
       ? array.map(function(d, i) { o.index = i; return f.call(o, d); })
@@ -131,7 +131,7 @@ pv.transpose = function(arrays) {
  * @returns {number[]} an array of numbers that sums to one.
  */
 pv.normalize = function(array, f) {
-  var norm = map(array, f), sum = pv.sum(norm);
+  var norm = pv.map(array, f), sum = pv.sum(norm);
   for (var i = 0; i < norm.length; i++) norm[i] /= sum;
   return norm;
 };
