@@ -593,7 +593,7 @@ pv.Mark.prototype.render = function() {
           render(child, depth + 1);
         }
       } else {
-        while (i++ < mark.scene.length) {
+        while (++i < mark.scene.length) {
           if (mark.scene[i].visible) {
             stack[0] = mark.scene[i].data;
             mark.index = i;
