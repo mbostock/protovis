@@ -1,5 +1,3 @@
-var guid = 0;
-
 pv.SvgScene.panel = function(scenes) {
   var g = scenes.$g, e = g && g.firstChild;
   for (var i = 0; i < scenes.length; i++) {
@@ -39,7 +37,7 @@ pv.SvgScene.panel = function(scenes) {
 
     /* clip (nest children) */
     if (s.overflow == "hidden") {
-      var id = (guid++).toString(36),
+      var id = (this.id++).toString(36),
           c = this.expect(e, "g", {"clip-path": "url(#" + id + ")"});
       if (!c.parentNode) g.appendChild(c);
       scenes.$g = g = c;

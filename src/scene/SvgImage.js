@@ -18,7 +18,7 @@ pv.SvgScene.image = function(scenes) {
         "width": s.width,
         "height": s.height
       });
-    e.setAttributeNS(ns.xlink, "href", s.url);
+    e.setAttributeNS(this.xlink, "href", s.url);
     e = this.append(e, scenes, i);
 
     /* stroke */
