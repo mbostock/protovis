@@ -564,15 +564,10 @@ pv.Mark.prototype.cousin = function() {
  * a panel.
  */
 pv.Mark.prototype.render = function() {
-  if (!this.root.scene) {
-    /* For the first render, take it from the top. */
-    if (this.parent) {
-      this.root.render();
-      return;
-    }
-  } else {
-    /* Clear the data stack if called from an event handler. */
-    delete this.root.scene.data;
+  /* For the first render, take it from the top. */
+  if (!this.root.scene && this.parent) {
+    this.root.render();
+    return;
   }
 
   /**
@@ -590,58 +585,51 @@ pv.Mark.prototype.render = function() {
   function render(mark, depth) {
     if (depth < indexes.length) {
       var childIndex = indexes[depth], child = mark.children[childIndex];
-      if (mark.hasOwnProperty("index")) {
-        var i = mark.index;
+      stack.unshift(null);
+      var i = mark.index;
+      if (i != -1) {
         if (mark.scene[i].visible) {
-          child.scene = mark.scene[i].children[childIndex];
+          stack[0] = mark.scene[i].data;
           render(child, depth + 1);
         }
       } else {
-        for (var i = 0; i < mark.scene.length; i++) {
+        while (i++ < mark.scene.length) {
           if (mark.scene[i].visible) {
+            stack[0] = mark.scene[i].data;
             mark.index = i;
             child.scene = mark.scene[i].children[childIndex];
             render(child, depth + 1);
           }
         }
         delete mark.index;
+        delete child.scene;
       }
-      delete child.scene;
-      return;
+      stack.shift();
+    } else {
+      mark.build();
+
+      /*
+       * In the update phase, the scene is rendered by creating and updating
+       * elements and attributes in the SVG image. No properties are evaluated
+       * during the update phase; instead the values computed previously in the
+       * build phase are simply translated into SVG. The update phase is
+       * decoupled (see pv.Scene) to allow different rendering engines.
+       */
+      pv.Scene.updateAll(mark.scene);
     }
-
-    /* Now that the scene stack is set, evaluate the properties. */
-    mark.build();
-
-    /*
-     * In the update phase, the scene is rendered by creating and updating
-     * elements and attributes in the SVG image. No properties are evaluated
-     * during the update phase; instead the values computed previously in the
-     * build phase are simply translated into SVG. The update phase is decoupled
-     * (see pv.Scene) to allow different rendering engines.
-     */
-    pv.Scene.updateAll(mark.scene);
-    delete mark.root.scene.data;
   }
 
   /* Bind this mark's property definitions. */
   this.bind();
 
   /* Recursively render all instances of this mark. */
-  var indexes = [];
+  var stack = pv.Mark.stack, indexes = [];
   for (var m = this; m.parent; m = m.parent) indexes.unshift(m.childIndex);
   render(this.root, 0);
 };
 
-/** @private Computes the root data stack for the specified mark. */
-pv.Mark.argv = function(mark) {
-  var stack = [];
-  while (mark) {
-    stack.push(mark.scene[mark.index].data);
-    mark = mark.parent;
-  }
-  return stack;
-};
+/** @private Stores the current data stack. */
+pv.Mark.stack = [];
 
 /**
  * @private In the bind phase, inherited property definitions are cached so they
@@ -650,7 +638,7 @@ pv.Mark.argv = function(mark) {
 pv.Mark.prototype.bind = function() {
   var seen = {}, types = [[], [], [], []], data, visible;
 
-  /** TODO */
+  /** Scans the proto chain for the specified mark. */
   function bind(mark) {
     do {
       var properties = mark.$properties;
@@ -668,7 +656,7 @@ pv.Mark.prototype.bind = function() {
     } while (mark = mark.proto);
   }
 
-  /** TODO */
+  /** Returns a def setter-getter for the specified property. */
   function def(name) {
     return function(v) {
       var defs = this.scene.defs;
@@ -753,7 +741,7 @@ pv.Mark.prototype.bind = function() {
  * @param parent the instance of the parent panel from the scene graph.
  */
 pv.Mark.prototype.build = function() {
-  var scene = this.scene;
+  var scene = this.scene, stack = pv.Mark.stack;
   if (!scene) {
     scene = this.scene = [];
     scene.mark = this;
@@ -764,10 +752,6 @@ pv.Mark.prototype.build = function() {
       scene.parentIndex = this.parent.index;
     }
   }
-
-  /* Set the data stack. */
-  var stack = this.root.scene.data;
-  if (!stack) this.root.scene.data = stack = pv.Mark.argv(this.parent);
 
   /* Evaluate defs. */
   if (this.binds.defs.length) {
@@ -799,6 +783,7 @@ pv.Mark.prototype.build = function() {
   }
 
   /* Create, update and delete scene nodes. */
+  var index = this.index;
   stack.unshift(null);
   scene.length = data.length;
   for (var i = 0; i < data.length; i++) {
@@ -808,10 +793,12 @@ pv.Mark.prototype.build = function() {
     s.data = stack[0] = data[i];
     this.buildInstance(s);
   }
-  stack.shift();
-  delete this.index;
   pv.Mark.prototype.index = -1;
-  if (!this.parent) scene.data = null;
+  stack.shift();
+
+  /* Restore the old index, if any. */
+  if (index != -1) this.index = index;
+  else delete this.index;
 
   return this;
 };
@@ -830,7 +817,7 @@ pv.Mark.prototype.buildProperties = function(s, properties) {
       case 0: case 1: v = this.scene.defs.values[p.name]; break;
       case 3: {
         property = p.name;
-        v = v.apply(this, this.root.scene.data);
+        v = v.apply(this, pv.Mark.stack);
         break;
       }
     }
@@ -1004,38 +991,36 @@ pv.Mark.prototype.event = function(type, handler) {
   return this;
 };
 
-/** @private TODO */
-pv.Mark.prototype.dispatch = function(e, scenes, index) {
-  var l = this.$handlers && this.$handlers[e.type];
-  if (!l) return this.parent
-      && this.parent.dispatch(e, scenes.parent, scenes.parentIndex);
-
+/** @private Evaluates the function <i>f</i> with the specified context. */
+pv.Mark.context = function(scenes, index, f) {
+  var that = scenes.mark, stack = pv.Mark.stack, mark;
   try {
-    /* Setup the scene stack. */
-    var mark = this;
+    mark = that;
     do {
+      stack.push(scenes[index].data);
       mark.index = index;
       mark.scene = scenes;
       index = scenes.parentIndex;
       scenes = scenes.parent;
     } while (mark = mark.parent);
-
-    /* Execute the event listener. */
-    try {
-      mark = l.apply(this, this.root.scene.data = pv.Mark.argv(this));
-    } finally {
-      e.preventDefault();
-      this.root.scene.data = null;
-    }
-
-    /* Update the display. TODO dirtying. */
-    if (mark instanceof pv.Mark) mark.render();
+    f();
   } finally {
-    /* Restore the scene stack. */
-    var mark = this;
+    mark = that;
     do {
+      stack.pop();
       if (mark.parent) delete mark.scene;
       delete mark.index;
     } while (mark = mark.parent);
   }
+};
+
+/** @private Execute the event listener, then re-render. */
+pv.Mark.dispatch = function(e, scenes, index) {
+  var m = scenes.mark, p = scenes.parent, l = m.$handlers && m.$handlers[e.type];
+  if (!l) return p && pv.Mark.dispatch(e, p, scenes.parentIndex);
+  pv.Mark.context(scenes, index, function() {
+      m = l.apply(m, pv.Mark.stack);
+      if (m && m.render) m.render();
+      e.preventDefault();
+    });
 };
