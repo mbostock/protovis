@@ -245,9 +245,14 @@ pv.Panel.prototype.buildImplied = function(s) {
       var cache = this.$canvas || (this.$canvas = []);
       if (!(c = cache[this.index])) {
         c = cache[this.index] = document.createElement("span");
-        this.$dom // script element for text/javascript+protovis
-            ? this.$dom.parentNode.insertBefore(c, this.$dom)
-            : lastElement().appendChild(c);
+        if (this.$dom) { // script element for text/javascript+protovis
+          this.$dom.parentNode.insertBefore(c, this.$dom);
+        } else { // find the last element in the body
+          var n = document.body;
+          while (n.lastChild && n.lastChild.tagName) n = n.lastChild;
+          if (n != document.body) n = n.parentNode;
+          n.appendChild(c);
+        }
       }
     }
     s.canvas = c;
@@ -255,16 +260,3 @@ pv.Panel.prototype.buildImplied = function(s) {
   if (!s.transform) s.transform = pv.Transform.identity;
   pv.Mark.prototype.buildImplied.call(this, s);
 };
-
-/**
- * @private Returns the last element in the current document's body. The canvas
- * element is appended to this last element if another DOM element has not
- * already been specified via the <tt>$dom</tt> field.
- */
-function lastElement() {
-  var node = document.body;
-  while (node.lastChild && node.lastChild.tagName) {
-    node = node.lastChild;
-  }
-  return (node == document.body) ? node : node.parentNode;
-}

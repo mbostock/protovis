@@ -634,14 +634,14 @@ pv.Mark.prototype.render = function() {
 };
 
 /** @private Computes the root data stack for the specified mark. */
-function argv(mark) {
+pv.Mark.argv = function(mark) {
   var stack = [];
   while (mark) {
     stack.push(mark.scene[mark.index].data);
     mark = mark.parent;
   }
   return stack;
-}
+};
 
 /**
  * @private In the bind phase, inherited property definitions are cached so they
@@ -767,7 +767,7 @@ pv.Mark.prototype.build = function() {
 
   /* Set the data stack. */
   var stack = this.root.scene.data;
-  if (!stack) this.root.scene.data = stack = argv(this.parent);
+  if (!stack) this.root.scene.data = stack = pv.Mark.argv(this.parent);
 
   /* Evaluate defs. */
   if (this.binds.defs.length) {
@@ -1022,7 +1022,7 @@ pv.Mark.prototype.dispatch = function(e, scenes, index) {
 
     /* Execute the event listener. */
     try {
-      mark = l.apply(this, this.root.scene.data = argv(this));
+      mark = l.apply(this, this.root.scene.data = pv.Mark.argv(this));
     } finally {
       e.preventDefault();
       this.root.scene.data = null;
