@@ -145,12 +145,7 @@ pv.Rule.prototype.anchor = function(name) {
       });
 };
 
-/**
- * @private Overrides the default behavior of {@link pv.Mark.buildImplied} to
- * determine the orientation (vertical or horizontal) of the rule.
- *
- * @param s a node in the scene graph; the instance of the rule to build.
- */
+/** @private Sets width or height based on orientation. */
 pv.Rule.prototype.buildImplied = function(s) {
   var l = s.left, r = s.right, t = s.top, b = s.bottom;
 

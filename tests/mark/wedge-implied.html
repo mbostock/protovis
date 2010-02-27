@@ -1,0 +1,52 @@
+<html>
+  <head>
+    <title>Wedge Implied</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <style type="text/css">
+
+body {
+  max-width: 8in;
+  margin: .25in;
+  font: 14px/134% Helvetica Neue, sans-serif;
+}
+
+    </style>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(400)
+    .height(400);
+
+vis.add(pv.Wedge)
+    .data(pv.range(10))
+    .bottom(200)
+    .left(200)
+    .innerRadius(function(d) (d + 2) * 15)
+    .outerRadius(function(d) (d + 3) * 15)
+    .startAngle(function(d) Math.PI / 2 + d / 10 * Math.PI)
+    .angle(2)
+    .event("mouseover", function() this.angle(3))
+    .event("mouseout", function() this.angle(2));
+
+vis.render();
+
+    </script><p>
+
+This test verifies that updating the <tt>angle</tt> property from within an
+event handler functions correctly. Mouseover the wedges to see them switch
+from <tt>angle</tt> 2 to 3.
+
+<p>Previously, event handlers would not re-evaluate properties; instead the
+event handler could directly set arbitrary property values and the corresponding
+SVG element would be updated. This had a bug such that if the <tt>angle</tt>
+were set during render, the implied <tt>endAngle</tt> would not be updated, and
+the wedge would not be rendered correctly.
+
+<p>Now that event handlers cannot directly set property values, and instead
+update property definitions which then are re-evaluated as part of render,
+wedge definitions can be manipulated interactively to no ill effect.
+
+  </body>
+</html>

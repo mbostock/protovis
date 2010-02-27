@@ -215,12 +215,7 @@ pv.Area.prototype.anchor = function(name) {
       });
 };
 
-/**
- * @private Overrides the default behavior of {@link pv.Mark.buildImplied} such
- * that the width and height are set to zero if null.
- *
- * @param s a node in the scene graph; the instance of the mark to build.
- */
+/** @private Sets width and height to zero if null. */
 pv.Area.prototype.buildImplied = function(s) {
   if (s.height == null) s.height = 0;
   if (s.width == null) s.width = 0;

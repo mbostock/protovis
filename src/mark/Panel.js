@@ -253,7 +253,7 @@ pv.Panel.prototype.buildImplied = function(s) {
     s.canvas = c;
   }
   if (!s.transform) s.transform = pv.Transform.identity;
-  pv.Bar.prototype.buildImplied.call(this, s);
+  pv.Mark.prototype.buildImplied.call(this, s);
 };
 
 /**

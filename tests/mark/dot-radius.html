@@ -1,0 +1,22 @@
+<html>
+  <head>
+    <title>Dot Radius</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(200)
+    .height(200);
+
+vis.add(pv.Dot)
+    .def("left", 100)
+    .def("top", 100)
+    .def("radius", 90);
+
+vis.render();
+
+    </script>
+  </body>
+</html>

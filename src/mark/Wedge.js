@@ -246,20 +246,9 @@ pv.Wedge.upright = function(angle) {
   return (angle < Math.PI / 2) || (angle > 3 * Math.PI / 2);
 };
 
-/**
- * @private Overrides the default behavior of {@link pv.Mark.buildImplied} such
- * that the end angle is computed from the start angle and angle (angular span)
- * if not specified.
- *
- * @param s a node in the scene graph; the instance of the wedge to build.
- */
+/** @private Sets angle based on endAngle or vice versa. */
 pv.Wedge.prototype.buildImplied = function(s) {
-  /*
-   * TODO If the angle or endAngle is updated by an event handler, the implied
-   * properties won't recompute correctly, so this will lead to potentially
-   * buggy redraw. How to re-evaluate implied properties on update?
-   */
-  if (s.endAngle == null) s.endAngle = s.startAngle + s.angle;
   if (s.angle == null) s.angle = s.endAngle - s.startAngle;
+  else if (s.endAngle == null) s.endAngle = s.startAngle + s.angle;
   pv.Mark.prototype.buildImplied.call(this, s);
 };

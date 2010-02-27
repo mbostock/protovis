@@ -9,7 +9,7 @@ pv.SvgScene.dot = function(scenes) {
     if (!fill.opacity && !stroke.opacity) continue;
 
     /* points */
-    var radius = Math.sqrt(s.size), path;
+    var radius = s.radius, path;
     switch (s.shape) {
       case "cross": {
         path = "M" + -radius + "," + -radius
@@ -19,7 +19,7 @@ pv.SvgScene.dot = function(scenes) {
         break;
       }
       case "triangle": {
-        var h = radius, w = radius * 2 / Math.sqrt(3);
+        var h = radius, w = radius * 1.1547; // 2 / Math.sqrt(3)
         path = "M0," + h
             + "L" + w +"," + -h
             + " " + -w + "," + -h
@@ -27,7 +27,7 @@ pv.SvgScene.dot = function(scenes) {
         break;
       }
       case "diamond": {
-        radius *= Math.sqrt(2);
+        radius *= 1.414214; // Math.sqrt(2)
         path = "M0," + -radius
             + "L" + radius + ",0"
             + " 0," + radius
