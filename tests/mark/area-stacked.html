@@ -27,9 +27,8 @@ var vis = new pv.Panel()
 vis.add(pv.Panel)
     .data(data)
   .add(pv.Area)
-    .data(function(a) a)
+    .extend(pv.Layout.stack())
     .left(function(d) x(d.x))
-    .bottom(pv.Layout.stack())
     .height(function(d) y(d.y));
 
 vis.add(pv.Rule)

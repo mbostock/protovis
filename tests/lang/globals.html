@@ -1,0 +1,32 @@
+<html>
+  <head>
+    <script type="text/javascript">
+
+var globals = {};
+for (var i in window) globals[i] = true;
+
+    </script>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <style type="text/css">
+
+body {
+  max-width: 8in;
+  margin: .25in;
+  font: 14px/134% Helvetica Neue, sans-serif;
+}
+
+    </style>
+  </head>
+  <body>
+    Protovis defined the following globals:
+    <pre id="pre"></pre>
+    <script type="text/javascript+protovis">
+
+var list = [];
+globals.list = true;
+for (var i in window) if (!globals[i]) list.push(i);
+pre.innerHTML = list.join("\n");
+
+    </script>
+  </body>
+</html>

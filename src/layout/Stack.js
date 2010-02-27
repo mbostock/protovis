@@ -15,18 +15,14 @@
  * the specified offset is used. If no offset is specified, zero is used. For
  * example,
  *
- * <pre>new pv.Panel()
- *     .width(150).height(150)
- *   .add(pv.Panel)
+ * <pre>vis.add(pv.Panel)
  *     .data([[1, 1.2, 1.7, 1.5, 1.7],
  *            [.5, 1, .8, 1.1, 1.3],
  *            [.2, .5, .8, .9, 1]])
  *   .add(pv.Area)
- *     .data(function(d) d)
- *     .bottom(pv.Layout.stack())
+ *     .extend(pv.Layout.stack())
  *     .height(function(d) d * 40)
- *     .left(function() this.index * 35)
- *   .root.render();</pre>
+ *     .left(function() this.index * 35);</pre>
  *
  * specifies a vertically-stacked area chart.
  *
@@ -34,30 +30,51 @@
  * @see pv.Mark#cousin
  */
 pv.Layout.stack = function() {
-  /** @private */
-  var offset = function() { return 0; };
+  var orient = "bottom", // default orientation
+      size = "height", // default size
+      offset = function() { return 0; }; // default offset
 
-  /** @private */
+  /** @private Find the previous visible parent instance. */
   function layout() {
-
-    /* Find the previous visible parent instance. */
     var i = this.parent.index, p, c;
     while ((i-- > 0) && !c) {
       p = this.parent.scene[i];
       if (p.visible) c = p.children[this.childIndex][this.index];
     }
-
-    if (c) {
-      switch (property) {
-        case "bottom": return c.bottom + c.height;
-        case "top": return c.top + c.height;
-        case "left": return c.left + c.width;
-        case "right": return c.right + c.width;
-      }
-    }
-
-    return offset.apply(this, arguments);
+    return c
+        ? c[orient] + c[size]
+        : offset.apply(this, arguments);
   }
+
+  var mark = new pv.Mark()
+      .data(pv.identity)
+      .bottom(layout);
+
+  /**
+   * Sets or gets the orientation. The default orientation is "left", which
+   * means that ...<ul>
+   *
+   * <li>left - left-to-right.
+   * <li>right - right-to-left.
+   * <li>top - top-to-bottom.
+   * <li>bottom - bottom-to-top.
+   * <li>radial - radially, with the root at the center.</ul>
+   *
+   * @param {string} v the new orientation.
+   * @function
+   * @name pv.Layout.stack.prototype.orient
+   * @returns {pv.Layout.stack} this, or the current orientation.
+   */
+  mark.orient = function(v) {
+    if (arguments.length) {
+      mark[orient](null); // delete old property definition
+      orient = String(v);
+      mark[orient](layout);
+      size = (orient == "left") || (orient == "right") ? "width" : "height";
+      return this;
+    }
+    return orient;
+  };
 
   /**
    * Sets the offset for this stack layout. The offset can either be specified
@@ -71,10 +88,13 @@ pv.Layout.stack = function() {
    * @param {function} f offset function, or constant value.
    * @returns {pv.Layout.stack} this.
    */
-  layout.offset = function(f) {
-      offset = (f instanceof Function) ? f : function() { return f; };
+  mark.offset = function(f) {
+    if (arguments.length) {
+      offset = (typeof f == "function") ? f : function() { return f; };
       return this;
-    };
+    }
+    return offset;
+  };
 
-  return layout;
+  return mark;
 };

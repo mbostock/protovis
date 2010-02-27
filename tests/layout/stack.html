@@ -1,0 +1,27 @@
+<html>
+  <head>
+    <title>Stack</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(150)
+    .height(150);
+
+vis.add(pv.Panel)
+    .data([[1, 1.2, 1.7, 1.5, 1.7],
+           [.5, 1, .8, 1.1, 1.3],
+           [.2, .5, .8, .9, 1]])
+  .add(pv.Area)
+    .extend(pv.Layout.stack())
+    .height(function(d) d * 30)
+    .left(function() this.index * 35);
+
+vis.render();
+
+    </script>
+  </body>
+</html>
+

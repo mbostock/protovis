@@ -760,12 +760,9 @@ pv.Mark.prototype.build = function() {
     for (var i = 0; i < this.binds.defs.length; i++) {
       var d = this.binds.defs[i];
       if (!(d.name in defs.locked)) {
-        var v = d.value;
-        if (d.type == 1) {
-          property = d.name;
-          v = v.apply(this, stack);
-        }
-        defs.values[d.name] = v;
+        defs.values[d.name] = d.type == 1
+            ? d.value.apply(this, stack)
+            : d.value;
       }
     }
   }
@@ -773,13 +770,10 @@ pv.Mark.prototype.build = function() {
   /* Evaluate special data property. */
   var data = this.binds.data;
   switch (data.type) {
-    case 0: case 1: data = defs.values.data; break;
+    case 0:
+    case 1: data = defs.values.data; break;
     case 2: data = data.value; break;
-    case 3: {
-      property = "data";
-      data = data.value.apply(this, stack);
-      break;
-    }
+    case 3: data = data.value.apply(this, stack); break;
   }
 
   /* Create, update and delete scene nodes. */
@@ -814,12 +808,9 @@ pv.Mark.prototype.buildProperties = function(s, properties) {
   for (var i = 0, n = properties.length; i < n; i++) {
     var p = properties[i], v = p.value; // assume case 2 (constant)
     switch (p.type) {
-      case 0: case 1: v = this.scene.defs.values[p.name]; break;
-      case 3: {
-        property = p.name;
-        v = v.apply(this, pv.Mark.stack);
-        break;
-      }
+      case 0:
+      case 1: v = this.scene.defs.values[p.name]; break;
+      case 3: v = v.apply(this, pv.Mark.stack); break;
     }
     s[p.name] = v;
   }
@@ -902,16 +893,6 @@ pv.Mark.prototype.buildImplied = function(s) {
   if (p.fillStyle && !s.fillStyle) s.fillStyle = pv.Color.transparent;
   if (p.strokeStyle && !s.strokeStyle) s.strokeStyle = pv.Color.transparent;
 };
-
-/**
- * @private The name of the property being evaluated, for so-called "smart"
- * functions that change behavior depending on which property is being
- * evaluated. This functionality is somewhat magical, so for now, this feature
- * is not exposed outside the library.
- *
- * @type string
- */
-var property;
 
 /**
  * Returns the current location of the mouse (cursor) relative to this mark's
