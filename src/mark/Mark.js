@@ -241,6 +241,21 @@ pv.Mark.prototype.childIndex = -1;
 pv.Mark.prototype.index = -1;
 
 /**
+ * The current scale factor, based on any enclosing transforms. The current
+ * scale can be used to create scale-independent graphics. For example, to
+ * define a dot that has a radius of 10 irrespective of any zooming, say:
+ *
+ * <pre>dot.radius(function() 10 / this.scale)</pre>
+ *
+ * Note that the stroke width and font size are defined irrespective of scale
+ * (i.e., in screen space) already.
+ *
+ * @type number
+ * @see pv.Panel.transform
+ */
+pv.Mark.prototype.scale = 1;
+
+/**
  * The scene graph. The scene graph is an array of objects; each object (or
  * "node") corresponds to an instance of this mark and an element in the data
  * array. The scene graph can be traversed to lookup previously-evaluated

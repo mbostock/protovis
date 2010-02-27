@@ -143,7 +143,7 @@ pv.Panel.prototype.add = function(type) {
   return child;
 };
 
-/** @private TODO */
+/** @private Bind this panel, then any child marks recursively. */
 pv.Panel.prototype.bind = function() {
   pv.Mark.prototype.bind.call(this);
   for (var i = 0; i < this.children.length; i++) {
@@ -164,9 +164,12 @@ pv.Panel.prototype.buildInstance = function(s) {
   if (!s.children) s.children = [];
 
   /*
-   * The default index should be cleared as we recurse into child marks. It will
-   * be reset to the current index when the next panel instance is built.
+   * Multiply the current scale factor by this panel's transform. Also, clear
+   * the default index as we recurse into child marks; it will be reset to the
+   * current index when the next panel instance is built.
    */
+  var k = pv.Mark.prototype.scale;
+  pv.Mark.prototype.scale *= s.transform.k;
   pv.Mark.prototype.index = -1;
 
   /*
@@ -191,8 +194,9 @@ pv.Panel.prototype.buildInstance = function(s) {
     delete this.children[i].scene;
   }
 
-  /* Delete any expired child scenes, should child marks have been removed. */
+  /* Delete any expired child scenes, and restore the previous scale. */
   s.children.length = this.children.length;
+  pv.Mark.prototype.scale = k;
 };
 
 /**

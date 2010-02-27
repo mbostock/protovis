@@ -37,10 +37,9 @@ mark/Mark.js
 - antialias doesn't always work as expected; requires pixel rounding?
 - event("ignore") to disable pointer-events?
 - dot-dash strokes using stroke-dasharray
-- expose `this.scale` for transform-aware property functions?
 
 mark/Panel.js
-- BUG: panel fill and stroke and not transformed
+- BUG? panel fill and stroke and not transformed
 - BUG: pv.SvgScene.scale is not set correctly if not rendered from root
 - overflow documentation
 

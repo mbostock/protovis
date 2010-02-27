@@ -36,7 +36,7 @@ vis.add(pv.Panel)
 /* Nodes. */
 vis.add(pv.Dot)
     .extend(graph.node)
-    .size(function(d) d.linkDegree + 4)
+    .size(function(d) (d.linkDegree + 4) * Math.pow(this.scale, -1.5))
     .fillStyle(function(d) d.fixed ? "orange" : "white")
     .title(function(d) d.nodeValue)
     .event("mousedown", pv.Behavior.drag());
