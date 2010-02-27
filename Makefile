@@ -5,7 +5,6 @@ JS_PV_FILES = \
 	src/pv.js \
 	src/pv-internals.js \
 	src/text/Format.js \
-	src/text/PadFormat.js \
 	src/text/DateFormat.js \
 	src/text/TimeFormat.js \
 	src/text/NumberFormat.js \

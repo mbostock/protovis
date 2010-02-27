@@ -1,4 +1,5 @@
 pv.Format.time = function(type) {
+  var pad = pv.Format.pad;
 
   /*
    * MILLISECONDS = 1
@@ -33,12 +34,12 @@ pv.Format.time = function(type) {
         var a = [],
             s = ((t % 6e4) / 1e3) >> 0,
             m = ((t % 36e5) / 6e4) >> 0;
-        a.push(padz2(s));
+        a.push(pad("0", 2, s));
         if (t >= 36e5) {
           var h = ((t % 864e5) / 36e5) >> 0;
-          a.push(padz2(m));
+          a.push(pad("0", 2, m));
           if (t >= 864e5) {
-            a.push(padz2(h));
+            a.push(pad("0", 2, h));
             a.push(Math.floor(t / 864e5).toFixed());
           } else {
             a.push(h.toFixed());

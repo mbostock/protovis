@@ -68,6 +68,7 @@
  * documentation.
  */
 pv.Format.date = function(pattern) {
+  var pad = pv.Format.pad;
 
   /**
    * Converts a date to a string using the associated formatting pattern.
@@ -95,35 +96,35 @@ pv.Format.date = function(pattern) {
               "August", "September", "October", "November", "December"
             ][d.getMonth()];
           case '%c': return d.toLocaleString();
-          case '%C': return padz2(Math.floor(d.getFullYear() / 100) % 100);
-          case '%d': return padz2(d.getDate());
+          case '%C': return pad("0", 2, Math.floor(d.getFullYear() / 100) % 100);
+          case '%d': return pad("0", 2, d.getDate());
           case '%x':
-          case '%D': return padz2(d.getMonth() + 1)
-                    + "/" + padz2(d.getDate())
-                    + "/" + padz2(d.getFullYear() % 100);
-          case '%e': return pads2(d.getDate());
-          case '%H': return padz2(d.getHours());
+          case '%D': return pad("0", 2, d.getMonth() + 1)
+                    + "/" + pad("0", 2, d.getDate())
+                    + "/" + pad("0", 2, d.getFullYear() % 100);
+          case '%e': return pad(" ", 2, d.getDate());
+          case '%H': return pad("0", 2, d.getHours());
           case '%I': {
             var h = d.getHours() % 12;
-            return h ? padz2(h) : 12;
+            return h ? pad("0", 2, h) : 12;
           }
           // TODO %j: day of year as a decimal number [001,366]
-          case '%m': return padz2(d.getMonth() + 1);
-          case '%M': return padz2(d.getMinutes());
+          case '%m': return pad("0", 2, d.getMonth() + 1);
+          case '%M': return pad("0", 2, d.getMinutes());
           case '%n': return "\n";
           case '%p': return d.getHours() < 12 ? "AM" : "PM";
           case '%T':
           case '%X':
           case '%r': {
             var h = d.getHours() % 12;
-            return (h ? padz2(h) : 12)
-                    + ":" + padz2(d.getMinutes())
-                    + ":" + padz2(d.getSeconds())
+            return (h ? pad("0", 2, h) : 12)
+                    + ":" + pad("0", 2, d.getMinutes())
+                    + ":" + pad("0", 2, d.getSeconds())
                     + " " + (d.getHours() < 12 ? "AM" : "PM");
           }
-          case '%R': return padz2(d.getHours()) + ":" + padz2(d.getMinutes());
-          case '%S': return padz2(d.getSeconds());
-          case '%Q': return padz3(d.getMilliseconds());
+          case '%R': return pad("0", 2, d.getHours()) + ":" + pad("0", 2, d.getMinutes());
+          case '%S': return pad("0", 2, d.getSeconds());
+          case '%Q': return pad("0", 3, d.getMilliseconds());
           case '%t': return "\t";
           case '%u': {
             var w = d.getDay();
@@ -133,7 +134,7 @@ pv.Format.date = function(pattern) {
           // TODO %V: week number (monday first day) [01,53] ... with weirdness
           case '%w': return d.getDay();
           // TODO %W: week number (monday first day) [00,53] ... with weirdness
-          case '%y': return padz2(d.getFullYear() % 100);
+          case '%y': return pad("0", 2, d.getFullYear() % 100);
           case '%Y': return d.getFullYear();
           // TODO %Z: timezone name or abbreviation
           case '%%': return "%";
@@ -154,7 +155,7 @@ pv.Format.date = function(pattern) {
     var fields = [function() {}];
 
     /* Register callbacks for each field in the format pattern. */
-    var re = re_quote(pattern).replace(/%[a-zA-Z0-9]/g, function(s) {
+    var re = pv.Format.re(pattern).replace(/%[a-zA-Z0-9]/g, function(s) {
         switch (s) {
           // TODO %a: day of week, either abbreviated or full name
           // TODO %A: same as %a
