@@ -34,15 +34,12 @@ mark/Mark.js
 - event("ignore") to disable pointer-events?
 
 mark/Panel.js
-- BUG? panel fill and stroke and not transformed
-- BUG: pv.SvgScene.scale is not set correctly if not rendered from root
 - overflow documentation
 
 behavior/*
 - documentation, implementation, etc.
-- pv.Mark.context to encapsulate item reference, evaluation state?
-- should pv.Behavior.{drag,transform} automatically redraw?
-- split pv.Behavior.transform into pan+zoom.
+- should behaviors automatically re-render?
+- pv.Behavior.drag should use pv.Mark.context
 - pv.Behavior.point ... fuzzy mouseover
 
 physics/Simulation.js

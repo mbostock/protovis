@@ -597,27 +597,17 @@ pv.Mark.prototype.render = function() {
    * instance of the panel will be rendered; otherwise, all visible instances of
    * the mark will be rendered.
    */
-  function render(mark, depth) {
+  function render(mark, depth, scale) {
     if (depth < indexes.length) {
-      var childIndex = indexes[depth], child = mark.children[childIndex];
       stack.unshift(null);
-      var i = mark.index;
-      if (i != -1) {
-        if (mark.scene[i].visible) {
-          stack[0] = mark.scene[i].data;
-          render(child, depth + 1);
-        }
+      if (mark.hasOwnProperty("index")) {
+        renderInstance(mark, depth, scale);
       } else {
-        while (++i < mark.scene.length) {
-          if (mark.scene[i].visible) {
-            stack[0] = mark.scene[i].data;
-            mark.index = i;
-            child.scene = mark.scene[i].children[childIndex];
-            render(child, depth + 1);
-          }
+        for (var i = 0, n = mark.scene.length; i < n; i++) {
+          mark.index = i;
+          renderInstance(mark, depth, scale);
         }
         delete mark.index;
-        delete child.scene;
       }
       stack.shift();
     } else {
@@ -630,7 +620,47 @@ pv.Mark.prototype.render = function() {
        * build phase are simply translated into SVG. The update phase is
        * decoupled (see pv.Scene) to allow different rendering engines.
        */
+      pv.Scene.scale = scale;
       pv.Scene.updateAll(mark.scene);
+    }
+  }
+
+  /**
+   * @private Recursively renders the current instance of the specified mark.
+   * This is slightly tricky because `index` and `scene` properties may or may
+   * not already be set; if they are set, it means we are rendering only a
+   * specific instance; if they are unset, we are rendering all instances.
+   * Furthermore, we must preserve the original context of these properties when
+   * rendering completes.
+   *
+   * <p>Another tricky aspect is that the `scene` attribute should be set for
+   * any preceding children, so as to allow property chaining. This is
+   * consistent with first-pass rendering.
+   */
+  function renderInstance(mark, depth, scale) {
+    var s = mark.scene[mark.index], i;
+    if (s.visible) {
+      var childIndex = indexes[depth], child = mark.children[childIndex];
+
+      /* Set preceding child scenes. */
+      for (i = 0; i < childIndex; i++) {
+        mark.children[i].scene = s.children[i];
+      }
+
+      /* Set current child scene, if necessary. */
+      stack[0] = s.data;
+      if (child.scene) {
+        render(child, depth + 1, scale * s.transform.k);
+      } else {
+        child.scene = s.children[childIndex];
+        render(child, depth + 1, scale * s.transform.k);
+        delete child.scene;
+      }
+
+      /* Clear preceding child scenes. */
+      for (i = 0; i < childIndex; i++) {
+        delete mark.children[i].scene;
+      }
     }
   }
 
@@ -640,7 +670,7 @@ pv.Mark.prototype.render = function() {
   /* Recursively render all instances of this mark. */
   var stack = pv.Mark.stack, indexes = [];
   for (var m = this; m.parent; m = m.parent) indexes.unshift(m.childIndex);
-  render(this.root, 0);
+  render(this.root, 0, 1);
 };
 
 /** @private Stores the current data stack. */

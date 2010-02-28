@@ -41,7 +41,6 @@ pv.Scene = pv.SvgScene = {
  * @param scenes {array} an array of scene nodes.
  */
 pv.SvgScene.updateAll = function(scenes) {
-  /* TODO setup transform if not rendering on the root panel */
   if (!scenes.length) return;
   if ((scenes[0].reverse)
       && (scenes.type != "line")
