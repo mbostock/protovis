@@ -248,10 +248,11 @@ pv.Mark.prototype.index = -1;
  * <pre>dot.radius(function() 10 / this.scale)</pre>
  *
  * Note that the stroke width and font size are defined irrespective of scale
- * (i.e., in screen space) already.
+ * (i.e., in screen space) already. Also note that when a transform is applied
+ * to a panel, the scale affects only the child marks, not the panel itself.
  *
  * @type number
- * @see pv.Panel.transform
+ * @see pv.Panel.prototype.transform
  */
 pv.Mark.prototype.scale = 1;
 
@@ -598,6 +599,7 @@ pv.Mark.prototype.render = function() {
    * the mark will be rendered.
    */
   function render(mark, depth, scale) {
+    mark.scale = scale;
     if (depth < indexes.length) {
       stack.unshift(null);
       if (mark.hasOwnProperty("index")) {
@@ -623,6 +625,7 @@ pv.Mark.prototype.render = function() {
       pv.Scene.scale = scale;
       pv.Scene.updateAll(mark.scene);
     }
+    delete mark.scale;
   }
 
   /**
@@ -1022,26 +1025,56 @@ pv.Mark.context = function(scenes, index, f) {
   var that = scenes.mark,
       stack = pv.Mark.stack,
       proto = pv.Mark.prototype,
-      mark;
+      ancestors = [],
+      mark = that;
+
+  /* Set the default index. */
+  proto.index = index;
+
+  /* Set ancestors' scene and index; populate data stack. */
+  do {
+    ancestors.push(mark);
+    stack.push(scenes[index].data);
+    mark.index = index;
+    mark.scene = scenes;
+    index = scenes.parentIndex;
+    scenes = scenes.parent;
+  } while (mark = mark.parent);
+
+  /* Set ancestors' scale; requires top-down. */
+  for (var i = ancestors.length - 1, k = 1; i > 0; i--) {
+    mark = ancestors[i];
+    mark.scale = k *= mark.scene[mark.index].transform.k;
+  }
+
+  /* Set children's scene and scale. */
+  if (that.children) for (var i = 0, n = that.children.length; i < n; i++) {
+    mark = that.children[i];
+    mark.scene = that.scene[that.index].children[i];
+    mark.scale = k;
+  }
+
+  /* Invoke the given function. */
   try {
-    mark = that;
-    proto.index = index;
-    do {
-      proto.scale *= scenes[index].transform.k;
-      stack.push(scenes[index].data);
-      mark.index = index;
-      mark.scene = scenes;
-      index = scenes.parentIndex;
-      scenes = scenes.parent;
-    } while (mark = mark.parent);
     f.apply(that, stack);
   } finally {
-    mark = that;
     proto.index = -1;
-    proto.scale = 1;
+
+    /* Reset children. */
+    if (that.children) for (var i = 0, n = that.children.length; i < n; i++) {
+      mark = that.children[i];
+      delete mark.scene;
+      delete mark.scale;
+    }
+
+    /* Reset ancestors. */
+    mark = that;
     do {
       stack.pop();
-      if (mark.parent) delete mark.scene;
+      if (mark.parent) {
+        delete mark.scene;
+        delete mark.scale;
+      }
       delete mark.index;
     } while (mark = mark.parent);
   }

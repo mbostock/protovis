@@ -83,10 +83,23 @@ pv.Panel.prototype.type = "panel";
  */
 
 /**
- * TODO overflow documentation
+ * Specifies whether child marks are clipped when they overflow this panel.
+ * This affects the clipping of all this panel's descendant marks.
  *
  * @type string
  * @name pv.Panel.prototype.overflow
+ * @see http://www.w3.org/TR/CSS2/visufx.html#overflow
+ */
+
+/**
+ * The transform to be applied to child marks. The default transform is
+ * identity, which has no effect. Note that the panel's own fill and stroke are
+ * not affected by the transform, and panel's transform only affects the
+ * <tt>scale</tt> of child marks, not the panel itself.
+ *
+ * @type pv.Transform
+ * @name pv.Panel.prototype.transform
+ * @see pv.Mark.prototype.scale
  */
 
 /**
@@ -164,12 +177,11 @@ pv.Panel.prototype.buildInstance = function(s) {
   if (!s.children) s.children = [];
 
   /*
-   * Multiply the current scale factor by this panel's transform. Also, clear
-   * the default index as we recurse into child marks; it will be reset to the
+   * Multiply the current scale factor by this panel's transform. Also clear the
+   * default index as we recurse into child marks; it will be reset to the
    * current index when the next panel instance is built.
    */
-  var k = pv.Mark.prototype.scale;
-  pv.Mark.prototype.scale *= s.transform.k;
+  var scale = this.scale * s.transform.k, child, n = this.children.length;
   pv.Mark.prototype.index = -1;
 
   /*
@@ -178,9 +190,11 @@ pv.Panel.prototype.buildInstance = function(s) {
    * existing scene graph, such that properties from the previous build can be
    * reused; this is largely to facilitate the recycling of SVG elements.
    */
-  for (var i = 0; i < this.children.length; i++) {
-    this.children[i].scene = s.children[i]; // possibly undefined
-    this.children[i].build();
+  for (var i = 0; i < n; i++) {
+    child = this.children[i];
+    child.scene = s.children[i]; // possibly undefined
+    child.scale = scale;
+    child.build();
   }
 
   /*
@@ -189,14 +203,15 @@ pv.Panel.prototype.buildInstance = function(s) {
    * remain on the child nodes because this panel (or a parent panel) may be
    * instantiated multiple times!
    */
-  for (var i = 0; i < this.children.length; i++) {
-    s.children[i] = this.children[i].scene;
-    delete this.children[i].scene;
+  for (var i = 0; i < n; i++) {
+    child = this.children[i];
+    s.children[i] = child.scene;
+    delete child.scene;
+    delete child.scale;
   }
 
-  /* Delete any expired child scenes, and restore the previous scale. */
-  s.children.length = this.children.length;
-  pv.Mark.prototype.scale = k;
+  /* Delete any expired child scenes. */
+  s.children.length = n;
 };
 
 /**

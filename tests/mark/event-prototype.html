@@ -26,24 +26,26 @@ var panel = vis.add(pv.Panel)
     .top(function(d) d * 20)
     .transform(function(d) pv.Transform.identity.translate(d * 10, 0).scale(d))
     .fillStyle("green")
-    .event("mouseover", function() label.text(this.scale + " / " + pv.Mark.prototype.index))
-    .event("mouseout", function() label.text("MOUSEOVER ME"));
+    .event("mouseover", function() label.textStyle("white").i(pv.Mark.prototype.index))
+    .event("mouseout", function() label.textStyle("black").i(-1));
 
 var label = panel.add(pv.Rule)
     .width(10)
   .anchor("right").add(pv.Label)
-    .text("MOUSEOVER ME");
+    .def("i", -1)
+    .text(function() this.i() > 0 ? this.scale + " / " + this.i() : "MOUSEOVER ME");
 
 vis.render();
 
     </script><p>
 
 This test verifies that partial rendering correctly observes the current scale
-(the text size should not change); it also verifies that the
-default <tt>scale</tt> and <tt>index</tt> properties are set inside event
-handlers (on mouseover, the text labels should read "1 / 1" etc.); lastly it
-verifies that partial rendering wires up the scene of preceding siblings, so as
-to allow property chaining (no crashes).
+(the text size should not change); it verifies that the <tt>scale</tt> and
+<tt>index</tt> properties are set inside event handlers (on mouseover, the text
+labels should read "1&nbsp;/&nbsp;1" etc.); it verifies that partial rendering
+wires up the scene of preceding siblings, so as to allow property chaining (no
+crashes); lastly it verifies that when a panel triggers an event, its children
+have a <tt>scene</tt> attribute set, but no index.
 
   </body>
 </html>

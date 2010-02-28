@@ -22,6 +22,15 @@ body {
     <pre id="pre"></pre>
     <script type="text/javascript+protovis">
 
+new pv.Panel()
+    .width(200)
+    .height(200)
+  .add(pv.Bar)
+    .fillStyle("green")
+    .strokeStyle("black")
+    .lineWidth(10)
+  .root.render();
+
 var list = [];
 globals.list = true;
 for (var i in window) if (!globals[i]) list.push(i);

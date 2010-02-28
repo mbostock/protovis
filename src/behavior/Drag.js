@@ -1,21 +1,12 @@
 pv.Behavior.drag = function() {
-  var target, scene, index, p, v1;
-
-  /* Setup the scene stack. */
-  function setup() {
-    var m = target, s = scene, i = index;
-    do {
-      m.index = i;
-      m.scene = s;
-      i = s.parentIndex;
-      s = s.parent;
-    } while (m = m.parent);
-  }
+  var scene, // scene context
+      index, // scene context
+      p, // particle being dragged
+      v1; // initial mouse-particle offset
 
   function mousedown(d) {
-    target = this;
-    index = target.index;
-    scene = target.scene;
+    index = this.index;
+    scene = this.scene;
     var m = this.mouse();
     v1 = pv.vector(d.x, d.y).minus(m);
     p = d;
@@ -23,19 +14,20 @@ pv.Behavior.drag = function() {
   }
 
   function mousemove() {
-    if (!target) return;
-    setup();
-    var m = target.mouse();
-    p.x = v1.x + m.x;
-    p.y = v1.y + m.y;
+    if (!scene) return;
+    pv.Mark.context(scene, index, function() {
+        var m = this.mouse();
+        p.x = v1.x + m.x;
+        p.y = v1.y + m.y;
+      });
   }
 
   function mouseup() {
-    if (!target) return;
+    if (!scene) return;
     mousemove();
     p.fixed = false;
     p = null;
-    target = null;
+    scene = null;
   }
 
   pv.listen(window, "mousemove", mousemove);
