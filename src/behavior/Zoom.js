@@ -4,5 +4,5 @@ pv.Behavior.zoom = function() {
       this.transform(this.transform().translate(v.x, v.y)
           .scale((k < 0) ? (1000 / (1000 - k)) : ((1000 + k) / 1000))
           .translate(-v.x, -v.y)).render();
-    }
+    };
 };
