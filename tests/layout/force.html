@@ -15,7 +15,6 @@ body {
     <script type="text/javascript+protovis">
 
 var graph = pv.Layout.force(miserables.vertices, miserables.edges),
-    transform = pv.Behavior.transform(),
     w = window.innerWidth,
     h = window.innerHeight;
 
@@ -24,8 +23,8 @@ var vis = new pv.Panel()
     .height(h)
     .fillStyle("white")
     .strokeStyle("#ccc")
-    .event("mousedown", transform.pan)
-    .event("mousewheel", transform.zoom);
+    .event("mousedown", pv.Behavior.pan())
+    .event("mousewheel", pv.Behavior.zoom());
 
 /* Links. */
 vis.add(pv.Panel)

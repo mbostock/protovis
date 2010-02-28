@@ -71,7 +71,8 @@ JS_PV_FILES = \
 	src/behavior/Behavior.js \
 	src/behavior/Drag.js \
 	src/behavior/Select.js \
-	src/behavior/Transform.js
+	src/behavior/Pan.js \
+	src/behavior/Zoom.js
 
 #	src/data/PowerScale.js \
 

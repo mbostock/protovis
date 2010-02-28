@@ -28,13 +28,11 @@ var sim = pv.simulation(nodes)
     .constraint(pv.Constraint.position(function(d) d.p))
     .force(pv.Force.drag());
 
-var transform = pv.Behavior.transform();
-
 var vis = new pv.Panel()
     .width(w)
     .height(h)
-    .event("mousedown", transform.pan)
-    .event("mousewheel", transform.zoom)
+    .event("mousedown", pv.Behavior.pan())
+    .event("mousewheel", pv.Behavior.zoom())
     .fillStyle("white");
 
 vis.add(pv.Dot)

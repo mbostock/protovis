@@ -6,8 +6,7 @@
   <body>
     <script type="text/javascript+protovis">
 
-var transform = pv.Behavior.transform(),
-    lines = pv.range(0, 1001, 100),
+var lines = pv.range(0, 1001, 100),
     mouse;
 
 var vis = new pv.Panel()
@@ -17,8 +16,8 @@ var vis = new pv.Panel()
     .left(10)
     .right(10)
     .bottom(10)
-    .event("mousedown", transform.pan)
-    .event("mousewheel", transform.zoom)
+    .event("mousedown", pv.Behavior.pan())
+    .event("mousewheel", pv.Behavior.zoom())
     .event("mousemove", function() (mouse = this.mouse(), this))
     .fillStyle("#fff");
 

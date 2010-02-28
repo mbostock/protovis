@@ -16,6 +16,7 @@ mark/Mark.js
 - faster incremental rendering (detect properties)
 - rendering optimizations / minimal SVG?
 - remove first, last, cousin, sibling methods?
+- dot-dash strokes using stroke-dasharray
 
 mark/Bar.js
 - rounded corners

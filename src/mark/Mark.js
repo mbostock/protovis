@@ -989,19 +989,26 @@ pv.Mark.prototype.event = function(type, handler) {
 
 /** @private Evaluates the function <i>f</i> with the specified context. */
 pv.Mark.context = function(scenes, index, f) {
-  var that = scenes.mark, stack = pv.Mark.stack, mark;
+  var that = scenes.mark,
+      stack = pv.Mark.stack,
+      proto = pv.Mark.prototype,
+      mark;
   try {
     mark = that;
+    proto.index = index;
     do {
+      proto.scale *= scenes[index].transform.k;
       stack.push(scenes[index].data);
       mark.index = index;
       mark.scene = scenes;
       index = scenes.parentIndex;
       scenes = scenes.parent;
     } while (mark = mark.parent);
-    f();
+    f.apply(that, stack);
   } finally {
     mark = that;
+    proto.index = -1;
+    proto.scale = 1;
     do {
       stack.pop();
       if (mark.parent) delete mark.scene;

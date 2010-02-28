@@ -1,4 +1,4 @@
-data/Matrix.js
+data/Transform.js
 - documentation
 
 data/Scale.js
@@ -29,14 +29,9 @@ layout/Force.js
 layout/Treemap.js
 - use pv.Dom.Node
 
-layout/Stack.js
-- make class rather than property
-
 mark/Mark.js
-- standardize window.event access for event handlers?
 - antialias doesn't always work as expected; requires pixel rounding?
 - event("ignore") to disable pointer-events?
-- dot-dash strokes using stroke-dasharray
 
 mark/Panel.js
 - BUG? panel fill and stroke and not transformed
@@ -48,6 +43,7 @@ behavior/*
 - pv.Mark.context to encapsulate item reference, evaluation state?
 - should pv.Behavior.{drag,transform} automatically redraw?
 - split pv.Behavior.transform into pan+zoom.
+- pv.Behavior.point ... fuzzy mouseover
 
 physics/Simulation.js
 - use a constraint rather than `fixed` property to allow dragging?
