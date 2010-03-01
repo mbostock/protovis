@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Line Step</title>
+    <title>Area Step</title>
     <script type="text/javascript" src="../../protovis-d3.2.js"></script>
     <link rel="stylesheet" type="text/css" href="../style.css"/>
   </head>
@@ -14,26 +14,30 @@ var vis = new pv.Panel()
     .right(5)
     .bottom(5);
 
-vis.add(pv.Line)
+var area = vis.add(pv.Area)
     .data(function() pv.range(0, 6, .1).map(Math.sin))
+    .bottom(0)
     .left(function() this.index / 59 * 500)
-    .bottom(function(d) (d + 1) / 2 * 250 + 10)
+    .height(function(d) (d + 1) / 2 * 250 + 10)
+    .fillStyle(null)
     .strokeStyle("red")
     .interpolate("step-before")
   .add(pv.Area)
     .strokeStyle("green")
-    .interpolate("step-after")
-  .add(pv.Line)
+    .interpolate("step-after");
+
+area.add(pv.Line)
     .strokeStyle("blue")
-    .interpolate("linear");
+    .interpolate("linear")
+    .bottom(function() area.height());
 
 vis.render();
 
     </script>
 
-<p>The red line uses "step-before"; the green line uses "step-after". The red
-line should precede the blue line, which uses "linear" interpolation, while the
-green line should follow the blue line.
+<p>The red area uses "step-before"; the green area uses "step-after". The red
+area should precede the blue line, which uses "linear" interpolation, while the
+green area should follow the blue line.
 
   </body>
 </html>

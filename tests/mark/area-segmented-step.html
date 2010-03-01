@@ -1,0 +1,44 @@
+<html>
+  <head>
+    <title>Area Step</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <link rel="stylesheet" type="text/css" href="../style.css"/>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(500)
+    .height(270)
+    .left(5)
+    .right(5)
+    .bottom(5);
+
+var area = vis.add(pv.Area)
+    .data(function() pv.range(0, 6, .1).map(Math.sin))
+    .segmented(true)
+    .bottom(0)
+    .left(function() this.index / 59 * 500)
+    .height(function(d) (d + 1) / 2 * 250 + 10)
+    .fillStyle(function(d) pv.color("red").alpha((d + 1) / 2))
+    .interpolate("step-before")
+  .add(pv.Area)
+    .fillStyle(function(d) pv.color("green").alpha((1 - d) / 2))
+    .interpolate("step-after");
+
+area.add(pv.Line)
+    .fillStyle(null)
+    .strokeStyle("blue")
+    .interpolate("linear")
+    .bottom(function() area.height());
+
+vis.render();
+
+    </script>
+
+<p>The red area uses "step-before"; the green area uses "step-after". The red
+area should precede the blue line, which uses "linear" interpolation, while the
+green area should follow the blue line.
+
+  </body>
+</html>

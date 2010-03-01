@@ -61,11 +61,18 @@ pv.SvgScene.areaSegment = function(scenes) {
     var fill = s1.fillStyle, stroke = s1.strokeStyle;
     if (!fill.opacity && !stroke.opacity) continue;
 
+    /* interpolate */
+    var si = s1, sj = s2;
+    switch (s1.interpolate) {
+      case "step-before": si = s2; break;
+      case "step-after": sj = s1; break;
+    }
+
     /* points */
-    var p = s1.left + "," + s1.top + " "
-        + s2.left + "," + s2.top + " "
-        + (s2.left + s2.width) + "," + (s2.top + s2.height) + " "
-        + (s1.left + s1.width) + "," + (s1.top + s1.height);
+    var p = s1.left + "," + si.top + " "
+        + s2.left + "," + sj.top + " "
+        + (s2.left + s2.width) + "," + (sj.top + sj.height) + " "
+        + (s1.left + s1.width) + "," + (si.top + si.height);
 
     e = this.expect(e, "polygon", {
         "shape-rendering": s1.antialias ? null : "crispEdges",

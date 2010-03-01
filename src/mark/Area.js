@@ -112,8 +112,6 @@ pv.Area.prototype.type = "area";
  * functions (i.e., step functions), either "step-before" or "step-after" can be
  * specified.
  *
- * <p>Note: this property is currently supported only on non-segmented areas.
- *
  * <p>This property is <i>fixed</i>. See {@link pv.Mark}.
  *
  * @type string
