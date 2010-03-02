@@ -46,6 +46,9 @@ physics/Simulation.js
 physics/LinkConstraint.js
 - should support an alpha parameter, like pv.Constraint.position
 
+scene/*
+- use array push rather than string concatentation to improve performance?
+
 text/CsvFormat.js
 - return an object with a .format method, or the format function?
 - should other Formats return a function with a self-reference .format method?

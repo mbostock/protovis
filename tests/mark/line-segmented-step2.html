@@ -1,0 +1,32 @@
+<html>
+  <head>
+    <title>Segmented Line with Step Interpolation</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <link rel="stylesheet" type="text/css" href="../style.css"/>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(500)
+    .height(200)
+    .left(10)
+    .right(10)
+    .bottom(10)
+    .top(10);
+
+vis.add(pv.Line)
+    .data([{x:0, y:50}, {x:100, y:150}, {x:200, y:50}])
+    .segmented(true)
+    .left(function(d) d.x)
+    .bottom(function(d) d.y)
+    .lineWidth(function(d) d.y / 5)
+    .interpolate("step-before")
+    .strokeStyle(pv.color("steelblue").alpha(.7));
+
+vis.render();
+
+    </script>
+
+  </body>
+</html>

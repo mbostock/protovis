@@ -75,8 +75,6 @@ pv.Line.prototype.type = "line";
  * functions (i.e., step functions), either "step-before" or "step-after" can be
  * specified. To draw a clockwise circular arc between points, specify "polar".
  *
- * <p>Note: this property is currently supported only on non-segmented lines.
- *
  * <p>This property is <i>fixed</i>. See {@link pv.Mark}.
  *
  * @type string

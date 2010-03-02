@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Line Step</title>
+    <title>Segmented Line with Step Interpolation</title>
     <script type="text/javascript" src="../../protovis-d3.2.js"></script>
     <link rel="stylesheet" type="text/css" href="../style.css"/>
   </head>
@@ -14,26 +14,28 @@ var vis = new pv.Panel()
     .right(5)
     .bottom(5);
 
-vis.add(pv.Line)
+var line = vis.add(pv.Line)
     .data(function() pv.range(0, 6, .1).map(Math.sin))
+    .segmented(true)
     .left(function() this.index / 59 * 500)
     .bottom(function(d) (d + 1) / 2 * 250 + 10)
-    .strokeStyle("red")
+    .strokeStyle(pv.ramp("red", "orange").by(function(d) (d + 1) / 2))
     .interpolate("step-before")
   .add(pv.Line)
-    .strokeStyle("green")
+    .strokeStyle(pv.ramp("green", "yellow").by(function(d) (d + 1) / 2))
     .interpolate("step-after")
   .add(pv.Line)
-    .strokeStyle("blue")
+    .strokeStyle(pv.ramp("cyan", "blue").by(function(d) (d + 1) / 2))
     .interpolate("linear");
 
 vis.render();
 
     </script>
 
-<p>The red line uses "step-before"; the green line uses "step-after". The red
-line should precede the blue line, which uses "linear" interpolation, while the
-green line should follow the blue line.
+<p>The orange-red line uses "step-before"; the yellow-green line uses
+"step-after". The orange-red line should precede the blue-cyan line, which uses
+"linear" interpolation, while the yellow-green line should follow the blue-cyan
+line.
 
   </body>
 </html>
