@@ -55,7 +55,7 @@
  * specified margins. Rounding can be enabled using {@link #round}. Finally, an
  * optional root key can be specified using {@link #root} for convenience.
  *
- * @param tree a tree (an object) who leaf attributes have sizes.
+ * @param tree a tree (an object) whose leaf attributes have sizes.
  * @returns {pv.Layout.treemap} a tree layout.
  */
 pv.Layout.treemap = function(tree) {
