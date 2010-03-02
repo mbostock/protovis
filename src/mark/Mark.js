@@ -584,10 +584,19 @@ pv.Mark.prototype.cousin = function() {
  * a panel.
  */
 pv.Mark.prototype.render = function() {
-  /* For the first render, take it from the top. */
-  if (!this.root.scene && this.parent) {
-    this.root.render();
+  var parent = this.parent,
+      stack = pv.Mark.stack;
+
+  /* If the parent has not yet been rendered, render that instead. */
+  if (parent && !parent.scene) {
+    parent.render();
     return;
+  }
+
+  /* Record the path to this mark. */
+  var indexes = [];
+  for (var mark = this; mark.parent; mark = mark.parent) {
+    indexes.unshift(mark.childIndex);
   }
 
   /**
@@ -647,7 +656,8 @@ pv.Mark.prototype.render = function() {
   function renderInstance(mark, depth, scale) {
     var s = mark.scene[mark.index], i;
     if (s.visible) {
-      var childIndex = indexes[depth], child = mark.children[childIndex];
+      var childIndex = indexes[depth],
+          child = mark.children[childIndex];
 
       /* Set preceding child scenes. */
       for (i = 0; i < childIndex; i++) {
@@ -675,9 +685,10 @@ pv.Mark.prototype.render = function() {
   this.bind();
 
   /* Recursively render all instances of this mark. */
-  var stack = pv.Mark.stack, indexes = [];
-  for (var m = this; m.parent; m = m.parent) indexes.unshift(m.childIndex);
-  render(this.root, 0, 1);
+  this.context(
+      parent ? parent.scene : undefined,
+      parent ? parent.index : -1,
+      function() { render(this.root, 0, 1); });
 };
 
 /** @private Stores the current data stack. */
@@ -829,7 +840,6 @@ pv.Mark.prototype.build = function() {
   }
 
   /* Create, update and delete scene nodes. */
-  var index = this.index;
   stack.unshift(null);
   scene.length = data.length;
   for (var i = 0; i < data.length; i++) {
@@ -840,11 +850,8 @@ pv.Mark.prototype.build = function() {
     this.buildInstance(s);
   }
   pv.Mark.prototype.index = -1;
+  delete this.index;
   stack.shift();
-
-  /* Restore the old index, if any. */
-  if (index != -1) this.index = index;
-  else delete this.index;
 
   return this;
 };
@@ -1024,44 +1031,51 @@ pv.Mark.prototype.event = function(type, handler) {
 };
 
 /** @private Evaluates the function <i>f</i> with the specified context. */
-pv.Mark.context = function(scenes, index, f) {
-  var that = scenes.mark,
-      proto = pv.Mark.prototype,
-      stack = [],
-      ancestors = [],
-      mark = that;
+pv.Mark.prototype.context = function(scene, index, f) {
+  var proto = pv.Mark.prototype,
+      stack = pv.Mark.stack,
+      oscene = pv.Mark.scene,
+      oindex = proto.index;
 
-  /* Set the default index. */
-  proto.index = index;
+  /** @private Sets the context. */
+  function apply(scene, index) {
+    pv.Mark.scene = scene;
+    proto.index = index;
+    if (!scene) return;
 
-  /* Set ancestors' scene and index; populate data stack. */
-  do {
-    ancestors.push(mark);
-    stack.push(scenes[index].data);
-    mark.index = index;
-    mark.scene = scenes;
-    index = scenes.parentIndex;
-    scenes = scenes.parent;
-  } while (mark = mark.parent);
+    var that = scene.mark,
+        mark = that,
+        ancestors = [];
 
-  /* Set ancestors' scale; requires top-down. */
-  for (var i = ancestors.length - 1, k = 1; i > 0; i--) {
-    mark = ancestors[i];
-    mark.scale = k *= mark.scene[mark.index].transform.k;
+    /* Set ancestors' scene and index; populate data stack. */
+    do {
+      ancestors.push(mark);
+      stack.push(scene[index].data);
+      mark.index = index;
+      mark.scene = scene;
+      index = scene.parentIndex;
+      scene = scene.parent;
+    } while (mark = mark.parent);
+
+    /* Set ancestors' scale; requires top-down. */
+    for (var i = ancestors.length - 1, k = 1; i > 0; i--) {
+      mark = ancestors[i];
+      mark.scale = k *= mark.scene[mark.index].transform.k;
+    }
+
+    /* Set children's scene and scale. */
+    if (that.children) for (var i = 0, n = that.children.length; i < n; i++) {
+      mark = that.children[i];
+      mark.scene = that.scene[that.index].children[i];
+      mark.scale = k;
+    }
   }
 
-  /* Set children's scene and scale. */
-  if (that.children) for (var i = 0, n = that.children.length; i < n; i++) {
-    mark = that.children[i];
-    mark.scene = that.scene[that.index].children[i];
-    mark.scale = k;
-  }
-
-  /* Invoke the given function. */
-  try {
-    f.apply(that, stack);
-  } finally {
-    proto.index = -1;
+  /** @private Clears the context. */
+  function clear(scene, index) {
+    if (!scene) return;
+    var that = scene.mark,
+        mark;
 
     /* Reset children. */
     if (that.children) for (var i = 0, n = that.children.length; i < n; i++) {
@@ -1081,13 +1095,23 @@ pv.Mark.context = function(scenes, index, f) {
       delete mark.index;
     } while (mark = mark.parent);
   }
+
+  /* Context switch, invoke the function, then switch back. */
+  clear(oscene, oindex);
+  apply(scene, index);
+  try {
+    f.apply(this, stack);
+  } finally {
+    clear(scene, index);
+    apply(oscene, oindex);
+  }
 };
 
 /** @private Execute the event listener, then re-render. */
-pv.Mark.dispatch = function(e, scenes, index) {
-  var m = scenes.mark, p = scenes.parent, l = m.$handlers[e.type];
-  if (!l) return p && pv.Mark.dispatch(e, p, scenes.parentIndex);
-  pv.Mark.context(scenes, index, function() {
+pv.Mark.dispatch = function(e, scene, index) {
+  var m = scene.mark, p = scene.parent, l = m.$handlers[e.type];
+  if (!l) return p && pv.Mark.dispatch(e, p, scene.parentIndex);
+  m.context(scene, index, function() {
       m = l.apply(m, pv.Mark.stack);
       if (m && m.render) m.render();
       e.preventDefault();

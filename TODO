@@ -32,12 +32,10 @@ layout/Treemap.js
 mark/Mark.js
 - antialias doesn't always work as expected; requires pixel rounding?
 - event("ignore") to disable pointer-events?
-- BUG: property chaining and partial redraw; target.index is set
 
 behavior/*
 - documentation, implementation, etc.
 - should behaviors automatically re-render?
-- pv.Behavior.point ... fuzzy mouseover
 
 behavior/Select.js
 - rewrite

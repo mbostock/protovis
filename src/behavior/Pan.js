@@ -15,7 +15,7 @@ pv.Behavior.pan = function() {
 
   function mousemove() {
     if (!scene) return;
-    pv.Mark.context(scene, index, function() {
+    scene.mark.context(scene, index, function() {
         var x = (pv.event.pageX - v1.x) * k,
             y = (pv.event.pageY - v1.y) * k;
         this.transform(m1.translate(x, y)).render();
