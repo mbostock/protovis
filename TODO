@@ -32,12 +32,10 @@ layout/Treemap.js
 mark/Mark.js
 - antialias doesn't always work as expected; requires pixel rounding?
 - event("ignore") to disable pointer-events?
-- scale should be a per-instance attribute (like index), not a global
 
 behavior/*
 - documentation, implementation, etc.
 - should behaviors automatically re-render?
-- pv.Behavior.drag should use pv.Mark.context
 - pv.Behavior.point ... fuzzy mouseover
 
 physics/Simulation.js
