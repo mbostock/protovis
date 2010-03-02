@@ -155,45 +155,50 @@ pv.Area.prototype.defaults = new pv.Area()
  * @returns {pv.Anchor}
  */
 pv.Area.prototype.anchor = function(name) {
-  var area = this;
+  var target = this;
   return pv.Mark.prototype.anchor.call(this, name)
     .left(function() {
+        var s = target.scene[this.index];
         switch (this.name()) {
           case "bottom":
           case "top":
-          case "center": return area.left() + area.width() / 2;
-          case "right": return area.left() + area.width();
+          case "center": return s.left + s.width / 2;
+          case "right": return s.left + s.width;
         }
         return null;
       })
     .right(function() {
+        var s = target.scene[this.index];
         switch (this.name()) {
           case "bottom":
           case "top":
-          case "center": return area.right() + area.width() / 2;
-          case "left": return area.right() + area.width();
+          case "center": return s.right + s.width / 2;
+          case "left": return s.right + s.width;
         }
         return null;
       })
     .top(function() {
+        var s = target.scene[this.index];
         switch (this.name()) {
           case "left":
           case "right":
-          case "center": return area.top() + area.height() / 2;
-          case "bottom": return area.top() + area.height();
+          case "center": return s.top + s.height / 2;
+          case "bottom": return s.top + s.height;
         }
         return null;
       })
     .bottom(function() {
+        var s = target.scene[this.index];
         switch (this.name()) {
           case "left":
           case "right":
-          case "center": return area.bottom() + area.height() / 2;
-          case "top": return area.bottom() + area.height();
+          case "center": return s.bottom + s.height / 2;
+          case "top": return s.bottom + s.height;
         }
         return null;
       })
     .textAlign(function() {
+        var s = target.scene[this.index];
         switch (this.name()) {
           case "bottom":
           case "top":
@@ -203,6 +208,7 @@ pv.Area.prototype.anchor = function(name) {
         return "left";
       })
     .textBaseline(function() {
+        var s = target.scene[this.index];
         switch (this.name()) {
           case "right":
           case "left":

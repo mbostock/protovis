@@ -66,6 +66,7 @@ pv.Mark = function() {
    * in order of evaluation!
    */
   this.$properties = [];
+  this.$handlers = {};
 };
 
 /** @private Records which properties are defined on this mark type. */
@@ -503,12 +504,15 @@ pv.Mark.prototype.def = function(name, v) {
  * @returns {pv.Anchor} the new anchor.
  */
 pv.Mark.prototype.anchor = function(name) {
-  var mark = this, anchor = new pv.Anchor().name(name);
-  anchor.anchorTarget = function() { return mark; };
-  anchor.parent = this.parent;
-  return anchor
-    .data(function() { return mark.scene.map(function(s) { return s.data; }); })
-    .visible(function() { return mark.visible(); });
+  var target = this;
+  return new pv.Anchor(this)
+    .name(name)
+    .data(function() {
+        return target.scene.map(function(s) { return s.data; });
+      })
+    .visible(function() {
+        return target.scene[this.index].visible;
+      });
 };
 
 /**
@@ -1015,7 +1019,6 @@ pv.Mark.prototype.mouse = function() {
  * @returns {pv.Mark} this.
  */
 pv.Mark.prototype.event = function(type, handler) {
-  if (!this.$handlers) this.$handlers = {};
   this.$handlers[type] = handler;
   return this;
 };
@@ -1023,8 +1026,8 @@ pv.Mark.prototype.event = function(type, handler) {
 /** @private Evaluates the function <i>f</i> with the specified context. */
 pv.Mark.context = function(scenes, index, f) {
   var that = scenes.mark,
-      stack = pv.Mark.stack,
       proto = pv.Mark.prototype,
+      stack = [],
       ancestors = [],
       mark = that;
 
@@ -1082,7 +1085,7 @@ pv.Mark.context = function(scenes, index, f) {
 
 /** @private Execute the event listener, then re-render. */
 pv.Mark.dispatch = function(e, scenes, index) {
-  var m = scenes.mark, p = scenes.parent, l = m.$handlers && m.$handlers[e.type];
+  var m = scenes.mark, p = scenes.parent, l = m.$handlers[e.type];
   if (!l) return p && pv.Mark.dispatch(e, p, scenes.parentIndex);
   pv.Mark.context(scenes, index, function() {
       m = l.apply(m, pv.Mark.stack);

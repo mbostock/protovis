@@ -126,14 +126,16 @@ pv.Panel.prototype.defaults = new pv.Panel()
 pv.Panel.prototype.anchor = function(name) {
 
   /* A "view" of this panel whose margins appear to be zero. */
-  function z() { return 0; }
-  z.prototype = pv.extend(this);
-  z.prototype.left = z.prototype.right = z.prototype.top = z.prototype.bottom = z;
+  function target() { return 0; }
+  target.prototype = pv.extend(this);
+  target.prototype.parent = this;
+  target.prototype.left
+      = target.prototype.right
+      = target.prototype.top
+      = target.prototype.bottom = target;
 
-  var anchor = pv.Bar.prototype.anchor.call(new z(), name)
-      .data(function(d) { return [d]; });
-  anchor.parent = this;
-  return anchor;
+  return pv.Bar.prototype.anchor.call(new target(), name)
+    .data(function(d) { return [d]; });
 };
 
 /**

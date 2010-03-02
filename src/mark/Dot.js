@@ -135,45 +135,49 @@ pv.Dot.prototype.defaults = new pv.Dot()
  * @returns {pv.Anchor}
  */
 pv.Dot.prototype.anchor = function(name) {
-  var dot = this;
+  var target = this;
   return pv.Mark.prototype.anchor.call(this, name)
-    .left(function(d) {
+    .left(function() {
+        var s = target.scene[this.index];
         switch (this.name()) {
           case "bottom":
           case "top":
-          case "center": return dot.left();
-          case "right": return dot.left() + dot.radius();
+          case "center": return s.left;
+          case "right": return s.left + s.radius;
         }
         return null;
       })
-    .right(function(d) {
+    .right(function() {
+        var s = target.scene[this.index];
         switch (this.name()) {
           case "bottom":
           case "top":
-          case "center": return dot.right();
-          case "left": return dot.right() + dot.radius();
+          case "center": return s.right;
+          case "left": return s.right + s.radius;
         }
         return null;
       })
-    .top(function(d) {
+    .top(function() {
+        var s = target.scene[this.index];
         switch (this.name()) {
           case "left":
           case "right":
-          case "center": return dot.top();
-          case "bottom": return dot.top() + dot.radius();
+          case "center": return s.top;
+          case "bottom": return s.top + s.radius;
         }
         return null;
       })
-    .bottom(function(d) {
+    .bottom(function() {
+        var s = target.scene[this.index];
         switch (this.name()) {
           case "left":
           case "right":
-          case "center": return dot.bottom();
-          case "top": return dot.bottom() + dot.radius();
+          case "center": return s.bottom;
+          case "top": return s.bottom + s.radius;
         }
         return null;
       })
-    .textAlign(function(d) {
+    .textAlign(function() {
         switch (this.name()) {
           case "left": return "right";
           case "bottom":
@@ -182,7 +186,7 @@ pv.Dot.prototype.anchor = function(name) {
         }
         return "left";
       })
-    .textBaseline(function(d) {
+    .textBaseline(function() {
         switch (this.name()) {
           case "right":
           case "left":

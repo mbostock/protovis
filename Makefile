@@ -70,6 +70,7 @@ JS_PV_FILES = \
 	src/layout/Arc.js \
 	src/behavior/Behavior.js \
 	src/behavior/Drag.js \
+	src/behavior/Point.js \
 	src/behavior/Select.js \
 	src/behavior/Pan.js \
 	src/behavior/Zoom.js

@@ -123,41 +123,45 @@ pv.Bar.prototype.defaults = new pv.Bar()
  * @returns {pv.Anchor}
  */
 pv.Bar.prototype.anchor = function(name) {
-  var bar = this;
+  var target = this;
   return pv.Mark.prototype.anchor.call(this, name)
     .left(function() {
+        var s = target.scene[this.index];
         switch (this.name()) {
           case "bottom":
           case "top":
-          case "center": return bar.left() + (this.properties.width ? 0 : (bar.width() / 2));
-          case "right": return bar.left() + bar.width();
+          case "center": return s.left + (this.properties.width ? 0 : s.width / 2);
+          case "right": return s.left + s.width;
         }
         return null;
       })
     .right(function() {
+        var s = target.scene[this.index];
         switch (this.name()) {
           case "bottom":
           case "top":
-          case "center": return bar.right() + (this.properties.width ? 0 : (bar.width() / 2));
-          case "left": return bar.right() + bar.width();
+          case "center": return s.right + (this.properties.width ? 0 : s.width / 2);
+          case "left": return s.right + s.width;
         }
         return null;
       })
     .top(function() {
+        var s = target.scene[this.index];
         switch (this.name()) {
           case "left":
           case "right":
-          case "center": return bar.top() + (this.properties.height ? 0 : (bar.height() / 2));
-          case "bottom": return bar.top() + bar.height();
+          case "center": return s.top + (this.properties.height ? 0 : s.height / 2);
+          case "bottom": return s.top + s.height;
         }
         return null;
       })
     .bottom(function() {
+        var s = target.scene[this.index];
         switch (this.name()) {
           case "left":
           case "right":
-          case "center": return bar.bottom() + (this.properties.height ? 0 : (bar.height() / 2));
-          case "top": return bar.bottom() + bar.height();
+          case "center": return s.bottom + (this.properties.height ? 0 : s.height / 2);
+          case "top": return s.bottom + s.height;
         }
         return null;
       })
