@@ -158,7 +158,7 @@ pv.Area.prototype.anchor = function(name) {
   var target = this;
   return pv.Mark.prototype.anchor.call(this, name)
     .left(function() {
-        var s = target.scene[this.index];
+        var s = target.instance();
         switch (this.name()) {
           case "bottom":
           case "top":
@@ -168,7 +168,7 @@ pv.Area.prototype.anchor = function(name) {
         return null;
       })
     .right(function() {
-        var s = target.scene[this.index];
+        var s = target.instance();
         switch (this.name()) {
           case "bottom":
           case "top":
@@ -178,7 +178,7 @@ pv.Area.prototype.anchor = function(name) {
         return null;
       })
     .top(function() {
-        var s = target.scene[this.index];
+        var s = target.instance();
         switch (this.name()) {
           case "left":
           case "right":
@@ -188,7 +188,7 @@ pv.Area.prototype.anchor = function(name) {
         return null;
       })
     .bottom(function() {
-        var s = target.scene[this.index];
+        var s = target.instance();
         switch (this.name()) {
           case "left":
           case "right":
@@ -198,7 +198,7 @@ pv.Area.prototype.anchor = function(name) {
         return null;
       })
     .textAlign(function() {
-        var s = target.scene[this.index];
+        var s = target.instance();
         switch (this.name()) {
           case "bottom":
           case "top":
@@ -208,7 +208,7 @@ pv.Area.prototype.anchor = function(name) {
         return "left";
       })
     .textBaseline(function() {
-        var s = target.scene[this.index];
+        var s = target.instance();
         switch (this.name()) {
           case "right":
           case "left":

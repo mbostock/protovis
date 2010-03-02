@@ -169,7 +169,7 @@ pv.Wedge.prototype.anchor = function(name) {
   var target = this;
   return pv.Mark.prototype.anchor.call(this, name)
     .left(function() {
-        var s = target.scene[this.index];
+        var s = target.instance();
         switch (this.name()) {
           case "outer": return s.left + s.outerRadius * Math.cos(s.midAngle);
           case "inner": return s.left + s.innerRadius * Math.cos(s.midAngle);
@@ -179,7 +179,7 @@ pv.Wedge.prototype.anchor = function(name) {
         }
       })
     .right(function() {
-        var s = target.scene[this.index];
+        var s = target.instance();
         switch (this.name()) {
           case "outer": return s.right + s.outerRadius * Math.cos(s.midAngle);
           case "inner": return s.right + s.innerRadius * Math.cos(s.midAngle);
@@ -189,7 +189,7 @@ pv.Wedge.prototype.anchor = function(name) {
         }
       })
     .top(function() {
-        var s = target.scene[this.index];
+        var s = target.instance();
         switch (this.name()) {
           case "outer": return s.top + s.outerRadius * Math.sin(s.midAngle);
           case "inner": return s.top + s.innerRadius * Math.sin(s.midAngle);
@@ -199,7 +199,7 @@ pv.Wedge.prototype.anchor = function(name) {
         }
       })
     .bottom(function() {
-        var s = target.scene[this.index];
+        var s = target.instance();
         switch (this.name()) {
           case "outer": return s.bottom + s.outerRadius * Math.sin(s.midAngle);
           case "inner": return s.bottom + s.innerRadius * Math.sin(s.midAngle);
@@ -209,7 +209,7 @@ pv.Wedge.prototype.anchor = function(name) {
         }
       })
     .textAlign(function() {
-        var s = target.scene[this.index];
+        var s = target.instance();
         switch (this.name()) {
           case "outer": return pv.Wedge.upright(s.midAngle) ? "right" : "left";
           case "inner": return pv.Wedge.upright(s.midAngle) ? "left" : "right";
@@ -217,7 +217,7 @@ pv.Wedge.prototype.anchor = function(name) {
         return "center";
       })
     .textBaseline(function() {
-        var s = target.scene[this.index];
+        var s = target.instance();
         switch (this.name()) {
           case "start": return pv.Wedge.upright(s.startAngle) ? "top" : "bottom";
           case "end": return pv.Wedge.upright(s.endAngle) ? "bottom" : "top";
@@ -225,7 +225,7 @@ pv.Wedge.prototype.anchor = function(name) {
         return "middle";
       })
     .textAngle(function() {
-        var s = target.scene[this.index], a = 0;
+        var s = target.instance(), a = 0;
         switch (this.name()) {
           case "center":
           case "inner":

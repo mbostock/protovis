@@ -147,7 +147,7 @@ pv.Mark.prototype.property = function(name, cast) {
         this.propertyValue(name, v);
         return this;
       }
-      return this.scene[this.index][name];
+      return this.instance()[name];
     };
   pv.Mark.cast[name] = cast;
   return this;
@@ -511,7 +511,7 @@ pv.Mark.prototype.anchor = function(name) {
         return target.scene.map(function(s) { return s.data; });
       })
     .visible(function() {
-        return target.scene[this.index].visible;
+        return target.instance().visible;
       });
 };
 
@@ -529,6 +529,22 @@ pv.Mark.prototype.anchor = function(name) {
  */
 pv.Mark.prototype.anchorTarget = function() {
   return this.proto.anchorTarget();
+};
+
+/**
+ * Returns the current instance of this mark in the scene graph. This is
+ * typically equivalent to <tt>this.scene[this.index]</tt>, however if the scene
+ * or index is unset, the default instance of the mark is returned. If no
+ * default is set, the default is the last instance. Similarly, if the scene or
+ * index of the parent panel is unset, the default instance of this mark in the
+ * last instance of the enclosing panel is returned, and so on.
+ *
+ * @returns a node in the scene graph.
+ */
+pv.Mark.prototype.instance = function(defaultIndex) {
+  var scene = this.scene || this.parent.instance(-1).children[this.childIndex],
+      index = !arguments.length || this.hasOwnProperty("index") ? this.index : defaultIndex;
+  return scene[index < 0 ? scene.length - 1 : index];
 };
 
 /**
@@ -587,9 +603,9 @@ pv.Mark.prototype.render = function() {
   var parent = this.parent,
       stack = pv.Mark.stack;
 
-  /* If the parent has not yet been rendered, render that instead. */
-  if (parent && !parent.scene) {
-    parent.render();
+  /* For the first render, take it from the top. */
+  if (parent && !this.root.scene) {
+    this.root.render();
     return;
   }
 
@@ -683,6 +699,9 @@ pv.Mark.prototype.render = function() {
 
   /* Bind this mark's property definitions. */
   this.bind();
+
+  /* The render context is the first ancestor with an explicit index. */
+  while (parent && !parent.hasOwnProperty("index")) parent = parent.parent;
 
   /* Recursively render all instances of this mark. */
   this.context(

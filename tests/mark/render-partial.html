@@ -16,7 +16,7 @@ var panel1 = vis.add(pv.Panel)
 
 panel1.add(pv.Label)
     .textBaseline("top")
-    .text(function() "render 1: " + (panel1.count++ || (panel1.count = 1)));
+    .text(function() "render 1: " + (++panel1.count || (panel1.count = 1)));
 
 var panel2 = panel1.add(pv.Panel)
     .top(20)
@@ -24,7 +24,7 @@ var panel2 = panel1.add(pv.Panel)
 
 panel2.add(pv.Label)
     .textBaseline("top")
-    .text(function() "render 2: " + (panel2.count++ || (panel2.count = 1)));
+    .text(function() "render 2: " + (++panel2.count || (panel2.count = 1)));
 
 vis.render();
 panel1.render();
