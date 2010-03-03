@@ -166,53 +166,55 @@ pv.Wedge.prototype.midAngle = function() {
  * @returns {pv.Anchor}
  */
 pv.Wedge.prototype.anchor = function(name) {
+  function midRadius(s) { return (s.innerRadius + s.outerRadius) / 2; }
+  function midAngle(s) { return (s.startAngle + s.endAngle) / 2; }
   var target = this;
   return pv.Mark.prototype.anchor.call(this, name)
     .left(function() {
         var s = target.instance();
         switch (this.name()) {
-          case "outer": return s.left + s.outerRadius * Math.cos(s.midAngle);
-          case "inner": return s.left + s.innerRadius * Math.cos(s.midAngle);
-          case "start": return s.left + s.midRadius * Math.cos(s.startAngle);
-          case "center": return s.left + s.midRadius * Math.cos(s.midAngle);
-          case "end": return s.left + s.midRadius * Math.cos(s.endAngle);
+          case "outer": return s.left + s.outerRadius * Math.cos(midAngle(s));
+          case "inner": return s.left + s.innerRadius * Math.cos(midAngle(s));
+          case "start": return s.left + midRadius(s) * Math.cos(s.startAngle);
+          case "center": return s.left + midRadius(s) * Math.cos(midAngle(s));
+          case "end": return s.left + midRadius(s) * Math.cos(s.endAngle);
         }
       })
     .right(function() {
         var s = target.instance();
         switch (this.name()) {
-          case "outer": return s.right + s.outerRadius * Math.cos(s.midAngle);
-          case "inner": return s.right + s.innerRadius * Math.cos(s.midAngle);
-          case "start": return s.right + s.midRadius * Math.cos(s.startAngle);
-          case "center": return s.right + s.midRadius * Math.cos(s.midAngle);
-          case "end": return s.right + s.midRadius * Math.cos(s.endAngle);
+          case "outer": return s.right + s.outerRadius * Math.cos(midAngle(s));
+          case "inner": return s.right + s.innerRadius * Math.cos(midAngle(s));
+          case "start": return s.right + midRadius(s) * Math.cos(s.startAngle);
+          case "center": return s.right + midRadius(s) * Math.cos(midAngle(s));
+          case "end": return s.right + midRadius(s) * Math.cos(s.endAngle);
         }
       })
     .top(function() {
         var s = target.instance();
         switch (this.name()) {
-          case "outer": return s.top + s.outerRadius * Math.sin(s.midAngle);
-          case "inner": return s.top + s.innerRadius * Math.sin(s.midAngle);
-          case "start": return s.top + s.midRadius * Math.sin(s.startAngle);
-          case "center": return s.top + s.midRadius * Math.sin(s.midAngle);
-          case "end": return s.top + s.midRadius * Math.sin(s.endAngle);
+          case "outer": return s.top + s.outerRadius * Math.sin(midAngle(s));
+          case "inner": return s.top + s.innerRadius * Math.sin(midAngle(s));
+          case "start": return s.top + midRadius(s) * Math.sin(s.startAngle);
+          case "center": return s.top + midRadius(s) * Math.sin(midAngle(s));
+          case "end": return s.top + midRadius(s) * Math.sin(s.endAngle);
         }
       })
     .bottom(function() {
         var s = target.instance();
         switch (this.name()) {
-          case "outer": return s.bottom + s.outerRadius * Math.sin(s.midAngle);
-          case "inner": return s.bottom + s.innerRadius * Math.sin(s.midAngle);
-          case "start": return s.bottom + s.midRadius * Math.sin(s.startAngle);
-          case "center": return s.bottom + s.midRadius * Math.sin(s.midAngle);
-          case "end": return s.bottom + s.midRadius * Math.sin(s.endAngle);
+          case "outer": return s.bottom + s.outerRadius * Math.sin(midAngle(s));
+          case "inner": return s.bottom + s.innerRadius * Math.sin(midAngle(s));
+          case "start": return s.bottom + midRadius(s) * Math.sin(s.startAngle);
+          case "center": return s.bottom + midRadius(s) * Math.sin(midAngle(s));
+          case "end": return s.bottom + midRadius(s) * Math.sin(s.endAngle);
         }
       })
     .textAlign(function() {
         var s = target.instance();
         switch (this.name()) {
-          case "outer": return pv.Wedge.upright(s.midAngle) ? "right" : "left";
-          case "inner": return pv.Wedge.upright(s.midAngle) ? "left" : "right";
+          case "outer": return pv.Wedge.upright(midAngle(s)) ? "right" : "left";
+          case "inner": return pv.Wedge.upright(midAngle(s)) ? "left" : "right";
         }
         return "center";
       })
@@ -229,7 +231,7 @@ pv.Wedge.prototype.anchor = function(name) {
         switch (this.name()) {
           case "center":
           case "inner":
-          case "outer": a = s.midAngle; break;
+          case "outer": a = midAngle(s); break;
           case "start": a = s.startAngle; break;
           case "end": a = s.endAngle; break;
         }

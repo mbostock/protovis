@@ -198,7 +198,6 @@ pv.Area.prototype.anchor = function(name) {
         return null;
       })
     .textAlign(function() {
-        var s = target.instance();
         switch (this.name()) {
           case "bottom":
           case "top":
@@ -208,7 +207,6 @@ pv.Area.prototype.anchor = function(name) {
         return "left";
       })
     .textBaseline(function() {
-        var s = target.instance();
         switch (this.name()) {
           case "right":
           case "left":
