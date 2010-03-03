@@ -1,0 +1,59 @@
+<html>
+  <head>
+    <title>Tipsy Line</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script src="../jquery-1.4.2.min.js" type="text/javascript"></script>
+    <script src="jquery.tipsy.js" type="text/javascript"></script>
+    <script src="tipsy.js" type="text/javascript"></script>
+    <link href="tipsy.css" type="text/css" rel="stylesheet"/>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var data = pv.range(0, 10, .1).map(function(x) {
+        return {x: x, y: Math.sin(x) + Math.random() * .5 + 2};
+      }),
+    w = 400,
+    h = 200,
+    x = pv.Scale.linear(data, function(d) d.x).range(0, w),
+    y = pv.Scale.linear(0, 4).range(0, h);
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .bottom(20)
+    .left(20)
+    .right(10)
+    .top(5)
+    .fillStyle("#fff")
+    .event("mousemove", pv.Behavior.point(Infinity).collapse("y"));
+
+vis.add(pv.Rule)
+    .data(y.ticks())
+    .visible(function() !(this.index % 2))
+    .bottom(function(d) Math.round(y(d)) - .5)
+    .strokeStyle("#eee")
+  .anchor("left").add(pv.Label)
+    .text(function(d) d.toFixed(1));
+
+vis.add(pv.Rule)
+    .data(x.ticks())
+    .visible(function(d) d > 0)
+    .left(function(d) Math.round(x(d)) - .5)
+    .strokeStyle("#eee")
+  .anchor("bottom").add(pv.Label)
+    .text(function(d) d.toFixed());
+
+vis.add(pv.Line)
+    .data(data)
+    .left(function(d) x(d.x))
+    .bottom(function(d) y(d.y))
+    .lineWidth(3)
+    .title(function(d) d.x.toFixed(2) + ', ' + d.y.toFixed(2))
+    .event("point", pv.Behavior.tipsy({gravity: 's'}));
+
+vis.render();
+
+    </script>
+  </body>
+</html>
