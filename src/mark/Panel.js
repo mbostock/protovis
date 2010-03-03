@@ -176,6 +176,7 @@ pv.Panel.prototype.bind = function() {
  */
 pv.Panel.prototype.buildInstance = function(s) {
   pv.Bar.prototype.buildInstance.call(this, s);
+  if (!s.visible) return;
   if (!s.children) s.children = [];
 
   /*
