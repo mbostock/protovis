@@ -1,0 +1,37 @@
+<html>
+  <head>
+    <title>Panel Anchor</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var size = 160, n = 4;
+
+var vis = new pv.Panel()
+    .width(size)
+    .height(size)
+    .top(5)
+    .bottom(5)
+    .left(5)
+    .right(5);
+
+vis.add(pv.Panel)
+    .data(pv.range(n))
+    .top(function() this.index * size / n)
+    .height(size / n)
+  .add(pv.Panel)
+    .data(pv.range(n))
+    .left(function() this.index * size / n)
+    .width(size / n)
+    .strokeStyle("#000")
+    .lineWidth(1)
+    .antialias(false)
+  .anchor("center").add(pv.Label)
+    .text(function(d, x, y) x + ", " + y);
+
+vis.render();
+
+    </script>
+  </body>
+</html>
