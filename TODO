@@ -13,6 +13,9 @@ layout/Layot.js
 - allow interactive expanding / collapsing of tree nodes?
 - layouts should allow user to change the associated data
 - layouts should not cache by default
+- configuration should be specified by property functions for panels
+
+layout/Horizon.js
 
 layout/Tree.js
 - allow depth and breadth offset to be computed automatically
