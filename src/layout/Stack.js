@@ -30,71 +30,67 @@
  * @see pv.Mark#cousin
  */
 pv.Layout.stack = function() {
-  var orient = "bottom", // default orientation
-      size = "height", // default size
-      offset = function() { return 0; }; // default offset
+  return new pv.Layout.Stack();
+};
 
-  /** @private Find the previous visible parent instance. */
-  function layout() {
-    var i = this.parent.index, p, c;
-    while ((i-- > 0) && !c) {
-      p = this.parent.scene[i];
-      if (p.visible) c = p.children[this.childIndex][this.index];
-    }
-    return c
-        ? c[orient] + c[size]
-        : offset.apply(this, arguments);
+/** @ignore */
+pv.Layout.Stack = function() {
+  pv.Layout.call(this);
+  var size = {left: "width", right: "width", top: "height", bottom: "height"};
+
+  /** @private */
+  function orient(side) {
+    return function() {
+        var s = this.scene[this.index], parent = this.parent, c, p;
+        if (s.orient != side) return null;
+        for (var i = parent.index - 1; i >= 0; i--) {
+          p = parent.scene[i];
+          if (p.visible) {
+            c = p.children[this.childIndex][this.index];
+            break;
+          }
+        }
+        return c ? c[s.orient] + c[size[s.orient]] : s.offset;
+      };
   }
 
-  var mark = new pv.Mark()
-      .data(pv.identity)
-      .bottom(layout);
-
-  /**
-   * Sets or gets the orientation. The default orientation is "left", which
-   * means that ...<ul>
-   *
-   * <li>left - left-to-right.
-   * <li>right - right-to-left.
-   * <li>top - top-to-bottom.
-   * <li>bottom - bottom-to-top.
-   * <li>radial - radially, with the root at the center.</ul>
-   *
-   * @param {string} v the new orientation.
-   * @function
-   * @name pv.Layout.stack.prototype.orient
-   * @returns {pv.Layout.stack} this, or the current orientation.
-   */
-  mark.orient = function(v) {
-    if (arguments.length) {
-      mark[orient](null); // delete old property definition
-      orient = String(v);
-      mark[orient](layout);
-      size = (orient == "left") || (orient == "right") ? "width" : "height";
-      return this;
-    }
-    return orient;
-  };
-
-  /**
-   * Sets the offset for this stack layout. The offset can either be specified
-   * as a function or as a constant. If a function, the function is invoked in
-   * the same context as a normal property function: <tt>this</tt> refers to the
-   * mark, and the arguments are the full data stack. By default the offset is
-   * zero.
-   *
-   * @function
-   * @name pv.Layout.stack.prototype.offset
-   * @param {function} f offset function, or constant value.
-   * @returns {pv.Layout.stack} this.
-   */
-  mark.offset = function(f) {
-    if (arguments.length) {
-      offset = (typeof f == "function") ? f : function() { return f; };
-      return this;
-    }
-    return offset;
-  };
-
-  return mark;
+  this.orient("bottom")
+      .offset(0)
+      .propertyValue("data", pv.identity)
+      .propertyValue("bottom", orient("bottom"))
+      .propertyValue("top", orient("top"))
+      .propertyValue("left", orient("left"))
+      .propertyValue("right", orient("right"));
 };
+
+pv.Layout.Stack.prototype = pv.extend(pv.Layout)
+    .property("orient", String)
+    .property("offset", Number);
+
+/**
+ * Sets or gets the orientation. The default orientation is "left", which means
+ * that ...<ul>
+ *
+ * <li>left - left-to-right.
+ * <li>right - right-to-left.
+ * <li>top - top-to-bottom.
+ * <li>bottom - bottom-to-top.
+ * <li>radial - radially, with the root at the center.</ul>
+ *
+ * @param {string} v the new orientation.
+ * @function
+ * @name pv.Layout.stack.prototype.orient
+ * @returns {pv.Layout.stack} this, or the current orientation.
+ */
+
+/**
+ * Sets the offset for this stack layout. The offset can either be specified as
+ * a function or as a constant. If a function, the function is invoked in the
+ * same context as a normal property function: <tt>this</tt> refers to the mark,
+ * and the arguments are the full data stack. By default the offset is zero.
+ *
+ * @function
+ * @name pv.Layout.stack.prototype.offset
+ * @param {function} f offset function, or constant value.
+ * @returns {pv.Layout.stack} this.
+ */

@@ -22,8 +22,9 @@ var vis = new pv.Panel()
 
 var bar = vis.add(pv.Panel)
     .data(data)
+  .add(pv.Layout.Stack)
+    .orient("left")
   .add(pv.Bar)
-    .extend(pv.Layout.stack().orient("left"))
     .top(function() y(this.index))
     .height(y.range().band)
     .width(x);
