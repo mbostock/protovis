@@ -142,15 +142,34 @@ pv.Mark.prototype.property = function(name, cast) {
    * define a "name" property that is evaluated on derived marks, even though
    * those marks don't normally have a name.
    */
-  pv.Mark.prototype[name] = function(v) {
+  pv.Mark.prototype.propertyMethod(name);
+  pv.Mark.cast[name] = cast;
+  return this;
+};
+
+/** @private Defines a setter-getter for the specified property. */
+pv.Mark.prototype.propertyMethod = function(name, def) {
+  var c = pv.Mark.cast[name];
+  this[name] = function(v) {
+
+      /* If this is a def, use it rather than property. */
+      if (def && this.scene) {
+        var defs = this.scene.defs;
+        if (arguments.length) {
+          if (v == undefined) delete defs.locked[name];
+          else defs.locked[name] = true;
+          defs.values[name] = ((v != null) && c) ? c(v) : v;
+          return this;
+        }
+        return defs.values[name];
+      }
+
       if (arguments.length) {
-        this.propertyValue(name, v);
+        this.propertyValue(name, v).type -= def ? 2 : 0;
         return this;
       }
       return this.instance()[name];
     };
-  pv.Mark.cast[name] = cast;
-  return this;
 };
 
 /** @private Sets the value of the property <i>name</i> to <i>v</i>. */
@@ -490,8 +509,8 @@ pv.Mark.prototype.add = function(type) {
  * function.
  */
 pv.Mark.prototype.def = function(name, v) {
-  this.propertyValue(name, v).type -= 2;
-  return this;
+  this.propertyMethod(name, true);
+  return this[name](v);
 };
 
 /**
@@ -738,25 +757,6 @@ pv.Mark.prototype.bind = function() {
     } while (mark = mark.proto);
   }
 
-  /** Returns a def setter-getter for the specified property. */
-  function def(name) {
-    return function(v) {
-      var defs = this.scene.defs;
-      if (arguments.length) {
-        if (v == undefined) {
-          delete defs.locked[name];
-        } else {
-          defs.locked[name] = true;
-        }
-        var c = pv.Mark.cast[name];
-        defs.values[name] = ((v != null) && c) ? c(v) : v;
-        return this;
-      } else {
-        return defs.values[name];
-      }
-    };
-  }
-
   /* Scan the proto chain for all defined properties. */
   bind(this);
   bind(this.defaults);
@@ -775,8 +775,7 @@ pv.Mark.prototype.bind = function() {
   /* Define setter-getter for inherited defs. */
   var defs = types[0].concat(types[1]);
   for (var i = 0; i < defs.length; i++) {
-    var d = defs[i];
-    this[d.name] = def(d.name);
+    this.propertyMethod(defs[i].name, true);
   }
 
   /* Setup binds to evaluate constants before functions. */
