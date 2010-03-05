@@ -19,8 +19,8 @@
  *     .data([[1, 1.2, 1.7, 1.5, 1.7],
  *            [.5, 1, .8, 1.1, 1.3],
  *            [.2, .5, .8, .9, 1]])
+ *   .add(pv.Layout.Stack)
  *   .add(pv.Area)
- *     .extend(pv.Layout.stack())
  *     .height(function(d) d * 40)
  *     .left(function() this.index * 35);</pre>
  *
@@ -29,11 +29,6 @@
  * @returns {pv.Layout.stack} a stack property function.
  * @see pv.Mark#cousin
  */
-pv.Layout.stack = function() {
-  return new pv.Layout.Stack();
-};
-
-/** @ignore */
 pv.Layout.Stack = function() {
   pv.Layout.call(this);
   var size = {left: "width", right: "width", top: "height", bottom: "height"};
@@ -56,11 +51,11 @@ pv.Layout.Stack = function() {
 
   this.orient("bottom")
       .offset(0)
-      .propertyValue("data", pv.identity)
-      .propertyValue("bottom", orient("bottom"))
-      .propertyValue("top", orient("top"))
-      .propertyValue("left", orient("left"))
-      .propertyValue("right", orient("right"));
+      .data(pv.identity)
+      .bottom(orient("bottom"))
+      .top(orient("top"))
+      .left(orient("left"))
+      .right(orient("right"));
 };
 
 pv.Layout.Stack.prototype = pv.extend(pv.Layout)

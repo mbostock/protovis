@@ -3,28 +3,16 @@
  * @class
  */
 pv.Layout = function() {
-  this.$properties = [];
-  this.proto = {$properties: []};
+  pv.Mark.call(this);
 };
 
-/** @private Defines a layout property; not visible to marks. */
+pv.Layout.prototype = pv.extend(pv.Mark);
+
+/** @private Defines a local property with the specified name and cast. */
 pv.Layout.prototype.property = function(name, cast) {
-  pv.Mark.cast[name] = cast;
   this[name] = function(v) {
-      pv.Mark.prototype.propertyValue.call(this.proto, name, v);
-      return this;
+      return arguments.length ? this.def(name, v) : this.instance()[name];
     };
-  return this;
-};
-
-/** @private Defines a mark property for inheritance. */
-pv.Layout.prototype.propertyValue = function(name, v) {
-  pv.Mark.prototype.propertyValue.call(this, name, v);
-  return this;
-};
-
-/** @private Defines a mark def for inheritance. */
-pv.Layout.prototype.def = function(name, v) {
-  pv.Mark.prototype.propertyValue.call(this, name, v).type -= 2;
+  pv.Mark.cast[name] = cast;
   return this;
 };
