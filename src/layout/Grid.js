@@ -27,22 +27,91 @@
  *
  * By default, the grid fills the full width and height of the parent panel.
  *
- * @param {array[]} arrays an array of arrays.
+ * @param {array[]} rows an array of arrays.
  * @returns {pv.Layout.grid} a grid layout.
  */
-pv.Layout.grid = function(arrays) {
-  var rows = arrays.length, cols = arrays[0].length;
+pv.Layout.grid = function(rows, cols) {
+  var layout = new pv.Layout.Grid();
+  if (arguments.length > 1) layout.rows(rows).cols(cols);
+  else if (arguments.length) layout.data(rows);
+  return layout;
+};
 
-  /** @private */
-  function w() { return this.parent.width() / cols; }
+/** @ignore */
+pv.Layout.Grid = function() {
+  pv.Layout.call(this);
+  this.rows(1)
+      .cols(1)
+      .propertyValue("data", function(d) {
+          return pv.range(this.rows() * this.cols()).map(function() { return d; });
+        })
+      .propertyValue("width", function() {
+          return this.parent.width() / this.cols();
+        })
+      .propertyValue("height", function() {
+          return this.parent.height() / this.rows();
+        })
+      .propertyValue("left", function() {
+          return this.width() * (this.index % this.cols());
+        })
+      .propertyValue("top", function() {
+          return this.height() * Math.floor(this.index / this.cols());
+        });
+};
 
-  /** @private */
-  function h() { return this.parent.height() / rows; }
+pv.Layout.Grid.prototype = pv.extend(pv.Layout);
 
-  return new pv.Mark()
-      .data(pv.blend(arrays))
-      .left(function() { return w.call(this) * (this.index % cols); })
-      .top(function() { return h.call(this) * Math.floor(this.index / cols); })
-      .width(w)
-      .height(h);
+/**
+ * Sets the number of rows. This method can be used to replicate the enclosing
+ * panel data in the abscence of a data property. Note that if the data property
+ * is specified, it takes priority over the rows property.
+ *
+ * @param {number} v the number of rows.
+ * @function
+ * @name pv.Layout.grid.prototype.rows
+ * @returns {pv.Layout.grid} this.
+ */
+pv.Layout.Grid.prototype.rows = function(v) {
+  return this.def("rows", v);
+};
+
+/**
+ * Sets the number of columns. This method can be used to replicate the
+ * enclosing panel data in the abscence of a data property. Note that if the
+ * data property is specified, it takes priority over the columns property.
+ *
+ * @param {number} v the number of columns.
+ * @function
+ * @name pv.Layout.grid.prototype.cols
+ * @returns {pv.Layout.grid} this.
+ */
+pv.Layout.Grid.prototype.cols = function(v) {
+  return this.def("cols", v);
+};
+
+/**
+ * Sets the data. The data should be specified as an array of arrays; this array
+ * will be blended such that child marks will see elements of the subarrays.
+ * Setting the data associated with this grid implicitly sets the number of rows
+ * and columns.
+ *
+ * @param {array[]} v the new data.
+ * @function
+ * @name pv.Layout.grid.prototype.data
+ * @returns {pv.Layout.grid} this.
+ */
+pv.Layout.Grid.prototype.data = function(v) {
+  var x;
+  if (typeof v == "function") {
+    x = function() {
+        var x = v.apply(this, arguments);
+        this.rows(x.length).cols(x[0] ? x[0].length : 0);
+        return pv.blend(x);
+      };
+  } else {
+    x = pv.blend(v);
+    this.rows(v.length).cols(v[0] ? v[0].length : 0);
+  }
+  pv.Mark.prototype.propertyValue.call(this, "data", x);
+  return this;
 };

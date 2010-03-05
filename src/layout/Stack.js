@@ -68,8 +68,8 @@ pv.Layout.Stack.prototype = pv.extend(pv.Layout)
     .property("offset", Number);
 
 /**
- * Sets or gets the orientation. The default orientation is "left", which means
- * that ...<ul>
+ * Sets the orientation. The default orientation is "left", which means that
+ * ...<ul>
  *
  * <li>left - left-to-right.
  * <li>right - right-to-left.
@@ -80,7 +80,7 @@ pv.Layout.Stack.prototype = pv.extend(pv.Layout)
  * @param {string} v the new orientation.
  * @function
  * @name pv.Layout.stack.prototype.orient
- * @returns {pv.Layout.stack} this, or the current orientation.
+ * @returns {pv.Layout.stack} this.
  */
 
 /**

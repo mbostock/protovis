@@ -22,3 +22,9 @@ pv.Layout.prototype.propertyValue = function(name, v) {
   pv.Mark.prototype.propertyValue.call(this, name, v);
   return this;
 };
+
+/** @private Defines a mark def for inheritance. */
+pv.Layout.prototype.def = function(name, v) {
+  pv.Mark.prototype.propertyValue.call(this, name, v).type -= 2;
+  return this;
+};
