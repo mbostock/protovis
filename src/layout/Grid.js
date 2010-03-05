@@ -37,7 +37,7 @@ pv.Layout.Grid = function() {
   /* Set the default data directly, rather than using the wrapper. */
   this.propertyValue("data", function(d) {
       return pv.range(this.rows() * this.cols()).map(function() { return d; });
-    });
+    }).type = 3;
 
   this.rows(1)
       .cols(1)
