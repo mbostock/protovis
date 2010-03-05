@@ -15,8 +15,9 @@ var vis = new pv.Panel()
     .right(2)
     .bottom(2);
 
-vis.add(pv.Dot)
-    .extend(pv.Layout.pack(diamond(3, 4, 4)))
+vis.add(pv.Layout.Pack)
+    .data(diamond(3, 4, 4))
+  .add(pv.Dot)
     .def("active", -1)
     .strokeStyle(function() this.index == this.active() ? "red" : "white")
     .lineWidth(function() this.index == this.active() ? 1.5 : 1)

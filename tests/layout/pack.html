@@ -15,8 +15,10 @@ var vis = new pv.Panel()
     .right(2)
     .bottom(2);
 
-vis.add(pv.Dot)
-    .extend(pv.Layout.pack(flare).size(Number))
+vis.add(pv.Layout.Pack)
+    .data(flare)
+    .size(Number)
+  .add(pv.Dot)
     .fillStyle(function(n) n.firstChild ? "rgba(31, 119, 180, .25)" : "#ff7f0e")
     .title(function t(n) n.parentNode ? (t(n.parentNode) + "." + n.nodeName) : "flare");
 
