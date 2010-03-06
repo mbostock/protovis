@@ -12,21 +12,17 @@ var data = pv.range(101).map(function(d) {
 
 var w = 300,
     h = 35,
+    n = 2,
     x = pv.Scale.linear(data, pv.index).range(0, w).by(pv.index),
     y = pv.Scale.linear(data).range(-h, h);
 
-var horizon = pv.Layout.horizon()
-    .bands(1)
-    .mode("offset");
-
 var vis = new pv.Panel()
     .width(w)
-    .height(h / horizon.bands());
+    .height(h / n);
 
-vis.add(pv.Panel)
-    .extend(horizon.band)
+vis.add(pv.Layout.Horizon)
+    .bands(n)
   .add(pv.Area)
-    .extend(horizon)
     .data(data)
     .left(x)
     .height(y);
