@@ -42,7 +42,7 @@ try {
     var re = new RegExp("function(\\s+\\w+)?\\([^)]*\\)\\s*", "mg"), m, d, i = 0, s = "";
     while (m = re.exec(js)) {
       var j = m.index + m[0].length;
-      if (js.charAt(j--) != '{') {
+      if (js.charAt(j) != '{') {
         s += js.substring(i, j) + "{return ";
         i = j;
         for (var p = 0; p >= 0 && j < js.length; j++) {
