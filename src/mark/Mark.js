@@ -142,8 +142,7 @@ pv.Mark.prototype.property = function(name, cast) {
    * define a "name" property that is evaluated on derived marks, even though
    * those marks don't normally have a name.
    */
-  pv.Mark.cast[name] = cast;
-  pv.Mark.prototype.propertyMethod(name);
+  pv.Mark.prototype.propertyMethod(name, false, pv.Mark.cast[name] = cast);
   return this;
 };
 
@@ -157,9 +156,10 @@ pv.Mark.prototype.property = function(name, cast) {
  *
  * @param {string} name the property name.
  * @param {boolean} [def] whether is a property or a def.
+ * @param {function} [cast] the cast function for this property.
  */
-pv.Mark.prototype.propertyMethod = function(name, def) {
-  var c = pv.Mark.cast[name];
+pv.Mark.prototype.propertyMethod = function(name, def, cast) {
+  if (!cast) cast = pv.Mark.cast[name];
   this[name] = function(v) {
 
       /* If this is a def, use it rather than property. */
@@ -168,7 +168,7 @@ pv.Mark.prototype.propertyMethod = function(name, def) {
         if (arguments.length) {
           if (v == undefined) delete defs.locked[name];
           else defs.locked[name] = true;
-          defs.values[name] = ((v != null) && c) ? c(v) : v;
+          defs.values[name] = ((v != null) && cast) ? cast(v) : v;
           return this;
         }
         return defs.values[name];
@@ -177,10 +177,10 @@ pv.Mark.prototype.propertyMethod = function(name, def) {
       /* If arguments are specified, set the property value. */
       if (arguments.length) {
         var type = !def << 1 | (typeof v == "function");
-        this.propertyValue(name, (type & 1 && c) ? function() {
+        this.propertyValue(name, (type & 1 && cast) ? function() {
             var x = v.apply(this, arguments);
-            return (x != null) ? c(x) : null;
-          } : (((v != null) && c) ? c(v) : v)).type = type;
+            return (x != null) ? cast(x) : null;
+          } : (((v != null) && cast) ? cast(v) : v)).type = type;
         return this;
       }
 
