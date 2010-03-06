@@ -851,12 +851,7 @@ pv.Mark.prototype.build = function() {
 
   /* Evaluate special data property. */
   var data = this.binds.data;
-  switch (data.type) {
-    case 0:
-    case 1: data = defs.values.data; break;
-    case 2: data = data.value; break;
-    case 3: data = data.value.apply(this, stack); break;
-  }
+  data = data.type & 1 ? data.value.apply(this, stack) : data.value;
 
   /* Create, update and delete scene nodes. */
   stack.unshift(null);
@@ -1079,7 +1074,8 @@ pv.Mark.prototype.context = function(scene, index, f) {
     /* Set ancestors' scale; requires top-down. */
     for (var i = ancestors.length - 1, k = 1; i > 0; i--) {
       mark = ancestors[i];
-      mark.scale = k *= mark.scene[mark.index].transform.k;
+      mark.scale = k;
+      k *= mark.scene[mark.index].transform.k;
     }
 
     /* Set children's scene and scale. */
