@@ -10,8 +10,8 @@ pv.Force.drag = function(k) {
 
   force.apply = function(particles) {
     if (k) for (var p = particles; p; p = p.next) {
-      p.fx -= k * p.vx;
-      p.fy -= k * p.vy;
+      p.fx = k * (p.fx - p.x + p.px);
+      p.fy = k * (p.fy - p.y + p.py);
     }
   };
 
