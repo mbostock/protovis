@@ -14,39 +14,29 @@ body {
   <body>
     <script type="text/javascript+protovis">
 
-var vertices = pv.dom(diamond(3, 4, 4)).nodes(),
-    edges = vertices.slice(1).map(function(n) {
+var nodes = pv.dom(diamond(3, 4, 4)).nodes(),
+    links = nodes.slice(1).map(function(n) {
         return {source: n.nodeName, target: n.parentNode.nodeName || 0};
       });
 
-var graph = pv.Layout.force(vertices, edges),
-    w = window.innerWidth,
-    h = window.innerHeight;
-
 var vis = new pv.Panel()
-    .width(w)
-    .height(h)
+    .width(window.innerWidth)
+    .height(window.innerHeight)
     .fillStyle("white")
     .strokeStyle("#ccc")
     .event("mousedown", pv.Behavior.pan())
     .event("mousewheel", pv.Behavior.zoom());
 
-/* Links. */
-vis.add(pv.Panel)
-    .data(graph.links)
-  .add(pv.Line)
-    .extend(graph.link);
-
-/* Nodes. */
-vis.add(pv.Dot)
-    .extend(graph.node)
+vis.add(pv.Layout.Force)
+    .nodes(nodes)
+    .links(links)
+    .interactive(false)
+  .link.add(pv.Line)
+  .node.add(pv.Dot)
     .fillStyle(function(d) d.fixed ? "orange" : "white")
     .event("mousedown", pv.Behavior.drag());
 
-setInterval(function() {
-    vis.render();
-    graph.step();
-  }, 50);
+vis.render();
 
     </script>
   </body>

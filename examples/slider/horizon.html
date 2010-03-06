@@ -52,21 +52,19 @@ var data = pv.range(201).map(function(d) {
 
 var w = 600,
     h = 70,
+    bands = 1,
+    mode = "offset",
     x = pv.Scale.linear(data, pv.index).range(0, w).by(pv.index),
     y = pv.Scale.linear(data).range(-h, h);
 
-var horizon = pv.Layout.horizon()
-    .bands(2)
-    .mode("offset");
-
 var vis = new pv.Panel()
     .width(w)
-    .height(function() h / horizon.bands());
+    .height(function() h / bands);
 
-vis.add(pv.Panel)
-    .extend(horizon.band)
+vis.add(pv.Layout.Horizon)
+    .bands(function() bands)
+    .mode(function() mode)
   .add(pv.Area)
-    .extend(horizon)
     .data(data)
     .left(x)
     .height(y);
@@ -75,14 +73,13 @@ vis.render();
 
 $(slider).slider({
   min: 1, max: 10, slide: function(e, ui) {
-    bands.innerHTML = ui.value;
-    horizon.bands(ui.value);
+    $("#bands").html(bands = ui.value);
     vis.render();
   }
 });
 
 $([mirror, offset]).change(function() {
-  horizon.mode(this.value);
+  mode = this.value;
   vis.render();
 });
 

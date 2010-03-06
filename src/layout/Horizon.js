@@ -1,6 +1,6 @@
-pv.Layout.horizon = function() {
-  var bands, // number of bands
-      mirror = true, // whether to mirror or offset
+pv.Layout.Horizon = function() {
+  pv.Layout.call(this);
+  var mirror = true, // whether to mirror or offset
       size, // band size
       red, // negative band color
       blue; // positive band color
@@ -8,15 +8,23 @@ pv.Layout.horizon = function() {
   /** @private */
   function data() {
     size = Math.round(this.parent.height());
-    return pv.range(bands * 2);
+    mirror = this.mode() == "mirror";
+    var n = this.bands(), fill = this.backgroundStyle();
+    red = pv.Scale.linear(0, n).range(fill, this.negativeStyle());
+    blue = pv.Scale.linear(0, n).range(fill, this.positiveStyle());
+    return pv.range(n * 2);
   }
 
-  var layout = new pv.Mark()
-      .top(function(d, i) { return mirror && (i % 2) ? 0 : null; })
-      .bottom(function(d, i) { return mirror && (i % 2) ? null : 0; })
-      .fillStyle(function(d, i) { return (i % 2) ? red : blue; });
+  /* Set the fill style directly, rather than using the alias. */
+  this.propertyValue("fillStyle", function(i) {
+      return i ? null : this.backgroundStyle();
+    }).type = 3;
 
-  layout.band = new pv.Mark()
+  this.bands(2)
+      .mode("offset")
+      .backgroundStyle("white")
+      .negativeStyle("red")
+      .positiveStyle("blue")
       .data(data)
       .overflow("hidden")
       .height(function() { return size; })
@@ -25,27 +33,21 @@ pv.Layout.horizon = function() {
           return pv.Transform.identity.translate(0, y);
         });
 
-  layout.bands = function(x) {
-    if (arguments.length) {
-      bands = Number(x);
-      var a = 1 / (bands + 1);
-      red = pv.color("red").alpha(a);
-      blue = pv.color("blue").alpha(a);
-      return this;
-    }
-    return bands;
-  };
-
-  layout.mode = function(x) {
-    if (arguments.length) {
-      switch (x) {
-        case "mirror": mirror = true; break;
-        case "offset": mirror = false; break;
-      }
-      return this;
-    }
-    return mirror;
-  };
-
-  return layout.bands(2);
+  this.band = new pv.Mark()
+      .top(function(d, i) { return mirror && (i % 2) ? 0 : null; })
+      .bottom(function(d, i) { return mirror && (i % 2) ? null : 0; })
+      .fillStyle(function(d, i) { return ((i % 2) ? red : blue)((i >> 1) + 1); });
 };
+
+pv.Layout.Horizon.prototype = pv.extend(pv.Layout)
+    .property("bands", Number)
+    .property("mode", String)
+    .property("backgroundStyle", pv.color)
+    .property("negativeStyle", pv.color)
+    .property("positiveStyle", pv.color);
+
+pv.Layout.Horizon.prototype.add = function(type) {
+  return pv.Mark.prototype.add.call(this, pv.Panel).add(type).extend(this.band);
+};
+
+pv.Layout.Horizon.prototype.fillStyle = pv.Layout.Horizon.prototype.backgroundStyle;

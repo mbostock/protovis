@@ -33,10 +33,17 @@
  */
 pv.Layout.Grid = function() {
   pv.Layout.call(this);
+  var that = this;
 
-  /* Set the default data directly, rather than using the wrapper. */
-  this.propertyValue("data", function(d) {
-      return pv.range(this.rows() * this.cols()).map(function() { return d; });
+  /* Set the default data method before defining the cast. */
+  this.data(function(d) {
+      return pv.range(that.rows() * that.cols()).map(function() { return d; });
+    });
+
+  /* When the data property is set, implicitly change rows and cols. */
+  this.propertyMethod("data", false, function(v) {
+      that.rows(v.length).cols(v[0] ? v[0].length : 0);
+      return pv.blend(v);
     });
 
   this.rows(1)
@@ -84,20 +91,3 @@ pv.Layout.Grid.prototype = pv.extend(pv.Layout)
  * @name pv.Layout.grid.prototype.data
  * @returns {pv.Layout.grid} this.
  */
-pv.Layout.Grid.prototype.data = function(v) {
-  if (arguments.length) {
-    var x;
-    if (typeof v == "function") {
-      x = function() {
-          var x = v.apply(this, arguments);
-          this.rows(x.length).cols(x[0] ? x[0].length : 0);
-          return pv.blend(x);
-        };
-    } else {
-      x = pv.blend(v);
-      this.rows(v.length).cols(v[0] ? v[0].length : 0);
-    }
-    return pv.Mark.prototype.data.call(this, x);
-  }
-  return this.instance().data;
-};

@@ -1,14 +1,11 @@
 pv.Layout.Pack = function() {
   pv.Layout.call(this);
-
-  /* Set the size property directly, rather than using the wrapper. */
-  this.propertyValue("size", function(n) { return n.r * n.r; });
-
   this.data(pv.identity)
       .size(function() { return 1; })
       .spacing(1)
       .left(function(n) { return n.x; })
       .top(function(n) { return n.y; })
+      .radius(function(n) { return n.r; })
       .strokeStyle("rgb(31, 119, 180)")
       .fillStyle("rgba(31, 119, 180, .25)");
 };
@@ -239,7 +236,4 @@ pv.Layout.Pack.prototype.data = function(v) {
           : function() { return data(v); })
       : this.instance().data;
 };
-
-  // TODO is it possible for spacing to operate in pixel space?
-  // Right now it appears to be multiples of the smallest radius.
 
