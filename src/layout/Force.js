@@ -2,47 +2,64 @@ pv.Layout.Force = function() {
   pv.Layout.call(this);
   var that = this;
 
-  /** @private Initialize position using a random walk from the center. */
+  /** @private */
   function init() {
     var nodes = that.nodes(), links = that.links();
     if (nodes.sim) return;
 
-    nodes.forEach(function(d, i) {
-      nodes[i] = {nodeName: i, nodeValue: d, linkDegree: 0};
-    });
-    links.forEach(function(d, i) {
-      var s = nodes[d.source],
-          t = nodes[d.target],
-          v = isNaN(d.value) ? 1 : d.value;
+    /* Compute link degrees. */
+    links.forEach(function(d) {
+      var s = d.sourceNode || (d.sourceNode = nodes[d.source]),
+          t = d.targetNode || (d.targetNode = nodes[d.target]),
+          v = d.linkValue;
       s.linkDegree += v;
       t.linkDegree += v;
-      links[i] = {sourceNode: s, targetNode: t, linkValue: v};
     });
 
-    var x = this.parent.width() / 2,
-        y = this.parent.height() / 2;
+    /* Initialize positions using a random walk from the center. */
+    var w = this.parent.width(),
+        h = this.parent.height(),
+        x = w / 2,
+        y = h / 2;
     for (var i = 0, n = nodes.length; i < n; i++) {
       var node = nodes[i], angle = Math.random() * 2 * Math.PI;
-      node.x = x += 4 * Math.cos(angle);
-      node.y = y += 4 * Math.sin(angle);
+      node.x = x += 10 * (w / h) * Math.cos(angle);
+      node.y = y += 10 * (h / w) * Math.sin(angle);
     }
 
+    /* Initialize the simulation. */
     nodes.sim = pv.simulation(nodes);
     nodes.sim.force(pv.Force.drag());
     nodes.sim.force(pv.Force.charge());
     nodes.sim.force(pv.Force.spring().links(links));
 
-    var i = 0, n = that.iterations();
-    if (that.interactive()) {
-      var t = setInterval(function() {
-          if (i++ < n) {
-            nodes.sim.step();
-            that.root.render();
-          } else {
-            clearInterval(t);
+    /* Add any custom constraints. */
+    if (that.bound()) {
+      nodes.sim.constraint(pv.Constraint.bound().x(6, w - 6).y(6, h - 6));
+    }
+
+    /*
+     * If the iterations property is null (the default), the layout is
+     * interactive. The simulation is run until the fastest particle drops below
+     * an arbitrary minimum speed. Although the timer keeps firing, this speed
+     * calculation is fast so there is minimal CPU overhead. Note: if a particle
+     * is fixed for interactivity, treat this as a high speed and resume
+     * simulation.
+     */
+    var n = that.iterations();
+    if (n == null) {
+      function speed(n) { return n.fixed ? 1 : n.vx * n.vx + n.vy * n.vy; }
+      nodes.sim.step(); // compute initial velocities
+      var v = 1, min = 1e-4 * (links.length + 1);
+      setInterval(function() {
+          if (v > min) {
+            var then = Date.now();
+            do { nodes.sim.step(); } while (Date.now() - then < 20);
+            that.parent.render();
           }
+          v = pv.max(nodes, speed);
         }, 42);
-    } else while (i++ < n) {
+    } else for (var i = 0; i < n; i++) {
       nodes.sim.step();
     }
   }
@@ -81,12 +98,18 @@ pv.Layout.Force = function() {
 };
 
 pv.Layout.Force.prototype = pv.extend(pv.Layout)
-    .property("nodes")
-    .property("links")
-    .property("interactive", Boolean)
+    .property("nodes", function(v) {
+        return v.map(function(d) {
+            if (typeof d != "object") d = {nodeValue: d};
+            d.linkDegree = 0;
+            return d;
+          });
+      })
+    .property("links", function(v) {
+        return v.map(function(d) {
+            if (isNaN(d.linkValue)) d.linkValue = isNaN(d.value) ? 1 : d.value;
+            return d;
+          });
+      })
+    .property("bound", Boolean)
     .property("iterations", Number);
-
-pv.Layout.Force.prototype.defaults = new pv.Layout.Force()
-    .extend(pv.Layout.prototype.defaults)
-    .interactive(true)
-    .iterations(200);

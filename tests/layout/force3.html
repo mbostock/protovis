@@ -14,41 +14,26 @@ body {
   <body>
     <script type="text/javascript+protovis">
 
-var vertices = pv.dom(flare).nodes();
-vertices.forEach(function(n, i) n.id = i);
-var edges = vertices.slice(1).map(function(n) ({source: n.id, target: n.parentNode.id}));
-
-var graph = pv.Layout.force(vertices, edges),
-    w = window.innerWidth,
-    h = window.innerHeight;
-
 var vis = new pv.Panel()
-    .width(w)
-    .height(h)
+    .width(window.innerWidth)
+    .height(window.innerHeight)
     .fillStyle("white")
-    .strokeStyle("#ccc")
     .event("mousedown", pv.Behavior.pan())
     .event("mousewheel", pv.Behavior.zoom());
 
-/* Links. */
-vis.add(pv.Panel)
-    .data(graph.links)
-  .add(pv.Line)
-    .extend(graph.link);
-
-/* Nodes. */
-vis.add(pv.Dot)
-    .extend(graph.node)
-    .title(function(d) d.nodeValue.nodeName)
-    .size(function(d) (d.nodeValue.nodeValue / 100) || 10)
-    .fillStyle(function(d) d.fixed ? "orange"
-        : (d.nodeValue.nodeValue ? "white" : "steelblue"))
+vis.add(pv.Layout.Force)
+    .nodes(pv.dom(flare).nodes())
+    .links(function() this.nodes()
+        .filter(function(n) n.parentNode)
+        .map(function(n) ({sourceNode: n, targetNode: n.parentNode})))
+  .link.add(pv.Line)
+  .node.add(pv.Dot)
+    .title(function(d) d.nodeName)
+    .size(function(d) (d.nodeValue / 100) || 10)
+    .fillStyle(function(d) d.fixed ? "orange" : (d.firstChild ? "steelblue" : "white"))
     .event("mousedown", pv.Behavior.drag());
 
-setInterval(function() {
-    vis.render();
-    graph.step();
-  }, 50);
+vis.render();
 
     </script>
   </body>

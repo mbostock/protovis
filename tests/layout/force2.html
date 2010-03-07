@@ -3,41 +3,34 @@
     <title>Diamond Force</title>
     <script type="text/javascript" src="../../protovis-d3.2.js"></script>
     <script type="text/javascript" src="../diamond.js"></script>
-    <style type="text/css">
-
-body {
-  margin: 0;
-}
-
-    </style>
+    <link type="text/css" href="../style.css" rel="stylesheet"/>
   </head>
   <body>
-    <script type="text/javascript+protovis">
-
-var nodes = pv.dom(diamond(3, 4, 4)).nodes(),
-    links = nodes.slice(1).map(function(n) {
-        return {source: n.nodeName, target: n.parentNode.nodeName || 0};
-      });
+    <script type="text/javascript+protovis" id="foo">
 
 var vis = new pv.Panel()
-    .width(window.innerWidth)
-    .height(window.innerHeight)
-    .fillStyle("white")
-    .strokeStyle("#ccc")
-    .event("mousedown", pv.Behavior.pan())
-    .event("mousewheel", pv.Behavior.zoom());
+    .width(500)
+    .height(100)
+    .strokeStyle("#ccc");
 
 vis.add(pv.Layout.Force)
-    .nodes(nodes)
-    .links(links)
-    .interactive(false)
+    .nodes(pv.dom(diamond(3, 4, 4)).nodes())
+    .links(function() this.nodes()
+        .filter(function(n) n.parentNode)
+        .map(function(n) ({sourceNode: n, targetNode: n.parentNode})))
+    .bound(true)
+    .iterations(1e3)
   .link.add(pv.Line)
-  .node.add(pv.Dot)
-    .fillStyle(function(d) d.fixed ? "orange" : "white")
-    .event("mousedown", pv.Behavior.drag());
+  .node.add(pv.Dot);
 
 vis.render();
 
-    </script>
+    </script><p>
+
+      This example is non-interactive. It demonstrates computing a static
+      force-directed layout that is bounded by the containing panel. The data
+      set is the diamond tree used in other examples, with links between parents
+      and their children. The layout is computed using 1,000 iterations.
+
   </body>
 </html>
