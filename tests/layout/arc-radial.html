@@ -7,9 +7,6 @@
   <body>
     <script type="text/javascript+protovis">
 
-var graph = pv.Layout.arc(miserables.vertices, miserables.edges)
-    .orient("radial");
-
 var vis = new pv.Panel()
     .width(600)
     .height(600)
@@ -18,16 +15,14 @@ var vis = new pv.Panel()
     .right(100)
     .bottom(100);
 
-vis.add(pv.Panel)
-    .data(graph.links)
-  .add(pv.Line)
-    .extend(graph.link);
-
-vis.add(pv.Dot)
-    .extend(graph.node)
+vis.add(pv.Layout.Arc)
+    .nodes(miserables.vertices)
+    .links(miserables.edges)
+    .orient("radial")
+  .link.add(pv.Line)
+  .node.add(pv.Dot)
     .size(function(d) d.linkDegree + 4)
-  .add(pv.Label)
-    .extend(graph.label);
+  .label.add(pv.Label);
 
 vis.render();
 

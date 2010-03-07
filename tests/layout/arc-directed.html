@@ -6,27 +6,24 @@
   <body>
     <script type="text/javascript+protovis">
 
-var vertices = [0, 1, 2, 3],
-    edges = [{source:0, target:1}, {source:3, target:2}],
-    graph = pv.Layout.arc(vertices, edges).directed(true);
-
 var vis = new pv.Panel()
     .width(400)
-    .height(10)
-    .top(110)
-    .left(10)
-    .right(10)
-    .bottom(110);
+    .height(400)
+    .top(100)
+    .left(100)
+    .right(100)
+    .bottom(100);
 
 vis.add(pv.Panel)
-    .data(graph.links)
-  .add(pv.Line)
-    .extend(graph.link);
-
-vis.add(pv.Dot)
-    .extend(graph.node)
-  .add(pv.Label)
-    .extend(graph.label);
+    .data(["top", "bottom", "left", "right"])
+  .add(pv.Layout.Arc)
+    .nodes([0, 1, 2, 3])
+    .links([{source:0, target:1}, {source:3, target:2}])
+    .directed(true)
+    .orient(pv.identity)
+  .link.add(pv.Line)
+  .node.add(pv.Dot)
+  .label.add(pv.Label);
 
 vis.render();
 
