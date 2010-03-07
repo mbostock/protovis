@@ -46,14 +46,11 @@
     </div><p>
     <script type="text/javascript+protovis">
 
-var data = pv.range(201).map(function(d) {
-    return Math.sin(d / 2) + Math.sin(d / 3) + Math.sin(d / 5);
-  });
-
 var w = 600,
     h = 70,
     bands = 1,
     mode = "offset",
+    data = pv.range(101).map(function(d) Math.sin(d / 2) + Math.sin(d / 7)),
     x = pv.Scale.linear(data, pv.index).range(0, w).by(pv.index),
     y = pv.Scale.linear(data).range(-h, h);
 

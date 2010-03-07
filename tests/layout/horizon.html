@@ -6,13 +6,10 @@
   <body>
     <script type="text/javascript+protovis">
 
-var data = pv.range(101).map(function(d) {
-    return Math.sin(d / 3) + Math.sin(d / 6);
-  });
-
 var w = 300,
     h = 35,
     n = 2,
+    data = pv.range(101).map(function(d) Math.sin(d / 2) + Math.sin(d / 7)),
     x = pv.Scale.linear(data, pv.index).range(0, w).by(pv.index),
     y = pv.Scale.linear(data).range(-h, h);
 
