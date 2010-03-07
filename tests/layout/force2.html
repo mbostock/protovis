@@ -3,51 +3,59 @@
     <title>Diamond Force</title>
     <script type="text/javascript" src="../../protovis-d3.2.js"></script>
     <script type="text/javascript" src="../diamond.js"></script>
-    <style type="text/css">
-
-body {
-  margin: 0;
-}
-
-    </style>
+    <link type="text/css" href="../style.css" rel="stylesheet"/>
   </head>
   <body>
-    <script type="text/javascript+protovis">
+    <script type="text/javascript+protovis" id="foo">
 
-var vertices = pv.dom(diamond(3, 4, 4)).nodes(),
-    edges = vertices.slice(1).map(function(n) {
-        return {source: n.nodeName, target: n.parentNode.nodeName || 0};
-      });
-
-var graph = pv.Layout.force(vertices, edges),
-    w = window.innerWidth,
-    h = window.innerHeight;
+function activate(d, value) {
+  d.active = value;
+  if (d.parentNode) activate(d.parentNode, value);
+}
 
 var vis = new pv.Panel()
-    .width(w)
-    .height(h)
-    .fillStyle("white")
+    .data(pv.range(1, 4))
+    .width(500)
+    .height(100)
+    .top(5)
+    .left(5)
+    .right(5)
+    .bottom(5)
+    .fillStyle("#fff")
     .strokeStyle("#ccc")
-    .event("mousedown", pv.Behavior.pan())
-    .event("mousewheel", pv.Behavior.zoom());
+    .event("mousemove", pv.Behavior.point());
 
-/* Links. */
-vis.add(pv.Panel)
-    .data(graph.links)
-  .add(pv.Line)
-    .extend(graph.link);
+vis.add(pv.Layout.Force)
+    .nodes(function(i) pv.dom(diamond(i, i, i)).nodes())
+    .links(function() this.nodes()
+        .filter(function(n) n.parentNode)
+        .map(function(n) ({sourceNode: n, targetNode: n.parentNode})))
+    .bound(true)
+    .iterations(1e3)
+  .link.add(pv.Line)
+    .strokeStyle(function(d) d.active  ? "orange" : "lightgrey")
+  .node.add(pv.Dot)
+    .fillStyle(function(d) d.parentNode ? d.active ? "orange" : "white" : "steelblue")
+    .event("point", function(d) (activate(d, true), this.parent))
+    .event("unpoint", function(d) (activate(d, false), this.parent));
 
-/* Nodes. */
-vis.add(pv.Dot)
-    .extend(graph.node)
-    .fillStyle(function(d) d.fixed ? "orange" : "white")
-    .event("mousedown", pv.Behavior.drag());
+vis.add(pv.Label)
+    .bottom(0)
+    .text(function(i) "b = " + i);
 
-setInterval(function() {
-    vis.render();
-    graph.step();
-  }, 50);
+vis.render();
 
-    </script>
+    </script><p>
+
+      This example demonstrates computing a static force-directed layout that is
+      bounded by the containing panel, as well as dynamic properties for nodes
+      and links. The data set is the diamond tree used in other examples, with
+      links between parents and their children. The layout is computed using
+      1,000 iterations.<p>
+
+      Although the layout is static, this example is interactive. Using the
+      point and unpoint events, we can highlight the active node and its tree
+      ancestors.
+
   </body>
 </html>

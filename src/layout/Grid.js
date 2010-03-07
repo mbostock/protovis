@@ -21,28 +21,73 @@
  * array is a two-dimensional array of values in the range [0,1], a simple
  * heatmap can be generated as:
  *
- * <pre>.add(pv.Bar)
- *   .extend(pv.Layout.grid(array))
+ * <pre>.add(pv.Layout.Grid)
+ *   .data(arrays)
+ * .add(pv.Bar)
  *   .fillStyle(pv.ramp("white", "black"))</pre>
  *
  * By default, the grid fills the full width and height of the parent panel.
  *
- * @param {array[]} arrays an array of arrays.
+ * @param {array[]} rows an array of arrays.
  * @returns {pv.Layout.grid} a grid layout.
  */
-pv.Layout.grid = function(arrays) {
-  var rows = arrays.length, cols = arrays[0].length;
+pv.Layout.Grid = function() {
+  pv.Layout.call(this);
+  var that = this;
 
-  /** @private */
-  function w() { return this.parent.width() / cols; }
+  /* Set the default data method before defining the cast. */
+  this.data(function(d) {
+      return pv.range(that.rows() * that.cols()).map(function() { return d; });
+    });
 
-  /** @private */
-  function h() { return this.parent.height() / rows; }
+  /* When the data property is set, implicitly change rows and cols. */
+  this.propertyMethod("data", false, function(v) {
+      that.rows(v.length).cols(v[0] ? v[0].length : 0);
+      return pv.blend(v);
+    });
 
-  return new pv.Mark()
-      .data(pv.blend(arrays))
-      .left(function() { return w.call(this) * (this.index % cols); })
-      .top(function() { return h.call(this) * Math.floor(this.index / cols); })
-      .width(w)
-      .height(h);
+  this.rows(1)
+      .cols(1)
+      .width(function() { return this.parent.width() / this.cols(); })
+      .height(function() { return this.parent.height() / this.rows(); })
+      .left(function() { return this.width() * (this.index % this.cols()); })
+      .top(function() { return this.height() * Math.floor(this.index / this.cols()); });
 };
+
+pv.Layout.Grid.prototype = pv.extend(pv.Layout)
+    .property("rows", Number)
+    .property("cols", Number);
+
+/**
+ * Sets the number of rows. This method can be used to replicate the enclosing
+ * panel data in the abscence of a data property. Note that if the data property
+ * is specified, it takes priority over the rows property.
+ *
+ * @param {number} v the number of rows.
+ * @function
+ * @name pv.Layout.grid.prototype.rows
+ * @returns {pv.Layout.grid} this.
+ */
+
+/**
+ * Sets the number of columns. This method can be used to replicate the
+ * enclosing panel data in the abscence of a data property. Note that if the
+ * data property is specified, it takes priority over the columns property.
+ *
+ * @param {number} v the number of columns.
+ * @function
+ * @name pv.Layout.grid.prototype.cols
+ * @returns {pv.Layout.grid} this.
+ */
+
+/**
+ * Sets the data. The data should be specified as an array of arrays; this array
+ * will be blended such that child marks will see elements of the subarrays.
+ * Setting the data associated with this grid implicitly sets the number of rows
+ * and columns.
+ *
+ * @param {array[]} v the new data.
+ * @function
+ * @name pv.Layout.grid.prototype.data
+ * @returns {pv.Layout.grid} this.
+ */

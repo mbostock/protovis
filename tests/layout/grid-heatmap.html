@@ -1,0 +1,25 @@
+<html>
+  <head>
+    <title>Grid Heatmap</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../heatmap.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(heatmap[0].length * 6)
+    .height(heatmap.length * 6);
+
+vis.add(pv.Layout.Grid)
+    .data(heatmap)
+  .add(pv.Bar)
+    .fillStyle(pv.Scale.linear()
+        .domain(95, 115, 135, 155, 175, 195)
+        .range("#0a0", "#6c0", "#ee0", "#eb4", "#eb9", "#fff"));
+
+vis.render();
+
+    </script>
+  </body>
+</html>

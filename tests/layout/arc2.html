@@ -7,14 +7,6 @@
   <body>
     <script type="text/javascript+protovis">
 
-var vertices = pv.dom(diamond(3, 4, 4)).nodes(),
-    edges = vertices.slice(1).map(function(n) {
-        return {source: n.nodeName, target: n.parentNode.nodeName || 0};
-      });
-
-var graph = pv.Layout.arc(vertices, edges)
-    .orient("left");
-
 var vis = new pv.Panel()
     .width(400)
     .height(400)
@@ -23,13 +15,14 @@ var vis = new pv.Panel()
     .right(10)
     .bottom(10);
 
-vis.add(pv.Panel)
-    .data(graph.links)
-  .add(pv.Line)
-    .extend(graph.link);
-
-vis.add(pv.Dot)
-    .extend(graph.node);
+vis.add(pv.Layout.Arc)
+    .nodes(pv.dom(diamond(3, 4, 4)).nodes())
+    .links(function() this.nodes()
+        .filter(function(n) n.parentNode)
+        .map(function(n) ({sourceNode: n, targetNode: n.parentNode})))
+    .orient("left")
+  .link.add(pv.Line)
+  .node.add(pv.Dot);
 
 vis.render();
 

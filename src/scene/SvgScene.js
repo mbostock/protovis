@@ -150,3 +150,6 @@ pv.SvgScene.removeSiblings = function(e) {
     e = n;
   }
 };
+
+/** @private Do nothing when rendering undefined mark types. */
+pv.SvgScene.undefined = function() {};

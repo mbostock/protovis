@@ -72,7 +72,7 @@ pv.Mark = function() {
 /** @private Records which properties are defined on this mark type. */
 pv.Mark.prototype.properties = {};
 
-/** @private Records which the cast function for each property. */
+/** @private Records the cast function for each property. */
 pv.Mark.cast = {};
 
 /**
@@ -142,42 +142,62 @@ pv.Mark.prototype.property = function(name, cast) {
    * define a "name" property that is evaluated on derived marks, even though
    * those marks don't normally have a name.
    */
-  pv.Mark.prototype[name] = function(v) {
+  pv.Mark.prototype.propertyMethod(name, false, pv.Mark.cast[name] = cast);
+  return this;
+};
+
+/**
+ * @private Defines a setter-getter for the specified property.
+ *
+ * <p>If a cast function has been assigned to the specified property name, the
+ * property function is wrapped by the cast function, or, if a constant is
+ * specified, the constant is immediately cast. Note, however, that if the
+ * property value is null, the cast function is not invoked.
+ *
+ * @param {string} name the property name.
+ * @param {boolean} [def] whether is a property or a def.
+ * @param {function} [cast] the cast function for this property.
+ */
+pv.Mark.prototype.propertyMethod = function(name, def, cast) {
+  if (!cast) cast = pv.Mark.cast[name];
+  this[name] = function(v) {
+
+      /* If this is a def, use it rather than property. */
+      if (def && this.scene) {
+        var defs = this.scene.defs;
+        if (arguments.length) {
+          if (v == undefined) delete defs.locked[name];
+          else defs.locked[name] = true;
+          defs.values[name] = ((v != null) && cast) ? cast(v) : v;
+          return this;
+        }
+        return defs.values[name];
+      }
+
+      /* If arguments are specified, set the property value. */
       if (arguments.length) {
-        this.propertyValue(name, v);
+        var type = !def << 1 | (typeof v == "function");
+        this.propertyValue(name, (type & 1 && cast) ? function() {
+            var x = v.apply(this, arguments);
+            return (x != null) ? cast(x) : null;
+          } : (((v != null) && cast) ? cast(v) : v)).type = type;
         return this;
       }
+
       return this.instance()[name];
     };
-  pv.Mark.cast[name] = cast;
-  return this;
 };
 
 /** @private Sets the value of the property <i>name</i> to <i>v</i>. */
 pv.Mark.prototype.propertyValue = function(name, v) {
-  /* Replace existing property definition, if found. */
-  for (var i = 0; i < this.$properties.length; i++) {
-    if (this.$properties[i].name == name) {
-      this.$properties.splice(i, 1);
+  var properties = this.$properties, p = {name: name, value: v};
+  for (var i = 0; i < properties.length; i++) {
+    if (properties[i].name == name) {
+      properties.splice(i, 1);
       break;
     }
   }
-
-  /*
-   * If a cast function is specified, the property function is wrapped by the
-   * cast function, or, if a constant is specified, the constant is immediately
-   * cast. Note, however, that if the property value is null, the cast function
-   * is not invoked.
-   */
-  var c = pv.Mark.cast[name], f = typeof v == "function", p = {
-      name: name,
-      type: f ? 3 : 2,
-      value: (f && c) ? function() {
-          var x = v.apply(this, arguments);
-          return (x != null) ? c(x) : null;
-        } : (((v != null) && c) ? c(v) : v)
-    };
-  this.$properties.push(p);
+  properties.push(p);
   return p;
 };
 
@@ -490,8 +510,8 @@ pv.Mark.prototype.add = function(type) {
  * function.
  */
 pv.Mark.prototype.def = function(name, v) {
-  this.propertyValue(name, v).type -= 2;
-  return this;
+  this.propertyMethod(name, true);
+  return this[name](v);
 };
 
 /**
@@ -738,25 +758,6 @@ pv.Mark.prototype.bind = function() {
     } while (mark = mark.proto);
   }
 
-  /** Returns a def setter-getter for the specified property. */
-  function def(name) {
-    return function(v) {
-      var defs = this.scene.defs;
-      if (arguments.length) {
-        if (v == undefined) {
-          delete defs.locked[name];
-        } else {
-          defs.locked[name] = true;
-        }
-        var c = pv.Mark.cast[name];
-        defs.values[name] = ((v != null) && c) ? c(v) : v;
-        return this;
-      } else {
-        return defs.values[name];
-      }
-    };
-  }
-
   /* Scan the proto chain for all defined properties. */
   bind(this);
   bind(this.defaults);
@@ -775,8 +776,7 @@ pv.Mark.prototype.bind = function() {
   /* Define setter-getter for inherited defs. */
   var defs = types[0].concat(types[1]);
   for (var i = 0; i < defs.length; i++) {
-    var d = defs[i];
-    this[d.name] = def(d.name);
+    this.propertyMethod(defs[i].name, true);
   }
 
   /* Setup binds to evaluate constants before functions. */
@@ -851,12 +851,7 @@ pv.Mark.prototype.build = function() {
 
   /* Evaluate special data property. */
   var data = this.binds.data;
-  switch (data.type) {
-    case 0:
-    case 1: data = defs.values.data; break;
-    case 2: data = data.value; break;
-    case 3: data = data.value.apply(this, stack); break;
-  }
+  data = data.type & 1 ? data.value.apply(this, stack) : data.value;
 
   /* Create, update and delete scene nodes. */
   stack.unshift(null);
@@ -1079,7 +1074,8 @@ pv.Mark.prototype.context = function(scene, index, f) {
     /* Set ancestors' scale; requires top-down. */
     for (var i = ancestors.length - 1, k = 1; i > 0; i--) {
       mark = ancestors[i];
-      mark.scale = k *= mark.scene[mark.index].transform.k;
+      mark.scale = k;
+      k *= mark.scene[mark.index].transform.k;
     }
 
     /* Set children's scene and scale. */
