@@ -1,6 +1,7 @@
 pv.Force.spring = function(k) {
   var d = .1, // default damping factor
       l = 20, // default rest length
+      links, // links on which to apply spring forces
       kl, // per-spring normalization
       force = {};
 
