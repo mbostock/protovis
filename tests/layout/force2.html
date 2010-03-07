@@ -8,29 +8,54 @@
   <body>
     <script type="text/javascript+protovis" id="foo">
 
+function activate(d, value) {
+  d.active = value;
+  if (d.parentNode) activate(d.parentNode, value);
+}
+
 var vis = new pv.Panel()
+    .data(pv.range(1, 4))
     .width(500)
     .height(100)
-    .strokeStyle("#ccc");
+    .top(5)
+    .left(5)
+    .right(5)
+    .bottom(5)
+    .fillStyle("#fff")
+    .strokeStyle("#ccc")
+    .event("mousemove", pv.Behavior.point());
 
 vis.add(pv.Layout.Force)
-    .nodes(pv.dom(diamond(3, 4, 4)).nodes())
+    .nodes(function(i) pv.dom(diamond(i, i, i)).nodes())
     .links(function() this.nodes()
         .filter(function(n) n.parentNode)
         .map(function(n) ({sourceNode: n, targetNode: n.parentNode})))
     .bound(true)
     .iterations(1e3)
   .link.add(pv.Line)
-  .node.add(pv.Dot);
+    .strokeStyle(function(d) d.active  ? "orange" : "lightgrey")
+  .node.add(pv.Dot)
+    .fillStyle(function(d) d.parentNode ? d.active ? "orange" : "white" : "steelblue")
+    .event("point", function(d) (activate(d, true), this.parent))
+    .event("unpoint", function(d) (activate(d, false), this.parent));
+
+vis.add(pv.Label)
+    .bottom(0)
+    .text(function(i) "b = " + i);
 
 vis.render();
 
     </script><p>
 
-      This example is non-interactive. It demonstrates computing a static
-      force-directed layout that is bounded by the containing panel. The data
-      set is the diamond tree used in other examples, with links between parents
-      and their children. The layout is computed using 1,000 iterations.
+      This example demonstrates computing a static force-directed layout that is
+      bounded by the containing panel, as well as dynamic properties for nodes
+      and links. The data set is the diamond tree used in other examples, with
+      links between parents and their children. The layout is computed using
+      1,000 iterations.<p>
+
+      Although the layout is static, this example is interactive. Using the
+      point and unpoint events, we can highlight the active node and its tree
+      ancestors.
 
   </body>
 </html>
