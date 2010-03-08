@@ -27,8 +27,8 @@ pv.Layout.Network = function() {
     };
 
   /**
-   * The link prototype, which renders edges between child nodes and their
-   * parents. This prototype is intended to be used with a Line mark in
+   * The link prototype, which renders edges between source nodes and target
+   * nodes. This prototype is intended to be used with a Line mark in
    * conjunction with the node prototype.
    *
    * @type pv.Mark
@@ -83,7 +83,6 @@ pv.Layout.Network.prototype = pv.extend(pv.Layout)
     .property("nodes", function(v) {
         return v.map(function(d, i) {
             if (typeof d != "object") d = {nodeValue: d};
-            d.index = i;
             d.linkDegree = 0;
             return d;
           });
@@ -103,17 +102,14 @@ pv.Layout.Network.prototype.bind = function() {
 
 /** @private Locks node and links after initialization. */
 pv.Layout.Network.prototype.init = function() {
-  var nodes = this.nodes(),
-      links = this.links(),
-      locks = this.scene.defs.locked;
-
-  /* Lock nodes and links, so they're not reset on render. */
+  var locks = this.scene.defs.locked;
   if (locks.nodes) return true;
   locks.nodes = true;
   locks.links = true;
 
   /* Compute link degrees; map source and target indexes to nodes. */
-  links.forEach(function(d) {
+  var nodes = this.nodes();
+  this.links().forEach(function(d) {
       var s = d.sourceNode || (d.sourceNode = nodes[d.source]),
           t = d.targetNode || (d.targetNode = nodes[d.target]),
           v = d.linkValue;

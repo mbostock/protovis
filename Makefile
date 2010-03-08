@@ -60,6 +60,7 @@ JS_PV_FILES = \
 	src/physics/BoundConstraint.js \
 	src/layout/Layout.js \
 	src/layout/Network.js \
+	src/layout/Hierarchy.js \
 	src/layout/Grid.js \
 	src/layout/Stack.js \
 	src/layout/Treemap.js \
