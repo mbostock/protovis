@@ -13,35 +13,53 @@ pv.SvgScene.area = function(scenes) {
   var fill = s.fillStyle, stroke = s.strokeStyle;
   if (!fill.opacity && !stroke.opacity) return e;
 
-  /* points */
-  var p1 = "", p2 = "";
-  for (var i = 0, j = scenes.length - 1; j >= 0; i++, j--) {
-    var si = scenes[i], sj = scenes[j];
-    p1 += si.left + "," + si.top + " ";
-    p2 += (sj.left + sj.width) + "," + (sj.top + sj.height) + " ";
+  /* interpolate */
+  var step = {"step-before": 1, "step-after": 2}[s.interpolate];
 
-    /* interpolate (assume linear by default) */
-    if (i < scenes.length - 1) {
-      var sk = scenes[i + 1], sl = scenes[j - 1];
-      switch (s.interpolate) {
-        case "step-before": {
-          p1 += si.left + "," + sk.top + " ";
-          p2 += (sl.left + sl.width) + "," + (sj.top + sj.height) + " ";
-          break;
-        }
-        case "step-after": {
-          p1 += sk.left + "," + si.top + " ";
-          p2 += (sj.left + sj.width) + "," + (sl.top + sl.height) + " ";
-          break;
+  /** @private Computes the path for the range [i, j]. */
+  function path(i, j) {
+    var p1 = [], p2 = [];
+    for (var k = j; i <= k; i++, j--) {
+      var si = scenes[i],
+          sj = scenes[j],
+          pi = si.left + "," + si.top,
+          pj = (sj.left + sj.width) + "," + (sj.top + sj.height);
+
+      /* interpolate */
+      if (step && (i < k)) {
+        var sk = scenes[i + 1], sl = scenes[j - 1];
+        if (step & 1) {
+          pi += "V" + sk.top;
+          pj += "H" + (sl.left + sl.width);
+        } else {
+          pi += "H" + sk.left;
+          pj += "V" + (sl.top + sl.height);
         }
       }
+
+      p1.push(pi);
+      p2.push(pj);
     }
+    return p1.concat(p2).join("L");
   }
 
-  e = this.expect(e, "polygon", {
+  /* points */
+  var d = [], si, sj;
+  for (var i = 0; i < scenes.length; i++) {
+    si = scenes[i]; if (!si.width && !si.height) continue;
+    for (var j = i + 1; j < scenes.length; j++) {
+      sj = scenes[j]; if (!sj.width && !sj.height) break;
+    }
+    if (i && (step != 2)) i--;
+    if ((j < scenes.length) && (step != 1)) j++;
+    d.push(path(i, i = j - 1));
+  }
+  if (!d.length) return e;
+
+  e = this.expect(e, "path", {
       "shape-rendering": s.antialias ? null : "crispEdges",
       "cursor": s.cursor,
-      "points": p1 + p2,
+      "d": "M" + d.join("ZM") + "Z",
       "fill": fill.color,
       "fill-opacity": fill.opacity || null,
       "stroke": stroke.color,
