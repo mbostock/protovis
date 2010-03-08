@@ -1,5 +1,59 @@
 pv.Layout.Pack = function() {
   pv.Layout.Hierarchy.call(this);
+
+  var node = this.node
+      .radius(function(n) { return n.radius; })
+      .strokeStyle("rgb(31, 119, 180)")
+      .fillStyle("rgba(31, 119, 180, .25)");
+
+  /** @private Adding to this layout implicitly adds to this node. */
+  this.add = function(type) {
+      return this.parent.add(type).extend(node);
+    };
+
+  /* Now hide references to inherited marks. */
+  delete this.node;
+  delete this.label;
+  delete this.link;
+};
+
+pv.Layout.Pack.prototype = pv.extend(pv.Layout.Hierarchy)
+    .property("spacing", Number);
+
+pv.Layout.Pack.prototype.defaults = new pv.Layout.Pack()
+    .extend(pv.Layout.Hierarchy.prototype.defaults)
+    .spacing(1);
+
+/** @private The default size function. */
+pv.Layout.Pack.prototype.$radius = function() { return 1; };
+
+// TODO is it possible for spacing to operate in pixel space?
+// Right now it appears to be multiples of the smallest radius.
+
+/**
+ * Specifies the sizing function. By default, a sizing function is disabled and
+ * all nodes are given constant size. The sizing function is invoked for each
+ * leaf node in the tree (passed to the constructor).
+ *
+ * <p>For example, if the tree data structure represents a file system, with
+ * files as leaf nodes, and each file has a <tt>bytes</tt> attribute, you can
+ * specify a size function as:
+ *
+ * <pre>.size(function(d) d.bytes)</pre>
+ *
+ * @param {function} f the new sizing function.
+ * @returns {pv.Layout.Pack} this.
+ */
+pv.Layout.Pack.prototype.size = function(f) {
+  this.$radius = typeof f == "function"
+      ? function() { return Math.sqrt(f.apply(this, arguments)); }
+      : (f = Math.sqrt(f), function() { return f; });
+  return this;
+};
+
+/** @private */
+pv.Layout.Pack.prototype.init = function() {
+  if (pv.Layout.Hierarchy.prototype.init.call(this)) return;
   var that = this, spacing;
 
   /** @private Compute the radii of the leaf nodes. */
@@ -174,69 +228,17 @@ pv.Layout.Pack = function() {
     n.radius *= k;
   }
 
-  /** @private */
-  this.init = function() {
-    if (pv.Layout.Hierarchy.prototype.init.call(this)) return;
+  var nodes = this.nodes();
+  spacing = this.spacing();
+  radii(nodes);
 
-    var nodes = this.nodes();
-    spacing = this.spacing();
-    radii(nodes);
+  var root = nodes[0];
+  root.left = 0;
+  root.top = 0;
+  root.radius = packTree(root);
 
-    var root = nodes[0];
-    root.left = 0;
-    root.top = 0;
-    root.radius = packTree(root);
-
-    var w = this.parent.width(),
-        h = this.parent.height(),
-        k = 1 / Math.max(2 * root.radius / w, 2 * root.radius / h);
-    transform(root, w / 2, h / 2, k);
-  };
-
-  var node = this.node
-      .radius(function(n) { return n.radius; })
-      .strokeStyle("rgb(31, 119, 180)")
-      .fillStyle("rgba(31, 119, 180, .25)");
-
-  /** @private Adding to this layout implicitly adds to this node. */
-  this.add = function(type) {
-      return this.parent.add(type).extend(node);
-    };
-
-  /* Now hide references to inherited marks. */
-  delete this.node;
-  delete this.label;
-  delete this.link;
-};
-
-pv.Layout.Pack.prototype = pv.extend(pv.Layout.Hierarchy)
-    .property("spacing", Number);
-
-pv.Layout.Pack.prototype.defaults = new pv.Layout.Pack()
-    .extend(pv.Layout.Hierarchy.prototype.defaults)
-    .spacing(1);
-
-/** @private The default size function. */
-pv.Layout.Pack.prototype.$radius = function() { return 1; };
-
-// TODO is it possible for spacing to operate in pixel space?
-// Right now it appears to be multiples of the smallest radius.
-
-/**
- * Specifies the sizing function. By default, a sizing function is disabled and
- * all nodes are given constant size. The sizing function is invoked for each
- * leaf node in the tree (passed to the constructor).
- *
- * <p>For example, if the tree data structure represents a file system, with
- * files as leaf nodes, and each file has a <tt>bytes</tt> attribute, you can
- * specify a size function as:
- *
- * <pre>.size(function(d) d.bytes)</pre>
- *
- * @param {function} f the new sizing function.
- * @returns {pv.Layout.Pack} this.
- */
-pv.Layout.Pack.prototype.size = function(f) {
-  this.$radius = function() { return Math.sqrt(f.apply(this, arguments)); }
-  return this;
+  var w = this.parent.width(),
+      h = this.parent.height(),
+      k = 1 / Math.max(2 * root.radius / w, 2 * root.radius / h);
+  transform(root, w / 2, h / 2, k);
 };
