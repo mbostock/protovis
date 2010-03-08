@@ -16,7 +16,7 @@ pv.Behavior.point = function(r) {
   function search(scene, index) {
     var v = scene.mark.mouse(),
         s = scene[index],
-        point = {cost: Infinity};
+        point = {cost: Infinity, distance: Infinity};
     for (var i = 0, n = s.children.length; i < n; i++) {
       var child = s.children[i], p;
       if (child.mark.type == "panel") {
