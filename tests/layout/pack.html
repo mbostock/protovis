@@ -16,7 +16,7 @@ var vis = new pv.Panel()
     .bottom(2);
 
 vis.add(pv.Layout.Pack)
-    .data(flare)
+    .data(pv.dom(flare).nodes())
     .size(Number)
   .add(pv.Dot)
     .fillStyle(function(n) n.firstChild ? "rgba(31, 119, 180, .25)" : "#ff7f0e")
