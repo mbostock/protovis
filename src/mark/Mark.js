@@ -164,13 +164,15 @@ pv.Mark.prototype.propertyMethod = function(name, def, cast) {
 
       /* If this is a def, use it rather than property. */
       if (def && this.scene) {
-        var d = this.scene.defs[name];
+        var defs = this.scene.defs;
         if (arguments.length) {
-          d.id = (v == undefined) ? 0 : pv.id();
-          d.value = ((v != null) && cast) ? cast(v) : v;
+          defs[name] = {
+            id: (v == undefined) ? 0 : pv.id(),
+            value: ((v != null) && cast) ? cast(v) : v
+          };
           return this;
         }
-        return d.value;
+        return defs[name] ? defs[name].value : null;
       }
 
       /* If arguments are specified, set the property value. */
