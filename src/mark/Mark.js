@@ -434,7 +434,6 @@ pv.Mark.prototype.scale = 1;
 pv.Mark.prototype.defaults = new pv.Mark()
     .data(function(d) { return [d]; })
     .visible(true)
-    .reverse(false)
     .antialias(true);
 
 /**

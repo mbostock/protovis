@@ -29,6 +29,9 @@ layout/Force.js
 - cooling schedule to reduce cpu usage as layout stabilizes
 - automatic support for computing layout statically
 
+layout/Stack.js
+- query visible property to drop series?
+
 layout/Treemap.js
 - use pv.Dom.Node
 

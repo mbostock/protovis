@@ -94,12 +94,6 @@ pv.Layout.Network.prototype = pv.extend(pv.Layout)
           });
       });
 
-/** @private Register an initialization hook after all properties. */
-pv.Layout.Network.prototype.bind = function() {
-  this.def("init", this.init);
-  pv.Layout.prototype.bind.call(this);
-};
-
 /** @private Locks node and links after initialization. */
 pv.Layout.Network.prototype.init = function() {
   var locks = this.scene.defs.locked;

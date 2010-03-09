@@ -1,0 +1,30 @@
+<html>
+  <head>
+    <title>Area Chart</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <link rel="stylesheet" type="text/css" href="../style.css"/>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(400)
+    .height(110);
+
+vis.add(pv.Area)
+    .data(pv.range(20).map(function(i) Math.max(0, i % 6 - 1)))
+    .left(function() this.index * 20)
+    .bottom(10)
+    .height(function(d) d * 20)
+    .strokeStyle("rgba(0,0,0,.5)")
+    .lineWidth(10);
+
+vis.render();
+
+    </script><p>
+
+    This test verifies that when an area has points zero height, the path is
+    broken up into multiple subpaths. This avoids unnecessary strokes when the
+    data is zero.
+  </body>
+</html>

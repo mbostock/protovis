@@ -16,24 +16,27 @@ body {
 
 var w = window.innerWidth,
     h = window.innerHeight,
-    n = 20, // number of layers
-    m = 400, // number of samples per layer
-    x = pv.Scale.linear(0, m - 1).range(0, w),
-    y = pv.Scale.linear(0, 2 * n).range(0, h);
+    n = 30, // number of layers
+    m = 100, // number of samples per layer
+    x = pv.Scale.linear(0, m - 1).range(0, h),
+    y = pv.Scale.linear(0, n / 2).range(0, w);
 
 var vis = new pv.Panel()
     .width(w)
     .height(h);
 
 vis.add(pv.Layout.Stack)
-    .data(layers(n, m))
-    .orient("top")
+    .data(waves(n, m))
+    .visible(function() !(this.index % 2))
+    .orient("left")
     .order("inside-out")
     .offset("wiggle")
   .add(pv.Area)
-    .left(x.by(pv.index))
-    .height(y)
-    .fillStyle(pv.ramp("#aad", "#556").by(Math.random));
+    .data(pv.identity)
+    .top(x.by(pv.index))
+    .width(y)
+    .fillStyle(pv.ramp("#aad", "#556").domain(0, n).by(pv.parent))
+    .strokeStyle("#334");
 
 vis.render();
 
