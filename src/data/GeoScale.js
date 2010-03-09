@@ -20,6 +20,7 @@ pv.Scale.geo = function() {
   var xScale = pv.Scale.linear(-1, 1).range(0, 1);
   var yScale = pv.Scale.linear(-1, 1).range(0, 1);
 
+  /* Contains the list of in-built forward projections */
   var projections = {
     mercator: function(latlon) {
       var f = radians(latlon.lat);
@@ -42,7 +43,7 @@ pv.Scale.geo = function() {
       var l = radians(latlon.lon);
       var f = radians(latlon.lat);
       return {
-          x:((l - 0) * Math.cos(f))/Math.PI,
+          x:((l) * Math.cos(f))/Math.PI,
           y:(latlon.lat/90)
       };
     },
@@ -73,8 +74,9 @@ pv.Scale.geo = function() {
           y:(latlon.lat/90)
       };
     }
-  }
+  };
 
+  /* Contains the list of in-built backward projections */
   var inverses = {
     mercator: function(xy) {
       return {
@@ -92,7 +94,7 @@ pv.Scale.geo = function() {
 
     sinusoidal: function(xy) {
       return {
-        lon:degrees(0 + (xy.x*Math.PI)/Math.cos(xy.y*Math.PI/2)),
+        lon:degrees((xy.x*Math.PI)/Math.cos(xy.y*Math.PI/2)),
         lat:xy.y*90
       };
     },
@@ -101,7 +103,7 @@ pv.Scale.geo = function() {
       var x = xy.x * (Math.PI/2);
       var y = xy.y * (Math.PI/2);
       return {
-        lon:degrees(0 + x/Math.cos(y)),
+        lon:degrees(x/Math.cos(y)),
         lat:degrees(y)
       };
     },
@@ -122,14 +124,14 @@ pv.Scale.geo = function() {
         lat:xy.y*90
       };
     }
-  }
+  };
 
   /** @private */
   function scale(latlon) {
     if(!latlonLast || latlon.lon != latlonLast.lon || latlon.lat != latlonLast.lat) {
       latlonLast = latlon;
       var p = project(latlon);
-      lastPoint = {x:xScale(p.x), y:yScale(p.y)};
+      lastPoint = new pv.Vector(xScale(p.x), yScale(p.y));
     }
 
     return lastPoint;
@@ -202,7 +204,7 @@ pv.Scale.geo = function() {
    * recommended approach. However, if the range values are derived from data,
    * you may find the second method more appropriate.
    *
-   * <p>3. <tt>range()</tt>
+   * <p>2. <tt>range()</tt>
    *
    * <p>Invoking the <tt>range</tt> method with no arguments returns the
    * current range as an array.
@@ -224,6 +226,35 @@ pv.Scale.geo = function() {
     return [tlp, brp];
   };
 
+  /**
+   * Sets or gets the projection. This method can be invoked several ways:
+   *
+   * <p>1. <tt>projection(projectionString)</tt>
+   *
+   * <p>Specifying the inbuilt projection type as a string selects that projection
+   * to be used.
+   *
+   * <p>2. <tt>projection(forward, inverse)</tt>
+   *
+   * <p>Passing a function defines that functio to be the projection <i>forward</i> should map
+   * a {@code pv.Scale.LatLon} object (in degrees) to a {@code pv.Vector}. An inverse function
+   * can be provided as the second argument this function should map a {@code pv.Vector} to a
+   * {@code pv.Scale.LatLon}. If no inverse is defined the identity function is used instead.
+   *
+   * <p>3. <tt>projection(proj4js)</tt>
+   *
+   * <p>An initialised PROJ4js projection object can be passed in.
+   *
+   * <p>4. <tt>projection()</tt>
+   *
+   * <p>Invoking the <tt>projection</tt> method with no arguments returns the
+   * current object that defined the projection.
+   *
+   * @function
+   * @name pv.Scale.geo.prototype.projection
+   * @param {...} range... range values.
+   * @returns {pv.Scale.geo} <tt>this</tt>, or the current range.
+   */
   scale.projection = function(p, i) {
     if(arguments.length) {
       proj = p;
@@ -259,7 +290,7 @@ pv.Scale.geo = function() {
       return this;
     }
     return proj;
-  }
+  };
 
   /**
    * Returns a view of this scale by the specified accessor function <tt>f</tt>.
