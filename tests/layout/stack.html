@@ -2,25 +2,41 @@
   <head>
     <title>Stack</title>
     <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../layers.js"></script>
+    <style type="text/css">
+
+body {
+  margin: 0;
+}
+
+    </style>
   </head>
   <body>
     <script type="text/javascript+protovis">
 
-var vis = new pv.Panel()
-    .width(150)
-    .height(150);
+var w = window.innerWidth,
+    h = window.innerHeight,
+    n = 20, // number of layers
+    m = 400, // number of samples per layer
+    x = pv.Scale.linear(0, m - 1).range(0, w),
+    y = pv.Scale.linear(0, 2 * n).range(0, h);
 
-vis.add(pv.Panel)
-    .data([[1, 1.2, 1.7, 1.5, 1.7],
-           [.5, 1, .8, 1.1, 1.3],
-           [.2, .5, .8, .9, 1]])
-  .add(pv.Layout.Stack)
-    .offset(0)
+var vis = new pv.Panel()
+    .width(w)
+    .height(h);
+
+vis.add(pv.Layout.Stack)
+    .data(layers(n, m))
+    .orient("top")
+    .order("inside-out")
+    .offset("wiggle")
   .add(pv.Area)
-    .height(function(d) d * 30)
-    .left(function() this.index * 35);
+    .left(x.by(pv.index))
+    .height(y)
+    .fillStyle(pv.ramp("#aad", "#556").by(Math.random));
 
 vis.render();
+
 
     </script>
   </body>
