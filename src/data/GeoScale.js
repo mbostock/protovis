@@ -33,8 +33,8 @@ pv.Scale.geo = function() {
       var l = radians(latlon.lon);
       var f = radians(latlon.lat);
       return {
-    	  x:(latlon.lon/180),
-    	  y:(Math.sin(f))
+          x:(latlon.lon/180),
+          y:(Math.sin(f))
       };
     },
 
@@ -42,8 +42,8 @@ pv.Scale.geo = function() {
       var l = radians(latlon.lon);
       var f = radians(latlon.lat);
       return {
-    	  x:((l - 0) * Math.cos(f))/Math.PI,
-    	  y:(latlon.lat/90)
+          x:((l - 0) * Math.cos(f))/Math.PI,
+          y:(latlon.lat/90)
       };
     },
 
@@ -52,8 +52,8 @@ pv.Scale.geo = function() {
       var f = radians(latlon.lat);
       var a = Math.acos(Math.cos(f) * Math.cos(l/2));
       return {
-    	  x:(a!=0.0?(Math.cos(f) * Math.sin(l/2) * a / Math.sin(a)):0)/(Math.PI/2),
-    	  y:(a!=0.0?(Math.sin(f) * a / Math.sin(a)):0)/(Math.PI/2)
+          x:(a!=0.0?(Math.cos(f) * Math.sin(l/2) * a / Math.sin(a)):0)/(Math.PI/2),
+          y:(a!=0.0?(Math.sin(f) * a / Math.sin(a)):0)/(Math.PI/2)
       };
     },
 
@@ -62,15 +62,15 @@ pv.Scale.geo = function() {
       var f = radians(latlon.lat);
       var C = Math.sqrt(1 + Math.cos(f) * Math.cos(l/2));
       return {
-    	  x:(2 * Math.SQRT2 * Math.cos(f) * Math.sin(l/2) / C)/3,
-    	  y:(Math.SQRT2 * Math.sin(f) / C)/1.5
+          x:(2 * Math.SQRT2 * Math.cos(f) * Math.sin(l/2) / C)/3,
+          y:(Math.SQRT2 * Math.sin(f) / C)/1.5
       };
     },
 
     none: function(latlon) {
       return {
-    	  x:(latlon.lon/180),
-    	  y:(latlon.lat/90)
+          x:(latlon.lon/180),
+          y:(latlon.lat/90)
       };
     }
   }
@@ -85,15 +85,15 @@ pv.Scale.geo = function() {
 
     gallPeters: function(xy) {
       return {
-    	lon:xy.x*180,
-    	lat:degrees(Math.asin(xy.y))
+        lon:xy.x*180,
+        lat:degrees(Math.asin(xy.y))
       };
     },
 
     sinusoidal: function(xy) {
       return {
-    	lon:degrees(0 + (xy.x*Math.PI)/Math.cos(xy.y*Math.PI/2)),
-    	lat:xy.y*90
+        lon:degrees(0 + (xy.x*Math.PI)/Math.cos(xy.y*Math.PI/2)),
+        lat:xy.y*90
       };
     },
 
@@ -101,8 +101,8 @@ pv.Scale.geo = function() {
       var x = xy.x * (Math.PI/2);
       var y = xy.y * (Math.PI/2);
       return {
-    	lon:degrees(0 + x/Math.cos(y)),
-    	lat:degrees(y)
+        lon:degrees(0 + x/Math.cos(y)),
+        lat:degrees(y)
       };
     },
 
@@ -111,15 +111,15 @@ pv.Scale.geo = function() {
       var y = xy.y * 1.5;
       var z = Math.sqrt(1 - x*x/16 - y*y/4);
       return {
-    	lon:degrees(2 * Math.atan2(z*x, 2*(2*z*z - 1))),
-    	lat:degrees(Math.asin(z*y))
+        lon:degrees(2 * Math.atan2(z*x, 2*(2*z*z - 1))),
+        lat:degrees(Math.asin(z*y))
       };
     },
 
     none: function(xy) {
       return {
-    	lon:xy.x*180,
-    	lat:xy.y*90
+        lon:xy.x*180,
+        lat:xy.y*90
       };
     }
   }
@@ -131,15 +131,15 @@ pv.Scale.geo = function() {
       var p = project(latlon);
       lastPoint = {x:xScale(p.x), y:yScale(p.y)};
     }
-	
+
     return lastPoint;
   }
 
   scale.invert = function(p) {
     var p = {x:xScale.invert(p.x), y:yScale.invert(p.y)};
     return inverse(p);
-  };  
-  
+  };
+
   /** @private */
   function radians(degrees) {
     return(Math.PI * degrees / 180);
@@ -177,15 +177,15 @@ pv.Scale.geo = function() {
    * @returns {pv.Scale.ordinal} <tt>this</tt>, or the current domain.
    */
   scale.domain = function(array, f) {
-	if (arguments.length) {
+    if (arguments.length) {
       d = (array instanceof Array)
           ? ((arguments.length > 1) ? map(array, f) : array)
           : Array.prototype.slice.call(arguments);
-      
+
       if(project) {
         points = d.map(project);
         xScale.domain(points, function(p) { return p.x });
-	    yScale.domain(points, function(p) { return p.y });
+        yScale.domain(points, function(p) { return p.y });
       }
       lastLon = undefined; // invalidate the cache
       return this;
@@ -217,7 +217,7 @@ pv.Scale.geo = function() {
       tlp = tl;
       brp = br;
       xScale.range(tlp.x, brp.x);
-  	  yScale.range(brp.y, tlp.y);
+        yScale.range(brp.y, tlp.y);
       lastLon = undefined; // invalidate the cache
       return this;
     }
@@ -251,7 +251,7 @@ pv.Scale.geo = function() {
         project = projections[proj];
         invert = inverses[proj];
       }
-      
+
       // reapply the domain
       if(d) this.domain(d);
 
