@@ -76,27 +76,20 @@ pv.Layout.Stack.prototype.prebind = function(bind, child) {
     "height": 1
   };
 
-  /* Cache the original property value. */
-  var properties = child.binds.optional, values = {};
-  for (var i = 0; i < properties.length; i++) {
-    var p = properties[i];
-    if (p.name in positionals) {
-      if (p.original) { // our dynamic bind
-        values[p.name] = p.original;
-      } else {
-        values[p.name] = p.value;
-        delete o[p.name];
-      }
-    }
+  /** @private Returns a constant property function for the specified value. */
+  function constant(x) {
+    return function() { return x; };
   }
 
   /* Override the positional properties with dynamics. */
+  var properties = child.binds.properties;
   for (var name in positionals) {
-    if (!(name in o)) {
-      var v = values[name],
-          p = o[name] = child.propertyValue(name, v);
-      p.type = 2;
-      p.original = v || true; // TODO handle constants
+    var p = properties[name];
+    if (!p.original) { // ignore our dynamic binds
+      var v = p.type & 1 ? p.value : constant(p.value),
+          d = o[name] = child.propertyValue(name, v);
+      d.type = 3;
+      d.original = v;
     }
   }
 
@@ -219,7 +212,6 @@ pv.Layout.Stack.prototype.prebuild = function(data, child) {
   }
 
   /* Substitute the dynamic properties so the child can build. */
-  pdy.type = px.type = py.type = 3;
   px.value = function() { return x[this.index]; };
   py.value = function() { return y[this.parent.index][this.index]; };
   pdy.value = function() { return dy[this.parent.index][this.index]; };
