@@ -14,8 +14,8 @@ pv.Layout.Network = function() {
       .data(function() { return that.nodes(); })
       .strokeStyle("#1f77b4")
       .fillStyle("#fff")
-      .left(function(n) { return n.left; })
-      .top(function(n) { return n.top; });
+      .left(function(n) { return n.x; })
+      .top(function(n) { return n.y; });
 
   /** @private Propagate layout mark references to node children. */
   this.node.add = function(type) {

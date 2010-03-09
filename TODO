@@ -5,17 +5,8 @@ data/Scale.js
 - consolidate code between scale implementations
 
 layout/Layot.js
-- use def("init") to initialize rather than depend on data (link inheritance)
-- consolidate code between layout implementations
-- documentation across implementations
-- allow or require pv.Dom.Node as input, rather than maps?
-- standardize node.depth, node.size? otherwise hide internal attributes?
 - allow interactive expanding / collapsing of tree nodes?
-- layouts should allow user to change the associated data
-- layouts should not cache by default
-- configuration should be specified by property functions for panels
-
-layout/Horizon.js
+- migrate all implementations to extend pv.Layout
 
 layout/Tree.js
 - allow depth and breadth offset to be computed automatically
@@ -23,21 +14,15 @@ layout/Tree.js
 layout/{Cluster,Partition}.js
 - support customized inner/outer radius
 
-layout/Force.js
-- specify nodes and links using methods, rather than ctor arguments?
-- behaves differently from pv.dom, kind of confusing
-- cooling schedule to reduce cpu usage as layout stabilizes
-- automatic support for computing layout statically
-
-layout/Stack.js
-- query visible property to drop series?
-
 layout/Treemap.js
 - use pv.Dom.Node
 
 mark/Mark.js
 - antialias doesn't always work as expected; requires pixel rounding?
 - event("ignore") to disable pointer-events?
+
+mark/Area.js
+- {min,max}:name psuedo-anchors for center labeling?
 
 behavior/*
 - documentation, implementation, etc.

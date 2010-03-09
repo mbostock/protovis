@@ -26,8 +26,8 @@ pv.Layout.Arc = function() {
       }
     }
 
-    /** @private Returns the left position, given the breadth. */
-    function left(b) {
+    /** @private Returns the x-position, given the breadth. */
+    function x(b) {
       switch (orient) {
       case "top":
       case "bottom": return b * w;
@@ -37,8 +37,8 @@ pv.Layout.Arc = function() {
       }
     }
 
-    /** @private Returns the top position, given the breadth. */
-    function top(b) {
+    /** @private Returns the y-position, given the breadth. */
+    function y(b) {
       switch (orient) {
       case "top": return 0;
       case "bottom": return h;
@@ -48,11 +48,11 @@ pv.Layout.Arc = function() {
       }
     }
 
-    /* Populate the left, top and angle attributes. */
+    /* Populate the x, y and angle attributes. */
     for (var i = 0, n = nodes.length; i < n; i++) {
       var breadth = (i + .5) / n, node = nodes[i];
-      node.left = left(breadth);
-      node.top = top(breadth);
+      node.x = x(breadth);
+      node.y = y(breadth);
       node.angle = angle(breadth);
     }
   };
