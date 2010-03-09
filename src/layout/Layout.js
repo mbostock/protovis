@@ -18,7 +18,8 @@ pv.Layout.prototype.property = function(name, cast) {
 pv.Layout.prototype.bind = function() {
   pv.Mark.prototype.bind.call(this);
   var binds = this.binds, data = binds.data, value = data.value;
-  this.binds.data = {
+  binds.data = {
+    id: data.id,
     type: data.type | 1,
     value: data.type & 1
         ? function() { var x = value.apply(this, arguments); this.init(x); return x; }

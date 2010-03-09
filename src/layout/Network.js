@@ -94,12 +94,20 @@ pv.Layout.Network.prototype = pv.extend(pv.Layout)
           });
       });
 
+/** @private If the nodes property is changed, unlock the links too. */
+pv.Layout.Network.prototype.bind = function() {
+  pv.Layout.prototype.bind.call(this);
+  var binds = this.binds,
+      nodes = binds.properties.nodes,
+      links = binds.properties.links;
+  if (links && (nodes.id > links.id)) links.id = nodes.id;
+};
+
 /** @private Locks node and links after initialization. */
 pv.Layout.Network.prototype.init = function() {
-  var locks = this.scene.defs.locked;
-  if (locks.nodes) return true;
-  locks.nodes = true;
-  locks.links = true;
+  var defs = this.scene.defs;
+  if (defs.nodes.id) return true;
+  defs.links.id = defs.nodes.id = pv.id();
 
   /* Compute link degrees; map source and target indexes to nodes. */
   var nodes = this.nodes();

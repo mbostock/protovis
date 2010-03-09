@@ -127,3 +127,8 @@ pv.listener = function(listener) {
       }
     };
 };
+
+/** @private Returns a locally-unique positive id. */
+pv.id = function() {
+  var id = 1; return function() { return id++; };
+}();
