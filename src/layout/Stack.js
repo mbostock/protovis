@@ -19,13 +19,6 @@ pv.Layout.Stack = function() {
   pv.Layout.call(this);
   var that = this;
 
-  /** @private Invoke the prebuild hook when the data property is evaluated. */
-  function data() {
-    var data = that.scene.$stack.data;
-    that.prebuild(data, this.children[0]);
-    return data;
-  }
-
   /**
    * Adds a mark of the specified type to a new panel, using this stack layout.
    * Any positional properties defined on the returned mark will be evaluated
@@ -33,7 +26,15 @@ pv.Layout.Stack = function() {
    * implied offset.
    */
   this.add = function(type) {
-      var mark = that.parent.add(pv.Panel).data(data).add(type).data(pv.identity),
+      var mark = that.parent.add(pv.Panel)
+              .data(function() {
+                  var data = that.scene.$stack.data;
+                  that.prebuild(data, this.children[0]);
+                  return data;
+                })
+              .visible(function() { return that.scene[this.index].visible; })
+            .add(type)
+              .data(pv.identity),
           bind = mark.bind;
       mark.bind = function() { that.prebind(bind, this); };
       return mark;
@@ -117,6 +118,7 @@ pv.Layout.Stack.prototype.prebuild = function(data, child) {
       x = new Array(n),
       y = [],
       dy = [],
+      parent = child.parent,
       properties = child.binds.$stack;
 
   /* Find the property definitions for dynamic substitution. */
@@ -134,18 +136,20 @@ pv.Layout.Stack.prototype.prebuild = function(data, child) {
   for (var i = 0; i < n; i++) {
     dy[i] = [];
     y[i] = [];
-    x[i] = [];
+    parent.index = i;
     for (var j = 0; j < m; j++) {
       stack[0] = data[i][j];
       pv.Mark.prototype.index = child.index = j;
-      x[i][j] = fx.apply(child, stack);
-      dy[i][j] = fy.apply(child, stack);
+      if (!i) x[j] = fx.apply(child, stack);
+      dy[i][j] = this.scene[i].visible ? fy.apply(child, stack) : 0;
     }
   }
+  delete parent.index;
   delete child.index;
   stack.shift();
 
   /* order */
+  var index;
   switch (this.order()) {
     case "inside-out": {
       var max = dy.map(function(v) { return pv.max.index(v); }),
@@ -165,11 +169,10 @@ pv.Layout.Stack.prototype.prebuild = function(data, child) {
           bottoms.push(j);
         }
       }
-      var order = bottoms.reverse().concat(tops)
-      dy = order.map(function(i) { return dy[i]; });
-      y = order.map(function(i) { return y[i]; });
+      index = bottoms.reverse().concat(tops);
       break;
     }
+    default: index = pv.range(n); break;
   }
 
   /* offset */
@@ -178,47 +181,47 @@ pv.Layout.Stack.prototype.prebuild = function(data, child) {
       for (var j = 0; j < m; j++) {
         var o = 0;
         for (var i = 0; i < n; i++) o += dy[i][j];
-        y[0][j] = (h - o) / 2;
+        y[index[0]][j] = (h - o) / 2;
       }
       break;
     }
     case "wiggle": {
       var o = 0;
       for (var i = 0; i < n; i++) o += dy[i][0];
-      y[0][0] = o = (h - o) / 2;
+      y[index[0]][0] = o = (h - o) / 2;
       for (var j = 1; j < m; j++) {
-        var s1 = 0, s2 = 0, dx = x[0][j] - x[0][j - 1];
+        var s1 = 0, s2 = 0, dx = x[j] - x[j - 1];
         for (var i = 0; i < n; i++) s1 += dy[i][j];
         for (var i = 0; i < n; i++) {
-          var s3 = (dy[i][j] - dy[i][j - 1]) / (2 * dx);
+          var s3 = (dy[index[i]][j] - dy[index[i]][j - 1]) / (2 * dx);
           for (var k = 0; k < i; k++) {
-            s3 += (dy[k][j] - dy[k][j - 1]) / dx;
+            s3 += (dy[index[k]][j] - dy[index[k]][j - 1]) / dx;
           }
-          s2 += s3 * dy[i][j];
+          s2 += s3 * dy[index[i]][j];
         }
-        y[0][j] = o -= s1 ? s2 / s1 * dx : 0;
+        y[index[0]][j] = o -= s1 ? s2 / s1 * dx : 0;
       }
       break;
     }
     default: {
-      for (var j = 0; j < m; j++) y[0][j] = 0;
+      for (var j = 0; j < m; j++) y[index[0]][j] = 0;
       break;
     }
   }
 
   /* Propagate the offset to the other series. */
   for (var j = 0; j < m; j++) {
-    var o = y[0][j];
+    var o = y[index[0]][j];
     for (var i = 1; i < n; i++) {
-      o += dy[i - 1][j];
-      y[i][j] = o;
+      o += dy[index[i - 1]][j];
+      y[index[i]][j] = o;
     }
   }
 
   /* Substitute the dynamic properties so the child can build. */
   pdy.type = px.type = py.type = 3;
-  pdy.value = function() { return dy[this.parent.index][this.index]; };
-  px.value = function() { return x[this.parent.index][this.index]; };
+  px.value = function() { return x[this.index]; };
   py.value = function() { return y[this.parent.index][this.index]; };
+  pdy.value = function() { return dy[this.parent.index][this.index]; };
   return data;
 };
