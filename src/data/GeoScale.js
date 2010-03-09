@@ -1,6 +1,6 @@
 /**
  * Returns the specified geographical projection. The arguments to this
- * constructor are optional, and equivalent to calling {@link #projection} .
+ * constructor are optional, and equivalent to calling {@link #domain} .
  *
  * @class Represents a geographical scale. <style
  * type="text/css">sub{line-height:0}</style> A geographical scale represents the
@@ -11,45 +11,45 @@
  * the screen.
  *
  *
- * @param {...} projection... projection type.
+ * @param {pv.LatLon...} domain... domain values.
  * @returns {pv.Scale.geo} a geographical scale.
  */
 
 pv.Scale.geo = function() {
-  var tlp, brp, d = undefined, proj, project, invert, lonlatLast = undefined, lastPoint;
+  var tlp, brp, d = undefined, proj, project, invert, latlonLast = undefined, lastPoint;
   var xScale = pv.Scale.linear(-1, 1).range(0, 1);
   var yScale = pv.Scale.linear(-1, 1).range(0, 1);
 
   var projections = {
-    mercator: function(lonlat) {
-      var f = radians(lonlat.lat);
+    mercator: function(latlon) {
+      var f = radians(latlon.lat);
       return {
-        x:(lonlat.lon/180),
+        x:(latlon.lon/180),
         y:((Math.log(Math.tan(Math.PI/4 + f/2)))/Math.PI)
       };
     },
 
-    gallPeters: function(lonlat) {
-      var l = radians(lonlat.lon);
-      var f = radians(lonlat.lat);
+    gallPeters: function(latlon) {
+      var l = radians(latlon.lon);
+      var f = radians(latlon.lat);
       return {
-    	  x:(lonlat.lon/180),
+    	  x:(latlon.lon/180),
     	  y:(Math.sin(f))
       };
     },
 
-    sinusoidal: function(lonlat) {
-      var l = radians(lonlat.lon);
-      var f = radians(lonlat.lat);
+    sinusoidal: function(latlon) {
+      var l = radians(latlon.lon);
+      var f = radians(latlon.lat);
       return {
     	  x:((l - 0) * Math.cos(f))/Math.PI,
-    	  y:(lonlat.lat/90)
+    	  y:(latlon.lat/90)
       };
     },
 
-    aitoff: function(lonlat) {
-      var l = radians(lonlat.lon);
-      var f = radians(lonlat.lat);
+    aitoff: function(latlon) {
+      var l = radians(latlon.lon);
+      var f = radians(latlon.lat);
       var a = Math.acos(Math.cos(f) * Math.cos(l/2));
       return {
     	  x:(a!=0.0?(Math.cos(f) * Math.sin(l/2) * a / Math.sin(a)):0)/(Math.PI/2),
@@ -57,9 +57,9 @@ pv.Scale.geo = function() {
       };
     },
 
-    hammer: function(lonlat) {
-      var l = radians(lonlat.lon);
-      var f = radians(lonlat.lat);
+    hammer: function(latlon) {
+      var l = radians(latlon.lon);
+      var f = radians(latlon.lat);
       var C = Math.sqrt(1 + Math.cos(f) * Math.cos(l/2));
       return {
     	  x:(2 * Math.SQRT2 * Math.cos(f) * Math.sin(l/2) / C)/3,
@@ -67,10 +67,10 @@ pv.Scale.geo = function() {
       };
     },
 
-    none: function(lonlat) {
+    none: function(latlon) {
       return {
-    	  x:(lonlat.lon/180),
-    	  y:(lonlat.lat/90)
+    	  x:(latlon.lon/180),
+    	  y:(latlon.lat/90)
       };
     }
   }
@@ -125,10 +125,10 @@ pv.Scale.geo = function() {
   }
 
   /** @private */
-  function scale(lonlat) {
-    if(!lonlatLast || lonlat.lon != lonlatLast.lon || lonlat.lat != lonlatLast.lat) {
-      lonlatLast = lonlat;
-      var p = project(lonlat);
+  function scale(latlon) {
+    if(!latlonLast || latlon.lon != latlonLast.lon || latlon.lat != latlonLast.lat) {
+      latlonLast = latlon;
+      var p = project(latlon);
       lastPoint = {x:xScale(p.x), y:yScale(p.y)};
     }
 	
@@ -236,8 +236,8 @@ pv.Scale.geo = function() {
         }
       } else if(typeof proj == "object" && proj.hasOwnProprety('readyToUse')) {
         // treat proj as a proj4js porjection
-        project = function(lonlat) {
-          var xy = {x:radians(lonlat.lon), y:radians(lonlat.lat)};
+        project = function(latlon) {
+          var xy = {x:radians(latlon.lon), y:radians(latlon.lat)};
           proj.forward(xy);
           return xy;
         };
