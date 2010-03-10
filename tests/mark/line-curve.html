@@ -1,0 +1,57 @@
+<html>
+  <head>
+    <title>Line Chart</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var data = pv.range(0, 10, .5).map(function(x) {
+        return {x: x, y: Math.sin(x) + Math.random() + 2};
+      }),
+    w = 800,
+    h = 400,
+    x = pv.Scale.linear(data, function(d) d.x).range(0, w),
+    y = pv.Scale.linear(0, 4.5).range(0, h);
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .bottom(20)
+    .left(20)
+    .right(10)
+    .top(5);
+
+vis.add(pv.Rule)
+    .data(y.ticks())
+    .visible(function() !(this.index % 2))
+    .bottom(function(d) Math.round(y(d)) - .5)
+    .strokeStyle("#eee")
+  .anchor("left").add(pv.Label)
+    .text(function(d) d.toFixed(1));
+
+vis.add(pv.Rule)
+    .data(x.ticks())
+    .visible(function(d) d > 0)
+    .left(function(d) Math.round(x(d)) - .5)
+    .strokeStyle("#eee")
+  .anchor("bottom").add(pv.Label)
+    .text(function(d) d.toFixed());
+
+vis.add(pv.Line)
+    .data(data)
+    .left(function(d) x(d.x))
+    .bottom(function(d) y(d.y))
+    .interpolate("curve")
+    .lineWidth(2);
+
+vis.add(pv.Dot)
+    .data(data)
+    .left(function(d) x(d.x))
+    .bottom(function(d) y(d.y));
+
+vis.render();
+
+    </script>
+  </body>
+</html>

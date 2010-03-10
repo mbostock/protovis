@@ -16,8 +16,29 @@ pv.SvgScene.line = function(scenes) {
 
   /* points */
   var d = "M" + s.left + "," + s.top;
-  for (var i = 1; i < scenes.length; i++) {
-    d += this.pathSegment(scenes[i - 1], scenes[i]);
+  if(s.interpolate != "curve") {
+    for (var i = 1; i < scenes.length; i++) {
+      d += this.pathSegment(scenes[i - 1], scenes[i]);
+    }
+  } else {
+    var s0 = scenes[0];
+    var s1 = s0;
+    var s2 = s0;
+    var s3 = scenes[1];
+    d += this.basisCurveTo(s0, s1, s2, s3);
+    for (var i = 2; i < scenes.length; i++) {
+      s0 = s1;
+      s1 = s2;
+      s2 = s3;
+      s3 = scenes[i];
+      d += this.basisCurveTo(s0, s1, s2, s3);
+    }
+    for (var j = 0; j < 2; j++) {
+      s0 = s1;
+      s1 = s2;
+      s2 = s3;
+      d += this.basisCurveTo(s0, s1, s2, s3);
+    }
   }
 
   e = this.expect(e, "path", {
@@ -31,6 +52,41 @@ pv.SvgScene.line = function(scenes) {
       "stroke-width": stroke.opacity ? s.lineWidth / this.scale : null
     });
   return this.append(e, scenes, 0);
+};
+
+/**
+ * Matrix to transform basis (b-spline) control points to bezier control
+ * points. Derived from FvD 11.2.8.
+ */
+pv.SvgScene.basisToBezier = [
+  [ 1.0/6.0, 4.0/6.0, 1.0/6.0, 0.0/6.0 ],
+  [ 0.0/6.0, 4.0/6.0, 2.0/6.0, 0.0/6.0 ],
+  [ 0.0/6.0, 2.0/6.0, 4.0/6.0, 0.0/6.0 ],
+  [ 0.0/6.0, 1.0/6.0, 4.0/6.0, 1.0/6.0 ]
+];
+
+/**
+ * Converts the specified b-spline curve segment to a bezier curve compatible
+ * with SVG "C".
+ */
+pv.SvgScene.basisCurveTo = function(s0, s1, s2, s3) {
+  var b1 = this.weightCurve(this.basisToBezier[1], s0, s1, s2, s3);
+  var b2 = this.weightCurve(this.basisToBezier[2], s0, s1, s2, s3);
+  var b  = this.weightCurve(this.basisToBezier[3], s0, s1, s2, s3);
+  //this.bezierCurveTo(b1.x, b1.y, b2.x, b2.y, b.x, b.y);
+  return "C" + b1.x + "," + b1.y + "," + b2.x + "," + b2.y + "," + b.x + "," + b.y;
+};
+
+/**
+ * Returns the point that is the weighted sum of the specified control points,
+ * using the specified weights. This method requires that there are four weights
+ * and four control points.
+ */
+pv.SvgScene.weightCurve = function(w, s1, s2, s3, s4) {
+  return {
+    x:(w[0] * s1.left + w[1] * s2.left + w[2] * s3.left + w[3] * s4.left),
+    y:(w[0] * s1.top  + w[1] * s2.top  + w[2] * s3.top  + w[3] * s4.top )
+  };
 };
 
 pv.SvgScene.lineSegment = function(scenes) {
