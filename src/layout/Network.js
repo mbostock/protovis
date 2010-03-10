@@ -65,7 +65,7 @@ pv.Layout.Network = function() {
       .extend(this.node)
       .textMargin(7)
       .textBaseline("middle")
-      .text(function(n) { return n.nodeName; })
+      .text(function(n) { return n.nodeName || n.nodeValue; })
       .textAngle(function(n) {
           var a = n.angle;
           return pv.Wedge.upright(a) ? a : (a + Math.PI);
