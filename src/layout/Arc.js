@@ -1,12 +1,13 @@
 /** @class Layout for arc diagrams. */
 pv.Layout.Arc = function() {
   pv.Layout.Network.call(this);
-  var orient, directed, reverse;
+  var interpolate, directed, reverse;
 
   /** @private */
   this.init = function() {
-    orient = this.orient();
+    var orient = this.orient();
     directed = this.directed();
+    interpolate = orient == "radial" ? "linear" : "polar";
     reverse = orient == "right" || orient == "top";
     if (pv.Layout.Network.prototype.init.call(this)) return;
 
@@ -49,11 +50,11 @@ pv.Layout.Arc = function() {
     }
 
     /* Populate the x, y and angle attributes. */
-    for (var i = 0, n = nodes.length; i < n; i++) {
-      var breadth = (i + .5) / n, node = nodes[i];
-      node.x = x(breadth);
-      node.y = y(breadth);
-      node.angle = angle(breadth);
+    for (var i = 0; i < nodes.length; i++) {
+      var breadth = (i + .5) / nodes.length, n = nodes[i];
+      n.x = x(breadth);
+      n.y = y(breadth);
+      n.angle = angle(breadth);
     }
   };
 
@@ -61,12 +62,9 @@ pv.Layout.Arc = function() {
   this.link
       .data(function(p) {
           var s = p.sourceNode, t = p.targetNode;
-          return reverse != (directed || (s.index < t.index))
-              ? [s, t] : [t, s];
+          return reverse != (directed || (s.index < t.index)) ? [s, t] : [t, s];
         })
-      .interpolate(function() {
-          return (orient == "radial") ? "linear" : "polar";
-        });
+      .interpolate(function() { return interpolate; });
 };
 
 pv.Layout.Arc.prototype = pv.extend(pv.Layout.Network)

@@ -83,6 +83,7 @@ pv.Layout.Network.prototype = pv.extend(pv.Layout)
     .property("nodes", function(v) {
         return v.map(function(d, i) {
             if (typeof d != "object") d = {nodeValue: d};
+            d.index = i;
             d.linkDegree = 0;
             return d;
           });

@@ -1,0 +1,31 @@
+<html>
+  <head>
+    <title>Directed Arc</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(400)
+    .height(400)
+    .top(100)
+    .left(100)
+    .right(100)
+    .bottom(100);
+
+vis.add(pv.Panel)
+    .data(["top", "bottom", "left", "right"])
+  .add(pv.Layout.Arc)
+    .nodes([0, 1, 2, 3])
+    .links([{source:0, target:1}, {source:3, target:2}])
+    .orient(pv.identity)
+  .link.add(pv.Line)
+  .node.add(pv.Dot)
+  .label.add(pv.Label);
+
+vis.render();
+
+    </script>
+  </body>
+</html>
