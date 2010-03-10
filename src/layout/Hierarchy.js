@@ -18,10 +18,14 @@ pv.Layout.Hierarchy.prototype.bind = function() {
       id: pv.id(),
       type: 1,
       value: function() {
-          return this.nodes()
-              .filter(function(n) { return n.parentNode; })
-              .map(function(n) { return {sourceNode: n, targetNode: n.parentNode}; });
-        }
+        return this.nodes()
+          .filter(function(n) { return n.parentNode; })
+          .map(function(n) { return {
+            sourceNode: n,
+            targetNode: n.parentNode,
+            linkDegree: 1
+          }; });
+      }
     });
   }
 };
