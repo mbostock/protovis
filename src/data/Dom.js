@@ -57,9 +57,10 @@ pv.Dom.prototype.leaf = function(f) {
  * Applies the DOM operator, returning the root node.
  *
  * @returns {pv.Dom.Node} the root node.
+ * @param {string} [nodeName] optional node name for the root.
  */
-pv.Dom.prototype.root = function() {
-  var leaf = this.$leaf;
+pv.Dom.prototype.root = function(nodeName) {
+  var leaf = this.$leaf, root = recurse(this.$map);
 
   /** @private */
   function recurse(map) {
@@ -71,7 +72,8 @@ pv.Dom.prototype.root = function() {
     return n;
   }
 
-  return recurse(this.$map);
+  root.nodeName = nodeName;
+  return root;
 };
 
 /**
@@ -81,16 +83,7 @@ pv.Dom.prototype.root = function() {
  * @returns {array} the array of nodes in preorder traversal.
  */
 pv.Dom.prototype.nodes = function() {
-  var array = [];
-
-  /** @private */
-  function flatten(node) {
-    array.push(node);
-    node.childNodes.forEach(flatten);
-  }
-
-  flatten(this.root(), array);
-  return array;
+  return this.root().nodes();
 };
 
 /**
@@ -299,6 +292,7 @@ pv.Dom.Node.prototype.visitAfter = function(f) {
  * sort operation.
  *
  * @param {function} f a comparator function.
+ * @returns this
  */
 pv.Dom.Node.prototype.sort = function(f) {
   if (this.firstChild) {
@@ -315,4 +309,19 @@ pv.Dom.Node.prototype.sort = function(f) {
     delete p.nextSibling;
     p.sort(f);
   }
+  return this;
+};
+
+/** Returns all descendants of this node in preorder traversal. */
+pv.Dom.Node.prototype.nodes = function() {
+  var array = [];
+
+  /** @private */
+  function flatten(node) {
+    array.push(node);
+    node.childNodes.forEach(flatten);
+  }
+
+  flatten(this, array);
+  return array;
 };
