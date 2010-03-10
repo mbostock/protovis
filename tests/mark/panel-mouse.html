@@ -1,0 +1,53 @@
+<html>
+  <head>
+    <title>Panel Transform</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var lines = pv.range(0, 1001, 100),
+    mouse;
+
+var vis = new pv.Panel()
+    .width(1000)
+    .height(1000)
+    .top(10)
+    .left(10)
+    .right(10)
+    .bottom(10)
+    .event("mousedown", pv.Behavior.pan())
+    .event("mousewheel", pv.Behavior.zoom())
+    .event("mousemove", function() (mouse = this.mouse(), this))
+    .fillStyle("#fff");
+
+vis.add(pv.Rule)
+    .data(lines)
+    .strokeStyle(function() this.index % 2 ? "#aaa" : "#666")
+    .left(pv.identity)
+  .add(pv.Rule)
+    .left(null)
+    .top(pv.identity);
+
+vis.add(pv.Panel)
+    .data(lines)
+  .add(pv.Dot)
+    .data(lines)
+    .left(function(x, y) x)
+    .top(function(x, y) y)
+  .add(pv.Label)
+    .text(function(x, y) x + ", " + y);
+
+vis.add(pv.Dot)
+    .data(function() [mouse])
+    .visible(pv.identity)
+    .left(function(d) d.x)
+    .top(function(d) d.y)
+  .add(pv.Label)
+    .text(function(d) Math.round(d.x) + ", " + Math.round(d.y));
+
+vis.render();
+
+    </script>
+  </body>
+</html>

@@ -6,45 +6,49 @@
   <body>
     <script type="text/javascript+protovis">
 
-var lines = pv.range(0, 1001, 100),
-    mouse;
+var w = 800,
+    h = 800,
+    t, // the inverted transform
+    x = pv.Scale.linear(0, w).range(0, w),
+    y = pv.Scale.linear(0, h).range(0, h);
 
 var vis = new pv.Panel()
-    .width(1000)
-    .height(1000)
-    .top(10)
-    .left(10)
-    .right(10)
-    .bottom(10)
+    .width(w)
+    .height(h)
+    .top(30)
+    .left(40)
+    .right(20)
+    .bottom(20)
+    .strokeStyle("#ccc");
+
+var view = vis.add(pv.Panel)
+    .overflow("hidden")
+    .fillStyle("#fff")
     .event("mousedown", pv.Behavior.pan())
-    .event("mousewheel", pv.Behavior.zoom())
-    .event("mousemove", function() (mouse = this.mouse(), this))
-    .fillStyle("#fff");
+    .event("mousewheel", pv.Behavior.zoom());
+
+view.anchor("center").add(pv.Dot)
+    .data(pv.range(100).map(function() ({x:Math.random(), y:Math.random()})))
+    .left(function(d) d.x * w)
+    .top(function(d) d.y * h)
+    .fillStyle(pv.rgb(255, 255, 255, .5))
+    .radius(function() 5 / this.scale);
 
 vis.add(pv.Rule)
-    .data(lines)
-    .strokeStyle(function() this.index % 2 ? "#aaa" : "#666")
-    .left(pv.identity)
-  .add(pv.Rule)
-    .left(null)
-    .top(pv.identity);
+    .def("init", function() t = view.transform().invert())
+    .data(function() x.domain(t.x, w * t.k + t.x).ticks())
+    .strokeStyle("#ccc")
+    .left(x)
+  .anchor("bottom").add(pv.Label);
 
-vis.add(pv.Panel)
-    .data(lines)
-  .add(pv.Dot)
-    .data(lines)
-    .left(function(x, y) x)
-    .top(function(x, y) y)
-  .add(pv.Label)
-    .text(function(x, y) x + ", " + y);
+vis.add(pv.Rule)
+    .data(function() y.domain(t.y, h * t.k + t.y).ticks())
+    .strokeStyle("#ccc")
+    .top(y)
+  .anchor("left").add(pv.Label);
 
-vis.add(pv.Dot)
-    .data(function() [mouse])
-    .visible(pv.identity)
-    .left(function(d) d.x)
-    .top(function(d) d.y)
-  .add(pv.Label)
-    .text(function(d) Math.round(d.x) + ", " + Math.round(d.y));
+/* Hack! Need a way to control which panel gets rendered with pan & zoom! */
+view.render = function() { vis.render(); };
 
 vis.render();
 
