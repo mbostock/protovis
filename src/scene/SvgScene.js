@@ -11,9 +11,6 @@ pv.Scene = pv.SvgScene = {
   /** The pre-multipled scale, based on any enclosing transforms. */
   scale: 1,
 
-  /** A globally unique ID used to refer to clip-paths and such. */
-  id: 0,
-
   /** Implicit values for SVG and CSS properties. */
   implicit: {
     svg: {

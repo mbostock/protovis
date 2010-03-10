@@ -14,8 +14,8 @@ pv.Layout.Network = function() {
       .data(function() { return that.nodes(); })
       .strokeStyle("#1f77b4")
       .fillStyle("#fff")
-      .left(function(n) { return n.left; })
-      .top(function(n) { return n.top; });
+      .left(function(n) { return n.x; })
+      .top(function(n) { return n.y; });
 
   /** @private Propagate layout mark references to node children. */
   this.node.add = function(type) {
@@ -65,7 +65,7 @@ pv.Layout.Network = function() {
       .extend(this.node)
       .textMargin(7)
       .textBaseline("middle")
-      .text(function(n) { return n.nodeValue; })
+      .text(function(n) { return n.nodeName || n.nodeValue; })
       .textAngle(function(n) {
           var a = n.angle;
           return pv.Wedge.upright(a) ? a : (a + Math.PI);
@@ -83,6 +83,7 @@ pv.Layout.Network.prototype = pv.extend(pv.Layout)
     .property("nodes", function(v) {
         return v.map(function(d, i) {
             if (typeof d != "object") d = {nodeValue: d};
+            d.index = i;
             d.linkDegree = 0;
             return d;
           });
@@ -94,18 +95,20 @@ pv.Layout.Network.prototype = pv.extend(pv.Layout)
           });
       });
 
-/** @private Register an initialization hook after all properties. */
+/** @private If the nodes property is changed, unlock the links too. */
 pv.Layout.Network.prototype.bind = function() {
-  this.def("init", this.init);
   pv.Layout.prototype.bind.call(this);
+  var binds = this.binds,
+      nodes = binds.properties.nodes,
+      links = binds.properties.links;
+  if (links && (nodes.id > links.id)) links.id = nodes.id;
 };
 
 /** @private Locks node and links after initialization. */
 pv.Layout.Network.prototype.init = function() {
-  var locks = this.scene.defs.locked;
-  if (locks.nodes) return true;
-  locks.nodes = true;
-  locks.links = true;
+  var defs = this.scene.defs;
+  if (defs.nodes.id) return true;
+  defs.links.id = defs.nodes.id = pv.id();
 
   /* Compute link degrees; map source and target indexes to nodes. */
   var nodes = this.nodes();

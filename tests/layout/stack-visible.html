@@ -1,0 +1,47 @@
+<html>
+  <head>
+    <title>Stack</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../layers.js"></script>
+    <style type="text/css">
+
+body {
+  margin: 0;
+}
+
+    </style>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var w = window.innerWidth,
+    h = window.innerHeight,
+    n = 30, // number of layers
+    m = 100, // number of samples per layer
+    x = pv.Scale.linear(0, m - 1).range(0, h),
+    y = pv.Scale.linear(0, n / 2).range(0, w);
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(h);
+
+vis.add(pv.Layout.Stack)
+    .data(waves(n, m))
+    .visible(function() !(this.index % 2))
+    .orient("left")
+    .order("inside-out")
+    .offset("wiggle")
+  .add(pv.Area)
+    .data(pv.identity)
+    .top(x.by(pv.index))
+    .width(y)
+    .fillStyle(pv.ramp("#aad", "#556").domain(0, n).by(pv.parent))
+    .strokeStyle("#334");
+
+vis.render();
+
+
+    </script>
+  </body>
+</html>
+

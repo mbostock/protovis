@@ -166,12 +166,13 @@ pv.Mark.prototype.propertyMethod = function(name, def, cast) {
       if (def && this.scene) {
         var defs = this.scene.defs;
         if (arguments.length) {
-          if (v == undefined) delete defs.locked[name];
-          else defs.locked[name] = true;
-          defs.values[name] = ((v != null) && cast) ? cast(v) : v;
+          defs[name] = {
+            id: (v == undefined) ? 0 : pv.id(),
+            value: ((v != null) && cast) ? cast(v) : v
+          };
           return this;
         }
-        return defs.values[name];
+        return defs[name] ? defs[name].value : null;
       }
 
       /* If arguments are specified, set the property value. */
@@ -190,7 +191,7 @@ pv.Mark.prototype.propertyMethod = function(name, def, cast) {
 
 /** @private Sets the value of the property <i>name</i> to <i>v</i>. */
 pv.Mark.prototype.propertyValue = function(name, v) {
-  var properties = this.$properties, p = {name: name, value: v};
+  var properties = this.$properties, p = {name: name, id: pv.id(), value: v};
   for (var i = 0; i < properties.length; i++) {
     if (properties[i].name == name) {
       properties.splice(i, 1);
@@ -434,7 +435,6 @@ pv.Mark.prototype.scale = 1;
 pv.Mark.prototype.defaults = new pv.Mark()
     .data(function(d) { return [d]; })
     .visible(true)
-    .reverse(false)
     .antialias(true);
 
 /**
@@ -747,7 +747,7 @@ pv.Mark.prototype.bind = function() {
       for (var i = properties.length - 1; i >= 0 ; i--) {
         var p = properties[i];
         if (!(p.name in seen)) {
-          seen[p.name] = 1;
+          seen[p.name] = p;
           switch (p.name) {
             case "data": data = p; break;
             case "visible": visible = p; break;
@@ -768,8 +768,7 @@ pv.Mark.prototype.bind = function() {
   var mark = this;
   do for (var name in mark.properties) {
     if (!(name in seen)) {
-      seen[name] = 1;
-      types[2].push({name: name, type: 2, value: null});
+      types[2].push(seen[name] = {name: name, type: 2, value: null});
     }
   } while (mark = mark.proto);
 
@@ -781,6 +780,7 @@ pv.Mark.prototype.bind = function() {
 
   /* Setup binds to evaluate constants before functions. */
   this.binds = {
+    properties: seen,
     data: data,
     defs: defs,
     required: [visible],
@@ -838,13 +838,14 @@ pv.Mark.prototype.build = function() {
   /* Evaluate defs. */
   if (this.binds.defs.length) {
     var defs = scene.defs;
-    if (!defs) scene.defs = defs = {values: {}, locked: {}};
+    if (!defs) scene.defs = defs = {};
     for (var i = 0; i < this.binds.defs.length; i++) {
-      var d = this.binds.defs[i];
-      if (!(d.name in defs.locked)) {
-        defs.values[d.name] = d.type == 1
-            ? d.value.apply(this, stack)
-            : d.value;
+      var p = this.binds.defs[i], d = defs[p.name];
+      if (!d || (p.id > d.id)) {
+        defs[p.name] = {
+          id: 0, // this def will be re-evaluated on next build
+          value: (p.type & 1) ? p.value.apply(this, stack) : p.value
+        };
       }
     }
   }
@@ -882,7 +883,7 @@ pv.Mark.prototype.buildProperties = function(s, properties) {
     var p = properties[i], v = p.value; // assume case 2 (constant)
     switch (p.type) {
       case 0:
-      case 1: v = this.scene.defs.values[p.name]; break;
+      case 1: v = this.scene.defs[p.name].value; break;
       case 3: v = v.apply(this, pv.Mark.stack); break;
     }
     s[p.name] = v;

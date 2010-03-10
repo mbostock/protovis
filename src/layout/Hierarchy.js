@@ -8,13 +8,24 @@ pv.Layout.Hierarchy.prototype = pv.extend(pv.Layout.Network);
 /** @private Alias the data property to nodes. */
 pv.Layout.Hierarchy.prototype.data = pv.Layout.Hierarchy.prototype.nodes;
 
-/** @private Compute the default links from child to parent. */
-pv.Layout.Hierarchy.prototype.init = function() {
-  var defs = this.scene.defs.values;
-  if (!defs.links) {
-    defs.links = defs.nodes
-        .filter(function(n) { return n.parentNode; })
-        .map(function(n) { return {sourceNode: n, targetNode: n.parentNode}; });
+/** @private Register an implicit links property. */
+pv.Layout.Hierarchy.prototype.bind = function() {
+  pv.Layout.Network.prototype.bind.call(this);
+  var binds = this.binds;
+  if (!binds.properties.links) {
+    binds.defs.push({
+      name: "links",
+      id: pv.id(),
+      type: 1,
+      value: function() {
+        return this.nodes()
+          .filter(function(n) { return n.parentNode; })
+          .map(function(n) { return {
+            sourceNode: n,
+            targetNode: n.parentNode,
+            linkDegree: 1
+          }; });
+      }
+    });
   }
-  pv.Layout.Network.prototype.init.call(this);
 };
