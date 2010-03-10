@@ -24,7 +24,7 @@ vis.add(pv.Layout.Tree)
     .strokeStyle(function(d) d.active ? "#f00" : "#aaa")
     .fillStyle(function(d) d.active ? "#fdd" : "#ddd")
     .event("mouseover", function(d) (d.active = true, this))
-    .event("mouseout", function(d) (d.active = false, this))
+    .event("mouseout", function(d) (d.active = false, this));
 
 vis.render();
 

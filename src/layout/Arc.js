@@ -1,7 +1,7 @@
 /** @class Layout for arc diagrams. */
 pv.Layout.Arc = function() {
   pv.Layout.Network.call(this);
-  var interpolate, directed, reverse;
+  var interpolate, directed, reverse, init = this.init;
 
   /** @private Cache layout state to optimize properties. */
   this.init = function() {
@@ -9,7 +9,7 @@ pv.Layout.Arc = function() {
     directed = this.directed();
     interpolate = orient == "radial" ? "linear" : "polar";
     reverse = orient == "right" || orient == "top";
-    pv.Layout.Arc.prototype.init.call(this);
+    init.call(this);
   };
 
   /* Override link properties to handle directedness and orientation. */
