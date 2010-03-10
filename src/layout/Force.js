@@ -19,21 +19,21 @@ pv.Layout.Force.prototype.init = function() {
       h = this.parent.height(),
       x = w / 2,
       y = h / 2;
-  for (var i = 0, n = nodes.length; i < n; i++) {
-    var node = nodes[i], angle = Math.random() * 2 * Math.PI;
-    node.x = x += 10 * (w / h) * Math.cos(angle);
-    node.y = y += 10 * (h / w) * Math.sin(angle);
+  for (var i = 0; i < nodes.length; i++) {
+    var n = nodes[i], angle = Math.random() * 2 * Math.PI;
+    n.x = x += 10 * (w / h) * Math.cos(angle);
+    n.y = y += 10 * (h / w) * Math.sin(angle);
   }
 
   /* Initialize the simulation. */
-  nodes.sim = pv.simulation(nodes);
-  nodes.sim.force(pv.Force.drag());
-  nodes.sim.force(pv.Force.charge());
-  nodes.sim.force(pv.Force.spring().links(links));
+  var sim = pv.simulation(nodes);
+  sim.force(pv.Force.drag());
+  sim.force(pv.Force.charge());
+  sim.force(pv.Force.spring().links(links));
 
   /* Optionally add bound constraint. TODO: better padding. */
   if (this.bound()) {
-    nodes.sim.constraint(pv.Constraint.bound().x(6, w - 6).y(6, h - 6));
+    sim.constraint(pv.Constraint.bound().x(6, w - 6).y(6, h - 6));
   }
 
   /*
@@ -47,17 +47,17 @@ pv.Layout.Force.prototype.init = function() {
   var n = this.iterations();
   if (n == null) {
     function speed(n) { return n.fixed ? 1 : n.vx * n.vx + n.vy * n.vy; }
-    nodes.sim.step(); // compute initial velocities
+    sim.step(); // compute initial velocities
     var v = 1, min = 1e-4 * (links.length + 1), parent = this.parent;
     setInterval(function() {
         if (v > min) {
           var then = Date.now();
-          do { nodes.sim.step(); } while (Date.now() - then < 20);
+          do { sim.step(); } while (Date.now() - then < 20);
           parent.render();
         }
         v = pv.max(nodes, speed);
       }, 42);
   } else for (var i = 0; i < n; i++) {
-    nodes.sim.step();
+    sim.step();
   }
 }

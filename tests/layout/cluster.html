@@ -15,21 +15,16 @@ var vis = new pv.Panel()
     .top(10)
     .bottom(10);
 
-var tree = pv.Layout.cluster(flare)
-    .sort(function(a, b) pv.naturalOrder(a.nodeName, b.nodeName))
-    .groupLeaves(true)
-    .orient("left");
-
-vis.add(pv.Panel)
-    .data(tree.links)
-  .add(pv.Line)
-    .extend(tree.link)
-    .lineWidth(1);
-
-vis.add(pv.Dot)
-    .extend(tree.node)
-  .add(pv.Label)
-    .extend(tree.label);
+vis.add(pv.Layout.Cluster)
+    .data(pv.dom(flare)
+        .root("flare")
+        .sort(function(a, b) pv.naturalOrder(a.nodeName, b.nodeName))
+        .nodes())
+    .group(true)
+    .orient("left")
+  .link.add(pv.Line)
+  .node.add(pv.Dot)
+  .label.add(pv.Label);
 
 vis.render();
 

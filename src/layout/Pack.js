@@ -7,9 +7,7 @@ pv.Layout.Pack = function() {
       .fillStyle("rgba(31, 119, 180, .25)");
 
   /** @private Adding to this layout implicitly adds to this node. */
-  this.add = function(type) {
-      return this.parent.add(type).extend(node);
-    };
+  this.add = function(type) { return this.parent.add(type).extend(node); };
 
   /* Now hide references to inherited marks. */
   delete this.node;

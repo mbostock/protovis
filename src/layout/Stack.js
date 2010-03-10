@@ -108,9 +108,10 @@ pv.Layout.Stack.prototype.prebuild = function(data, child) {
       n = data.length,
       m = data[0].length,
       h = this.parent[horizontal ? "height" : "width"](),
-      x = new Array(n),
+      x = [],
       y = [],
       dy = [],
+      z = [],
       parent = child.parent,
       properties = child.binds.$stack;
 
@@ -129,12 +130,13 @@ pv.Layout.Stack.prototype.prebuild = function(data, child) {
   for (var i = 0; i < n; i++) {
     dy[i] = [];
     y[i] = [];
+    z[i] = this.scene[i].visible;
     parent.index = i;
     for (var j = 0; j < m; j++) {
       stack[0] = data[i][j];
       pv.Mark.prototype.index = child.index = j;
       if (!i) x[j] = fx.apply(child, stack);
-      dy[i][j] = this.scene[i].visible ? fy.apply(child, stack) : 0;
+      dy[i][j] = z[i] ? fy.apply(child, stack) : 0;
     }
   }
   delete parent.index;
@@ -193,6 +195,22 @@ pv.Layout.Stack.prototype.prebuild = function(data, child) {
           s2 += s3 * dy[index[i]][j];
         }
         y[index[0]][j] = o -= s1 ? s2 / s1 * dx : 0;
+      }
+      break;
+    }
+    case "expand": {
+      var nz = pv.sum(z);
+      for (var j = 0; j < m; j++) {
+        y[index[0]][j] = 0;
+        var k = 0;
+        for (var i = 0; i < n; i++) k += dy[i][j];
+        if (k) {
+          k = h / k;
+          for (var i = 0; i < n; i++) dy[i][j] *= k;
+        } else {
+          k = h / nz;
+          for (var i = 0; i < n; i++) dy[i][j] = z[i] ? k : 0;
+        }
       }
       break;
     }

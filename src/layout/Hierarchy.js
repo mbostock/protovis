@@ -17,11 +17,23 @@ pv.Layout.Hierarchy.prototype.bind = function() {
       name: "links",
       id: pv.id(),
       type: 1,
-      value: function() {
-          return this.nodes()
-              .filter(function(n) { return n.parentNode; })
-              .map(function(n) { return {sourceNode: n, targetNode: n.parentNode}; });
-        }
+      value: pv.Layout.Hierarchy.links
     });
   }
+};
+
+/**
+ * The default links property; computes links using the <tt>parentNode</tt>
+ * attribute.
+ */
+pv.Layout.Hierarchy.links = function() {
+  return this.nodes()
+      .filter(function(n) { return n.parentNode; })
+      .map(function(n) {
+          return {
+              sourceNode: n,
+              targetNode: n.parentNode,
+              linkDegree: 1
+            };
+      });
 };

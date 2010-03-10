@@ -4,7 +4,7 @@ data/Transform.js
 data/Scale.js
 - consolidate code between scale implementations
 
-layout/Layot.js
+layout/Layout.js
 - allow interactive expanding / collapsing of tree nodes?
 - migrate all implementations to extend pv.Layout
 

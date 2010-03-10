@@ -11,13 +11,11 @@ var vis = new pv.Panel()
     .height(100)
     .width(1200);
 
-var tree = pv.Layout.cluster(flare)
-    .sort(function(a, b) pv.naturalOrder(a.nodeName, b.nodeName))
-    .groupLeaves(true)
-    .orient("top");
-
-vis.add(pv.Bar)
-    .extend(tree.fill);
+vis.add(pv.Layout.Cluster.Fill)
+    .data(pv.dom(flare).root("flare").nodes())
+    .group(true)
+    .orient("top")
+  .add(pv.Bar);
 
 vis.render();
 
