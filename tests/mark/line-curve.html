@@ -42,7 +42,16 @@ vis.add(pv.Line)
     .data(data)
     .left(function(d) x(d.x))
     .bottom(function(d) y(d.y))
-    .interpolate("curve")
+    .interpolate("bspline")
+    .strokeStyle("#3f3")
+    .lineWidth(2);
+
+vis.add(pv.Line)
+    .data(data)
+    .left(function(d) x(d.x))
+    .bottom(function(d) y(d.y))
+    .interpolate("cspline")
+    .strokeStyle("#f33")
     .lineWidth(2);
 
 vis.add(pv.Dot)

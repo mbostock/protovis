@@ -16,11 +16,7 @@ pv.SvgScene.line = function(scenes) {
 
   /* points */
   var d = "M" + s.left + "," + s.top;
-  if(s.interpolate != "curve") {
-    for (var i = 1; i < scenes.length; i++) {
-      d += this.pathSegment(scenes[i - 1], scenes[i]);
-    }
-  } else {
+  if(s.interpolate == "bspline") {
     var s0 = scenes[0];
     var s1 = s0;
     var s2 = s0;
@@ -38,6 +34,22 @@ pv.SvgScene.line = function(scenes) {
       s1 = s2;
       s2 = s3;
       d += this.basisCurveTo(s0, s1, s2, s3);
+    }
+  } else if(s.interpolate == "cspline" && scenes.length > 2) {
+      var a = 0.2;
+      var i;
+      d += "C" + (scenes[0].left + (scenes[1].left - scenes[0].left)*a) + "," + (scenes[0].top + (scenes[1].top - scenes[0].top)*a)
+         + "," + (scenes[1].left + (scenes[0].left - scenes[2].left)*a) + "," + (scenes[1].top + (scenes[0].top - scenes[2].top)*a)
+         + "," + scenes[1].left + "," + scenes[1].top;
+      for (i = 2; i < scenes.length-1; i++) {
+        d += "S" + (scenes[i].left + (scenes[i-1].left - scenes[i+1].left)*a) + "," + (scenes[i].top + (scenes[i-1].top - scenes[i+1].top)*a)
+           + "," + scenes[i].left + "," + scenes[i].top;
+      }
+      d += "S" + (scenes[i].left + (scenes[i-1].left - scenes[i].left)*a) + "," + (scenes[i].top + (scenes[i-1].top - scenes[i].top)*a)
+         + "," + scenes[i].left + "," + scenes[i].top;
+  } else {
+    for (var i = 1; i < scenes.length; i++) {
+      d += this.pathSegment(scenes[i - 1], scenes[i]);
     }
   }
 
