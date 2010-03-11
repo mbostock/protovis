@@ -19,7 +19,7 @@ layout/Treemap.js
 
 mark/Mark.js
 - antialias doesn't always work as expected; requires pixel rounding?
-- event("ignore") to disable pointer-events?
+- events property: "ignore", "all", "visible"
 
 mark/Area.js
 - {min,max}:name psuedo-anchors for center labeling?

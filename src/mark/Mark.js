@@ -976,19 +976,24 @@ pv.Mark.prototype.buildImplied = function(s) {
  * @returns {pv.Vector} the mouse location.
  */
 pv.Mark.prototype.mouse = function() {
+
+  /* Compute xy-coordinates relative to the panel. */
   var x = pv.event.pageX,
       y = pv.event.pageY,
-      t = pv.Transform.identity,
-      panel = (this instanceof pv.Panel) ? this : this.parent,
-      node = this.root.canvas();
+      n = this.root.canvas();
   do {
-    x -= node.offsetLeft;
-    y -= node.offsetTop;
-  } while (node = node.offsetParent);
-  do {
-    t = t.translate(panel.left(), panel.top()).times(panel.transform());
-  } while (panel = panel.parent);
+    x -= n.offsetLeft;
+    y -= n.offsetTop;
+  } while (n = n.offsetParent);
+
+  /* Compute the inverse transform of all enclosing panels. */
+  var t = pv.Transform.identity,
+      p = this.transform ? this : this.parent
+      pz = [];
+  do { pz.push(p); } while (p = p.parent);
+  while (p = pz.pop()) t = t.translate(p.left(), p.top()).times(p.transform());
   t = t.invert();
+
   return pv.vector(x * t.k + t.x, y * t.k + t.y);
 };
 
