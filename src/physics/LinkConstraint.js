@@ -1,5 +1,6 @@
 pv.Constraint.link = function(d) {
-  var constraint = {};
+  var a = .1, // default alpha
+      constraint = {};
 
   if (!arguments.length) d = 20; // default rest length
 
@@ -9,6 +10,14 @@ pv.Constraint.link = function(d) {
       return constraint;
     }
     return links;
+  };
+
+  constraint.alpha = function(x) {
+    if (arguments.length) {
+      a = Number(x);
+      return constraint;
+    }
+    return a;
   };
 
   constraint.apply = function(particles) {
