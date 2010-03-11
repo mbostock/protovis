@@ -86,10 +86,9 @@ pv.Layout.Stack.prototype.prebind = function(bind, child) {
   for (var name in positionals) {
     var p = properties[name];
     if (!p.original) { // ignore our dynamic binds
-      var v = p.type & 1 ? p.value : constant(p.value),
-          d = o[name] = child.propertyValue(name, v);
-      d.type = 3;
-      d.original = v;
+      var d = o[name] = child.propertyValue(name, p.value);
+      d.type = p.type;
+      d.original = p.value;
     }
   }
 
@@ -117,12 +116,11 @@ pv.Layout.Stack.prototype.prebuild = function(data, child) {
 
   /* Find the property definitions for dynamic substitution. */
   var pdy = properties[horizontal ? "height" : "width"],
-      px = horizontal
-          ? properties.left || properties.right
-          : properties.top || properties.bottom,
-      py = properties[orient],
-      fy = pdy.original,
-      fx = px.original;
+      px = horizontal ? properties.left : properties.top,
+      py = properties[orient];
+
+  /* If the x-property is null (the default), use the alternative. */
+  if (px.value == null) px = horizontal ? properties.right : properties.bottom;
 
   /* Iterate over the data, evaluating the x and dy functions. */
   var stack = pv.Mark.stack;
@@ -135,8 +133,8 @@ pv.Layout.Stack.prototype.prebuild = function(data, child) {
     for (var j = 0; j < m; j++) {
       stack[0] = data[i][j];
       pv.Mark.prototype.index = child.index = j;
-      if (!i) x[j] = fx.apply(child, stack);
-      dy[i][j] = z[i] ? fy.apply(child, stack) : 0;
+      if (!i) x[j] = px.original.apply(child, stack);
+      dy[i][j] = z[i] ? pdy.original.apply(child, stack) : 0;
     }
   }
   delete parent.index;
@@ -230,6 +228,7 @@ pv.Layout.Stack.prototype.prebuild = function(data, child) {
   }
 
   /* Substitute the dynamic properties so the child can build. */
+  px.type = py.type = pdy.type = 3;
   px.value = function() { return x[this.index]; };
   py.value = function() { return y[this.parent.index][this.index]; };
   pdy.value = function() { return dy[this.parent.index][this.index]; };
