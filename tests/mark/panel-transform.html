@@ -8,7 +8,7 @@
 
 var w = 800,
     h = 800,
-    t, // the inverted transform
+    t = pv.Transform.identity, // the inverted transform
     x = pv.Scale.linear(0, w).range(0, w),
     y = pv.Scale.linear(0, h).range(0, h);
 
@@ -21,21 +21,7 @@ var vis = new pv.Panel()
     .bottom(20)
     .strokeStyle("#ccc");
 
-var view = vis.add(pv.Panel)
-    .overflow("hidden")
-    .fillStyle("#fff")
-    .event("mousedown", pv.Behavior.pan())
-    .event("mousewheel", pv.Behavior.zoom());
-
-view.anchor("center").add(pv.Dot)
-    .data(pv.range(100).map(function() ({x:Math.random(), y:Math.random()})))
-    .left(function(d) d.x * w)
-    .top(function(d) d.y * h)
-    .fillStyle(pv.rgb(255, 255, 255, .5))
-    .radius(function() 5 / this.scale);
-
 vis.add(pv.Rule)
-    .def("init", function() t = view.transform().invert())
     .data(function() x.domain(t.x, w * t.k + t.x).ticks())
     .strokeStyle("#ccc")
     .left(x)
@@ -47,8 +33,32 @@ vis.add(pv.Rule)
     .top(y)
   .anchor("left").add(pv.Label);
 
+var view = vis.add(pv.Panel)
+    .overflow("hidden")
+    .fillStyle("rgba(0,0,0,.001)") // pointer-events = "all"
+    .event("mousedown", pv.Behavior.pan())
+    .event("mousewheel", pv.Behavior.zoom());
+
+view.anchor("center").add(pv.Dot)
+    .data(pv.range(100).map(function() ({x:Math.random(), y:Math.random()})))
+    .left(function(d) d.x * w)
+    .top(function(d) d.y * h)
+    .fillStyle(pv.rgb(255, 255, 255, .5))
+    .radius(function() 5 / this.scale);
+
+/* Hack! Need a way get the transform as it is set. */
+view.transform = function() {
+  var f = view.transform;
+  return function(v) {
+    if (v) t = v.invert();
+    return f.apply(this, arguments);
+  };
+}();
+
 /* Hack! Need a way to control which panel gets rendered with pan & zoom! */
-view.render = function() { vis.render(); };
+view.render = function() {
+  vis.render();
+};
 
 vis.render();
 
