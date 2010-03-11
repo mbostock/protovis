@@ -16,7 +16,7 @@ pv.SvgScene.line = function(scenes) {
 
   /* points */
   var d = "M" + s.left + "," + s.top;
-  if(s.interpolate == "bspline") {
+  if(s.interpolate == "basis" && scenes.length > 2) {
     var s0 = scenes[0];
     var s1 = s0;
     var s2 = s0;
@@ -35,7 +35,7 @@ pv.SvgScene.line = function(scenes) {
       s2 = s3;
       d += this.basisCurveTo(s0, s1, s2, s3);
     }
-  } else if(s.interpolate == "cspline" && scenes.length > 2) {
+  } else if(s.interpolate == "cardinal" && scenes.length > 2) {
       var a = 0.2;
       var i;
       d += "C" + (scenes[0].left + (scenes[1].left - scenes[0].left)*a) + "," + (scenes[0].top + (scenes[1].top - scenes[0].top)*a)

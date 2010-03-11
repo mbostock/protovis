@@ -137,6 +137,22 @@ pv.Scale.geo = function() {
     return lastPoint;
   }
 
+  /**
+   * Inverts the specified value in the output range, returning the
+   * corresponding value in the input domain. This is frequently used to convert
+   * the mouse location (see {@link pv.Mark#mouse}) to a value in the input
+   * domain. Inversion is only supported for numeric ranges, and not colors.
+   *
+   * <p>Note that this method does not do any rounding or bounds checking. If
+   * the input domain is discrete (e.g., an array index), the returned value
+   * should be rounded. If the specified <tt>y</tt> value is outside the range,
+   * the returned value may be equivalently outside the input domain.
+   *
+   * @function
+   * @name pv.Scale.linear.prototype.invert
+   * @param {number} y a value in the output range (a pixel location).
+   * @returns {number} a value in the input domain.
+   */
   scale.invert = function(p) {
     var p = {x:xScale.invert(p.x), y:yScale.invert(p.y)};
     return inverse(p);
@@ -265,7 +281,7 @@ pv.Scale.geo = function() {
         } else {
             invert = inverses["none"];
         }
-      } else if(typeof proj == "object" && proj.hasOwnProprety('readyToUse')) {
+      } else if(typeof proj == "object" && proj.hasOwnProperty('readyToUse')) {
         // treat proj as a proj4js porjection
         project = function(latlon) {
           var xy = {x:radians(latlon.lon), y:radians(latlon.lat)};

@@ -42,7 +42,7 @@ vis.add(pv.Line)
     .data(data)
     .left(function(d) x(d.x))
     .bottom(function(d) y(d.y))
-    .interpolate("bspline")
+    .interpolate("basis")
     .strokeStyle("#3f3")
     .lineWidth(2);
 
@@ -50,7 +50,7 @@ vis.add(pv.Line)
     .data(data)
     .left(function(d) x(d.x))
     .bottom(function(d) y(d.y))
-    .interpolate("cspline")
+    .interpolate("cardianl")
     .strokeStyle("#f33")
     .lineWidth(2);
 

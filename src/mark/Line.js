@@ -74,6 +74,9 @@ pv.Line.prototype.type = "line";
  * default, producing a straight line between points. For piecewise constant
  * functions (i.e., step functions), either "step-before" or "step-after" can be
  * specified. To draw a clockwise circular arc between points, specify "polar".
+ * Two curve interpelations are also supported, the values "basis" and "cardinal"
+ * will interpolate using a B-Spline and a Cardinal spline interpolation
+ * respectively.
  *
  * <p>This property is <i>fixed</i>. See {@link pv.Mark}.
  *
