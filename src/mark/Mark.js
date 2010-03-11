@@ -988,7 +988,7 @@ pv.Mark.prototype.mouse = function() {
 
   /* Compute the inverse transform of all enclosing panels. */
   var t = pv.Transform.identity,
-      p = this.transform ? this : this.parent
+      p = this.properties.transform ? this : this.parent
       pz = [];
   do { pz.push(p); } while (p = p.parent);
   while (p = pz.pop()) t = t.translate(p.left(), p.top()).times(p.transform());
