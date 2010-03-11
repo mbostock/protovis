@@ -1,0 +1,31 @@
+<html>
+  <head>
+    <title>Horizon</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var w = 300,
+    h = 35,
+    data = pv.range(101).map(function(d) Math.sin(d / 2) + Math.sin(d / 7)),
+    x = pv.Scale.linear(data, pv.index).range(0, w).by(pv.index),
+    y = pv.Scale.linear(data).range(-h, h);
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(2 * h);
+
+vis.add(pv.Layout.Horizon)
+    .mode("color")
+    .bands(1)
+  .add(pv.Area)
+    .data(data)
+    .left(x)
+    .height(y);
+
+vis.render();
+
+    </script>
+  </body>
+</html>
