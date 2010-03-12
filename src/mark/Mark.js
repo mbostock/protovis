@@ -515,10 +515,27 @@ pv.Mark.prototype.def = function(name, v) {
 };
 
 /**
- * Returns an anchor with the specified name. While anchor names are typically
- * constants, the anchor name is a true property, which means you can specify a
- * function to compute the anchor name dynamically. See the
- * {@link pv.Anchor#name} property for details.
+ * Returns an anchor with the specified name. All marks support the five
+ * standard anchor names:<ul>
+ *
+ * <li>top
+ * <li>left
+ * <li>center
+ * <li>bottom
+ * <li>right
+ *
+ * </ul>In addition to positioning properties (left, right, top bottom), the
+ * anchors support text rendering properties (text-align, text-baseline). Text is
+ * rendered to appear inside the mark by default.
+ *
+ * <p>To facilitate stacking, anchors are defined in terms of their opposite
+ * edge. For example, the top anchor defines the bottom property, such that the
+ * mark extends upwards; the bottom anchor instead defines the top property,
+ * such that the mark extends downwards. See also {@link pv.Layout.Stack}.
+ *
+ * <p>While anchor names are typically constants, the anchor name is a true
+ * property, which means you can specify a function to compute the anchor name
+ * dynamically. See the {@link pv.Anchor#name} property for details.
  *
  * @param {string} name the anchor name; either a string or a property function.
  * @returns {pv.Anchor} the new anchor.
@@ -532,6 +549,52 @@ pv.Mark.prototype.anchor = function(name) {
       })
     .visible(function() {
         return target.instance().visible;
+      })
+    .left(function() {
+        var s = target.instance(), w = s.width || 0;
+        switch (this.name()) {
+          case "bottom":
+          case "top":
+          case "center": return s.left + (this.properties.width ? 0 : w / 2);
+          case "right": return s.left + w;
+        }
+        return null;
+      })
+    .top(function() {
+        var s = target.instance(), h = s.height || 0;
+        switch (this.name()) {
+          case "left":
+          case "right":
+          case "center": return s.top + (this.properties.height ? 0 : h / 2);
+          case "bottom": return s.top + h;
+        }
+        return null;
+      })
+    .right(function() {
+        var s = target.instance();
+        return this.name() == "left" ? s.right + (s.width || 0) : null;
+      })
+    .bottom(function() {
+        var s = target.instance();
+        return this.name() == "top" ? s.bottom + (s.height || 0) : null;
+      })
+    .textAlign(function() {
+        switch (this.name()) {
+          case "bottom":
+          case "top":
+          case "center": return "center";
+          case "right": return "right";
+        }
+        return "left";
+      })
+    .textBaseline(function() {
+        switch (this.name()) {
+          case "right":
+          case "left":
+          case "center": return "middle";
+          case "top": return "top";
+        }
+        return "bottom";
       });
 };
 

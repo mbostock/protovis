@@ -123,27 +123,7 @@ pv.Rule.prototype.defaults = new pv.Rule()
  * @param {string} name the anchor name; either a string or a property function.
  * @returns {pv.Anchor}
  */
-pv.Rule.prototype.anchor = function(name) {
-  return pv.Bar.prototype.anchor.call(this, name)
-    .textAlign(function(d) {
-        switch (this.name()) {
-          case "left": return "right";
-          case "bottom":
-          case "top":
-          case "center": return "center";
-          case "right": return "left";
-        }
-      })
-    .textBaseline(function(d) {
-        switch (this.name()) {
-          case "right":
-          case "left":
-          case "center": return "middle";
-          case "top": return "bottom";
-          case "bottom": return "top";
-        }
-      });
-};
+pv.Rule.prototype.anchor = pv.Line.prototype.anchor;
 
 /** @private Sets width or height based on orientation. */
 pv.Rule.prototype.buildImplied = function(s) {

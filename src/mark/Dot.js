@@ -149,13 +149,7 @@ pv.Dot.prototype.anchor = function(name) {
       })
     .right(function() {
         var s = target.instance();
-        switch (this.name()) {
-          case "bottom":
-          case "top":
-          case "center": return s.right;
-          case "left": return s.right + s.radius;
-        }
-        return null;
+        return this.name() == "left" ? s.right + s.radius : null;
       })
     .top(function() {
         var s = target.instance();
@@ -169,13 +163,7 @@ pv.Dot.prototype.anchor = function(name) {
       })
     .bottom(function() {
         var s = target.instance();
-        switch (this.name()) {
-          case "left":
-          case "right":
-          case "center": return s.bottom;
-          case "top": return s.bottom + s.radius;
-        }
-        return null;
+        return this.name() == "top" ? s.bottom + s.radius : null;
       })
     .textAlign(function() {
         switch (this.name()) {
