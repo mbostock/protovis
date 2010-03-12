@@ -52,7 +52,7 @@ pv.Layout.Hierarchy.Fill = {
         .innerRadius(function(n) { return n.innerRadius; })
         .outerRadius(function(n) { return n.outerRadius; })
         .startAngle(function(n) { return n.startAngle; })
-        .endAngle(function(n) { return n.endAngle; });
+        .angle(function(n) { return n.angle; });
 
     /** @private Adding to this layout implicitly adds to this node. */
     this.add = function(type) { return this.parent.add(type).extend(node); };
@@ -135,8 +135,8 @@ pv.Layout.Hierarchy.Fill = {
     }
 
     /** @private */
-    function endAngle(n) {
-      return (n.parentNode ? n.maxBreadth - .25 : 1) * 2 * Math.PI;
+    function angle(n) {
+      return (n.maxBreadth - n.minBreadth) * 2 * Math.PI;
     }
 
     for (var i = 0; i < nodes.length; i++) {
@@ -148,7 +148,7 @@ pv.Layout.Hierarchy.Fill = {
       n.innerRadius = innerRadius(n);
       n.outerRadius = outerRadius(n);
       n.startAngle = startAngle(n);
-      n.endAngle = endAngle(n);
+      n.angle = angle(n);
     }
   }
 };
