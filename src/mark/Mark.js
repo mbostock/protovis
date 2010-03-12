@@ -552,6 +552,15 @@ pv.Mark.prototype.anchorTarget = function() {
 };
 
 /**
+ * Alias for setting the left, right, top and bottom properties simultaneously.
+ *
+ * @returns {pv.Mark} this.
+ */
+pv.Mark.prototype.margin = function(n) {
+  return this.left(n).right(n).top(n).bottom(n);
+};
+
+/**
  * Returns the current instance of this mark in the scene graph. This is
  * typically equivalent to <tt>this.scene[this.index]</tt>, however if the scene
  * or index is unset, the default instance of the mark is returned. If no
