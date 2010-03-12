@@ -31,8 +31,8 @@ pv.Layout.Treemap = function() {
   var node = this.node
       .strokeStyle("#fff")
       .fillStyle("rgba(31, 119, 180, .25)")
-      .width(function(n) { return n.width; })
-      .height(function(n) { return n.height; });
+      .width(function(n) { return n.dx; })
+      .height(function(n) { return n.dy; });
 
   /** @private Adding to this layout implicitly adds to this node. */
   this.add = function(type) { return this.parent.add(type).extend(node); };
@@ -88,8 +88,8 @@ pv.Layout.Treemap.prototype.init = function() {
         mink = Infinity,
         x = n.x + left,
         y = n.y + top,
-        w = n.width - left - right,
-        h = n.height - top - bottom,
+        w = n.dx - left - right,
+        h = n.dy - top - bottom,
         l = Math.min(w, h),
         k = w * h / n.size;
 
@@ -106,23 +106,23 @@ pv.Layout.Treemap.prototype.init = function() {
         if (w == l) {
           n.x = x + d;
           n.y = y;
-          n.width = nw;
-          n.height = hh;
+          n.dx = nw;
+          n.dy = hh;
         } else {
           n.x = x;
           n.y = y + d;
-          n.width = hh;
-          n.height = nw;
+          n.dx = hh;
+          n.dy = nw;
         }
         d += nw;
       }
 
       if (w == l) {
-        if (n) n.width += w - d; // correct rounding error
+        if (n) n.dx += w - d; // correct rounding error
         y += hh;
         h -= hh;
       } else {
-        if (n) n.height += h - d; // correct rounding error
+        if (n) n.dy += h - d; // correct rounding error
         x += hh;
         w -= hh;
       }
@@ -153,9 +153,9 @@ pv.Layout.Treemap.prototype.init = function() {
 
     /* correct rounding error */
     if (w == l) for (var i = 0; i < row.length; i++) {
-      row[i].width += w;
+      row[i].dx += w;
     } else for (var i = 0; i < row.length; i++) {
-      row[i].height += h;
+      row[i].dy += h;
     }
   }
 
@@ -173,7 +173,7 @@ pv.Layout.Treemap.prototype.init = function() {
   root.sort(function(a, b) { return a.size - b.size; });
   root.x = 0;
   root.y = 0;
-  root.width = that.parent.width();
-  root.height = that.parent.height();
+  root.dx = that.parent.width();
+  root.dy = that.parent.height();
   root.visitBefore(squarify);
 };

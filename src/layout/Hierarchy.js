@@ -47,8 +47,8 @@ pv.Layout.Hierarchy.Fill = {
     var node = this.node
         .strokeStyle("#fff")
         .fillStyle("#ccc")
-        .width(function(n) { return n.width; })
-        .height(function(n) { return n.height; })
+        .width(function(n) { return n.dx; })
+        .height(function(n) { return n.dy; })
         .innerRadius(function(n) { return n.innerRadius; })
         .outerRadius(function(n) { return n.outerRadius; })
         .startAngle(function(n) { return n.startAngle; })
@@ -100,7 +100,7 @@ pv.Layout.Hierarchy.Fill = {
     }
 
     /** @private */
-    function width(n) {
+    function dx(n) {
       switch (orient) {
         case "left":
         case "right": return (n.maxDepth - n.minDepth) / (1 + ds) * w;
@@ -110,7 +110,7 @@ pv.Layout.Hierarchy.Fill = {
     }
 
     /** @private */
-    function height(n) {
+    function dy(n) {
       switch (orient) {
         case "left":
         case "right": return (n.maxBreadth - n.minBreadth) * h;
@@ -143,8 +143,8 @@ pv.Layout.Hierarchy.Fill = {
       var n = nodes[i];
       n.x = x(n);
       n.y = y(n);
-      n.width = width(n);
-      n.height = height(n);
+      n.dx = dx(n);
+      n.dy = dy(n);
       n.innerRadius = innerRadius(n);
       n.outerRadius = outerRadius(n);
       n.startAngle = startAngle(n);
