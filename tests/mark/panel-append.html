@@ -1,0 +1,29 @@
+<html>
+  <head>
+    <title>Panel Append</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <div id="container"></div>
+    <script type="text/javascript+protovis">
+
+function append() {
+  var vis = new pv.Panel()
+      .canvas(container.appendChild(document.createElement("div")))
+      .width(150)
+      .height(150)
+      .margin(5)
+      .strokeStyle("#ccc");
+
+  vis.anchor("center").add(pv.Label)
+      .text("Hello, world!");
+
+  vis.render();
+}
+
+append();
+append();
+
+    </script>
+  </body>
+</html>
