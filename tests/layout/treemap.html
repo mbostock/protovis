@@ -1,0 +1,22 @@
+<html>
+  <head>
+    <title>Flare Treemap</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../flare.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(860)
+    .height(668);
+
+vis.add(pv.Layout.Treemap)
+    .data(pv.dom(flare).root("flare").nodes())
+  .add(pv.Bar);
+
+vis.render();
+
+    </script>
+  </body>
+</html>

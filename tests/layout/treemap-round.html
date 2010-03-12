@@ -1,0 +1,34 @@
+<html>
+  <head>
+    <title>Flare Treemap</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../flare.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+function active(d, v) {
+  d.active = v; if (d.parentNode) active(d.parentNode, v);
+}
+
+var vis = new pv.Panel()
+    .width(860)
+    .height(668)
+    .margin(.5);
+
+vis.add(pv.Layout.Treemap)
+    .data(pv.dom(flare).nodes())
+    .margin(6)
+    .round(true)
+  .add(pv.Panel)
+    .event("mouseover", function(d) (active(d, true), this))
+    .event("mouseout", function(d) (active(d, false), this))
+    .fillStyle(function(d) d.active ? "lightcoral" : "#ccc")
+    .strokeStyle("#fff")
+    .lineWidth(1);
+
+vis.render();
+
+    </script>
+  </body>
+</html>

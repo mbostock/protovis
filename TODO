@@ -7,15 +7,13 @@ data/Scale.js
 layout/Layout.js
 - allow interactive expanding / collapsing of tree nodes?
 - migrate all implementations to extend pv.Layout
+- use private data, or at least standardize which attributes are populated
 
 layout/Tree.js
 - allow depth and breadth offset to be computed automatically
 
 layout/{Cluster,Partition}.js
 - support customized inner/outer radius
-
-layout/Treemap.js
-- use pv.Dom.Node
 
 mark/Mark.js
 - antialias doesn't always work as expected; requires pixel rounding?
