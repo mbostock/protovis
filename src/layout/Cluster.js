@@ -12,9 +12,7 @@ pv.Layout.Cluster = function() {
     init.call(this);
   };
 
-  this.link
-      .strokeStyle("#ccc")
-      .interpolate(function() { return interpolate; });
+  this.link.interpolate(function() { return interpolate; });
 };
 
 pv.Layout.Cluster.prototype = pv.extend(pv.Layout.Hierarchy)
@@ -133,114 +131,12 @@ pv.Layout.Cluster.prototype.init = function() {
 /** A variant of cluster layout that is space-filling. */
 pv.Layout.Cluster.Fill = function() {
   pv.Layout.Cluster.call(this);
-
-  var node = this.node
-      .strokeStyle("#fff")
-      .fillStyle("#ccc")
-      .width(function(n) { return n.width; })
-      .height(function(n) { return n.height; })
-      .innerRadius(function(n) { return n.innerRadius; })
-      .outerRadius(function(n) { return n.outerRadius; })
-      .startAngle(function(n) { return n.startAngle; })
-      .endAngle(function(n) { return n.endAngle; });
-
-  /** @private Adding to this layout implicitly adds to this node. */
-  this.add = function(type) { return this.parent.add(type).extend(node); };
-
-  /* Now hide references to inherited marks. */
-  delete this.node;
-  delete this.label;
-  delete this.link;
+  pv.Layout.Hierarchy.Fill.constructor.call(this);
 };
 
 pv.Layout.Cluster.Fill.prototype = pv.extend(pv.Layout.Cluster);
 
 pv.Layout.Cluster.Fill.prototype.init = function() {
   if (pv.Layout.Cluster.prototype.init.call(this)) return;
-  var nodes = this.nodes(),
-      orient = this.orient(),
-      group = this.group(),
-      w = this.parent.width(),
-      h = this.parent.height(),
-      r = Math.min(w, h) / 2,
-      ds = -nodes[0].minDepth;
-
-  /** @private Scales the specified depth for a space-filling layout. */
-  function scale(d, ds) {
-    return (d + ds) / (1 + ds);
-  }
-
-  /** @private */
-  function x(n) {
-    switch (orient) {
-      case "left": return scale(n.minDepth, ds) * w;
-      case "right": return (1 - scale(n.maxDepth, ds)) * w;
-      case "top": return n.minBreadth * w;
-      case "bottom": return (1 - n.maxBreadth) * w;
-      case "radial": return w / 2;
-    }
-  }
-
-  /** @private */
-  function y(n) {
-    switch (orient) {
-      case "left": return n.minBreadth * h;
-      case "right": return (1 - n.maxBreadth) * h;
-      case "top": return scale(n.minDepth, ds) * h;
-      case "bottom": return (1 - scale(n.maxDepth, ds)) * h;
-      case "radial": return h / 2;
-    }
-  }
-
-  /** @private */
-  function width(n) {
-    switch (orient) {
-      case "left":
-      case "right": return (n.maxDepth - n.minDepth) / (1 + ds) * w;
-      case "top":
-      case "bottom": return (n.maxBreadth - n.minBreadth) * w;
-    }
-  }
-
-  /** @private */
-  function height(n) {
-    switch (orient) {
-      case "left":
-      case "right": return (n.maxBreadth - n.minBreadth) * h;
-      case "top":
-      case "bottom": return (n.maxDepth - n.minDepth) / (1 + ds) * h;
-    }
-  }
-
-  /** @private */
-  function innerRadius(n) {
-    return Math.max(0, scale(n.minDepth, ds / 2)) * r;
-  }
-
-  /** @private */
-  function outerRadius(n) {
-    return scale(n.maxDepth, ds / 2) * r;
-  }
-
-  /** @private */
-  function startAngle(n) {
-    return (n.parentNode ? n.minBreadth - .25 : 0) * 2 * Math.PI;
-  }
-
-  /** @private */
-  function endAngle(n) {
-    return (n.parentNode ? n.maxBreadth - .25 : 1) * 2 * Math.PI;
-  }
-
-  for (var i = 0; i < nodes.length; i++) {
-    var n = nodes[i];
-    n.x = x(n);
-    n.y = y(n);
-    n.width = width(n);
-    n.height = height(n);
-    n.innerRadius = innerRadius(n);
-    n.outerRadius = outerRadius(n);
-    n.startAngle = startAngle(n);
-    n.endAngle = endAngle(n);
-  }
+  pv.Layout.Hierarchy.Fill.init.call(this);
 };

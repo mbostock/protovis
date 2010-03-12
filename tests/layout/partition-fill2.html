@@ -11,10 +11,9 @@ var vis = new pv.Panel()
     .width(1200)
     .height(600);
 
-var tree = pv.Layout.partition(diamond(3, 4, 4));
-
-vis.add(pv.Bar)
-    .extend(tree.fill);
+vis.add(pv.Layout.Partition.Fill)
+    .data(pv.dom(diamond(3, 4, 4)).nodes())
+  .add(pv.Bar);
 
 vis.render();
 

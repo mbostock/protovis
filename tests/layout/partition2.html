@@ -10,26 +10,18 @@
 var vis = new pv.Panel()
     .width(900)
     .height(300)
-    .left(10)
-    .right(10)
-    .top(10)
-    .bottom(10);
+    .margin(12);
 
-var tree = pv.Layout.partition(diamond(3, 4, 4));
-
-vis.add(pv.Panel)
-    .data(tree.links)
-  .add(pv.Line)
-    .extend(tree.link);
-
-vis.add(pv.Dot)
-    .extend(tree.node)
-    .def("active", -1)
+vis.add(pv.Layout.Partition)
+    .data(pv.dom(diamond(3, 4, 4)).nodes())
+  .link.add(pv.Line)
+    .strokeStyle("#aaa")
+  .node.add(pv.Dot)
     .size(100)
-    .strokeStyle(function() this.index == this.active() ? "red" : null)
-    .fillStyle("#ccc")
-    .event("mouseover", function() this.active(this.index))
-    .event("mouseout", function() this.active(-1));
+    .strokeStyle(function(d) d.active ? "#f00" : "#aaa")
+    .fillStyle(function(d) d.active ? "#fdd" : "#ddd")
+    .event("mouseover", function(d) (d.active = true, this))
+    .event("mouseout", function(d) (d.active = false, this));
 
 vis.render();
 

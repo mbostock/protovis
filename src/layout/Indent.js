@@ -1,6 +1,6 @@
 pv.Layout.Indent = function() {
   pv.Layout.Hierarchy.call(this);
-  this.link.interpolate("step-after").strokeStyle("#ccc");
+  this.link.interpolate("step-after");
 };
 
 pv.Layout.Indent.prototype = pv.extend(pv.Layout.Hierarchy)

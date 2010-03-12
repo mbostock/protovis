@@ -8,6 +8,10 @@ layout/Layout.js
 - allow interactive expanding / collapsing of tree nodes?
 - migrate all implementations to extend pv.Layout
 - use private data, or at least standardize which attributes are populated
+- rename: x -> left, y -> top, angle -> textAngle
+
+layout/Force.js
+- copy: x -> left, y -> top
 
 layout/Tree.js
 - allow depth and breadth offset to be computed automatically
