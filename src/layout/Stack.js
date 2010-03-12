@@ -49,7 +49,6 @@ pv.Layout.Stack.prototype = pv.extend(pv.Layout)
 pv.Layout.Stack.prototype.defaults = new pv.Layout.Stack()
     .extend(pv.Layout.prototype.defaults)
     .orient("bottom")
-    .order("unsorted")
     .offset("zero");
 
 /** @private Capture the panel data on initialization. */
