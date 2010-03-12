@@ -578,9 +578,9 @@ pv.Mark.prototype.anchor = function(name) {
           case "bottom":
           case "top":
           case "center": return s.left + (this.properties.width ? 0 : w / 2);
-          case "right": return s.left + w;
+          case "left": return null;
         }
-        return null;
+        return s.left + w;
       })
     .top(function() {
         var s = target.instance(), h = s.height || 0;
@@ -588,9 +588,9 @@ pv.Mark.prototype.anchor = function(name) {
           case "left":
           case "right":
           case "center": return s.top + (this.properties.height ? 0 : h / 2);
-          case "bottom": return s.top + h;
+          case "top": return null;
         }
-        return null;
+        return s.top + h;
       })
     .right(function() {
         var s = target.instance();

@@ -143,9 +143,9 @@ pv.Dot.prototype.anchor = function(name) {
           case "bottom":
           case "top":
           case "center": return s.left;
-          case "right": return s.left + s.radius;
+          case "left": return null;
         }
-        return null;
+        return s.left + s.radius;
       })
     .right(function() {
         var s = target.instance();
@@ -157,9 +157,9 @@ pv.Dot.prototype.anchor = function(name) {
           case "left":
           case "right":
           case "center": return s.top;
-          case "bottom": return s.top + s.radius;
+          case "top": return null;
         }
-        return null;
+        return s.top + s.radius;
       })
     .bottom(function() {
         var s = target.instance();
