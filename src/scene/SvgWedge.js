@@ -49,6 +49,7 @@ pv.SvgScene.wedge = function(scenes) {
 
     e = this.expect(e, "path", {
         "shape-rendering": s.antialias ? null : "crispEdges",
+        "pointer-events": s.events,
         "cursor": s.cursor,
         "transform": "translate(" + s.left + "," + s.top + ")",
         "d": p,

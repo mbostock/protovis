@@ -1,59 +1,35 @@
-pv.Layout.indent = function(map) {
-  var nodes,
-      bspace = 15,
-      dspace = 15,
-      ax,
-      ay;
+pv.Layout.Indent = function() {
+  pv.Layout.Hierarchy.call(this);
+  this.link.interpolate("step-after");
+};
+
+pv.Layout.Indent.prototype = pv.extend(pv.Layout.Hierarchy)
+    .property("depth", Number)
+    .property("breadth", Number);
+
+pv.Layout.Indent.prototype.defaults = new pv.Layout.Indent()
+    .extend(pv.Layout.Hierarchy.prototype.defaults)
+    .depth(15)
+    .breadth(15);
+
+pv.Layout.Indent.prototype.init = function() {
+  if (pv.Layout.Hierarchy.prototype.init.call(this)) return;
+  var nodes = this.nodes(),
+      bspace = this.breadth(),
+      dspace = this.depth(),
+      ax = 0,
+      ay = 0;
 
   /** @private */
   function position(n, breadth, depth) {
     n.x = ax + depth++ * dspace;
     n.y = ay + breadth++ * bspace;
+    n.angle = 0;
     for (var c = n.firstChild; c; c = c.nextSibling) {
       breadth = position(c, breadth, depth);
     }
     return breadth;
   }
 
-  /** @private */
-  function data() {
-    if (nodes) return nodes;
-    nodes = pv.dom(map).nodes();
-    ax = dspace;
-    ay = bspace;
-    position(nodes[0], 0, 0);
-    return nodes;
-  }
-
-  var layout = {};
-
-  layout.nodes = data;
-
-  layout.links = function() {
-    return data.call(this)
-        .filter(function(n) { return n.parentNode; })
-        .map(function(n) { return [n, n.parentNode]; });
-  };
-
-  layout.spacing = function(depth, breadth) {
-    dspace = depth;
-    bspace = breadth;
-    return this;
-  };
-
-  layout.node = new pv.Mark()
-      .data(data)
-      .strokeStyle("#1f77b4")
-      .fillStyle("#fff")
-      .left(function(n) { return n.x; })
-      .top(function(n) { return n.y; });
-
-  layout.link = new pv.Mark().extend(layout.node)
-      .data(pv.identity)
-      .antialias(false)
-      .interpolate("step-after")
-      .strokeStyle("#ccc")
-      .fillStyle(null);
-
-  return layout;
+  position(nodes[0], 1, 1);
 };

@@ -10,24 +10,20 @@
 var vis = new pv.Panel()
     .width(500)
     .height(2000)
-    .left(10)
+    .left(40)
     .right(120)
     .top(10)
     .bottom(10);
 
-var tree = pv.Layout.partition(flare)
-    .sort(function(a, b) pv.naturalOrder(a.nodeName, b.nodeName))
-    .orient("left");
-
-vis.add(pv.Panel)
-    .data(tree.links)
-  .add(pv.Line)
-    .extend(tree.link);
-
-vis.add(pv.Dot)
-    .extend(tree.node)
-  .anchor("right").add(pv.Label)
-    .text(function(d) d.nodeName || "flare");
+vis.add(pv.Layout.Partition)
+    .data(pv.dom(flare)
+        .root("flare")
+        .sort(function(a, b) pv.naturalOrder(a.nodeName, b.nodeName))
+        .nodes())
+    .orient("left")
+  .link.add(pv.Line)
+  .node.add(pv.Dot)
+  .label.add(pv.Label);
 
 vis.render();
 

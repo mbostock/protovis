@@ -11,11 +11,10 @@ var vis = new pv.Panel()
     .width(600)
     .height(600);
 
-var tree = pv.Layout.partition(diamond(3, 4, 4))
-    .orient("radial");
-
-vis.add(pv.Wedge)
-    .extend(tree.fill);
+vis.add(pv.Layout.Partition.Fill)
+    .data(pv.dom(diamond(3, 4, 4)).nodes())
+    .orient("radial")
+  .add(pv.Wedge);
 
 vis.render();
 

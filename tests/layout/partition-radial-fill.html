@@ -8,21 +8,15 @@
     <script type="text/javascript+protovis">
 
 var vis = new pv.Panel()
-    .width(800)
-    .height(800)
-    .top(100)
-    .left(100)
-    .bottom(100)
-    .right(100);
+    .width(900)
+    .height(900);
 
-var tree = pv.Layout.partition(flare)
-    .sort(function(a, b) pv.naturalOrder(a.nodeName, b.nodeName))
-    .orient("radial");
-
-vis.add(pv.Wedge)
-    .extend(tree.fill)
+vis.add(pv.Layout.Partition.Fill)
+    .data(pv.dom(flare).nodes())
+    .order("ascending")
+    .orient("radial")
+  .add(pv.Wedge)
   .anchor("center").add(pv.Label)
-    .visible(function(d) d.nodeName)
     .text(function(d) d.nodeName);
 
 vis.render();

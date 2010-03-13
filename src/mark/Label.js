@@ -145,6 +145,7 @@ pv.Label.prototype.type = "label";
  */
 pv.Label.prototype.defaults = new pv.Label()
     .extend(pv.Mark.prototype.defaults)
+    .events("none")
     .text(pv.identity)
     .font("10px sans-serif")
     .textAngle(0)

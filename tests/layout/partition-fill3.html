@@ -11,16 +11,15 @@ var vis = new pv.Panel()
     .width(600)
     .height(1200);
 
-var tree = pv.Layout.partition(flare)
+vis.add(pv.Layout.Partition.Fill)
+    .data(pv.dom(flare).root("flare").nodes())
+    .order("descending")
+    .orient("left")
     .size(Number)
-    .sort(function(a, b) b.size - a.size)
-    .orient("left");
-
-vis.add(pv.Bar)
-    .extend(tree.fill)
+  .add(pv.Bar)
   .anchor("center").add(pv.Label)
-    .visible(function(n) this.anchorTarget().height() > 10)
-    .text(function(n) n.parentNode ? n.nodeName : "flare");
+    .visible(function(d) d.height > 10)
+    .text(function(d) d.nodeName);
 
 vis.render();
 

@@ -11,17 +11,11 @@ var vis = new pv.Panel()
     .width(400)
     .height(3800);
 
-var indent = pv.Layout.indent(flare);
-
-vis.add(pv.Panel)
-    .data(indent.links)
-  .add(pv.Line)
-    .extend(indent.link);
-
-vis.add(pv.Dot)
-    .extend(indent.node)
-  .anchor("right").add(pv.Label)
-    .text(function(n) n.parentNode ? n.nodeName : "flare");
+vis.add(pv.Layout.Indent)
+    .data(pv.dom(flare).root("flare").nodes())
+  .link.add(pv.Line)
+  .node.add(pv.Dot)
+  .label.add(pv.Label);
 
 vis.render();
 

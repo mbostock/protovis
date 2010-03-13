@@ -55,6 +55,7 @@ pv.SvgScene.line = function(scenes) {
 
   e = this.expect(e, "path", {
       "shape-rendering": s.antialias ? null : "crispEdges",
+      "pointer-events": s.events,
       "cursor": s.cursor,
       "d": d,
       "fill": fill.color,
@@ -123,6 +124,7 @@ pv.SvgScene.lineSegment = function(scenes) {
 
     e = this.expect(e, "path", {
         "shape-rendering": s1.antialias ? null : "crispEdges",
+        "pointer-events": s1.events,
         "cursor": s1.cursor,
         "d": d,
         "fill": fill.color,

@@ -22,7 +22,8 @@ pv.SvgScene.label = function(scenes) {
     }
 
     e = this.expect(e, "text", {
-        "pointer-events": "none",
+        "pointer-events": s.events,
+        "cursor": s.cursor,
         "x": x,
         "y": y,
         "dy": dy,
