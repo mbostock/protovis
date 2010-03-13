@@ -132,7 +132,9 @@ vis.add(pv.Dot)
     .fillStyle(pv.color("steelblue").alpha(.8))
     .strokeStyle("black")
    .add(pv.Label)
-    .text(function(d) d.code);
+    .text(function(d) d.code)
+    .textAlign("center")
+    .textBaseline("middle");
 
 var timer = setInterval(function() {
     if (i++ > 150) clearInterval(timer);
