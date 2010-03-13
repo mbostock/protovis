@@ -1,0 +1,32 @@
+<html>
+  <head>
+    <title>Label Events</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(200)
+    .height(200)
+    .fillStyle("#ccc")
+    .strokeStyle("#aaa")
+    .events("all") // stroke should not prevent label events
+    .margin(2);
+
+vis.anchor("center").add(pv.Label)
+    .data([{}])
+    .font("48px sans-serif")
+    .cursor("pointer")
+    .title("CLICK NOW")
+    .textStyle(function(d) d.active ? "white" : "black")
+    .text(function(d) d.active ? "OBEY" : "CLICK")
+    .events("all")
+    .event("mousedown", function(d) (d.active = true, this))
+    .event("mouseup", function(d) (d.active = false, this))
+
+vis.render();
+
+    </script>
+  </body>
+</html>

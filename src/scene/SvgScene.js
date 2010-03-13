@@ -15,6 +15,7 @@ pv.Scene = pv.SvgScene = {
   implicit: {
     svg: {
       "shape-rendering": "auto",
+      "pointer-events": "painted",
       "x": 0,
       "y": 0,
       "dy": 0,

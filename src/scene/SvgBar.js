@@ -10,6 +10,7 @@ pv.SvgScene.bar = function(scenes) {
 
     e = this.expect(e, "rect", {
         "shape-rendering": s.antialias ? null : "crispEdges",
+        "pointer-events": s.events,
         "cursor": s.cursor,
         "x": s.left,
         "y": s.top,

@@ -10,6 +10,7 @@ pv.SvgScene.rule = function(scenes) {
 
     e = this.expect(e, "line", {
         "shape-rendering": s.antialias ? null : "crispEdges",
+        "pointer-events": s.events,
         "cursor": s.cursor,
         "x1": s.left,
         "y1": s.top,

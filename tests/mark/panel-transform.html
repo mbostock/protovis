@@ -35,7 +35,7 @@ vis.add(pv.Rule)
 
 var view = vis.add(pv.Panel)
     .overflow("hidden")
-    .fillStyle("rgba(0,0,0,.001)") // pointer-events = "all"
+    .events("all")
     .event("mousedown", pv.Behavior.pan())
     .event("mousewheel", pv.Behavior.zoom());
 

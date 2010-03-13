@@ -213,7 +213,8 @@ pv.Mark.prototype
     .property("cursor", String)
     .property("title", String)
     .property("reverse", Boolean)
-    .property("antialias", Boolean);
+    .property("antialias", Boolean)
+    .property("events", String);
 
 /**
  * The mark type; a lower camelCase name. The type name controls rendering
@@ -412,6 +413,26 @@ pv.Mark.prototype.scale = 1;
  */
 
 /**
+ * The events property; corresponds to the SVG pointer-events property,
+ * specifying how the mark should participate in mouse events. The default value
+ * is "painted". Supported values are:
+ *
+ * <p>"painted": The given mark may receive events when the mouse is over a
+ * "painted" area. The painted areas are the interior (i.e., fill) of the mark
+ * if a 'fillStyle' is specified, and the perimeter (i.e., stroke) of the mark
+ * if a 'strokeStyle' is specified.
+ *
+ * <p>"all": The given mark may receive events when the mouse is over either the
+ * interior (i.e., fill) or the perimeter (i.e., stroke) of the mark, regardless
+ * of the specified fillStyle and strokeStyle.
+ *
+ * <p>"none": The given mark may not receive events.
+ *
+ * @type string
+ * @name pv.Mark.prototype.events
+ */
+
+/**
  * The reverse property; a boolean determining whether marks are ordered from
  * front-to-back or back-to-front. SVG does not support explicit z-ordering;
  * shapes are rendered in the order they appear. Thus, by default, marks are
@@ -435,7 +456,8 @@ pv.Mark.prototype.scale = 1;
 pv.Mark.prototype.defaults = new pv.Mark()
     .data(function(d) { return [d]; })
     .visible(true)
-    .antialias(true);
+    .antialias(true)
+    .events("painted");
 
 /**
  * Sets the prototype of this mark to the specified mark. Any properties not

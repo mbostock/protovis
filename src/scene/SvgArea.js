@@ -58,6 +58,7 @@ pv.SvgScene.area = function(scenes) {
 
   e = this.expect(e, "path", {
       "shape-rendering": s.antialias ? null : "crispEdges",
+      "pointer-events": s.events,
       "cursor": s.cursor,
       "d": "M" + d.join("ZM") + "Z",
       "fill": fill.color,
@@ -94,6 +95,7 @@ pv.SvgScene.areaSegment = function(scenes) {
 
     e = this.expect(e, "polygon", {
         "shape-rendering": s1.antialias ? null : "crispEdges",
+        "pointer-events": s1.events,
         "cursor": s1.cursor,
         "points": p,
         "fill": fill.color,

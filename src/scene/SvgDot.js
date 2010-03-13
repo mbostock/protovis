@@ -52,6 +52,7 @@ pv.SvgScene.dot = function(scenes) {
     /* Use <circle> for circles, <path> for everything else. */
     var svg = {
       "shape-rendering": s.antialias ? null : "crispEdges",
+      "pointer-events": s.events,
       "fill": fill.color,
       "fill-opacity": fill.opacity || null,
       "stroke": stroke.color,
