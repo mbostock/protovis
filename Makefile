@@ -72,6 +72,7 @@ JS_PV_FILES = \
 	src/layout/Partition.js \
 	src/layout/Arc.js \
 	src/layout/Horizon.js \
+	src/layout/Rollup.js \
 	src/behavior/Behavior.js \
 	src/behavior/Drag.js \
 	src/behavior/Point.js \

@@ -27,7 +27,7 @@ mark/Area.js
 
 behavior/*
 - documentation, implementation, etc.
-- should behaviors automatically re-render?
+- should behaviors automatically re-render? render hooks (e.g., panel-transform)
 
 behavior/Select.js
 - rewrite

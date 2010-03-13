@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <title>Social Rollup</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../social.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var w = 100,
+    h = 100,
+    fx = function(d) d.gender,
+    fy = function(d) d.group,
+    x = pv.Scale.ordinal(social.nodes, fx).splitFlush(0, w),
+    y = pv.Scale.ordinal(social.nodes, fy).splitFlush(0, h);
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .margin(30);
+
+vis.add(pv.Layout.Rollup)
+    .nodes(social.nodes)
+    .links(social.links)
+    .left(x.by(fx))
+    .top(y.by(fy))
+  .link.add(pv.Line)
+  .node.add(pv.Dot);
+
+vis.add(pv.Label)
+    .data(x.domain())
+    .left(x)
+    .top(-10)
+    .textAlign("center")
+    .textBaseline("bottom");
+
+vis.add(pv.Label)
+    .data(y.domain())
+    .top(y)
+    .left(-10)
+    .textAlign("right")
+    .textBaseline("middle");
+
+vis.render();
+
+    </script>
+  </body>
+</html>
