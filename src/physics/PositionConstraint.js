@@ -1,5 +1,5 @@
 pv.Constraint.position = function(f) {
-  var a = .1, // default alpha
+  var a = 1, // default alpha
       constraint = {};
 
   if (!arguments.length) f = pv.identity; // default position
