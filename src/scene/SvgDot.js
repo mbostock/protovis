@@ -9,7 +9,7 @@ pv.SvgScene.dot = function(scenes) {
     if (!fill.opacity && !stroke.opacity) continue;
 
     /* points */
-    var radius = s.radius, path;
+    var radius = s.radius, path = null;
     switch (s.shape) {
       case "cross": {
         path = "M" + -radius + "," + -radius
