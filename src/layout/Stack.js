@@ -48,20 +48,20 @@ pv.Layout.Stack = function() {
           bind = mark.bind;
       mark.bind = function() { that.prebind(bind, this); };
 
-      /** @private Returns the max instance of mark. */
-      function max(i) {
-        return mark.parent.scene[i].children[0][that.scene.$stack.max[i]];
+      /** @private Returns the target instance of the mark. */
+      function target() {
+        return mark.parent.scene[this.parent.index].children[0][this.index];
       }
 
       /** The label prototype; bound to the added mark. */
       mark.label = new pv.Mark()
           .extend(label)
           .left(function() {
-              var s = max(this.parent.index);
+              var s = target.call(this);
               return s.left + s.width / 2;
             })
           .bottom(function() {
-              var s = max(this.parent.index);
+              var s = target.call(this);
               return s.bottom + s.height / 2;
             });
 
