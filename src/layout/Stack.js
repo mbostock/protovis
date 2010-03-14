@@ -36,6 +36,7 @@ pv.Layout.Stack = function() {
    */
   this.add = function(type) {
       var mark = that.parent.add(pv.Panel)
+              .extend(that)
               .data(function() {
                   var data = that.scene.$stack.data;
                   that.prebuild(data, this.children[0]);
