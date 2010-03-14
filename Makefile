@@ -22,6 +22,7 @@ JS_PV_FILES = \
 	src/data/LinearScale.js \
 	src/data/LogScale.js \
 	src/data/OrdinalScale.js \
+	src/data/Histogram.js \
 	src/color/Color.js \
 	src/color/Colors.js \
 	src/color/Ramp.js \
