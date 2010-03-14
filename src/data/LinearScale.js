@@ -219,12 +219,15 @@ pv.Scale.linear = function() {
    *
    * @function
    * @name pv.Scale.linear.prototype.ticks
+   * @param {number} [m] optional number of desired ticks.
    * @returns {number[]} an array input domain values to use as ticks.
    */
-  scale.ticks = function() {
+  scale.ticks = function(m) {
     var min = d[0],
         max = d[d.length - 1],
         span = max - min;
+
+    if (!arguments.length) m = 10;
 
     /* Special case: dates. */
     if (type == newDate) {
@@ -310,7 +313,7 @@ pv.Scale.linear = function() {
           }
           default: {
             step = pv.logCeil(n / 15, 10);
-            if (n / step < 2) step /= 2;
+            if (n / step < 2) step /= 5;
             else if (n / step < 5) step /= 2;
             date.setFullYear(Math.floor(date.getFullYear() / step) * step);
             break;
@@ -329,9 +332,11 @@ pv.Scale.linear = function() {
     }
 
     /* Normal case: numbers. */
-    var step = pv.logCeil(span / 15, 10);
-    if (span / step < 2) step /= 5;
-    else if (span / step < 5) step /= 2;
+    var step = pv.logFloor(span / m, 10),
+        err = m / (span / step);
+    if (err <= .15) step *= 10;
+    else if (err <= .35) step *= 5;
+    else if (err <= .75) step *= 2;
     var start = Math.ceil(min / step) * step,
         end = Math.floor(max / step) * step,
         precision = Math.max(0, -Math.floor(pv.log(step, 10) + .01));
