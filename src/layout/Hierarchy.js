@@ -136,7 +136,7 @@ pv.Layout.Hierarchy.Fill = {
 
     /** @private */
     function angle(n) {
-      return (n.maxBreadth - n.minBreadth) * 2 * Math.PI;
+      return (n.parentNode ? n.maxBreadth - n.minBreadth : 1) * 2 * Math.PI;
     }
 
     for (var i = 0; i < nodes.length; i++) {
