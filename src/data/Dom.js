@@ -325,3 +325,22 @@ pv.Dom.Node.prototype.nodes = function() {
   flatten(this, array);
   return array;
 };
+
+/**
+ * Toggles the child nodes of this node. If this node is not yet toggled, this
+ * method removes all child nodes and appends them to a new <tt>toggled</tt>
+ * array attribute on this node. Otherwise, if this node is toggled, this method
+ * re-adds all toggled child nodes and deletes the <tt>toggled</tt> attribute.
+ *
+ * <p>This method has no effect if the node has no child nodes.
+ */
+pv.Dom.Node.prototype.toggle = function() {
+  var n = this;
+  if (n.toggled) {
+    for (var c; c = n.toggled.pop();) n.appendChild(c);
+    delete n.toggled;
+  } else if (n.lastChild) {
+    n.toggled = [];
+    while (n.lastChild) n.toggled.push(n.removeChild(n.lastChild));
+  }
+};

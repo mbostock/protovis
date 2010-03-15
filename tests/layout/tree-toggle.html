@@ -1,0 +1,35 @@
+<html>
+  <head>
+    <title>Diamond Tree</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../diamond.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var root = pv.dom(diamond(3, 4, 5)).root();
+
+var vis = new pv.Panel()
+    .width(400)
+    .height(400)
+    .top(20);
+
+var layout = vis.add(pv.Layout.Tree)
+    .data(root.nodes())
+    .depth(30)
+    .breadth(25)
+    .orient("top");
+
+layout.link.add(pv.Line)
+    .strokeStyle("#aaa")
+  .node.add(pv.Dot)
+    .size(100)
+    .strokeStyle("#aaa")
+    .fillStyle(function(d) d.toggled ? "#aaa" : "#ddd")
+    .event("click", function(d) (d.toggle(), layout.data(root.nodes()).parent));
+
+vis.render();
+
+    </script>
+  </body>
+</html>
