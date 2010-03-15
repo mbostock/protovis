@@ -22,8 +22,11 @@ JS_PV_FILES = \
 	src/data/LinearScale.js \
 	src/data/LogScale.js \
 	src/data/OrdinalScale.js \
-	src/data/LatLon.js \
-	src/data/GeoScale.js \
+	src/geo/Geo.js \
+	src/geo/LatLng.js \
+	src/geo/Projection.js \
+	src/geo/Projections.js \
+	src/geo/GeoScale.js \
 	src/color/Color.js \
 	src/color/Colors.js \
 	src/color/Ramp.js \

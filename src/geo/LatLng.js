@@ -1,10 +1,10 @@
 /**
- * A coordinate class used by the {@code pv.Scale.GeoScale}. There is no
- * explicit constructor corresponding to the class {@code pv.Scale.LatLon}; this
+ * A coordinate class used by the {@code pv.Geo.scale}. There is no
+ * explicit constructor corresponding to the class {@code pv.geo.LatLng}; this
  * class merely serves to document the attributes that are present in coordinate
  * descriptions
  *
- * @class pv.LatLon
+ * @class pv.LatLng
  */
 
 /**
@@ -12,7 +12,7 @@
  * Positive is North
  *
  * @type number
- * @field pv.Scale.LatLon.prototype.lat
+ * @field pv.Geo.LatLng.prototype.lat
  */
 
 /**
@@ -20,6 +20,6 @@
  * Positive is East
  *
  * @type number
- * @field pv.Scale.LatLon.prototype.lon
+ * @field pv.Geo.LatLng.prototype.lng
  */
 

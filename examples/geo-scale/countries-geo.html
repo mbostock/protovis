@@ -25,9 +25,9 @@
       </select>
     </div>
     <script type="text/javascript+protovis">
-  var proj4 = new Proj4js.Proj('EPSG:41001');
-  alert('wait');
-  if(!proj4.readyToUse) alert('not ready1');
+  //var proj4 = new Proj4js.Proj('EPSG:41001');
+  //alert('wait');
+  //if(!proj4.readyToUse) alert('not ready1');
     </script>
     <script type="text/javascript+protovis">
 
@@ -44,7 +44,7 @@
     return {x:lonlat.lat, y:lonlat.lon};
   }
 
-  var scale = pv.Scale.geo({lon:-179, lat:0}, {lon:+179, lat:0}, {lon:0, lat:-80}, {lon:0, lat:80}).projection(proj4).range({x:0, y:0}, {x:w, y:h});
+  var scale = pv.Geo.scale({lon:-179, lat:0}, {lon:+179, lat:0}, {lon:0, lat:-80}, {lon:0, lat:80}).projection(pv.Geo.projections["sinusoidal"]).range({x:0, y:0}, {x:w, y:h});
   //var scale = pv.Scale.geo("hammer").range({x:0, y:0}, {x:w, y:h});
   var col = pv.Scale.linear(0, 4000).range("green", "red");
   var points = [];
