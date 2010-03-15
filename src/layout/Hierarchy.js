@@ -14,12 +14,9 @@ pv.Layout.Hierarchy.prototype.bind = function() {
   pv.Layout.Network.prototype.bind.call(this);
   var binds = this.binds;
   if (!binds.properties.links) {
-    binds.defs.push({
-      name: "links",
-      id: pv.id(),
-      type: 1,
-      value: pv.Layout.Hierarchy.links
-    });
+    var p = this.propertyValue("links", pv.Layout.Hierarchy.links);
+    p.type = 1;
+    binds.defs.push(p);
   }
 };
 
