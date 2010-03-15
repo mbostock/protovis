@@ -9,8 +9,9 @@
 var data = pv.range(4).map(function()
         pv.range(0, 10, .1).map(function(x) {
             return {x: x, y: Math.sin(x) + Math.random() * .5 + 2};
-          })),
-    w = 400,
+          }));
+
+var w = 400,
     h = 200,
     x = pv.Scale.linear(0, 9.9).range(0, w),
     y = pv.Scale.linear(0, 14).range(0, h);
