@@ -16,7 +16,7 @@ pv.Behavior.point = function(r) {
   function search(scene, index) {
     var v = scene.mark.mouse(),
         s = scene[index],
-        point = {cost: Infinity, distance: Infinity};
+        point = {cost: Infinity};
     for (var i = 0, n = s.children.length; i < n; i++) {
       var child = s.children[i], p;
       if (child.mark.type == "panel") {
@@ -45,7 +45,7 @@ pv.Behavior.point = function(r) {
   function mousemove() {
     /* If the closest mark is far away, clear the current target. */
     var point = search(this.scene, this.index);
-    if (point.distance > r2) point = null;
+    if ((point.cost == Infinity) || (point.distance > r2)) point = null;
 
     /* Unpoint the old target, if it's not the new target. */
     if (unpoint) {
