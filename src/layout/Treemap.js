@@ -27,6 +27,7 @@
  */
 pv.Layout.Treemap = function() {
   pv.Layout.Hierarchy.call(this);
+  var that = this;
 
   var node = this.node
       .strokeStyle("#fff")
@@ -35,7 +36,15 @@ pv.Layout.Treemap = function() {
       .height(function(n) { return n.dy; });
 
   /** @private Adding to this layout implicitly adds to this node. */
-  this.add = function(type) { return this.parent.add(type).extend(node); };
+  this.add = function(type) {
+    return type.prototype instanceof pv.Layout
+        ? this.parent.add(pv.Panel).extend(node)
+            .strokeStyle(null)
+            .fillStyle(null)
+            .visible(function(n) { return !n.firstChild; })
+            .add(type)
+        : this.parent.add(type).extend(node);
+  };
 
   /* Now hide references to inherited marks. */
   delete this.node;
@@ -54,7 +63,7 @@ pv.Layout.Treemap.prototype = pv.extend(pv.Layout.Hierarchy)
 
 pv.Layout.Treemap.prototype.defaults = new pv.Layout.Treemap()
     .extend(pv.Layout.Hierarchy.prototype.defaults)
-    .mode("squarify") // squarify, slice-and-dice
+    .mode("squarify") // squarify, slice-and-dice, slice, dice
     .order("ascending"); // ascending, descending, null == unsorted
 
 pv.Layout.Treemap.prototype.$size = Number;
@@ -74,7 +83,8 @@ pv.Layout.Treemap.prototype.init = function() {
       top = that.top(),
       bottom = that.bottom(),
       size = function(n) { return n.size; },
-      round = that.round() ? Math.round : Number;
+      round = that.round() ? Math.round : Number,
+      mode = that.mode();
 
   /** @private */
   function slice(row, sum, horizontal, x, y, w, h) {
@@ -116,88 +126,83 @@ pv.Layout.Treemap.prototype.init = function() {
   }
 
   /** @private */
-  var modes = {
-    "slice-and-dice": function(n, i) {
-      slice(n.childNodes,
-          pv.sum(n.childNodes, size),
-          i & 1,
-          n.x + left,
-          n.y + top,
-          n.dx - left - right,
-          n.dy - top - bottom);
-    },
+  function layout(n, i) {
+    var x = n.x + left,
+        y = n.y + top,
+        w = n.dx - left - right,
+        h = n.dy - top - bottom;
 
-    "squarify": function(n) {
-      var row = [],
-          mink = Infinity,
-          x = n.x + left,
-          y = n.y + top,
-          w = n.dx - left - right,
-          h = n.dy - top - bottom,
-          l = Math.min(w, h),
-          k = w * h / n.size;
+    /* Assume squarify by default. */
+    if (mode != "squarify") {
+      slice(n.childNodes, n.size,
+          mode == "slice" ? true
+          : mode == "dice" ? false
+          : i & 1, x, y, w, h);
+      return;
+    }
 
-      /* Abort if the size is nonpositive. */
-      if (n.size <= 0) {
-        n.dx = 0;
-        n.dy = 0;
-        return;
+    var row = [],
+        mink = Infinity,
+        l = Math.min(w, h),
+        k = w * h / n.size;
+
+    /* Abort if the size is nonpositive. */
+    if (n.size <= 0) return;
+
+    /* Scale the sizes to fill the current subregion. */
+    n.visitBefore(function(n) { n.size *= k; });
+
+    /** @private Position the specified nodes along one dimension. */
+    function position(row) {
+      var horizontal = w == l,
+          sum = pv.sum(row, size),
+          r = l ? round(sum / l) : 0;
+      slice(row, sum, horizontal, x, y, horizontal ? w : r, horizontal ? r : h);
+      if (horizontal) {
+        y += r;
+        h -= r;
+      } else {
+        x += r;
+        w -= r;
       }
+      l = Math.min(w, h);
+      return horizontal;
+    }
 
-      /* Scale the sizes to fill the current subregion. */
-      n.visitBefore(function(n) { n.size *= k; });
-
-      /** @private Position the specified nodes along one dimension. */
-      function position(row) {
-        var horizontal = w == l,
-            sum = pv.sum(row, size),
-            r = l ? round(sum / l) : 0;
-        slice(row, sum, horizontal, x, y, horizontal ? w : r, horizontal ? r : h);
-        if (horizontal) {
-          y += r;
-          h -= r;
-        } else {
-          x += r;
-          w -= r;
-        }
-        l = Math.min(w, h);
-        return horizontal;
+    var children = n.childNodes.slice(); // copy
+    while (children.length) {
+      var child = children[children.length - 1];
+      if (!child.size) {
+        children.pop();
+        continue;
       }
+      row.push(child);
 
-      var children = n.childNodes.slice(); // copy
-      while (children.length) {
-        var child = children[children.length - 1];
-        if (!child.size) {
-          children.pop();
-          continue;
-        }
-        row.push(child);
-
-        var k = ratio(row, l);
-        if (k <= mink) {
-          children.pop();
-          mink = k;
-        } else {
-          row.pop();
-          position(row);
-          row.length = 0;
-          mink = Infinity;
-        }
-      }
-
-      /* correct off-axis rounding error */
-      if (position(row)) for (var i = 0; i < row.length; i++) {
-        row[i].dy += h;
-      } else for (var i = 0; i < row.length; i++) {
-        row[i].dx += w;
+      var k = ratio(row, l);
+      if (k <= mink) {
+        children.pop();
+        mink = k;
+      } else {
+        row.pop();
+        position(row);
+        row.length = 0;
+        mink = Infinity;
       }
     }
-  };
+
+    /* correct off-axis rounding error */
+    if (position(row)) for (var i = 0; i < row.length; i++) {
+      row[i].dy += h;
+    } else for (var i = 0; i < row.length; i++) {
+      row[i].dx += w;
+    }
+  }
 
   /* Recursively compute the node depth and size. */
   stack.unshift(null);
   root.visitAfter(function(n, i) {
       n.depth = i;
+      n.x = n.y = n.dx = n.dy = 0;
       n.size = n.firstChild
           ? pv.sum(n.childNodes, function(n) { return n.size; })
           : that.$size.apply(that, (stack[0] = n.nodeValue, stack));
@@ -221,5 +226,5 @@ pv.Layout.Treemap.prototype.init = function() {
   root.y = 0;
   root.dx = that.parent.width();
   root.dy = that.parent.height();
-  root.visitBefore(modes[that.mode()]);
+  root.visitBefore(layout);
 };

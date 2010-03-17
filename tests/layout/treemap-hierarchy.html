@@ -1,0 +1,41 @@
+<html>
+  <head>
+    <title>Flare Treemap</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <style type="text/css">
+
+body {
+  margin: 0;
+}
+
+    </style>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(function() window.innerWidth - 1)
+    .height(function() window.innerHeight - 1)
+    .margin(.5);
+
+vis.add(pv.Layout.Treemap)
+    .data(pv.nodes(pv.range(3)))
+    .mode("slice")
+  .add(pv.Layout.Treemap)
+    .data(pv.nodes(pv.range(10)))
+    .mode("dice")
+  .add(pv.Layout.Treemap)
+    .data(pv.nodes(pv.range(10)))
+    .mode("slice")
+  .add(pv.Bar)
+    .fillStyle(pv.ramp("steelblue", "brown").by(Math.random))
+    .lineWidth(1)
+    .antialias(false);
+
+vis.render();
+
+window.onresize = function() vis.render();
+
+    </script>
+  </body>
+</html>

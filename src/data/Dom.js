@@ -344,3 +344,18 @@ pv.Dom.Node.prototype.toggle = function() {
     while (n.lastChild) n.toggled.push(n.removeChild(n.lastChild));
   }
 };
+
+/**
+ * Given a flat array of values, returns a simple DOM with each value wrapped by
+ * a node that is a child of the root node.
+ *
+ * @param {array} values
+ * @returns {array} nodes
+ */
+pv.nodes = function(values) {
+  var root = new pv.Dom.Node();
+  for (var i = 0; i < values.length; i++) {
+    root.appendChild(new pv.Dom.Node(values[i]));
+  }
+  return root.nodes();
+};
