@@ -3,19 +3,37 @@
     <title>Flare Treemap</title>
     <script type="text/javascript" src="../../protovis-d3.2.js"></script>
     <script type="text/javascript" src="../flare.js"></script>
+    <style type="text/css">
+
+body {
+  margin: 0;
+}
+
+    </style>
   </head>
   <body>
     <script type="text/javascript+protovis">
 
 var vis = new pv.Panel()
-    .width(860)
-    .height(668);
+    .width(function() window.innerWidth - 1)
+    .height(function() window.innerHeight - 1)
+    .margin(.5);
 
 vis.add(pv.Layout.Treemap)
     .data(pv.dom(flare).root("flare").nodes())
-  .add(pv.Bar);
+    .round(true)
+  .add(pv.Panel)
+    .visible(function(d) !d.firstChild)
+    .overflow("hidden")
+    .fillStyle(pv.Colors.category19().by(function(d) d.parentNode.nodeName))
+    .lineWidth(1)
+  .anchor("center").add(pv.Label)
+    .textAngle(function(d) d.dx > d.dy ? 0 : -Math.PI / 2)
+    .text(function(d) d.nodeName);
 
 vis.render();
+
+window.onresize = function() vis.render();
 
     </script>
   </body>

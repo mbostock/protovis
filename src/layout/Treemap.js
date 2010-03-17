@@ -48,7 +48,14 @@ pv.Layout.Treemap.prototype = pv.extend(pv.Layout.Hierarchy)
     .property("left", Number)
     .property("right", Number)
     .property("top", Number)
-    .property("bottom", Number);
+    .property("bottom", Number)
+    .property("mode", String)
+    .property("order", String);
+
+pv.Layout.Treemap.prototype.defaults = new pv.Layout.Treemap()
+    .extend(pv.Layout.Hierarchy.prototype.defaults)
+    .mode("squarify") // squarify, slice-and-dice
+    .order("ascending"); // ascending, descending, null == unsorted
 
 pv.Layout.Treemap.prototype.$size = Number;
 
@@ -66,7 +73,33 @@ pv.Layout.Treemap.prototype.init = function() {
       right = that.right(),
       top = that.top(),
       bottom = that.bottom(),
+      size = function(n) { return n.size; },
       round = that.round() ? Math.round : Number;
+
+  /** @private */
+  function slice(row, sum, horizontal, x, y, w, h) {
+    for (var i = 0, d = 0; i < row.length; i++) {
+      var n = row[i];
+      if (horizontal) {
+        n.x = x + d;
+        n.y = y;
+        d += n.dx = round(w * n.size / sum);
+        n.dy = h;
+      } else {
+        n.x = x;
+        n.y = y + d;
+        n.dx = w;
+        d += n.dy = round(h * n.size / sum);
+      }
+    }
+    if (n) { // correct on-axis rounding error
+      if (horizontal) {
+        n.dx += w - d;
+      } else {
+        n.dy += h - d;
+      }
+    }
+  }
 
   /** @private */
   function ratio(row, l) {
@@ -83,81 +116,83 @@ pv.Layout.Treemap.prototype.init = function() {
   }
 
   /** @private */
-  function squarify(n) {
-    var row = [],
-        mink = Infinity,
-        x = n.x + left,
-        y = n.y + top,
-        w = n.dx - left - right,
-        h = n.dy - top - bottom,
-        l = Math.min(w, h),
-        k = w * h / n.size;
+  var modes = {
+    "slice-and-dice": function(n, i) {
+      slice(n.childNodes,
+          pv.sum(n.childNodes, size),
+          i & 1,
+          n.x + left,
+          n.y + top,
+          n.dx - left - right,
+          n.dy - top - bottom);
+    },
 
-    /* Scale the sizes to fill the current subregion. */
-    n.visitBefore(function(n) { n.size *= k; });
+    "squarify": function(n) {
+      var row = [],
+          mink = Infinity,
+          x = n.x + left,
+          y = n.y + top,
+          w = n.dx - left - right,
+          h = n.dy - top - bottom,
+          l = Math.min(w, h),
+          k = w * h / n.size;
 
-    /** @private Position the specified nodes along one dimension. */
-    function position(row) {
-      var s = pv.sum(row, function(n) { return n.size; }),
-          hh = (l == 0) ? 0 : round(s / l);
+      /* Abort if the size is nonpositive. */
+      if (n.size <= 0) {
+        n.dx = 0;
+        n.dy = 0;
+        return;
+      }
 
-      for (var i = 0, d = 0; i < row.length; i++) {
-        var n = row[i], nw = round(n.size / hh);
-        if (w == l) {
-          n.x = x + d;
-          n.y = y;
-          n.dx = nw;
-          n.dy = hh;
+      /* Scale the sizes to fill the current subregion. */
+      n.visitBefore(function(n) { n.size *= k; });
+
+      /** @private Position the specified nodes along one dimension. */
+      function position(row) {
+        var horizontal = w == l,
+            sum = pv.sum(row, size),
+            r = l ? round(sum / l) : 0;
+        slice(row, sum, horizontal, x, y, horizontal ? w : r, horizontal ? r : h);
+        if (horizontal) {
+          y += r;
+          h -= r;
         } else {
-          n.x = x;
-          n.y = y + d;
-          n.dx = hh;
-          n.dy = nw;
+          x += r;
+          w -= r;
         }
-        d += nw;
+        l = Math.min(w, h);
+        return horizontal;
       }
 
-      if (w == l) {
-        if (n) n.dx += w - d; // correct rounding error
-        y += hh;
-        h -= hh;
-      } else {
-        if (n) n.dy += h - d; // correct rounding error
-        x += hh;
-        w -= hh;
-      }
-      l = Math.min(w, h);
-    }
+      var children = n.childNodes.slice(); // copy
+      while (children.length) {
+        var child = children[children.length - 1];
+        if (!child.size) {
+          children.pop();
+          continue;
+        }
+        row.push(child);
 
-    var children = n.childNodes.slice(); // copy
-    while (children.length) {
-      var child = children[children.length - 1];
-      if (!child.size) {
-        children.pop();
-        continue;
+        var k = ratio(row, l);
+        if (k <= mink) {
+          children.pop();
+          mink = k;
+        } else {
+          row.pop();
+          position(row);
+          row.length = 0;
+          mink = Infinity;
+        }
       }
-      row.push(child);
 
-      var k = ratio(row, l);
-      if (k <= mink) {
-        children.pop();
-        mink = k;
-      } else {
-        row.pop();
-        position(row);
-        row.length = 0;
-        mink = Infinity;
+      /* correct off-axis rounding error */
+      if (position(row)) for (var i = 0; i < row.length; i++) {
+        row[i].dy += h;
+      } else for (var i = 0; i < row.length; i++) {
+        row[i].dx += w;
       }
     }
-    position(row);
-
-    /* correct rounding error */
-    if (w == l) for (var i = 0; i < row.length; i++) {
-      row[i].dx += w;
-    } else for (var i = 0; i < row.length; i++) {
-      row[i].dy += h;
-    }
-  }
+  };
 
   /* Recursively compute the node depth and size. */
   stack.unshift(null);
@@ -169,11 +204,22 @@ pv.Layout.Treemap.prototype.init = function() {
     });
   stack.shift();
 
-  /* Sort by ascending size, then recursively compute the layout. */
-  root.sort(function(a, b) { return a.size - b.size; });
+  /* Sort. */
+  switch (that.order()) {
+    case "ascending": {
+      root.sort(function(a, b) { return a.size - b.size; });
+      break;
+    }
+    case "descending": {
+      root.sort(function(a, b) { return b.size - a.size; });
+      break;
+    }
+  }
+
+  /* Recursively compute the layout. */
   root.x = 0;
   root.y = 0;
   root.dx = that.parent.width();
   root.dy = that.parent.height();
-  root.visitBefore(squarify);
+  root.visitBefore(modes[that.mode()]);
 };

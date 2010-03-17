@@ -21,6 +21,9 @@ layout/Tree.js
 layout/{Cluster,Partition}.js
 - support customized inner/outer radius
 
+mark/Anchor.js
+- support anchors across panels: mirrored descent (fallback to last?)
+
 mark/Mark.js
 - antialias doesn't always work as expected; requires pixel rounding?
 
