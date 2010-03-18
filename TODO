@@ -1,9 +1,6 @@
 data/Transform.js
 - documentation
 
-data/Scale.js
-- consolidate code between scale implementations
-
 layout/Layout.js
 - use private data, or at least standardize which attributes are populated
 - rename: x -> left, y -> top, angle -> textAngle?
