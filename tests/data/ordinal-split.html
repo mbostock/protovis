@@ -1,0 +1,51 @@
+<html>
+  <head>
+    <title>Ordinal Split</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var categories = "ABCDEF".split(""),
+    data = categories.map(function(c) ({x:c, y:pv.range(40).map(Math.random)})),
+    w = 140,
+    h = 400,
+    x = pv.Scale.ordinal(categories).split(0, w),
+    y = pv.Scale.linear(0, 1).range(0, h),
+    c = pv.Scale.linear(0, .5, 1).range("red", "#ddd", "green");
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .margin(20)
+    .right(30)
+    .strokeStyle("#ccc");
+
+vis.add(pv.Rule)
+    .data(categories)
+    .strokeStyle("#eee")
+    .left(x)
+  .anchor("bottom").add(pv.Label)
+    .textMargin(8);
+
+vis.add(pv.Rule)
+    .data(y.ticks())
+    .strokeStyle("#eee")
+    .bottom(y)
+  .anchor("right").add(pv.Label)
+    .textMargin(8)
+    .text(y.tickFormat);
+
+vis.add(pv.Panel)
+    .data(data)
+  .add(pv.Dot)
+    .data(function(d) d.y)
+    .left(function(y, d) x(d.x))
+    .bottom(y)
+    .strokeStyle(c);
+
+vis.render();
+
+    </script>
+  </body>
+</html>
