@@ -133,7 +133,7 @@ pv.Scale.quantitative = function() {
         if (arguments.length < 2) min = pv.identity;
         if (arguments.length < 3) max = min;
         o = array.length && min(array[0]);
-        d = [pv.min(array, min), pv.max(array, max)];
+        d = array.length ? [pv.min(array, min), pv.max(array, max)] : [];
       } else {
         o = array;
         d = Array.prototype.slice.call(arguments).map(Number);
@@ -220,9 +220,12 @@ pv.Scale.quantitative = function() {
    * @returns {number[]} an array input domain values to use as ticks.
    */
   scale.ticks = function(m) {
+    if (d.length == 0) return [];
     var min = d[0],
         max = d[d.length - 1],
         span = max - min;
+
+    if (span == 0) return [min];
 
     if (!arguments.length) m = 10;
 
@@ -367,10 +370,13 @@ pv.Scale.quantitative = function() {
    * @returns {pv.Scale.quantitative} <tt>this</tt>.
    */
   scale.nice = function() {
+    if (d.length == 0) return this;
     // TODO support non-uniform domains
     var min = d[0],
         max = d[d.length - 1],
-        step = Math.pow(10, Math.round(Math.log(max - min) / Math.log(10)) - 1);
+        span = max - min;
+    if (span == 0) return this;
+    var step = Math.pow(10, Math.round(Math.log(span) / Math.log(10)) - 1);
     d = [Math.floor(min / step) * step, Math.ceil(max / step) * step];
     return this;
   };
