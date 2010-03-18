@@ -1,5 +1,5 @@
 pv.Behavior.tipsy = function(opts) {
-  var tip, datum;
+  var tip;
   return function(d) {
       /* Compute the transform to offset the tooltip position. */
       var t = pv.Transform.identity, p = this.parent;
@@ -11,15 +11,8 @@ pv.Behavior.tipsy = function(opts) {
       var c = this.root.canvas();
       c.style.position = "relative";
 
-      datum = d;
       if (!tip) {
-         tip = c.appendChild(document.createElement("span"));
-
-        /* If using a title function, pass it the current datum. */
-        var title = opts.title;
-        if (title instanceof Function) {
-          opts = $.extend({}, opts, {title: function() { return title(datum); }});
-        }
+        tip = c.appendChild(document.createElement("span"));
 
         /* Setup tipsy. */
         $(tip).tipsy(opts);
@@ -29,7 +22,7 @@ pv.Behavior.tipsy = function(opts) {
       e.style.display = "inline-block";
       e.style.position = "absolute";
       e.style.background = "transparent";
-      e.title = this.title();
+      e.title = this.title() || this.text();
 
       /*
        * Compute bounding box. TODO support area, lines, wedges, stroke. Also

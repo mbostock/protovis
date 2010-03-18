@@ -49,7 +49,7 @@ vis.add(pv.Line)
     .left(function(d) x(d.x))
     .bottom(function(d) y(d.y))
     .lineWidth(3)
-    .title(function(d) d.x.toFixed(2) + ', ' + d.y.toFixed(2))
+    .text(function(d) d.x.toFixed(2) + ', ' + d.y.toFixed(2))
     .event("point", pv.Behavior.tipsy({gravity: 's'}));
 
 vis.render();
