@@ -1,6 +1,9 @@
 data/Transform.js
 - documentation
 
+data/Scale.js
+- allow customization of data ticks (e.g., "3 months", "5 minutes")
+
 layout/Layout.js
 - use private data, or at least standardize which attributes are populated
 - rename: x -> left, y -> top, angle -> textAngle?
@@ -8,6 +11,8 @@ layout/Layout.js
 layout/Force.js
 - copy: x -> left, y -> top
 - example with interactive filtering of links and nodes
+- allow customization of simulation parameters (e.g., rest length)
+- allow dynamic updates to the graph, preserving simulation (add/remove nodes/liks)
 
 layout/Network.js
 - add reset() method to clear cached layout
@@ -18,6 +23,9 @@ layout/Tree.js
 layout/{Cluster,Partition}.js
 - support customized inner/outer radius
 
+layout/Stack.js
+- order("reverse")
+
 mark/Anchor.js
 - support anchors across panels: mirrored descent (fallback to last?)
 
@@ -26,6 +34,10 @@ mark/Mark.js
 
 mark/Area.js
 - {min,max}:name psuedo-anchors for center labeling?
+
+mark/Area.Radial.js
+mark/Line.Radial.js
+mark/Bar.Radial.js
 
 behavior/*
 - documentation, implementation, etc.
