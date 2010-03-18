@@ -57,7 +57,8 @@ pv.Scale.quantitative = function() {
       type = Number, // default type
       n = false, // whether the domain is negative
       f = pv.identity, // default forward transform
-      g = pv.identity; // default inverse transform
+      g = pv.identity, // default inverse transform
+      tickFormat = String; // default tick formatting function
 
   /** @private */
   function newDate(x) {
@@ -317,7 +318,7 @@ pv.Scale.quantitative = function() {
         }
       }
 
-      scale.tickFormat = pv.Format.date(format);
+      tickFormat = pv.Format.date(format);
 
       while (true) {
         increment(date);
@@ -336,21 +337,21 @@ pv.Scale.quantitative = function() {
     var start = Math.ceil(min / step) * step,
         end = Math.floor(max / step) * step,
         precision = Math.max(0, -Math.floor(pv.log(step, 10) + .01));
-    scale.tickFormat = function(x) { return x.toFixed(precision); };
+    tickFormat = function(x) { return x.toFixed(precision); };
     return pv.range(start, end + step, step);
   };
 
   /**
    * Formats the specified tick value using the appropriate precision, based on
-   * the step interval between tick marks. This method is only defined after
-   * {@link #ticks} has been called, since tick generation determines the
-   * formatting.
+   * the step interval between tick marks. If {@link #ticks} has not been called,
+   * the argument is converted to a string, but no formatting is applied.
    *
    * @function
    * @name pv.Scale.quantitative.prototype.tickFormat
    * @param {number} t a tick value.
    * @returns {string} a formatted tick value.
    */
+  scale.tickFormat = function (t) { return tickFormat(t); };
 
   /**
    * "Nices" this scale, extending the bounds of the input domain to
