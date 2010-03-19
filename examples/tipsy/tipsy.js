@@ -8,13 +8,10 @@ pv.Behavior.tipsy = function(opts) {
       } while (p = p.parent);
 
       /* Create and cache the tooltip span to be used by tipsy. */
-      var c = this.root.canvas();
-      c.style.position = "relative";
-
       if (!tip) {
+        var c = this.root.canvas();
+        c.style.position = "relative";
         tip = c.appendChild(document.createElement("span"));
-
-        /* Setup tipsy. */
         $(tip).tipsy(opts);
       }
 
@@ -49,7 +46,7 @@ pv.Behavior.tipsy = function(opts) {
           }
         });
 
-      /* Trigger the tooltip. This is necessary for dimensionless mark instances. */
-      $(e).trigger('mouseenter');
+      /* Trigger the tooltip; necessary for dimensionless mark instances. */
+      $(e).trigger("mouseenter");
     };
 };
