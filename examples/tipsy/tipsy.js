@@ -1,6 +1,6 @@
 pv.Behavior.tipsy = function(opts) {
   var tip;
-  return function() {
+  return function(d) {
       /* Compute the transform to offset the tooltip position. */
       var t = pv.Transform.identity, p = this.parent;
       do {
@@ -10,11 +10,19 @@ pv.Behavior.tipsy = function(opts) {
       /* Create and cache the tooltip span to be used by tipsy. */
       var c = this.root.canvas();
       c.style.position = "relative";
-      var e = tip || (tip = c.appendChild(document.createElement("span")));
+
+      if (!tip) {
+        tip = c.appendChild(document.createElement("span"));
+
+        /* Setup tipsy. */
+        $(tip).tipsy(opts);
+      }
+
+      var e = tip;
       e.style.display = "inline-block";
       e.style.position = "absolute";
       e.style.background = "transparent";
-      e.title = this.title();
+      e.title = this.title() || this.text();
 
       /*
        * Compute bounding box. TODO support area, lines, wedges, stroke. Also
@@ -33,12 +41,15 @@ pv.Behavior.tipsy = function(opts) {
       e.style.left = Math.floor(this.left() * t.k + t.x);
       e.style.top = Math.floor(this.top() * t.k + t.y);
 
-      /* Setup tipsy, and cleanup the tooltip span on mouseout. */
-      $(e).tipsy(opts).mouseout(function() {
+      /* Cleanup the tooltip span on mouseout. */
+      $(e).mouseout(function() {
           if (tip) {
             c.removeChild(tip);
             tip = null;
           }
         });
+
+      /* Trigger the tooltip. This is necessary for dimensionless mark instances. */
+      $(e).trigger('mouseenter');
     };
 };
