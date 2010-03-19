@@ -16,7 +16,7 @@
  */
 
 pv.Geo.scale = function() {
-  var tlp, brp, d = undefined, proj, latlngLast = undefined, lastPoint;
+  var tlp, brp, d = undefined, proj = pv.Geo.projections.identity, latlngLast = undefined, lastPoint;
   var xScale = pv.Scale.linear(-1, 1).range(0, 1);
   var yScale = pv.Scale.linear(-1, 1).range(0, 1);
 
