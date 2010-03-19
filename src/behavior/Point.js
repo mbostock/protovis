@@ -62,6 +62,16 @@ pv.Behavior.point = function(r) {
     /* Point the new target, if there is one. */
     if (unpoint = point) {
       pv.Mark.dispatch(event("point"), point.scene, point.index);
+
+      /* Unpoint when the mouse leaves the root panel. */
+      pv.listen(this.root.canvas(), "mouseout", mouseout);
+    }
+  }
+
+  function mouseout(e) {
+    if (unpoint && !pv.ancestor(this, e.relatedTarget)) {
+      pv.Mark.dispatch(event("unpoint"), unpoint.scene, unpoint.index);
+      unpoint = null;
     }
   }
 

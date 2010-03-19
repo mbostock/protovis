@@ -112,20 +112,35 @@ pv.listen = function(target, type, listener) {
 
 /**
  * @private Returns a wrapper for the specified listener function such that the
- * {@link pv.event} is set for the duration of the listener's invocation.
+ * {@link pv.event} is set for the duration of the listener's invocation. The
+ * wrapper is cached on the returned function, such that duplicate registrations
+ * of the wrapped event handler are ignored.
  *
- * @param {function} an event handler.
+ * @param {function} f an event handler.
  * @returns {function} the wrapped event handler.
  */
-pv.listener = function(listener) {
-  return function(e) {
+pv.listener = function(f) {
+  return f.$listener || (f.$listener = function(e) {
       try {
         pv.event = e;
-        return listener(e);
+        return f.call(this, e);
       } finally {
         delete pv.event;
       }
-    };
+    });
+};
+
+/**
+ * @private Returns true iff <i>a</i> is an ancestor of <i>e</i>. This is useful
+ * for ignoring mouseout and mouseover events that are contained within the
+ * target element.
+ */
+pv.ancestor = function(a, e) {
+  while (e) {
+    if (e == a) return true;
+    e = e.parentNode;
+  }
+  return false;
 };
 
 /** @private Returns a locally-unique positive id. */
