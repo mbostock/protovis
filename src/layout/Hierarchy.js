@@ -14,12 +14,9 @@ pv.Layout.Hierarchy.prototype.bind = function() {
   pv.Layout.Network.prototype.bind.call(this);
   var binds = this.binds;
   if (!binds.properties.links) {
-    binds.defs.push({
-      name: "links",
-      id: pv.id(),
-      type: 1,
-      value: pv.Layout.Hierarchy.links
-    });
+    var p = this.propertyValue("links", pv.Layout.Hierarchy.links);
+    p.type = 1;
+    binds.defs.push(p);
   }
 };
 
@@ -136,7 +133,7 @@ pv.Layout.Hierarchy.Fill = {
 
     /** @private */
     function angle(n) {
-      return (n.maxBreadth - n.minBreadth) * 2 * Math.PI;
+      return (n.parentNode ? n.maxBreadth - n.minBreadth : 1) * 2 * Math.PI;
     }
 
     for (var i = 0; i < nodes.length; i++) {

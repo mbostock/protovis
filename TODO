@@ -1,23 +1,25 @@
 data/Transform.js
 - documentation
 
-data/Scale.js
-- consolidate code between scale implementations
-
 layout/Layout.js
-- allow interactive expanding / collapsing of tree nodes?
-- migrate all implementations to extend pv.Layout
 - use private data, or at least standardize which attributes are populated
-- rename: x -> left, y -> top, angle -> textAngle
+- rename: x -> left, y -> top, angle -> textAngle?
 
 layout/Force.js
 - copy: x -> left, y -> top
+- example with interactive filtering of links and nodes
+
+layout/Network.js
+- add reset() method to clear cached layout
 
 layout/Tree.js
 - allow depth and breadth offset to be computed automatically
 
 layout/{Cluster,Partition}.js
 - support customized inner/outer radius
+
+mark/Anchor.js
+- support anchors across panels: mirrored descent (fallback to last?)
 
 mark/Mark.js
 - antialias doesn't always work as expected; requires pixel rounding?
@@ -27,7 +29,7 @@ mark/Area.js
 
 behavior/*
 - documentation, implementation, etc.
-- should behaviors automatically re-render?
+- should behaviors automatically re-render? render hooks (e.g., panel-transform)
 
 behavior/Select.js
 - rewrite

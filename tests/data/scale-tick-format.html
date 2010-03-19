@@ -1,0 +1,54 @@
+<html>
+  <head>
+    <title>Tick Format Test</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var data = pv.range(101),
+    w = 500,
+    h = 500,
+    x = pv.Scale.linear(0, 100).range(0, w),
+    y = pv.Scale.linear(0, 100).range(0, h);
+
+/* Override tickFormat to use Arabic. */
+y.tickFormat = function(x) {
+  var c = [], x = String(x);
+  for (var i = 0; i < x.length; i++) c.push(0x660 + Number(x[i]));
+  return String.fromCharCode.apply(null, c);
+};
+
+var vis = new pv.Panel()
+    .width(500)
+    .height(500)
+    .margin(20)
+    .left(30)
+    .fillStyle("#fff")
+    .strokeStyle("#ccc");
+
+vis.add(pv.Rule)
+    .data(pv.range(0, 101, 10))
+    .left(x)
+    .strokeStyle("#ccc")
+  .anchor("bottom").add(pv.Label)
+    .text(x.tickFormat); // defaults to String
+
+vis.add(pv.Rule)
+    .data(y.ticks())
+    .bottom(y)
+    .strokeStyle("#ccc")
+  .anchor("left").add(pv.Label)
+    .font("14px sans-serif")
+    .text(y.tickFormat);
+
+vis.add(pv.Line)
+    .data(data)
+    .left(x)
+    .bottom(y);
+
+vis.render();
+
+    </script>
+  </body>
+</html>

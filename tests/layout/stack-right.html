@@ -35,15 +35,12 @@ vis.add(pv.Layout.Stack)
     .height(y)
     .fillStyle(pv.ramp("#aad", "#556").by(Math.random))
     .strokeStyle(function() this.fillStyle().alpha(.5))
-  .anchor("center").add(pv.Label)
-    .def("i", function() pv.max.index(this.anchorTarget().scene, function(s) s.height))
-    .visible(function() this.i() == this.index)
+  .label.add(pv.Label)
     .textStyle("white")
-    .font(function() Math.max(8, Math.sqrt(this.anchorTarget().height())) + "px sans-serif")
+    .font(function(d) Math.max(10, d * 4) + "px sans-serif")
     .text(pv.parent);
 
 vis.render();
-
 
     </script>
   </body>

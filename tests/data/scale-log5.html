@@ -1,0 +1,60 @@
+<html>
+  <head>
+    <title>Log Scale</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var data = pv.range(1, 101),
+    m = {x:1, y:1},
+    w = 500,
+    h = 500,
+    x = pv.Scale.linear(1, 100).range(0, w),
+    y = pv.Scale.log(.9, 110).range(0, h).nice();
+
+var vis = new pv.Panel()
+    .width(500)
+    .height(500)
+    .margin(20)
+    .left(30)
+    .fillStyle("#fff")
+    .strokeStyle("#ccc")
+    .event("mousemove", function() {
+        m = this.mouse();
+        m.x = x.invert(m.x);
+        m.y = y.invert(h - m.y);
+        return this;
+      });
+
+vis.add(pv.Rule)
+    .data(x.ticks())
+    .left(x)
+    .strokeStyle("#ccc")
+  .anchor("bottom").add(pv.Label)
+    .text(x.tickFormat);
+
+vis.add(pv.Rule)
+    .data(y.ticks())
+    .bottom(y)
+    .strokeStyle("#ccc")
+  .anchor("left").add(pv.Label)
+    .text(y.tickFormat);
+
+vis.add(pv.Line)
+    .data(data)
+    .left(x)
+    .bottom(y);
+
+vis.add(pv.Dot)
+    .data([m])
+    .left(function() x(m.x))
+    .bottom(function() y(m.y))
+  .anchor("right").add(pv.Label)
+    .text(function() x.tickFormat(m.x) + ", " + y.tickFormat(m.y));
+
+vis.render();
+
+    </script>
+  </body>
+</html>

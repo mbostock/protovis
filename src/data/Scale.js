@@ -1,5 +1,3 @@
-// TODO code-sharing between scales
-
 /**
  * @ignore
  * @class

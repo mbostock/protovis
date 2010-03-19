@@ -2,7 +2,6 @@
   <head>
     <title>Flare Treemap</title>
     <script type="text/javascript" src="../../protovis-d3.2.js"></script>
-    <script type="text/javascript" src="../flare.js"></script>
     <style type="text/css">
 
 body {
@@ -14,26 +13,24 @@ body {
   <body>
     <script type="text/javascript+protovis">
 
-function active(d, v) {
-  d.active = v; if (d.parentNode) active(d.parentNode, v);
-}
-
 var vis = new pv.Panel()
     .width(function() window.innerWidth - 1)
     .height(function() window.innerHeight - 1)
     .margin(.5);
 
 vis.add(pv.Layout.Treemap)
-    .data(pv.dom(flare).nodes())
-    .margin(6)
-    .round(true)
+    .data(pv.nodes(pv.range(3)))
+    .mode("slice")
+  .add(pv.Layout.Treemap)
+    .data(pv.nodes(pv.range(10)))
+    .mode("dice")
+  .add(pv.Layout.Treemap)
+    .data(pv.nodes(pv.range(10)))
+    .mode("slice")
   .add(pv.Bar)
-    .fillStyle(function(d) d.active ? "lightcoral" : "#ccc")
-    .strokeStyle("#fff")
+    .fillStyle(pv.ramp("steelblue", "brown").by(Math.random))
     .lineWidth(1)
-    .antialias(false)
-    .event("mouseover", function(d) (active(d, true), this))
-    .event("mouseout", function(d) (active(d, false), this));
+    .antialias(false);
 
 vis.render();
 

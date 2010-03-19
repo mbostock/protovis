@@ -27,6 +27,7 @@
  */
 pv.Layout.Treemap = function() {
   pv.Layout.Hierarchy.call(this);
+  var that = this;
 
   var node = this.node
       .strokeStyle("#fff")
@@ -35,7 +36,15 @@ pv.Layout.Treemap = function() {
       .height(function(n) { return n.dy; });
 
   /** @private Adding to this layout implicitly adds to this node. */
-  this.add = function(type) { return this.parent.add(type).extend(node); };
+  this.add = function(type) {
+    return type.prototype instanceof pv.Layout
+        ? this.parent.add(pv.Panel).extend(node)
+            .strokeStyle(null)
+            .fillStyle(null)
+            .visible(function(n) { return !n.firstChild; })
+            .add(type)
+        : this.parent.add(type).extend(node);
+  };
 
   /* Now hide references to inherited marks. */
   delete this.node;
@@ -48,7 +57,14 @@ pv.Layout.Treemap.prototype = pv.extend(pv.Layout.Hierarchy)
     .property("left", Number)
     .property("right", Number)
     .property("top", Number)
-    .property("bottom", Number);
+    .property("bottom", Number)
+    .property("mode", String)
+    .property("order", String);
+
+pv.Layout.Treemap.prototype.defaults = new pv.Layout.Treemap()
+    .extend(pv.Layout.Hierarchy.prototype.defaults)
+    .mode("squarify") // squarify, slice-and-dice, slice, dice
+    .order("ascending"); // ascending, descending, null == unsorted
 
 pv.Layout.Treemap.prototype.$size = Number;
 
@@ -66,7 +82,34 @@ pv.Layout.Treemap.prototype.init = function() {
       right = that.right(),
       top = that.top(),
       bottom = that.bottom(),
-      round = that.round() ? Math.round : Number;
+      size = function(n) { return n.size; },
+      round = that.round() ? Math.round : Number,
+      mode = that.mode();
+
+  /** @private */
+  function slice(row, sum, horizontal, x, y, w, h) {
+    for (var i = 0, d = 0; i < row.length; i++) {
+      var n = row[i];
+      if (horizontal) {
+        n.x = x + d;
+        n.y = y;
+        d += n.dx = round(w * n.size / sum);
+        n.dy = h;
+      } else {
+        n.x = x;
+        n.y = y + d;
+        n.dx = w;
+        d += n.dy = round(h * n.size / sum);
+      }
+    }
+    if (n) { // correct on-axis rounding error
+      if (horizontal) {
+        n.dx += w - d;
+      } else {
+        n.dy += h - d;
+      }
+    }
+  }
 
   /** @private */
   function ratio(row, l) {
@@ -83,50 +126,47 @@ pv.Layout.Treemap.prototype.init = function() {
   }
 
   /** @private */
-  function squarify(n) {
-    var row = [],
-        mink = Infinity,
-        x = n.x + left,
+  function layout(n, i) {
+    var x = n.x + left,
         y = n.y + top,
         w = n.dx - left - right,
-        h = n.dy - top - bottom,
+        h = n.dy - top - bottom;
+
+    /* Assume squarify by default. */
+    if (mode != "squarify") {
+      slice(n.childNodes, n.size,
+          mode == "slice" ? true
+          : mode == "dice" ? false
+          : i & 1, x, y, w, h);
+      return;
+    }
+
+    var row = [],
+        mink = Infinity,
         l = Math.min(w, h),
         k = w * h / n.size;
+
+    /* Abort if the size is nonpositive. */
+    if (n.size <= 0) return;
 
     /* Scale the sizes to fill the current subregion. */
     n.visitBefore(function(n) { n.size *= k; });
 
     /** @private Position the specified nodes along one dimension. */
     function position(row) {
-      var s = pv.sum(row, function(n) { return n.size; }),
-          hh = (l == 0) ? 0 : round(s / l);
-
-      for (var i = 0, d = 0; i < row.length; i++) {
-        var n = row[i], nw = round(n.size / hh);
-        if (w == l) {
-          n.x = x + d;
-          n.y = y;
-          n.dx = nw;
-          n.dy = hh;
-        } else {
-          n.x = x;
-          n.y = y + d;
-          n.dx = hh;
-          n.dy = nw;
-        }
-        d += nw;
-      }
-
-      if (w == l) {
-        if (n) n.dx += w - d; // correct rounding error
-        y += hh;
-        h -= hh;
+      var horizontal = w == l,
+          sum = pv.sum(row, size),
+          r = l ? round(sum / l) : 0;
+      slice(row, sum, horizontal, x, y, horizontal ? w : r, horizontal ? r : h);
+      if (horizontal) {
+        y += r;
+        h -= r;
       } else {
-        if (n) n.dy += h - d; // correct rounding error
-        x += hh;
-        w -= hh;
+        x += r;
+        w -= r;
       }
       l = Math.min(w, h);
+      return horizontal;
     }
 
     var children = n.childNodes.slice(); // copy
@@ -149,13 +189,12 @@ pv.Layout.Treemap.prototype.init = function() {
         mink = Infinity;
       }
     }
-    position(row);
 
-    /* correct rounding error */
-    if (w == l) for (var i = 0; i < row.length; i++) {
-      row[i].dx += w;
-    } else for (var i = 0; i < row.length; i++) {
+    /* correct off-axis rounding error */
+    if (position(row)) for (var i = 0; i < row.length; i++) {
       row[i].dy += h;
+    } else for (var i = 0; i < row.length; i++) {
+      row[i].dx += w;
     }
   }
 
@@ -163,17 +202,29 @@ pv.Layout.Treemap.prototype.init = function() {
   stack.unshift(null);
   root.visitAfter(function(n, i) {
       n.depth = i;
+      n.x = n.y = n.dx = n.dy = 0;
       n.size = n.firstChild
           ? pv.sum(n.childNodes, function(n) { return n.size; })
           : that.$size.apply(that, (stack[0] = n.nodeValue, stack));
     });
   stack.shift();
 
-  /* Sort by ascending size, then recursively compute the layout. */
-  root.sort(function(a, b) { return a.size - b.size; });
+  /* Sort. */
+  switch (that.order()) {
+    case "ascending": {
+      root.sort(function(a, b) { return a.size - b.size; });
+      break;
+    }
+    case "descending": {
+      root.sort(function(a, b) { return b.size - a.size; });
+      break;
+    }
+  }
+
+  /* Recursively compute the layout. */
   root.x = 0;
   root.y = 0;
   root.dx = that.parent.width();
   root.dy = that.parent.height();
-  root.visitBefore(squarify);
+  root.visitBefore(layout);
 };

@@ -1,0 +1,45 @@
+<html>
+  <head>
+    <title>Ticks Test</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var w = 800,
+    h = 400,
+    n = 197,
+    x = pv.Scale.linear(0, n - 1).range(0, w),
+    y = pv.Scale.linear(0, n / 3).range(10, h);
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .strokeStyle("#ccc")
+    .margin(9.5)
+    .events("all")
+    .event("mousemove", pv.Behavior.point(Infinity).collapse("y"));
+
+var line = vis.add(pv.Line)
+    .def("active", -1)
+    .data(pv.range(n).map(function(i) Math.abs(i - x.ticks(i).length)))
+    .interpolate("step-after")
+    .left(x.by(pv.index))
+    .bottom(y)
+    .event("point", function() this.active(this.index).parent)
+    .event("unpoint", function() this.active(-1).parent);
+
+line.add(pv.Dot)
+    .fillStyle("white")
+    .visible(function() this.proto.active() == this.index)
+  .anchor("top").add(pv.Label)
+    .text(function(d) this.index + ": " + d.toFixed(0));
+
+vis.add(pv.Rule)
+    .bottom(y(0));
+
+vis.render();
+
+    </script>
+  </body>
+</html>

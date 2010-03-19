@@ -19,9 +19,12 @@ JS_PV_FILES = \
 	src/data/Vector.js \
 	src/data/Transform.js \
 	src/data/Scale.js \
+	src/data/QuantitativeScale.js \
 	src/data/LinearScale.js \
 	src/data/LogScale.js \
+	src/data/RootScale.js \
 	src/data/OrdinalScale.js \
+    src/data/Histogram.js \
 	src/geo/Geo.js \
 	src/geo/LatLng.js \
 	src/geo/Projection.js \
@@ -77,6 +80,7 @@ JS_PV_FILES = \
 	src/layout/Partition.js \
 	src/layout/Arc.js \
 	src/layout/Horizon.js \
+	src/layout/Rollup.js \
 	src/behavior/Behavior.js \
 	src/behavior/Drag.js \
 	src/behavior/Point.js \

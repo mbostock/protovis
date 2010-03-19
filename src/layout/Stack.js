@@ -19,6 +19,15 @@ pv.Layout.Stack = function() {
   pv.Layout.call(this);
   var that = this;
 
+  /** @private */
+  var label = new pv.Mark()
+      .data(pv.identity)
+      .visible(function() {
+          return this.index == that.scene.$stack.max[this.parent.index];
+        })
+      .textBaseline("middle")
+      .textAlign("center");
+
   /**
    * Adds a mark of the specified type to a new panel, using this stack layout.
    * Any positional properties defined on the returned mark will be evaluated
@@ -27,6 +36,7 @@ pv.Layout.Stack = function() {
    */
   this.add = function(type) {
       var mark = that.parent.add(pv.Panel)
+              .extend(that)
               .data(function() {
                   var data = that.scene.$stack.data;
                   that.prebuild(data, this.children[0]);
@@ -37,6 +47,36 @@ pv.Layout.Stack = function() {
               .data(pv.identity),
           bind = mark.bind;
       mark.bind = function() { that.prebind(bind, this); };
+
+      /** @private Returns the target instance of the mark. */
+      function target() {
+        return mark.parent.scene[this.parent.index].children[0][this.index];
+      }
+
+      /** The label prototype; bound to the added mark. */
+      mark.label = new pv.Mark()
+          .extend(label)
+          .left(function() {
+              var s = target.call(this);
+              return s.left + s.width / 2;
+            })
+          .bottom(function() {
+              var s = target.call(this);
+              return s.bottom + s.height / 2;
+            });
+
+      /**
+       * Adds a label of the specified type (typically pv.Label) to a new panel
+       * using this stack layout. One label will be rendered per series, at the
+       * maximum value of the series.
+       */
+      mark.label.add = function(type) {
+          return that.parent.add(pv.Panel)
+              .data(function() { return that.scene.$stack.data; })
+            .add(type)
+              .extend(this);
+        };
+
       return mark;
     };
 };
@@ -225,6 +265,11 @@ pv.Layout.Stack.prototype.prebuild = function(data, child) {
       y[index[i]][j] = o;
     }
   }
+
+  /* Populate the maximum indices for labeling. */
+  this.scene.$stack.max = dy.map(function(array) {
+      return pv.max.index(array);
+    });
 
   /* Substitute the dynamic properties so the child can build. */
   px.type = py.type = pdy.type = 3;

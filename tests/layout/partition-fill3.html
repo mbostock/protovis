@@ -18,7 +18,7 @@ vis.add(pv.Layout.Partition.Fill)
     .size(Number)
   .add(pv.Bar)
   .anchor("center").add(pv.Label)
-    .visible(function(d) d.height > 10)
+    .visible(function(d) d.dy > 10)
     .text(function(d) d.nodeName);
 
 vis.render();

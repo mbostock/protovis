@@ -14,26 +14,22 @@ body {
   <body>
     <script type="text/javascript+protovis">
 
-function active(d, v) {
-  d.active = v; if (d.parentNode) active(d.parentNode, v);
-}
-
 var vis = new pv.Panel()
     .width(function() window.innerWidth - 1)
     .height(function() window.innerHeight - 1)
     .margin(.5);
 
 vis.add(pv.Layout.Treemap)
-    .data(pv.dom(flare).nodes())
-    .margin(6)
-    .round(true)
-  .add(pv.Bar)
-    .fillStyle(function(d) d.active ? "lightcoral" : "#ccc")
-    .strokeStyle("#fff")
-    .lineWidth(1)
-    .antialias(false)
-    .event("mouseover", function(d) (active(d, true), this))
-    .event("mouseout", function(d) (active(d, false), this));
+    .data(pv.dom(flare).root("flare").nodes())
+    .mode("slice-and-dice")
+    .order("descending")
+  .add(pv.Panel)
+    .overflow("hidden")
+    .fillStyle("#aec7e8")
+    .visible(function(d) !d.firstChild)
+  .anchor("center").add(pv.Label)
+    .textAngle(function(d) d.dx > d.dy ? 0 : -Math.PI / 2)
+    .text(function(d) d.nodeName);
 
 vis.render();
 

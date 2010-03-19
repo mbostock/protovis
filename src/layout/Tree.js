@@ -208,6 +208,7 @@ pv.Layout.Tree.prototype.init = function() {
       delete v.change;
       delete v.shift;
       delete v.number;
+      delete v.thread;
     });
 };
 

@@ -1,0 +1,41 @@
+<html>
+  <head>
+    <title>Social Force</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../social.js"></script>
+    <style type="text/css">
+
+body {
+  margin: 0;
+}
+
+    </style>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(window.innerWidth)
+    .height(window.innerHeight)
+    .fillStyle("white")
+    .event("mousedown", pv.Behavior.pan())
+    .event("mousewheel", pv.Behavior.zoom());
+
+vis.add(pv.Layout.Force)
+    .nodes(social.nodes)
+    .links(social.links)
+  .link.add(pv.Line)
+  .node.add(pv.Dot)
+    .strokeStyle(null)
+    .shape(function(d) d.gender == "M" ? "square" : "circle")
+    .fillStyle(function(d) d.group == 1 ? "black" : "grey")
+    .event("mousedown", pv.Behavior.drag())
+  .anchor("center").add(pv.Label)
+    .textStyle("white")
+    .text(function(d) d.gender + d.group);
+
+vis.render();
+
+    </script>
+  </body>
+</html>
