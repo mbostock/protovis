@@ -204,6 +204,7 @@ pv.Layout.Stack.prototype.prebuild = function(data, child) {
       index = bottoms.reverse().concat(tops);
       break;
     }
+    case "reverse": index = pv.range(n - 1, -1, -1); break;
     default: index = pv.range(n); break;
   }
 

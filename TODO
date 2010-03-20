@@ -23,9 +23,6 @@ layout/Tree.js
 layout/{Cluster,Partition}.js
 - support customized inner/outer radius
 
-layout/Stack.js
-- order("reverse")
-
 mark/Anchor.js
 - support anchors across panels: mirrored descent (fallback to last?)
 
