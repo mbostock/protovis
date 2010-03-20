@@ -20,14 +20,9 @@ pv.SvgScene.panel = function(scenes) {
         g.setAttribute("fill", "none");
         g.setAttribute("stroke", "none");
         g.setAttribute("stroke-width", 1.5);
-        g.onclick
-            = g.onmousedown
-            = g.onmouseup
-            = g.onmousemove
-            = g.onmouseout
-            = g.onmouseover
-            = g.onmousewheel
-            = this.dispatch;
+        for (var j = 0; j < this.events.length; j++) {
+          g.addEventListener(this.events[j], this.dispatch, false);
+        }
         e = g.firstChild;
       }
       scenes.$g = g;
