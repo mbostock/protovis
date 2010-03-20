@@ -1,0 +1,21 @@
+<html>
+  <head>
+    <title>Ticks Test</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript">
+
+var a = pv.Scale.linear([]).range(0,10),
+    b = pv.Scale.linear(0, 0).range(0,10);
+
+a.nice();
+b.nice();
+
+a.ticks(); // []
+b.ticks(); // [0]
+
+    </script>
+  <p>This tests some scale corner cases. It doesn't render anything, but also should not generate any errors.</p>
+  </body>
+</html>
