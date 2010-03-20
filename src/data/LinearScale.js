@@ -33,5 +33,6 @@
  */
 pv.Scale.linear = function() {
   var scale = pv.Scale.quantitative();
-  return scale.domain.apply(scale, arguments);
+  scale.domain.apply(scale, arguments);
+  return scale;
 };

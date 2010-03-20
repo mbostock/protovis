@@ -121,5 +121,6 @@ pv.Scale.log = function() {
     return b;
   };
 
-  return scale.domain.apply(scale, arguments).base(10);
+  scale.domain.apply(scale, arguments);
+  return scale.base(10);
 };
