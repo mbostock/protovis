@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Flare Pack</title>
+    <title>Flare Treemap</title>
     <script type="text/javascript" src="../../protovis-d3.2.js"></script>
     <script type="text/javascript" src="../flare.js"></script>
   </head>
@@ -12,10 +12,10 @@ var vis = new pv.Panel()
     .height(800)
     .margin(2);
 
-vis.add(pv.Layout.Pack)
-    .data(pv.dom(flare).nodes())
-    .size(Number)
-  .add(pv.Dot)
+vis.add(pv.Layout.Treemap)
+    .data(pv.dom(flare).root("flare").nodes())
+    .margin(6)
+  .add(pv.Panel)
     .fillStyle(function(n) n.firstChild ? "rgba(31, 119, 180, .25)" : "#ff7f0e")
     .title(function t(n) n.parentNode ? (t(n.parentNode) + "." + n.nodeName) : "flare");
 
