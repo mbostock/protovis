@@ -11,6 +11,7 @@ layout/Layout.js
 layout/Force.js
 - copy: x -> left, y -> top
 - example with interactive filtering of links and nodes
+- smarter default rest length / charge force constant
 - allow customization of simulation parameters (e.g., rest length)
 - allow dynamic updates to the graph, preserving simulation (add/remove nodes/liks)
 
@@ -20,9 +21,6 @@ layout/Network.js
 layout/Tree.js
 - allow depth and breadth offset to be computed automatically
 
-layout/{Cluster,Partition}.js
-- support customized inner/outer radius
-
 mark/Anchor.js
 - support anchors across panels: mirrored descent (fallback to last?)
 
@@ -31,10 +29,6 @@ mark/Mark.js
 
 mark/Area.js
 - {min,max}:name psuedo-anchors for center labeling?
-
-mark/Area.Radial.js
-mark/Line.Radial.js
-mark/Bar.Radial.js
 
 behavior/*
 - documentation, implementation, etc.
@@ -51,7 +45,6 @@ behavior/Pan.js
 - specify bounds on panning
 
 behavior/Zoom.js
-- firefox support for mousewheel
 - specify bounds on zoom level
 - non-uniform zooms (e.g., in time series, zoom time dimension only)?
 
@@ -60,9 +53,6 @@ physics/Simulation.js
 
 physics/LinkConstraint.js
 - should support an alpha parameter, like pv.Constraint.position
-
-scene/*
-- use array push rather than string concatentation to improve performance?
 
 text/CsvFormat.js
 - return an object with a .format method, or the format function?

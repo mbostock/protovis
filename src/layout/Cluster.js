@@ -17,7 +17,9 @@ pv.Layout.Cluster = function() {
 
 pv.Layout.Cluster.prototype = pv.extend(pv.Layout.Hierarchy)
     .property("group", Number)
-    .property("orient", String);
+    .property("orient", String)
+    .property("innerRadius", Number)
+    .property("outerRadius", Number);
 
 pv.Layout.Cluster.prototype.defaults = new pv.Layout.Cluster()
     .extend(pv.Layout.Hierarchy.prototype.defaults)
@@ -26,106 +28,65 @@ pv.Layout.Cluster.prototype.defaults = new pv.Layout.Cluster()
 
 pv.Layout.Cluster.prototype.init = function() {
   if (pv.Layout.Hierarchy.prototype.init.call(this)) return;
-  var nodes = this.nodes(),
-      orient = this.orient(),
-      g = this.group(),
-      w = this.parent.width(),
-      h = this.parent.height(),
-      r = Math.min(w, h) / 2;
+  var root = this.nodes()[0],
+      group = this.group(),
+      breadth,
+      depth,
+      leafCount = 0,
+      leafIndex = .5 - group / 2;
 
-  /** @private Compute the maximum depth of descendants for each node. */
-  function depth(n) {
-    var d = 0;
-    for (var c = n.firstChild; c; c = c.nextSibling) {
-      d = Math.max(d, 1 + depth(c));
-    }
-    return n.depth = d;
-  }
-
-  /* Compute the initial depth of each node. */
-  var root = nodes[0], ds = 1 / depth(root);
-
-  /* Count the number of leaf nodes. */
-  var leafCount = 0, p;
-  root.visitAfter(function(n) {
-      if (!n.firstChild) {
-        if (g && (p != n.parentNode)) {
-          p = n.parentNode;
-          leafCount += g;
-        }
-        leafCount++;
-      }
-    });
-
-  /* Compute the unit breadth and depth of each node. */
-  var leafIndex = .5 - g / 2, step = 1 / leafCount, p = undefined;
+  /* Count the leaf nodes and compute the depth of descendants. */
+  var p = undefined;
   root.visitAfter(function(n) {
       if (n.firstChild) {
-        var b = 0;
-        for (var c = n.firstChild; c; c = c.nextSibling) b += c.breadth;
-        b /= n.childNodes.length;
+        n.depth = 1 + pv.max(n.childNodes, function(n) { return n.depth; });
       } else {
-        if (g && (p != n.parentNode)) {
+        if (group && (p != n.parentNode)) {
           p = n.parentNode;
-          leafIndex += g;
+          leafCount += group;
         }
-        b = step * leafIndex++;
+        leafCount++;
+        n.depth = 0;
       }
-      n.breadth = b;
-      n.depth = 1 - n.depth / root.depth;
+    });
+  breadth = 1 / leafCount;
+  depth = 1 / root.depth;
+
+  /* Compute the unit breadth and depth of each node. */
+  var p = undefined;
+  root.visitAfter(function(n) {
+      if (n.firstChild) {
+        n.breadth = pv.mean(n.childNodes, function(n) { return n.breadth; });
+      } else {
+        if (group && (p != n.parentNode)) {
+          p = n.parentNode;
+          leafIndex += group;
+        }
+        n.breadth = breadth * leafIndex++;
+      }
+      n.depth = 1 - n.depth * depth;
     });
 
   /* Compute breadth and depth ranges for space-filling layouts. */
   root.visitAfter(function(n) {
-      n.minBreadth = n.firstChild ? n.firstChild.minBreadth : (n.breadth - step / 2);
-      n.maxBreadth = n.firstChild ? n.lastChild.maxBreadth : (n.breadth + step / 2);
+      n.minBreadth = n.firstChild
+          ? n.firstChild.minBreadth
+          : (n.breadth - breadth / 2);
+      n.maxBreadth = n.firstChild
+          ? n.lastChild.maxBreadth
+          : (n.breadth + breadth / 2);
     });
   root.visitBefore(function(n) {
-      n.minDepth = n.parentNode ? n.parentNode.maxDepth : 0;
-      n.maxDepth = n.parentNode ? (n.depth + root.depth) : (n.minDepth + 2 * root.depth);
+      n.minDepth = n.parentNode
+          ? n.parentNode.maxDepth
+          : 0;
+      n.maxDepth = n.parentNode
+          ? (n.depth + root.depth)
+          : (n.minDepth + 2 * root.depth);
     });
-  root.minDepth = -ds;
+  root.minDepth = -depth;
 
-  /** @private Returns the radius of the given node. */
-  function radius(n) {
-    return n.parentNode ? (n.depth * r) : 0;
-  }
-
-  /** @private Returns the angle of the given node. */
-  function angle(n) {
-    return (orient == "radial")
-        ? (n.parentNode ? (n.breadth - .25) * 2 * Math.PI : 0)
-        : (n.firstChild ? Math.PI : 0);
-  }
-
-  /** @private */
-  function x(n) {
-    switch (orient) {
-      case "left": return n.depth * w;
-      case "right": return w - n.depth * w;
-      case "top": return n.breadth * w;
-      case "bottom": return w - n.breadth * w;
-      case "radial": return w / 2 + radius(n) * Math.cos(angle(n));
-    }
-  }
-
-  /** @private */
-  function y(n) {
-    switch (orient) {
-      case "left": return n.breadth * h;
-      case "right": return h - n.breadth * h;
-      case "top": return n.depth * h;
-      case "bottom": return h - n.depth * h;
-      case "radial": return h / 2 + radius(n) * Math.sin(angle(n));
-    }
-  }
-
-  for (var i = 0; i < nodes.length; i++) {
-    var n = nodes[i];
-    n.x = x(n);
-    n.y = y(n);
-    n.angle = angle(n);
-  }
+  pv.Layout.Hierarchy.NodeLink.init.call(this);
 };
 
 /** A variant of cluster layout that is space-filling. */
