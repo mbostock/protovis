@@ -13,9 +13,6 @@ pv.SvgScene.area = function(scenes) {
   var fill = s.fillStyle, stroke = s.strokeStyle;
   if (!fill.opacity && !stroke.opacity) return e;
 
-  /* interpolate */
-  var step = {"step-before": 1, "step-after": 2}[s.interpolate];
-
   /** @private Computes the path for the range [i, j]. */
   function path(i, j) {
     var p1 = [], p2 = [];
@@ -26,14 +23,19 @@ pv.SvgScene.area = function(scenes) {
           pj = (sj.left + sj.width) + "," + (sj.top + sj.height);
 
       /* interpolate */
-      if (step && (i < k)) {
+      if (i < k) {
         var sk = scenes[i + 1], sl = scenes[j - 1];
-        if (step & 1) {
-          pi += "V" + sk.top;
-          pj += "H" + (sl.left + sl.width);
-        } else {
-          pi += "H" + sk.left;
-          pj += "V" + (sl.top + sl.height);
+        switch (si.interpolate) {
+          case "step-before": {
+            pi += "V" + sk.top;
+            pj += "H" + (sl.left + sl.width);
+            break;
+          }
+          case "step-after": {
+            pi += "H" + sk.left;
+            pj += "V" + (sl.top + sl.height);
+            break;
+          }
         }
       }
 
@@ -50,8 +52,8 @@ pv.SvgScene.area = function(scenes) {
     for (var j = i + 1; j < scenes.length; j++) {
       sj = scenes[j]; if (!sj.width && !sj.height) break;
     }
-    if (i && (step != 2)) i--;
-    if ((j < scenes.length) && (step != 1)) j++;
+    if (i && (scenes[i].interpolate != "step-after")) i--;
+    if ((j < scenes.length) && (scenes[j].interpolate != "step-before")) j++;
     d.push(path(i, i = j - 1));
   }
   if (!d.length) return e;

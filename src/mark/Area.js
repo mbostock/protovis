@@ -142,8 +142,7 @@ pv.Area.fixed = {
   lineWidth: 1,
   strokeStyle: 1,
   fillStyle: 1,
-  segmented: 1,
-  interpolate: 1
+  segmented: 1
 };
 
 /**

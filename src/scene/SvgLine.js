@@ -72,12 +72,17 @@ pv.SvgScene.lineSegment = function(scenes) {
 
 /** @private Returns the path segment for the specified points. */
 pv.SvgScene.pathSegment = function(s1, s2) {
+  var l = 1; // sweep-flag
   switch (s1.interpolate) {
+    case "polar-reverse":
+      l = 0;
     case "polar": {
       var dx = s2.left - s1.left,
           dy = s2.top - s1.top,
-          r = Math.sqrt(dx * dx + dy * dy) / 2;
-      return "A" + r + "," + r + " 0 1,1 " + s2.left + "," + s2.top;
+          e = 1 - s1.eccentricity,
+          r = Math.sqrt(dx * dx + dy * dy) / (2 * e);
+      if ((e <= 0) || (e > 1)) break; // draw a straight line
+      return "A" + r + "," + r + " 0 0," + l + " " + s2.left + "," + s2.top;
     }
     case "step-before": return "V" + s2.top + "H" + s2.left;
     case "step-after": return "H" + s2.left + "V" + s2.top;

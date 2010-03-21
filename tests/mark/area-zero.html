@@ -17,6 +17,10 @@ vis.add(pv.Area)
     .bottom(10)
     .height(function(d) d * 20)
     .strokeStyle("rgba(0,0,0,.5)")
+    .interpolate(function()
+        this.index > 12 ? "step-after"
+        : this.index > 6 ? "linear"
+        : "step-before")
     .lineWidth(10);
 
 vis.render();
