@@ -5,7 +5,7 @@ data/?
 - AJAX helper? or refer to jQuery
 
 layout/Layout.js
-- other algorithms: balloon, dig-cola, matrix?
+- other algorithms: dig-cola, matrix?
 
 mark/Mark.js
 - allow mixin rather than single inheritance?
