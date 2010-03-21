@@ -1,21 +1,133 @@
 <html>
   <head>
-    <title>Ticks Test</title>
+    <title>Degenerate Scales</title>
     <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <link rel="stylesheet" type="text/css" href="../style.css"/>
   </head>
   <body>
-    <script type="text/javascript">
+    <pre id="pre"></pre>
+    <script type="text/javascript+protovis">
 
-var a = pv.Scale.linear([]).range(0,10),
-    b = pv.Scale.linear(0, 0).range(0,10);
+var s;
+pre.innerHTML += ">>> domain()\n";
+pre.innerHTML += "<b>domain\t\t\texpected\t\tactual</b>\n";
 
-a.nice();
-b.nice();
+s = pv.Scale.linear(0);
+pre.innerHTML += "(0)\t\t\t'0,0'\t\t\t'" + s.domain() + "'\n";
 
-a.ticks(); // []
-b.ticks(); // [0]
+s = pv.Scale.linear([0]);
+pre.innerHTML += "([0])\t\t\t'0,0'\t\t\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear(0, 0);
+pre.innerHTML += "(0,0)\t\t\t'0,0'\t\t\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear();
+pre.innerHTML += "()\t\t\t'0,1'\t\t\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear([1,0]);
+pre.innerHTML += "([1,0])\t\t\t'0,1'\t\t\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear(1,0);
+pre.innerHTML += "(1,0)\t\t\t'1,0'\t\t\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear(0,NaN);
+pre.innerHTML += "(0,NaN)\t\t\t'0,NaN'\t\t\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear(NaN,0);
+pre.innerHTML += "(NaN,0)\t\t\t'NaN,0'\t\t\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear(NaN,NaN);
+pre.innerHTML += "(NaN,NaN)\t\t'NaN,NaN'\t\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear([]);
+pre.innerHTML += "([])\t\t\t'-Infinity,Infinity'\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear(-Infinity, Infinity);
+pre.innerHTML += "(-Infinity,Infinity)\t'-Infinity,Infinity'\t'" + s.domain() + "'\n";
+
+pre.innerHTML += "\n>>> nice()\n";
+pre.innerHTML += "<b>domain\t\t\texpected\t\tactual</b>\n";
+
+s = pv.Scale.linear(0).nice();
+pre.innerHTML += "(0)\t\t\t'0,0'\t\t\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear([0]).nice();
+pre.innerHTML += "([0])\t\t\t'0,0'\t\t\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear(0, 0).nice();
+pre.innerHTML += "(0,0)\t\t\t'0,0'\t\t\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear().nice();
+pre.innerHTML += "()\t\t\t'0,1'\t\t\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear([1,0]).nice();
+pre.innerHTML += "([1,0])\t\t\t'0,1'\t\t\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear(1,0).nice();
+pre.innerHTML += "(1,0)\t\t\t'1,0'\t\t\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear(.9,.1).nice();
+pre.innerHTML += "(0.9,0.1)\t\t'0.9,0.1'\t\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear(.1,.1).nice();
+pre.innerHTML += "(0.1,0.1)\t\t'0.1,0.1'\t\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear(0,NaN).nice();
+pre.innerHTML += "(0,NaN)\t\t\t'0,NaN'\t\t\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear(NaN,NaN).nice();
+pre.innerHTML += "(NaN,NaN)\t\t'NaN,NaN'\t\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear([]).nice();
+pre.innerHTML += "([])\t\t\t'-Infinity,Infinity'\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear(-Infinity, Infinity).nice();
+pre.innerHTML += "(-Infinity,Infinity)\t'-Infinity,Infinity'\t'" + s.domain() + "'\n";
+
+pre.innerHTML += "\n>>> ticks()\n";
+pre.innerHTML += "<b>domain\t\t\texpected\t\tactual</b>\n";
+
+function ticks(s) s.ticks(3).map(s.tickFormat);
+
+s = pv.Scale.linear(0);
+pre.innerHTML += "(0)\t\t\t'0'\t\t\t'" + ticks(s) + "'\n";
+
+s = pv.Scale.linear([0]);
+pre.innerHTML += "([0])\t\t\t'0'\t\t\t'" + ticks(s) + "'\n";
+
+s = pv.Scale.linear(0, 0);
+pre.innerHTML += "(0,0)\t\t\t'0'\t\t\t'" + ticks(s) + "'\n";
+
+s = pv.Scale.linear();
+pre.innerHTML += "()\t\t\t'0.0,0.5,1.0'\t\t'" + ticks(s) + "'\n";
+
+s = pv.Scale.linear([1,0]);
+pre.innerHTML += "([1,0])\t\t\t'0.0,0.5,1.0'\t\t'" + ticks(s) + "'\n";
+
+s = pv.Scale.linear(1,0);
+pre.innerHTML += "(1,0)\t\t\t'1.0,0.5,0.0'\t\t'" + ticks(s) + "'\n";
+
+s = pv.Scale.linear(.9,.1);
+pre.innerHTML += "(0.9,0.1)\t\t'0.8,0.6,0.4,0.2'\t'" + ticks(s) + "'\n";
+
+s = pv.Scale.linear(.1,.1);
+pre.innerHTML += "(0.1,0.1)\t\t'0.1'\t\t\t'" + ticks(s) + "'\n";
+
+s = pv.Scale.linear(0,NaN);
+pre.innerHTML += "(0,NaN)\t\t\t'0'\t\t\t'" + ticks(s) + "'\n";
+
+s = pv.Scale.linear(NaN,NaN);
+pre.innerHTML += "(NaN,NaN)\t\t'NaN'\t\t\t'" + ticks(s) + "'\n";
+
+s = pv.Scale.linear(new Date(0));
+pre.innerHTML += "(new Date(0))\t\t'12/31/69'\t\t'" + ticks(s) + "'\n";
+
+s = pv.Scale.linear([]);
+pre.innerHTML += "([])\t\t\t'-Infinity'\t\t'" + ticks(s) + "'\n";
+
+s = pv.Scale.linear(-Infinity, Infinity);
+pre.innerHTML += "(-Infinity,Infinity)\t'-Infinity'\t\t'" + ticks(s) + "'\n";
 
     </script>
-  <p>This tests some scale corner cases. It doesn't render anything, but also should not generate any errors.</p>
   </body>
 </html>
