@@ -54,6 +54,7 @@ pv.SvgScene.wedge = function(scenes) {
         "transform": "translate(" + s.left + "," + s.top + ")",
         "d": p,
         "fill": fill.color,
+        "fill-rule": "evenodd",
         "fill-opacity": fill.opacity || null,
         "stroke": stroke.color,
         "stroke-opacity": stroke.opacity || null,
