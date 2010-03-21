@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <title>Log Floor</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../testify.js"></script>
+    <link rel="stylesheet" type="text/css" href="../style.css"/>
+    <link rel="stylesheet" type="text/css" href="../testify.css"/>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var i, text = "";
+
+text += ">>> pv.logFloor()\n";
+text += "<b>domain\texpected\tactual</b>\n";
+
+i = pv.logFloor(1, 0);
+text += "(1, 0)\t1\t" + i + "\n";
+
+i = pv.logFloor(0, 2);
+text += "(0, 2)\t0\t" + i + "\n";
+
+i = pv.logFloor(0, 1);
+text += "(0, 1)\tNaN\t" + i + "\n";
+
+i = pv.logFloor(0, 0);
+text += "(0, 0)\tNaN\t" + i + "\n";
+
+i = pv.logFloor(Infinity, 10);
+text += "(Infinity, 10)\tInfinity\t" + i + "\n";
+
+i = pv.logFloor(-Infinity, 10);
+text += "(-Infinity, 10)\t-Infinity\t" + i + "\n";
+
+i = pv.logFloor(1, 1);
+text += "(1, 1)\tNaN\t" + i + "\n";
+
+i = pv.logFloor(1, NaN);
+text += "(1, NaN)\tNaN\t" + i + "\n";
+
+i = pv.logFloor(NaN, 10);
+text += "(NaN, 10)\tNaN\t" + i + "\n";
+
+testify(text);
+
+    </script>
+  </body>
+</html>

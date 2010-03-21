@@ -1,9 +1,9 @@
 /**
  * Returns an array of numbers, starting at <tt>start</tt>, incrementing by
- * <tt>step</tt>, until <tt>stop</tt> is reached. The stop value is exclusive. If
- * only a single argument is specified, this value is interpeted as the
- * <i>stop</i> value, with the <i>start</i> value as zero. If only two arguments
- * are specified, the step value is implied to be one.
+ * <tt>step</tt>, until <tt>stop</tt> is reached. The stop value is
+ * exclusive. If only a single argument is specified, this value is interpeted
+ * as the <i>stop</i> value, with the <i>start</i> value as zero. If only two
+ * arguments are specified, the step value is implied to be one.
  *
  * <p>The method is modeled after the built-in <tt>range</tt> method from
  * Python. See the Python documentation for more details.
@@ -20,7 +20,7 @@ pv.range = function(start, stop, step) {
     start = 0;
   }
   if (step == undefined) step = 1;
-  else if (!step) throw new Error("step must be non-zero");
+  if ((stop - start) / step == Infinity) throw new Error("range must be finite");
   var array = [], i = 0, j;
   if (step < 0) {
     while ((j = start + step * i++) > stop) {
@@ -35,27 +35,26 @@ pv.range = function(start, stop, step) {
 };
 
 /**
- * Returns a random number in the range [<tt>min</tt>, <tt>max</tt>) that is a
- * multiple of <tt>step</tt>. More specifically, the returned number is of the
- * form <tt>min</tt> + <i>n</i> * <tt>step</tt>, where <i>n</i> is a nonnegative
- * integer. If <tt>step</tt> is not specified, it defaults to 1, returning a
- * random integer if <tt>min</tt> is also an integer.
+ * Returns a random number in the range [<tt>start</tt>, <tt>stop</tt>) that is
+ * a multiple of <tt>step</tt>. More specifically, the returned number is of the
+ * form <tt>start</tt> + <i>n</i> * <tt>step</tt>, where <i>n</i> is a
+ * nonnegative integer. If <tt>step</tt> is not specified, it defaults to 1,
+ * returning a random integer if <tt>start</tt> is also an integer.
  *
- * @param min {number} minimum value.
- * @param [max] {number} maximum value.
- * @param [step] {numbeR} step value.
+ * @param {number} [start] the start value value.
+ * @param {number} stop the stop value.
+ * @param {number} [step] the step value.
+ * @returns {number} a random number between <i>start</i> and <i>stop</i>.
  */
-pv.random = function(min, max, step) {
+pv.random = function(start, stop, step) {
   if (arguments.length == 1) {
-    max = min;
-    min = 0;
+    stop = start;
+    start = 0;
   }
-  if (step == undefined) {
-    step = 1;
-  }
+  if (step == undefined) step = 1;
   return step
-      ? (Math.floor(Math.random() * (max - min) / step) * step + min)
-      : (Math.random() * (max - min) + min);
+      ? (Math.floor(Math.random() * (stop - start) / step) * step + start)
+      : (Math.random() * (stop - start) + start);
 };
 
 /**
@@ -102,9 +101,10 @@ pv.max = function(array, f) {
  * @returns {number} the index of the maximum value of the specified array.
  */
 pv.max.index = function(array, f) {
+  if (!array.length) return -1;
   if (f == pv.index) return array.length - 1;
   if (!f) f = pv.identity;
-  var maxi = -1, maxx = -Infinity, o = {};
+  var maxi = 0, maxx = -Infinity, o = {};
   for (var i = 0; i < array.length; i++) {
     o.index = i;
     var x = f.call(o, array[i]);
@@ -143,9 +143,10 @@ pv.min = function(array, f) {
  * @returns {number} the index of the minimum value of the specified array.
  */
 pv.min.index = function(array, f) {
+  if (!array.length) return -1;
   if (f == pv.index) return 0;
   if (!f) f = pv.identity;
-  var mini = -1, minx = Infinity, o = {};
+  var mini = 0, minx = Infinity, o = {};
   for (var i = 0; i < array.length; i++) {
     o.index = i;
     var x = f.call(o, array[i]);
@@ -191,16 +192,18 @@ pv.median = function(array, f) {
 };
 
 /**
- * Returns the variance of the specified array. If the specified array is not an
- * array of numbers, an optional accessor function <tt>f</tt> can be specified
- * to map the elements to numbers. See {@link #normalize} for an
- * example. Accessor functions can refer to <tt>this.index</tt>.
+ * Returns the unweighted variance of the specified array. If the specified
+ * array is not an array of numbers, an optional accessor function <tt>f</tt>
+ * can be specified to map the elements to numbers. See {@link #normalize} for
+ * an example. Accessor functions can refer to <tt>this.index</tt>.
  *
  * @param {array} array an array of objects, or numbers.
  * @param {function} [f] an optional accessor function.
  * @returns {number} the variance of the specified array.
  */
 pv.variance = function(array, f) {
+  if (array.length < 1) return NaN;
+  if (array.length == 1) return 0;
   var mean = pv.mean(array, f), sum = 0, o = {};
   if (!f) f = pv.identity;
   for (var i = 0; i < array.length; i++) {
@@ -212,16 +215,17 @@ pv.variance = function(array, f) {
 };
 
 /**
- * Returns the standard deviation of the specified array. If the specified array
- * is not an array of numbers, an optional accessor function <tt>f</tt> can be
- * specified to map the elements to numbers. See {@link #normalize} for an
- * example. Accessor functions can refer to <tt>this.index</tt>.
+ * Returns an unbiased estimation of the standard deviation of a population,
+ * given the specified random sample. If the specified array is not an array of
+ * numbers, an optional accessor function <tt>f</tt> can be specified to map the
+ * elements to numbers. See {@link #normalize} for an example. Accessor
+ * functions can refer to <tt>this.index</tt>.
  *
  * @param {array} array an array of objects, or numbers.
  * @param {function} [f] an optional accessor function.
  * @returns {number} the standard deviation of the specified array.
  */
-pv.stddev = function(array, f) {
+pv.deviation = function(array, f) {
   return Math.sqrt(pv.variance(array, f) / (array.length - 1));
 };
 
@@ -260,6 +264,7 @@ pv.logSymmetric = function(x, b) {
  * @returns {number} the adjusted, symmetric log value.
  */
 pv.logAdjusted = function(x, b) {
+  if (!isFinite(x)) return x;
   var negative = x < 0;
   if (x < b) x += (b - x) / b;
   return negative ? -pv.log(x, b) : pv.log(x, b);

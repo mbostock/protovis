@@ -1,0 +1,28 @@
+table.testify {
+  width: 100%;
+  font: 14px/134% Courier, monospace;
+  border-spacing: 0;
+  margin-bottom: 1em;
+}
+
+table.testify td {
+  width: 33%;
+}
+
+table.testify tr:first-child,
+table.testify tr:first-child + tr {
+  font-weight: bold;
+}
+
+table.testify tr:first-child + tr td {
+  border-bottom: solid 1px #ccc;
+}
+
+table.testify tr.pass {
+  background: rgba(0,255,0,.1);
+}
+
+table.testify tr.fail {
+  color: red;
+  background: rgba(255,0,0,.1);
+}

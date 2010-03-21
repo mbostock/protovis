@@ -1,0 +1,42 @@
+<html>
+  <head>
+    <title>Sum</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../testify.js"></script>
+    <link rel="stylesheet" type="text/css" href="../style.css"/>
+    <link rel="stylesheet" type="text/css" href="../testify.css"/>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var i, text = "";
+
+text += ">>> pv.sum()\n";
+text += "<b>domain\texpected\tactual</b>\n";
+
+i = pv.sum([]);
+text += "([])\t0\t" + i + "\n";
+
+i = pv.sum([Infinity]);
+text += "([Infinity])\tInfinity\t" + i + "\n";
+
+i = pv.sum([-Infinity]);
+text += "([-Infinity])\t-Infinity\t" + i + "\n";
+
+i = pv.sum([1, Infinity]);
+text += "([1, Infinity])\tInfinity\t" + i + "\n";
+
+i = pv.sum([1, -Infinity]);
+text += "([1, -Infinity])\t-Infinity\t" + i + "\n";
+
+i = pv.sum([NaN]);
+text += "([NaN])\tNaN\t" + i + "\n";
+
+i = pv.sum([0, NaN]);
+text += "([0, NaN])\tNaN\t" + i + "\n";
+
+testify(text);
+
+    </script>
+  </body>
+</html>

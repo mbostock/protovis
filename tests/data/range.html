@@ -1,0 +1,99 @@
+<html>
+  <head>
+    <title>Range</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../testify.js"></script>
+    <link rel="stylesheet" type="text/css" href="../style.css"/>
+    <link rel="stylesheet" type="text/css" href="../testify.css"/>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var i, text = "";
+
+text += ">>> pv.range()\n";
+text += "<b>domain\texpected\tactual</b>\n";
+
+i = pv.range(0);
+text += "(0)\t''\t'" + i + "'\n";
+
+i = pv.range(-1);
+text += "(-1)\t''\t'" + i + "'\n";
+
+i = pv.range(2);
+text += "(2)\t'0,1'\t'" + i + "'\n";
+
+i = pv.range(-2, 0);
+text += "(-2, 0)\t'-2,-1'\t'" + i + "'\n";
+
+i = pv.range(0, 2, -1);
+text += "(0, 2, -1)\t''\t'" + i + "'\n";
+
+i = pv.range(2, 0, -1);
+text += "(2, 0, -1)\t'2,1'\t'" + i + "'\n";
+
+i = pv.range(NaN);
+text += "(NaN)\t''\t'" + i + "'\n";
+
+i = pv.range(0, NaN);
+text += "(0, NaN)\t''\t'" + i + "'\n";
+
+i = pv.range(-Infinity);
+text += "(-Infinity)\t''\t'" + i + "'\n";
+
+try { i = pv.range(0, 1, NaN); } catch (e) { i = e; }
+text += "(0, 1, NaN)\t''\t'" + i + "'\n";
+
+i = pv.range(-1, 1);
+text += "(-1, 1)\t'-1,0'\t'" + i + "'\n";
+
+i = pv.range(Infinity, Infinity);
+text += "(Infinity, Infinity)\t''\t'" + i + "'\n";
+
+i = pv.range(-Infinity, -Infinity);
+text += "(-Infinity, -Infinity)\t''\t'" + i + "'\n";
+
+i = pv.range(Infinity, -Infinity);
+text += "(Infinity, -Infinity)\t''\t'" + i + "'\n";
+
+i = pv.range(0, -Infinity);
+text += "(0, -Infinity)\t''\t'" + i + "'\n";
+
+i = pv.range(Infinity, 0);
+text += "(Infinity, 0)\t''\t'" + i + "'\n";
+
+i = pv.range(Infinity, NaN);
+text += "(Infinity, NaN)\t''\t'" + i + "'\n";
+
+i = pv.range(NaN, Infinity);
+text += "(NaN, Infinity)\t''\t'" + i + "'\n";
+
+i = pv.range(-Infinity, NaN);
+text += "(-Infinity, NaN)\t''\t'" + i + "'\n";
+
+i = pv.range(NaN, -Infinity);
+text += "(NaN, -Infinity)\t''\t'" + i + "'\n";
+
+try { i = pv.range(Infinity); } catch (e) { i = e; }
+text += "(Infinity)\t'Error: range must be finite'\t'" + i + "'\n";
+
+try { i = pv.range(-Infinity, Infinity); } catch (e) { i = e; }
+text += "(-Infinity, Infinity)\t'Error: range must be finite'\t'" + i + "'\n";
+
+try { i = pv.range(0, Infinity); } catch (e) { i = e; }
+text += "(0, Infinity)\t'Error: range must be finite'\t'" + i + "'\n";
+
+try { i = pv.range(10, Infinity); } catch (e) { i = e; }
+text += "(10, Infinity)\t'Error: range must be finite'\t'" + i + "'\n";
+
+try { i = pv.range(-Infinity, 0); } catch (e) { i = e; }
+text += "(-Infinity, 0)\t'Error: range must be finite'\t'" + i + "'\n";
+
+try { i = pv.range(0, 1, 0); } catch (e) { i = e; }
+text += "(0, 1, 0)\t'Error: range must be finite'\t'" + i + "'\n";
+
+testify(text);
+
+    </script>
+  </body>
+</html>

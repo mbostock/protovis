@@ -1,0 +1,36 @@
+<html>
+  <head>
+    <title>Min</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../testify.js"></script>
+    <link rel="stylesheet" type="text/css" href="../style.css"/>
+    <link rel="stylesheet" type="text/css" href="../testify.css"/>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var i, text = "";
+
+text += ">>> pv.min()\n";
+text += "domain\texpected\tactual\n";
+
+i = pv.min([]);
+text += "([])\tInfinity\t" + i + "\n";
+
+i = pv.min([Infinity]);
+text += "([Infinity])\tInfinity\t" + i + "\n";
+
+i = pv.min([-Infinity]);
+text += "([-Infinity])\t-Infinity\t" + i + "\n";
+
+i = pv.min([NaN]);
+text += "([NaN])\tNaN\t" + i + "\n";
+
+i = pv.min([undefined]);
+text += "([undefined])\tNaN\t" + i + "\n";
+
+testify(text);
+
+    </script>
+  </body>
+</html>
