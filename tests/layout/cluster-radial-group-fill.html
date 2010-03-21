@@ -16,7 +16,7 @@ var vis = new pv.Panel()
     .right(100);
 
 vis.add(pv.Layout.Cluster.Fill)
-    .data(pv.dom(flare).nodes())
+    .data(pv.dom(flare).root("flare").nodes())
     .group(true)
     .orient("radial")
   .add(pv.Wedge)

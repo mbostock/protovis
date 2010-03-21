@@ -15,7 +15,7 @@ var vis = new pv.Panel()
     .right(-160);
 
 vis.add(pv.Layout.Tree)
-    .data(pv.dom(flare).nodes())
+    .data(pv.dom(flare).root("flare").nodes())
     .depth(110)
     .breadth(9.35)
     .orient("radial")
