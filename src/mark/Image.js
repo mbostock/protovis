@@ -1,17 +1,16 @@
 /**
- * Constructs a new dot mark with default properties. Images are not typically
- * constructed directly, but by adding to a panel or an existing mark via
- * {@link pv.Mark#add}.
+ * Constructs a new image with default properties. Images are not typically
+ * constructed directly, but by adding to a panel or an existing mark via {@link
+ * pv.Mark#add}.
  *
- * @class Represents an image. Images share the same layout and style properties as
- * bars, in conjunction with an external image such as PNG or JPEG. The image is
- * specified via the {@link #url} property. The fill, if specified, appears
+ * @class Represents an image. Images share the same layout and style properties
+ * as bars, in conjunction with an external image such as PNG or JPEG. The image
+ * is specified via the {@link #url} property. The fill, if specified, appears
  * beneath the image, while the optional stroke appears above the image.
  *
- * <p>TODO Restore support for dynamic images (such as heatmaps). These were
- * supported in the canvas implementation using the pixel buffer API; although
- * SVG does not support pixel manipulation, it is possible to embed a canvas
- * element in SVG using foreign objects.
+ * <p>Dynamic images such as heatmaps are supported using the {@link #image}
+ * function. This function is passed the <i>x</i> and <i>y</i> index, in
+ * addition to the current data stack. The return value is a {@link pv.Color}.
  *
  * <p>TODO Allow different modes of image placement: "scale" -- scale and
  * preserve aspect ratio, "tile" -- repeat the image, "center" -- center the
@@ -57,6 +56,15 @@ pv.Image.prototype.image = function(f) {
   return this;
 };
 
+/** @private Scan the proto chain for an image function. */
+pv.Image.prototype.bind = function() {
+  pv.Bar.prototype.bind.call(this);
+  var binds = this.binds, mark = this;
+  do {
+    binds.image = mark.$image;
+  } while (!binds.image && (mark = mark.proto));
+};
+
 pv.Image.prototype.buildImplied = function(s) {
   pv.Bar.prototype.buildImplied.call(this, s);
   if (!s.visible) return;
@@ -66,7 +74,7 @@ pv.Image.prototype.buildImplied = function(s) {
   if (s.imageHeight == null) s.imageHeight = s.height;
 
   /* Compute the pixel values. */
-  if ((s.url == null) && this.$image) {
+  if ((s.url == null) && this.binds.image) {
 
     /* Cache the canvas element to reuse across renders. */
     var canvas = this.$canvas || (this.$canvas = document.createElement("canvas")),
@@ -85,7 +93,7 @@ pv.Image.prototype.buildImplied = function(s) {
       stack[1] = y;
       for (var x = 0; x < w; x++) {
         stack[0] = x;
-        var color = this.$image.apply(this, stack);
+        var color = this.binds.image.apply(this, stack);
         data[p++] = color.r;
         data[p++] = color.g;
         data[p++] = color.b;

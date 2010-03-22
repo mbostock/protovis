@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <title>Image</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <link rel="stylesheet" type="text/css" href="../style.css"/>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(300)
+    .height(300)
+    .fillStyle("#F7E7BA");
+
+vis.add(pv.Image)
+    .data([{a: 10, b: 40, c: 30, color: "#89B7D9"}])
+    .imageWidth(150)
+    .imageHeight(150)
+    .image(function(x, y, d)
+        ((x + d.c) % d.b < d.a) && (x & 1 ^ y & 1)
+        || ((y + d.c) % d.b < d.a) && !(x & 1 ^ y & 1)
+        ? d.color : null)
+  .add(pv.Image)
+    .data([{a: 4, b: 40, c: 7, color: "#705551"}]);
+
+vis.render();
+
+    </script>
+
+    <p>This test verifies that the <tt>image</tt> psuedo-property is inherited.
+    You should see a pleasant tartan.
+  </body>
+</html>
