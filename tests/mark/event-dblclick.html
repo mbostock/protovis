@@ -1,0 +1,30 @@
+<html>
+  <head>
+    <title>Double Click</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(200)
+    .height(200)
+    .strokeStyle("black")
+    .lineWidth(10)
+    .fillStyle("lightgreen")
+    .event("click", function() label1.text("click"))
+    .event("dblclick", function() label1.text("dblclick"))
+    .event("mousedown", function() label2.text("mousedown"))
+    .event("mouseup", function() label2.text("mouseup"));
+
+var label1 = vis.anchor("center").add(pv.Label)
+    .textBaseline("bottom");
+
+var label2 = vis.anchor("center").add(pv.Label)
+    .textBaseline("top");
+
+vis.render();
+
+    </script>
+  </body>
+</html>
