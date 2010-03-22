@@ -1,0 +1,27 @@
+<html>
+  <head>
+    <title>Miserables Matrix</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../miserables.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(700)
+    .height(700)
+    .top(90)
+    .left(90);
+
+vis.add(pv.Layout.Matrix)
+    .nodes(miserables.vertices)
+    .links(miserables.edges)
+    .sort(function(a, b) b.linkDegree - a.linkDegree)
+  .link.add(pv.Bar)
+  .label.add(pv.Label);
+
+vis.render();
+
+    </script>
+  </body>
+</html>
