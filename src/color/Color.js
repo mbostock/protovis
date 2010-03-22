@@ -62,7 +62,8 @@ pv.color = function(format) {
   }
 
   /* Named colors. */
-  format = pv.Color.names[format] || format;
+  var named = pv.Color.names[format];
+  if (named) return named;
 
   /* Hexadecimal colors: #rgb and #rrggbb. */
   if (format.charAt(0) == "#") {
@@ -79,7 +80,7 @@ pv.color = function(format) {
     return pv.rgb(parseInt(r, 16), parseInt(g, 16), parseInt(b, 16), 1);
   }
 
-  /* Otherwise, assume named colors. TODO allow lazy conversion to RGB. */
+  /* Otherwise, pass-through unsupported colors. */
   return new pv.Color(format, 1);
 };
 
@@ -589,6 +590,12 @@ pv.Color.names = {
   yellow: "#ffff00",
   yellowgreen: "#9acd32"
 };
+
+/* Initialized named colors. */
+(function() {
+  var names = pv.Color.names;
+  for (var name in names) names[name] = pv.color(names[name]);
+})();
 
 /** @private */
 pv.Color.transparent = pv.rgb(0, 0, 0, 0);
