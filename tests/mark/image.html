@@ -1,0 +1,32 @@
+<html>
+  <head>
+    <title>Image</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../life.js"></script>
+    <link type="text/css" href="../center.css" rel="stylesheet"/>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(300)
+    .height(300)
+    .margin(2);
+
+vis.add(pv.Image)
+    .fillStyle("#fee")
+    .strokeStyle("#a03")
+    .url("../stanford.png");
+
+vis.add(pv.Image)
+    .left(75)
+    .top(75)
+    .width(150)
+    .height(150)
+    .url("../stanford.png");
+
+vis.render();
+
+    </script>
+  </body>
+</html>

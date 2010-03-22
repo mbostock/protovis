@@ -26,7 +26,9 @@ pv.Image = function() {
 };
 
 pv.Image.prototype = pv.extend(pv.Bar)
-    .property("url", String);
+    .property("url", String)
+    .property("imageWidth", Number)
+    .property("imageHeight", Number);
 
 pv.Image.prototype.type = "image";
 
@@ -46,3 +48,50 @@ pv.Image.prototype.type = "image";
 pv.Image.prototype.defaults = new pv.Image()
     .extend(pv.Bar.prototype.defaults)
     .fillStyle(null);
+
+pv.Image.prototype.image = function(f) {
+  this.$image = function() {
+      var c = f.apply(this, arguments);
+      return c == null ? pv.Color.transparent : pv.color(c);
+    };
+  return this;
+};
+
+pv.Image.prototype.buildImplied = function(s) {
+  pv.Bar.prototype.buildImplied.call(this, s);
+  if (!s.visible) return;
+
+  /* Compute the implied image dimensions. */
+  if (s.imageWidth == null) s.imageWidth = s.width;
+  if (s.imageHeight == null) s.imageHeight = s.height;
+
+  /* Compute the pixel values. */
+  if ((s.url == null) && this.$image) {
+
+    /* Cache the canvas element to reuse across renders. */
+    var canvas = this.$canvas || (this.$canvas = document.createElement("canvas")),
+        context = canvas.getContext("2d"),
+        w = s.imageWidth,
+        h = s.imageHeight,
+        stack = pv.Mark.stack,
+        data;
+
+    /* Evaluate the image function, storing into a CanvasPixelArray. */
+    canvas.width = w;
+    canvas.height = h;
+    data = (s.image = context.createImageData(w, h)).data;
+    stack.unshift(null, null);
+    for (var y = 0, p = 0; y < h; y++) {
+      stack[1] = y;
+      for (var x = 0; x < w; x++) {
+        stack[0] = x;
+        var color = this.$image.apply(this, stack);
+        data[p++] = color.r;
+        data[p++] = color.g;
+        data[p++] = color.b;
+        data[p++] = 255 * color.a;
+      }
+    }
+    stack.splice(0, 2);
+  }
+};

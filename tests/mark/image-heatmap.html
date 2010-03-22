@@ -1,0 +1,29 @@
+<html>
+  <head>
+    <title>Image Heatmap</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../heatmap.js"></script>
+    <link type="text/css" href="../center.css" rel="stylesheet"/>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(heatmap[0].length * 6)
+    .height(heatmap.length * 6)
+    .strokeStyle("#000")
+    .margin(2);
+
+vis.add(pv.Image)
+    .imageWidth(heatmap[0].length)
+    .imageHeight(heatmap.length)
+    .image(pv.Scale.linear()
+        .domain(95, 115, 135, 155, 175, 195)
+        .range("#0a0", "#6c0", "#ee0", "#eb4", "#eb9", "#fff")
+        .by(function(x, y) heatmap[y][x]));
+
+vis.render();
+
+    </script>
+  </body>
+</html>

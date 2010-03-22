@@ -7,6 +7,7 @@ pv.Scene = pv.SvgScene = {
   svg: "http://www.w3.org/2000/svg",
   xmlns: "http://www.w3.org/2000/xmlns",
   xlink: "http://www.w3.org/1999/xlink",
+  xhtml: "http://www.w3.org/1999/xhtml",
 
   /** The pre-multipled scale, based on any enclosing transforms. */
   scale: 1,
