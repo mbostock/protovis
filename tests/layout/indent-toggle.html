@@ -15,11 +15,9 @@ var root = pv.dom(flare)
 root.visitAfter(function(n) {
   if (n.firstChild) {
     n.nodeValue = pv.sum(n.childNodes, function(n) n.nodeValue);
-    n.toggle();
+    if (n.parentNode) n.toggle();
   }
 });
-
-root.toggle();
 
 var vis = new pv.Panel()
     .width(260)
@@ -35,7 +33,7 @@ layout.link.add(pv.Line);
 
 layout.node.add(pv.Dot)
     .fillStyle(function(n) n.toggled ? "#1f77b4" : n.firstChild ? "#aec7e8" : "#ff7f0e")
-    .event("mousedown", function(n) (n.toggle(), layout.data(root.nodes()).parent))
+    .event("mousedown", toggle)
   .anchor("left").add(pv.Label)
     .right(6)
     .textStyle(function(n) n.firstChild || n.toggled ? "#aaa" : "#000")
@@ -44,9 +42,15 @@ layout.node.add(pv.Dot)
 layout.label.add(pv.Label)
     .cursor("default")
     .events("all")
-    .event("mousedown", function(n) (n.toggle(), layout.data(root.nodes()).parent));
+    .event("mousedown", toggle);
 
 vis.render();
+
+/* Toggles the selected node, then updates the layout. */
+function toggle(n) {
+  n.toggle(pv.event.altKey);
+  return layout.data(root.nodes()).root;
+}
 
     </script>
   </body>

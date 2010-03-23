@@ -347,8 +347,13 @@ pv.Dom.Node.prototype.nodes = function() {
  * re-adds all toggled child nodes and deletes the <tt>toggled</tt> attribute.
  *
  * <p>This method has no effect if the node has no child nodes.
+ *
+ * @param {boolean} [recursive] whether the toggle should apply to descendants.
  */
-pv.Dom.Node.prototype.toggle = function() {
+pv.Dom.Node.prototype.toggle = function(recursive) {
+  if (recursive) return this.toggled
+      ? this.visitBefore(function(n) { if (n.toggled) n.toggle(); })
+      : this.visitAfter(function(n) { if (!n.toggled) n.toggle(); });
   var n = this;
   if (n.toggled) {
     for (var c; c = n.toggled.pop();) n.appendChild(c);
