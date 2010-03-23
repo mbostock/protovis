@@ -14,8 +14,8 @@
 function brownian() {
   data.shift();
   data.push({
-      x: x = Math.min(w, Math.max(0, x + pv.random(-k, k))),
-      y: y = Math.min(h, Math.max(0, y + pv.random(-k, k)))
+      x: x = Math.min(w, Math.max(0, x + pv.random(-k, k, 0))),
+      y: y = Math.min(h, Math.max(0, y + pv.random(-k, k, 0)))
     });
   return data;
 }
