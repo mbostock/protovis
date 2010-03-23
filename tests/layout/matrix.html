@@ -7,6 +7,8 @@
   <body>
     <script type="text/javascript+protovis">
 
+var color = pv.Colors.category19().by(function(d) d.group);
+
 var vis = new pv.Panel()
     .width(700)
     .height(700)
@@ -14,10 +16,15 @@ var vis = new pv.Panel()
     .left(90);
 
 vis.add(pv.Layout.Matrix)
-    .nodes(miserables.vertices)
-    .links(miserables.edges)
+    .nodes(miserables.nodes)
+    .links(miserables.links)
+    .sort(function(a, b) b.group - a.group)
   .link.add(pv.Bar)
-  .label.add(pv.Label);
+    .fillStyle(function(l) l.linkValue
+        ? ((l.targetNode.group == l.sourceNode.group)
+        ? color(l.sourceNode) : "#555") : "#eee")
+  .label.add(pv.Label)
+    .textStyle(color);
 
 vis.render();
 

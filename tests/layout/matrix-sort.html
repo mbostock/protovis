@@ -14,8 +14,8 @@ var vis = new pv.Panel()
     .left(90);
 
 vis.add(pv.Layout.Matrix)
-    .nodes(miserables.vertices)
-    .links(miserables.edges)
+    .nodes(miserables.nodes)
+    .links(miserables.links)
     .sort(function(a, b) b.linkDegree - a.linkDegree)
   .link.add(pv.Bar)
   .label.add(pv.Label);
