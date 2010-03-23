@@ -24,6 +24,7 @@ pv.Line = function() {
 
 pv.Line.prototype = pv.extend(pv.Mark)
     .property("lineWidth", Number)
+    .property("lineJoin", String)
     .property("strokeStyle", pv.color)
     .property("fillStyle", pv.color)
     .property("segmented", Boolean)
@@ -47,6 +48,21 @@ pv.Line.prototype.type = "line";
  * @type string
  * @name pv.Line.prototype.strokeStyle
  * @see pv.color
+ */
+
+/**
+ * The type of corners where two lines meet. Accepted values are "bevel",
+ * "round" and "miter". The default value is "miter".
+ *
+ * <p>For segmented lines, only "miter" joins and "linear" interpolation are
+ * currently supported. Any other value, including null, will disable joins,
+ * producing disjoint line segments. Note that the miter joins must be computed
+ * manually (at least in the current SVG renderer); since this calculation may
+ * be expensive and unnecessary for small lines, specifying null can improve
+ * performance significantly.
+ *
+ * @type string
+ * @name pv.Line.prototype.lineJoin
  */
 
 /**
@@ -100,6 +116,7 @@ pv.Line.prototype.type = "line";
  */
 pv.Line.prototype.defaults = new pv.Line()
     .extend(pv.Mark.prototype.defaults)
+    .lineJoin("miter")
     .lineWidth(1.5)
     .strokeStyle(pv.Colors.category10().by(pv.parent))
     .interpolate("linear")

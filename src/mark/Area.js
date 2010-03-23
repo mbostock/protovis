@@ -140,6 +140,7 @@ pv.Area.prototype.buildImplied = function(s) {
 /** @private Records which properties may be fixed. */
 pv.Area.fixed = {
   lineWidth: 1,
+  lineJoin: 1,
   strokeStyle: 1,
   fillStyle: 1,
   segmented: 1

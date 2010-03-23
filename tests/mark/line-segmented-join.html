@@ -1,0 +1,52 @@
+<html>
+  <head>
+    <title>Segmented Line Joins</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <link rel="stylesheet" type="text/css" href="../style.css"/>
+    <style type="text/css">
+
+span {
+  display: block !important;
+}
+
+    </style>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var joins = ["miter", "round", "bevel", null],
+    itrps = ["linear", "step-before", "step-after", "polar", "polar-reverse"],
+    w = 160,
+    h = 80,
+    p = 80;
+
+var vis = new pv.Panel()
+    .width((w + p) * joins.length)
+    .height((h + p) * itrps.length)
+    .margin(40);
+
+var panel = vis.add(pv.Panel)
+    .data(pv.cross(itrps, joins))
+    .left(function() this.index % joins.length * (w + p))
+    .top(function() ~~(this.index / joins.length) * (h + p))
+    .width(w)
+    .height(h);
+
+panel.add(pv.Line)
+    .data([{x:0,y:w/2},{x:w/3,y:0},{x:2*w/3,y:h},{x:w,y:0}])
+    .segmented(true)
+    .left(function(d) d.x)
+    .top(function(d) d.y)
+    .interpolate(function(d, p) p[0])
+    .lineJoin(function(d, p) p[1])
+    .lineWidth(20)
+    .strokeStyle("rgba(0,0,0,.5)")
+
+panel.anchor("center").add(pv.Label)
+    .text(function(d) d.map(String));
+
+vis.render();
+
+    </script>
+  </body>
+</html>

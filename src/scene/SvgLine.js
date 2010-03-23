@@ -29,7 +29,8 @@ pv.SvgScene.line = function(scenes) {
       "fill-opacity": fill.opacity || null,
       "stroke": stroke.color,
       "stroke-opacity": stroke.opacity || null,
-      "stroke-width": stroke.opacity ? s.lineWidth / this.scale : null
+      "stroke-width": stroke.opacity ? s.lineWidth / this.scale : null,
+      "stroke-linejoin": s.lineJoin
     });
   return this.append(e, scenes, 0);
 };
@@ -46,7 +47,7 @@ pv.SvgScene.lineSegment = function(scenes) {
 
     /* interpolate */
     var d;
-    if (s1.interpolate == "linear") {
+    if ((s1.interpolate == "linear") && (s1.lineJoin == "miter")) {
       fill = stroke;
       stroke = pv.Color.transparent;
       d = this.pathJoin(scenes[i - 1], s1, s2, scenes[i + 2]);
@@ -63,7 +64,8 @@ pv.SvgScene.lineSegment = function(scenes) {
         "fill-opacity": fill.opacity || null,
         "stroke": stroke.color,
         "stroke-opacity": stroke.opacity || null,
-        "stroke-width": stroke.opacity ? s1.lineWidth / this.scale : null
+        "stroke-width": stroke.opacity ? s1.lineWidth / this.scale : null,
+        "stroke-linejoin": s1.lineJoin
       });
     e = this.append(e, scenes, i);
   }

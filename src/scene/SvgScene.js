@@ -39,7 +39,8 @@ pv.Scene = pv.SvgScene = {
       "fill-opacity": 1,
       "stroke": "none",
       "stroke-opacity": 1,
-      "stroke-width": 1.5
+      "stroke-width": 1.5,
+      "stroke-linejoin": "miter"
     },
     css: {
       "font": "10px sans-serif"
