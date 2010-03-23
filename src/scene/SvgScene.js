@@ -163,7 +163,7 @@ pv.SvgScene.dispatch = pv.listener(function(e) {
         break;
       }
       case "mousewheel": {
-        e.wheel = (window.opera ? 12 : 1) * e.wheelDelta;
+        e.wheel = (window.opera ? 12 : 48) * e.wheelDelta;
         break;
       }
     }
