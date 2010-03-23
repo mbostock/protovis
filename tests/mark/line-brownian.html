@@ -2,6 +2,14 @@
   <head>
     <title>Brownian Motion</title>
     <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <style type="text/css">
+
+body {
+  background: #222;
+  margin: 0;
+}
+
+    </style>
   </head>
   <body>
     <script type="text/javascript+protovis">
@@ -22,16 +30,15 @@ function brownian() {
 
 var n = 300,
     k = 12,
-    w = 640,
-    h = 360,
+    w = window.innerWidth,
+    h = window.innerHeight,
     x = w / 2,
     y = h / 2,
     data = pv.range(n).map(function() ({x: x, y: y}));
 
 var vis = new pv.Panel()
     .width(w)
-    .height(h)
-    .fillStyle("#222");
+    .height(h);
 
 vis.add(pv.Line)
     .data(brownian)
