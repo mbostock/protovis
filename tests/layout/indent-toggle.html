@@ -22,8 +22,9 @@ root.visitAfter(function(n) {
 root.toggle();
 
 var vis = new pv.Panel()
-    .width(300)
-    .height(3040);
+    .width(260)
+    .height(function() (root.nodes().length + 1) * 12)
+    .strokeStyle("#ccc");
 
 var layout = vis.add(pv.Layout.Indent)
     .data(root.nodes())
@@ -35,8 +36,8 @@ layout.link.add(pv.Line);
 layout.node.add(pv.Dot)
     .fillStyle(function(n) n.toggled ? "#1f77b4" : n.firstChild ? "#aec7e8" : "#ff7f0e")
     .event("mousedown", function(n) (n.toggle(), layout.data(root.nodes()).parent))
-  .anchor("right").add(pv.Label)
-    .left(200)
+  .anchor("left").add(pv.Label)
+    .right(6)
     .textStyle(function(n) n.firstChild || n.toggled ? "#aaa" : "#000")
     .text(function(n) (n.nodeValue >> 10) + "KB");
 
