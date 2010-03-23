@@ -52,9 +52,9 @@ bzr.update = function() {
       var ta = sa + sa * (sb - sc);
       var tb = sb + sb * (sc - sa);
       var tc = sc + sc * (sa - sb);
-      bzr.a[p] = ta < 1 ? ta : 0;
-      bzr.b[p] = tb < 1 ? tb : 0;
-      bzr.c[p] = tc < 1 ? tc : 0;
+      bzr.a[p] = ta < 1 ? ta : 1;
+      bzr.b[p] = tb < 1 ? tb : 1;
+      bzr.c[p] = tc < 1 ? tc : 1;
     }
   }
 };
