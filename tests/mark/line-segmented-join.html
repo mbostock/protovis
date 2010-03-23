@@ -40,7 +40,7 @@ panel.add(pv.Line)
     .interpolate(function(d, p) p[0])
     .lineJoin(function(d, p) p[1])
     .lineWidth(20)
-    .strokeStyle("rgba(0,0,0,.5)")
+    .strokeStyle("rgba(0,0,0,.5)");
 
 panel.anchor("center").add(pv.Label)
     .text(function(d) d.map(String));
