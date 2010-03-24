@@ -1,0 +1,54 @@
+<html>
+  <head>
+    <title>Label Breaks</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var data = pv.range(101),
+    w = 500,
+    h = 500,
+    x = pv.Scale.linear(0, 100).range(0, w),
+    y = pv.Scale.linear(0, 100).range(0, h);
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .margin(20)
+    .left(30)
+    .fillStyle("#fff")
+    .strokeStyle("#ccc");
+
+var xtick = vis.add(pv.Rule)
+    .data(x.ticks())
+    .left(x)
+    .strokeStyle("#ccc")
+  .anchor("bottom").add(pv.Label)
+    .text(x.tickFormat);
+
+xtick.add(pv.Label)
+    .top(function() xtick.top() + 10)
+    .text("x");
+
+var ytick = vis.add(pv.Rule)
+    .data(y.ticks())
+    .bottom(y)
+    .strokeStyle("#ccc")
+  .anchor("left").add(pv.Label)
+    .text(y.tickFormat);
+
+ytick.add(pv.Label)
+    .top(function() ytick.top() + 10)
+    .text("y");
+
+vis.add(pv.Line)
+    .data(data)
+    .left(x)
+    .bottom(y);
+
+vis.render();
+
+    </script>
+  </body>
+</html>
