@@ -51,7 +51,9 @@ pv.Image.prototype.defaults = new pv.Image()
 pv.Image.prototype.image = function(f) {
   this.$image = function() {
       var c = f.apply(this, arguments);
-      return c == null ? pv.Color.transparent : pv.color(c);
+      return c == null ? pv.Color.transparent
+          : typeof c == "string" ? pv.color(c)
+          : c;
     };
   return this;
 };

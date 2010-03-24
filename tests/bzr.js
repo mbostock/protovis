@@ -8,7 +8,7 @@ var bzr = {};
 
 bzr.color = function(x, y) {
   var p = y * bzr.size + x;
-  return pv.rgb(bzr.a[p] * 256, bzr.b[p] * 256, bzr.c[p] * 256);
+  return {r: bzr.a[p] * 255, g: bzr.b[p] * 255, b: bzr.c[p] * 255, a: 255};
 };
 
 bzr.reset = function(n) {
