@@ -62,6 +62,8 @@ pv.Line.prototype.type = "line";
  * be expensive and unnecessary for small lines, specifying null can improve
  * performance significantly.
  *
+ * <p>This property is <i>fixed</i>. See {@link pv.Mark}.
+ *
  * @type string
  * @name pv.Line.prototype.lineJoin
  */
@@ -70,6 +72,8 @@ pv.Line.prototype.type = "line";
  * The line fill style; if non-null, the interior of the line is closed and
  * filled with the specified color. The default value of this property is a
  * null, meaning that lines are not filled by default.
+ *
+ * <p>This property is <i>fixed</i>. See {@link pv.Mark}.
  *
  * @type string
  * @name pv.Line.prototype.fillStyle
@@ -93,10 +97,8 @@ pv.Line.prototype.type = "line";
  * functions (i.e., step functions), either "step-before" or "step-after" can be
  * specified. To draw a clockwise circular arc between points, specify "polar";
  * to draw a counterclockwise circular arc between points, specify
- * "polar-reverse".
- * Two curve interpelations are also supported, the values "basis" and "cardinal"
- * will interpolate using a B-Spline and a Cardinal spline interpolation
- * respectively.
+ * "polar-reverse". To draw open uniform b-splines, specify "basis". To draw
+ * cardinal splines, specify "cardinal"; see also {@link #tension}.
  *
  * <p>This property is <i>fixed</i>. See {@link pv.Mark}.
  *
@@ -116,8 +118,12 @@ pv.Line.prototype.type = "line";
 
 /**
  * The tension of cardinal splines; used in conjunction with
- * interpolate("cardinal"). A value between 0
- * and 1 draws cardinal splines with the given tension.
+ * interpolate("cardinal"). A value between 0 and 1 draws cardinal splines with
+ * the given tension. In some sense, the tension can be interpreted as the
+ * "length" of the tangent; a tension of 1 will yield all zero tangents, and a
+ * tension of 0 yields a Catmull-Rom spline. The default value is 0.75.
+ *
+ * <p>This property is <i>fixed</i>. See {@link pv.Mark}.
  *
  * @type number
  * @name pv.Line.prototype.tension
@@ -136,7 +142,7 @@ pv.Line.prototype.defaults = new pv.Line()
     .strokeStyle(pv.Colors.category10().by(pv.parent))
     .interpolate("linear")
     .eccentricity(0)
-    .tension(0.8);
+    .tension(.75);
 
 /** @private Reuse Area's implementation for segmented bind & build. */
 pv.Line.prototype.bind = pv.Area.prototype.bind;

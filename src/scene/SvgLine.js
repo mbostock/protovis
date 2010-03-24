@@ -1,6 +1,3 @@
-// TODO fillStyle for lineSegment?
-// TODO lineOffset for flow maps?
-
 pv.SvgScene.line = function(scenes) {
   var e = scenes.$g.firstChild;
   if (scenes.length < 2) return e;
@@ -16,37 +13,46 @@ pv.SvgScene.line = function(scenes) {
 
   /* points */
   var d = "M" + s.left + "," + s.top;
-  if(s.interpolate == "basis" && scenes.length > 2) {
-    var s0 = scenes[0];
-    var s1 = s0;
-    var s2 = s0;
-    var s3 = scenes[1];
-    d += this.basisCurveTo(s0, s1, s2, s3);
+  if (s.interpolate == "basis" && scenes.length > 2) {
+    var s0 = scenes[0],
+        s1 = s0,
+        s2 = s0,
+        s3 = scenes[1];
+    d += this.pathBasis(s0, s1, s2, s3);
     for (var i = 2; i < scenes.length; i++) {
       s0 = s1;
       s1 = s2;
       s2 = s3;
       s3 = scenes[i];
-      d += this.basisCurveTo(s0, s1, s2, s3);
+      d += this.pathBasis(s0, s1, s2, s3);
     }
     for (var j = 0; j < 2; j++) {
       s0 = s1;
       s1 = s2;
       s2 = s3;
-      d += this.basisCurveTo(s0, s1, s2, s3);
+      d += this.pathBasis(s0, s1, s2, s3);
     }
-  } else if(s.interpolate == "cardinal" && scenes.length > 2) {
-      var a = 1 - s.tension;
-      var i;
-      d += "C" + (scenes[0].left + (scenes[1].left - scenes[0].left)*a) + "," + (scenes[0].top + (scenes[1].top - scenes[0].top)*a)
-         + "," + (scenes[1].left + (scenes[0].left - scenes[2].left)*a) + "," + (scenes[1].top + (scenes[0].top - scenes[2].top)*a)
-         + "," + scenes[1].left + "," + scenes[1].top;
-      for (i = 2; i < scenes.length-1; i++) {
-        d += "S" + (scenes[i].left + (scenes[i-1].left - scenes[i+1].left)*a) + "," + (scenes[i].top + (scenes[i-1].top - scenes[i+1].top)*a)
-           + "," + scenes[i].left + "," + scenes[i].top;
+  } else if (s.interpolate == "cardinal" && scenes.length > 2) {
+      var a = 1 - s.tension,
+          s0 = scenes[0],
+          s1 = scenes[1],
+          s2 = scenes[2];
+      d += "C" + (s0.left + (s1.left - s0.left) * a)
+         + "," + (s0.top + (s1.top - s0.top) * a)
+         + "," + (s1.left + (s0.left - s2.left) * a)
+         + "," + (s1.top + (s0.top - s2.top) * a)
+         + "," + s1.left + "," + s1.top;
+    for (var i = 2; i < scenes.length; i++) {
+        s0 = s1;
+        s1 = s2;
+        s2 = scenes[i];
+        d += "S" + (s1.left + (s0.left - s2.left) * a)
+           + "," + (s1.top + (s0.top - s2.top) * a)
+           + "," + s1.left + "," + s1.top;
       }
-      d += "S" + (scenes[i].left + (scenes[i-1].left - scenes[i].left)*a) + "," + (scenes[i].top + (scenes[i-1].top - scenes[i].top)*a)
-         + "," + scenes[i].left + "," + scenes[i].top;
+      d += "S" + (s2.left + (s1.left - s2.left) * a)
+         + "," + (s2.top + (s1.top - s2.top) * a)
+         + "," + s2.left + "," + s2.top;
   } else {
     for (var i = 1; i < scenes.length; i++) {
       d += this.pathSegment(scenes[i - 1], scenes[i]);
@@ -69,39 +75,48 @@ pv.SvgScene.line = function(scenes) {
 };
 
 /**
- * Matrix to transform basis (b-spline) control points to bezier control
- * points. Derived from FvD 11.2.8.
+ * @private Converts the specified b-spline curve segment to a bezier curve
+ * compatible with SVG "C".
+ *
+ * @param s0 the first control point.
+ * @param s1 the second control point.
+ * @param s2 the third control point.
+ * @param s3 the fourth control point.
  */
-pv.SvgScene.basisToBezier = [
-  [ 1.0/6.0, 4.0/6.0, 1.0/6.0, 0.0/6.0 ],
-  [ 0.0/6.0, 4.0/6.0, 2.0/6.0, 0.0/6.0 ],
-  [ 0.0/6.0, 2.0/6.0, 4.0/6.0, 0.0/6.0 ],
-  [ 0.0/6.0, 1.0/6.0, 4.0/6.0, 1.0/6.0 ]
-];
+pv.SvgScene.pathBasis = (function() {
 
-/**
- * Converts the specified b-spline curve segment to a bezier curve compatible
- * with SVG "C".
- */
-pv.SvgScene.basisCurveTo = function(s0, s1, s2, s3) {
-  var b1 = this.weightCurve(this.basisToBezier[1], s0, s1, s2, s3);
-  var b2 = this.weightCurve(this.basisToBezier[2], s0, s1, s2, s3);
-  var b  = this.weightCurve(this.basisToBezier[3], s0, s1, s2, s3);
-  //this.bezierCurveTo(b1.x, b1.y, b2.x, b2.y, b.x, b.y);
-  return "C" + b1.x + "," + b1.y + "," + b2.x + "," + b2.y + "," + b.x + "," + b.y;
-};
+  /**
+   * Matrix to transform basis (b-spline) control points to bezier control
+   * points. Derived from FvD 11.2.8.
+   */
+  var basis = [
+    [ 1/6, 2/3, 1/6,   0 ],
+    [   0, 2/3, 1/3,   0 ],
+    [   0, 1/3, 2/3,   0 ],
+    [   0, 1/6, 2/3, 1/6 ]
+  ];
 
-/**
- * Returns the point that is the weighted sum of the specified control points,
- * using the specified weights. This method requires that there are four weights
- * and four control points.
- */
-pv.SvgScene.weightCurve = function(w, s1, s2, s3, s4) {
-  return {
-    x:(w[0] * s1.left + w[1] * s2.left + w[2] * s3.left + w[3] * s4.left),
-    y:(w[0] * s1.top  + w[1] * s2.top  + w[2] * s3.top  + w[3] * s4.top )
-  };
-};
+  /**
+   * Returns the point that is the weighted sum of the specified control points,
+   * using the specified weights. This method requires that there are four
+   * weights and four control points.
+   */
+  function weight(w, s1, s2, s3, s4) {
+    return {
+      x:(w[0] * s1.left + w[1] * s2.left + w[2] * s3.left + w[3] * s4.left),
+      y:(w[0] * s1.top  + w[1] * s2.top  + w[2] * s3.top  + w[3] * s4.top )
+    };
+  }
+
+  return function(s0, s1, s2, s3) {
+      var b1 = weight(basis[1], s0, s1, s2, s3),
+          b2 = weight(basis[2], s0, s1, s2, s3),
+          b3 = weight(basis[3], s0, s1, s2, s3);
+      return "C" + b1.x + "," + b1.y
+          + "," + b2.x + "," + b2.y
+          + "," + b3.x + "," + b3.y;
+    };
+})();
 
 pv.SvgScene.lineSegment = function(scenes) {
   var e = scenes.$g.firstChild;

@@ -1,41 +1,27 @@
 /**
- * A projection class used by the {@code pv.Geo.scale}. There is no
- * explicit constructor corresponding to the class {@code pv.Geo.Projection}; this
- * class merely serves to document the attributes that are present in a projection
- * description
+ * A projection class used by the {@code pv.Geo.scale}. There is no explicit
+ * constructor corresponding to the class {@code pv.Geo.Projection}; this class
+ * merely serves to document the projection interface. TODO describe in more
+ * detail how projections map between {@link pv.Geo.LatLng} and {@link
+ * pv.Vector} in [-1,1].
  *
- * @class pv.Geo.Projection
- */
-
-pv.Geo.Projection = function() {}
-
-/**
- * The <i>forward</i> projection. This function should map a {@code pv.Scale.LatLng}
- * object (in degrees) to a {@code pv.Vector}.
- *
- * @type function
- * @field pv.Geo.Projection.prototype.forward
+ * @class
  */
 
 /**
- * The <i>inverse</i> projection. This function should map a {@code pv.Vector} to a
- * {@code pv.Scale.LatLng}.
+ * The <i>forward</i> projection.
  *
  * @type function
- * @field pv.Geo.Projection.prototype.inverse
+ * @field pv.Geo.Projection.prototype.project
+ * @param {pv.Geo.LatLng} latlng the latitude and longitude to project.
+ * @param {pv.Vector} the xy-coordinates of the given point.
  */
 
-pv.Geo.Projection.fromProj4 = function(proj4) {
-  return {
-    forward: function(latlng) {
-      var xy = {x:pv.Geo.radians(latlng.lon), y:pv.Geo.radians(latlng.lat)};
-      proj4.forward(xy);
-      return xy;
-    },
-    inverse: function(xy) {
-      var pt = {x:xy.x, y:xy.y};
-      proj4.inverse(pt);
-      return {lon:pv.Geo.degrees(pt.x), lat:pv.Geo.degrees(pt.y)};
-    }
-  }
-}
+/**
+ * The <i>inverse</i> projection; optional.
+ *
+ * @type function
+ * @field pv.Geo.Projection.prototype.invert
+ * @param {pv.Vector} point the x- and y-coordinates to invert.
+ * @returns {pv.Geo.LatLng} the latitude and longitude of the given point.
+ */

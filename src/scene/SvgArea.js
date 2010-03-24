@@ -1,5 +1,3 @@
-// TODO strokeStyle for areaSegment?
-
 pv.SvgScene.area = function(scenes) {
   var e = scenes.$g.firstChild;
   if (!scenes.length) return e;
@@ -25,7 +23,7 @@ pv.SvgScene.area = function(scenes) {
       /* interpolate */
       if (i < k) {
         var sk = scenes[i + 1], sl = scenes[j - 1];
-        switch (si.interpolate) {
+        switch (s.interpolate) {
           case "step-before": {
             pi += "V" + sk.top;
             pj += "H" + (sl.left + sl.width);
@@ -52,8 +50,8 @@ pv.SvgScene.area = function(scenes) {
     for (var j = i + 1; j < scenes.length; j++) {
       sj = scenes[j]; if (!sj.width && !sj.height) break;
     }
-    if (i && (scenes[i].interpolate != "step-after")) i--;
-    if ((j < scenes.length) && (scenes[j].interpolate != "step-before")) j++;
+    if (i && (s.interpolate != "step-after")) i--;
+    if ((j < scenes.length) && (s.interpolate != "step-before")) j++;
     d.push(path(i, i = j - 1));
   }
   if (!d.length) return e;

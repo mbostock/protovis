@@ -3,6 +3,9 @@ data/Transform.js
 
 data/Scale.js
 - allow customization of data ticks (e.g., "3 months", "5 minutes")
+- ignore undefined values when computing min/max for domains
+- greedily convert range to the expected type (for colors?)
+- quantile scales!
 
 layout/Layout.js
 - use private data, or at least standardize which attributes are populated
@@ -30,6 +33,10 @@ mark/Mark.js
 
 mark/Area.js
 - {min,max}:name psuedo-anchors for center labeling?
+- support for "basis" and "cardinal" interpolation
+
+mark/Line.js
+- support for "basis" and "cardinal" with segmented lines
 
 behavior/*
 - documentation, implementation, etc.

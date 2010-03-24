@@ -24,12 +24,7 @@ JS_CORE_FILES = \
 	src/data/LogScale.js \
 	src/data/RootScale.js \
 	src/data/OrdinalScale.js \
-    src/data/Histogram.js \
-	src/geo/Geo.js \
-	src/geo/LatLng.js \
-	src/geo/Projection.js \
-	src/geo/Projections.js \
-	src/geo/GeoScale.js \
+	src/data/Histogram.js \
 	src/color/Color.js \
 	src/color/Colors.js \
 	src/color/Ramp.js \
@@ -55,7 +50,7 @@ JS_CORE_FILES = \
 	src/mark/Image.js \
 	src/mark/Wedge.js
 
-JS_EXTRA_FILES = \
+JS_LAYOUT_FILES = \
 	src/physics/Particle.js \
 	src/physics/Simulation.js \
 	src/physics/Quadtree.js \
@@ -65,7 +60,6 @@ JS_EXTRA_FILES = \
 	src/physics/SpringForce.js \
 	src/physics/Constraint.js \
 	src/physics/CollisionConstraint.js \
-	src/physics/LinkConstraint.js \
 	src/physics/PositionConstraint.js \
 	src/physics/BoundConstraint.js \
 	src/layout/Layout.js \
@@ -91,10 +85,18 @@ JS_EXTRA_FILES = \
 	src/behavior/Pan.js \
 	src/behavior/Zoom.js
 
+JS_GEO_FILES = \
+	src/geo/Geo.js \
+	src/geo/LatLng.js \
+	src/geo/Projection.js \
+	src/geo/Projections.js \
+	src/geo/GeoScale.js
+
 JS_FILES = \
 	$(JS_LANG_FILES) \
 	$(JS_CORE_FILES) \
-	$(JS_EXTRA_FILES) \
+	$(JS_LAYOUT_FILES) \
+	$(JS_GEO_FILES) \
 	src/lang/init.js
 
 all: protovis-d3.2.js protovis-r3.2.js

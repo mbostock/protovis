@@ -299,3 +299,14 @@ pv.logCeil = function(x, b) {
       ? Math.pow(b, Math.ceil(pv.log(x, b)))
       : -Math.pow(b, -Math.ceil(-pv.log(-x, b)));
 };
+
+(function() {
+  var radians = Math.PI / 180,
+      degrees = 180 / Math.PI;
+
+  /** Returns the number of radians corresponding to the specified degrees. */
+  pv.radians = function(degrees) { return radians * degrees; };
+
+  /** Returns the number of degrees corresponding to the specified radians. */
+  pv.degrees = function(radians) { return degrees * radians; };
+})();

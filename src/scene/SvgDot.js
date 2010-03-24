@@ -27,7 +27,7 @@ pv.SvgScene.dot = function(scenes) {
         break;
       }
       case "diamond": {
-        radius *= 1.414214; // Math.sqrt(2)
+        radius *= Math.SQRT2;
         path = "M0," + -radius
             + "L" + radius + ",0"
             + " 0," + radius
