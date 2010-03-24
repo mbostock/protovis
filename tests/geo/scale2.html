@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <title>Geo Scale</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="us-states.js"></script>
+    <link type="text/css" href="../center.css" rel="stylesheet"/>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var w = window.innerWidth * .8,
+    h = 3 / 5 * w;
+
+var geo = pv.Geo.scale()
+    .domain({lng:-130, lat:20}, {lng:-62, lat:54})
+    .range(w, h);
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(h);
+
+/* States. */
+vis.add(pv.Panel)
+    .data(states)
+  .add(pv.Panel)
+    .data(function(c) c.borders)
+  .add(pv.Line)
+    .data(function(b) b)
+    .left(geo.x)
+    .top(geo.y)
+    .title(function(d, b, c) c.name)
+    .fillStyle(pv.Colors.category19().by(function(d, b, c) c.name))
+    .strokeStyle(function() this.fillStyle().darker())
+    .lineWidth(1);
+
+vis.render();
+
+    </script>
+  </body>
+</html>
