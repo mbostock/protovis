@@ -1,18 +1,20 @@
 <html>
   <head>
-    <title>Splines</title>
+    <title>Cardinal Splines</title>
     <script type="text/javascript" src="../../protovis-d3.2.js"></script>
   </head>
   <body>
     <script type="text/javascript+protovis">
 
-var data = pv.range(0, 10, .5).map(function(x) {
-        return {x: x, y: Math.sin(x) + Math.random() + 2};
+var t = 0, dt = 0.05;
+
+var data = pv.range(10).map(function(x) {
+        return {x: x, y: Math.sin(x * Math.PI + Math.PI / 2)};
       }),
     w = 800,
     h = 400,
     x = pv.Scale.linear(data, function(d) d.x).range(0, w),
-    y = pv.Scale.linear(0, 4.5).range(0, h);
+    y = pv.Scale.linear(-1.5, 1.5).range(0, h);
 
 var vis = new pv.Panel()
     .width(w)
@@ -40,24 +42,17 @@ vis.add(pv.Line)
     .data(data)
     .left(function(d) x(d.x))
     .bottom(function(d) y(d.y))
-    .interpolate("basis")
-    .strokeStyle("#3f3")
-    .lineWidth(2);
-
-vis.add(pv.Line)
-    .data(data)
-    .left(function(d) x(d.x))
-    .bottom(function(d) y(d.y))
     .interpolate("cardinal")
-    .strokeStyle("#f33")
-    .lineWidth(2);
-
-vis.add(pv.Dot)
-    .data(data)
-    .left(function(d) x(d.x))
-    .bottom(function(d) y(d.y));
+    .tension(function() t);
 
 vis.render();
+
+setInterval(function() {
+  t += dt;
+  if (t < -1) { t = -1; dt *= -1; }
+  else if (t > 2) { t = 2; dt *= -1; }
+  vis.render();
+}, 42);
 
     </script>
   </body>

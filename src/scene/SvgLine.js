@@ -33,26 +33,26 @@ pv.SvgScene.line = function(scenes) {
       d += this.pathBasis(s0, s1, s2, s3);
     }
   } else if (s.interpolate == "cardinal" && scenes.length > 2) {
-      var a = 1 - s.tension,
-          s0 = scenes[0],
-          s1 = scenes[1],
-          s2 = scenes[2];
-      d += "C" + (s0.left + (s1.left - s0.left) * a)
-         + "," + (s0.top + (s1.top - s0.top) * a)
-         + "," + (s1.left + (s0.left - s2.left) * a)
-         + "," + (s1.top + (s0.top - s2.top) * a)
-         + "," + s1.left + "," + s1.top;
-    for (var i = 2; i < scenes.length; i++) {
-        s0 = s1;
-        s1 = s2;
-        s2 = scenes[i];
-        d += "S" + (s1.left + (s0.left - s2.left) * a)
-           + "," + (s1.top + (s0.top - s2.top) * a)
-           + "," + s1.left + "," + s1.top;
-      }
-      d += "S" + (s2.left + (s1.left - s2.left) * a)
-         + "," + (s2.top + (s1.top - s2.top) * a)
-         + "," + s2.left + "," + s2.top;
+    var a = (1 - s.tension) / 2,
+        s0 = scenes[0],
+        s1 = scenes[1],
+        s2 = scenes[2];
+    d += "C" + (s0.left + (s2.left - s0.left) * a)
+        + "," + (s0.top + (s2.top - s0.top) * a)
+        + "," + (s1.left + (s0.left - s2.left) * a)
+        + "," + (s1.top + (s0.top - s2.top) * a)
+        + "," + s1.left + "," + s1.top;
+    for (var i = 3; i < scenes.length; i++) {
+      s0 = s1;
+      s1 = s2;
+      s2 = scenes[i];
+      d += "S" + (s1.left + (s0.left - s2.left) * a)
+          + "," + (s1.top + (s0.top - s2.top) * a)
+          + "," + s1.left + "," + s1.top;
+    }
+    d += "S" + (s2.left - (s2.left - s0.left) * a)
+        + "," + (s2.top - (s2.top - s0.top) * a)
+        + "," + s2.left + "," + s2.top;
   } else {
     for (var i = 1; i < scenes.length; i++) {
       d += this.pathSegment(scenes[i - 1], scenes[i]);

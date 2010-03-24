@@ -120,8 +120,9 @@ pv.Line.prototype.type = "line";
  * The tension of cardinal splines; used in conjunction with
  * interpolate("cardinal"). A value between 0 and 1 draws cardinal splines with
  * the given tension. In some sense, the tension can be interpreted as the
- * "length" of the tangent; a tension of 1 will yield all zero tangents, and a
- * tension of 0 yields a Catmull-Rom spline. The default value is 0.75.
+ * "length" of the tangent; a tension of 1 will yield all zero tangents (i.e.,
+ * linear interpolation), and a tension of 0 yields a Catmull-Rom spline. The
+ * default value is 0.7.
  *
  * <p>This property is <i>fixed</i>. See {@link pv.Mark}.
  *
@@ -142,7 +143,7 @@ pv.Line.prototype.defaults = new pv.Line()
     .strokeStyle(pv.Colors.category10().by(pv.parent))
     .interpolate("linear")
     .eccentricity(0)
-    .tension(.75);
+    .tension(.7);
 
 /** @private Reuse Area's implementation for segmented bind & build. */
 pv.Line.prototype.bind = pv.Area.prototype.bind;
