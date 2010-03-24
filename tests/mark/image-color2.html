@@ -1,0 +1,35 @@
+<html>
+  <head>
+    <title>Image</title>
+    <script type="text/javascript" src="../../protovis-r3.2.js"></script>
+    <script type="text/javascript" src="../bzr.js"></script>
+    <link type="text/css" href="../center.css" rel="stylesheet"/>
+    <style type="text/css">
+
+body {
+  background: #222;
+}
+
+    </style>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(bzr.size * 4)
+    .height(bzr.size * 4);
+
+vis.add(pv.Image)
+    .def("init", function() bzr.update())
+    .imageWidth(bzr.size)
+    .imageHeight(bzr.size)
+    .image(bzr.color)
+    .event("click", function() bzr.reset());
+
+vis.render();
+
+setInterval(function() vis.render(), 42);
+
+    </script>
+  </body>
+</html>

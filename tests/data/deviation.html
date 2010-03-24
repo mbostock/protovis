@@ -1,0 +1,54 @@
+<html>
+  <head>
+    <title>Deviation</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../testify.js"></script>
+    <link rel="stylesheet" type="text/css" href="../style.css"/>
+    <link rel="stylesheet" type="text/css" href="../testify.css"/>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var i, text = "";
+
+text += ">>> pv.deviation()\n";
+text += "<b>domain\texpected\tactual</b>\n";
+
+i = pv.deviation([]);
+text += "([])\tNaN\t" + i + "\n";
+
+i = pv.deviation([Infinity]);
+text += "([Infinity])\tNaN\t" + i + "\n";
+
+i = pv.deviation([-Infinity]);
+text += "([-Infinity])\tNaN\t" + i + "\n";
+
+i = pv.deviation([1, Infinity]);
+text += "([1, Infinity])\tNaN\t" + i + "\n";
+
+i = pv.deviation([1, -Infinity]);
+text += "([1, -Infinity])\tNaN\t" + i + "\n";
+
+i = pv.deviation([NaN]);
+text += "([NaN])\tNaN\t" + i + "\n";
+
+i = pv.deviation([0, NaN]);
+text += "([0, NaN])\tNaN\t" + i + "\n";
+
+i = pv.deviation([0, Infinity]);
+text += "([0, Infinity])\tNaN\t" + i + "\n";
+
+i = pv.deviation([0, 0]);
+text += "([0, 0])\t0\t" + i + "\n";
+
+i = pv.deviation([0, 1]);
+text += "([0, 1])\t0.7071067811865476\t" + i + "\n";
+
+i = pv.deviation([0, 1, 2]);
+text += "([0, 1, 2])\t1\t" + i + "\n";
+
+testify(text);
+
+    </script>
+  </body>
+</html>

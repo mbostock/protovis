@@ -1,0 +1,34 @@
+<html>
+  <head>
+    <title>Flare Dendrogram</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../flare.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(800)
+    .height(800);
+
+vis.add(pv.Layout.Cluster.Fill)
+    .data(pv.dom(flare).nodes())
+    .innerRadius(320)
+    .outerRadius(220)
+    .orient("radial")
+  .add(pv.Wedge)
+    .fillStyle("#1f77b4");
+
+vis.add(pv.Layout.Partition.Fill)
+    .data(pv.dom(flare).nodes())
+    .innerRadius(300)
+    .outerRadius(400)
+    .orient("radial")
+  .add(pv.Wedge)
+    .fillStyle(function(n) n.parentNode ? "#2ca02c" : "#aaa");
+
+vis.render();
+
+    </script>
+  </body>
+</html>

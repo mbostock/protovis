@@ -16,12 +16,14 @@ var vis = new pv.Panel()
     .bottom(100);
 
 vis.add(pv.Layout.Arc)
-    .nodes(miserables.vertices)
-    .links(miserables.edges)
+    .nodes(miserables.nodes)
+    .links(miserables.links)
     .orient("radial")
   .link.add(pv.Line)
   .node.add(pv.Dot)
     .size(function(d) d.linkDegree + 4)
+    .fillStyle(pv.Colors.category19().by(function(d) d.group))
+    .strokeStyle(function() this.fillStyle().darker())
   .label.add(pv.Label);
 
 vis.render();

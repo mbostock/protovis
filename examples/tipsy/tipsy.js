@@ -1,6 +1,28 @@
 pv.Behavior.tipsy = function(opts) {
   var tip;
-  return function() {
+
+  /**
+   * @private When the mouse leaves the root panel, trigger a mouseleave event
+   * on the tooltip span. This is necessary for dimensionless marks (e.g.,
+   * lines) when the mouse isn't actually over the span.
+   */
+  function trigger() {
+    $(tip).trigger("mouseleave");
+  }
+
+  /**
+   * @private When the mouse leaves the tooltip, remove the tooltip span. This
+   * event handler is declared outside of the event handler such that duplicate
+   * registrations are ignored.
+   */
+  function cleanup() {
+    if (tip) {
+      tip.parentNode.removeChild(tip);
+      tip = null;
+    }
+  }
+
+  return function(d) {
       /* Compute the transform to offset the tooltip position. */
       var t = pv.Transform.identity, p = this.parent;
       do {
@@ -8,13 +30,18 @@ pv.Behavior.tipsy = function(opts) {
       } while (p = p.parent);
 
       /* Create and cache the tooltip span to be used by tipsy. */
-      var c = this.root.canvas();
-      c.style.position = "relative";
-      var e = tip || (tip = c.appendChild(document.createElement("span")));
-      e.style.display = "inline-block";
-      e.style.position = "absolute";
-      e.style.background = "transparent";
-      e.title = this.title();
+      if (!tip) {
+        var c = this.root.canvas();
+        c.style.position = "relative";
+        $(c).mouseleave(trigger);
+
+        tip = c.appendChild(document.createElement("div"));
+        tip.style.position = "absolute";
+        $(tip).tipsy(opts);
+      }
+
+      /* Propagate the tooltip text. */
+      tip.title = this.title() || this.text();
 
       /*
        * Compute bounding box. TODO support area, lines, wedges, stroke. Also
@@ -22,23 +49,21 @@ pv.Behavior.tipsy = function(opts) {
        * rounding implementation can be off by one pixel.
        */
       if (this.properties.width) {
-        e.style.width = Math.ceil(this.width() * t.k) + 1;
-        e.style.height = Math.ceil(this.height() * t.k) + 1;
+        tip.style.width = Math.ceil(this.width() * t.k) + 1;
+        tip.style.height = Math.ceil(this.height() * t.k) + 1;
       } else if (this.properties.radius) {
         var r = this.radius();
         t.x -= r;
         t.y -= r;
-        e.style.height = e.style.width = Math.ceil(2 * r * t.k);
+        tip.style.height = tip.style.width = Math.ceil(2 * r * t.k);
       }
-      e.style.left = Math.floor(this.left() * t.k + t.x);
-      e.style.top = Math.floor(this.top() * t.k + t.y);
+      tip.style.left = Math.floor(this.left() * t.k + t.x);
+      tip.style.top = Math.floor(this.top() * t.k + t.y);
 
-      /* Setup tipsy, and cleanup the tooltip span on mouseout. */
-      $(e).tipsy(opts).mouseout(function() {
-          if (tip) {
-            c.removeChild(tip);
-            tip = null;
-          }
-        });
+      /*
+       * Cleanup the tooltip span on mouseout. Immediately trigger the tooltip;
+       * this is necessary for dimensionless marks.
+       */
+      $(tip).mouseleave(cleanup).trigger("mouseenter");
     };
 };

@@ -7,9 +7,23 @@ pv.Scene = pv.SvgScene = {
   svg: "http://www.w3.org/2000/svg",
   xmlns: "http://www.w3.org/2000/xmlns",
   xlink: "http://www.w3.org/1999/xlink",
+  xhtml: "http://www.w3.org/1999/xhtml",
 
   /** The pre-multipled scale, based on any enclosing transforms. */
   scale: 1,
+
+  /** The set of supported events. */
+  events: [
+    "DOMMouseScroll", // for Firefox
+    "mousewheel",
+    "mousedown",
+    "mouseup",
+    "mouseover",
+    "mouseout",
+    "mousemove",
+    "click",
+    "dblclick"
+  ],
 
   /** Implicit values for SVG and CSS properties. */
   implicit: {
@@ -25,7 +39,8 @@ pv.Scene = pv.SvgScene = {
       "fill-opacity": 1,
       "stroke": "none",
       "stroke-opacity": 1,
-      "stroke-width": 1.5
+      "stroke-width": 1.5,
+      "stroke-linejoin": "miter"
     },
     css: {
       "font": "10px sans-serif"
@@ -137,10 +152,27 @@ pv.SvgScene.title = function(e, s) {
 /** TODO */
 pv.SvgScene.dispatch = pv.listener(function(e) {
   var t = e.target.$scene;
-  if (t) pv.Mark.dispatch(e, t.scenes, t.index);
+  if (t) {
+    var type = e.type;
+
+    /* Fixes for mousewheel support on Firefox & Opera. */
+    switch (type) {
+      case "DOMMouseScroll": {
+        type = "mousewheel";
+        e.wheel = -480 * e.detail;
+        break;
+      }
+      case "mousewheel": {
+        e.wheel = (window.opera ? 12 : 48) * e.wheelDelta;
+        break;
+      }
+    }
+
+    if (pv.Mark.dispatch(type, t.scenes, t.index)) e.preventDefault();
+  }
 });
 
-/** TODO */
+/** @private Remove siblings following element <i>e</i>. */
 pv.SvgScene.removeSiblings = function(e) {
   while (e) {
     var n = e.nextSibling;

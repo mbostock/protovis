@@ -1,0 +1,143 @@
+<html>
+  <head>
+    <title>Degenerate Scales</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../testify.js"></script>
+    <link rel="stylesheet" type="text/css" href="../style.css"/>
+    <link rel="stylesheet" type="text/css" href="../testify.css"/>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var s, text = "";
+
+text += ">>> domain()\n";
+text += "<b>domain\texpected\tactual</b>\n";
+
+s = pv.Scale.linear(0);
+text += "(0)\t'0,0'\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear([0]);
+text += "([0])\t'0,0'\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear(0, 0);
+text += "(0,0)\t'0,0'\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear();
+text += "()\t'0,1'\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear([1,0]);
+text += "([1,0])\t'0,1'\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear(1,0);
+text += "(1,0)\t'1,0'\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear(0,NaN);
+text += "(0,NaN)\t'0,NaN'\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear(NaN,0);
+text += "(NaN,0)\t'NaN,0'\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear(NaN,NaN);
+text += "(NaN,NaN)\t'NaN,NaN'\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear([]);
+text += "([])\t'-Infinity,Infinity'\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear(-Infinity, Infinity);
+text += "(-Infinity,Infinity)\t'-Infinity,Infinity'\t'" + s.domain() + "'\n";
+
+testify(text);
+text = "";
+
+text += ">>> nice()\n";
+text += "<b>domain\texpected\tactual</b>\n";
+
+s = pv.Scale.linear(0).nice();
+text += "(0)\t'0,0'\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear([0]).nice();
+text += "([0])\t'0,0'\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear(0, 0).nice();
+text += "(0,0)\t'0,0'\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear().nice();
+text += "()\t'0,1'\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear([1,0]).nice();
+text += "([1,0])\t'0,1'\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear(1,0).nice();
+text += "(1,0)\t'1,0'\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear(.9,.1).nice();
+text += "(0.9,0.1)\t'0.9,0.1'\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear(.1,.1).nice();
+text += "(0.1,0.1)\t'0.1,0.1'\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear(0,NaN).nice();
+text += "(0,NaN)\t'0,NaN'\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear(NaN,NaN).nice();
+text += "(NaN,NaN)\t'NaN,NaN'\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear([]).nice();
+text += "([])\t'-Infinity,Infinity'\t'" + s.domain() + "'\n";
+
+s = pv.Scale.linear(-Infinity, Infinity).nice();
+text += "(-Infinity,Infinity)\t'-Infinity,Infinity'\t'" + s.domain() + "'\n";
+
+testify(text);
+text = "";
+
+text += ">>> ticks()\n";
+text += "<b>domain\texpected\tactual</b>\n";
+
+function ticks(s) s.ticks(3).map(s.tickFormat);
+
+s = pv.Scale.linear(0);
+text += "(0)\t'0'\t'" + ticks(s) + "'\n";
+
+s = pv.Scale.linear([0]);
+text += "([0])\t'0'\t'" + ticks(s) + "'\n";
+
+s = pv.Scale.linear(0, 0);
+text += "(0,0)\t'0'\t'" + ticks(s) + "'\n";
+
+s = pv.Scale.linear();
+text += "()\t'0.0,0.5,1.0'\t'" + ticks(s) + "'\n";
+
+s = pv.Scale.linear([1,0]);
+text += "([1,0])\t'0.0,0.5,1.0'\t'" + ticks(s) + "'\n";
+
+s = pv.Scale.linear(1,0);
+text += "(1,0)\t'1.0,0.5,0.0'\t'" + ticks(s) + "'\n";
+
+s = pv.Scale.linear(.9,.1);
+text += "(0.9,0.1)\t'0.8,0.6,0.4,0.2'\t'" + ticks(s) + "'\n";
+
+s = pv.Scale.linear(.1,.1);
+text += "(0.1,0.1)\t'0.1'\t'" + ticks(s) + "'\n";
+
+s = pv.Scale.linear(0,NaN);
+text += "(0,NaN)\t'0'\t'" + ticks(s) + "'\n";
+
+s = pv.Scale.linear(NaN,NaN);
+text += "(NaN,NaN)\t'NaN'\t'" + ticks(s) + "'\n";
+
+s = pv.Scale.linear(new Date(0));
+text += "(new Date(0))\t'12/31/69'\t'" + ticks(s) + "'\n";
+
+s = pv.Scale.linear([]);
+text += "([])\t'-Infinity'\t'" + ticks(s) + "'\n";
+
+s = pv.Scale.linear(-Infinity, Infinity);
+text += "(-Infinity,Infinity)\t'-Infinity'\t'" + ticks(s) + "'\n";
+
+testify(text);
+
+    </script>
+  </body>
+</html>

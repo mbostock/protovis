@@ -133,11 +133,13 @@ pv.Scale.quantitative = function() {
         if (arguments.length < 2) min = pv.identity;
         if (arguments.length < 3) max = min;
         o = array.length && min(array[0]);
-        d = [pv.min(array, min), pv.max(array, max)];
+        d = array.length ? [pv.min(array, min), pv.max(array, max)] : [];
       } else {
         o = array;
         d = Array.prototype.slice.call(arguments).map(Number);
       }
+      if (!d.length) d = [-Infinity, Infinity];
+      else if (d.length == 1) d = [d[0], d[0]];
       n = (d[0] || d[d.length - 1]) < 0;
       l = d.map(f);
       type = (o instanceof Date) ? newDate : Number;
@@ -176,6 +178,8 @@ pv.Scale.quantitative = function() {
   scale.range = function() {
     if (arguments.length) {
       r = Array.prototype.slice.call(arguments);
+      if (!r.length) r = [-Infinity, Infinity];
+      else if (r.length == 1) r = [r[0], r[0]];
       i = [];
       for (var j = 0; j < r.length - 1; j++) {
         i.push(pv.Scale.interpolator(r[j], r[j + 1]));
@@ -220,11 +224,18 @@ pv.Scale.quantitative = function() {
    * @returns {number[]} an array input domain values to use as ticks.
    */
   scale.ticks = function(m) {
-    var min = d[0],
-        max = d[d.length - 1],
+    var start = d[0],
+        end = d[d.length - 1],
+        reverse = end < start,
+        min = reverse ? end : start,
+        max = reverse ? start : end,
         span = max - min;
 
-    if (!arguments.length) m = 10;
+    /* Special case: empty, invalid or infinite span. */
+    if (!span || !isFinite(span)) {
+      if (type == newDate) tickFormat = pv.Format.date("%x");
+      return [type(min)];
+    }
 
     /* Special case: dates. */
     if (type == newDate) {
@@ -275,6 +286,7 @@ pv.Scale.quantitative = function() {
         format = "%S.%Qs";
         increment = function(d) { d.setTime(d.getTime() + step); };
       }
+      tickFormat = pv.Format.date(format);
 
       var date = new Date(min), dates = [];
       floor(date, precision);
@@ -318,17 +330,16 @@ pv.Scale.quantitative = function() {
         }
       }
 
-      tickFormat = pv.Format.date(format);
-
       while (true) {
         increment(date);
         if (date > max) break;
         dates.push(new Date(date));
       }
-      return dates;
+      return reverse ? dates.reverse() : dates;
     }
 
     /* Normal case: numbers. */
+    if (!arguments.length) m = 10;
     var step = pv.logFloor(span / m, 10),
         err = m / (span / step);
     if (err <= .15) step *= 10;
@@ -338,7 +349,8 @@ pv.Scale.quantitative = function() {
         end = Math.floor(max / step) * step,
         precision = Math.max(0, -Math.floor(pv.log(step, 10) + .01));
     tickFormat = function(x) { return x.toFixed(precision); };
-    return pv.range(start, end + step, step);
+    var ticks = pv.range(start, end + step, step);
+    return reverse ? ticks.reverse() : ticks;
   };
 
   /**
@@ -367,11 +379,21 @@ pv.Scale.quantitative = function() {
    * @returns {pv.Scale.quantitative} <tt>this</tt>.
    */
   scale.nice = function() {
-    // TODO support non-uniform domains
-    var min = d[0],
-        max = d[d.length - 1],
-        step = Math.pow(10, Math.round(Math.log(max - min) / Math.log(10)) - 1);
+    if (d.length != 2) return this; // TODO support non-uniform domains
+    var start = d[0],
+        end = d[d.length - 1],
+        reverse = end < start,
+        min = reverse ? end : start,
+        max = reverse ? start : end,
+        span = max - min;
+
+    /* Special case: empty, invalid or infinite span. */
+    if (!span || !isFinite(span)) return this;
+
+    var step = Math.pow(10, Math.round(Math.log(span) / Math.log(10)) - 1);
     d = [Math.floor(min / step) * step, Math.ceil(max / step) * step];
+    if (reverse) d.reverse();
+    l = d.map(f);
     return this;
   };
 

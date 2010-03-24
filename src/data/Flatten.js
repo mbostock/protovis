@@ -75,6 +75,23 @@ pv.Flatten = function(map) {
  */
 pv.Flatten.prototype.key = function(key, f) {
   this.keys.push({name: key, value: f});
+  delete this.$leaf;
+  return this;
+};
+
+/**
+ * Flattens using the specified leaf function. This is an alternative to
+ * specifying an explicit set of keys; the tiers of the underlying tree will be
+ * determined dynamically by recursing on the values, and the resulting keys
+ * will be stored in the entries <tt>keys</tt> attribute. The leaf function must
+ * return true for leaves, and false for internal nodes.
+ *
+ * @param {function} f a leaf function.
+ * @returns {pv.Nest} this.
+ */
+pv.Flatten.prototype.leaf = function(f) {
+  this.keys.length = 0;
+  this.$leaf = f;
   return this;
 };
 
@@ -85,7 +102,24 @@ pv.Flatten.prototype.key = function(key, f) {
  * @returns an array of elements from the flattened map.
  */
 pv.Flatten.prototype.array = function() {
-  var entries = [], stack = [], keys = this.keys;
+  var entries = [], stack = [], keys = this.keys, leaf = this.$leaf;
+
+  /* Recursively visit using the leaf function. */
+  if (leaf) {
+    function recurse(value, i) {
+      if (leaf(value)) {
+        entries.push({keys: stack.slice(), value: value});
+      } else {
+        for (var key in value) {
+          stack.push(key);
+          recurse(value[key], i + 1);
+          stack.pop();
+        }
+      }
+    }
+    recurse(this.map, 0);
+    return entries;
+  }
 
   /* Recursively visits the specified value. */
   function visit(value, i) {

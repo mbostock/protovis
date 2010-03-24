@@ -36,7 +36,7 @@ pv.SvgScene.line = function(scenes) {
       d += this.basisCurveTo(s0, s1, s2, s3);
     }
   } else if(s.interpolate == "cardinal" && scenes.length > 2) {
-      var a = 0.2;
+      var a = 1 - s.tension;
       var i;
       d += "C" + (scenes[0].left + (scenes[1].left - scenes[0].left)*a) + "," + (scenes[0].top + (scenes[1].top - scenes[0].top)*a)
          + "," + (scenes[1].left + (scenes[0].left - scenes[2].left)*a) + "," + (scenes[1].top + (scenes[0].top - scenes[2].top)*a)
@@ -62,7 +62,8 @@ pv.SvgScene.line = function(scenes) {
       "fill-opacity": fill.opacity || null,
       "stroke": stroke.color,
       "stroke-opacity": stroke.opacity || null,
-      "stroke-width": stroke.opacity ? s.lineWidth / this.scale : null
+      "stroke-width": stroke.opacity ? s.lineWidth / this.scale : null,
+      "stroke-linejoin": s.lineJoin
     });
   return this.append(e, scenes, 0);
 };
@@ -114,7 +115,7 @@ pv.SvgScene.lineSegment = function(scenes) {
 
     /* interpolate */
     var d;
-    if (s1.interpolate == "linear") {
+    if ((s1.interpolate == "linear") && (s1.lineJoin == "miter")) {
       fill = stroke;
       stroke = pv.Color.transparent;
       d = this.pathJoin(scenes[i - 1], s1, s2, scenes[i + 2]);
@@ -131,7 +132,8 @@ pv.SvgScene.lineSegment = function(scenes) {
         "fill-opacity": fill.opacity || null,
         "stroke": stroke.color,
         "stroke-opacity": stroke.opacity || null,
-        "stroke-width": stroke.opacity ? s1.lineWidth / this.scale : null
+        "stroke-width": stroke.opacity ? s1.lineWidth / this.scale : null,
+        "stroke-linejoin": s1.lineJoin
       });
     e = this.append(e, scenes, i);
   }
@@ -140,12 +142,17 @@ pv.SvgScene.lineSegment = function(scenes) {
 
 /** @private Returns the path segment for the specified points. */
 pv.SvgScene.pathSegment = function(s1, s2) {
+  var l = 1; // sweep-flag
   switch (s1.interpolate) {
+    case "polar-reverse":
+      l = 0;
     case "polar": {
       var dx = s2.left - s1.left,
           dy = s2.top - s1.top,
-          r = Math.sqrt(dx * dx + dy * dy) / 2;
-      return "A" + r + "," + r + " 0 1,1 " + s2.left + "," + s2.top;
+          e = 1 - s1.eccentricity,
+          r = Math.sqrt(dx * dx + dy * dy) / (2 * e);
+      if ((e <= 0) || (e > 1)) break; // draw a straight line
+      return "A" + r + "," + r + " 0 0," + l + " " + s2.left + "," + s2.top;
     }
     case "step-before": return "V" + s2.top + "H" + s2.left;
     case "step-after": return "H" + s2.left + "V" + s2.top;

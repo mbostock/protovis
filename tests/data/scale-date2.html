@@ -1,0 +1,38 @@
+<html>
+  <head>
+    <title>Date Test</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var ticks = [
+        {x: -90, name: "3 months"},
+        {x: -30, name: "1 month"},
+        {x: -7, name: "1 week"},
+        {x: -1, name: "24 hours"},
+        {x: 0, name: "now"}
+      ],
+    w = 400,
+    h = 10,
+    x = pv.Scale.root(ticks, function(d) d.x).range(0, w);
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .margin(29.5);
+
+vis.add(pv.Rule)
+    .bottom(h / 2);
+
+vis.add(pv.Rule)
+    .data(ticks)
+    .left(function(d) x(d.x))
+  .anchor("bottom").add(pv.Label)
+    .text(function(d) d.name);
+
+vis.render();
+
+    </script>
+  </body>
+</html>

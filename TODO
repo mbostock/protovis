@@ -1,22 +1,26 @@
 data/Transform.js
 - documentation
 
+data/Scale.js
+- allow customization of data ticks (e.g., "3 months", "5 minutes")
+
 layout/Layout.js
 - use private data, or at least standardize which attributes are populated
 - rename: x -> left, y -> top, angle -> textAngle?
+- add support for sort() functions as appropriate (e.g., arc); use bind.sort
 
 layout/Force.js
 - copy: x -> left, y -> top
 - example with interactive filtering of links and nodes
+- smarter default rest length / charge force constant
+- allow customization of simulation parameters (e.g., rest length)
+- allow dynamic updates to the graph, preserving simulation (add/remove nodes/liks)
 
 layout/Network.js
 - add reset() method to clear cached layout
 
 layout/Tree.js
 - allow depth and breadth offset to be computed automatically
-
-layout/{Cluster,Partition}.js
-- support customized inner/outer radius
 
 mark/Anchor.js
 - support anchors across panels: mirrored descent (fallback to last?)
@@ -42,7 +46,6 @@ behavior/Pan.js
 - specify bounds on panning
 
 behavior/Zoom.js
-- firefox support for mousewheel
 - specify bounds on zoom level
 - non-uniform zooms (e.g., in time series, zoom time dimension only)?
 
@@ -51,9 +54,6 @@ physics/Simulation.js
 
 physics/LinkConstraint.js
 - should support an alpha parameter, like pv.Constraint.position
-
-scene/*
-- use array push rather than string concatentation to improve performance?
 
 text/CsvFormat.js
 - return an object with a .format method, or the format function?

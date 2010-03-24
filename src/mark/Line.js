@@ -24,10 +24,13 @@ pv.Line = function() {
 
 pv.Line.prototype = pv.extend(pv.Mark)
     .property("lineWidth", Number)
+    .property("lineJoin", String)
     .property("strokeStyle", pv.color)
     .property("fillStyle", pv.color)
     .property("segmented", Boolean)
-    .property("interpolate", String);
+    .property("interpolate", String)
+    .property("eccentricity", Number)
+    .property("tension", Number);
 
 pv.Line.prototype.type = "line";
 
@@ -46,6 +49,21 @@ pv.Line.prototype.type = "line";
  * @type string
  * @name pv.Line.prototype.strokeStyle
  * @see pv.color
+ */
+
+/**
+ * The type of corners where two lines meet. Accepted values are "bevel",
+ * "round" and "miter". The default value is "miter".
+ *
+ * <p>For segmented lines, only "miter" joins and "linear" interpolation are
+ * currently supported. Any other value, including null, will disable joins,
+ * producing disjoint line segments. Note that the miter joins must be computed
+ * manually (at least in the current SVG renderer); since this calculation may
+ * be expensive and unnecessary for small lines, specifying null can improve
+ * performance significantly.
+ *
+ * @type string
+ * @name pv.Line.prototype.lineJoin
  */
 
 /**
@@ -73,7 +91,9 @@ pv.Line.prototype.type = "line";
  * How to interpolate between values. Linear interpolation ("linear") is the
  * default, producing a straight line between points. For piecewise constant
  * functions (i.e., step functions), either "step-before" or "step-after" can be
- * specified. To draw a clockwise circular arc between points, specify "polar".
+ * specified. To draw a clockwise circular arc between points, specify "polar";
+ * to draw a counterclockwise circular arc between points, specify
+ * "polar-reverse".
  * Two curve interpelations are also supported, the values "basis" and "cardinal"
  * will interpolate using a B-Spline and a Cardinal spline interpolation
  * respectively.
@@ -85,6 +105,25 @@ pv.Line.prototype.type = "line";
  */
 
 /**
+ * The eccentricity of polar line segments; used in conjunction with
+ * interpolate("polar"). The default value of 0 means that line segments are
+ * drawn as circular arcs. A value of 1 draws a straight line. A value between 0
+ * and 1 draws an elliptical arc with the given eccentricity.
+ *
+ * @type number
+ * @name pv.Line.prototype.eccentricity
+ */
+
+/**
+ * The tension of cardinal splines; used in conjunction with
+ * interpolate("cardinal"). A value between 0
+ * and 1 draws cardinal splines with the given tension.
+ *
+ * @type number
+ * @name pv.Line.prototype.tension
+ */
+
+/**
  * Default properties for lines. By default, there is no fill and the stroke
  * style is a categorical color. The default interpolation is linear.
  *
@@ -92,9 +131,12 @@ pv.Line.prototype.type = "line";
  */
 pv.Line.prototype.defaults = new pv.Line()
     .extend(pv.Mark.prototype.defaults)
+    .lineJoin("miter")
     .lineWidth(1.5)
     .strokeStyle(pv.Colors.category10().by(pv.parent))
-    .interpolate("linear");
+    .interpolate("linear")
+    .eccentricity(0)
+    .tension(0.8);
 
 /** @private Reuse Area's implementation for segmented bind & build. */
 pv.Line.prototype.bind = pv.Area.prototype.bind;

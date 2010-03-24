@@ -16,7 +16,7 @@ pv.listen(window, "load", function() {
       pv.$.s = pv.$.x[pv.$.i];
       if (pv.$.s.type == "text/javascript+protovis") {
         try {
-          window.eval(pv.parse(pv.$.s.textContent || pv.$.s.innerHTML));
+          window.eval(pv.parse(pv.$.s.text));
         } catch (e) {
           pv.error(e);
         }

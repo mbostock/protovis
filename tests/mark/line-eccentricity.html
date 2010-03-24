@@ -1,0 +1,39 @@
+<html>
+  <head>
+    <title>Line Eccentricity</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var e = 0, de = 0.01;
+
+var vis = new pv.Panel()
+    .width(400)
+    .height(400)
+    .margin(10)
+    .strokeStyle("#ccc");
+
+vis.add(pv.Line)
+    .data([{x:75,y:75},{x:200,y:200},{x:325,y:325}])
+    .lineWidth(10)
+    .left(function(d) d.x)
+    .top(function(d) d.y)
+    .interpolate(function() this.index & 1 ? "polar-reverse" : "polar")
+    .eccentricity(function() e);
+
+vis.anchor("center").add(pv.Label)
+    .text(function() e.toFixed(2));
+
+vis.render();
+
+setInterval(function() {
+  e += de;
+  if (e < 0) { e = 0; de *= -1; }
+  else if (e > 1) { e = 1; de *= -1; }
+  vis.render();
+}, 42);
+
+    </script>
+  </body>
+</html>

@@ -16,11 +16,13 @@ pv.Layout.Pack = function() {
 };
 
 pv.Layout.Pack.prototype = pv.extend(pv.Layout.Hierarchy)
-    .property("spacing", Number);
+    .property("spacing", Number)
+    .property("order", String); // ascending, descending, reverse, null
 
 pv.Layout.Pack.prototype.defaults = new pv.Layout.Pack()
     .extend(pv.Layout.Hierarchy.prototype.defaults)
-    .spacing(1);
+    .spacing(1)
+    .order("ascending");
 
 /** @private The default size function. */
 pv.Layout.Pack.prototype.$radius = function() { return 1; };
@@ -52,7 +54,11 @@ pv.Layout.Pack.prototype.size = function(f) {
 /** @private */
 pv.Layout.Pack.prototype.init = function() {
   if (pv.Layout.Hierarchy.prototype.init.call(this)) return;
-  var that = this, spacing;
+  var that = this,
+      nodes = that.nodes(),
+      root = nodes[0],
+      order = that.order(),
+      spacing = that.spacing();
 
   /** @private Compute the radii of the leaf nodes. */
   function radii(nodes) {
@@ -76,7 +82,20 @@ pv.Layout.Pack.prototype.init = function() {
       c.n = c.p = c;
       nodes.push(c);
     }
-    nodes.sort(function(a, b) { return a.radius - b.radius; });
+
+    /* Sort. */
+    switch (order) {
+      case "ascending": {
+        nodes.sort(function(a, b) { return a.radius - b.radius; });
+        break;
+      }
+      case "descending": {
+        nodes.sort(function(a, b) { return b.radius - a.radius; });
+        break;
+      }
+      case "reverse": nodes.reverse(); break;
+    }
+
     return packCircle(nodes);
   }
 
@@ -226,11 +245,9 @@ pv.Layout.Pack.prototype.init = function() {
     n.radius *= k;
   }
 
-  var nodes = this.nodes();
-  spacing = this.spacing();
   radii(nodes);
 
-  var root = nodes[0];
+  /* Recursively compute the layout. */
   root.x = 0;
   root.y = 0;
   root.radius = packTree(root);

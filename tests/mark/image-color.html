@@ -1,0 +1,35 @@
+<html>
+  <head>
+    <title>Image</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../life.js"></script>
+    <link type="text/css" href="../center.css" rel="stylesheet"/>
+    <style type="text/css">
+
+body {
+  background: #222;
+}
+
+    </style>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(life.size * 4)
+    .height(life.size * 4);
+
+vis.add(pv.Image)
+    .def("init", function() life.update())
+    .imageWidth(life.size)
+    .imageHeight(life.size)
+    .image(pv.colors(null, "#0f0").by(function(i, j) life[j * life.size + i]))
+    .event("click", function() life.reset());
+
+vis.render();
+
+setInterval(function() vis.render(), 42);
+
+    </script>
+  </body>
+</html>

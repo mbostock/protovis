@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <title>Flare Pack</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../flare.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+/* Produce a flat hierarchy of the Flare classes. */
+var classes = pv.nodes(pv.flatten(flare).leaf(Number).array());
+classes.slice(1).forEach(function(n) {
+  n.nodeName = "flare." + n.nodeValue.keys.join(".");
+  n.nodeValue = n.nodeValue.value;
+});
+
+var vis = new pv.Panel()
+    .width(800)
+    .height(800);
+
+vis.add(pv.Layout.Pack)
+    .data(classes)
+    .size(Number)
+    .spacing(0)
+  .add(pv.Dot)
+    .visible(function(n) n.parentNode)
+    .title(function(n) n.nodeName);
+
+vis.render();
+
+    </script>
+  </body>
+</html>

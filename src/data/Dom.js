@@ -292,7 +292,7 @@ pv.Dom.Node.prototype.visitAfter = function(f) {
  * sort operation.
  *
  * @param {function} f a comparator function.
- * @returns this
+ * @returns this.
  */
 pv.Dom.Node.prototype.sort = function(f) {
   if (this.firstChild) {
@@ -309,6 +309,20 @@ pv.Dom.Node.prototype.sort = function(f) {
     delete p.nextSibling;
     p.sort(f);
   }
+  return this;
+};
+
+/**
+ * Reverses all sibling nodes.
+ *
+ * @returns this.
+ */
+pv.Dom.Node.prototype.reverse = function() {
+  var childNodes = [];
+  this.visitAfter(function(n) {
+      while (n.lastChild) childNodes.push(n.removeChild(n.lastChild));
+      for (var c; c = childNodes.pop();) n.insertBefore(c, n.firstChild);
+    });
   return this;
 };
 
@@ -333,8 +347,13 @@ pv.Dom.Node.prototype.nodes = function() {
  * re-adds all toggled child nodes and deletes the <tt>toggled</tt> attribute.
  *
  * <p>This method has no effect if the node has no child nodes.
+ *
+ * @param {boolean} [recursive] whether the toggle should apply to descendants.
  */
-pv.Dom.Node.prototype.toggle = function() {
+pv.Dom.Node.prototype.toggle = function(recursive) {
+  if (recursive) return this.toggled
+      ? this.visitBefore(function(n) { if (n.toggled) n.toggle(); })
+      : this.visitAfter(function(n) { if (!n.toggled) n.toggle(); });
   var n = this;
   if (n.toggled) {
     for (var c; c = n.toggled.pop();) n.appendChild(c);
@@ -349,8 +368,8 @@ pv.Dom.Node.prototype.toggle = function() {
  * Given a flat array of values, returns a simple DOM with each value wrapped by
  * a node that is a child of the root node.
  *
- * @param {array} values
- * @returns {array} nodes
+ * @param {array} values.
+ * @returns {array} nodes.
  */
 pv.nodes = function(values) {
   var root = new pv.Dom.Node();

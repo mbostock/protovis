@@ -166,9 +166,7 @@ pv.Layout.Tree.prototype.init = function() {
 
   /** @private Returns the angle of the given node. */
   function angle(n) {
-    return (orient == "radial")
-        ? n.breadth / depth
-        : (n.firstChild ? Math.PI : 0);
+    return (orient == "radial") ? n.breadth / depth : 0;
   }
 
   /** @private */
@@ -200,6 +198,7 @@ pv.Layout.Tree.prototype.init = function() {
       v.angle = angle(v);
       v.x = x(v);
       v.y = y(v);
+      if (v.firstChild) v.angle += Math.PI;
       delete v.breadth;
       delete v.depth;
       delete v.ancestor;

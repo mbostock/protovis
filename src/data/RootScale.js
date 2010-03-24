@@ -20,5 +20,6 @@ pv.Scale.root = function() {
     return b;
   };
 
-  return scale.power(2).domain.apply(scale, arguments);
+  scale.domain.apply(scale, arguments);
+  return scale.power(2);
 };

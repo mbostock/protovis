@@ -12,7 +12,7 @@ var vis = new pv.Panel()
     .height(900);
 
 vis.add(pv.Layout.Partition.Fill)
-    .data(pv.dom(flare).nodes())
+    .data(pv.dom(flare).root("flare").nodes())
     .order("ascending")
     .orient("radial")
   .add(pv.Wedge)

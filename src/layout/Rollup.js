@@ -12,7 +12,10 @@ pv.Layout.Rollup = function() {
 
   /* Render rollup links. */
   var add = this.link.add;
-  this.link.add = function(type) {
+  this.link
+      .interpolate("polar")
+      .eccentricity(.8)
+      .add = function(type) {
       var mark = add.call(this, type);
       mark.parent.data(function() { return that.scene.$rollup.links; });
       return mark;

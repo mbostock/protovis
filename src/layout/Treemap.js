@@ -64,7 +64,7 @@ pv.Layout.Treemap.prototype = pv.extend(pv.Layout.Hierarchy)
 pv.Layout.Treemap.prototype.defaults = new pv.Layout.Treemap()
     .extend(pv.Layout.Hierarchy.prototype.defaults)
     .mode("squarify") // squarify, slice-and-dice, slice, dice
-    .order("ascending"); // ascending, descending, null == unsorted
+    .order("ascending"); // ascending, descending, reverse, null
 
 pv.Layout.Treemap.prototype.$size = Number;
 
@@ -219,6 +219,7 @@ pv.Layout.Treemap.prototype.init = function() {
       root.sort(function(a, b) { return b.size - a.size; });
       break;
     }
+    case "reverse": root.reverse(); break;
   }
 
   /* Recursively compute the layout. */

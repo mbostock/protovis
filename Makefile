@@ -1,7 +1,7 @@
 JS_LANG_FILES = \
 	src/lang/Array.js
 
-JS_PV_FILES = \
+JS_CORE_FILES = \
 	src/pv.js \
 	src/pv-internals.js \
 	src/text/Format.js \
@@ -53,7 +53,9 @@ JS_PV_FILES = \
 	src/mark/Rule.js \
 	src/mark/Panel.js \
 	src/mark/Image.js \
-	src/mark/Wedge.js \
+	src/mark/Wedge.js
+
+JS_EXTRA_FILES = \
 	src/physics/Particle.js \
 	src/physics/Simulation.js \
 	src/physics/Quadtree.js \
@@ -81,6 +83,7 @@ JS_PV_FILES = \
 	src/layout/Arc.js \
 	src/layout/Horizon.js \
 	src/layout/Rollup.js \
+	src/layout/Matrix.js \
 	src/behavior/Behavior.js \
 	src/behavior/Drag.js \
 	src/behavior/Point.js \
@@ -88,11 +91,10 @@ JS_PV_FILES = \
 	src/behavior/Pan.js \
 	src/behavior/Zoom.js
 
-#	src/data/PowerScale.js \
-
 JS_FILES = \
 	$(JS_LANG_FILES) \
-	$(JS_PV_FILES) \
+	$(JS_CORE_FILES) \
+	$(JS_EXTRA_FILES) \
 	src/lang/init.js
 
 all: protovis-d3.2.js protovis-r3.2.js
@@ -108,9 +110,7 @@ protovis-d3.2.js: $(JS_FILES) Makefile
 protovis-r3.2.js: $(JS_FILES) Makefile
 	rm -f $@
 	echo "// $(shell git rev-parse --short HEAD)" >> $@
-	cat $(JS_LANG_FILES) | java -jar lib/yuicompressor-2.4.2.jar --charset UTF-8 --type js >> $@
-	cat $(JS_PV_FILES) | java -jar lib/yuicompressor-2.4.2.jar --charset UTF-8 --type js >> $@
-	cat src/lang/init.js | java -jar lib/yuicompressor-2.4.2.jar --charset UTF-8 --type js >> $@
+	cat $(JS_FILES) | java -jar lib/yuicompressor-2.4.2.jar --charset UTF-8 --type js >> $@
 
 clean:
 	rm -rf protovis-d3.2.js protovis-r3.2.js

@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <title>Miserables Matrix</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../miserables.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var color = pv.Colors.category19().by(function(d) d.group);
+
+var vis = new pv.Panel()
+    .width(700)
+    .height(700)
+    .top(90)
+    .left(90);
+
+vis.add(pv.Layout.Matrix)
+    .nodes(miserables.nodes)
+    .links(miserables.links)
+    .sort(function(a, b) b.group - a.group)
+  .link.add(pv.Bar)
+    .fillStyle(function(l) l.linkValue
+        ? ((l.targetNode.group == l.sourceNode.group)
+        ? color(l.sourceNode) : "#555") : "#eee")
+  .label.add(pv.Label)
+    .textStyle(color);
+
+vis.render();
+
+    </script>
+  </body>
+</html>

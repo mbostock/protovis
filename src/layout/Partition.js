@@ -4,7 +4,9 @@ pv.Layout.Partition = function() {
 
 pv.Layout.Partition.prototype = pv.extend(pv.Layout.Hierarchy)
     .property("order", String) // null, ascending, descending?
-    .property("orient", String); // top, left, right, bottom, radial
+    .property("orient", String) // top, left, right, bottom, radial
+    .property("innerRadius", Number)
+    .property("outerRadius", Number);
 
 pv.Layout.Partition.prototype.defaults = new pv.Layout.Partition()
     .extend(pv.Layout.Hierarchy.prototype.defaults)
@@ -19,18 +21,12 @@ pv.Layout.Partition.prototype.size = function(f) {
 
 pv.Layout.Partition.prototype.init = function() {
   var that = this,
-      nodes = that.nodes(),
-      root = nodes[0],
-      stack = pv.Mark.stack,
+      root = that.nodes()[0],
       order = that.order(),
-      orient = that.orient(),
-      w = that.parent.width(),
-      h = that.parent.height(),
-      r = Math.min(w, h) / 2,
+      stack = pv.Mark.stack,
       maxDepth = 0;
 
   /* Recursively compute the tree depth and node size. */
-  var maxDepth = 0;
   stack.unshift(null);
   root.visitAfter(function(n, i) {
       if (i > maxDepth) maxDepth = i;
@@ -64,46 +60,7 @@ pv.Layout.Partition.prototype.init = function() {
       n.maxDepth = n.depth = i * ds;
     });
 
-  /** @private Returns the radius of the given node. */
-  function radius(n) {
-    return n.parentNode ? (n.depth * r) : 0;
-  }
-
-  /** @private Returns the angle of the given node. */
-  function angle(n) {
-    return orient == "radial"
-        ? (n.parentNode ? (n.breadth - .25) * 2 * Math.PI : 0)
-        : (n.firstChild ? Math.PI : 0);
-  }
-
-  /** @private */
-  function x(n) {
-    switch (orient) {
-      case "left": return n.depth * w;
-      case "right": return w - n.depth * w;
-      case "top": return n.breadth * w;
-      case "bottom": return w - n.breadth * w;
-      case "radial": return w / 2 + radius(n) * Math.cos(n.angle);
-    }
-  }
-
-  /** @private */
-  function y(n) {
-    switch (orient) {
-      case "left": return n.breadth * h;
-      case "right": return h - n.breadth * h;
-      case "top": return n.depth * h;
-      case "bottom": return h - n.depth * h;
-      case "radial": return h / 2 + radius(n) * Math.sin(n.angle);
-    }
-  }
-
-  for (var i = 0; i < nodes.length; i++) {
-    var n = nodes[i];
-    n.angle = angle(n);
-    n.x = x(n);
-    n.y = y(n);
-  }
+  pv.Layout.Hierarchy.NodeLink.init.call(this);
 };
 
 /** A variant of partition layout that is space-filling. */

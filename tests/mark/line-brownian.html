@@ -1,0 +1,57 @@
+<html>
+  <head>
+    <title>Brownian Motion</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <style type="text/css">
+
+body {
+  background: #222;
+  margin: 0;
+}
+
+    </style>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+/**
+ * A random walk from <x,y> constrained in [0,w] and [0,h].
+ *
+ * @see http://processing.org/learning/topics/brownian.html
+ */
+function brownian() {
+  data.shift();
+  data.push({
+      x: x = Math.min(w, Math.max(0, x + pv.random(-k, k, 0))),
+      y: y = Math.min(h, Math.max(0, y + pv.random(-k, k, 0)))
+    });
+  return data;
+}
+
+var n = 300,
+    k = 12,
+    w = window.innerWidth,
+    h = window.innerHeight,
+    x = w / 2,
+    y = h / 2,
+    data = pv.range(n).map(function() ({x: x, y: y}));
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(h);
+
+vis.add(pv.Line)
+    .data(brownian)
+    .left(function(d) d.x)
+    .top(function(d) d.y)
+    .segmented(true)
+    .interpolate("polar") // unnecessary, but cool
+    .strokeStyle(pv.Scale.linear(0, n - 1).range("#222", "#fff").by(pv.index));
+
+vis.render();
+
+setInterval(function() vis.render(), 42);
+
+    </script>
+  </body>
+</html>

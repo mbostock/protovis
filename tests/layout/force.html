@@ -14,6 +14,8 @@ body {
   <body>
     <script type="text/javascript+protovis">
 
+var color = pv.Colors.category19().by(function(d) d.group);
+
 var vis = new pv.Panel()
     .width(window.innerWidth)
     .height(window.innerHeight)
@@ -22,13 +24,14 @@ var vis = new pv.Panel()
     .event("mousewheel", pv.Behavior.zoom());
 
 vis.add(pv.Layout.Force)
-    .nodes(miserables.vertices)
-    .links(miserables.edges)
+    .nodes(miserables.nodes)
+    .links(miserables.links)
   .link.add(pv.Line)
   .node.add(pv.Dot)
     .size(function(d) (d.linkDegree + 4) * Math.pow(this.scale, -1.5))
-    .fillStyle(function(d) d.fixed ? "orange" : "white")
-    .title(function(d) d.nodeValue)
+    .fillStyle(function(d) d.fixed ? "brown" : color(d))
+    .strokeStyle(function() this.fillStyle().darker())
+    .title(function(d) d.nodeName)
     .event("mousedown", pv.Behavior.drag());
 
 vis.render();

@@ -37,6 +37,67 @@ pv.Layout.Hierarchy.links = function() {
 };
 
 /** @private */
+pv.Layout.Hierarchy.NodeLink = {
+
+  /** @private */
+  init: function() {
+    var nodes = this.nodes(),
+        orient = this.orient(),
+        w = this.parent.width(),
+        h = this.parent.height();
+
+    /* Compute default inner and outer radius. */
+    if (orient == "radial") {
+      var ir = this.innerRadius(), or = this.outerRadius();
+      if (ir == null) ir = 0;
+      if (or == null) or = Math.min(w, h) / 2;
+    }
+
+    /** @private Returns the radius of the given node. */
+    function radius(n) {
+      return n.parentNode ? (n.depth * (or - ir) + ir) : 0;
+    }
+
+    /** @private Returns the angle of the given node. */
+    function angle(n) {
+      return orient == "radial"
+          ? (n.parentNode ? (n.breadth - .25) * 2 * Math.PI : 0)
+          : 0;
+    }
+
+    /** @private */
+    function x(n) {
+      switch (orient) {
+        case "left": return n.depth * w;
+        case "right": return w - n.depth * w;
+        case "top": return n.breadth * w;
+        case "bottom": return w - n.breadth * w;
+        case "radial": return w / 2 + radius(n) * Math.cos(n.angle);
+      }
+    }
+
+    /** @private */
+    function y(n) {
+      switch (orient) {
+        case "left": return n.breadth * h;
+        case "right": return h - n.breadth * h;
+        case "top": return n.depth * h;
+        case "bottom": return h - n.depth * h;
+        case "radial": return h / 2 + radius(n) * Math.sin(n.angle);
+      }
+    }
+
+    for (var i = 0; i < nodes.length; i++) {
+      var n = nodes[i];
+      n.angle = angle(n);
+      n.x = x(n);
+      n.y = y(n);
+      if (n.firstChild) n.angle += Math.PI;
+    }
+  }
+};
+
+/** @private */
 pv.Layout.Hierarchy.Fill = {
 
   /** @private */
@@ -66,19 +127,26 @@ pv.Layout.Hierarchy.Fill = {
         orient = this.orient(),
         w = this.parent.width(),
         h = this.parent.height(),
-        r = Math.min(w, h) / 2,
-        ds = -nodes[0].minDepth;
+        depth = -nodes[0].minDepth;
+
+    /* Compute default inner and outer radius. */
+    if (orient == "radial") {
+      var ir = this.innerRadius(), or = this.outerRadius();
+      if (ir == null) ir = 0;
+      if (ir) depth *= 2; // use full depth step for root
+      if (or == null) or = Math.min(w, h) / 2;
+    }
 
     /** @private Scales the specified depth for a space-filling layout. */
-    function scale(d, ds) {
-      return (d + ds) / (1 + ds);
+    function scale(d, depth) {
+      return (d + depth) / (1 + depth);
     }
 
     /** @private */
     function x(n) {
       switch (orient) {
-        case "left": return scale(n.minDepth, ds) * w;
-        case "right": return (1 - scale(n.maxDepth, ds)) * w;
+        case "left": return scale(n.minDepth, depth) * w;
+        case "right": return (1 - scale(n.maxDepth, depth)) * w;
         case "top": return n.minBreadth * w;
         case "bottom": return (1 - n.maxBreadth) * w;
         case "radial": return w / 2;
@@ -90,8 +158,8 @@ pv.Layout.Hierarchy.Fill = {
       switch (orient) {
         case "left": return n.minBreadth * h;
         case "right": return (1 - n.maxBreadth) * h;
-        case "top": return scale(n.minDepth, ds) * h;
-        case "bottom": return (1 - scale(n.maxDepth, ds)) * h;
+        case "top": return scale(n.minDepth, depth) * h;
+        case "bottom": return (1 - scale(n.maxDepth, depth)) * h;
         case "radial": return h / 2;
       }
     }
@@ -100,7 +168,7 @@ pv.Layout.Hierarchy.Fill = {
     function dx(n) {
       switch (orient) {
         case "left":
-        case "right": return (n.maxDepth - n.minDepth) / (1 + ds) * w;
+        case "right": return (n.maxDepth - n.minDepth) / (1 + depth) * w;
         case "top":
         case "bottom": return (n.maxBreadth - n.minBreadth) * w;
       }
@@ -112,18 +180,18 @@ pv.Layout.Hierarchy.Fill = {
         case "left":
         case "right": return (n.maxBreadth - n.minBreadth) * h;
         case "top":
-        case "bottom": return (n.maxDepth - n.minDepth) / (1 + ds) * h;
+        case "bottom": return (n.maxDepth - n.minDepth) / (1 + depth) * h;
       }
     }
 
     /** @private */
     function innerRadius(n) {
-      return Math.max(0, scale(n.minDepth, ds / 2)) * r;
+      return Math.max(0, scale(n.minDepth, depth / 2)) * (or - ir) + ir;
     }
 
     /** @private */
     function outerRadius(n) {
-      return scale(n.maxDepth, ds / 2) * r;
+      return scale(n.maxDepth, depth / 2) * (or - ir) + ir;
     }
 
     /** @private */

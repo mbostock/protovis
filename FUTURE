@@ -1,11 +1,11 @@
-data/PowerScale.js
-- finish implementation
+scene/*
+- use array push rather than string concatentation to improve performance?
 
 data/?
 - AJAX helper? or refer to jQuery
 
-layout/Layot.js
-- other algorithms: ballon, dig-cola, attribute graph, matrix, arc diagram?
+layout/Layout.js
+- other algorithms: dig-cola, matrix?
 
 mark/Mark.js
 - allow mixin rather than single inheritance?
@@ -14,7 +14,6 @@ mark/Mark.js
 - drop shadows, blurring, other graphical effects?
 - animation
 - faster incremental rendering (detect properties)
-- rendering optimizations / minimal SVG?
 - remove first, last, cousin, sibling methods?
 - dot-dash strokes using stroke-dasharray
 
@@ -31,3 +30,7 @@ mark/Label.js
 
 mark/Area.js
 - spline interpolation
+
+mark/Area.Radial.js
+mark/Line.Radial.js
+mark/Bar.Radial.js
