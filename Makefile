@@ -99,6 +99,11 @@ JS_FILES = \
 	$(JS_GEO_FILES) \
 	src/lang/init.js
 
+JS_COMPILER = \
+	java -jar lib/google-compiler/compiler-20100201.jar \
+	--charset UTF-8 \
+	--warning_level=QUIET
+
 all: protovis-d3.2.js protovis-r3.2.js
 
 protovis-d3.2.js: $(JS_FILES) Makefile
@@ -112,7 +117,7 @@ protovis-d3.2.js: $(JS_FILES) Makefile
 protovis-r3.2.js: $(JS_FILES) Makefile
 	rm -f $@
 	echo "// $(shell git rev-parse --short HEAD)" >> $@
-	cat $(JS_FILES) | java -jar lib/yuicompressor-2.4.2.jar --charset UTF-8 --type js >> $@
+	cat $(JS_FILES) | $(JS_COMPILER) >> $@
 
 clean:
 	rm -rf protovis-d3.2.js protovis-r3.2.js
