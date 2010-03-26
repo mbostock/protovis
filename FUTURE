@@ -1,13 +1,17 @@
-scene/*
+*
+- use === and !== instead of == and !=
+- force type conversion of input arguments in public API?
 - use array push rather than string concatentation to improve performance?
+- use Object.create instead of pv.extend, if available
 
 data/?
 - AJAX helper? or refer to jQuery
 
-layout/Layout.js
-- other algorithms: dig-cola, matrix?
+data/Scale.js
+- allow customization of data ticks (e.g., "3 months", "5 minutes")
 
 mark/Mark.js
+- antialias doesn't always work as expected; requires pixel rounding?
 - allow mixin rather than single inheritance?
 - linear and radial gradient fills
 - pattern fills
@@ -34,3 +38,6 @@ mark/Area.js
 mark/Area.Radial.js
 mark/Line.Radial.js
 mark/Bar.Radial.js
+
+physics/LinkConstraint.js
+- should support an alpha parameter, like pv.Constraint.position

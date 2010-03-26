@@ -1,44 +1,38 @@
-data/Transform.js
-- documentation
-
 data/Scale.js
-- allow customization of data ticks (e.g., "3 months", "5 minutes")
 - ignore undefined values when computing min/max for domains
 - greedily convert range to the expected type (for colors?)
 - quantile scales!
 
 layout/Layout.js
+- extend Panel?
 - use private data, or at least standardize which attributes are populated
-- rename: x -> left, y -> top, angle -> textAngle?
 - add support for sort() functions as appropriate (e.g., arc); use bind.sort
 - size() functions should be inherited, use bind.size, etc.
 
 layout/Force.js
-- copy: x -> left, y -> top
-- example with interactive filtering of links and nodes
 - smarter default rest length / charge force constant
 - allow customization of simulation parameters (e.g., rest length)
 - allow dynamic updates to the graph, preserving simulation (add/remove nodes/liks)
 
 layout/Network.js
-- add reset() method to clear cached layout
+- add reset() method to clear cached layout?
 
 layout/Tree.js
 - allow depth and breadth offset to be computed automatically
 
+mark/Anchor.js
+- {min,max}:name "singleton" anchors for center labeling on area and line?
+
 mark/Mark.js
-- antialias doesn't always work as expected; requires pixel rounding?
 - event handlers should be inherited, queryable? (use bind)
 
 mark/Area.js
-- {min,max}:name psuedo-anchors for center labeling?
 - support for "basis" and "cardinal" interpolation
 
 mark/Line.js
 - support for "basis" and "cardinal" with segmented lines
 
 behavior/*
-- documentation, implementation, etc.
 - should behaviors automatically re-render? render hooks (e.g., panel-transform)
 
 behavior/Select.js
@@ -58,17 +52,14 @@ behavior/Zoom.js
 physics/Simulation.js
 - use a constraint rather than `fixed` property to allow dragging?
 
-physics/LinkConstraint.js
-- should support an alpha parameter, like pv.Constraint.position
-
 text/CsvFormat.js
 - return an object with a .format method, or the format function?
 - should other Formats return a function with a self-reference .format method?
 
 geo/GeoScale.js
 - determine center point of projection from domain
+- standardize on GeoJSON representation
+- include shapefile -> GeoJSON convertors or link to them
 
 *
-- use Object.create instead of pv.extend, if available
-- use === and !== instead of == and !=
-- force type conversion of input arguments in public API?
+- documentation
