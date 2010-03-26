@@ -61,7 +61,7 @@ var vis = new pv.Panel()
 vis.add(pv.Layout.Horizon)
     .bands(function() bands)
     .mode(function() mode)
-  .add(pv.Area)
+  .band.add(pv.Area)
     .data(data)
     .left(x)
     .height(y);

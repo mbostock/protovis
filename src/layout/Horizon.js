@@ -1,33 +1,26 @@
 pv.Layout.Horizon = function() {
-  pv.Layout.call(this);
+  pv.Panel.call(this);
   var mode, size, red, blue;
 
-  /** @private */
-  function data() {
-    mode = this.mode();
-    size = Math.round((mode == "color" ? .5 : 1) * this.parent.height());
-    var n = this.bands(), fill = this.backgroundStyle();
-    red = pv.Scale.linear(0, n).range(fill, this.negativeStyle());
-    blue = pv.Scale.linear(0, n).range(fill, this.positiveStyle());
-    return pv.range(n * 2);
-  }
-
-  /* Set the fill style directly, rather than using the alias. */
-  this.propertyValue("fillStyle", function(i) {
-      return i ? null : this.backgroundStyle();
-    }).type = 3;
-
-  this.bands(2)
-      .mode("offset")
-      .backgroundStyle("white")
-      .positiveStyle("#1f77b4")
-      .negativeStyle("#d62728")
-      .data(data)
+  this.def("bands", 2)
+      .def("mode", "offset")
+      .def("backgroundStyle", "white")
+      .def("positiveStyle", "#1f77b4")
+      .def("negativeStyle", "#d62728")
+      .data(function() {
+          mode = this.mode();
+          size = Math.round((mode == "color" ? .5 : 1) * this.parent.height());
+          var n = this.bands(), fill = this.backgroundStyle();
+          red = pv.Scale.linear(0, n).range(fill, this.negativeStyle());
+          blue = pv.Scale.linear(0, n).range(fill, this.positiveStyle());
+          return pv.range(n * 2);
+        })
       .overflow("hidden")
       .height(function() { return size; })
-      .top(function(i) { return mode == "color" ? (i & 1) * size : 0; });
+      .top(function(i) { return mode == "color" ? (i & 1) * size : 0; })
+      .fillStyle(function(i) { return i ? null : this.backgroundStyle(); });
 
-  this.band = new pv.Mark()
+  (this.band = new pv.Mark()
       .top(function(d, i) {
           return mode == "mirror" && i & 1
               ? (i + 1 >> 1) * size
@@ -40,19 +33,50 @@ pv.Layout.Horizon = function() {
         })
       .fillStyle(function(d, i) {
           return (i & 1 ? red : blue)((i >> 1) + 1);
-        });
-
-  var add = this.add;
-  this.add = function(type) {
-    return add.call(this, pv.Panel).add(type).extend(this.band);
-  };
+      })).parent = this;
 };
 
-pv.Layout.Horizon.prototype = pv.extend(pv.Layout)
-    .property("bands", Number)
-    .property("mode", String) // mirror, offset, color
-    .property("backgroundStyle", pv.color)
-    .property("negativeStyle", pv.color)
-    .property("positiveStyle", pv.color);
+pv.Layout.Horizon.prototype = pv.extend(pv.Panel);
 
-pv.Layout.Horizon.prototype.fillStyle = pv.Layout.Horizon.prototype.backgroundStyle;
+/**
+ * The horizon mode: offset, mirror, or color. The default is "offset".
+ *
+ * @type string
+ * @name pv.Layout.Horizon.prototype.mode
+ */
+
+/**
+ * The number of bands. Must be at least one. The default value is two.
+ *
+ * @type number
+ * @name pv.Layout.Horizon.prototype.bands
+ */
+
+/**
+ * The positive band color; if non-null, the interior of positive bands are
+ * filled with the specified color. The default value of this property is blue.
+ * For accurate blending, this color should be fully opaque.
+ *
+ * @type pv.Color
+ * @name pv.Layout.Horizon.prototype.positiveStyle
+ */
+
+/**
+ * The negative band color; if non-null, the interior of negative bands are
+ * filled with the specified color. The default value of this property is red.
+ * For accurate blending, this color should be fully opaque.
+ *
+ * @type pv.Color
+ * @name pv.Layout.Horizon.prototype.negativeStyle
+ */
+
+/**
+ * The background color. The panel background is filled with the specified
+ * color, and the negative and positive bands are filled with an interpolated
+ * color between this color and the respective band color. The default value of
+ * this property is white. For accurate blending, this color should be fully
+ * opaque.
+ *
+ * @type pv.Color
+ * @name pv.Layout.Horizon.prototype.backgroundStyle
+ */

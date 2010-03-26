@@ -167,7 +167,7 @@ pv.Mark.prototype.propertyMethod = function(name, def, cast) {
         var defs = this.scene.defs;
         if (arguments.length) {
           defs[name] = {
-            id: (v == undefined) ? 0 : pv.id(),
+            id: (v == null) ? 0 : pv.id(),
             value: ((v != null) && cast) ? cast(v) : v
           };
           return this;
@@ -533,7 +533,7 @@ pv.Mark.prototype.add = function(type) {
  */
 pv.Mark.prototype.def = function(name, v) {
   this.propertyMethod(name, true);
-  return this[name](v);
+  return this[name](arguments.length > 1 ? v : null);
 };
 
 /**

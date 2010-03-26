@@ -17,12 +17,9 @@ var vis = new pv.Panel()
 vis.add(pv.Layout.Grid)
     .rows(3)
     .cols(3)
-  .add(pv.Layout.Grid)
-    .rows(pv.parent)
-    .cols(pv.parent)
+    .data(pv.range(7))
     .strokeStyle("#fff")
-  .anchor("center").add(pv.Label)
-    .font("24px sans");
+  .anchor("center").add(pv.Label);
 
 vis.render();
 
