@@ -218,7 +218,7 @@ pv.Geo.scale = function(p) {
           : p;
       return this.domain(d); // recompute normalized domain
     }
-    return proj;
+    return p;
   };
 
   /**

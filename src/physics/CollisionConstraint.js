@@ -7,7 +7,7 @@ pv.Constraint.collision = function(radius) {
       py2,
       constraint = {};
 
-  if (!arguments.length) r = 10; // default search radius
+  if (!arguments.length) r1 = 10; // default search radius
 
   constraint.repeat = function(x) {
     if (arguments.length) {
