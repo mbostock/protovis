@@ -5,7 +5,7 @@ pv.Behavior.point = function(r) {
       ky = 1, // y-dimension cost scale
       r2 = arguments.length ? r * r : 900; // fuzzy radius
 
-  /** @Private Search for the mark closest to the mouse. */
+  /** @private Search for the mark closest to the mouse. */
   function search(scene, index) {
     var s = scene[index],
         point = {cost: Infinity};
