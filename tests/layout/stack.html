@@ -26,24 +26,17 @@ var vis = new pv.Panel()
     .height(h);
 
 vis.add(pv.Layout.Stack)
-    .data(layers(n, m))
-    .orient("top")
+    .layers(layers(n, m))
+    .step(x.by(pv.index))
+    .size(y)
     .order("inside-out")
     .offset("wiggle")
-  .add(pv.Area)
-    .left(x.by(pv.index))
-    .height(y)
+  .layer.add(pv.Area)
     .fillStyle(pv.ramp("#aad", "#556").by(Math.random))
-    .strokeStyle(function() this.fillStyle().alpha(.5))
-  .label.add(pv.Label)
-    .textStyle("white")
-    .font(function(d) Math.max(10, d * 4) + "px sans-serif")
-    .text(pv.parent);
+    .strokeStyle(function() this.fillStyle().alpha(.5));
 
 vis.render();
-
 
     </script>
   </body>
 </html>
-

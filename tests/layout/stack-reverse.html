@@ -26,22 +26,16 @@ var vis = new pv.Panel()
     .height(h);
 
 vis.add(pv.Layout.Stack)
-    .data(layers(n, m))
-    .orient("bottom")
+    .layers(layers(n, m))
     .order("reverse")
     .offset("zero")
-  .add(pv.Area)
-    .left(x.by(pv.index))
-    .height(y)
+    .step(x.by(pv.index))
+    .size(y)
+  .layer.add(pv.Area)
     .fillStyle(pv.ramp("#aad", "#556").domain(0, n - 1).by(pv.parent))
-    .strokeStyle(function() this.fillStyle().darker(.5))
-  .label.add(pv.Label)
-    .textStyle("white")
-    .font(function(d) Math.max(10, d * 4) + "px sans-serif")
-    .text(pv.parent);
+    .strokeStyle(function() this.fillStyle().darker(.5));
 
 vis.render();
-
 
     </script>
   </body>

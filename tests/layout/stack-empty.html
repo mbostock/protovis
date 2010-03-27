@@ -1,0 +1,27 @@
+<html>
+  <head>
+    <title>Empty Stack</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(300)
+    .height(300)
+    .margin(2)
+    .strokeStyle("#ccc");
+
+vis.add(pv.Layout.Stack)
+  .layer.add(pv.Area)
+    .fillStyle(pv.ramp("#aad", "#556").by(Math.random))
+    .strokeStyle(function() this.fillStyle().alpha(.5));
+
+vis.anchor("center").add(pv.Label)
+    .text("EMPTY");
+
+vis.render();
+
+    </script>
+  </body>
+</html>

@@ -25,13 +25,12 @@ var vis = new pv.Panel()
     .height(h);
 
 vis.add(pv.Layout.Stack)
-    .data(waves(n, m))
+    .layers(waves(n, m))
     .order("inside-out")
     .offset("expand")
-  .add(pv.Area)
-    .data(pv.identity)
-    .left(x.by(pv.index))
-    .height(pv.identity)
+    .step(x.by(pv.index))
+    .size(pv.identity)
+  .layer.add(pv.Area)
     .fillStyle(pv.ramp("#ada", "#656").domain(n, 0).by(pv.parent))
     .strokeStyle("#797");
 

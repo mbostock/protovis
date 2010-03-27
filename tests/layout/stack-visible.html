@@ -26,22 +26,18 @@ var vis = new pv.Panel()
     .height(h);
 
 vis.add(pv.Layout.Stack)
-    .data(waves(n, m))
-    .visible(function() !(this.index % 2))
+    .layers(waves(n, m).filter(function(d, i) !(i & 1)))
     .orient("left")
     .order("inside-out")
     .offset("wiggle")
-  .add(pv.Area)
-    .data(pv.identity)
-    .top(x.by(pv.index))
-    .width(y)
+    .step(x.by(pv.index))
+    .size(y)
+  .layer.add(pv.Area)
     .fillStyle(pv.ramp("#aad", "#556").domain(0, n).by(pv.parent))
     .strokeStyle("#334");
 
 vis.render();
 
-
     </script>
   </body>
 </html>
-
