@@ -604,9 +604,6 @@ pv.Mark.prototype.anchor = function(name) {
     .data(function() {
         return scene.map(function(s) { return s.data; });
       })
-    .visible(function() {
-        return scene[this.index].visible;
-      })
     .left(function() {
         var s = scene[this.index], w = s.width || 0;
         switch (this.name()) {

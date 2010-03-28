@@ -23,6 +23,14 @@ pv.Anchor = function(target) {
   pv.Mark.call(this);
   this.target = target;
   this.parent = target.parent;
+
+  /** @private Forward any properties on the target to the anchor. */
+  function proxy(name) {
+    return function() { return this.scene.target[this.index][name]; };
+  }
+  for (var name in target.properties) {
+    this.propertyValue(name, proxy(name)).type = 3;
+  }
 };
 
 pv.Anchor.prototype = pv.extend(pv.Mark)
