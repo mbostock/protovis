@@ -6,8 +6,8 @@
   <body>
     <script type="text/javascript+protovis">
 
-var data = pv.range(0, 10, .1).map(function(x) {
-        return {x: x, y: Math.sin(x) + Math.random() * .5 + 2};
+var data = pv.range(0, 10, .5).map(function(x) {
+        return {x: x, y: Math.sin(x) + 2};
       }),
     w = 400,
     h = 200,
@@ -30,9 +30,9 @@ vis.add(pv.Area)
     .left(function(d) x(d.x))
     .bottom(0)
     .height(function(d) y(d.y))
-    .fillStyle(function() pv.hsl(pv.random(360), .5, .5))
+    .fillStyle(pv.Colors.category20().by(pv.index))
   .anchor("top").add(pv.Dot)
-    .fillStyle(function() this.anchorTarget().fillStyle())
+    .fillStyle(function() this.scene.target[this.index].fillStyle)
     .strokeStyle("black");
 
 vis.render();

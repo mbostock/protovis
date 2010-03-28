@@ -21,12 +21,10 @@ var vis = new pv.Panel()
 vis.add(pv.Area)
     .data(data)
     .bottom(0)
-    .fillStyle(pv.Colors.category20().by(pv.child))
     .left(function(d) x(d.x))
     .height(function(d) y(d.y))
-    .width(x.range().band)
   .anchor().add(pv.Area)
-    .fillStyle(null)
+    .height(function() this.scene.target[this.index].height)
     .strokeStyle("black");
 
 vis.render();
