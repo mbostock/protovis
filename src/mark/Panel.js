@@ -121,8 +121,8 @@ pv.Panel.prototype.defaults = new pv.Panel()
  * @param {string} name the anchor name; either a string or a property function.
  * @returns {pv.Anchor} the new anchor.
  */
-pv.Panel.prototype.anchor = function(name) {
-  var anchor = pv.Bar.prototype.anchor.call(this, name);
+pv.Panel.prototype.anchor = function() {
+  var anchor = pv.Bar.prototype.anchor.apply(this, arguments);
   anchor.parent = this;
   return anchor;
 };
