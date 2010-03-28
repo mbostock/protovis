@@ -9,14 +9,20 @@
 var vis = new pv.Panel()
     .width(200)
     .height(200)
+    .margin(10);
 
-vis.add(pv.Bar)
-    .fillStyle("#ccc")
-  .anchor("top").add(pv.Label)
-    .text("top")
-    .anchorTarget()
-  .anchor("bottom").add(pv.Label)
-    .text("bottom");
+var bar = vis.add(pv.Panel)
+    .data(pv.range(10))
+    .top(function(i) 20 * i)
+    .height(20)
+  .add(pv.Bar);
+
+vis.add(pv.Panel)
+    .extend(bar.parent)
+  .add(pv.Dot)
+    .extend(bar.anchor("bottom"))
+    .fillStyle("#fff")
+    .strokeStyle("#000");
 
 vis.render();
 

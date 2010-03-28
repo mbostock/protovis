@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <title>Scatterplot</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var w = 400,
+    h = 400;
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .margin(20)
+    .strokeStyle("#ccc");
+
+var dot = vis.add(pv.Dot)
+    .top(w / 2)
+    .left(w / 2)
+    .radius(w >> 2);
+
+dot.anchor("top").add(pv.Label).text("top");
+dot.anchor("left").add(pv.Label).text("left");
+dot.anchor("right").add(pv.Label).text("right");
+dot.anchor("bottom").add(pv.Label).text("bottom");
+dot.anchor("center").add(pv.Label).text("center");
+
+vis.render();
+
+    </script>
+  </body>
+</html>

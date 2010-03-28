@@ -26,9 +26,6 @@ layout/Network.js
 layout/Tree.js
 - allow depth and breadth offset to be computed automatically
 
-mark/Anchor.js
-- support anchors across panels: mirrored descent (fallback to last?)
-
 mark/Mark.js
 - antialias doesn't always work as expected; requires pixel rounding?
 - event handlers should be inherited, queryable? (use bind)

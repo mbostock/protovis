@@ -563,17 +563,20 @@ pv.Mark.prototype.def = function(name, v) {
  * @returns {pv.Anchor} the new anchor.
  */
 pv.Mark.prototype.anchor = function(name) {
-  var target = this;
+  var target = this, scene;
   return new pv.Anchor(this)
     .name(name)
+    .def("$mark.anchor", function() {
+        scene = this.scene.target = target.instances(this);
+      })
     .data(function() {
-        return target.scene.map(function(s) { return s.data; });
+        return scene.map(function(s) { return s.data; });
       })
     .visible(function() {
-        return target.instance().visible;
+        return scene[this.index].visible;
       })
     .left(function() {
-        var s = target.instance(), w = s.width || 0;
+        var s = scene[this.index], w = s.width || 0;
         switch (this.name()) {
           case "bottom":
           case "top":
@@ -583,7 +586,7 @@ pv.Mark.prototype.anchor = function(name) {
         return s.left + w;
       })
     .top(function() {
-        var s = target.instance(), h = s.height || 0;
+        var s = scene[this.index], h = s.height || 0;
         switch (this.name()) {
           case "left":
           case "right":
@@ -593,11 +596,11 @@ pv.Mark.prototype.anchor = function(name) {
         return s.top + h;
       })
     .right(function() {
-        var s = target.instance();
+        var s = scene[this.index];
         return this.name() == "left" ? s.right + (s.width || 0) : null;
       })
     .bottom(function() {
-        var s = target.instance();
+        var s = scene[this.index];
         return this.name() == "top" ? s.bottom + (s.height || 0) : null;
       })
     .textAlign(function() {
@@ -659,6 +662,21 @@ pv.Mark.prototype.instance = function(defaultIndex) {
   var scene = this.scene || this.parent.instance(-1).children[this.childIndex],
       index = !arguments.length || this.hasOwnProperty("index") ? this.index : defaultIndex;
   return scene[index < 0 ? scene.length - 1 : index];
+};
+
+/** @private */
+pv.Mark.prototype.instances = function(source) {
+  var mark = this, index = [];
+  while (!(scene = mark.scene)) {
+    source = source.parent;
+    index.push({index: source.index, childIndex: mark.childIndex});
+    mark = mark.parent;
+  }
+  while (index.length) {
+    var i = index.pop();
+    scene = scene[i.index].children[i.childIndex];
+  }
+  return scene;
 };
 
 /**

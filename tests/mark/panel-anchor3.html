@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Anchor</title>
+    <title>Panel Anchor</title>
     <script type="text/javascript" src="../../protovis-d3.2.js"></script>
   </head>
   <body>
@@ -9,14 +9,11 @@
 var vis = new pv.Panel()
     .width(200)
     .height(200)
+    .margin(5)
+    .strokeStyle("#ccc");
 
-vis.add(pv.Bar)
-    .fillStyle("#ccc")
-  .anchor("top").add(pv.Label)
-    .text("top")
-    .anchorTarget()
-  .anchor("bottom").add(pv.Label)
-    .text("bottom");
+vis.anchor("center").add(pv.Label)
+    .text("Hello, world!");
 
 vis.render();
 

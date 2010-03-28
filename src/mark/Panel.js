@@ -128,14 +128,14 @@ pv.Panel.prototype.anchor = function(name) {
   /* A "view" of this panel whose margins appear to be zero. */
   var target = pv.extend(this);
   target.parent = this;
-  target.instance = function() {
-      var s = pv.extend(this.parent.instance());
+  target.instances = function(source) {
+      var s = this.parent.instances(source);
+      s = pv.extend(s[this.parent.index]);
       s.right = s.top = s.left = s.bottom = 0;
-      return s;
+      return [s];
     };
 
-  return pv.Bar.prototype.anchor.call(target, name)
-      .data(function(d) { return [d]; });
+  return pv.Bar.prototype.anchor.call(target, name);
 };
 
 /**

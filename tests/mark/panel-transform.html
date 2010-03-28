@@ -39,7 +39,7 @@ var view = vis.add(pv.Panel)
     .event("mousedown", pv.Behavior.pan())
     .event("mousewheel", pv.Behavior.zoom());
 
-view.anchor("center").add(pv.Dot)
+view.add(pv.Dot)
     .data(pv.range(100).map(function() ({x:Math.random(), y:Math.random()})))
     .left(function(d) d.x * w)
     .top(function(d) d.y * h)
