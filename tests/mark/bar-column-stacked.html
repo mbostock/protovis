@@ -22,8 +22,8 @@ var vis = new pv.Panel()
 
 var bar = vis.add(pv.Layout.Stack)
     .layers(data)
-    .step(function() x(this.index))
-    .size(y)
+    .x(function() x(this.index))
+    .y(y)
   .layer.add(pv.Bar)
     .width(x.range().band);
 

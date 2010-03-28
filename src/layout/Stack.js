@@ -7,8 +7,8 @@
  *     .layers([[1, 1.2, 1.7, 1.5, 1.7],
  *              [.5, 1, .8, 1.1, 1.3],
  *              [.2, .5, .8, .9, 1]])
- *     .step(function() this.index * 35)
- *     .size(function(d) d * 40)
+ *     .x(function() this.index * 35)
+ *     .y(function(d) d * 40)
  *   .layer.add(pv.Area);</pre>
  *
  * specifies a vertically-stacked area chart.
@@ -176,47 +176,47 @@ pv.Layout.Stack = function() {
 
 pv.Layout.Stack.prototype = pv.extend(pv.Panel);
 
-/** @private Bind the step and size functions, allowing inheritance. */
+/** @private Bind the x and y functions, allowing inheritance. */
 pv.Layout.Stack.prototype.bind = function() {
   pv.Panel.prototype.bind.call(this);
   var mark = this, binds = this.binds.stack || (this.binds.stack = {});
   do {
-    if (!binds.x) binds.x = mark.$step;
-    if (!binds.y) binds.y = mark.$size;
+    if (!binds.x) binds.x = mark.$x;
+    if (!binds.y) binds.y = mark.$y;
   } while (mark = mark.proto);
 };
 
 /**
- * The step function; determines the position of the sample within the layer.
- * This typically corresponds to the independent variable. For example, with the
+ * The x function; determines the position of the sample within the layer.  This
+ * typically corresponds to the independent variable. For example, with the
  * default "bottom-left" orientation, this function defines the "left" property.
  *
- * @param {function} f the step function.
+ * @param {function} f the x function.
  * @returns this.
  */
-pv.Layout.Stack.prototype.step = function(f) {
+pv.Layout.Stack.prototype.x = function(f) {
   if (arguments.length) {
-    this.$step = typeof f == "function" ? f : function() { return f; };
+    this.$x = typeof f == "function" ? f : function() { return f; };
     return this;
   }
-  return this.$step;
+  return this.$x;
 };
 
 /**
- * The size function; determines the span size of the sample within the layer.
+ * The y function; determines the thickness of the layer at the given sample.
  * This typically corresponds to the dependent variable. For example, with the
  * default "bottom-left" orientation, this function defines the "height"
  * property.
  *
- * @param {function} f the size function.
+ * @param {function} f the y function.
  * @returns this.
  */
-pv.Layout.Stack.prototype.size = function(f) {
+pv.Layout.Stack.prototype.y = function(f) {
   if (arguments.length) {
-    this.$size = typeof f == "function" ? f : function() { return f; };
+    this.$y = typeof f == "function" ? f : function() { return f; };
     return this;
   }
-  return this.$size;
+  return this.$y;
 };
 
 /**
