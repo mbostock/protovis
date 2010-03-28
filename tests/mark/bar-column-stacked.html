@@ -21,11 +21,11 @@ var vis = new pv.Panel()
     .top(5);
 
 var bar = vis.add(pv.Layout.Stack)
-    .data(data)
-  .add(pv.Bar)
-    .left(function() x(this.index))
-    .width(x.range().band)
-    .height(y);
+    .layers(data)
+    .step(function() x(this.index))
+    .size(y)
+  .layer.add(pv.Bar)
+    .width(x.range().band);
 
 bar.anchor("top").add(pv.Label)
     .visible(function(d) d > .2)
