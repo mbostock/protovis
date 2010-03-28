@@ -34,11 +34,11 @@
 pv.Layout.Grid = function() {
   pv.Panel.call(this);
 
-  this.def("rows")
-      .def("cols")
+  this.def("rows", 1)
+      .def("cols", 1)
       .data(function(d) {
           var r = this.rows(), c = this.cols();
-          if ((r == null) && (typeof c == "object")) {
+          if (typeof c == "object") {
             r = pv.transpose(c);
           }
           if (typeof r == "object") {

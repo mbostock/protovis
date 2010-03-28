@@ -29,10 +29,10 @@ var vis = new pv.Panel()
     .event("mousemove", pv.Behavior.point(Infinity).collapse("y"));
 
 var area = vis.add(pv.Layout.Stack)
-    .data(data)
-  .add(pv.Area)
-    .left(function(d) x(d.x))
-    .height(function(d) y(d.y));
+    .layers(data)
+    .step(function(d) x(d.x))
+    .size(function(d) y(d.y))
+  .layer.add(pv.Area);
 
 /* A transparent overlay to avoid label clipping. */
 vis.add(pv.Panel)
