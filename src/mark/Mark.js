@@ -564,21 +564,39 @@ pv.Mark.prototype.def = function(name, v) {
  */
 pv.Mark.prototype.anchor = function(name) {
   var target = this, scene;
+
+  /** @private Find the instances of target that match source. */
+  function instances(source) {
+    var mark = target, index = [];
+
+    /* Mirrored descent. */
+    while (!(scene = mark.scene)) {
+      source = source.parent;
+      index.push({index: source.index, childIndex: mark.childIndex});
+      mark = mark.parent;
+    }
+    while (index.length) {
+      var i = index.pop();
+      scene = scene[i.index].children[i.childIndex];
+    }
+
+    /*
+     * When the anchor target is also an ancestor, as in the case of adding
+     * to a panel anchor, only generate one instance per panel. Also, set
+     * the margins to zero, since they are offset by the enclosing panel.
+     */
+    if (target.hasOwnProperty("index")) {
+      var s = pv.extend(scene[target.index]);
+      s.right = s.top = s.left = s.bottom = 0;
+      return [s];
+    }
+    return scene;
+  }
+
   return new pv.Anchor(this)
     .name(name)
     .def("$mark.anchor", function() {
-        scene = target.instances(this);
-        /*
-         * When the anchor target is also the parent, as in the case of adding
-         * to a panel anchor, only generate one instance per panel. Also, set
-         * the margins to zero, since they are offset by the enclosing panel.
-         */
-        if (target == this.parent) {
-          var s = pv.extend(scene[target.index]);
-          s.right = s.top = s.left = s.bottom = 0;
-          scene = [s];
-        }
-        this.scene.target = scene;
+        scene = this.scene.target = instances(this);
       })
     .data(function() {
         return scene.map(function(s) { return s.data; });
@@ -673,21 +691,6 @@ pv.Mark.prototype.instance = function(defaultIndex) {
   var scene = this.scene || this.parent.instance(-1).children[this.childIndex],
       index = !arguments.length || this.hasOwnProperty("index") ? this.index : defaultIndex;
   return scene[index < 0 ? scene.length - 1 : index];
-};
-
-/** @private */
-pv.Mark.prototype.instances = function(source) {
-  var mark = this, index = [];
-  while (!(scene = mark.scene)) {
-    source = source.parent;
-    index.push({index: source.index, childIndex: mark.childIndex});
-    mark = mark.parent;
-  }
-  while (index.length) {
-    var i = index.pop();
-    scene = scene[i.index].children[i.childIndex];
-  }
-  return scene;
 };
 
 /**

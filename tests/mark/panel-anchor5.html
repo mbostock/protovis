@@ -1,0 +1,28 @@
+<html>
+  <head>
+    <title>Anchor</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(200)
+    .height(200)
+    .margin(10);
+
+var panel = vis.add(pv.Panel)
+    .data(pv.range(10))
+    .top(function(i) 20 * i)
+    .height(20)
+    .fillStyle(pv.Colors.category10());
+
+panel.add(pv.Panel).add(pv.Dot)
+    .extend(panel.anchor("center"))
+    .strokeStyle("#000");
+
+vis.render();
+
+    </script>
+  </body>
+</html>
