@@ -36,14 +36,14 @@ var area = vis.add(pv.Layout.Stack)
     .strokeStyle(function() this.fillStyle().alpha(.5));
 
 vis.add(pv.Panel)
-     .extend(area.parent.anchor())
+    .extend(area.parent.anchor())
   .add(pv.Label)
-     .extend(area.anchor())
-     .def("max", function() pv.max.index(this.scene.target, function(s) s.height))
-     .visible(function() this.index == this.max())
-     .font(function(d) Math.max(10, d * 4) + "px sans-serif")
-     .textStyle("white")
-     .text(pv.parent);
+    .extend(area.anchor())
+    .def("max", function() pv.max.index(this.scene.target, function(s) s.height))
+    .visible(function() this.index == this.max())
+    .font(function(d) Math.max(10, d * 4) + "px sans-serif")
+    .textStyle("white")
+    .text(pv.parent);
 
 vis.render();
 
