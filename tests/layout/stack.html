@@ -25,7 +25,7 @@ var vis = new pv.Panel()
     .width(w)
     .height(h);
 
-vis.add(pv.Layout.Stack)
+var area = vis.add(pv.Layout.Stack)
     .layers(layers(n, m))
     .step(x.by(pv.index))
     .size(y)
@@ -34,6 +34,16 @@ vis.add(pv.Layout.Stack)
   .layer.add(pv.Area)
     .fillStyle(pv.ramp("#aad", "#556").by(Math.random))
     .strokeStyle(function() this.fillStyle().alpha(.5));
+
+vis.add(pv.Panel)
+     .data(pv.range(n))
+  .add(pv.Label)
+     .extend(area.anchor("center"))
+     .def("max", function() pv.max.index(this.scene.target, function(s) s.height))
+     .visible(function() this.index == this.max())
+     .font(function(d) Math.max(10, d * 4) + "px sans-serif")
+     .textStyle("white")
+     .text(pv.parent);
 
 vis.render();
 
