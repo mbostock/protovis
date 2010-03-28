@@ -567,7 +567,18 @@ pv.Mark.prototype.anchor = function(name) {
   return new pv.Anchor(this)
     .name(name)
     .def("$mark.anchor", function() {
-        scene = this.scene.target = target.instances(this);
+        scene = target.instances(this);
+        /*
+         * When the anchor target is also the parent, as in the case of adding
+         * to a panel anchor, only generate one instance per panel. Also, set
+         * the margins to zero, since they are offset by the enclosing panel.
+         */
+        if (target == this.parent) {
+          var s = pv.extend(scene[target.index]);
+          s.right = s.top = s.left = s.bottom = 0;
+          scene = [s];
+        }
+        this.scene.target = scene;
       })
     .data(function() {
         return scene.map(function(s) { return s.data; });
