@@ -11,6 +11,7 @@ layout/Layout.js
 - use private data, or at least standardize which attributes are populated
 - rename: x -> left, y -> top, angle -> textAngle?
 - add support for sort() functions as appropriate (e.g., arc); use bind.sort
+- size() functions should be inherited, use bind.size, etc.
 
 layout/Force.js
 - copy: x -> left, y -> top
@@ -30,6 +31,7 @@ mark/Anchor.js
 
 mark/Mark.js
 - antialias doesn't always work as expected; requires pixel rounding?
+- event handlers should be inherited, queryable? (use bind)
 
 mark/Area.js
 - {min,max}:name psuedo-anchors for center labeling?
