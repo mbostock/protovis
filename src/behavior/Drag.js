@@ -2,13 +2,18 @@ pv.Behavior.drag = function() {
   var scene, // scene context
       index, // scene context
       p, // particle being dragged
-      v1; // initial mouse-particle offset
+      v1, // initial mouse-particle offset
+      max;
 
   function mousedown(d) {
     index = this.index;
     scene = this.scene;
     var m = this.mouse();
     v1 = pv.vector(d.x, d.y).minus(m);
+    max = {
+      x: this.parent.width() - (d.dx || 0),
+      y: this.parent.height() - (d.dy || 0)
+    };
     p = d;
     p.fixed = true;
   }
@@ -17,8 +22,8 @@ pv.Behavior.drag = function() {
     if (!scene) return;
     scene.mark.context(scene, index, function() {
         var m = this.mouse();
-        p.x = v1.x + m.x;
-        p.y = v1.y + m.y;
+        p.x = Math.max(0, Math.min(v1.x + m.x, max.x));
+        p.y = Math.max(0, Math.min(v1.y + m.y, max.y));
       });
   }
 

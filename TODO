@@ -35,9 +35,6 @@ mark/Line.js
 behavior/*
 - should behaviors automatically re-render? render hooks (e.g., panel-transform)
 
-behavior/Select.js
-- rewrite
-
 behavior/Point.js
 - better support for area, wedge, and bar
 

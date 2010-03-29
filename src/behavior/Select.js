@@ -1,49 +1,35 @@
 pv.Behavior.select = function(f) {
-  var target, m1, index, scenes, args, region;
+  var scene, // scene context
+      index, // scene context
+      r, // region being selected
+      m1; // initial mouse position
 
-  /* Setup the scene stack. */
-  function setup() {
-    var m = target, s = scenes, i = index;
-    do {
-      m.index = i;
-      m.scene = s;
-      i = s.parentIndex;
-      s = s.parent;
-    } while (m = m.parent);
-  }
-
-  function mousedown() {
-    target = this;
-    index = target.index;
-    scenes = target.scene;
+  function mousedown(d) {
+    index = this.index;
+    scene = this.scene;
     m1 = this.mouse();
-    region = {};
-    region.left = m1.x;
-    region.top = m1.y;
-    region.right = target.width() - m1.x;
-    region.bottom = target.height() - m1.y;
-    region.width = 0;
-    region.height = 0;
-    args = Array.prototype.concat.apply([region], arguments);
-    f.apply(this, args);
+    r = d;
+    r.x = m1.x;
+    r.y = m1.y;
+    r.dx = r.dy = 0;
   }
 
   function mousemove() {
-    if (!target) return;
-    setup();
-    var m2 = target.mouse();
-    region.left = Math.max(0, Math.min(m1.x, m2.x));
-    region.top = Math.max(0, Math.min(m1.y, m2.y));
-    region.right = Math.max(0, target.width() - Math.max(m1.x, m2.x));
-    region.bottom = Math.max(0, target.height() - Math.max(m1.y, m2.y));
-    region.width = Math.max(0, target.width() - region.left - region.right);
-    region.height = Math.max(0, target.height() - region.top - region.bottom);
-    f.apply(target, args);
+    if (!scene) return;
+    scene.mark.context(scene, index, function() {
+        var m2 = this.mouse();
+        r.x = Math.max(0, Math.min(m1.x, m2.x));
+        r.y = Math.max(0, Math.min(m1.y, m2.y));
+        r.dx = Math.min(this.width(), Math.max(m2.x, m1.x)) - r.x;
+        r.dy = Math.min(this.height(), Math.max(m2.y, m1.y)) - r.y;
+      });
   }
 
   function mouseup() {
+    if (!scene) return;
     mousemove();
-    target = null;
+    r = null;
+    scene = null;
   }
 
   pv.listen(window, "mousemove", mousemove);
