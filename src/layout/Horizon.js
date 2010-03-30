@@ -1,13 +1,8 @@
 pv.Layout.Horizon = function() {
-  pv.Panel.call(this);
+  pv.Layout.call(this);
   var mode, size, red, blue;
 
-  this.def("bands", 2)
-      .def("mode", "offset")
-      .def("backgroundStyle", "white")
-      .def("positiveStyle", "#1f77b4")
-      .def("negativeStyle", "#d62728")
-      .data(function() {
+  this.data(function() {
           mode = this.mode();
           size = Math.round((mode == "color" ? .5 : 1) * this.parent.height());
           var n = this.bands(), fill = this.backgroundStyle();
@@ -36,7 +31,20 @@ pv.Layout.Horizon = function() {
       })).parent = this;
 };
 
-pv.Layout.Horizon.prototype = pv.extend(pv.Panel);
+pv.Layout.Horizon.prototype = pv.extend(pv.Layout)
+    .property("bands", Number)
+    .property("mode", String)
+    .property("backgroundStyle", pv.color)
+    .property("positiveStyle", pv.color)
+    .property("negativeStyle", pv.color);
+
+pv.Layout.Horizon.prototype.defaults = new pv.Layout.Horizon()
+    .extend(pv.Layout.prototype.defaults)
+    .bands(2)
+    .mode("offset")
+    .backgroundStyle("white")
+    .positiveStyle("#1f77b4")
+    .negativeStyle("#d62728");
 
 /**
  * The horizon mode: offset, mirror, or color. The default is "offset".

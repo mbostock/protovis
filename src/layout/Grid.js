@@ -32,36 +32,40 @@
  * @returns {pv.Layout.Grid} a grid layout.
  */
 pv.Layout.Grid = function() {
-  pv.Panel.call(this);
-
-  this.def("rows", 1)
-      .def("cols", 1)
-      .data(function(d) {
-          var r = this.rows(), c = this.cols();
-          if (typeof c == "object") {
-            r = pv.transpose(c);
-          }
-          if (typeof r == "object") {
-            this.rows(r.length).cols(r[0] ? r[0].length : 0);
-            return pv.blend(r);
-          }
-          return pv.repeat([d], r * c);
-        })
-      .width(function() {
-          return this.parent.width() / this.cols();
-        })
-      .height(function() {
-          return this.parent.height() / this.rows();
-        })
-      .left(function() {
-          return this.width() * (this.index % this.cols());
-        })
-      .top(function() {
-          return this.height() * Math.floor(this.index / this.cols());
-        });
+  pv.Layout.call(this);
 };
 
-pv.Layout.Grid.prototype = pv.extend(pv.Panel);
+pv.Layout.Grid.prototype = pv.extend(pv.Layout)
+    .property("rows")
+    .property("cols");
+
+pv.Layout.Grid.prototype.defaults = new pv.Layout.Grid()
+    .extend(pv.Layout.prototype.defaults)
+    .rows(1)
+    .cols(1)
+    .data(function(d) {
+        var r = this.rows(), c = this.cols();
+        if (typeof c == "object") {
+          r = pv.transpose(c);
+        }
+        if (typeof r == "object") {
+          this.rows(r.length).cols(r[0] ? r[0].length : 0);
+          return pv.blend(r);
+        }
+        return pv.repeat([d], r * c);
+      })
+    .width(function() {
+        return this.parent.width() / this.cols();
+      })
+    .height(function() {
+        return this.parent.height() / this.rows();
+      })
+    .left(function() {
+        return this.width() * (this.index % this.cols());
+      })
+    .top(function() {
+        return this.height() * Math.floor(this.index / this.cols());
+      });
 
 /**
  * The number of rows, or the data in row-major order.
