@@ -1,0 +1,86 @@
+<html>
+  <head>
+    <title>Weather</title>
+    <link type="text/css" rel="stylesheet" href="../ex.css"/>
+    <script type="text/javascript" src="../../protovis-r3.2.js"></script>
+    <script type="text/javascript" src="weather.js"></script>
+    <style type="text/css">
+
+#fig {
+  width: 200px;
+  height: 250px;
+}
+
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <script type="text/javascript+protovis">
+
+var w = 18, h = 3;
+
+var vis = new pv.Panel()
+    .width(200)
+    .height(250);
+
+/* Record range. */
+var record = vis.add(pv.Bar)
+    .data(weather)
+    .bottom(function(d) d.record.low * h)
+    .height(function(d) (d.record.high - d.record.low) * h)
+    .left(function() this.index * w)
+    .width(w - 2)
+    .fillStyle("#ccc");
+
+/* Normal range. */
+record.add(pv.Bar)
+    .bottom(function(d) d.normal.low * h)
+    .height(function(d) (d.normal.high - d.normal.low) * h)
+    .fillStyle("#999");
+
+/* White grid lines. */
+vis.add(pv.Rule)
+    .data([20, 40, 60])
+    .bottom(function(d) d * h + 1)
+    .left(0).right(20)
+    .lineWidth(2).strokeStyle("white")
+  .anchor("right").add(pv.Label)
+    .text(function(d) d + "\u00b0");
+
+/* Actual and forecast range. */
+record.add(pv.Bar)
+    .visible(function(d) d.actual)
+    .bottom(function(d) d.actual.low * h)
+    .height(function(d) (d.actual.high - d.actual.low) * h)
+    .left(function() this.index * w + 3)
+    .width(w - 8)
+    .fillStyle("black")
+  .add(pv.Bar)
+    .visible(function(d) d.forecast)
+    .bottom(function(d) d.forecast.high.low * h)
+    .height(function(d) (d.forecast.high.high - d.forecast.high.low) * h)
+  .add(pv.Bar)
+    .bottom(function(d) d.forecast.low.low * h)
+    .height(function(d) (d.forecast.low.high - d.forecast.low.low) * h)
+  .add(pv.Bar)
+    .bottom(function(d) d.forecast.low.low * h)
+    .height(function(d) (d.forecast.high.high - d.forecast.low.low) * h)
+    .left(function() this.index * w + 3 + Math.floor((w - 8) / 3))
+    .width(Math.ceil((w - 8) / 3));
+
+/* Day labels. */
+record.anchor("top").add(pv.Label)
+    .top(16)
+    .text(function(d) d.day);
+
+/* Title. */
+vis.add(pv.Label)
+    .top(0).left(0)
+    .textBaseline("top")
+    .font("bold 10pt Sans-Serif")
+    .text("Seattle ");
+
+vis.render();
+
+    </script>
+  </div></div></body>
+</html>
