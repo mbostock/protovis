@@ -23,25 +23,28 @@ var vis = new pv.Panel()
     .events("all")
     .event("mousemove", pv.Behavior.point(Infinity).collapse("y"));
 
-var area = vis.add(pv.Area)
+vis.add(pv.Area)
     .data(data)
     .left(function(d) x(d.x))
     .height(function(d) y(d.y))
     .bottom(0)
     .fillStyle("rgba(31,119,180,.6)")
-    .event("point", function() (i = this.index, this.parent))
-    .event("unpoint", function() (i = -1, this.parent));
-
-var line = area.anchor("top").add(pv.Line)
+    .event("point", function() (i = this.index, cross))
+    .event("unpoint", function() (i = -1, cross))
+  .anchor("top").add(pv.Line)
     .lineWidth(3);
 
-var dot = area.anchor("top")
-    .antialias(false)
-    .visible(function() i == this.index)
-    .strokeStyle("#d62728");
+var cross = vis.add(pv.Panel)
+    .data(data)
+    .visible(function() i == this.index);
 
-dot.add(pv.Rule).left(null).right(null);
-dot.add(pv.Rule).top(null).bottom(null);
+cross.add(pv.Rule)
+    .strokeStyle("brown")
+    .antialias(false)
+    .left(function(d) x(d.x))
+  .add(pv.Rule)
+    .left(null)
+    .bottom(function(d) y(d.y));
 
 vis.add(pv.Rule)
     .data(x.ticks())
