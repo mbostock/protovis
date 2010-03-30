@@ -18,7 +18,7 @@ var vis = new pv.Panel()
     .fillStyle("#fff");
 
 vis.add(pv.Bar)
-    .data([{x:200, w:10}])
+    .data([{x:200, dx:10}])
     .bottom(0)
     .left(function(d) d.x)
     .width(function(d) d.dx)
