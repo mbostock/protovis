@@ -33,17 +33,8 @@
  */
 pv.Layout.Grid = function() {
   pv.Layout.call(this);
-};
 
-pv.Layout.Grid.prototype = pv.extend(pv.Layout)
-    .property("rows")
-    .property("cols");
-
-pv.Layout.Grid.prototype.defaults = new pv.Layout.Grid()
-    .extend(pv.Layout.prototype.defaults)
-    .rows(1)
-    .cols(1)
-    .data(function(d) {
+  this.data(function(d) {
         var r = this.rows(), c = this.cols();
         if (typeof c == "object") {
           r = pv.transpose(c);
@@ -66,6 +57,16 @@ pv.Layout.Grid.prototype.defaults = new pv.Layout.Grid()
     .top(function() {
         return this.height() * Math.floor(this.index / this.cols());
       });
+};
+
+pv.Layout.Grid.prototype = pv.extend(pv.Layout)
+    .property("rows")
+    .property("cols");
+
+pv.Layout.Grid.prototype.defaults = new pv.Layout.Grid()
+    .extend(pv.Layout.prototype.defaults)
+    .rows(1)
+    .cols(1);
 
 /**
  * The number of rows, or the data in row-major order.
