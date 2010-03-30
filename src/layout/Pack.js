@@ -1,17 +1,15 @@
 pv.Layout.Pack = function() {
   pv.Layout.Hierarchy.call(this);
 
-  var node = this.node
+  this.node
       .radius(function(n) { return n.radius; })
       .strokeStyle("rgb(31, 119, 180)")
       .fillStyle("rgba(31, 119, 180, .25)");
 
-  /** @private Adding to this layout implicitly adds to this node. */
-  this.add = function(type) { return this.parent.add(type).extend(node); };
+  this.label
+      .textAlign("center");
 
-  /* Now hide references to inherited marks. */
-  delete this.node;
-  delete this.label;
+  /* Hide unsupported link. */
   delete this.link;
 };
 

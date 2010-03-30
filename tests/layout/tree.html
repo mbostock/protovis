@@ -14,14 +14,15 @@ var vis = new pv.Panel()
     .top(-400)
     .bottom(-50);
 
-vis.add(pv.Layout.Tree)
-    .data(pv.dom(flare).root("flare").nodes())
+var layout = vis.add(pv.Layout.Tree)
+    .nodes(pv.dom(flare).root("flare").nodes())
     .depth(120)
     .breadth(10)
-    .orient("left")
-  .link.add(pv.Line)
-  .node.add(pv.Dot)
-  .label.add(pv.Label);
+    .orient("left");
+
+layout.link.add(pv.Line);
+layout.node.add(pv.Dot);
+layout.label.add(pv.Label);
 
 vis.render();
 

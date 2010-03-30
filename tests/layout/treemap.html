@@ -19,21 +19,18 @@ var vis = new pv.Panel()
     .height(function() window.innerHeight - 1)
     .margin(.5);
 
-vis.add(pv.Layout.Treemap)
-    .data(pv.dom(flare).root("flare").nodes())
-    .round(true)
-  .add(pv.Panel)
-    .visible(function(d) !d.firstChild)
-    .overflow("hidden")
+var layout = vis.add(pv.Layout.Treemap)
+    .nodes(pv.dom(flare).root("flare").nodes())
+    .round(true);
+
+layout.leaf.add(pv.Bar)
     .fillStyle(pv.Colors.category19().by(function(d) d.parentNode.nodeName))
-    .lineWidth(1)
-  .anchor("center").add(pv.Label)
-    .textAngle(function(d) d.dx > d.dy ? 0 : -Math.PI / 2)
-    .text(function(d) d.nodeName);
+    .strokeStyle("#fff")
+    .lineWidth(1);
+
+layout.label.add(pv.Label);
 
 vis.render();
-
-window.onresize = function() vis.render();
 
     </script>
   </body>

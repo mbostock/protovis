@@ -21,16 +21,19 @@ var vis = new pv.Panel()
     .event("mousedown", pv.Behavior.pan())
     .event("mousewheel", pv.Behavior.zoom());
 
-vis.add(pv.Layout.Force)
+var layout = vis.add(pv.Layout.Force)
     .nodes(social.nodes)
-    .links(social.links)
-  .link.add(pv.Line)
-  .node.add(pv.Dot)
+    .links(social.links);
+
+layout.link.add(pv.Line);
+
+layout.node.add(pv.Dot)
     .strokeStyle(null)
     .shape(function(d) d.gender == "M" ? "square" : "circle")
     .fillStyle(function(d) d.group == 1 ? "black" : "grey")
-    .event("mousedown", pv.Behavior.drag())
-  .anchor("center").add(pv.Label)
+    .event("mousedown", pv.Behavior.drag());
+
+layout.label.add(pv.Label)
     .textStyle("white")
     .text(function(d) d.gender + d.group);
 

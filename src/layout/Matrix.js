@@ -16,9 +16,11 @@ pv.Layout.Matrix = function() {
       .height(function() { return s().dy; })
       .lineWidth(1.5)
       .strokeStyle("#fff")
-      .fillStyle(function(l) { return l.linkValue ? "#555" : "#eee"; });
+      .fillStyle(function(l) { return l.linkValue ? "#555" : "#eee"; })
+      .parent = this;
 
-  this.link.add = this.node.add;
+  /* No special add for links! */
+  delete this.link.add;
 
   /* Labels are duplicated for top & left. */
   this.label
@@ -27,8 +29,7 @@ pv.Layout.Matrix = function() {
       .top(function() { return this.index & 1 ? null : s().dy * ((this.index >> 1) + .5); })
       .textMargin(4)
       .textAlign(function() { return this.index & 1 ? "left" : "right"; })
-      .textAngle(function() { return this.index & 1 ? -Math.PI / 2 : 0; })
-      .textBaseline("middle");
+      .textAngle(function() { return this.index & 1 ? -Math.PI / 2 : 0; });
 
   /* The node mark is unused. */
   delete this.node;

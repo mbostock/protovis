@@ -18,8 +18,8 @@
  * <ul>
  * <li><tt>x</tt> - the cell left position.
  * <li><tt>y</tt> - the cell top position.
- * <li><tt>width</tt> - the cell width.
- * <li><tt>height</tt> - the cell height.
+ * <li><tt>dx</tt> - the cell width.
+ * <li><tt>dy</tt> - the cell height.
  * <li><tt>depth</tt> - the node depth (tier; the root is 0).
  * </ul>
  *
@@ -27,37 +27,36 @@
  */
 pv.Layout.Treemap = function() {
   pv.Layout.Hierarchy.call(this);
-  var that = this;
 
-  var node = this.node
+  this.node
       .strokeStyle("#fff")
       .fillStyle("rgba(31, 119, 180, .25)")
       .width(function(n) { return n.dx; })
       .height(function(n) { return n.dy; });
 
-  /** @private Adding to this layout implicitly adds to this node. */
-  this.add = function(type) {
-    return type.prototype instanceof pv.Layout
-        ? this.parent.add(pv.Panel).extend(node)
-            .strokeStyle(null)
-            .fillStyle(null)
-            .visible(function(n) { return !n.firstChild; })
-            .add(type)
-        : this.parent.add(type).extend(node);
-  };
+  this.label
+      .visible(function(n) { return !n.firstChild; })
+      .left(function(n) { return n.x + (n.dx / 2); })
+      .top(function(n) { return n.y + (n.dy / 2); })
+      .textAlign("center")
+      .textAngle(function(n) { return n.dx > n.dy ? 0 : -Math.PI / 2; });
 
-  /* Now hide references to inherited marks. */
-  delete this.node;
-  delete this.label;
+  (this.leaf = new pv.Mark()
+      .extend(this.node)
+      .fillStyle(null)
+      .strokeStyle(null)
+      .visible(function(n) { return !n.firstChild; })).parent = this;
+
+  /* Hide unsupported link. */
   delete this.link;
 };
 
 pv.Layout.Treemap.prototype = pv.extend(pv.Layout.Hierarchy)
     .property("round", Boolean)
-    .property("left", Number)
-    .property("right", Number)
-    .property("top", Number)
-    .property("bottom", Number)
+    .property("paddingLeft", Number)
+    .property("paddingRight", Number)
+    .property("paddingTop", Number)
+    .property("paddingBottom", Number)
     .property("mode", String)
     .property("order", String);
 
@@ -66,22 +65,33 @@ pv.Layout.Treemap.prototype.defaults = new pv.Layout.Treemap()
     .mode("squarify") // squarify, slice-and-dice, slice, dice
     .order("ascending"); // ascending, descending, reverse, null
 
+/**
+ * Alias for setting the left, right, top and bottom padding properties
+ * simultaneously.
+ *
+ * @returns {pv.Layout.Treemap} this.
+ */
+pv.Layout.Treemap.prototype.padding = function(n) {
+  return this.paddingLeft(n).paddingRight(n).paddingTop(n).paddingBottom(n);
+};
+
 pv.Layout.Treemap.prototype.$size = Number;
 
 pv.Layout.Treemap.prototype.size = function(f) {
-  this.$size = f;
+  this.$size = typeof f == "function" ? f : function() { return f; };
   return this;
 };
 
 pv.Layout.Treemap.prototype.init = function() {
+  if (pv.Layout.Hierarchy.prototype.init.call(this)) return;
   var that = this,
       nodes = that.nodes(),
       root = nodes[0],
       stack = pv.Mark.stack,
-      left = that.left(),
-      right = that.right(),
-      top = that.top(),
-      bottom = that.bottom(),
+      left = that.paddingLeft(),
+      right = that.paddingRight(),
+      top = that.paddingTop(),
+      bottom = that.paddingBottom(),
       size = function(n) { return n.size; },
       round = that.round() ? Math.round : Number,
       mode = that.mode();

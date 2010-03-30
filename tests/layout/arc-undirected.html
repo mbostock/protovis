@@ -14,15 +14,16 @@ var vis = new pv.Panel()
     .right(100)
     .bottom(100);
 
-vis.add(pv.Panel)
+var layout = vis.add(pv.Panel)
     .data(["top", "bottom", "left", "right"])
   .add(pv.Layout.Arc)
     .nodes([0, 1, 2, 3])
     .links([{source:0, target:1}, {source:3, target:2}])
-    .orient(pv.identity)
-  .link.add(pv.Line)
-  .node.add(pv.Dot)
-  .label.add(pv.Label);
+    .orient(pv.identity);
+
+layout.link.add(pv.Line);
+layout.node.add(pv.Dot);
+layout.label.add(pv.Label);
 
 vis.render();
 

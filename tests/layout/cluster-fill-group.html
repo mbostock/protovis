@@ -12,10 +12,10 @@ var vis = new pv.Panel()
     .width(1200);
 
 vis.add(pv.Layout.Cluster.Fill)
-    .data(pv.dom(flare).root("flare").nodes())
+    .nodes(pv.dom(flare).root("flare").nodes())
     .group(true)
     .orient("top")
-  .add(pv.Bar);
+  .node.add(pv.Bar);
 
 vis.render();
 

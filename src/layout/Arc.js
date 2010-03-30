@@ -38,8 +38,8 @@ pv.Layout.Arc.prototype.init = function() {
       h = this.parent.height(),
       r = Math.min(w, h) / 2;
 
-  /** @private Returns the angle, given the breadth. */
-  function angle(b) {
+  /** @private Returns the mid-angle, given the breadth. */
+  function midAngle(b) {
     switch (orient) {
       case "top": return -Math.PI / 2;
       case "bottom": return Math.PI / 2;
@@ -56,7 +56,7 @@ pv.Layout.Arc.prototype.init = function() {
       case "bottom": return b * w;
       case "left": return 0;
       case "right": return w;
-      case "radial": return w / 2 + r * Math.cos(angle(b));
+      case "radial": return w / 2 + r * Math.cos(midAngle(b));
     }
   }
 
@@ -67,16 +67,16 @@ pv.Layout.Arc.prototype.init = function() {
       case "bottom": return h;
       case "left":
       case "right": return b * h;
-      case "radial": return h / 2 + r * Math.sin(angle(b));
+      case "radial": return h / 2 + r * Math.sin(midAngle(b));
     }
   }
 
-  /* Populate the x, y and angle attributes. */
+  /* Populate the x, y and mid-angle attributes. */
   for (var i = 0; i < nodes.length; i++) {
     var breadth = (i + .5) / nodes.length, n = nodes[i];
     n.x = x(breadth);
     n.y = y(breadth);
-    n.angle = angle(breadth);
+    n.midAngle = midAngle(breadth);
   }
 };
 

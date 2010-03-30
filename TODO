@@ -4,27 +4,19 @@ data/Scale.js
 - quantile scales!
 
 layout/Layout.js
-- extend Panel?
-- use private data, or at least standardize which attributes are populated
-- add support for sort() functions as appropriate (e.g., arc); use bind.sort
-- size() functions should be inherited, use bind.size, etc.
+- standardize which attributes are populated
+- add support for sort() functions as appropriate (e.g., arc)
 
 layout/Force.js
 - smarter default rest length / charge force constant
 - allow customization of simulation parameters (e.g., rest length)
 - allow dynamic updates to the graph, preserving simulation (add/remove nodes/liks)
 
-layout/Network.js
-- add reset() method to clear cached layout?
-
 layout/Tree.js
 - allow depth and breadth offset to be computed automatically
 
 mark/Anchor.js
 - {min,max}:name "singleton" anchors for center labeling on area and line?
-
-mark/Mark.js
-- event handlers should be inherited, queryable? (use bind)
 
 mark/Area.js
 - support for "basis" and "cardinal" interpolation
@@ -60,3 +52,4 @@ geo/GeoScale.js
 
 *
 - documentation
+- port examples

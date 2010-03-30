@@ -19,22 +19,21 @@ var vis = new pv.Panel()
     .margin(.5);
 
 vis.add(pv.Layout.Treemap)
-    .data(pv.nodes(pv.range(3)))
+    .nodes(pv.nodes(pv.range(3)))
     .mode("slice")
-  .add(pv.Layout.Treemap)
-    .data(pv.nodes(pv.range(10)))
+  .leaf.add(pv.Layout.Treemap)
+    .nodes(pv.nodes(pv.range(10)))
     .mode("dice")
-  .add(pv.Layout.Treemap)
-    .data(pv.nodes(pv.range(10)))
+  .leaf.add(pv.Layout.Treemap)
+    .nodes(pv.nodes(pv.range(10)))
     .mode("slice")
-  .add(pv.Bar)
+  .leaf.add(pv.Bar)
     .fillStyle(pv.ramp("steelblue", "brown").by(Math.random))
+    .strokeStyle("#fff")
     .lineWidth(1)
     .antialias(false);
 
 vis.render();
-
-window.onresize = function() vis.render();
 
     </script>
   </body>

@@ -6,17 +6,18 @@ pv.Layout.Hierarchy = function() {
 
 pv.Layout.Hierarchy.prototype = pv.extend(pv.Layout.Network);
 
-/** @private Alias the data property to nodes. */
-pv.Layout.Hierarchy.prototype.data = pv.Layout.Hierarchy.prototype.nodes;
-
-/** @private Register an implicit links property. */
+/**
+ * @private Register an implicit links property. Unfortunately, we can't simply
+ * register this as a default because it depends on the nodes property, and thus
+ * must be defined after the nodes property.
+ */
 pv.Layout.Hierarchy.prototype.bind = function() {
   pv.Layout.Network.prototype.bind.call(this);
   var binds = this.binds;
   if (!binds.properties.links) {
     var p = this.propertyValue("links", pv.Layout.Hierarchy.links);
     p.type = 1;
-    binds.defs.push(p);
+    binds.defs.splice(binds.defs.length - 1, 0, p); // before init
   }
 };
 
@@ -59,10 +60,8 @@ pv.Layout.Hierarchy.NodeLink = {
     }
 
     /** @private Returns the angle of the given node. */
-    function angle(n) {
-      return orient == "radial"
-          ? (n.parentNode ? (n.breadth - .25) * 2 * Math.PI : 0)
-          : 0;
+    function midAngle(n) {
+      return (n.parentNode ? (n.breadth - .25) * 2 * Math.PI : 0);
     }
 
     /** @private */
@@ -72,7 +71,7 @@ pv.Layout.Hierarchy.NodeLink = {
         case "right": return w - n.depth * w;
         case "top": return n.breadth * w;
         case "bottom": return w - n.breadth * w;
-        case "radial": return w / 2 + radius(n) * Math.cos(n.angle);
+        case "radial": return w / 2 + radius(n) * Math.cos(n.midAngle);
       }
     }
 
@@ -83,16 +82,16 @@ pv.Layout.Hierarchy.NodeLink = {
         case "right": return h - n.breadth * h;
         case "top": return n.depth * h;
         case "bottom": return h - n.depth * h;
-        case "radial": return h / 2 + radius(n) * Math.sin(n.angle);
+        case "radial": return h / 2 + radius(n) * Math.sin(n.midAngle);
       }
     }
 
     for (var i = 0; i < nodes.length; i++) {
       var n = nodes[i];
-      n.angle = angle(n);
+      n.midAngle = orient == "radial" ? midAngle(n) : 0;
       n.x = x(n);
       n.y = y(n);
-      if (n.firstChild) n.angle += Math.PI;
+      if (n.firstChild) n.midAngle += Math.PI;
     }
   }
 };
@@ -102,7 +101,7 @@ pv.Layout.Hierarchy.Fill = {
 
   /** @private */
   constructor: function() {
-    var node = this.node
+    this.node
         .strokeStyle("#fff")
         .fillStyle("#ccc")
         .width(function(n) { return n.dx; })
@@ -112,12 +111,12 @@ pv.Layout.Hierarchy.Fill = {
         .startAngle(function(n) { return n.startAngle; })
         .angle(function(n) { return n.angle; });
 
-    /** @private Adding to this layout implicitly adds to this node. */
-    this.add = function(type) { return this.parent.add(type).extend(node); };
+    this.label
+        .textAlign("center")
+        .left(function(n) { return n.x + (n.dx / 2); })
+        .top(function(n) { return n.y + (n.dy / 2); });
 
-    /* Now hide references to inherited marks. */
-    delete this.node;
-    delete this.label;
+    /* Hide unsupported link. */
     delete this.link;
   },
 
@@ -125,6 +124,7 @@ pv.Layout.Hierarchy.Fill = {
   init: function() {
     var nodes = this.nodes(),
         orient = this.orient(),
+        horizontal = /^(top|bottom)$/.test(orient),
         w = this.parent.width(),
         h = this.parent.height(),
         depth = -nodes[0].minDepth;
@@ -171,6 +171,7 @@ pv.Layout.Hierarchy.Fill = {
         case "right": return (n.maxDepth - n.minDepth) / (1 + depth) * w;
         case "top":
         case "bottom": return (n.maxBreadth - n.minBreadth) * w;
+        case "radial": return n.parentNode ? (n.innerRadius + n.outerRadius) * Math.cos(n.midAngle) : 0;
       }
     }
 
@@ -181,6 +182,7 @@ pv.Layout.Hierarchy.Fill = {
         case "right": return (n.maxBreadth - n.minBreadth) * h;
         case "top":
         case "bottom": return (n.maxDepth - n.minDepth) / (1 + depth) * h;
+        case "radial": return n.parentNode ? (n.innerRadius + n.outerRadius) * Math.sin(n.midAngle) : 0;
       }
     }
 
@@ -208,12 +210,17 @@ pv.Layout.Hierarchy.Fill = {
       var n = nodes[i];
       n.x = x(n);
       n.y = y(n);
+      if (orient == "radial") {
+        n.innerRadius = innerRadius(n);
+        n.outerRadius = outerRadius(n);
+        n.startAngle = startAngle(n);
+        n.angle = angle(n);
+        n.midAngle = n.startAngle + n.angle / 2;
+      } else {
+        n.midAngle = horizontal ? -Math.PI / 2 : 0;
+      }
       n.dx = dx(n);
       n.dy = dy(n);
-      n.innerRadius = innerRadius(n);
-      n.outerRadius = outerRadius(n);
-      n.startAngle = startAngle(n);
-      n.angle = angle(n);
     }
   }
 };

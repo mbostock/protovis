@@ -25,16 +25,16 @@ var vis = new pv.Panel()
     .strokeStyle("#ccc")
     .event("mousemove", pv.Behavior.point());
 
-vis.add(pv.Layout.Force)
+var layout = vis.add(pv.Layout.Force)
     .nodes(function(i) pv.dom(diamond(i, i, i)).nodes())
-    .links(function() this.nodes()
-        .filter(function(n) n.parentNode)
-        .map(function(n) ({sourceNode: n, targetNode: n.parentNode})))
+    .links(pv.Layout.Hierarchy.links)
     .bound(true)
-    .iterations(1e3)
-  .link.add(pv.Line)
-    .strokeStyle(function(d) d.active  ? "orange" : "lightgrey")
-  .node.add(pv.Dot)
+    .iterations(1e3);
+
+layout.link.add(pv.Line)
+    .strokeStyle(function(d) d.active  ? "orange" : "lightgrey");
+
+layout.node.add(pv.Dot)
     .fillStyle(function(d) d.parentNode ? d.active ? "orange" : "white" : "steelblue")
     .event("point", function(d) (activate(d, true), this.parent))
     .event("unpoint", function(d) (activate(d, false), this.parent));

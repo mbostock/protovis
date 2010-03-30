@@ -13,9 +13,9 @@ var vis = new pv.Panel()
     .margin(2);
 
 vis.add(pv.Layout.Treemap)
-    .data(pv.dom(flare).root("flare").nodes())
-    .margin(6)
-  .add(pv.Panel)
+    .nodes(pv.dom(flare).root("flare").nodes())
+    .padding(6)
+  .node.add(pv.Bar)
     .fillStyle(function(n) n.firstChild ? "rgba(31, 119, 180, .25)" : "#ff7f0e")
     .title(function t(n) n.parentNode ? (t(n.parentNode) + "." + n.nodeName) : "flare");
 

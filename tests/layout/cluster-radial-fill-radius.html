@@ -12,12 +12,12 @@ var vis = new pv.Panel()
     .height(600);
 
 vis.add(pv.Layout.Cluster.Fill)
-    .data(pv.dom(flare).nodes())
+    .nodes(pv.dom(flare).nodes())
     .innerRadius(200)
     .outerRadius(300)
     .orient("radial")
     .group(.5)
-  .add(pv.Wedge);
+  .node.add(pv.Wedge);
 
 vis.render();
 

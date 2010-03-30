@@ -3,10 +3,10 @@
  * @class
  */
 pv.Layout = function() {
-  pv.Mark.call(this);
+  pv.Panel.call(this);
 };
 
-pv.Layout.prototype = pv.extend(pv.Mark);
+pv.Layout.prototype = pv.extend(pv.Panel);
 
 /** @private Defines a local property with the specified name and cast. */
 pv.Layout.prototype.property = function(name, cast) {
@@ -14,18 +14,16 @@ pv.Layout.prototype.property = function(name, cast) {
   return this;
 };
 
-/** @private Wrap the data property with an initialization hook. */
+/** @private Register an init hook, after all other defs. */
 pv.Layout.prototype.bind = function() {
-  pv.Mark.prototype.bind.call(this);
-  var binds = this.binds, data = binds.data, value = data.value;
-  binds.data = {
-    id: data.id,
-    type: data.type | 1,
-    value: data.type & 1
-        ? function() { var x = value.apply(this, arguments); this.init(x); return x; }
-        : function() { this.init(value); return value; }
-  };
+  pv.Panel.prototype.bind.call(this);
+  var binds = this.binds;
+  if (!binds.properties.init) {
+    var p = this.propertyValue("init", this.init);
+    p.type = 1;
+    binds.defs.push(p);
+  }
 };
 
-/** @private Initialization hook after data and defs have been evaluated. */
+/** @private Initialization hook after defs have been evaluated. */
 pv.Layout.prototype.init = function() {};

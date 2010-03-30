@@ -10,21 +10,12 @@ pv.Layout.Network = function() {
    * @type pv.Mark
    * @name pv.Layout.Network.prototype.node
    */
-  this.node = new pv.Mark()
+  (this.node = new pv.Mark()
       .data(function() { return that.nodes(); })
       .strokeStyle("#1f77b4")
       .fillStyle("#fff")
       .left(function(n) { return n.x; })
-      .top(function(n) { return n.y; });
-
-  /** @private Propagate layout mark references to node children. */
-  this.node.add = function(type) {
-      var mark = that.parent.add(type).extend(this);
-      mark.link = that.link;
-      mark.node = that.node;
-      mark.label = that.label;
-      return mark;
-    };
+      .top(function(n) { return n.y; })).parent = this;
 
   /**
    * The link prototype, which renders edges between source nodes and target
@@ -41,15 +32,12 @@ pv.Layout.Network = function() {
       .lineWidth(function(d, p) { return p.linkValue * 1.5; })
       .strokeStyle("rgba(0,0,0,.2)");
 
-  /** @private Propagate layout mark references to link children. */
+  /** @private */
   this.link.add = function(type) {
-      var mark = that.parent.add(pv.Panel)
+      return that.add(pv.Panel)
           .data(function() { return that.links(); })
-          .add(type).extend(this);
-      mark.link = that.link;
-      mark.node = that.node;
-      mark.label = that.label;
-      return mark;
+        .add(type)
+          .extend(this);
     };
 
   /**
@@ -61,25 +49,23 @@ pv.Layout.Network = function() {
    * @type pv.Mark
    * @name pv.Layout.Network.prototype.label
    */
-  this.label = new pv.Mark()
+  (this.label = new pv.Mark()
       .extend(this.node)
       .textMargin(7)
       .textBaseline("middle")
       .text(function(n) { return n.nodeName || n.nodeValue; })
       .textAngle(function(n) {
-          var a = n.angle;
+          var a = n.midAngle;
           return pv.Wedge.upright(a) ? a : (a + Math.PI);
         })
       .textAlign(function(n) {
-          return pv.Wedge.upright(n.angle) ? "left" : "right";
-        });
-
-  /** @private Propagate layout mark references to label children. */
-  this.label.add = this.node.add;
+          return pv.Wedge.upright(n.midAngle) ? "left" : "right";
+        })).parent = this;
 };
 
 /** @private Transform nodes and links on cast. */
 pv.Layout.Network.prototype = pv.extend(pv.Layout)
+    .property("cache", Boolean)
     .property("nodes", function(v) {
         return v.map(function(d, i) {
             if (typeof d != "object") d = {nodeValue: d};
@@ -95,20 +81,15 @@ pv.Layout.Network.prototype = pv.extend(pv.Layout)
           });
       });
 
-/** @private If the nodes property is changed, unlock the links too. */
-pv.Layout.Network.prototype.bind = function() {
-  pv.Layout.prototype.bind.call(this);
-  var binds = this.binds,
-      nodes = binds.properties.nodes,
-      links = binds.properties.links;
-  if (links && (nodes.id > links.id)) links.id = nodes.id;
-};
+pv.Layout.Network.prototype.defaults = new pv.Layout.Network()
+    .extend(pv.Layout.prototype.defaults)
+    .cache(true);
 
 /** @private Locks node and links after initialization. */
 pv.Layout.Network.prototype.init = function() {
-  var defs = this.scene.defs;
-  if (defs.nodes.id) return true;
-  defs.links.id = defs.nodes.id = pv.id();
+  var cache = this.scene.defs.cache;
+  if (cache.id && cache.value) return true;
+  cache.id = this.binds.properties.cache.id;
 
   /* Compute link degrees; map source and target indexes to nodes. */
   var nodes = this.nodes();

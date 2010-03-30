@@ -24,7 +24,7 @@ pv.Layout.Indent.prototype.init = function() {
   function position(n, breadth, depth) {
     n.x = ax + depth++ * dspace;
     n.y = ay + breadth++ * bspace;
-    n.angle = 0;
+    n.midAngle = 0;
     for (var c = n.firstChild; c; c = c.nextSibling) {
       breadth = position(c, breadth, depth);
     }

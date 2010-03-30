@@ -13,12 +13,13 @@ var vis = new pv.Panel()
     .top(90)
     .left(90);
 
-vis.add(pv.Layout.Matrix)
+var layout = vis.add(pv.Layout.Matrix)
     .nodes(miserables.nodes)
     .links(miserables.links)
-    .sort(function(a, b) b.linkDegree - a.linkDegree)
-  .link.add(pv.Bar)
-  .label.add(pv.Label);
+    .sort(function(a, b) b.linkDegree - a.linkDegree);
+
+layout.link.add(pv.Bar);
+layout.label.add(pv.Label);
 
 vis.render();
 

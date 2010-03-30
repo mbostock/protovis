@@ -11,19 +11,21 @@ var vis = new pv.Panel()
     .width(500)
     .height(500);
 
-vis.add(pv.Layout.Tree)
-    .data(pv.dom(diamond(3, 4, 4)).nodes())
+var layout = vis.add(pv.Layout.Tree)
+    .nodes(pv.dom(diamond(3, 4, 4)).nodes())
     .depth(30)
     .breadth(25)
-    .orient("radial")
-  .link.add(pv.Line)
-    .strokeStyle("#aaa")
-  .node.add(pv.Dot)
+    .orient("radial");
+
+layout.link.add(pv.Line)
+    .strokeStyle("#aaa");
+
+layout.node.add(pv.Dot)
     .size(100)
     .strokeStyle(function(d) d.active ? "#f00" : "#aaa")
     .fillStyle(function(d) d.active ? "#fdd" : "#ddd")
     .event("mouseover", function(d) (d.active = true, this))
-    .event("mouseout", function(d) (d.active = false, this))
+    .event("mouseout", function(d) (d.active = false, this));
 
 vis.render();
 

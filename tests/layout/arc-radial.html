@@ -15,16 +15,19 @@ var vis = new pv.Panel()
     .right(100)
     .bottom(100);
 
-vis.add(pv.Layout.Arc)
+var layout = vis.add(pv.Layout.Arc)
     .nodes(miserables.nodes)
     .links(miserables.links)
-    .orient("radial")
-  .link.add(pv.Line)
-  .node.add(pv.Dot)
+    .orient("radial");
+
+layout.link.add(pv.Line);
+
+layout.node.add(pv.Dot)
     .size(function(d) d.linkDegree + 4)
     .fillStyle(pv.Colors.category19().by(function(d) d.group))
-    .strokeStyle(function() this.fillStyle().darker())
-  .label.add(pv.Label);
+    .strokeStyle(function() this.fillStyle().darker());
+
+layout.label.add(pv.Label);
 
 vis.render();
 

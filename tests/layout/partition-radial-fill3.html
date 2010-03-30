@@ -11,15 +11,14 @@ var vis = new pv.Panel()
     .width(900)
     .height(900);
 
-vis.add(pv.Layout.Partition.Fill)
-    .data(pv.dom(flare).root("flare").nodes())
+var layout = vis.add(pv.Layout.Partition.Fill)
+    .nodes(pv.dom(flare).root("flare").nodes())
     .size(Number)
     .order("ascending")
-    .orient("radial")
-  .add(pv.Wedge)
-  .anchor("center").add(pv.Label)
-    .visible(function(d) d.angle > .04)
-    .text(function(d) d.nodeName);
+    .orient("radial");
+
+layout.node.add(pv.Wedge);
+layout.label.add(pv.Label);
 
 vis.render();
 

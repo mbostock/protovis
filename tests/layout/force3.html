@@ -21,11 +21,13 @@ var vis = new pv.Panel()
     .event("mousedown", pv.Behavior.pan())
     .event("mousewheel", pv.Behavior.zoom());
 
-vis.add(pv.Layout.Force)
+var layout = vis.add(pv.Layout.Force)
     .nodes(pv.dom(flare).nodes())
-    .links(pv.Layout.Hierarchy.links)
-  .link.add(pv.Line)
-  .node.add(pv.Dot)
+    .links(pv.Layout.Hierarchy.links);
+
+layout.link.add(pv.Line);
+
+layout.node.add(pv.Dot)
     .title(function(d) d.nodeName)
     .size(function(d) (d.nodeValue / 100) || 10)
     .fillStyle(function(d) d.fixed ? "orange" : (d.firstChild ? "steelblue" : "white"))

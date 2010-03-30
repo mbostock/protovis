@@ -12,17 +12,16 @@ var vis = new pv.Panel()
     .height(600)
     .margin(100);
 
-vis.add(pv.Layout.Cluster)
-    .data(pv.dom(flare).root("flare").nodes())
+var layout = vis.add(pv.Layout.Cluster)
+    .nodes(pv.dom(flare).root("flare").nodes())
     .innerRadius(200)
     .outerRadius(300)
     .group(true)
-    .orient("radial")
-  .link.add(pv.Line)
-  .node.add(pv.Dot)
-    .radius(3)
-  .label.add(pv.Label)
-    .textMargin(5);
+    .orient("radial");
+
+layout.link.add(pv.Line);
+layout.node.add(pv.Dot).radius(3);
+layout.label.add(pv.Label).textMargin(5);
 
 vis.render();
 

@@ -11,6 +11,7 @@ data/Scale.js
 - allow customization of data ticks (e.g., "3 months", "5 minutes")
 
 mark/Mark.js
+- event handlers should be inherited?
 - antialias doesn't always work as expected; requires pixel rounding?
 - allow mixin rather than single inheritance?
 - linear and radial gradient fills

@@ -12,15 +12,16 @@ var vis = new pv.Panel()
     .height(800)
     .margin(100);
 
-vis.add(pv.Layout.Partition)
-    .data(pv.dom(flare)
+var layout = vis.add(pv.Layout.Partition)
+    .nodes(pv.dom(flare)
         .root("flare")
         .sort(function(a, b) pv.naturalOrder(a.nodeName, b.nodeName))
         .nodes())
-    .orient("radial")
-  .link.add(pv.Line)
-  .node.add(pv.Dot)
-  .label.add(pv.Label);
+    .orient("radial");
+
+layout.link.add(pv.Line);
+layout.node.add(pv.Dot);
+layout.label.add(pv.Label);
 
 vis.render();
 

@@ -12,8 +12,8 @@ var vis = new pv.Panel()
     .height(600);
 
 vis.add(pv.Layout.Partition.Fill)
-    .data(pv.dom(diamond(3, 4, 4)).nodes())
-  .add(pv.Bar);
+    .nodes(pv.dom(diamond(3, 4, 4)).nodes())
+  .node.add(pv.Bar);
 
 vis.render();
 

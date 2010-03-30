@@ -19,14 +19,15 @@ var vis = new pv.Panel()
     .height(h)
     .margin(30);
 
-vis.add(pv.Layout.Rollup)
+var layout = vis.add(pv.Layout.Rollup)
     .nodes(social.nodes)
     .links(social.links)
-    .left(x.by(fx))
-    .top(y.by(fy))
-    .directed(true)
-  .link.add(pv.Line)
-  .node.add(pv.Dot);
+    .x(x.by(fx))
+    .y(y.by(fy))
+    .directed(true);
+
+layout.link.add(pv.Line);
+layout.node.add(pv.Dot);
 
 vis.add(pv.Label)
     .data(x.domain())

@@ -15,15 +15,17 @@ var vis = new pv.Panel()
     .top(90)
     .left(90);
 
-vis.add(pv.Layout.Matrix)
+var layout = vis.add(pv.Layout.Matrix)
     .nodes(miserables.nodes)
     .links(miserables.links)
-    .sort(function(a, b) b.group - a.group)
-  .link.add(pv.Bar)
+    .sort(function(a, b) b.group - a.group);
+
+layout.link.add(pv.Bar)
     .fillStyle(function(l) l.linkValue
         ? ((l.targetNode.group == l.sourceNode.group)
-        ? color(l.sourceNode) : "#555") : "#eee")
-  .label.add(pv.Label)
+        ? color(l.sourceNode) : "#555") : "#eee");
+
+layout.label.add(pv.Label)
     .textStyle(color);
 
 vis.render();

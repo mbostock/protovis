@@ -15,25 +15,19 @@ body {
     <script type="text/javascript+protovis">
 
 var vis = new pv.Panel()
-    .width(function() window.innerWidth - 1)
-    .height(function() window.innerHeight - 1)
-    .margin(.5);
+    .width(function() window.innerWidth - 2)
+    .height(function() window.innerHeight - 2)
+    .margin(1);
 
-vis.add(pv.Layout.Treemap)
-    .data(pv.dom(flare).root("flare").nodes())
+var layout = vis.add(pv.Layout.Treemap)
+    .nodes(pv.dom(flare).root("flare").nodes())
     .mode("slice-and-dice")
-    .order("descending")
-  .add(pv.Panel)
-    .overflow("hidden")
-    .fillStyle("#aec7e8")
-    .visible(function(d) !d.firstChild)
-  .anchor("center").add(pv.Label)
-    .textAngle(function(d) d.dx > d.dy ? 0 : -Math.PI / 2)
-    .text(function(d) d.nodeName);
+    .order("descending");
+
+layout.node.add(pv.Bar);
+layout.label.add(pv.Label);
 
 vis.render();
-
-window.onresize = function() vis.render();
 
     </script>
   </body>

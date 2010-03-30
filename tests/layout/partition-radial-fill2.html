@@ -12,9 +12,9 @@ var vis = new pv.Panel()
     .height(600);
 
 vis.add(pv.Layout.Partition.Fill)
-    .data(pv.dom(diamond(3, 4, 4)).nodes())
+    .nodes(pv.dom(diamond(3, 4, 4)).nodes())
     .orient("radial")
-  .add(pv.Wedge);
+  .node.add(pv.Wedge);
 
 vis.render();
 

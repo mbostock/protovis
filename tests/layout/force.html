@@ -23,11 +23,13 @@ var vis = new pv.Panel()
     .event("mousedown", pv.Behavior.pan())
     .event("mousewheel", pv.Behavior.zoom());
 
-vis.add(pv.Layout.Force)
+var layout = vis.add(pv.Layout.Force)
     .nodes(miserables.nodes)
-    .links(miserables.links)
-  .link.add(pv.Line)
-  .node.add(pv.Dot)
+    .links(miserables.links);
+
+layout.link.add(pv.Line);
+
+layout.node.add(pv.Dot)
     .size(function(d) (d.linkDegree + 4) * Math.pow(this.scale, -1.5))
     .fillStyle(function(d) d.fixed ? "brown" : color(d))
     .strokeStyle(function() this.fillStyle().darker())

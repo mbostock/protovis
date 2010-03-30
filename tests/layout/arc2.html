@@ -15,14 +15,15 @@ var vis = new pv.Panel()
     .right(10)
     .bottom(10);
 
-vis.add(pv.Layout.Arc)
+var layout = vis.add(pv.Layout.Arc)
     .nodes(pv.dom(diamond(3, 4, 4)).nodes())
     .links(function() this.nodes()
         .filter(function(n) n.parentNode)
         .map(function(n) ({sourceNode: n, targetNode: n.parentNode})))
-    .orient("left")
-  .link.add(pv.Line)
-  .node.add(pv.Dot);
+    .orient("left");
+
+layout.link.add(pv.Line);
+layout.node.add(pv.Dot);
 
 vis.render();
 

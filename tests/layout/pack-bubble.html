@@ -19,10 +19,10 @@ var vis = new pv.Panel()
     .height(800);
 
 vis.add(pv.Layout.Pack)
-    .data(classes)
+    .nodes(classes)
     .size(Number)
     .spacing(0)
-  .add(pv.Dot)
+  .node.add(pv.Dot)
     .visible(function(n) n.parentNode)
     .title(function(n) n.nodeName);
 

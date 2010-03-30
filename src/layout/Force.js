@@ -1,8 +1,9 @@
+
 pv.Layout.Force = function() {
   pv.Layout.Network.call(this);
-
   /* Force-directed graphs can be messy, so reduce the link width. */
   this.link.lineWidth(function(d, p) { return Math.sqrt(p.linkValue) * 1.5; });
+  this.label.textAlign("center");
 };
 
 pv.Layout.Force.prototype = pv.extend(pv.Layout.Network)
@@ -60,4 +61,4 @@ pv.Layout.Force.prototype.init = function() {
   } else for (var i = 0; i < n; i++) {
     sim.step();
   }
-}
+};

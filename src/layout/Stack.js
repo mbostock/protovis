@@ -16,7 +16,7 @@
  * @returns {pv.Layout.Stack} a stack layout.
  */
 pv.Layout.Stack = function() {
-  pv.Panel.call(this);
+  pv.Layout.call(this);
   var none = function() { return null; },
       prop = {t: none, l: none, r: none, b: none, w: none, h: none};
 
@@ -28,14 +28,13 @@ pv.Layout.Stack = function() {
   }
 
   /** @private Compute the layout! */
-  function data() {
+  this.init = function() {
     var data = this.layers(),
         n = data.length,
         m = data[0].length,
         orient = this.orient(),
         horizontal = /^(top|bottom)\b/.test(orient),
         h = this.parent[horizontal ? "height" : "width"](),
-        binds = this.binds.stack,
         x = [],
         y = [],
         dy = [];
@@ -51,8 +50,8 @@ pv.Layout.Stack = function() {
       for (var j = 0; j < m; j++) {
         stack[0] = data[i][j];
         pv.Mark.prototype.index = this.layer.index = j;
-        if (!i) x[j] = binds.x.apply(this.layer, stack);
-        dy[i][j] = binds.y.apply(this.layer, stack);
+        if (!i) x[j] = this.$x.apply(this.layer, stack);
+        dy[i][j] = this.$y.apply(this.layer, stack);
       }
     }
     delete this.layer.index;
@@ -154,14 +153,7 @@ pv.Layout.Stack = function() {
     prop[px] = function(i, j) { return x[j]; };
     prop[py] = function(i, j) { return y[i][j]; };
     prop[pdy] = function(i, j) { return dy[i][j]; };
-    return data;
-  }
-
-  this.def("orient", "bottom-left")
-      .def("offset", "zero")
-      .def("order")
-      .def("layers", [[]])
-      .data(data);
+  };
 
   (this.layer = new pv.Mark()
       .data(pv.identity)
@@ -174,17 +166,18 @@ pv.Layout.Stack = function() {
       .parent = this;
 };
 
-pv.Layout.Stack.prototype = pv.extend(pv.Panel);
+pv.Layout.Stack.prototype = pv.extend(pv.Layout)
+    .property("orient", String)
+    .property("offset", String)
+    .property("order", String)
+    .property("layers");
 
-/** @private Bind the x and y functions, allowing inheritance. */
-pv.Layout.Stack.prototype.bind = function() {
-  pv.Panel.prototype.bind.call(this);
-  var mark = this, binds = this.binds.stack || (this.binds.stack = {});
-  do {
-    if (!binds.x) binds.x = mark.$x;
-    if (!binds.y) binds.y = mark.$y;
-  } while (mark = mark.proto);
-};
+pv.Layout.Stack.prototype.defaults = new pv.Layout.Stack()
+    .extend(pv.Layout.prototype.defaults)
+    .orient("bottom-left")
+    .offset("zero")
+    .layers([[]])
+    .data(function() { return this.layers(); });
 
 /**
  * The x function; determines the position of the sample within the layer.  This
@@ -195,11 +188,8 @@ pv.Layout.Stack.prototype.bind = function() {
  * @returns this.
  */
 pv.Layout.Stack.prototype.x = function(f) {
-  if (arguments.length) {
-    this.$x = typeof f == "function" ? f : function() { return f; };
-    return this;
-  }
-  return this.$x;
+  this.$x = typeof f == "function" ? f : function() { return f; };
+  return this;
 };
 
 /**
@@ -212,11 +202,8 @@ pv.Layout.Stack.prototype.x = function(f) {
  * @returns this.
  */
 pv.Layout.Stack.prototype.y = function(f) {
-  if (arguments.length) {
-    this.$y = typeof f == "function" ? f : function() { return f; };
-    return this;
-  }
-  return this.$y;
+  this.$y = typeof f == "function" ? f : function() { return f; };
+  return this;
 };
 
 /**

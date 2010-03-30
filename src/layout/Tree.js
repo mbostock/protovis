@@ -165,7 +165,7 @@ pv.Layout.Tree.prototype.init = function() {
   secondWalk(root, -root.prelim, 0);
 
   /** @private Returns the angle of the given node. */
-  function angle(n) {
+  function midAngle(n) {
     return (orient == "radial") ? n.breadth / depth : 0;
   }
 
@@ -176,7 +176,7 @@ pv.Layout.Tree.prototype.init = function() {
       case "right": return w - n.depth;
       case "top":
       case "bottom": return n.breadth + w / 2;
-      case "radial": return w / 2 + n.depth * Math.cos(angle(n));
+      case "radial": return w / 2 + n.depth * Math.cos(midAngle(n));
     }
   }
 
@@ -187,7 +187,7 @@ pv.Layout.Tree.prototype.init = function() {
       case "right": return n.breadth + h / 2;
       case "top": return n.depth;
       case "bottom": return h - n.depth;
-      case "radial": return h / 2 + n.depth * Math.sin(angle(n));
+      case "radial": return h / 2 + n.depth * Math.sin(midAngle(n));
     }
   }
 
@@ -195,10 +195,10 @@ pv.Layout.Tree.prototype.init = function() {
   root.visitAfter(function(v) {
       v.breadth *= breadth;
       v.depth *= depth;
-      v.angle = angle(v);
+      v.midAngle = midAngle(v);
       v.x = x(v);
       v.y = y(v);
-      if (v.firstChild) v.angle += Math.PI;
+      if (v.firstChild) v.midAngle += Math.PI;
       delete v.breadth;
       delete v.depth;
       delete v.ancestor;

@@ -24,20 +24,16 @@ var vis = new pv.Panel()
     .margin(.5);
 
 vis.add(pv.Layout.Treemap)
-    .data(pv.dom(flare).nodes())
-    .margin(6)
+    .nodes(pv.dom(flare).nodes())
+    .padding(6)
     .round(true)
-  .add(pv.Bar)
+  .node.add(pv.Bar)
     .fillStyle(function(d) d.active ? "lightcoral" : "#ccc")
-    .strokeStyle("#fff")
     .lineWidth(1)
-    .antialias(false)
     .event("mouseover", function(d) (active(d, true), this))
     .event("mouseout", function(d) (active(d, false), this));
 
 vis.render();
-
-window.onresize = function() vis.render();
 
     </script>
   </body>

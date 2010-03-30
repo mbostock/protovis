@@ -11,13 +11,15 @@ var vis = new pv.Panel()
     .width(400)
     .height(1100);
 
-vis.add(pv.Layout.Indent)
-    .data(pv.dom(diamond(3, 4, 4)).nodes())
+var layout = vis.add(pv.Layout.Indent)
+    .nodes(pv.dom(diamond(3, 4, 4)).nodes())
     .breadth(23)
-    .depth(23)
-  .link.add(pv.Line)
-    .strokeStyle("#aaa")
-  .node.add(pv.Dot)
+    .depth(23);
+
+layout.link.add(pv.Line)
+    .strokeStyle("#aaa");
+
+layout.node.add(pv.Dot)
     .size(100)
     .strokeStyle(function(d) d.active ? "#f00" : "#aaa")
     .fillStyle(function(d) d.active ? "#fdd" : "#ddd")
