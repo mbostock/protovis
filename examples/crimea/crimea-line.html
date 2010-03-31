@@ -50,7 +50,6 @@ vis.add(pv.Rule)
     .data(y.ticks())
     .bottom(y)
     .strokeStyle(function(i) i ? "#ccc" : "black")
-    .antialias(false)
   .anchor("right").add(pv.Label)
     .visible(function() !(this.index & 1))
     .textMargin(6);
