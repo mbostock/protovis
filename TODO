@@ -7,6 +7,10 @@ layout/Layout.js
 - standardize which attributes are populated
 - add support for sort() functions as appropriate (e.g., arc)
 
+layout/Stack.js
+- inability to specify custom data property makes forming layers array
+  difficult; consider going back to previous strategy of left / top / data
+
 layout/Force.js
 - smarter default rest length / charge force constant
 - allow customization of simulation parameters (e.g., rest length)
