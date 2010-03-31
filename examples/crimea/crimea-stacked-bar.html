@@ -30,9 +30,10 @@ var vis = new pv.Panel()
     .right(40);
 
 vis.add(pv.Layout.Stack)
-    .layers(causes.map(function(t) crimea.map(function(d) ({x:d.date, y:d[t]}))))
-    .x(function(d) x(d.x))
-    .y(function(d) y(d.y))
+    .layers(causes)
+    .values(crimea)
+    .x(function(d) x(d.date))
+    .y(function(d, t) y(d[t]))
   .layer.add(pv.Bar)
     .antialias(false)
     .width(x.range().band)
@@ -43,7 +44,7 @@ vis.add(pv.Layout.Stack)
     .visible(function() !this.parent.index && !(this.index % 3))
     .textBaseline("top")
     .textMargin(5)
-    .text(function(d) format(d.x));
+    .text(function(d) format(d.date));
 
 vis.add(pv.Rule)
     .data(y.ticks(5))

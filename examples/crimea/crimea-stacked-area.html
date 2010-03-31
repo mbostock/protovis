@@ -30,9 +30,10 @@ var vis = new pv.Panel()
     .right(40);
 
 vis.add(pv.Layout.Stack)
-    .layers(causes.map(function(t) crimea.map(function(d) ({x:d.date, y:d[t]}))))
-    .x(function(d) x(d.x))
-    .y(function(d) y(d.y))
+    .layers(causes)
+    .values(crimea)
+    .x(function(d) x(d.date))
+    .y(function(d, t) y(d[t]))
   .layer.add(pv.Area)
     .fillStyle(fill.by(pv.parent))
     .strokeStyle(function() this.fillStyle().darker())

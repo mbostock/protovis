@@ -23,12 +23,12 @@ pv.Layout.Rollup.prototype = pv.extend(pv.Layout.Network)
     .property("directed", Boolean);
 
 pv.Layout.Rollup.prototype.x = function(f) {
-  this.$x = typeof f == "function" ? f : function() { return f; };
+  this.$x = pv.functor(f);
   return this;
 };
 
 pv.Layout.Rollup.prototype.y = function(f) {
-  this.$y = typeof f == "function" ? f : function() { return f; };
+  this.$y = pv.functor(f);
   return this;
 };
 

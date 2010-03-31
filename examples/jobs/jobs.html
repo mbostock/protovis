@@ -55,16 +55,14 @@ vis.add(pv.Rule)
     .bottom(0);
 
 var area = vis.add(pv.Layout.Stack)
-    .layers(pv.nest(jobs)
-        .key(function(d) d.gender + d.job)
-        .entries()
-        .map(function(d) d.values))
+    .layers(pv.nest(jobs).key(function(d) d.gender + d.job).entries())
+    .values(function(d) d.values)
     .x(function(d) x(d.year))
     .y(function(d) y(d.people))
     .order("reverse")
     .offset("expand")
   .layer.add(pv.Area)
-    .fillStyle(function(d) c(d.gender).alpha(a(sumByJob[d.gender + d.job])));
+    .fillStyle(function(d, p) c(d.gender).alpha(a(sumByJob[p.key])));
 
 vis.render();
 

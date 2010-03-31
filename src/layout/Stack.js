@@ -18,7 +18,8 @@
 pv.Layout.Stack = function() {
   pv.Layout.call(this);
   var none = function() { return null; },
-      prop = {t: none, l: none, r: none, b: none, w: none, h: none};
+      prop = {t: none, l: none, r: none, b: none, w: none, h: none},
+      values;
 
   /** @private Proxy the given property on the layer. */
   function proxy(name) {
@@ -31,7 +32,7 @@ pv.Layout.Stack = function() {
   this.init = function() {
     var data = this.layers(),
         n = data.length,
-        m = data[0].length,
+        m,
         orient = this.orient(),
         horizontal = /^(top|bottom)\b/.test(orient),
         h = this.parent[horizontal ? "height" : "width"](),
@@ -39,24 +40,29 @@ pv.Layout.Stack = function() {
         y = [],
         dy = [];
 
-    /* Iterate over the data, evaluating the x and y functions. */
+    /* Iterate over the data, evaluating the values, x and y functions. */
     var stack = pv.Mark.stack;
-    stack.unshift(null, null);
+    stack.unshift(null);
+    values = [];
     for (var i = 0; i < n; i++) {
       dy[i] = [];
       y[i] = [];
-      this.index = i;
-      stack[1] = data[i];
+      pv.Mark.prototype.index = this.index = i;
+      stack[0] = data[i];
+      values[i] = this.$values.apply(this, stack);
+      if (!i) m = values[i].length;
+      stack.unshift(null);
       for (var j = 0; j < m; j++) {
-        stack[0] = data[i][j];
+        stack[0] = values[i][j];
         pv.Mark.prototype.index = this.layer.index = j;
         if (!i) x[j] = this.$x.apply(this.layer, stack);
         dy[i][j] = this.$y.apply(this.layer, stack);
       }
+      stack.shift();
     }
     delete this.layer.index;
     delete this.index;
-    stack.splice(0, 2);
+    stack.shift();
 
     /* order */
     var index;
@@ -156,7 +162,7 @@ pv.Layout.Stack = function() {
   };
 
   (this.layer = new pv.Mark()
-      .data(pv.identity)
+      .data(function() { return values[this.parent.index]; })
       .top(proxy("t"))
       .left(proxy("l"))
       .right(proxy("r"))
@@ -180,7 +186,7 @@ pv.Layout.Stack.prototype.defaults = new pv.Layout.Stack()
     .data(function() { return this.layers(); });
 
 /**
- * The x function; determines the position of the sample within the layer.  This
+ * The x function; determines the position of the value within the layer.  This
  * typically corresponds to the independent variable. For example, with the
  * default "bottom-left" orientation, this function defines the "left" property.
  *
@@ -188,12 +194,12 @@ pv.Layout.Stack.prototype.defaults = new pv.Layout.Stack()
  * @returns this.
  */
 pv.Layout.Stack.prototype.x = function(f) {
-  this.$x = typeof f == "function" ? f : function() { return f; };
+  this.$x = pv.functor(f);
   return this;
 };
 
 /**
- * The y function; determines the thickness of the layer at the given sample.
+ * The y function; determines the thickness of the layer at the given value.
  * This typically corresponds to the dependent variable. For example, with the
  * default "bottom-left" orientation, this function defines the "height"
  * property.
@@ -202,7 +208,22 @@ pv.Layout.Stack.prototype.x = function(f) {
  * @returns this.
  */
 pv.Layout.Stack.prototype.y = function(f) {
-  this.$y = typeof f == "function" ? f : function() { return f; };
+  this.$y = pv.functor(f);
+  return this;
+};
+
+/** @private The default value function; identity. */
+pv.Layout.Stack.prototype.$values = pv.identity;
+
+/**
+ * The values function; determines the values for a given layer. The default
+ * value is the identity function.
+ *
+ * @param {function} f the values function.
+ * @returns this.
+ */
+pv.Layout.Stack.prototype.values = function(f) {
+  this.$values = pv.functor(f);
   return this;
 };
 
@@ -226,7 +247,7 @@ pv.Layout.Stack.prototype.y = function(f) {
  * <li>right-bottom == right
  *
  * </ul>. The default value is "bottom-left", which means that the layers will
- * be built from the bottom-up, and the samples within layers will be laid out
+ * be built from the bottom-up, and the values within layers will be laid out
  * from left-to-right.
  *
  * <p>Note that with non-zero baselines, some orientations may give similar
