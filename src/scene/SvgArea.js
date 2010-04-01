@@ -44,7 +44,8 @@ pv.SvgScene.area = function(scenes) {
   }
 
   function pathCurve(i, j) {
-    var pointsT = [], pointsB = [];
+    var pointsT = [], pointsB = [],
+        pathT, pathB;
     for (var k = j; i <= k; i++, j--) {
       var si = scenes[i],
           sj = scenes[j];
@@ -52,8 +53,18 @@ pv.SvgScene.area = function(scenes) {
       pointsT.push(pv.vector(si.left, si.top));
       pointsB.push(pv.vector(sj.left + sj.width, sj.top + sj.height));
     }
-    return pointsT[0].x + "," + pointsT[0].y + pv.SvgScene.curvePathCardinal(pointsT, s.tension)
-     +"L"+ pointsB[0].x + "," + pointsB[0].y + pv.SvgScene.curvePathCardinal(pointsB, s.tension);
+    if(s.interpolate == "basis") {
+      pathT = pv.SvgScene.curvePathBasis(pointsT)
+      pathB = pv.SvgScene.curvePathBasis(pointsB);
+    } else if (s.interpolate == "cardinal") {
+      pathT = pv.SvgScene.curvePathCardinal(pointsT, s.tension)
+      pathB = pv.SvgScene.curvePathCardinal(pointsB, s.tension);
+    } else { // if (s.interpolate == "monotone") {
+      pathT = pv.SvgScene.curvePathMonotone(pointsT)
+      pathB = pv.SvgScene.curvePathMonotone(pointsB);
+    }
+    return pointsT[0].x + "," + pointsT[0].y + pathT
+     +"L"+ pointsB[0].x + "," + pointsB[0].y + pathB;
   }
 
   /* points */
@@ -65,7 +76,7 @@ pv.SvgScene.area = function(scenes) {
     }
     if (i && (s.interpolate != "step-after")) i--;
     if ((j < scenes.length) && (s.interpolate != "step-before")) j++;
-    if (s.interpolate == "cardinal") {
+    if (j - i > 2 && (s.interpolate == "basis" || s.interpolate == "cardinal" || s.interpolate == "monotone")) {
       d.push(pathCurve(i, j - 1));
     } else {
       d.push(path(i, j - 1));
