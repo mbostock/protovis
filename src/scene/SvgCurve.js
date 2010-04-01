@@ -148,6 +148,7 @@ pv.SvgScene.curvePathMonotone = function(points) {
   var tangents = [],
       d = [],
       m = [],
+      dx = [],
       k = 0,
       ignore = [];
 
@@ -158,10 +159,13 @@ pv.SvgScene.curvePathMonotone = function(points) {
 
   // Initialize the tangents at every data point as the average of the secants
   m[0] = d[0];
+  dx[0] = Math.abs(points[1].x - points[0].x);
   for(k = 1; k < points.length - 1; k++) {
     m[k] = (d[k-1]+d[k])/2;
+    dx[k] = Math.abs(points[k+1].x - points[k-1].x)/2;
   }
   m[k] = d[k-1];
+  dx[k] = Math.abs(points[k].x - points[k-1].x);
 
   // Step 3
   for(k = 0; k < points.length - 1; k++) {
@@ -195,7 +199,7 @@ pv.SvgScene.curvePathMonotone = function(points) {
 
   var ep = '';
   for(var i = 0; i < points.length; i++) {
-    var ti = pv.vector(1, m[i]).norm().times(20);
+    var ti = pv.vector(1, m[i]).norm().times(dx[i]/3);
     tangents.push(ti);
     ep += "M" + points[i].x + "," + points[i].y + "L" + (points[i].x + ti.x) + "," + (points[i].y + ti.y);
   }
