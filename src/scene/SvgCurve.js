@@ -42,6 +42,12 @@ pv.SvgScene.pathBasis = (function() {
     };
 })();
 
+/**
+ * @private Interpolates the given points using the basis spline interpolation.
+ * Returns an SVG path without the leading M instruction to allow path appending.
+ *
+ * @param points the array of points.
+ */
 pv.SvgScene.curvePathBasis = function(points) {
   if(points.length <= 2) return '';
   var path = '',
@@ -64,6 +70,14 @@ pv.SvgScene.curvePathBasis = function(points) {
   return path;
 };
 
+/**
+ * @private Interpolates the given points with respective tangents using the cubic
+ * Hermite spline interpolation.
+ * Returns an SVG path without the leading M instruction to allow path appending.
+ *
+ * @param points the array of points.
+ * @param tangents the array of tangent vectors.
+ */
 pv.SvgScene.curvePathHermite = function(points, tangents) {
   if(points.length != tangents.length) return '';
   var path = '',
@@ -94,6 +108,13 @@ pv.SvgScene.curvePathHermite = function(points, tangents) {
   return path;
 };
 
+/**
+ * @private Interpolates the given points using cardinal spline interpolation.
+ * Returns an SVG path without the leading M instruction to allow path appending.
+ *
+ * @param points the array of points.
+ * @param tension the tension of hte cardinal spline.
+ */
 pv.SvgScene.curvePathCardinal = function(points, tension) {
   if(points.length <= 2) return '';
   var tangents = [];
@@ -113,6 +134,15 @@ pv.SvgScene.curvePathCardinal = function(points, tension) {
   return this.curvePathHermite(points, tangents);
 };
 
+/**
+ * @private Interpolates the given points using Fritsch-Carlson Monotone cubic
+ * Hermite interpolation.
+ * Returns an SVG path without the leading M instruction to allow path appending.
+ *
+ * Note: this is the test case unoptimised version, a prototype.
+ *
+ * @param points the array of points.
+ */
 pv.SvgScene.curvePathMonotone = function(points) {
   if(points.length <= 2) return '';
   var tangents = [],
@@ -173,6 +203,15 @@ pv.SvgScene.curvePathMonotone = function(points) {
   return this.curvePathHermite(points, tangents);// + ep;
 };
 
+/**
+ * @private Interpolates the given points using Fritsch-Carlson Monotone cubic
+ * Hermite interpolation.
+ * Returns an SVG path without the leading M instruction to allow path appending.
+ *
+ * Note: this is the optimised version that is not working yet
+ *
+ * @param points the array of points.
+ */
 pv.SvgScene.curvePathMonotoneOpt = function(points) {
   if(points.length <= 2) return '';
   var tangents = [],

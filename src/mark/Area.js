@@ -111,7 +111,10 @@ pv.Area.prototype.type = "area";
  * How to interpolate between values. Linear interpolation ("linear") is the
  * default, producing a straight line between points. For piecewise constant
  * functions (i.e., step functions), either "step-before" or "step-after" can be
- * specified.
+ * specified. To draw a clockwise circular arc between points, specify "polar";
+ * to draw a counterclockwise circular arc between points, specify
+ * "polar-reverse". To draw open uniform b-splines, specify "basis". To draw
+ * cardinal splines, specify "cardinal"; see also {@link #tension}.
  *
  * <p>This property is <i>fixed</i>. See {@link pv.Mark}.
  *
