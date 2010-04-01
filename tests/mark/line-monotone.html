@@ -1,17 +1,15 @@
 <html>
   <head>
-    <title>Splines</title>
+    <title>Monotone curve</title>
     <script type="text/javascript" src="../../protovis-d3.2.js"></script>
   </head>
   <body>
     <script type="text/javascript+protovis">
 
-var data = pv.range(0, 10, .5).map(function(x) {
-        return {x: x, y: Math.sin(x) + Math.random() + 2};
-      }),
-    w = 800,
+var data = [4.0, 3.9, 3.0, 2.5, 1.0, 1.0, 1.0, 0.7, 0.2, 0.1],
+    w = 600,
     h = 400,
-    x = pv.Scale.linear(data, function(d) d.x).range(0, w),
+    x = pv.Scale.linear(0, data.length+1).range(0, w),
     y = pv.Scale.linear(0, 4.5).range(0, h);
 
 var vis = new pv.Panel()
@@ -38,25 +36,17 @@ vis.add(pv.Rule)
 
 vis.add(pv.Line)
     .data(data)
-    .left(function(d) x(d.x))
-    .bottom(function(d) y(d.y))
-    .interpolate("basis")
-    .strokeStyle("#3f3")
-    .lineWidth(2);
-
-vis.add(pv.Line)
-    .data(data)
-    .left(function(d) x(d.x))
-    .bottom(function(d) y(d.y))
-    .interpolate("cardinal")
-    .tension(0.5)
-    .strokeStyle("#f33")
+    .left(function() x(this.index+1))
+    .bottom(y)
+    .interpolate("monotone")
+    .strokeStyle("#33f")
     .lineWidth(2);
 
 vis.add(pv.Dot)
     .data(data)
-    .left(function(d) x(d.x))
-    .bottom(function(d) y(d.y));
+    .left(function() x(this.index+1))
+    .bottom(y)
+    .strokeStyle("#f33");
 
 vis.render();
 

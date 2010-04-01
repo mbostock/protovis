@@ -29,6 +29,7 @@ JS_CORE_FILES = \
 	src/color/Colors.js \
 	src/color/Ramp.js \
 	src/scene/SvgScene.js \
+	src/scene/SvgCurve.js \
 	src/scene/SvgArea.js \
 	src/scene/SvgBar.js \
 	src/scene/SvgDot.js \
