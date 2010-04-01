@@ -98,15 +98,15 @@ pv.SvgScene.curvePathCardinal = function(scenes, from, to, tension) {
   if(to - from < 2) return '';
   var tangents = [];
   var a = (1 - tension) / 2,
-      s0 = scenes[from],
-      s1 = scenes[from+1],
-      s2 = scenes[from+2];
-  tangents.push(pv.vector(s1.left - s0.left, s1.top - s0.top).times(a));
+      s0 = undefined,
+      s1 = scenes[from],
+      s2 = scenes[from+1];
+  tangents.push(pv.vector(s2.left - s1.left, s2.top - s1.top).times(a));
   for (var i = from+2; i <= to; i++) {
-    tangents.push(pv.vector(s2.left - s0.left, s2.top - s0.top).times(a));
     s0 = s1;
     s1 = s2;
     s2 = scenes[i];
+    tangents.push(pv.vector(s2.left - s0.left, s2.top - s0.top).times(a));
   }
   tangents.push(pv.vector(s2.left - s1.left, s2.top - s1.top).times(a));
 
