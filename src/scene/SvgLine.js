@@ -13,12 +13,19 @@ pv.SvgScene.line = function(scenes) {
 
   /* points */
   var d = "M" + s.left + "," + s.top;
-  if (s.interpolate == "basis" && scenes.length > 2) {
-    d += this.curvePathBasis(scenes, 0, scenes.length-1);
-  } else if (s.interpolate == "cardinal" && scenes.length > 2) {
-    d += this.curvePathCardinal(scenes, 0, scenes.length-1, s.tension);
-  } else if (s.interpolate == "monotone" && scenes.length > 2) {
-    d += this.curvePathMonotone(scenes, 0, scenes.length-1);
+
+  if (scenes.length > 2 && (s.interpolate == "basis" || s.interpolate == "cardinal" || s.interpolate == "monotone")) {
+    var points = [];
+    scenes.forEach(function(scene) {
+      points.push(pv.vector(scene.left, scene.top));
+    });
+    if(s.interpolate == "basis") {
+      d += this.curvePathBasis(points);
+    } else if (s.interpolate == "cardinal") {
+      d += this.curvePathCardinal(points, s.tension);
+    } else { // if (s.interpolate == "monotone") {
+      d += this.curvePathMonotone(points);
+    }
   } else {
     for (var i = 1; i < scenes.length; i++) {
       d += this.pathSegment(scenes[i - 1], scenes[i]);

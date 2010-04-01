@@ -2,10 +2,10 @@
  * @private Converts the specified b-spline curve segment to a bezier curve
  * compatible with SVG "C".
  *
- * @param s0 the first control point.
- * @param s1 the second control point.
- * @param s2 the third control point.
- * @param s3 the fourth control point.
+ * @param p0 the first control point.
+ * @param p1 the second control point.
+ * @param p2 the third control point.
+ * @param p3 the fourth control point.
  */
 pv.SvgScene.pathBasis = (function() {
 
@@ -25,96 +25,96 @@ pv.SvgScene.pathBasis = (function() {
    * using the specified weights. This method requires that there are four
    * weights and four control points.
    */
-  function weight(w, s1, s2, s3, s4) {
-    return {
-      x:(w[0] * s1.left + w[1] * s2.left + w[2] * s3.left + w[3] * s4.left),
-      y:(w[0] * s1.top  + w[1] * s2.top  + w[2] * s3.top  + w[3] * s4.top )
-    };
+  function weight(w, p1, p2, p3, p4) {
+    return pv.vector(
+      (w[0] * p1.x + w[1] * p2.x + w[2] * p3.x + w[3] * p4.x),
+      (w[0] * p1.y + w[1] * p2.y + w[2] * p3.y + w[3] * p4.y)
+    );
   }
 
-  return function(s0, s1, s2, s3) {
-      var b1 = weight(basis[1], s0, s1, s2, s3),
-          b2 = weight(basis[2], s0, s1, s2, s3),
-          b3 = weight(basis[3], s0, s1, s2, s3);
+  return function(p0, p1, p2, p3) {
+      var b1 = weight(basis[1], p0, p1, p2, p3),
+          b2 = weight(basis[2], p0, p1, p2, p3),
+          b3 = weight(basis[3], p0, p1, p2, p3);
       return "C" + b1.x + "," + b1.y
           + "," + b2.x + "," + b2.y
           + "," + b3.x + "," + b3.y;
     };
 })();
 
-pv.SvgScene.curvePathBasis = function(scenes, from, to) {
-  if(to - from < 2) return '';
+pv.SvgScene.curvePathBasis = function(points) {
+  if(points.length <= 2) return '';
   var path = '',
-      s0 = scenes[from],
-      s1 = s0,
-      s2 = s0,
-      s3 = scenes[from+1];
-  path += this.pathBasis(s0, s1, s2, s3);
-  for (var i = from+2; i <= to; i++) {
-    s0 = s1;
-    s1 = s2;
-    s2 = s3;
-    s3 = scenes[i];
-    path += this.pathBasis(s0, s1, s2, s3);
+      p0 = points[0],
+      p1 = p0,
+      p2 = p0,
+      p3 = points[1];
+  path += this.pathBasis(p0, p1, p2, p3);
+  for (var i = 2; i < points.length; i++) {
+    p0 = p1;
+    p1 = p2;
+    p2 = p3;
+    p3 = points[i];
+    path += this.pathBasis(p0, p1, p2, p3);
   }
   // cycle through to get the last point
-  path += this.pathBasis(s1, s2, s3, s3);
-  path += this.pathBasis(s2, s3, s3, s3);
+  path += this.pathBasis(p1, p2, p3, p3);
+  path += this.pathBasis(p2, p3, p3, p3);
 
   return path;
 };
 
-pv.SvgScene.curvePathHermite = function(scenes, from, to, tangents) {
-  if(to - from + 1 != tangents.length) return '';
+pv.SvgScene.curvePathHermite = function(points, tangents) {
+  if(points.length != tangents.length) return '';
   var path = '',
-      s0 = scenes[from],
-      s1 = scenes[from+1],
-      s2 = scenes[from+2],
+      p0 = points[0],
+      p1 = points[1],
+      p2 = points[2],
       ta = tangents[0],
       tb = tangents[1];
-  path += "C" + (s0.left + ta.x)
-        + "," + (s0.top + ta.y)
-        + "," + (s1.left - tb.x)
-        + "," + (s1.top - tb.y)
-        + "," + s1.left + "," + s1.top;
-  for (var i = from+3, t = 2; i <= to; i++, t++) {
-    s0 = s1;
-    s1 = s2;
-    s2 = scenes[i];
+  path += "C" + (p0.x + ta.x)
+        + "," + (p0.y + ta.y)
+        + "," + (p1.x - tb.x)
+        + "," + (p1.y - tb.y)
+        + "," + p1.x + "," + p1.y;
+  for (var i = 0+3, t = 2; i < points.length; i++, t++) {
+    p0 = p1;
+    p1 = p2;
+    p2 = points[i];
     tb = tangents[t];
-    path += "S" + (s1.left - tb.x)
-          + "," + (s1.top - tb.y)
-          + "," + s1.left + "," + s1.top;
+    path += "S" + (p1.x - tb.x)
+          + "," + (p1.y - tb.y)
+          + "," + p1.x + "," + p1.y;
   }
   tb = tangents[t];
-  path += "S" + (s2.left - tb.x)
-        + "," + (s2.top - tb.y)
-        + "," + s2.left + "," + s2.top;
+  path += "S" + (p2.x - tb.x)
+        + "," + (p2.y - tb.y)
+        + "," + p2.x + "," + p2.y;
 
   return path;
 };
 
-pv.SvgScene.curvePathCardinal = function(scenes, from, to, tension) {
-  if(to - from < 2) return '';
+pv.SvgScene.curvePathCardinal = function(points, tension) {
+  if(points.length <= 2) return '';
   var tangents = [];
   var a = (1 - tension) / 2,
-      s0 = undefined,
-      s1 = scenes[from],
-      s2 = scenes[from+1];
-  tangents.push(pv.vector(s2.left - s1.left, s2.top - s1.top).times(a));
-  for (var i = from+2; i <= to; i++) {
-    s0 = s1;
-    s1 = s2;
-    s2 = scenes[i];
-    tangents.push(pv.vector(s2.left - s0.left, s2.top - s0.top).times(a));
+      p0 = undefined,
+      p1 = points[0],
+      p2 = points[1];
+  tangents.push(pv.vector(p2.x - p1.x, p2.y - p1.y).times(a));
+  for (var i = 2; i < points.length; i++) {
+    p0 = p1;
+    p1 = p2;
+    p2 = points[i];
+    tangents.push(pv.vector(p2.x - p0.x, p2.y - p0.y).times(a));
   }
-  tangents.push(pv.vector(s2.left - s1.left, s2.top - s1.top).times(a));
+  tangents.push(pv.vector(p2.x - p1.x, p2.y - p1.y).times(a));
 
-  return this.curvePathHermite(scenes, from, to, tangents);
+  return this.curvePathHermite(points, tangents);
 };
 
-pv.SvgScene.curvePathMonotone = function(scenes, from, to) {
-  if(to - from < 2) return '';
+pv.SvgScene.curvePathMonotone = function(points) {
+  if(points.length <= 2) return '';
   var tangents = [],
       d = [],
       m = [],
@@ -122,19 +122,19 @@ pv.SvgScene.curvePathMonotone = function(scenes, from, to) {
       ignore = [];
 
   // Compute the slopes of the secant lines between successive points
-  for(k = 0; k < scenes.length-1; k++) {
-    d[k] = (scenes[k+1].top - scenes[k].top)/(scenes[k+1].left - scenes[k].left);
+  for(k = 0; k < points.length-1; k++) {
+    d[k] = (points[k+1].y - points[k].y)/(points[k+1].x - points[k].x);
   }
 
   // Initialize the tangents at every data point as the average of the secants
   m[0] = d[0];
-  for(k = 1; k < scenes.length - 1; k++) {
+  for(k = 1; k < points.length - 1; k++) {
     m[k] = (d[k-1]+d[k])/2;
   }
   m[k] = d[k-1];
 
   // Step 3
-  for(k = 0; k < scenes.length-1; k++) {
+  for(k = 0; k < points.length - 1; k++) {
     if(d[k] == 0) {
       m[ k ] = 0;
       m[k+1] = 0;
@@ -144,7 +144,7 @@ pv.SvgScene.curvePathMonotone = function(scenes, from, to) {
   }
 
   // Step 4 + 5
-  for(k = 0; k < scenes.length-1; k++) {
+  for(k = 0; k < points.length-1; k++) {
     if(ignore[k]) continue;
     var ak = m[ k ]/d[k];
     var bk = m[k+1]/d[k];
@@ -164,30 +164,30 @@ pv.SvgScene.curvePathMonotone = function(scenes, from, to) {
   }
 
   var ep = '';
-  for(var i = 0; i < scenes.length; i++) {
+  for(var i = 0; i < points.length; i++) {
     var ti = pv.vector(1, m[i]).norm().times(20);
     tangents.push(ti);
-    ep += "M" + scenes[i].left + "," + scenes[i].top + "L" + (scenes[i].left + ti.x) + "," + (scenes[i].top + ti.y);
+    ep += "M" + points[i].x + "," + points[i].y + "L" + (points[i].x + ti.x) + "," + (points[i].y + ti.y);
   }
 
-  return this.curvePathHermite(scenes, from, to, tangents);// + ep;
+  return this.curvePathHermite(points, tangents);// + ep;
 };
 
-pv.SvgScene.curvePathMonotoneOpt = function(scenes, from, to) {
-  if(to - from < 2) return '';
+pv.SvgScene.curvePathMonotoneOpt = function(points) {
+  if(points.length <= 2) return '';
   var tangents = [],
       m = [],
-      s0 = scenes[0],
-      s1 = scenes[1],
+      p0 = points[0],
+      p1 = points[1],
       dp = 0,
-      dk = (s1.top - s0.top)/(s1.left - s0.left);
+      dk = (p1.y - p0.y)/(p1.x - p0.x);
   m.push(dk);
-  for(var k = 1; k < scenes.length; k++) {
-    s0 = s1;
-    s1 = scenes[k];
+  for(var k = 1; k < points.length; k++) {
+    p0 = p1;
+    p1 = points[k];
     dp = dk;
-    if(s1.top != s0.top) {
-      dk = (s1.top - s0.top)/(s1.left - s0.left);
+    if(p1.y != p0.y) {
+      dk = (p1.y - p0.y)/(p1.x - p0.x);
       m.push((dp + dk)/2);
     } else {
       dk = 0;
@@ -196,9 +196,9 @@ pv.SvgScene.curvePathMonotoneOpt = function(scenes, from, to) {
     }
 
   }
-  for(var i = 0; i < scenes.length; i++) {
+  for(var i = 0; i < points.length; i++) {
     tangents.push(pv.vector(1, m[i]).times(20));
   }
 
-  return this.curvePathHermite(scenes, from, to, tangents);
+  return this.curvePathHermite(points, tangents);
 };
