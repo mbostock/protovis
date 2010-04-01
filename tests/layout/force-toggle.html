@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Flare Force</title>
+    <title>Miserables Force</title>
     <script type="text/javascript" src="../../protovis-d3.2.js"></script>
     <script type="text/javascript" src="../flare.js"></script>
     <style type="text/css">
@@ -14,6 +14,13 @@ body {
   <body>
     <script type="text/javascript+protovis">
 
+var root = pv.dom(flare).root("flare");
+root.toggle(true);
+root.toggle();
+
+var drag = pv.Behavior.drag(),
+    dragged = false; // ignore clicks when dragging
+
 var vis = new pv.Panel()
     .width(window.innerWidth)
     .height(window.innerHeight)
@@ -22,16 +29,18 @@ var vis = new pv.Panel()
     .event("mousewheel", pv.Behavior.zoom());
 
 var layout = vis.add(pv.Layout.Force)
-    .nodes(pv.dom(flare).nodes())
+    .nodes(root.nodes())
     .links(pv.Layout.Hierarchy.links);
 
 layout.link.add(pv.Line);
 
 layout.node.add(pv.Dot)
-    .title(function(d) d.nodeName)
-    .size(function(d) (d.nodeValue / 100) || 10)
-    .fillStyle(function(d) d.fix ? "orange" : (d.firstChild ? "steelblue" : "white"))
-    .event("mousedown", pv.Behavior.drag());
+    .title(function(n) n.nodeName)
+    .size(function(n) (n.nodeValue / 100) || 10)
+    .fillStyle(function(n) n.toggled ? "#1f77b4" : n.firstChild ? "#aec7e8" : "#ff7f0e")
+    .event("mousedown", function() (dragged = false, drag.apply(this, arguments)))
+    .event("mousemove", function() dragged = true)
+    .event("click", function(n) (dragged || n.toggle(pv.event.altKey), layout.nodes(root.nodes()).cache(false)));
 
 vis.render();
 

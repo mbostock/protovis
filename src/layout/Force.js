@@ -1,4 +1,4 @@
-
+/** @class Force-directed network layout. */
 pv.Layout.Force = function() {
   pv.Layout.Network.call(this);
   /* Force-directed graphs can be messy, so reduce the link width. */
@@ -12,18 +12,29 @@ pv.Layout.Force.prototype = pv.extend(pv.Layout.Network)
 
 /** @private Initialize the physics simulation. */
 pv.Layout.Force.prototype.init = function() {
-  if (pv.Layout.Network.prototype.init.call(this)) return;
-  var nodes = this.nodes(), links = this.links();
 
-  /* Initialize positions using a random walk from the center. */
-  var w = this.parent.width(),
-      h = this.parent.height(),
-      x = w / 2,
-      y = h / 2;
-  for (var i = 0; i < nodes.length; i++) {
-    var n = nodes[i], angle = Math.random() * 2 * Math.PI;
-    n.x = x += 10 * (w / h) * Math.cos(angle);
-    n.y = y += 10 * (h / w) * Math.sin(angle);
+  /* Any cached interactive layouts need to be rebound for the timer. */
+  if (pv.Layout.Network.prototype.init.call(this)) {
+    var f = this.scene.$force;
+    if (f) {
+      f.next = this.binds.$force;
+      this.binds.$force = f;
+    }
+    return;
+  }
+
+  var that = this,
+      nodes = that.nodes(),
+      links = that.links(),
+      k = this.iterations(),
+      x = that.parent.width() / 2,
+      y = that.parent.height() / 2;
+
+  /* Initialize positions randomly near the center. */
+  for (var i = 0, n; i < nodes.length; i++) {
+    n = nodes[i];
+    if (isNaN(n.x)) n.x = x + Math.random() - .5;
+    if (isNaN(n.y)) n.y = y + Math.random() - .5;
   }
 
   /* Initialize the simulation. */
@@ -31,10 +42,16 @@ pv.Layout.Force.prototype.init = function() {
   sim.force(pv.Force.drag());
   sim.force(pv.Force.charge());
   sim.force(pv.Force.spring().links(links));
+  sim.constraint(pv.Constraint.position());
 
   /* Optionally add bound constraint. TODO: better padding. */
   if (this.bound()) {
     sim.constraint(pv.Constraint.bound().x(6, w - 6).y(6, h - 6));
+  }
+
+  /** @private Returns the speed of the given node, to determine cooling. */
+  function speed(n) {
+    return n.fix ? 1 : n.vx * n.vx + n.vy * n.vy;
   }
 
   /*
@@ -45,20 +62,31 @@ pv.Layout.Force.prototype.init = function() {
    * is fixed for interactivity, treat this as a high speed and resume
    * simulation.
    */
-  var n = this.iterations();
-  if (n == null) {
-    function speed(n) { return n.fixed ? 1 : n.vx * n.vx + n.vy * n.vy; }
+  if (k == null) {
+    sim.step(); // compute initial previous velocities
     sim.step(); // compute initial velocities
-    var v = 1, min = 1e-4 * (links.length + 1), parent = this.parent;
-    setInterval(function() {
-        if (v > min) {
+
+    /* Add the simulation state to the bound list. */
+    var force = this.scene.$force = this.binds.$force = {
+      next: this.binds.$force,
+      nodes: nodes,
+      min: 1e-4 * (links.length + 1),
+      sim: sim
+    };
+
+    /* Start the timer, if not already started. */
+    if (!this.$timer) this.$timer = setInterval(function() {
+      var render = false;
+      for (var f = that.binds.$force; f; f = f.next) {
+        if (pv.max(f.nodes, speed) > f.min) {
           var then = Date.now();
-          do { sim.step(); } while (Date.now() - then < 20);
-          parent.render();
+          do { f.sim.step(); } while (Date.now() - then < 20);
+          render = true;
         }
-        v = pv.max(nodes, speed);
-      }, 42);
-  } else for (var i = 0; i < n; i++) {
+      }
+      if (render) that.parent.render();
+    }, 42);
+  } else for (var i = 0; i < k; i++) {
     sim.step();
   }
 };

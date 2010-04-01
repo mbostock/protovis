@@ -115,7 +115,6 @@ pv.Simulation.prototype.step = function() {
     var px = p.px, py = p.py;
     p.px = p.x;
     p.py = p.y;
-    if (p.fixed) continue;
     p.x += p.vx = ((p.x - px) + p.fx);
     p.y += p.vy = ((p.y - py) + p.fy);
   }
@@ -125,12 +124,4 @@ pv.Simulation.prototype.step = function() {
   for (c = this.constraints; c; c = c.next) c.apply(this.particles, q);
   for (p = this.particles; p; p = p.next) p.fx = p.fy = 0;
   for (f = this.forces; f; f = f.next) f.apply(this.particles, q);
-
-  /* Restore fixed positions, if necessary. */
-  for (p = this.particles; p; p = p.next) {
-    if (p.fixed) {
-      p.x = p.px;
-      p.y = p.py;
-    }
-  }
 };

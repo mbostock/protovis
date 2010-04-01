@@ -31,7 +31,7 @@ layout.link.add(pv.Line);
 
 layout.node.add(pv.Dot)
     .size(function(d) (d.linkDegree + 4) * Math.pow(this.scale, -1.5))
-    .fillStyle(function(d) d.fixed ? "brown" : color(d))
+    .fillStyle(function(d) d.fix ? "brown" : color(d))
     .strokeStyle(function() this.fillStyle().darker())
     .title(function(d) d.nodeName)
     .event("mousedown", pv.Behavior.drag());

@@ -22,6 +22,7 @@ pv.Behavior.select = function(f) {
         r.y = Math.max(0, Math.min(m1.y, m2.y));
         r.dx = Math.min(this.width(), Math.max(m2.x, m1.x)) - r.x;
         r.dy = Math.min(this.height(), Math.max(m2.y, m1.y)) - r.y;
+        this.render();
       });
   }
 

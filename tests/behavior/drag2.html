@@ -24,12 +24,10 @@ vis.add(pv.Bar)
     .width(function(d) d.dx)
     .strokeStyle("#1f77b4")
     .fillStyle("#aec7e8")
+    .cursor("ew-resize")
     .event("mousedown", pv.Behavior.drag());
 
 vis.render();
-
-/* Hack! Drag behavior should support re-rendering. */
-pv.listen(window, "mousemove", function() vis.render());
 
     </script>
   </body>
