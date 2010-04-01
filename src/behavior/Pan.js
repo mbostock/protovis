@@ -23,7 +23,6 @@ pv.Behavior.pan = function() {
   }
 
   function mouseup() {
-    mousemove();
     scene = null;
   }
 

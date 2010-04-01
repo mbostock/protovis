@@ -22,17 +22,21 @@ pv.Behavior.drag = function() {
         var m = this.mouse();
         p.x = p.fix.x = Math.max(0, Math.min(v1.x + m.x, max.x));
         p.y = p.fix.y = Math.max(0, Math.min(v1.y + m.y, max.y));
-        this.render();
+        this.parent.render();
       });
   }
 
   function mouseup() {
     if (!scene) return;
-    mousemove();
     p.fix = null;
-    scene.mark.context(scene, index, scene.mark.render);
+    scene.mark.context(scene, index, function() { this.parent.render(); });
     scene = null;
   }
+
+  mousedown.render = function(mark) {
+    render = mark;
+    return mousedown;
+  };
 
   pv.listen(window, "mousemove", mousemove);
   pv.listen(window, "mouseup", mouseup);
