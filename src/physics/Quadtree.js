@@ -33,6 +33,7 @@ pv.Quadtree = function(particles) {
    * and [<i>y1</i>, <i>y2</i>].
    */
   function insert(n, p, x1, y1, x2, y2) {
+    if (isNaN(p.x) || isNaN(p.y)) return; // ignore invalid particles
     if (n.leaf) {
       if (n.p) {
         /*
