@@ -98,7 +98,8 @@ pv.Rule.prototype.type = "rule";
 pv.Rule.prototype.defaults = new pv.Rule()
     .extend(pv.Mark.prototype.defaults)
     .lineWidth(1)
-    .strokeStyle("black");
+    .strokeStyle("black")
+    .antialias(false);
 
 /**
  * Constructs a new rule anchor with default properties. Rules support five

@@ -173,7 +173,7 @@ pv.Line.prototype.buildInstance = pv.Area.prototype.buildInstance;
  * @returns {pv.Anchor}
  */
 pv.Line.prototype.anchor = function(name) {
-  return pv.Mark.prototype.anchor.call(this, name)
+  return pv.Area.prototype.anchor.call(this, name)
     .textAlign(function(d) {
         switch (this.name()) {
           case "left": return "right";

@@ -147,3 +147,8 @@ pv.ancestor = function(a, e) {
 pv.id = function() {
   var id = 1; return function() { return id++; };
 }();
+
+/** @private Returns a function wrapping the specified constant. */
+pv.functor = function(v) {
+  return typeof v == "function" ? v : function() { return v; };
+};

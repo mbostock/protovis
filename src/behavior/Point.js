@@ -9,7 +9,7 @@ pv.Behavior.point = function(r) {
   function search(scene, index) {
     var s = scene[index],
         point = {cost: Infinity};
-    for (var i = 0, n = s.children.length; i < n; i++) {
+    for (var i = 0, n = s.visible && s.children.length; i < n; i++) {
       var child = s.children[i], mark = child.mark, p;
       if (mark.type == "panel") {
         mark.scene = child;

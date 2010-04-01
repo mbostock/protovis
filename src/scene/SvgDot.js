@@ -53,6 +53,7 @@ pv.SvgScene.dot = function(scenes) {
     var svg = {
       "shape-rendering": s.antialias ? null : "crispEdges",
       "pointer-events": s.events,
+      "cursor": s.cursor,
       "fill": fill.color,
       "fill-opacity": fill.opacity || null,
       "stroke": stroke.color,

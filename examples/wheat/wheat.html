@@ -1,0 +1,130 @@
+<html>
+  <head>
+    <title>Wheat &amp; Wages</title>
+    <link type="text/css" rel="stylesheet" href="../ex.css"/>
+    <script type="text/javascript" src="../../protovis-r3.2.js"></script>
+    <script type="text/javascript" src="wheat.js"></script>
+    <style type="text/css">
+
+body {
+  font: oblique small baskerville;
+}
+
+#fig {
+  width: 860px;
+  height: 465px;
+}
+
+#title {
+  position: absolute;
+  top: 70px;
+  left: 200px;
+  padding: 10px;
+  background: white;
+}
+
+large {
+  font-size: medium;
+}
+
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <center id="title">
+      <large><b>CHART</b>,<br>
+      Shewing at One View<br>
+      The Price of The Quarter of Wheat,</large><br> &amp;
+      Wages of Labour by the Week,<br>
+      from The Year 1565 to 1821,<br>
+      by WILLIAM PLAYFAIR
+    </center>
+    <script type="text/javascript+protovis">
+
+var w = 860 - 60,
+    h = 465 - 20,
+    x = pv.Scale.linear(1565, 1821).range(0, w),
+    y = pv.Scale.linear(0, 100).range(0, h);
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .right(60)
+    .bottom(20);
+
+/* Price of The Quarter of Wheat. */
+vis.add(pv.Area)
+    .data(wheat)
+    .interpolate("step-after")
+    .bottom(0)
+    .height(function(d) y(d.wheat))
+    .left(function(d) x(d.year))
+    .fillStyle("#aaa")
+    .strokeStyle("#999")
+  .add(pv.Rule);
+
+/* Weekly Wages of a Good Mechanic. */
+vis.add(pv.Area)
+    .data(wheat.filter(function(d) d.wages))
+    .left(function(d) x(d.year))
+    .bottom(0)
+    .height(function(d) y(d.wages))
+    .fillStyle("hsla(195, 50%, 80%, .75)")
+  .anchor("top").add(pv.Line)
+    .fillStyle(null)
+    .lineWidth(4)
+    .strokeStyle("lightcoral")
+  .add(pv.Line)
+    .top(function() this.proto.top() + 1.5)
+    .lineWidth(1.5)
+    .strokeStyle("black");
+
+vis.add(pv.Label)
+    .left(130).bottom(31)
+    .font("italic 10px serif")
+    .text("Weekly Wages of a Good Mechanic");
+
+/* Y-axis. */
+vis.add(pv.Rule)
+    .bottom(-.5)
+  .add(pv.Rule)
+    .data(pv.range(0, 100, 10))
+    .bottom(y)
+    .strokeStyle("rgba(255, 255, 255, .2)")
+  .anchor("right").add(pv.Label)
+    .visible(function() !(this.index & 1))
+    .text(function(s) s + (s ? "" : " shillings"));
+
+/* X-axis. */
+vis.add(pv.Rule)
+    .data(pv.range(1560, 1830, 10))
+    .bottom(0)
+    .left(x)
+    .height(-4)
+  .add(pv.Rule)
+    .data(pv.range(1600, 1850, 50))
+    .height(null)
+    .top(0)
+    .strokeStyle("rgba(0, 0, 0, .2)")
+  .anchor("bottom").add(pv.Label)
+    .textMargin(8);
+
+/* Monarchs. */
+vis.add(pv.Bar)
+    .data(monarch)
+    .height(5)
+    .top(function(d) (!d.commonwealth && (this.index % 2)) ? 15 : 10)
+    .fillStyle(function(d) d.commonwealth ? null : "#000")
+    .strokeStyle("#000")
+    .left(function(d) x(d.start))
+    .width(function(d) x(d.end) - x(d.start))
+  .anchor("center").add(pv.Label)
+    .textBaseline("top")
+    .textMargin(6)
+    .font("italic 10px serif")
+    .text(function(d) d.name);
+
+vis.render();
+
+    </script>
+  </div></div></body>
+</html>

@@ -8,9 +8,13 @@ pv.Layout = function() {
 
 pv.Layout.prototype = pv.extend(pv.Panel);
 
-/** @private Defines a local property with the specified name and cast. */
+/**
+ * @private Defines a local def property with the specified name and cast. Note
+ * that although the property method is only defined locally, the cast function
+ * is global, which is necessary since properties are inherited!
+ */
 pv.Layout.prototype.property = function(name, cast) {
-  this.propertyMethod(name, true, cast);
+  this.propertyMethod(name, true, pv.Mark.cast[name] = cast);
   return this;
 };
 

@@ -10,7 +10,6 @@ layout/Layout.js
 layout/Force.js
 - smarter default rest length / charge force constant
 - allow customization of simulation parameters (e.g., rest length)
-- allow dynamic updates to the graph, preserving simulation (add/remove nodes/liks)
 
 layout/Tree.js
 - allow depth and breadth offset to be computed automatically
@@ -24,9 +23,6 @@ mark/Area.js
 mark/Line.js
 - support for "basis" and "cardinal" with segmented lines
 
-behavior/*
-- should behaviors automatically re-render? render hooks (e.g., panel-transform)
-
 behavior/Point.js
 - better support for area, wedge, and bar
 
@@ -37,9 +33,6 @@ behavior/Pan.js
 behavior/Zoom.js
 - specify bounds on zoom level
 - non-uniform zooms (e.g., in time series, zoom time dimension only)?
-
-physics/Simulation.js
-- use a constraint rather than `fixed` property to allow dragging?
 
 text/CsvFormat.js
 - return an object with a .format method, or the format function?

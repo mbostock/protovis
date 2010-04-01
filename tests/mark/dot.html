@@ -6,8 +6,9 @@
   <body>
     <script type="text/javascript+protovis">
 
-var data = pv.range(100).map(Math.random),
-    w = 400,
+var data = pv.range(100).map(Math.random);
+
+var w = 400,
     h = 400,
     x = pv.Scale.linear(0, 99).range(0, w),
     y = pv.Scale.linear(0, 1).range(0, h),
@@ -24,18 +25,18 @@ var vis = new pv.Panel()
 
 vis.add(pv.Rule)
     .data(y.ticks())
-    .bottom(function(d) Math.round(y(d)) - .5)
+    .bottom(y)
     .strokeStyle("#eee")
   .anchor("left").add(pv.Label)
-    .text(function(d) d.toFixed(1));
+    .text(y.tickFormat);
 
 vis.add(pv.Rule)
     .data(x.ticks())
-    .visible(function(d) d > 0)
-    .left(function(d) Math.round(x(d)) - .5)
+    .left(x)
     .strokeStyle("#eee")
   .anchor("bottom").add(pv.Label)
-    .text(function(d) d.toFixed());
+    .visible(function(d) d > 0)
+    .text(x.tickFormat);
 
 vis.add(pv.Dot)
     .data(data)

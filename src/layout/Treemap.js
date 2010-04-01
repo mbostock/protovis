@@ -78,7 +78,7 @@ pv.Layout.Treemap.prototype.padding = function(n) {
 pv.Layout.Treemap.prototype.$size = Number;
 
 pv.Layout.Treemap.prototype.size = function(f) {
-  this.$size = typeof f == "function" ? f : function() { return f; };
+  this.$size = pv.functor(f);
   return this;
 };
 

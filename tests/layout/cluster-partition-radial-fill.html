@@ -3,9 +3,12 @@
     <title>Flare Dendrogram</title>
     <script type="text/javascript" src="../../protovis-d3.2.js"></script>
     <script type="text/javascript" src="../flare.js"></script>
+    <script type="text/javascript" src="../center.js"></script>
   </head>
   <body>
     <script type="text/javascript+protovis">
+
+var o = 0;
 
 var vis = new pv.Panel()
     .width(800)
@@ -17,7 +20,9 @@ vis.add(pv.Layout.Cluster.Fill)
     .outerRadius(220)
     .orient("radial")
   .node.add(pv.Wedge)
-    .fillStyle("#1f77b4");
+    .startAngle(function(n) n.startAngle + o)
+    .fillStyle(pv.ramp("#aec7e8", "#1f77b4").by(function(n) n.depth))
+    .lineWidth(1);
 
 vis.add(pv.Layout.Partition.Fill)
     .nodes(pv.dom(flare).nodes())
@@ -25,9 +30,13 @@ vis.add(pv.Layout.Partition.Fill)
     .outerRadius(400)
     .orient("radial")
   .node.add(pv.Wedge)
-    .fillStyle(function(n) n.parentNode ? "#2ca02c" : "#aaa");
+    .startAngle(function(n) n.startAngle - o)
+    .fillStyle(pv.ramp("#aec7e8", "#2ca02c").by(function(n) n.depth))
+    .lineWidth(1);
 
 vis.render();
+
+setInterval(function() (o -= .003, vis.render()), 42);
 
     </script>
   </body>

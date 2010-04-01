@@ -31,18 +31,23 @@ var layout = vis.add(pv.Layout.Indent)
 
 layout.link.add(pv.Line);
 
-layout.node.add(pv.Dot)
-    .fillStyle(function(n) n.toggled ? "#1f77b4" : n.firstChild ? "#aec7e8" : "#ff7f0e")
-    .event("mousedown", toggle)
-  .anchor("left").add(pv.Label)
+var node = layout.node.add(pv.Panel)
+    .top(function(n) n.y - 6)
+    .height(12)
     .right(6)
-    .textStyle(function(n) n.firstChild || n.toggled ? "#aaa" : "#000")
-    .text(function(n) (n.nodeValue >> 10) + "KB");
-
-layout.label.add(pv.Label)
-    .cursor("default")
+    .strokeStyle(null)
     .events("all")
     .event("mousedown", toggle);
+
+node.anchor("left").add(pv.Dot)
+    .strokeStyle("#1f77b4")
+    .fillStyle(function(n) n.toggled ? "#1f77b4" : n.firstChild ? "#aec7e8" : "#ff7f0e")
+  .anchor("right").add(pv.Label)
+    .text(function(n) n.nodeName);
+
+node.anchor("right").add(pv.Label)
+    .textStyle(function(n) n.firstChild || n.toggled ? "#aaa" : "#000")
+    .text(function(n) (n.nodeValue >> 10) + "KB");
 
 vis.render();
 
