@@ -30,7 +30,8 @@ pv.Area.prototype = pv.extend(pv.Mark)
     .property("strokeStyle", pv.color)
     .property("fillStyle", pv.color)
     .property("segmented", Boolean)
-    .property("interpolate", String);
+    .property("interpolate", String)
+    .property("tension", Number);
 
 pv.Area.prototype.type = "area";
 
@@ -119,6 +120,20 @@ pv.Area.prototype.type = "area";
  */
 
 /**
+ * The tension of cardinal splines; used in conjunction with
+ * interpolate("cardinal"). A value between 0 and 1 draws cardinal splines with
+ * the given tension. In some sense, the tension can be interpreted as the
+ * "length" of the tangent; a tension of 1 will yield all zero tangents (i.e.,
+ * linear interpolation), and a tension of 0 yields a Catmull-Rom spline. The
+ * default value is 0.7.
+ *
+ * <p>This property is <i>fixed</i>. See {@link pv.Mark}.
+ *
+ * @type number
+ * @name pv.Line.prototype.tension
+ */
+
+/**
  * Default properties for areas. By default, there is no stroke and the fill
  * style is a categorical color.
  *
@@ -128,7 +143,8 @@ pv.Area.prototype.defaults = new pv.Area()
     .extend(pv.Mark.prototype.defaults)
     .lineWidth(1.5)
     .fillStyle(pv.Colors.category20().by(pv.parent))
-    .interpolate("linear");
+    .interpolate("linear")
+    .tension(.7);
 
 /** @private Sets width and height to zero if null. */
 pv.Area.prototype.buildImplied = function(s) {

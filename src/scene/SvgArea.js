@@ -43,6 +43,19 @@ pv.SvgScene.area = function(scenes) {
     return p1.concat(p2).join("L");
   }
 
+  function pathCurve(i, j) {
+    var pointsT = [], pointsB = [];
+    for (var k = j; i <= k; i++, j--) {
+      var si = scenes[i],
+          sj = scenes[j];
+
+      pointsT.push(pv.vector(si.left, si.top));
+      pointsB.push(pv.vector(sj.left + sj.width, sj.top + sj.height));
+    }
+    return pointsT[0].x + "," + pointsT[0].y + pv.SvgScene.curvePathCardinal(pointsT, s.tension)
+     +"L"+ pointsB[0].x + "," + pointsB[0].y + pv.SvgScene.curvePathCardinal(pointsB, s.tension);
+  }
+
   /* points */
   var d = [], si, sj;
   for (var i = 0; i < scenes.length; i++) {
@@ -52,7 +65,12 @@ pv.SvgScene.area = function(scenes) {
     }
     if (i && (s.interpolate != "step-after")) i--;
     if ((j < scenes.length) && (s.interpolate != "step-before")) j++;
-    d.push(path(i, i = j - 1));
+    if (s.interpolate == "cardinal") {
+      d.push(pathCurve(i, j - 1));
+    } else {
+      d.push(path(i, j - 1));
+    }
+    i = j - 1;
   }
   if (!d.length) return e;
 
