@@ -18,9 +18,6 @@ var root = pv.dom(flare).root("flare");
 root.toggle(true);
 root.toggle();
 
-var drag = pv.Behavior.drag(),
-    dragged = false; // ignore clicks when dragging
-
 var vis = new pv.Panel()
     .width(window.innerWidth)
     .height(window.innerHeight)
@@ -38,9 +35,8 @@ layout.node.add(pv.Dot)
     .title(function(n) n.nodeName)
     .size(function(n) (n.nodeValue / 100) || 10)
     .fillStyle(function(n) n.toggled ? "#1f77b4" : n.firstChild ? "#aec7e8" : "#ff7f0e")
-    .event("mousedown", function() (dragged = false, drag.apply(this, arguments)))
-    .event("mousemove", function() dragged = true)
-    .event("click", function(n) (dragged || n.toggle(pv.event.altKey), layout.nodes(root.nodes()).cache(false)));
+    .event("mousedown", pv.Behavior.drag())
+    .event("dblclick", function(n) (n.toggle(pv.event.altKey), layout.nodes(root.nodes()).cache(false)));
 
 vis.render();
 
