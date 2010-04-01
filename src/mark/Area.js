@@ -26,7 +26,7 @@ pv.Area = function() {
 pv.Area.prototype = pv.extend(pv.Mark)
     .property("width", Number)
     .property("height", Number)
-    .property("lineWidth", String)
+    .property("lineWidth", Number)
     .property("strokeStyle", pv.color)
     .property("fillStyle", pv.color)
     .property("segmented", Boolean)
