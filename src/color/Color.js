@@ -13,8 +13,8 @@
  * <li>hsla(120, 100%, 50%, 1)
  *
  * </ul>The SVG 1.0 color keywords names are also supported, such as "aliceblue"
- * and "yellowgreen". The "transparent" keyword is supported for a
- * fully-transparent color.
+ * and "yellowgreen". The "transparent" keyword is supported for fully-
+ * transparent black.
  *
  * <p>If the <tt>format</tt> argument is already an instance of <tt>Color</tt>,
  * the argument is returned with no further processing.
@@ -26,8 +26,7 @@
  * @see <a href="http://www.w3.org/TR/css3-color/">CSS3 color module</a>
  */
 pv.color = function(format) {
-  if (format == "transparent") return pv.Color.transparent;
-  if (format instanceof pv.Color) return format.rgb();
+  if (format.rgb) return format.rgb();
 
   /* Handle hsl, rgb. */
   var m1 = /([a-z]+)\((.*)\)/i.exec(format);
@@ -588,7 +587,8 @@ pv.Color.names = {
   white: "#ffffff",
   whitesmoke: "#f5f5f5",
   yellow: "#ffff00",
-  yellowgreen: "#9acd32"
+  yellowgreen: "#9acd32",
+  transparent: pv.Color.transparent = pv.rgb(0, 0, 0, 0)
 };
 
 /* Initialized named colors. */
@@ -596,6 +596,3 @@ pv.Color.names = {
   var names = pv.Color.names;
   for (var name in names) names[name] = pv.color(names[name]);
 })();
-
-/** @private */
-pv.Color.transparent = pv.rgb(0, 0, 0, 0);
