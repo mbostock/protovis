@@ -212,3 +212,43 @@ pv.Area.prototype.buildInstance = function(s) {
 
   pv.Mark.prototype.buildInstance.call(this, s);
 };
+
+/**
+ * Constructs a new area anchor with default properties. Areas support five
+ * different anchors:<ul>
+ *
+ * <li>top
+ * <li>left
+ * <li>center
+ * <li>bottom
+ * <li>right
+ *
+ * </ul>In addition to positioning properties (left, right, top bottom), the
+ * anchors support text rendering properties (text-align, text-baseline). Text
+ * is rendered to appear inside the area. The area anchor also propagates the
+ * interpolate, eccentricity, and tension properties such that an anchored area
+ * or line will match positions between control points.
+ *
+ * <p>For consistency with the other mark types, the anchor positions are
+ * defined in terms of their opposite edge. For example, the top anchor defines
+ * the bottom property, such that an area added to the top anchor grows upward.
+ *
+ * @param {string} name the anchor name; either a string or a property function.
+ * @returns {pv.Anchor}
+ */
+pv.Area.prototype.anchor = function(name) {
+  var scene;
+  return pv.Mark.prototype.anchor.call(this, name)
+    .def("$area.anchor", function() {
+        scene = this.scene.target;
+      })
+    .interpolate(function() {
+       return scene[this.index].interpolate;
+      })
+    .eccentricity(function() {
+       return scene[this.index].eccentricity;
+      })
+    .tension(function() {
+        return scene[this.index].tension;
+      });
+};

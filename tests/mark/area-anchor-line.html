@@ -6,7 +6,7 @@
   <body>
     <script type="text/javascript+protovis">
 
-var data = pv.range(0, 10, .1).map(function(x) {
+var data = pv.range(0, 10, .3).map(function(x) {
         return {x: x, y: Math.sin(x) + Math.random() * .5 + 2};
       });
 
@@ -46,6 +46,7 @@ vis.add(pv.Area)
     .bottom(0)
     .height(function(d) y(d.y))
     .fillStyle("rgba(31,119,180,.6)")
+    .interpolate("step-before")
   .anchor("top").add(pv.Line)
     .lineWidth(3);
 
