@@ -566,7 +566,7 @@ pv.Mark.prototype.anchor = function(name) {
   var target = this, scene;
 
   /* Default anchor name. */
-  if (!arguments.length) name = "center";
+  if (!name) name = "center";
 
   /** @private Find the instances of target that match source. */
   function instances(source) {
