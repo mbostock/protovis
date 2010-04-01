@@ -88,8 +88,9 @@ pv.Layout.Network.prototype.defaults = new pv.Layout.Network()
 /** @private Locks node and links after initialization. */
 pv.Layout.Network.prototype.init = function() {
   var cache = this.scene.defs.cache;
-  if (cache.id && cache.value) return true;
-  cache.id = this.binds.properties.cache.id;
+  if (this.scene.$cache && cache.value) return true;
+  this.scene.$cache = true;
+  cache.id = 0; // unlock the cache property
 
   /* Compute link degrees; map source and target indexes to nodes. */
   var nodes = this.nodes();
