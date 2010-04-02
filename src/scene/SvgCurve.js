@@ -122,6 +122,7 @@ pv.SvgScene.curvePathCardinal = function(points, tension) {
       p0 = undefined,
       p1 = points[0],
       p2 = points[1];
+
   tangents.push(pv.vector(p2.x - p1.x, p2.y - p1.y).times(a));
   for (var i = 2; i < points.length; i++) {
     p0 = p1;
@@ -131,7 +132,15 @@ pv.SvgScene.curvePathCardinal = function(points, tension) {
   }
   tangents.push(pv.vector(p2.x - p1.x, p2.y - p1.y).times(a));
 
-  return this.curvePathHermite(points, tangents);
+  /*
+  // Helper code: Show tangents
+  var ep = '';
+  for(var i = 0; i < points.length; i++) {
+    ep += "M" + points[i].x + "," + points[i].y + "L" + (points[i].x + tangents[i].x) + "," + (points[i].y + tangents[i].y);
+  }
+  */
+
+  return this.curvePathHermite(points, tangents);// + ep;
 };
 
 /**
@@ -197,14 +206,17 @@ pv.SvgScene.curvePathMonotone = function(points) {
     }
   }
 
-  var ep = '';
   for(var i = 0; i < points.length; i++) {
-    var ti = pv.vector(1, m[i]).norm().times(dx[i]/3);
-    tangents.push(ti);
-    ep += "M" + points[i].x + "," + points[i].y + "L" + (points[i].x + ti.x) + "," + (points[i].y + ti.y);
+    tangents.push(pv.vector(1, m[i]).norm().times(dx[i]/3));
   }
 
-  return this.curvePathHermite(points, tangents);// + ep;
+  // Helper code: Show tangents
+  var ep = '';
+  for(var i = 0; i < points.length; i++) {
+    ep += "M" + points[i].x + "," + points[i].y + "L" + (points[i].x + tangents[i].x) + "," + (points[i].y + tangents[i].y);
+  }
+
+  return this.curvePathHermite(points, tangents) + ep;
 };
 
 /**
