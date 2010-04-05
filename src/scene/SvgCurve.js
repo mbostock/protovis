@@ -115,18 +115,19 @@ pv.SvgScene.curvePathCardinal = function(points, tension) {
   if(points.length <= 2) return '';
   var tangents = [];
   var a = (1 - tension) / 2,
-      p0 = undefined,
-      p1 = points[0],
-      p2 = points[1];
+      p0 = points[0],
+      p1 = points[1],
+      p2 = points[2];
 
-  tangents.push(pv.vector(p2.x - p1.x, p2.y - p1.y).times(a));
-  for (var i = 2; i < points.length; i++) {
+  tangents.push(pv.vector(p2.x - p0.x, p2.y - p0.y).times(a));
+  for (var i = 3; i < points.length; i++) {
+    tangents.push(pv.vector(p2.x - p0.x, p2.y - p0.y).times(a));
     p0 = p1;
     p1 = p2;
     p2 = points[i];
-    tangents.push(pv.vector(p2.x - p0.x, p2.y - p0.y).times(a));
   }
-  tangents.push(pv.vector(p2.x - p1.x, p2.y - p1.y).times(a));
+  tangents.push(pv.vector(p2.x - p0.x, p2.y - p0.y).times(a));
+  tangents.push(pv.vector(p2.x - p0.x, p2.y - p0.y).times(a));
 
   /*
   // Helper code: Show tangents
