@@ -54,13 +54,13 @@ pv.SvgScene.area = function(scenes) {
       pointsB.push(pv.vector(sj.left + sj.width, sj.top + sj.height));
     }
     if(s.interpolate == "basis") {
-      pathT = pv.SvgScene.curvePathBasis(pointsT)
+      pathT = pv.SvgScene.curvePathBasis(pointsT);
       pathB = pv.SvgScene.curvePathBasis(pointsB);
     } else if (s.interpolate == "cardinal") {
-      pathT = pv.SvgScene.curvePathCardinal(pointsT, s.tension)
+      pathT = pv.SvgScene.curvePathCardinal(pointsT, s.tension);
       pathB = pv.SvgScene.curvePathCardinal(pointsB, s.tension);
     } else { // if (s.interpolate == "monotone") {
-      pathT = pv.SvgScene.curvePathMonotone(pointsT)
+      pathT = pv.SvgScene.curvePathMonotone(pointsT);
       pathB = pv.SvgScene.curvePathMonotone(pointsB);
     }
     return pointsT[0].x + "," + pointsT[0].y + pathT

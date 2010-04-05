@@ -45,8 +45,9 @@ vis.add(pv.Area)
     .left(function(d) x(d.x))
     .bottom(0)
     .height(function(d) y(d.y))
-    .fillStyle("rgba(31,119,180,.6)");
-  .anchor("top").add(pv.Line)
+    .fillStyle("rgba(31,119,180,.6)")
+  .anchor("top")
+    .add(pv.Line)
     .lineWidth(3);
 
 vis.render();
