@@ -1,7 +1,6 @@
 data/Scale.js
 - ignore undefined values when computing min/max for domains
 - greedily convert range to the expected type (for colors?)
-- quantile scales!
 
 layout/Layout.js
 - standardize which attributes are populated

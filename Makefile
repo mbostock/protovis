@@ -24,6 +24,7 @@ JS_CORE_FILES = \
 	src/data/LogScale.js \
 	src/data/RootScale.js \
 	src/data/OrdinalScale.js \
+	src/data/QuantileScale.js \
 	src/data/Histogram.js \
 	src/color/Color.js \
 	src/color/Colors.js \
