@@ -44,6 +44,7 @@ pv.Layout.Hierarchy.NodeLink = {
   init: function() {
     var nodes = this.nodes(),
         orient = this.orient(),
+        horizontal = /^(top|bottom)$/.test(orient),
         w = this.parent.width(),
         h = this.parent.height();
 
@@ -88,7 +89,8 @@ pv.Layout.Hierarchy.NodeLink = {
 
     for (var i = 0; i < nodes.length; i++) {
       var n = nodes[i];
-      n.midAngle = orient == "radial" ? midAngle(n) : 0;
+      n.midAngle = orient == "radial" ? midAngle(n)
+          : horizontal ? Math.PI / 2 : 0;
       n.x = x(n);
       n.y = y(n);
       if (n.firstChild) n.midAngle += Math.PI;
