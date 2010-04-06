@@ -27,14 +27,14 @@ pv.Layout.Force.prototype.init = function() {
       nodes = that.nodes(),
       links = that.links(),
       k = this.iterations(),
-      x = that.parent.width() / 2,
-      y = that.parent.height() / 2;
+      w = that.parent.width(),
+      h = that.parent.height();
 
   /* Initialize positions randomly near the center. */
   for (var i = 0, n; i < nodes.length; i++) {
     n = nodes[i];
-    if (isNaN(n.x)) n.x = x + Math.random() - .5;
-    if (isNaN(n.y)) n.y = y + Math.random() - .5;
+    if (isNaN(n.x)) n.x = w / 2 + Math.random() - .5;
+    if (isNaN(n.y)) n.y = h / 2 + Math.random() - .5;
   }
 
   /* Initialize the simulation. */
