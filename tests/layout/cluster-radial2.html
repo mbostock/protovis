@@ -10,10 +10,7 @@
 var vis = new pv.Panel()
     .width(600)
     .height(600)
-    .top(100)
-    .bottom(100)
-    .left(100)
-    .right(100);
+    .margin(100);
 
 var layout = vis.add(pv.Layout.Cluster)
     .nodes(pv.dom(diamond(3, 4, 4)).nodes())

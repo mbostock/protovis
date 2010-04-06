@@ -41,7 +41,7 @@ bar.anchor("left").add(pv.Label)
 
 vis.add(pv.Rule)
     .data(x.ticks())
-    .left(function(d) Math.round(x(d)) - .5)
+    .left(x)
     .strokeStyle(function(d) d ? "rgba(255,255,255,.3)" : "#000")
   .add(pv.Rule)
     .bottom(0)

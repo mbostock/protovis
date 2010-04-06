@@ -2,7 +2,6 @@
   <head>
     <title>Scatterplot</title>
     <script type="text/javascript" src="../../protovis-d3.2.js"></script>
-    <link rel="stylesheet" type="text/css" href="../style.css"/>
   </head>
   <body>
     <script type="text/javascript+protovis">
@@ -28,7 +27,7 @@ var vis = new pv.Panel()
 
 vis.add(pv.Rule)
     .data(y.ticks())
-    .bottom(function(d) Math.round(y(d)) - .5)
+    .bottom(y)
     .strokeStyle("#eee")
   .anchor("left").add(pv.Label)
     .text(function(d) d.toFixed(1));
@@ -36,7 +35,7 @@ vis.add(pv.Rule)
 vis.add(pv.Rule)
     .data(x.ticks())
     .visible(function(d) d > 0)
-    .left(function(d) Math.round(x(d)) - .5)
+    .left(x)
     .strokeStyle("#eee")
   .anchor("bottom").add(pv.Label)
     .text(function(d) d.toFixed());

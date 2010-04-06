@@ -38,7 +38,7 @@ bar.anchor("bottom").add(pv.Label)
 
 vis.add(pv.Rule)
     .data(y.ticks())
-    .bottom(function(d) Math.round(y(d)) - .5)
+    .bottom(y)
     .strokeStyle(function(d) d ? "rgba(255,255,255,.3)" : "#000")
   .add(pv.Rule)
     .left(0)
