@@ -20,11 +20,6 @@ behavior/Point.js
 
 behavior/Pan.js
 - lock one axis
-- specify bounds on panning
-
-behavior/Zoom.js
-- specify bounds on zoom level
-- non-uniform zooms (e.g., in time series, zoom time dimension only)?
 
 geo/GeoScale.js
 - determine center point of projection from domain
