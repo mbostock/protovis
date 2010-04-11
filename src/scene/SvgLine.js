@@ -15,16 +15,12 @@ pv.SvgScene.line = function(scenes) {
   var d = "M" + s.left + "," + s.top;
 
   if (scenes.length > 2 && (s.interpolate == "basis" || s.interpolate == "cardinal" || s.interpolate == "monotone")) {
-    var points = [];
-    scenes.forEach(function(scene) {
-      points.push(pv.vector(scene.left, scene.top));
-    });
     if(s.interpolate == "basis") {
-      d += this.curvePathBasis(points);
+      d += this.curvePathBasis(scenes);
     } else if (s.interpolate == "cardinal") {
-      d += this.curvePathCardinal(points, s.tension);
+      d += this.curvePathCardinal(scenes, s.tension);
     } else { // if (s.interpolate == "monotone") {
-      d += this.curvePathMonotone(points);
+      d += this.curvePathMonotone(scenes);
     }
   } else {
     for (var i = 1; i < scenes.length; i++) {

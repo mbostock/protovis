@@ -50,8 +50,8 @@ pv.SvgScene.area = function(scenes) {
       var si = scenes[i],
           sj = scenes[j];
 
-      pointsT.push(pv.vector(si.left, si.top));
-      pointsB.push(pv.vector(sj.left + sj.width, sj.top + sj.height));
+      pointsT.push(si);
+      pointsB.push({left:(sj.left+sj.width), top:(sj.top+sj.height)});
     }
     if(s.interpolate == "basis") {
       pathT = pv.SvgScene.curvePathBasis(pointsT);
