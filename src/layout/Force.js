@@ -33,8 +33,8 @@ pv.Layout.Force.prototype.init = function() {
   /* Initialize positions randomly near the center. */
   for (var i = 0, n; i < nodes.length; i++) {
     n = nodes[i];
-    if (isNaN(n.x)) n.x = w / 2 + Math.random() - .5;
-    if (isNaN(n.y)) n.y = h / 2 + Math.random() - .5;
+    if (isNaN(n.x)) n.x = w / 2 + 40 * Math.random() - 20;
+    if (isNaN(n.y)) n.y = h / 2 + 40 * Math.random() - 20;
   }
 
   /* Initialize the simulation. */
