@@ -237,7 +237,7 @@ pv.Wedge.prototype.anchor = function(name) {
 pv.Wedge.upright = function(angle) {
   angle = angle % (2 * Math.PI);
   angle = (angle < 0) ? (2 * Math.PI + angle) : angle;
-  return (angle < Math.PI / 2) || (angle > 3 * Math.PI / 2);
+  return (angle < Math.PI / 2) || (angle >= 3 * Math.PI / 2);
 };
 
 /** @private Sets angle based on endAngle or vice versa. */

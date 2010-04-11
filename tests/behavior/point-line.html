@@ -26,20 +26,20 @@ var vis = new pv.Panel()
     .event("mousemove", pv.Behavior.point(Infinity).collapse("y"));
 
 vis.add(pv.Rule)
-    .data(y.ticks())
-    .visible(function() !(this.index % 2))
-    .bottom(function(d) Math.round(y(d)) - .5)
-    .strokeStyle("#eee")
-  .anchor("left").add(pv.Label)
-    .text(function(d) d.toFixed(1));
-
-vis.add(pv.Rule)
     .data(x.ticks())
     .visible(function(d) d > 0)
-    .left(function(d) Math.round(x(d)) - .5)
+    .left(x)
     .strokeStyle("#eee")
   .anchor("bottom").add(pv.Label)
     .text(function(d) d.toFixed());
+
+vis.add(pv.Rule)
+    .data(y.ticks())
+    .visible(function() !(this.index % 2))
+    .bottom(y)
+    .strokeStyle(function(d) d ? "#eee" : "#000")
+  .anchor("left").add(pv.Label)
+    .text(function(d) d.toFixed(1));
 
 vis.add(pv.Line)
     .def("active", -1)

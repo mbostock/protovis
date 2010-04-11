@@ -9,6 +9,8 @@ data/?
 
 data/Scale.js
 - allow customization of data ticks (e.g., "3 months", "5 minutes")
+- greedily convert range to the expected type (for colors?)
+- ignore undefined values when computing min/max for domains
 
 mark/Mark.js
 - event handlers should be inherited?
@@ -42,3 +44,6 @@ mark/Bar.Radial.js
 
 physics/LinkConstraint.js
 - should support an alpha parameter, like pv.Constraint.position
+
+layout/Tree.js
+- allow depth and breadth offset to be computed automatically
