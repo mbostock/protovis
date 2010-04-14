@@ -47,3 +47,7 @@ physics/LinkConstraint.js
 
 layout/Tree.js
 - allow depth and breadth offset to be computed automatically
+
+behavior/Pan.js
+- custom bounds
+- lock one axis
