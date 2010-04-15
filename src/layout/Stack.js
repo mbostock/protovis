@@ -153,8 +153,8 @@ pv.Layout.Stack = function() {
     /* Find the property definitions for dynamic substitution. */
     var i = orient.indexOf("-"),
         pdy = horizontal ? "h" : "w",
-        px = i < 0 ? (horizontal ? "l" : "b") : orient.charAt(i + 1),
-        py = i < 0 ? (horizontal ? "b" : "l") : orient.charAt(0);
+        px = i < 0 && horizontal ? "l" : orient.charAt(i + 1),
+        py = i < 0 && !horizontal ? "b" : orient.charAt(0);
     for (var p in prop) prop[p] = none;
     prop[px] = function(i, j) { return x[j]; };
     prop[py] = function(i, j) { return y[i][j]; };
@@ -184,6 +184,10 @@ pv.Layout.Stack.prototype.defaults = new pv.Layout.Stack()
     .offset("zero")
     .layers([[]])
     .data(function() { return this.layers(); });
+
+pv.Layout.Stack.prototype.$x
+    = pv.Layout.Stack.prototype.$y
+    = function() { return 0; };
 
 /**
  * The x function; determines the position of the value within the layer.  This
