@@ -51,3 +51,6 @@ layout/Tree.js
 behavior/Pan.js
 - custom bounds
 - lock one axis
+
+behavior/Point.js
+- compute true distance from mouse to perimeter (e.g., wedge)
