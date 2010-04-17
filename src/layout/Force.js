@@ -8,7 +8,26 @@ pv.Layout.Force = function() {
 
 pv.Layout.Force.prototype = pv.extend(pv.Layout.Network)
     .property("bound", Boolean)
-    .property("iterations", Number);
+    .property("iterations", Number)
+    .property("dragConstant", Number)
+    .property("chargeConstant", Number)
+    .property("chargeMinDistance", Number)
+    .property("chargeMaxDistance", Number)
+    .property("chargeTheta", Number)
+    .property("springConstant", Number)
+    .property("springDamping", Number)
+    .property("springLength", Number);
+
+pv.Layout.Force.prototype.defaults = new pv.Layout.Force()
+    .extend(pv.Layout.Network.prototype.defaults)
+    .dragConstant(.1)
+    .chargeConstant(-40)
+    .chargeMinDistance(2)
+    .chargeMaxDistance(500)
+    .chargeTheta(.9)
+    .springConstant(.1)
+    .springDamping(.1)
+    .springLength(20);
 
 /** @private Initialize the physics simulation. */
 pv.Layout.Force.prototype.init = function() {
@@ -39,9 +58,22 @@ pv.Layout.Force.prototype.init = function() {
 
   /* Initialize the simulation. */
   var sim = pv.simulation(nodes);
-  sim.force(pv.Force.drag());
-  sim.force(pv.Force.charge());
-  sim.force(pv.Force.spring().links(links));
+
+  /* Drag force. */
+  sim.force(pv.Force.drag(this.dragConstant()));
+
+  /* Charge (repelling) force. */
+  sim.force(pv.Force.charge(this.chargeConstant())
+      .domain(this.chargeMinDistance(), this.chargeMaxDistance())
+      .theta(this.chargeTheta()));
+
+  /* Spring (attracting) force. */
+  sim.force(pv.Force.spring(this.springConstant())
+      .damping(this.springDamping())
+      .length(this.springLength())
+      .links(links));
+
+  /* Position constraint (for interactive dragging). */
   sim.constraint(pv.Constraint.position());
 
   /* Optionally add bound constraint. TODO: better padding. */
