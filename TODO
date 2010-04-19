@@ -4,7 +4,6 @@ layout/Layout.js
 
 layout/Force.js
 - smarter default rest length / charge force constant
-- allow customization of simulation parameters (e.g., rest length)
 
 mark/Mark.js
 - partial redraw for newly-added marks
