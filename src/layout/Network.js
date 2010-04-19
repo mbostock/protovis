@@ -3,6 +3,9 @@ pv.Layout.Network = function() {
   pv.Layout.call(this);
   var that = this;
 
+  /* Version tracking to cache layout state, improving performance. */
+  this.$id = pv.id();
+
   /**
    * The node prototype. This prototype is intended to be used with a Dot mark
    * in conjunction with the link prototype.
@@ -32,13 +35,12 @@ pv.Layout.Network = function() {
       .lineWidth(function(d, p) { return p.linkValue * 1.5; })
       .strokeStyle("rgba(0,0,0,.2)");
 
-  /** @private */
   this.link.add = function(type) {
-      return that.add(pv.Panel)
-          .data(function() { return that.links(); })
-        .add(type)
-          .extend(this);
-    };
+    return that.add(pv.Panel)
+        .data(function() { return that.links(); })
+      .add(type)
+        .extend(this);
+  };
 
   /**
    * The node label prototype, which renders the node name adjacent to the node.
@@ -65,7 +67,6 @@ pv.Layout.Network = function() {
 
 /** @private Transform nodes and links on cast. */
 pv.Layout.Network.prototype = pv.extend(pv.Layout)
-    .property("cache", Boolean)
     .property("nodes", function(v) {
         return v.map(function(d, i) {
             if (typeof d != "object") d = {nodeValue: d};
@@ -81,24 +82,35 @@ pv.Layout.Network.prototype = pv.extend(pv.Layout)
           });
       });
 
-pv.Layout.Network.prototype.defaults = new pv.Layout.Network()
-    .extend(pv.Layout.prototype.defaults)
-    .cache(true);
+/**
+ * Resets the cache, such that changes to layout property definitions will be
+ * visible on subsequent render. Unlike normal marks (and normal layouts),
+ * properties associated with network layouts are not automatically re-evaluated
+ * on render; the properties are cached, and any expensive layout algorithms are
+ * only run after the layout is explicitly reset.
+ *
+ * @returns this
+ */
+pv.Layout.Network.prototype.reset = function() {
+  this.$id = pv.id();
+  return this;
+};
 
-/** @private Locks node and links after initialization. */
-pv.Layout.Network.prototype.init = function() {
-  var cache = this.scene.defs.cache;
-  if (this.scene.$cache && cache.value) return true;
-  this.scene.$cache = true;
-  cache.id = 0; // unlock the cache property
+/** @private Skip evaluating properties if cached. */
+pv.Layout.Network.prototype.buildProperties = function(s, properties) {
+  if ((s.$id || 0) < this.$id) {
+    pv.Layout.prototype.buildProperties.call(this, s, properties);
+  }
+};
 
-  /* Compute link degrees; map source and target indexes to nodes. */
-  var nodes = this.nodes();
-  this.links().forEach(function(d) {
-      var s = d.sourceNode || (d.sourceNode = nodes[d.source]),
-          t = d.targetNode || (d.targetNode = nodes[d.target]),
-          v = d.linkValue;
-      s.linkDegree += v;
-      t.linkDegree += v;
+/** @private Compute link degrees; map source and target indexes to nodes. */
+pv.Layout.Network.prototype.buildImplied = function(s) {
+  pv.Layout.prototype.buildImplied.call(this, s);
+  if (s.$id >= this.$id) return true;
+  s.$id = this.$id;
+  s.links.forEach(function(d) {
+      var v = d.linkValue;
+      (d.sourceNode || (d.sourceNode = s.nodes[d.source])).linkDegree += v;
+      (d.targetNode || (d.targetNode = s.nodes[d.target])).linkDegree += v;
     });
 };

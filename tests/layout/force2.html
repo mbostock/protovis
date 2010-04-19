@@ -33,8 +33,8 @@ layout.link.add(pv.Line)
 
 layout.node.add(pv.Dot)
     .fillStyle(function(d) d.parentNode ? d.active ? "orange" : "white" : "steelblue")
-    .event("point", function(d) (activate(d, true), this.parent))
-    .event("unpoint", function(d) (activate(d, false), this.parent));
+    .event("point", function(d) (activate(d, true), layout))
+    .event("unpoint", function(d) (activate(d, false), layout));
 
 vis.add(pv.Label)
     .bottom(0)

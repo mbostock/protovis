@@ -17,9 +17,11 @@
  */
 pv.Layout.Stack = function() {
   pv.Layout.call(this);
-  var none = function() { return null; },
+  var that = this,
+      none = function() { return null; },
       prop = {t: none, l: none, r: none, b: none, w: none, h: none},
-      values;
+      values,
+      buildImplied = that.buildImplied;
 
   /** @private Proxy the given property on the layer. */
   function proxy(name) {
@@ -29,44 +31,48 @@ pv.Layout.Stack = function() {
   }
 
   /** @private Compute the layout! */
-  this.init = function() {
-    var data = this.layers(),
+  this.buildImplied = function(s) {
+    buildImplied.call(this, s);
+
+    var data = s.layers,
         n = data.length,
         m,
-        orient = this.orient(),
+        orient = s.orient,
         horizontal = /^(top|bottom)\b/.test(orient),
         h = this.parent[horizontal ? "height" : "width"](),
         x = [],
         y = [],
         dy = [];
 
-    /* Iterate over the data, evaluating the values, x and y functions. */
-    var stack = pv.Mark.stack;
+    /*
+     * Iterate over the data, evaluating the values, x and y functions. The
+     * context in which the x and y psuedo-properties are evaluated is a
+     * pseudo-mark that is a grandchild of this layout.
+     */
+    var stack = pv.Mark.stack, o = {parent: {parent: this}};
     stack.unshift(null);
     values = [];
     for (var i = 0; i < n; i++) {
       dy[i] = [];
       y[i] = [];
-      pv.Mark.prototype.index = this.index = i;
+      o.parent.index = i;
       stack[0] = data[i];
-      values[i] = this.$values.apply(this, stack);
+      values[i] = this.$values.apply(o.parent, stack);
       if (!i) m = values[i].length;
       stack.unshift(null);
       for (var j = 0; j < m; j++) {
         stack[0] = values[i][j];
-        pv.Mark.prototype.index = this.layer.index = j;
-        if (!i) x[j] = this.$x.apply(this.layer, stack);
-        dy[i][j] = this.$y.apply(this.layer, stack);
+        o.index = j;
+        if (!i) x[j] = this.$x.apply(o, stack);
+        dy[i][j] = this.$y.apply(o, stack);
       }
       stack.shift();
     }
-    delete this.layer.index;
-    delete this.index;
     stack.shift();
 
     /* order */
     var index;
-    switch (this.order()) {
+    switch (s.order) {
       case "inside-out": {
         var max = dy.map(function(v) { return pv.max.index(v); }),
             map = pv.range(n).sort(function(a, b) { return max[a] - max[b]; }),
@@ -93,7 +99,7 @@ pv.Layout.Stack = function() {
     }
 
     /* offset */
-    switch (this.offset()) {
+    switch (s.offset) {
       case "silohouette": {
         for (var j = 0; j < m; j++) {
           var o = 0;
@@ -161,15 +167,21 @@ pv.Layout.Stack = function() {
     prop[pdy] = function(i, j) { return dy[i][j]; };
   };
 
-  (this.layer = new pv.Mark()
+  this.layer = new pv.Mark()
       .data(function() { return values[this.parent.index]; })
       .top(proxy("t"))
       .left(proxy("l"))
       .right(proxy("r"))
       .bottom(proxy("b"))
       .width(proxy("w"))
-      .height(proxy("h")))
-      .parent = this;
+      .height(proxy("h"));
+
+  this.layer.add = function(type) {
+    return that.add(pv.Panel)
+        .data(function() { return that.layers(); })
+      .add(type)
+        .extend(this);
+  };
 };
 
 pv.Layout.Stack.prototype = pv.extend(pv.Layout)
@@ -182,8 +194,7 @@ pv.Layout.Stack.prototype.defaults = new pv.Layout.Stack()
     .extend(pv.Layout.prototype.defaults)
     .orient("bottom-left")
     .offset("zero")
-    .layers([[]])
-    .data(function() { return this.layers(); });
+    .layers([[]]);
 
 pv.Layout.Stack.prototype.$x
     = pv.Layout.Stack.prototype.$y

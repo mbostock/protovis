@@ -27,7 +27,7 @@ layout.node.add(pv.Dot)
     .size(100)
     .strokeStyle("#aaa")
     .fillStyle(function(d) d.toggled ? "#aaa" : "#ddd")
-    .event("click", function(d) (d.toggle(), layout.cache(false).parent));
+    .event("click", function(d) (d.toggle(), layout.reset().parent));
 
 vis.render();
 

@@ -1,15 +1,17 @@
 /** @class Layout for arc diagrams. */
 pv.Layout.Arc = function() {
   pv.Layout.Network.call(this);
-  var interpolate, directed, reverse, init = this.init;
+  var interpolate, // cached interpolate
+      directed, // cached directed
+      reverse, // cached reverse
+      buildImplied = this.buildImplied;
 
   /** @private Cache layout state to optimize properties. */
-  this.init = function() {
-    var orient = this.orient();
-    directed = this.directed();
-    interpolate = orient == "radial" ? "linear" : "polar";
-    reverse = orient == "right" || orient == "top";
-    init.call(this);
+  this.buildImplied = function(s) {
+    buildImplied.call(this, s);
+    directed = s.directed;
+    interpolate = s.orient == "radial" ? "linear" : "polar";
+    reverse = s.orient == "right" || s.orient == "top";
   };
 
   /* Override link properties to handle directedness and orientation. */
@@ -30,12 +32,13 @@ pv.Layout.Arc.prototype.defaults = new pv.Layout.Arc()
     .orient("bottom");
 
 /** @private Populates the x, y and angle attributes on the nodes. */
-pv.Layout.Arc.prototype.init = function() {
-  if (pv.Layout.Network.prototype.init.call(this)) return;
-  var nodes = this.nodes(),
-      orient = this.orient(),
-      w = this.parent.width(),
-      h = this.parent.height(),
+pv.Layout.Arc.prototype.buildImplied = function(s) {
+  if (pv.Layout.Network.prototype.buildImplied.call(this, s)) return;
+
+  var nodes = s.nodes,
+      orient = s.orient,
+      w = s.width,
+      h = s.height,
       r = Math.min(w, h) / 2;
 
   /** @private Returns the mid-angle, given the breadth. */

@@ -82,19 +82,20 @@ pv.Layout.Treemap.prototype.size = function(f) {
   return this;
 };
 
-pv.Layout.Treemap.prototype.init = function() {
-  if (pv.Layout.Hierarchy.prototype.init.call(this)) return;
+pv.Layout.Treemap.prototype.buildImplied = function(s) {
+  if (pv.Layout.Hierarchy.prototype.buildImplied.call(this, s)) return;
+
   var that = this,
-      nodes = that.nodes(),
+      nodes = s.nodes,
       root = nodes[0],
       stack = pv.Mark.stack,
-      left = that.paddingLeft(),
-      right = that.paddingRight(),
-      top = that.paddingTop(),
-      bottom = that.paddingBottom(),
+      left = s.paddingLeft,
+      right = s.paddingRight,
+      top = s.paddingTop,
+      bottom = s.paddingBottom,
       size = function(n) { return n.size; },
-      round = that.round() ? Math.round : Number,
-      mode = that.mode();
+      round = s.round ? Math.round : Number,
+      mode = s.mode;
 
   /** @private */
   function slice(row, sum, horizontal, x, y, w, h) {
@@ -220,7 +221,7 @@ pv.Layout.Treemap.prototype.init = function() {
   stack.shift();
 
   /* Sort. */
-  switch (that.order()) {
+  switch (s.order) {
     case "ascending": {
       root.sort(function(a, b) { return a.size - b.size; });
       break;
@@ -235,7 +236,7 @@ pv.Layout.Treemap.prototype.init = function() {
   /* Recursively compute the layout. */
   root.x = 0;
   root.y = 0;
-  root.dx = that.parent.width();
-  root.dy = that.parent.height();
+  root.dx = s.width;
+  root.dy = s.height;
   root.visitBefore(layout);
 };

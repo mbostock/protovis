@@ -1,21 +1,33 @@
 pv.Layout.Horizon = function() {
   pv.Layout.call(this);
-  var mode, size, red, blue;
+  var that = this,
+      bands, // cached bands
+      mode, // cached mode
+      size, // cached height
+      fill, // cached background style
+      red, // cached negative color (ramp)
+      blue, // cached positive color (ramp)
+      buildImplied = this.buildImplied;
 
-  this.data(function() {
-          mode = this.mode();
-          size = Math.round((mode == "color" ? .5 : 1) * this.parent.height());
-          var n = this.bands(), fill = this.backgroundStyle();
-          red = pv.Scale.linear(0, n).range(fill, this.negativeStyle());
-          blue = pv.Scale.linear(0, n).range(fill, this.positiveStyle());
-          return pv.range(n * 2);
-        })
+  /** @private Cache the layout state to optimize properties. */
+  this.buildImplied = function(s) {
+    buildImplied.call(this, s);
+    bands = s.bands;
+    mode = s.mode;
+    size = Math.round((mode == "color" ? .5 : 1) * s.height);
+    fill = s.backgroundStyle;
+    red = pv.ramp(fill, s.negativeStyle).domain(0, bands);
+    blue = pv.ramp(fill, s.positiveStyle).domain(0, bands);
+  };
+
+  var bands = new pv.Panel()
+      .data(function() { return pv.range(bands * 2); })
       .overflow("hidden")
       .height(function() { return size; })
       .top(function(i) { return mode == "color" ? (i & 1) * size : 0; })
-      .fillStyle(function(i) { return i ? null : this.backgroundStyle(); });
+      .fillStyle(function(i) { return i ? null : fill; });
 
-  (this.band = new pv.Mark()
+  this.band = new pv.Mark()
       .top(function(d, i) {
           return mode == "mirror" && i & 1
               ? (i + 1 >> 1) * size
@@ -28,7 +40,11 @@ pv.Layout.Horizon = function() {
         })
       .fillStyle(function(d, i) {
           return (i & 1 ? red : blue)((i >> 1) + 1);
-      })).parent = this;
+        });
+
+  this.band.add = function(type) {
+    return that.add(pv.Panel).extend(bands).add(type).extend(this);
+  };
 };
 
 pv.Layout.Horizon.prototype = pv.extend(pv.Layout)
