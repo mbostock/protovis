@@ -33,7 +33,7 @@ pv.Layout.Partition.prototype.buildImplied = function(s) {
       if (i > maxDepth) maxDepth = i;
       n.size = n.firstChild
           ? pv.sum(n.childNodes, function(n) { return n.size; })
-          : that.$size.apply(that, (stack[0] = n.nodeValue, stack));
+          : that.$size.apply(that, (stack[0] = n, stack));
     });
   stack.shift();
 

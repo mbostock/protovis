@@ -64,8 +64,7 @@ pv.Layout.Pack.prototype.buildImplied = function(s) {
     for (var i = 0, n = nodes.length; i < n; i++) {
       var c = nodes[i];
       if (!c.firstChild) {
-        stack[0] = c.nodeValue;
-        c.radius = that.$radius.apply(that, stack);
+        c.radius = that.$radius.apply(that, (stack[0] = c, stack));
       }
     }
     stack.shift();

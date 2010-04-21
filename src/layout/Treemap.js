@@ -75,7 +75,9 @@ pv.Layout.Treemap.prototype.padding = function(n) {
   return this.paddingLeft(n).paddingRight(n).paddingTop(n).paddingBottom(n);
 };
 
-pv.Layout.Treemap.prototype.$size = Number;
+pv.Layout.Treemap.prototype.$size = function(d) {
+  return Number(d.nodeValue);
+};
 
 pv.Layout.Treemap.prototype.size = function(f) {
   this.$size = pv.functor(f);
@@ -216,7 +218,7 @@ pv.Layout.Treemap.prototype.buildImplied = function(s) {
       n.x = n.y = n.dx = n.dy = 0;
       n.size = n.firstChild
           ? pv.sum(n.childNodes, function(n) { return n.size; })
-          : that.$size.apply(that, (stack[0] = n.nodeValue, stack));
+          : that.$size.apply(that, (stack[0] = n, stack));
     });
   stack.shift();
 

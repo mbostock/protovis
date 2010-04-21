@@ -13,7 +13,7 @@ var vis = new pv.Panel()
 
 var layout = vis.add(pv.Layout.Partition.Fill)
     .nodes(pv.dom(flare).root("flare").nodes())
-    .size(Number)
+    .size(function(d) d.nodeValue)
     .order("ascending")
     .orient("radial");
 
