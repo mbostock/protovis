@@ -17,6 +17,7 @@ pv.Geo.scale = function(p) {
       j = pv.Geo.projections.identity, // domain <-> normalized range
       x = pv.Scale.linear(-1, 1).range(0, 1), // normalized <-> range
       y = pv.Scale.linear(-1, 1).range(1, 0), // normalized <-> range
+      c = { lng: 0, lat: 0 }, // Center Point
       lastLatLng, // cached latlng
       lastPoint; // cached point
 
@@ -26,10 +27,23 @@ pv.Geo.scale = function(p) {
         || (latlng.lng != lastLatLng.lng)
         || (latlng.lat != lastLatLng.lat)) {
       lastLatLng = latlng;
-      var p = j.project(latlng);
+      var p = project(latlng);
       lastPoint = {x: x(p.x), y: y(p.y)};
     }
     return lastPoint;
+  }
+
+  /** @private */
+  function project(latlng) {
+    var offset = {lng: (latlng.lng - c.lng), lat: (latlng.lat)};
+    return j.project(offset);
+  }
+
+  /** @private */
+  function invert(xy) {
+    var latlng = j.invert(xy);
+    latlng.lng += c.lng;
+    return latlng;
   }
 
   /** Returns the projected x-coordinate. */
@@ -87,7 +101,7 @@ pv.Geo.scale = function(p) {
    * @returns {number} a value in the input domain.
    */
   scale.invert = function(p) {
-    return j.invert({x: x.invert(p.x), y: y.invert(p.y)});
+    return invert({x: x.invert(p.x), y: y.invert(p.y)});
   };
 
   /**
@@ -130,10 +144,15 @@ pv.Geo.scale = function(p) {
           ? ((arguments.length > 1) ? pv.map(array, f) : array)
           : Array.prototype.slice.call(arguments);
       if (d.length > 1) {
-        var n = d.map(j.project); // normalized domain
+        var lngs = d.map(function(c) { return c.lng; });
+        var lats = d.map(function(c) { return c.lat; });
+        c = { lng: (pv.max(lngs) + pv.min(lngs)) / 2,
+              lat: (pv.max(lats) + pv.min(lats)) / 2 };
+        var n = d.map(project); // normalized domain
         x.domain(n, function(p) { return p.x; });
         y.domain(n, function(p) { return p.y; });
       } else {
+        c = { lng: 0, lat: 0 };
         x.domain(-1, 1);
         y.domain(-1, 1);
       }

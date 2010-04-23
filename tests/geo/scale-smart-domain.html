@@ -1,0 +1,55 @@
+<html>
+  <head>
+    <title>Geo Scale</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="countries-lowres.js"></script>
+    <script type="text/javascript" src="population.js"></script>
+    <script type="text/javascript" src="../center.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+/*
+ * A diverging color scale, using previously-computed quantiles of population
+ * densities; in the future, we might use a quantile scale here to do this
+ * automatically. Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer,
+ * Penn State.
+ */
+var fill = pv.Scale.linear()
+    .domain(140, 650, 1900)
+    .range("#91bfdb", "#ffffbf", "#fc8d59");
+
+/* Precompute the country's population density and color. */
+countries.forEach(function(c) {
+  c.color = population[c.code].area
+      ? fill(population[c.code].pop / population[c.code].area)
+      : "#ccc"; // unknown
+});
+
+var w = window.innerWidth * .8,
+    h = 3 / 5 * w,
+    geo = pv.Geo.scale("sinusoidal").domain({lng:-128, lat:24}, {lng:-64, lat:50}).range(w, h);
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(h);
+
+/* Countries. */
+vis.add(pv.Panel)
+    .data(countries)
+  .add(pv.Panel)
+    .data(function(c) c.borders)
+  .add(pv.Line)
+    .data(function(b) b)
+    .left(geo.x)
+    .top(geo.y)
+    .title(function(d, b, c) c.name)
+    .fillStyle(function(d, b, c) c.color)
+    .strokeStyle(function() this.fillStyle().darker())
+    .lineWidth(1);
+
+vis.render();
+
+    </script>
+  </body>
+</html>
