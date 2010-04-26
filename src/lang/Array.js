@@ -7,6 +7,8 @@
  * Creates a new array with the results of calling a provided function on every
  * element in this array. Implemented in Javascript 1.6.
  *
+ * @function
+ * @name Array.prototype.map
  * @see <a
  * href="https://developer.mozilla.org/En/Core_JavaScript_1.5_Reference/Objects/Array/Map">map</a>
  * documentation.
@@ -29,6 +31,8 @@ if (!Array.prototype.map) Array.prototype.map = function(f, o) {
  * Creates a new array with all elements that pass the test implemented by the
  * provided function. Implemented in Javascript 1.6.
  *
+ * @function
+ * @name Array.prototype.filter
  * @see <a
  * href="https://developer.mozilla.org/En/Core_JavaScript_1.5_Reference/Objects/Array/filter">filter</a>
  * documentation.
@@ -51,6 +55,8 @@ if (!Array.prototype.filter) Array.prototype.filter = function(f, o) {
  * Executes a provided function once per array element. Implemented in
  * Javascript 1.6.
  *
+ * @function
+ * @name Array.prototype.forEach
  * @see <a
  * href="https://developer.mozilla.org/En/Core_JavaScript_1.5_Reference/Objects/Array/ForEach">forEach</a>
  * documentation.
@@ -69,6 +75,8 @@ if (!Array.prototype.forEach) Array.prototype.forEach = function(f, o) {
  * left-to-right) as to reduce it to a single value. Implemented in Javascript
  * 1.8.
  *
+ * @function
+ * @name Array.prototype.reduce
  * @see <a
  * href="https://developer.mozilla.org/En/Core_JavaScript_1.5_Reference/Objects/Array/Reduce">reduce</a>
  * documentation.
