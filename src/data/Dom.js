@@ -91,7 +91,7 @@ pv.Dom.prototype.nodes = function() {
  * not typically created directly; instead they are generated from a JavaScript
  * map using the {@link pv.Dom} operator.
  *
- * @class Represents a <code>Node</tt> in the W3C Document Object Model.
+ * @class Represents a <tt>Node</tt> in the W3C Document Object Model.
  */
 pv.Dom.Node = function(value) {
   this.nodeValue = value;
