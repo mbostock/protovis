@@ -1,9 +1,15 @@
-pv.Behavior.select = function(f) {
+/**
+ * @class
+ * @extends pv.Behavior
+ * @constructor
+ */
+pv.Behavior.select = function() {
   var scene, // scene context
       index, // scene context
       r, // region being selected
       m1; // initial mouse position
 
+  /** @private */
   function mousedown(d) {
     index = this.index;
     scene = this.scene;
@@ -14,6 +20,7 @@ pv.Behavior.select = function(f) {
     r.dx = r.dy = 0;
   }
 
+  /** @private */
   function mousemove() {
     if (!scene) return;
     scene.mark.context(scene, index, function() {
@@ -26,6 +33,7 @@ pv.Behavior.select = function(f) {
       });
   }
 
+  /** @private */
   function mouseup() {
     scene = null;
   }

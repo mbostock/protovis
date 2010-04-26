@@ -1,8 +1,15 @@
+/**
+ * @class
+ * @extends pv.Behavior
+ * @constructor
+ * @param {number} speed
+ */
 pv.Behavior.zoom = function(speed) {
   var bound; // whether to bound to the panel
 
   if (!arguments.length) speed = 1 / 48;
 
+  /** @private */
   function mousewheel() {
     var v = this.mouse(),
         k = pv.event.wheel * speed,
@@ -17,6 +24,10 @@ pv.Behavior.zoom = function(speed) {
     this.transform(m).render();
   }
 
+  /**
+   * @type boolean
+   * @name pv.Behavior.zoom.prototype.bound
+   */
   mousewheel.bound = function(x) {
     if (arguments.length) {
       bound = Boolean(x);

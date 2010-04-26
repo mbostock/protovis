@@ -66,7 +66,7 @@ pv.Constraint.collision = function(radius) {
 
   /**
    * @function
-   * @name pv.Constraint.bound.prototype.apply
+   * @name pv.Constraint.collision.prototype.apply
    * @param {pv.Particle} particles
    * @param {pv.Quadtree} q
    * @returns {pv.Constraint.position} this.

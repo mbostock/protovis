@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends pv.Behavior
+ * @constructor
+ */
 pv.Behavior.pan = function() {
   var scene, // scene context
       index, // scene context
@@ -6,6 +11,7 @@ pv.Behavior.pan = function() {
       k, // inverse scale
       bound; // whether to bound to the panel
 
+  /** @private */
   function mousedown() {
     index = this.index;
     scene = this.scene;
@@ -20,6 +26,7 @@ pv.Behavior.pan = function() {
     }
   }
 
+  /** @private */
   function mousemove() {
     if (!scene) return;
     scene.mark.context(scene, index, function() {
@@ -34,10 +41,15 @@ pv.Behavior.pan = function() {
       });
   }
 
+  /** @private */
   function mouseup() {
     scene = null;
   }
 
+  /**
+   * @type boolean
+   * @name pv.Behavior.pan.prototype.bound
+   */
   mousedown.bound = function(x) {
     if (arguments.length) {
       bound = Boolean(x);
