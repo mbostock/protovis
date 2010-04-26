@@ -16,15 +16,16 @@ pv.Layout.Tree.prototype.defaults = new pv.Layout.Tree()
     .depth(60)
     .orient("top");
 
-pv.Layout.Tree.prototype.init = function() {
-  if (pv.Layout.Hierarchy.prototype.init.call(this)) return;
-  var nodes = this.nodes(),
-      orient = this.orient(),
-      depth = this.depth(),
-      breadth = this.breadth(),
-      group = this.group(),
-      w = this.parent.width(),
-      h = this.parent.height();
+pv.Layout.Tree.prototype.buildImplied = function(s) {
+  if (pv.Layout.Hierarchy.prototype.buildImplied.call(this, s)) return;
+
+  var nodes = s.nodes,
+      orient = s.orient,
+      depth = s.depth,
+      breadth = s.breadth,
+      group = s.group,
+      w = s.width,
+      h = s.height;
 
   /** @private */
   function firstWalk(v) {

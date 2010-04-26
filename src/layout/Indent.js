@@ -12,11 +12,12 @@ pv.Layout.Indent.prototype.defaults = new pv.Layout.Indent()
     .depth(15)
     .breadth(15);
 
-pv.Layout.Indent.prototype.init = function() {
-  if (pv.Layout.Hierarchy.prototype.init.call(this)) return;
-  var nodes = this.nodes(),
-      bspace = this.breadth(),
-      dspace = this.depth(),
+pv.Layout.Indent.prototype.buildImplied = function(s) {
+  if (pv.Layout.Hierarchy.prototype.buildImplied.call(this, s)) return;
+
+  var nodes = s.nodes,
+      bspace = s.breadth,
+      dspace = s.depth,
       ax = 0,
       ay = 0;
 

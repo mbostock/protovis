@@ -15,7 +15,7 @@ var layout = vis.add(pv.Layout.Partition.Fill)
     .nodes(pv.dom(flare).root("flare").nodes())
     .order("descending")
     .orient("left")
-    .size(Number);
+    .size(function(d) d.nodeValue);
 
 layout.node.add(pv.Bar);
 layout.label.add(pv.Label);

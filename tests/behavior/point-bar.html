@@ -1,0 +1,62 @@
+<html>
+  <head>
+    <script src="../../protovis-d3.2.js" type="text/javascript"></script>
+    <title>Bar Chart</title>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var data = pv.range(10).map(Math.random),
+    w = 400,
+    h = 250,
+    i = -1, // mouseover index
+    x = pv.Scale.linear(0, 1).range(0, w),
+    y = pv.Scale.ordinal(pv.range(10)).splitBanded(0, h, 4/5);
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .bottom(20)
+    .left(20)
+    .right(10)
+    .top(5)
+    .events("all")
+    .event("mousemove", pv.Behavior.point(Infinity).collapse("x"));
+
+var bar = vis.add(pv.Bar)
+    .data(data)
+    .top(function() y(this.index))
+    .height(y.range().band)
+    .left(0)
+    .width(x)
+    .event("point", function() (i = this.index, tip))
+    .event("unpoint", function() (i = -1, tip));
+
+bar.anchor("left").add(pv.Label)
+    .textMargin(5)
+    .textAlign("right")
+    .text(function() "ABCDEFGHIJK".charAt(this.index));
+
+var tip = bar.anchor("right").add(pv.Label)
+    .visible(function() this.index == i)
+    .textStyle(function(d) d < .1 ? "#000" : "#fff")
+    .textAlign(function(d) d < .1 ? "left" : "right")
+    .text(function(d) d.toFixed(3));
+
+vis.add(pv.Rule)
+    .data(x.ticks())
+    .left(function(d) Math.round(x(d)) - .5)
+    .strokeStyle(function(d) d ? "rgba(255,255,255,.3)" : "#000")
+  .add(pv.Rule)
+    .bottom(0)
+    .height(5)
+    .strokeStyle("#000")
+  .anchor("bottom").add(pv.Label)
+    .text(function(d) d.toFixed(1));
+
+vis.render();
+
+    </script>
+    <div id="example"></div>
+  </body>
+</html>

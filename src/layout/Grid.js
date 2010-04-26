@@ -23,8 +23,9 @@
  * heatmap can be generated as:
  *
  * <pre>.add(pv.Layout.Grid)
- *   .rows(arrays)
- *   .fillStyle(pv.ramp("white", "black"))</pre>
+ *     .rows(arrays)
+ *   .add(pv.Bar)
+ *     .fillStyle(pv.ramp("white", "black"))</pre>
  *
  * The grid subdivides the full width and height of the parent panel into equal
  * rectangles. For more data-driven subdivision, see {@link pv.Layout.Treemap}.
@@ -33,30 +34,29 @@
  */
 pv.Layout.Grid = function() {
   pv.Layout.call(this);
+  var that = this,
+      add = that.add;
 
-  this.data(function(d) {
-        var r = this.rows(), c = this.cols();
-        if (typeof c == "object") {
-          r = pv.transpose(c);
-        }
-        if (typeof r == "object") {
-          this.rows(r.length).cols(r[0] ? r[0].length : 0);
-          return pv.blend(r);
-        }
-        return pv.repeat([d], r * c);
-      })
-    .width(function() {
-        return this.parent.width() / this.cols();
-      })
-    .height(function() {
-        return this.parent.height() / this.rows();
-      })
-    .left(function() {
-        return this.width() * (this.index % this.cols());
-      })
-    .top(function() {
-        return this.height() * Math.floor(this.index / this.cols());
-      });
+  var cells = new pv.Panel()
+      .data(function() {
+          return that.scene[that.index].$grid;
+        })
+      .width(function() {
+          return that.width() / that.cols();
+        })
+      .height(function() {
+          return that.height() / that.rows();
+        })
+      .left(function() {
+          return this.width() * (this.index % that.cols());
+        })
+      .top(function() {
+          return this.height() * Math.floor(this.index / that.cols());
+        });
+
+  that.add = function(type) {
+    return add.call(this, pv.Panel).extend(cells).add(type);
+  };
 };
 
 pv.Layout.Grid.prototype = pv.extend(pv.Layout)
@@ -68,16 +68,35 @@ pv.Layout.Grid.prototype.defaults = new pv.Layout.Grid()
     .rows(1)
     .cols(1);
 
+pv.Layout.Grid.prototype.buildImplied = function(s) {
+  pv.Layout.prototype.buildImplied.call(this, s);
+  var r = s.rows, c = s.cols;
+  if (typeof c == "object") r = pv.transpose(c);
+  if (typeof r == "object") {
+    s.$grid = pv.blend(r);
+    s.rows = r.length;
+    s.cols = r[0] ? r[0].length : 0;
+  } else {
+    s.$grid = pv.repeat([s.data], r * c);
+  }
+};
+
 /**
- * The number of rows, or the data in row-major order.
+ * The number of rows. This property can also be specified as the data in
+ * row-major order; in this case, the rows property is implicitly set to the
+ * length of the array, and the cols property is set to the length of the first
+ * element in the array.
  *
- * @type number|array[]
+ * @type number
  * @name pv.Layout.Grid.prototype.rows
  */
 
 /**
- * The number of columns, or the data in column-major order.
+ * The number of columns. This property can also be specified as the data in
+ * column-major order; in this case, the cols property is implicitly set to the
+ * length of the array, and the rows property is set to the length of the first
+ * element in the array.
  *
- * @type number|array[]
+ * @type number
  * @name pv.Layout.Grid.prototype.cols
  */

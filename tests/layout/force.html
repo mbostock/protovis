@@ -25,7 +25,9 @@ var vis = new pv.Panel()
 
 var layout = vis.add(pv.Layout.Force)
     .nodes(miserables.nodes)
-    .links(miserables.links);
+    .links(miserables.links)
+    .springConstant(.5)
+    .chargeConstant(-2000);
 
 layout.link.add(pv.Line);
 

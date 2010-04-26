@@ -1,19 +1,30 @@
 pv.Layout.Matrix = function() {
   pv.Layout.Network.call(this);
-  var that = this;
+  var that = this,
+      n, // cached matrix size
+      dx, // cached cell width
+      dy, // cached cell height
+      labels, // cached labels (array of strings)
+      pairs, // cached pairs (array of links)
+      buildImplied = that.buildImplied;
 
-  /** @private */
-  function s() {
-    return that.scene.$matrix;
-  }
+  /** @private Cache layout state to optimize properties. */
+  this.buildImplied = function(s) {
+    buildImplied.call(this, s);
+    n = s.nodes.length;
+    dx = s.width / n;
+    dy = s.height / n;
+    labels = s.$matrix.labels;
+    pairs = s.$matrix.pairs;
+  };
 
   /* Links are all pairs of nodes. */
   this.link
-      .data(function() { return s().pairs; })
-      .left(function() { return s().dx * (this.index % s().n); })
-      .top(function() { return s().dy * Math.floor(this.index / s().n); })
-      .width(function() { return s().dx; })
-      .height(function() { return s().dy; })
+      .data(function() { return pairs; })
+      .left(function() { return dx * (this.index % n); })
+      .top(function() { return dy * Math.floor(this.index / n); })
+      .width(function() { return dx; })
+      .height(function() { return dy; })
       .lineWidth(1.5)
       .strokeStyle("#fff")
       .fillStyle(function(l) { return l.linkValue ? "#555" : "#eee"; })
@@ -24,9 +35,9 @@ pv.Layout.Matrix = function() {
 
   /* Labels are duplicated for top & left. */
   this.label
-      .data(function() { return s().labels; })
-      .left(function() { return this.index & 1 ? s().dx * ((this.index >> 1) + .5) : null; })
-      .top(function() { return this.index & 1 ? null : s().dy * ((this.index >> 1) + .5); })
+      .data(function() { return labels; })
+      .left(function() { return this.index & 1 ? dx * ((this.index >> 1) + .5) : null; })
+      .top(function() { return this.index & 1 ? null : dy * ((this.index >> 1) + .5); })
       .textMargin(4)
       .textAlign(function() { return this.index & 1 ? "left" : "right"; })
       .textAngle(function() { return this.index & 1 ? -Math.PI / 2 : 0; });
@@ -45,22 +56,19 @@ pv.Layout.Matrix.prototype.sort = function(f) {
 };
 
 /** @private */
-pv.Layout.Matrix.prototype.init = function() {
-  if (pv.Layout.Network.prototype.init.call(this)) return;
-  var nodes = this.nodes(),
-      links = this.links(),
-      directed = this.directed(),
+pv.Layout.Matrix.prototype.buildImplied = function(s) {
+  if (pv.Layout.Network.prototype.buildImplied.call(this, s)) return;
+
+  var nodes = s.nodes,
+      links = s.links,
       sort = this.$sort,
       n = nodes.length,
       index = pv.range(n),
-      matrix = this.scene.$matrix = {
-        n: n,
-        dx: this.parent.width() / n,
-        dy: this.parent.height() / n,
-        labels: [],
-        pairs: []
-      },
+      labels = [],
+      pairs = [],
       map = {};
+
+  s.$matrix = {labels: labels, pairs: pairs};
 
   /* Sort the nodes. */
   if (sort) index.sort(function(a, b) { return sort(nodes[a], nodes[b]); });
@@ -77,14 +85,14 @@ pv.Layout.Matrix.prototype.init = function() {
             targetNode: nodes[b],
             linkValue: 0
           };
-      matrix.pairs.push(map[a + "." + b] = p);
+      pairs.push(map[a + "." + b] = p);
     }
   }
 
   /* Create labels. */
   for (var i = 0; i < n; i++) {
     var a = index[i];
-    matrix.labels.push(nodes[a], nodes[a]);
+    labels.push(nodes[a], nodes[a]);
   }
 
   /* Accumulate link values. */
@@ -94,6 +102,6 @@ pv.Layout.Matrix.prototype.init = function() {
         target = l.targetNode.index,
         value = l.linkValue;
     map[source + "." + target].linkValue += value;
-    if (!directed) map[target + "." + source].linkValue += value;
+    if (!s.directed) map[target + "." + source].linkValue += value;
   }
 };

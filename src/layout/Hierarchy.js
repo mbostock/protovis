@@ -6,25 +6,13 @@ pv.Layout.Hierarchy = function() {
 
 pv.Layout.Hierarchy.prototype = pv.extend(pv.Layout.Network);
 
-/**
- * @private Register an implicit links property. Unfortunately, we can't simply
- * register this as a default because it depends on the nodes property, and thus
- * must be defined after the nodes property.
- */
-pv.Layout.Hierarchy.prototype.bind = function() {
-  pv.Layout.Network.prototype.bind.call(this);
-  var binds = this.binds;
-  if (!binds.properties.links) {
-    var p = this.propertyValue("links", pv.Layout.Hierarchy.links);
-    p.type = 1;
-    binds.defs.splice(binds.defs.length - 1, 0, p); // before init
-  }
+/** @private Compute the implied links. (Links are null by default.) */
+pv.Layout.Hierarchy.prototype.buildImplied = function(s) {
+  if (!s.links) s.links = pv.Layout.Hierarchy.links.call(this);
+  pv.Layout.Network.prototype.buildImplied.call(this, s);
 };
 
-/**
- * The default links property; computes links using the <tt>parentNode</tt>
- * attribute.
- */
+/** The implied links; computes links using the <tt>parentNode</tt> attribute. */
 pv.Layout.Hierarchy.links = function() {
   return this.nodes()
       .filter(function(n) { return n.parentNode; })
@@ -41,16 +29,16 @@ pv.Layout.Hierarchy.links = function() {
 pv.Layout.Hierarchy.NodeLink = {
 
   /** @private */
-  init: function() {
-    var nodes = this.nodes(),
-        orient = this.orient(),
+  buildImplied: function(s) {
+    var nodes = s.nodes,
+        orient = s.orient,
         horizontal = /^(top|bottom)$/.test(orient),
-        w = this.parent.width(),
-        h = this.parent.height();
+        w = s.width,
+        h = s.height;
 
     /* Compute default inner and outer radius. */
     if (orient == "radial") {
-      var ir = this.innerRadius(), or = this.outerRadius();
+      var ir = s.innerRadius, or = s.outerRadius;
       if (ir == null) ir = 0;
       if (or == null) or = Math.min(w, h) / 2;
     }
@@ -123,17 +111,17 @@ pv.Layout.Hierarchy.Fill = {
   },
 
   /** @private */
-  init: function() {
-    var nodes = this.nodes(),
-        orient = this.orient(),
+  buildImplied: function(s) {
+    var nodes = s.nodes,
+        orient = s.orient,
         horizontal = /^(top|bottom)$/.test(orient),
-        w = this.parent.width(),
-        h = this.parent.height(),
+        w = s.width,
+        h = s.height,
         depth = -nodes[0].minDepth;
 
     /* Compute default inner and outer radius. */
     if (orient == "radial") {
-      var ir = this.innerRadius(), or = this.outerRadius();
+      var ir = s.innerRadius, or = s.outerRadius;
       if (ir == null) ir = 0;
       if (ir) depth *= 2; // use full depth step for root
       if (or == null) or = Math.min(w, h) / 2;

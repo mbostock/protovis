@@ -50,13 +50,12 @@ pv.Layout.Pack.prototype.size = function(f) {
 };
 
 /** @private */
-pv.Layout.Pack.prototype.init = function() {
-  if (pv.Layout.Hierarchy.prototype.init.call(this)) return;
+pv.Layout.Pack.prototype.buildImplied = function(s) {
+  if (pv.Layout.Hierarchy.prototype.buildImplied.call(this, s)) return;
+
   var that = this,
-      nodes = that.nodes(),
-      root = nodes[0],
-      order = that.order(),
-      spacing = that.spacing();
+      nodes = s.nodes,
+      root = nodes[0];
 
   /** @private Compute the radii of the leaf nodes. */
   function radii(nodes) {
@@ -65,8 +64,7 @@ pv.Layout.Pack.prototype.init = function() {
     for (var i = 0, n = nodes.length; i < n; i++) {
       var c = nodes[i];
       if (!c.firstChild) {
-        stack[0] = c.nodeValue;
-        c.radius = that.$radius.apply(that, stack);
+        c.radius = that.$radius.apply(that, (stack[0] = c, stack));
       }
     }
     stack.shift();
@@ -82,7 +80,7 @@ pv.Layout.Pack.prototype.init = function() {
     }
 
     /* Sort. */
-    switch (order) {
+    switch (s.order) {
       case "ascending": {
         nodes.sort(function(a, b) { return a.radius - b.radius; });
         break;
@@ -211,7 +209,7 @@ pv.Layout.Pack.prototype.init = function() {
       n.y -= cy;
       cr = Math.max(cr, n.radius + Math.sqrt(n.x * n.x + n.y * n.y));
     }
-    return cr + spacing;
+    return cr + s.spacing;
   }
 
   /** @private */

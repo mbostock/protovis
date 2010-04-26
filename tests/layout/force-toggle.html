@@ -26,7 +26,7 @@ var vis = new pv.Panel()
     .event("mousewheel", pv.Behavior.zoom());
 
 var layout = vis.add(pv.Layout.Force)
-    .nodes(root.nodes())
+    .nodes(function() root.nodes())
     .links(pv.Layout.Hierarchy.links);
 
 layout.link.add(pv.Line);
@@ -36,7 +36,7 @@ layout.node.add(pv.Dot)
     .size(function(n) (n.nodeValue / 100) || 10)
     .fillStyle(function(n) n.toggled ? "#1f77b4" : n.firstChild ? "#aec7e8" : "#ff7f0e")
     .event("mousedown", pv.Behavior.drag())
-    .event("dblclick", function(n) (n.toggle(pv.event.altKey), layout.nodes(root.nodes()).cache(false)));
+    .event("dblclick", function(n) (n.toggle(pv.event.altKey), layout.reset()));
 
 vis.render();
 

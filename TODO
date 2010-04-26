@@ -6,6 +6,13 @@ layout/Force.js
 - smarter default rest length / charge force constant
 - allow customization of simulation parameters (e.g., rest length)
 
+mark/Mark.js
+- partial redraw for newly-added marks
+
+mark/Panel.js
+- remove()
+- query the visible region (avoid transform invert in panel-transform.html)?
+
 mark/Anchor.js
 - {min,max}:name "singleton" anchors for center labeling on area and line?
 
@@ -14,17 +21,6 @@ mark/Area.js
 
 mark/Line.js
 - support for "basis" and "cardinal" with segmented lines
-
-behavior/Point.js
-- better support for area, wedge, and bar
-
-behavior/Pan.js
-- lock one axis
-- specify bounds on panning
-
-behavior/Zoom.js
-- specify bounds on zoom level
-- non-uniform zooms (e.g., in time series, zoom time dimension only)?
 
 geo/GeoScale.js
 - determine center point of projection from domain

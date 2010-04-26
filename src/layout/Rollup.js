@@ -1,22 +1,33 @@
 pv.Layout.Rollup = function() {
   pv.Layout.Network.call(this);
-  var that = this;
+  var that = this,
+      nodes, // cached rollup nodes
+      links, // cached rollup links
+      buildImplied = that.buildImplied;
+
+  /** @private Cache layout state to optimize properties. */
+  this.buildImplied = function(s) {
+    buildImplied.call(this, s);
+    nodes = s.$rollup.nodes;
+    links = s.$rollup.links;
+  };
 
   /* Render rollup nodes. */
   this.node
-      .data(function() { return that.scene.$rollup.nodes; })
+      .data(function() { return nodes; })
       .size(function(d) { return d.nodes.length * 20; });
 
   /* Render rollup links. */
-  var add = this.link.add;
   this.link
       .interpolate("polar")
-      .eccentricity(.8)
-      .add = function(type) {
-      var mark = add.call(this, type);
-      mark.parent.data(function() { return that.scene.$rollup.links; });
-      return mark;
-    };
+      .eccentricity(.8);
+
+  this.link.add = function(type) {
+    return that.add(pv.Panel)
+        .data(function() { return links; })
+      .add(type)
+        .extend(this);
+  };
 };
 
 pv.Layout.Rollup.prototype = pv.extend(pv.Layout.Network)
@@ -32,11 +43,12 @@ pv.Layout.Rollup.prototype.y = function(f) {
   return this;
 };
 
-pv.Layout.Rollup.prototype.init = function() {
-  if (pv.Layout.Network.prototype.init.call(this)) return;
-  var nodes = this.nodes(),
-      links = this.links(),
-      directed = this.directed(),
+pv.Layout.Rollup.prototype.buildImplied = function(s) {
+  if (pv.Layout.Network.prototype.buildImplied.call(this, s)) return;
+
+  var nodes = s.nodes,
+      links = s.links,
+      directed = s.directed,
       n = nodes.length,
       x = [],
       y = [],
@@ -50,15 +62,14 @@ pv.Layout.Rollup.prototype.init = function() {
   }
 
   /* Iterate over the data, evaluating the x and y functions. */
-  var stack = pv.Mark.stack;
+  var stack = pv.Mark.stack, o = {parent: this};
   stack.unshift(null);
   for (var i = 0; i < n; i++) {
-    pv.Mark.prototype.index = this.index = i;
+    o.index = i;
     stack[0] = nodes[i];
-    x[i] = this.$x.apply(this.node, stack);
-    y[i] = this.$y.apply(this.node, stack);
+    x[i] = this.$x.apply(o, stack);
+    y[i] = this.$y.apply(o, stack);
   }
-  delete this.index;
   stack.shift();
 
   /* Compute rollup nodes. */
@@ -99,7 +110,7 @@ pv.Layout.Rollup.prototype.init = function() {
   }
 
   /* Export the rolled up nodes and links to the scene. */
-  this.scene.$rollup = {
+  s.$rollup = {
     nodes: pv.values(rnodes),
     links: pv.values(rlinks)
   };

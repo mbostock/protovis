@@ -36,8 +36,8 @@ vis.add(pv.Rule)
 var view = vis.add(pv.Panel)
     .overflow("hidden")
     .events("all")
-    .event("mousedown", pv.Behavior.pan())
-    .event("mousewheel", pv.Behavior.zoom());
+    .event("mousedown", pv.Behavior.pan().bound(true))
+    .event("mousewheel", pv.Behavior.zoom().bound(true));
 
 view.add(pv.Dot)
     .data(pv.range(100).map(function() ({x:Math.random(), y:Math.random()})))

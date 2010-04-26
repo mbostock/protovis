@@ -1,6 +1,7 @@
 /** @class Force-directed network layout. */
 pv.Layout.Force = function() {
   pv.Layout.Network.call(this);
+
   /* Force-directed graphs can be messy, so reduce the link width. */
   this.link.lineWidth(function(d, p) { return Math.sqrt(p.linkValue) * 1.5; });
   this.label.textAlign("center");
@@ -8,14 +9,33 @@ pv.Layout.Force = function() {
 
 pv.Layout.Force.prototype = pv.extend(pv.Layout.Network)
     .property("bound", Boolean)
-    .property("iterations", Number);
+    .property("iterations", Number)
+    .property("dragConstant", Number)
+    .property("chargeConstant", Number)
+    .property("chargeMinDistance", Number)
+    .property("chargeMaxDistance", Number)
+    .property("chargeTheta", Number)
+    .property("springConstant", Number)
+    .property("springDamping", Number)
+    .property("springLength", Number);
+
+pv.Layout.Force.prototype.defaults = new pv.Layout.Force()
+    .extend(pv.Layout.Network.prototype.defaults)
+    .dragConstant(.1)
+    .chargeConstant(-40)
+    .chargeMinDistance(2)
+    .chargeMaxDistance(500)
+    .chargeTheta(.9)
+    .springConstant(.1)
+    .springDamping(.1)
+    .springLength(20);
 
 /** @private Initialize the physics simulation. */
-pv.Layout.Force.prototype.init = function() {
+pv.Layout.Force.prototype.buildImplied = function(s) {
 
   /* Any cached interactive layouts need to be rebound for the timer. */
-  if (pv.Layout.Network.prototype.init.call(this)) {
-    var f = this.scene.$force;
+  if (pv.Layout.Network.prototype.buildImplied.call(this, s)) {
+    var f = s.$force;
     if (f) {
       f.next = this.binds.$force;
       this.binds.$force = f;
@@ -24,28 +44,41 @@ pv.Layout.Force.prototype.init = function() {
   }
 
   var that = this,
-      nodes = that.nodes(),
-      links = that.links(),
-      k = this.iterations(),
-      w = that.parent.width(),
-      h = that.parent.height();
+      nodes = s.nodes,
+      links = s.links,
+      k = s.iterations,
+      w = s.width,
+      h = s.height;
 
   /* Initialize positions randomly near the center. */
   for (var i = 0, n; i < nodes.length; i++) {
     n = nodes[i];
-    if (isNaN(n.x)) n.x = w / 2 + Math.random() - .5;
-    if (isNaN(n.y)) n.y = h / 2 + Math.random() - .5;
+    if (isNaN(n.x)) n.x = w / 2 + 40 * Math.random() - 20;
+    if (isNaN(n.y)) n.y = h / 2 + 40 * Math.random() - 20;
   }
 
   /* Initialize the simulation. */
   var sim = pv.simulation(nodes);
-  sim.force(pv.Force.drag());
-  sim.force(pv.Force.charge());
-  sim.force(pv.Force.spring().links(links));
+
+  /* Drag force. */
+  sim.force(pv.Force.drag(s.dragConstant));
+
+  /* Charge (repelling) force. */
+  sim.force(pv.Force.charge(s.chargeConstant)
+      .domain(s.chargeMinDistance, s.chargeMaxDistance)
+      .theta(s.chargeTheta));
+
+  /* Spring (attracting) force. */
+  sim.force(pv.Force.spring(s.springConstant)
+      .damping(s.springDamping)
+      .length(s.springLength)
+      .links(links));
+
+  /* Position constraint (for interactive dragging). */
   sim.constraint(pv.Constraint.position());
 
   /* Optionally add bound constraint. TODO: better padding. */
-  if (this.bound()) {
+  if (s.bound) {
     sim.constraint(pv.Constraint.bound().x(6, w - 6).y(6, h - 6));
   }
 
@@ -67,7 +100,7 @@ pv.Layout.Force.prototype.init = function() {
     sim.step(); // compute initial velocities
 
     /* Add the simulation state to the bound list. */
-    var force = this.scene.$force = this.binds.$force = {
+    var force = s.$force = this.binds.$force = {
       next: this.binds.$force,
       nodes: nodes,
       min: 1e-4 * (links.length + 1),

@@ -185,6 +185,29 @@ pv.numerate = function(keys, f) {
 };
 
 /**
+ * Returns the unique elements in the specified array, in the order they appear.
+ * Note that since JavaScript maps only support string keys, <tt>array</tt> must
+ * contain strings, or other values that naturally map to distinct string
+ * values. Alternatively, an optional accessor function <tt>f</tt> can be
+ * specified to compute the string key for the given element. Accessor functions
+ * can refer to <tt>this.index</tt>.
+ *
+ * @param {array} array an array, usually of string keys.
+ * @param {function} [f] an optional key function.
+ * @returns {array} the unique values.
+ */
+pv.uniq = function(array, f) {
+  if (!f) f = pv.identity;
+  var map = {}, keys = [], o = {}, y;
+  array.forEach(function(x, i) {
+    o.index = i;
+    y = f.call(o, x);
+    if (!(y in map)) map[y] = keys.push(y);
+  });
+  return keys;
+};
+
+/**
  * The comparator function for natural order. This can be used in conjunction with
  * the built-in array <tt>sort</tt> method to sort elements by their natural
  * order, ascending. Note that if no comparator function is specified to the

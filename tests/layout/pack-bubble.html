@@ -9,9 +9,9 @@
 
 /* Produce a flat hierarchy of the Flare classes. */
 var classes = pv.nodes(pv.flatten(flare).leaf(Number).array());
-classes.slice(1).forEach(function(n) {
-  n.nodeName = "flare." + n.nodeValue.keys.join(".");
-  n.nodeValue = n.nodeValue.value;
+classes.slice(1).forEach(function(d) {
+  d.nodeName = "flare." + d.nodeValue.keys.join(".");
+  d.nodeValue = d.nodeValue.value;
 });
 
 var vis = new pv.Panel()
@@ -20,11 +20,11 @@ var vis = new pv.Panel()
 
 vis.add(pv.Layout.Pack)
     .nodes(classes)
-    .size(Number)
+    .size(function(d) d.nodeValue)
     .spacing(0)
   .node.add(pv.Dot)
-    .visible(function(n) n.parentNode)
-    .title(function(n) n.nodeName);
+    .visible(function(d) d.parentNode)
+    .title(function(d) d.nodeName);
 
 vis.render();
 

@@ -21,7 +21,9 @@ vis.add(pv.Layout.Grid)
     .rows(pv.parent)
     .cols(pv.parent)
     .strokeStyle("#fff")
+  .add(pv.Bar)
   .anchor("center").add(pv.Label)
+    .textStyle("rgba(255, 255, 255, .4)")
     .font("24px sans");
 
 vis.render();

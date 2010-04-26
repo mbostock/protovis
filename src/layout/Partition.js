@@ -19,10 +19,11 @@ pv.Layout.Partition.prototype.size = function(f) {
   return this;
 };
 
-pv.Layout.Partition.prototype.init = function() {
+pv.Layout.Partition.prototype.buildImplied = function(s) {
+  if (pv.Layout.Hierarchy.prototype.buildImplied.call(this, s)) return;
+
   var that = this,
-      root = that.nodes()[0],
-      order = that.order(),
+      root = s.nodes[0],
       stack = pv.Mark.stack,
       maxDepth = 0;
 
@@ -32,12 +33,12 @@ pv.Layout.Partition.prototype.init = function() {
       if (i > maxDepth) maxDepth = i;
       n.size = n.firstChild
           ? pv.sum(n.childNodes, function(n) { return n.size; })
-          : that.$size.apply(that, (stack[0] = n.nodeValue, stack));
+          : that.$size.apply(that, (stack[0] = n, stack));
     });
   stack.shift();
 
   /* Order */
-  switch (order) {
+  switch (s.order) {
     case "ascending": root.sort(function(a, b) { return a.size - b.size; }); break;
     case "descending": root.sort(function(b, a) { return a.size - b.size; }); break;
   }
@@ -60,7 +61,7 @@ pv.Layout.Partition.prototype.init = function() {
       n.maxDepth = n.depth = i * ds;
     });
 
-  pv.Layout.Hierarchy.NodeLink.init.call(this);
+  pv.Layout.Hierarchy.NodeLink.buildImplied.call(this, s);
 };
 
 /** A variant of partition layout that is space-filling. */
@@ -71,7 +72,7 @@ pv.Layout.Partition.Fill = function() {
 
 pv.Layout.Partition.Fill.prototype = pv.extend(pv.Layout.Partition);
 
-pv.Layout.Partition.Fill.prototype.init = function() {
-  if (pv.Layout.Partition.prototype.init.call(this)) return;
-  pv.Layout.Hierarchy.Fill.init.call(this);
+pv.Layout.Partition.Fill.prototype.buildImplied = function(s) {
+  if (pv.Layout.Partition.prototype.buildImplied.call(this, s)) return;
+  pv.Layout.Hierarchy.Fill.buildImplied.call(this, s);
 };

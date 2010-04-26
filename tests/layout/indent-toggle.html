@@ -54,7 +54,7 @@ vis.render();
 /* Toggles the selected node, then updates the layout. */
 function toggle(n) {
   n.toggle(pv.event.altKey);
-  return layout.cache(false).root;
+  return layout.reset().root;
 }
 
     </script>

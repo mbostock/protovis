@@ -1,15 +1,15 @@
 pv.Layout.Cluster = function() {
   pv.Layout.Hierarchy.call(this);
-  var interpolate, init = this.init;
+  var interpolate, // cached interpolate
+      buildImplied = this.buildImplied;
 
   /** @private Cache layout state to optimize properties. */
-  this.init = function() {
-    var orient = this.orient();
+  this.buildImplied = function(s) {
+    buildImplied.call(this, s);
     interpolate
-        = /^(top|bottom)$/.test(orient) ? "step-before"
-        : /^(left|right)$/.test(orient) ? "step-after"
+        = /^(top|bottom)$/.test(s.orient) ? "step-before"
+        : /^(left|right)$/.test(s.orient) ? "step-after"
         : "linear";
-    init.call(this);
   };
 
   this.link.interpolate(function() { return interpolate; });
@@ -26,10 +26,11 @@ pv.Layout.Cluster.prototype.defaults = new pv.Layout.Cluster()
     .group(0)
     .orient("top");
 
-pv.Layout.Cluster.prototype.init = function() {
-  if (pv.Layout.Hierarchy.prototype.init.call(this)) return;
-  var root = this.nodes()[0],
-      group = this.group(),
+pv.Layout.Cluster.prototype.buildImplied = function(s) {
+  if (pv.Layout.Hierarchy.prototype.buildImplied.call(this, s)) return;
+
+  var root = s.nodes[0],
+      group = s.group,
       breadth,
       depth,
       leafCount = 0,
@@ -86,7 +87,7 @@ pv.Layout.Cluster.prototype.init = function() {
     });
   root.minDepth = -depth;
 
-  pv.Layout.Hierarchy.NodeLink.init.call(this);
+  pv.Layout.Hierarchy.NodeLink.buildImplied.call(this, s);
 };
 
 /** A variant of cluster layout that is space-filling. */
@@ -97,7 +98,7 @@ pv.Layout.Cluster.Fill = function() {
 
 pv.Layout.Cluster.Fill.prototype = pv.extend(pv.Layout.Cluster);
 
-pv.Layout.Cluster.Fill.prototype.init = function() {
-  if (pv.Layout.Cluster.prototype.init.call(this)) return;
-  pv.Layout.Hierarchy.Fill.init.call(this);
+pv.Layout.Cluster.Fill.prototype.buildImplied = function(s) {
+  if (pv.Layout.Cluster.prototype.buildImplied.call(this, s)) return;
+  pv.Layout.Hierarchy.Fill.buildImplied.call(this, s);
 };

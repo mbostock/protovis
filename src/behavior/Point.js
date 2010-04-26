@@ -24,8 +24,8 @@ pv.Behavior.point = function(r) {
         var v = mark.mouse();
         for (var j = 0, m = child.length; j < m; j++) {
           var c = child[j],
-              dx = v.x - c.left,
-              dy = v.y - c.top,
+              dx = v.x - c.left - (c.width || 0) / 2,
+              dy = v.y - c.top - (c.height || 0) / 2,
               dd = kx * dx * dx + ky * dy * dy;
           if (dd < point.cost) {
             point.distance = dx * dx + dy * dy;
