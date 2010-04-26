@@ -95,7 +95,7 @@ pv.Layout.Treemap.prototype.buildImplied = function(s) {
       right = s.paddingRight,
       top = s.paddingTop,
       bottom = s.paddingBottom,
-      size = function(n) { return n.size; },
+      /** @ignore */ size = function(n) { return n.size; },
       round = s.round ? Math.round : Number,
       mode = s.mode;
 

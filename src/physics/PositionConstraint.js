@@ -2,7 +2,7 @@ pv.Constraint.position = function(f) {
   var a = 1, // default alpha
       constraint = {};
 
-  if (!arguments.length) f = function(p) { return p.fix; };
+  if (!arguments.length) /** @ignore */ f = function(p) { return p.fix; };
 
   constraint.alpha = function(x) {
     if (arguments.length) {

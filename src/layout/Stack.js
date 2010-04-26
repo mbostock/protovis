@@ -18,7 +18,7 @@
 pv.Layout.Stack = function() {
   pv.Layout.call(this);
   var that = this,
-      none = function() { return null; },
+      /** @ignore */ none = function() { return null; },
       prop = {t: none, l: none, r: none, b: none, w: none, h: none},
       values,
       buildImplied = that.buildImplied;

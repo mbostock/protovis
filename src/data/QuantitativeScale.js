@@ -75,8 +75,8 @@ pv.Scale.quantitative = function() {
 
   /** @private */
   scale.transform = function(forward, inverse) {
-    f = function(x) { return n ? -forward(-x) : forward(x); };
-    g = function(y) { return n ? -inverse(-y) : inverse(y); };
+    /** @ignore */ f = function(x) { return n ? -forward(-x) : forward(x); };
+    /** @ignore */ g = function(y) { return n ? -inverse(-y) : inverse(y); };
     l = d.map(f);
     return this;
   };
@@ -256,35 +256,35 @@ pv.Scale.quantitative = function() {
       if (span >= 2 * 31536e6) {
         precision = 31536e6;
         format = "%Y";
-        increment = function(d) { d.setFullYear(d.getFullYear() + step); };
+        /** @ignore */ increment = function(d) { d.setFullYear(d.getFullYear() + step); };
       } else if (span >= 2 * 2592e6) {
         precision = 2592e6;
         format = "%m/%Y";
-        increment = function(d) { d.setMonth(d.getMonth() + step); };
+        /** @ignore */ increment = function(d) { d.setMonth(d.getMonth() + step); };
       } else if (span >= 2 * 6048e5) {
         precision = 6048e5;
         format = "%m/%d";
-        increment = function(d) { d.setDate(d.getDate() + 7 * step); };
+        /** @ignore */ increment = function(d) { d.setDate(d.getDate() + 7 * step); };
       } else if (span >= 2 * 864e5) {
         precision = 864e5;
         format = "%m/%d";
-        increment = function(d) { d.setDate(d.getDate() + step); };
+        /** @ignore */ increment = function(d) { d.setDate(d.getDate() + step); };
       } else if (span >= 2 * 36e5) {
         precision = 36e5;
         format = "%I:%M %p";
-        increment = function(d) { d.setHours(d.getHours() + step); };
+        /** @ignore */ increment = function(d) { d.setHours(d.getHours() + step); };
       } else if (span >= 3 * 6e4) {
         precision = 6e4;
         format = "%I:%M %p";
-        increment = function(d) { d.setMinutes(d.getMinutes() + step); };
+        /** @ignore */ increment = function(d) { d.setMinutes(d.getMinutes() + step); };
       } else if (span >= 3 * 1e3) {
         precision = 1e3;
         format = "%I:%M:%S";
-        increment = function(d) { d.setSeconds(d.getSeconds() + step); };
+        /** @ignore */ increment = function(d) { d.setSeconds(d.getSeconds() + step); };
       } else {
         precision = 1;
         format = "%S.%Qs";
-        increment = function(d) { d.setTime(d.getTime() + step); };
+        /** @ignore */ increment = function(d) { d.setTime(d.getTime() + step); };
       }
       tickFormat = pv.Format.date(format);
 
@@ -348,7 +348,7 @@ pv.Scale.quantitative = function() {
     var start = Math.ceil(min / step) * step,
         end = Math.floor(max / step) * step,
         precision = Math.max(0, -Math.floor(pv.log(step, 10) + .01));
-    tickFormat = function(x) { return x.toFixed(precision); };
+    /** @ignore */ tickFormat = function(x) { return x.toFixed(precision); };
     var ticks = pv.range(start, end + step, step);
     return reverse ? ticks.reverse() : ticks;
   };
