@@ -15,12 +15,10 @@ pv.SvgScene.line = function(scenes) {
   var d = "M" + s.left + "," + s.top;
 
   if (scenes.length > 2 && (s.interpolate == "basis" || s.interpolate == "cardinal" || s.interpolate == "monotone")) {
-    if(s.interpolate == "basis") {
-      d += this.curvePathBasis(scenes);
-    } else if (s.interpolate == "cardinal") {
-      d += this.curvePathCardinal(scenes, s.tension);
-    } else { // if (s.interpolate == "monotone") {
-      d += this.curvePathMonotone(scenes);
+    switch (s.interpolate) {
+      case "basis": d += this.curvePathBasis(scenes); break;
+      case "cardinal": d += this.curvePathCardinal(scenes, s.tension); break;
+      case "monotone": d += this.curvePathMonotone(scenes); break;
     }
   } else {
     for (var i = 1; i < scenes.length; i++) {
@@ -46,14 +44,12 @@ pv.SvgScene.line = function(scenes) {
 pv.SvgScene.lineSegment = function(scenes) {
   var e = scenes.$g.firstChild;
 
-  var paths;
   var s = scenes[0];
-  if(s.interpolate == "basis") {
-    paths = this.curvePathBasisSegments(scenes);
-  } else if (s.interpolate == "cardinal") {
-    paths = this.curvePathCardinalSegments(scenes, s.tension);
-  } else if (s.interpolate == "monotone") {
-    paths = this.curvePathMonotoneSegments(scenes);
+  var paths;
+  switch (s.interpolate) {
+    case "basis": paths = this.curvePathBasisSegments(scenes); break;
+    case "cardinal": paths = this.curvePathCardinalSegments(scenes, s.tension); break;
+    case "monotone": paths = this.curvePathMonotoneSegments(scenes); break;
   }
 
   for (var i = 0, n = scenes.length - 1; i < n; i++) {
@@ -157,7 +153,7 @@ pv.SvgScene.pathJoin = function(s0, s1, s2, s3) {
   }
 
   return "M" + a.x + "," + a.y
-      + "L" + b.x + "," + b.y
-      + " " + c.x + "," + c.y
-      + " " + d.x + "," + d.y;
+       + "L" + b.x + "," + b.y
+       + " " + c.x + "," + c.y
+       + " " + d.x + "," + d.y;
 };

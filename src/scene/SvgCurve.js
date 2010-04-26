@@ -97,17 +97,23 @@ pv.SvgScene.curvePathBasisSegments = function(points) {
       p1 = p0,
       p2 = p0,
       p3 = points[1];
+
+  // Merge the first path to the second path and the last path to the penultimate path
   firstPath = this.pathBasis.segment(p0, p1, p2, p3);
-  for (var i = 2; i < points.length; i++) {
+  p0 = p1;
+  p1 = p2;
+  p2 = p3;
+  p3 = points[2];
+  paths.push(firstPath + this.pathBasis(p0, p1, p2, p3));
+  for (var i = 3; i < points.length; i++) {
     p0 = p1;
     p1 = p2;
     p2 = p3;
     p3 = points[i];
     paths.push(this.pathBasis.segment(p0, p1, p2, p3));
   }
-  // Merge the first path to the second path and the last path to the penultimate path
+
   // because we have 2 paths too many!
-  paths[0] = firstPath + paths[0];
   paths.push(this.pathBasis.segment(p1, p2, p3, p3) + this.pathBasis(p2, p3, p3, p3));
 
   return paths;
