@@ -45,6 +45,15 @@ pv.SvgScene.line = function(scenes) {
 
 pv.SvgScene.lineSegment = function(scenes) {
   var e = scenes.$g.firstChild;
+
+  var paths;
+  var s = scenes[0];
+  if(s.interpolate == "basis") {
+     paths = this.curvePathBasisSegments(scenes);
+  } else if (s.interpolate == "cardinal") {
+     paths = this.curvePathCardinalSegments(scenes, s.tension);
+  }
+
   for (var i = 0, n = scenes.length - 1; i < n; i++) {
     var s1 = scenes[i], s2 = scenes[i + 1];
 
@@ -59,6 +68,8 @@ pv.SvgScene.lineSegment = function(scenes) {
       fill = stroke;
       stroke = pv.Color.transparent;
       d = this.pathJoin(scenes[i - 1], s1, s2, scenes[i + 2]);
+    } else if(paths) {
+      d = paths[i];
     } else {
       d = "M" + s1.left + "," + s1.top + this.pathSegment(s1, s2);
     }

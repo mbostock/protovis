@@ -14,7 +14,7 @@ pv.SvgScene.pathBasis = (function() {
    * points. Derived from FvD 11.2.8.
    */
   var basis = [
-//  [ 1/6, 2/3, 1/6,   0 ],
+    [ 1/6, 2/3, 1/6,   0 ],
     [   0, 2/3, 1/3,   0 ],
     [   0, 1/3, 2/3,   0 ],
     [   0, 1/6, 2/3, 1/6 ]
@@ -32,14 +32,27 @@ pv.SvgScene.pathBasis = (function() {
     };
   }
 
-  return function(p0, p1, p2, p3) {
-      var b1 = weight(basis[0], p0, p1, p2, p3),
-          b2 = weight(basis[1], p0, p1, p2, p3),
-          b3 = weight(basis[2], p0, p1, p2, p3);
-      return "C" + b1.x + "," + b1.y
-           + "," + b2.x + "," + b2.y
-           + "," + b3.x + "," + b3.y;
-    };
+  var convert = function(p0, p1, p2, p3) {
+    var b1 = weight(basis[1], p0, p1, p2, p3),
+        b2 = weight(basis[2], p0, p1, p2, p3),
+        b3 = weight(basis[3], p0, p1, p2, p3);
+    return "C" + b1.x + "," + b1.y
+         + "," + b2.x + "," + b2.y
+         + "," + b3.x + "," + b3.y;
+  };
+
+  convert.segment = function(p0, p1, p2, p3) {
+    var b0 = weight(basis[0], p0, p1, p2, p3),
+        b1 = weight(basis[1], p0, p1, p2, p3),
+        b2 = weight(basis[2], p0, p1, p2, p3),
+        b3 = weight(basis[3], p0, p1, p2, p3);
+    return "M" + b0.x + "," + b0.y
+         + "C" + b1.x + "," + b1.y
+         + "," + b2.x + "," + b2.y
+         + "," + b3.x + "," + b3.y;
+  };
+
+  return convert;
 })();
 
 /**
@@ -71,6 +84,36 @@ pv.SvgScene.curvePathBasis = function(points) {
 };
 
 /**
+ * @private Interpolates the given points using the basis spline interpolation.
+ * Returns an array of path strings.
+ *
+ * @param points the array of points.
+ */
+pv.SvgScene.curvePathBasisSegments = function(points) {
+  if(points.length <= 2) return '';
+  var firstPath = "",
+      paths = [],
+      p0 = points[0],
+      p1 = p0,
+      p2 = p0,
+      p3 = points[1];
+  firstPath = this.pathBasis.segment(p0, p1, p2, p3);
+  for (var i = 2; i < points.length; i++) {
+    p0 = p1;
+    p1 = p2;
+    p2 = p3;
+    p3 = points[i];
+    paths.push(this.pathBasis.segment(p0, p1, p2, p3));
+  }
+  // Merge the first path to the second path and the last path to the penultimate path
+  // because we have 2 paths too many!
+  paths[0] = firstPath + paths[0];
+  paths.push(this.pathBasis.segment(p1, p2, p3, p3) + this.pathBasis(p2, p3, p3, p3));
+
+  return paths;
+};
+
+/**
  * @private Interpolates the given points with respective tangents using the cubic
  * Hermite spline interpolation.
  * Returns an SVG path without the leading M instruction to allow path appending.
@@ -99,14 +142,44 @@ pv.SvgScene.curvePathHermite = function(points, tangents) {
 };
 
 /**
- * @private Interpolates the given points using cardinal spline interpolation.
- * Returns an SVG path without the leading M instruction to allow path appending.
+ * @private Interpolates the given points with respective tangents using the cubic
+ * Hermite spline interpolation.
+ * Returns an array of path strings.
+ *
+ * @param points the array of points.
+ * @param tangents the array of tangent vectors.
+ */
+pv.SvgScene.curvePathHermiteSegments = function(points, tangents) {
+  if(points.length < 2 || points.length != tangents.length) return '';
+  var paths = [],
+      p0,
+      p1  = points[0],
+      t0,
+      t1  = tangents[0];
+  for (var i = 1; i < points.length; i++) {
+    p0 = p1;
+    t0 = t1;
+    p1 = points[i];
+    t1 = tangents[i];
+    paths.push(
+        "M" + p0.left + "," + p0.top
+      + "C" + (p0.left + t0.x) + "," + (p0.top + t0.y)
+      + "," + (p1.left - t1.x) + "," + (p1.top - t1.y)
+      + "," + p1.left + "," + p1.top
+    );
+  }
+
+  return paths;
+};
+
+/**
+ * @private Computed the tangents for the given points needed for cardinal spline interpolation.
+ * Returns an array of tangent vectors.
  *
  * @param points the array of points.
  * @param tension the tension of hte cardinal spline.
  */
-pv.SvgScene.curvePathCardinal = function(points, tension) {
-  if(points.length <= 2) return '';
+pv.SvgScene.computeCardinalTangents = function(points, tension) {
   var tangents = [];
   var a = (1 - tension) / 2,
       p0 = points[0],
@@ -124,15 +197,33 @@ pv.SvgScene.curvePathCardinal = function(points, tension) {
   tangents.push(t);
   tangents.push(t);
 
-  /*
-  // Helper code: Show tangents
-  var ep = '';
-  for(var i = 0; i < points.length; i++) {
-    ep += "M" + points[i].left + "," + points[i].top + "L" + (points[i].left + tangents[i].x) + "," + (points[i].top + tangents[i].y);
-  }
-  */
+  return tangents;
+};
 
-  return this.curvePathHermite(points, tangents);// + ep;
+/**
+ * @private Interpolates the given points using cardinal spline interpolation.
+ * Returns an SVG path without the leading M instruction to allow path appending.
+ *
+ * @param points the array of points.
+ * @param tension the tension of hte cardinal spline.
+ */
+pv.SvgScene.curvePathCardinal = function(points, tension) {
+  if(points.length <= 2) return '';
+  var tangents = this.computeCardinalTangents(points, tension);
+  return this.curvePathHermite(points, tangents);
+};
+
+/**
+ * @private Interpolates the given points using cardinal spline interpolation.
+ * Returns an array of path strings.
+ *
+ * @param points the array of points.
+ * @param tension the tension of hte cardinal spline.
+ */
+pv.SvgScene.curvePathCardinalSegments = function(points, tension) {
+  if(points.length <= 2) return '';
+  var tangents = this.computeCardinalTangents(points, tension);
+  return this.curvePathHermiteSegments(points, tangents);
 };
 
 /**
