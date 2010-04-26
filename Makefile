@@ -105,6 +105,9 @@ JS_COMPILER = \
 	--charset UTF-8 \
 	--warning_level=QUIET
 
+JSDOC_HOME = /Library/jsdoc-toolkit
+JSDOC = java -jar $(JSDOC_HOME)/jsrun.jar $(JSDOC_HOME)/app/run.js
+
 all: protovis-d3.2.js protovis-r3.2.js
 protovis-d3.2.js: $(JS_FILES)
 protovis-r3.2.js: $(JS_FILES)
@@ -122,5 +125,9 @@ protovis-r3.2.js: $(JS_FILES)
 	echo "// $(shell git rev-parse --short HEAD)" >> $@
 	cat $(filter %.js,$^) | $(JS_COMPILER) >> $@
 
+jsdoc: $(JS_FILES) Makefile
+	rm -rf jsdoc
+	$(JSDOC) -a -t=$(JSDOC_HOME)/templates/jsdoc -d=$@ -E="^pv-" $(JS_FILES)
+
 clean:
-	rm -rf protovis-d3.2.js protovis-r3.2.js
+	rm -rf protovis-d3.2.js protovis-r3.2.js jsdoc
