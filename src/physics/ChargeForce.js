@@ -5,6 +5,11 @@
  * and that the particles do not have charges of varying magnitude; instead, the
  * attraction or repulsion of all particles is globally specified as the charge
  * {@link #constant}.
+ *
+ * @class
+ * @name pv.Force.charge
+ * @constructor
+ * @param {number} k
  */
 pv.Force.charge = function(k) {
   var min = 2, // minimum distance at which to observe forces
@@ -16,6 +21,12 @@ pv.Force.charge = function(k) {
 
   if (!arguments.length) k = -40; // default charge constant (repulsion)
 
+  /**
+   * @function
+   * @name pv.Force.charge.prototype.constant
+   * @param {number} x
+   * @returns {pv.Force.charge} this.
+   */
   force.constant = function(x) {
     if (arguments.length) {
       k = Number(x);
@@ -24,6 +35,13 @@ pv.Force.charge = function(k) {
     return k;
   };
 
+  /**
+   * @function
+   * @name pv.Force.charge.prototype.domain
+   * @param {number} a
+   * @param {number} b
+   * @returns {pv.Force.charge} this.
+   */
   force.domain = function(a, b) {
     if (arguments.length) {
       min = Number(a);
@@ -35,6 +53,12 @@ pv.Force.charge = function(k) {
     return [min, max];
   };
 
+  /**
+   * @function
+   * @name pv.Force.charge.prototype.theta
+   * @param {number} x
+   * @returns {pv.Force.charge} this.
+   */
   force.theta = function(x) {
     if (arguments.length) {
       theta = Number(x);
@@ -44,9 +68,9 @@ pv.Force.charge = function(k) {
   };
 
   /**
-   * Recursively computes the center of charge for each node in the quadtree.
-   * This is equivalent to the center of mass, assuming that all particles have
-   * unit weight.
+   * @ignore Recursively computes the center of charge for each node in the
+   * quadtree. This is equivalent to the center of mass, assuming that all
+   * particles have unit weight.
    */
   function accumulate(n) {
     var cx = 0, cy = 0;
@@ -73,10 +97,10 @@ pv.Force.charge = function(k) {
   }
 
   /**
-   * Recursively computes forces on the given particle using the given quadtree
-   * node. The Barnes-Hut approximation criterion is if the ratio of the size of
-   * the quadtree node to the distance from the point to the node's center of
-   * mass is beneath some threshold.
+   * @ignore Recursively computes forces on the given particle using the given
+   * quadtree node. The Barnes-Hut approximation criterion is if the ratio of
+   * the size of the quadtree node to the distance from the point to the node's
+   * center of mass is beneath some threshold.
    */
   function forces(n, p, x1, y1, x2, y2) {
     var dx = n.cx - p.x,
@@ -110,6 +134,13 @@ pv.Force.charge = function(k) {
     }
   }
 
+  /**
+   * @function
+   * @name pv.Force.charge.prototype.apply
+   * @param {pv.Particle} particles
+   * @param {pv.Quadtree} q
+   * @returns {pv.Force.charge} this.
+   */
   force.apply = function(particles, q) {
     accumulate(q.root);
     for (var p = particles; p; p = p.next) {

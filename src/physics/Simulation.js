@@ -1,14 +1,17 @@
 /**
  * Constructs a new empty simulation.
+ *
+ * @param {array} particles
  */
 pv.simulation = function(particles) {
   return new pv.Simulation(particles);
 };
 
 /**
- * A particle simulation.
+ * @class A particle simulation.
  *
  * @constructor Constructs a new empty simulation.
+ * @param {array} particles
  */
 pv.Simulation = function(particles) {
   for (var i = 0; i < particles.length; i++) this.particle(particles[i]);
@@ -18,24 +21,27 @@ pv.Simulation = function(particles) {
  * The particles in the simulation. Particles are stored as a linked list; this
  * field represents the first particle in the simulation.
  *
+ * @field
  * @type pv.Particle
- * @field pv.Simulation.prototype.particles
+ * @name pv.Simulation.prototype.particles
  */
 
 /**
  * The forces in the simulation. Forces are stored as a linked list; this field
  * represents the first force in the simulation.
  *
+ * @field
  * @type pv.Force
- * @field pv.Simulation.prototype.forces
+ * @name pv.Simulation.prototype.forces
  */
 
 /**
  * The constraints in the simulation. Constraints are stored as a linked list;
  * this field represents the first constraint in the simulation.
  *
+ * @field
  * @type pv.Constraint
- * @field pv.Simulation.prototype.constraints
+ * @name pv.Simulation.prototype.constraints
  */
 
 /**

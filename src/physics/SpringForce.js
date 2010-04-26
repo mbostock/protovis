@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @constructor
+ * @param {number} k
+ */
 pv.Force.spring = function(k) {
   var d = .1, // default damping factor
       l = 20, // default rest length
@@ -7,6 +12,12 @@ pv.Force.spring = function(k) {
 
   if (!arguments.length) k = .1; // default spring constant (tension)
 
+  /**
+   * @function
+   * @name pv.Force.spring.prototype.links
+   * @param {array} x
+   * @returns {pv.Force.spring} this.
+   */
   force.links = function(x) {
     if (arguments.length) {
       links = x;
@@ -20,6 +31,12 @@ pv.Force.spring = function(k) {
     return links;
   };
 
+  /**
+   * @function
+   * @name pv.Force.spring.prototype.constant
+   * @param {number} x
+   * @returns {pv.Force.spring} this.
+   */
   force.constant = function(x) {
     if (arguments.length) {
       k = Number(x);
@@ -28,6 +45,12 @@ pv.Force.spring = function(k) {
     return k;
   };
 
+  /**
+   * @function
+   * @name pv.Force.spring.prototype.damping
+   * @param {number} x
+   * @returns {pv.Force.spring} this.
+   */
   force.damping = function(x) {
     if (arguments.length) {
       d = Number(x);
@@ -36,6 +59,12 @@ pv.Force.spring = function(k) {
     return d;
   };
 
+  /**
+   * @function
+   * @name pv.Force.spring.prototype.length
+   * @param {number} x
+   * @returns {pv.Force.spring} this.
+   */
   force.length = function(x) {
     if (arguments.length) {
       l = Number(x);
@@ -44,6 +73,12 @@ pv.Force.spring = function(k) {
     return l;
   };
 
+  /**
+   * @function
+   * @name pv.Force.spring.prototype.apply
+   * @param {pv.Particle} particles
+   * @returns {pv.Force.spring} this.
+   */
   force.apply = function(particles) {
     for (var i = 0; i < links.length; i++) {
       var a = links[i].sourceNode,

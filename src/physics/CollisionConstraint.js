@@ -1,3 +1,9 @@
+/**
+ * @class
+ * @name pv.Constraint.collision
+ * @constructor
+ * @param {number} radius
+ */
 pv.Constraint.collision = function(radius) {
   var n = 1, // number of times to repeat the constraint
       r1,
@@ -9,6 +15,12 @@ pv.Constraint.collision = function(radius) {
 
   if (!arguments.length) r1 = 10; // default search radius
 
+  /**
+   * @function
+   * @name pv.Constraint.collision.prototype.repeat
+   * @param {number} x
+   * @returns {pv.Constraint.collision} this.
+   */
   constraint.repeat = function(x) {
     if (arguments.length) {
       n = Number(x);
@@ -52,6 +64,13 @@ pv.Constraint.collision = function(radius) {
     }
   }
 
+  /**
+   * @function
+   * @name pv.Constraint.bound.prototype.apply
+   * @param {pv.Particle} particles
+   * @param {pv.Quadtree} q
+   * @returns {pv.Constraint.position} this.
+   */
   constraint.apply = function(particles, q) {
     var p, r, max = -Infinity;
     for (p = particles; p; p = p.next) {
