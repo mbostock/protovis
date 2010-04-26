@@ -1,4 +1,9 @@
-/** @see http://citeseer.ist.psu.edu/buchheim02improving.html */
+/**
+ * @class
+ * @extends pv.Layout.Hierarchy
+ * @see http://citeseer.ist.psu.edu/buchheim02improving.html
+ * @constructor
+ */
 pv.Layout.Tree = function() {
   pv.Layout.Hierarchy.call(this);
 };
@@ -16,6 +21,7 @@ pv.Layout.Tree.prototype.defaults = new pv.Layout.Tree()
     .depth(60)
     .orient("top");
 
+/** @private */
 pv.Layout.Tree.prototype.buildImplied = function(s) {
   if (pv.Layout.Hierarchy.prototype.buildImplied.call(this, s)) return;
 
@@ -213,6 +219,16 @@ pv.Layout.Tree.prototype.buildImplied = function(s) {
 };
 
 /**
+ * @type number
+ * @name pv.Layout.Tree.prototype.breadth
+ */
+
+/**
+ * @type number
+ * @name pv.Layout.Tree.prototype.depth
+ */
+
+/**
  * The orientation. The default orientation is "left", which means that the root
  * node is placed on the left edge, leaf nodes appear on the right edge, and
  * internal nodes are in-between. The following orientations are supported:<ul>
@@ -223,10 +239,8 @@ pv.Layout.Tree.prototype.buildImplied = function(s) {
  * <li>bottom - bottom-to-top.
  * <li>radial - radially, with the root at the center.</ul>
  *
- * @param {string} v the new orientation.
- * @function
+ * @type string
  * @name pv.Layout.Tree.prototype.orient
- * @returns {pv.Layout.Tree} this, or the current orientation.
  */
 
 /**
@@ -235,8 +249,6 @@ pv.Layout.Tree.prototype.buildImplied = function(s) {
  * separated by one breadth offset. Setting this to false (or 0) causes
  * non-siblings to be adjacent.
  *
- * @param {number} x the new group spacing.
- * @function
+ * @type number
  * @name pv.Layout.Tree.prototype.group
- * @returns {pv.Layout.Tree} this, or the current group spacing.
  */

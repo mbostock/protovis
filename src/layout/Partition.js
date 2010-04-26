@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends pv.Layout.Hierarchy
+ * @constructor
+ */
 pv.Layout.Partition = function() {
   pv.Layout.Hierarchy.call(this);
 };
@@ -8,17 +13,53 @@ pv.Layout.Partition.prototype = pv.extend(pv.Layout.Hierarchy)
     .property("innerRadius", Number)
     .property("outerRadius", Number);
 
+/**
+ * @type string
+ * @name pv.Layout.Partition.prototype.order
+ */
+
+/**
+ * @type string
+ * @name pv.Layout.Partition.prototype.orient
+ */
+
+/**
+ * @type number
+ * @name pv.Layout.Partition.prototype.innerRadius
+ */
+
+/**
+ * @type number
+ * @name pv.Layout.Partition.prototype.outerRadius
+ */
+
 pv.Layout.Partition.prototype.defaults = new pv.Layout.Partition()
     .extend(pv.Layout.Hierarchy.prototype.defaults)
     .orient("top");
 
+/** @private */
 pv.Layout.Partition.prototype.$size = function() { return 1; };
 
+/**
+ * Specifies the sizing function. By default, a sizing function is disabled and
+ * all nodes are given constant size. The sizing function is invoked for each
+ * leaf node in the tree (passed to the constructor).
+ *
+ * <p>For example, if the tree data structure represents a file system, with
+ * files as leaf nodes, and each file has a <tt>bytes</tt> attribute, you can
+ * specify a size function as:
+ *
+ * <pre>.size(function(d) d.bytes)</pre>
+ *
+ * @param {function} f the new sizing function.
+ * @returns {pv.Layout.Partition} this.
+ */
 pv.Layout.Partition.prototype.size = function(f) {
   this.$size = f;
   return this;
 };
 
+/** @private */
 pv.Layout.Partition.prototype.buildImplied = function(s) {
   if (pv.Layout.Hierarchy.prototype.buildImplied.call(this, s)) return;
 
@@ -64,7 +105,11 @@ pv.Layout.Partition.prototype.buildImplied = function(s) {
   pv.Layout.Hierarchy.NodeLink.buildImplied.call(this, s);
 };
 
-/** A variant of partition layout that is space-filling. */
+/**
+ * @class A variant of partition layout that is space-filling.
+ * @extends pv.Layout.Partition
+ * @constructor
+ */
 pv.Layout.Partition.Fill = function() {
   pv.Layout.Partition.call(this);
   pv.Layout.Hierarchy.Fill.constructor.call(this);
@@ -72,6 +117,7 @@ pv.Layout.Partition.Fill = function() {
 
 pv.Layout.Partition.Fill.prototype = pv.extend(pv.Layout.Partition);
 
+/** @private */
 pv.Layout.Partition.Fill.prototype.buildImplied = function(s) {
   if (pv.Layout.Partition.prototype.buildImplied.call(this, s)) return;
   pv.Layout.Hierarchy.Fill.buildImplied.call(this, s);

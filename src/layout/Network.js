@@ -1,9 +1,13 @@
-/** @class Abstract layout for networks. */
+/**
+ * @class Abstract layout for networks.
+ * @extends pv.Layout
+ * @constructor
+ */
 pv.Layout.Network = function() {
   pv.Layout.call(this);
   var that = this;
 
-  /* Version tracking to cache layout state, improving performance. */
+  /* @private Version tracking to cache layout state, improving performance. */
   this.$id = pv.id();
 
   /**
@@ -89,7 +93,7 @@ pv.Layout.Network.prototype = pv.extend(pv.Layout)
  * on render; the properties are cached, and any expensive layout algorithms are
  * only run after the layout is explicitly reset.
  *
- * @returns this
+ * @returns {pv.Layout.Network} this.
  */
 pv.Layout.Network.prototype.reset = function() {
   this.$id = pv.id();

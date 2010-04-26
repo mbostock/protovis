@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends pv.Layout
+ * @constructor
+ */
 pv.Layout.Horizon = function() {
   pv.Layout.call(this);
   var that = this,
@@ -27,6 +32,13 @@ pv.Layout.Horizon = function() {
       .top(function(i) { return mode == "color" ? (i & 1) * size : 0; })
       .fillStyle(function(i) { return i ? null : fill; });
 
+  /**
+   * The band prototype. This prototype is intended to be used with an Area
+   * mark to render the horizon bands.
+   *
+   * @type pv.Mark
+   * @name pv.Layout.Horizon.prototype.band
+   */
   this.band = new pv.Mark()
       .top(function(d, i) {
           return mode == "mirror" && i & 1

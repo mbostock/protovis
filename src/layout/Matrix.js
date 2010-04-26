@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends pv.Layout.Network
+ * @constructor
+ */
 pv.Layout.Matrix = function() {
   pv.Layout.Network.call(this);
   var that = this,
@@ -49,7 +54,17 @@ pv.Layout.Matrix = function() {
 pv.Layout.Matrix.prototype = pv.extend(pv.Layout.Network)
     .property("directed", Boolean);
 
-/** Specifies an optional sort function. */
+/**
+ * @type boolean
+ * @name pv.Layout.Matrix.prototype.directed
+ */
+
+/**
+ * Specifies an optional sort function.
+ *
+ * @param {function} f
+ * @returns {pv.Layout.Matrix} this.
+ */
 pv.Layout.Matrix.prototype.sort = function(f) {
   this.$sort = f;
   return this;

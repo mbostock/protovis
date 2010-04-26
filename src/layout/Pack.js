@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends pv.Layout.Hierarchy
+ * @constructor
+ */
 pv.Layout.Pack = function() {
   pv.Layout.Hierarchy.call(this);
 
@@ -21,6 +26,16 @@ pv.Layout.Pack.prototype.defaults = new pv.Layout.Pack()
     .extend(pv.Layout.Hierarchy.prototype.defaults)
     .spacing(1)
     .order("ascending");
+
+/**
+ * @type number
+ * @name pv.Layout.Pack.prototype.spacing
+ */
+
+/**
+ * @type string
+ * @name pv.Layout.Pack.prototype.order
+ */
 
 /** @private The default size function. */
 pv.Layout.Pack.prototype.$radius = function() { return 1; };

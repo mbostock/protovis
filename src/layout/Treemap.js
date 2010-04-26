@@ -23,6 +23,8 @@
  * <li><tt>depth</tt> - the node depth (tier; the root is 0).
  * </ul>
  *
+ * @extends pv.Layout.Hierarchy
+ * @constructor
  * @returns {pv.Layout.Treemap} a treemap layout.
  */
 pv.Layout.Treemap = function() {
@@ -66,6 +68,41 @@ pv.Layout.Treemap.prototype.defaults = new pv.Layout.Treemap()
     .order("ascending"); // ascending, descending, reverse, null
 
 /**
+ * @type boolean
+ * @name pv.Layout.Treemap.prototype.round
+ */
+
+/**
+ * @type number
+ * @name pv.Layout.Treemap.prototype.paddingLeft
+ */
+
+/**
+ * @type number
+ * @name pv.Layout.Treemap.prototype.paddingRight
+ */
+
+/**
+ * @type number
+ * @name pv.Layout.Treemap.prototype.paddingTop
+ */
+
+/**
+ * @type number
+ * @name pv.Layout.Treemap.prototype.paddingBottom
+ */
+
+/**
+ * @type string
+ * @name pv.Layout.Treemap.prototype.mode
+ */
+
+/**
+ * @type string
+ * @name pv.Layout.Treemap.prototype.order
+ */
+
+/**
  * Alias for setting the left, right, top and bottom padding properties
  * simultaneously.
  *
@@ -75,15 +112,31 @@ pv.Layout.Treemap.prototype.padding = function(n) {
   return this.paddingLeft(n).paddingRight(n).paddingTop(n).paddingBottom(n);
 };
 
+/** @private */
 pv.Layout.Treemap.prototype.$size = function(d) {
   return Number(d.nodeValue);
 };
 
+/**
+ * Specifies the sizing function. By default, a sizing function is disabled and
+ * all nodes are given constant size. The sizing function is invoked for each
+ * leaf node in the tree (passed to the constructor).
+ *
+ * <p>For example, if the tree data structure represents a file system, with
+ * files as leaf nodes, and each file has a <tt>bytes</tt> attribute, you can
+ * specify a size function as:
+ *
+ * <pre>.size(function(d) d.bytes)</pre>
+ *
+ * @param {function} f the new sizing function.
+ * @returns {pv.Layout.Treemap} this.
+ */
 pv.Layout.Treemap.prototype.size = function(f) {
   this.$size = pv.functor(f);
   return this;
 };
 
+/** @private */
 pv.Layout.Treemap.prototype.buildImplied = function(s) {
   if (pv.Layout.Hierarchy.prototype.buildImplied.call(this, s)) return;
 

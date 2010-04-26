@@ -22,7 +22,7 @@
  * array is a two-dimensional array of values in the range [0,1], a simple
  * heatmap can be generated as:
  *
- * <pre>.add(pv.Layout.Grid)
+ * <pre>vis.add(pv.Layout.Grid)
  *     .rows(arrays)
  *   .add(pv.Bar)
  *     .fillStyle(pv.ramp("white", "black"))</pre>
@@ -30,6 +30,8 @@
  * The grid subdivides the full width and height of the parent panel into equal
  * rectangles. For more data-driven subdivision, see {@link pv.Layout.Treemap}.
  *
+ * @extends pv.Layout
+ * @constructor
  * @returns {pv.Layout.Grid} a grid layout.
  */
 pv.Layout.Grid = function() {
@@ -68,6 +70,7 @@ pv.Layout.Grid.prototype.defaults = new pv.Layout.Grid()
     .rows(1)
     .cols(1);
 
+/** @private */
 pv.Layout.Grid.prototype.buildImplied = function(s) {
   pv.Layout.prototype.buildImplied.call(this, s);
   var r = s.rows, c = s.cols;

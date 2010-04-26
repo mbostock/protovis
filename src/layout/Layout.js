@@ -1,6 +1,6 @@
 /**
- * @ignore
  * @class
+ * @extends pv.Panel
  */
 pv.Layout = function() {
   pv.Panel.call(this);
