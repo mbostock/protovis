@@ -4,6 +4,7 @@ JS_LANG_FILES = \
 JS_CORE_FILES = \
 	src/pv.js \
 	src/pv-internals.js \
+	src/lang/init.js \
 	src/text/Format.js \
 	src/text/DateFormat.js \
 	src/text/TimeFormat.js \
@@ -97,8 +98,7 @@ JS_FILES = \
 	$(JS_LANG_FILES) \
 	$(JS_CORE_FILES) \
 	$(JS_LAYOUT_FILES) \
-	$(JS_GEO_FILES) \
-	src/lang/init.js
+	$(JS_GEO_FILES)
 
 JS_COMPILER = \
 	java -jar lib/google-compiler/compiler-20100201.jar \
@@ -106,19 +106,21 @@ JS_COMPILER = \
 	--warning_level=QUIET
 
 all: protovis-d3.2.js protovis-r3.2.js
+protovis-d3.2.js: $(JS_FILES)
+protovis-r3.2.js: $(JS_FILES)
 
-protovis-d3.2.js: $(JS_FILES) Makefile
-	grep '	' -Hn $(JS_FILES) && echo "ERROR: tab" && exit 1 || true
-	grep '' -Hn $(JS_FILES) && echo "ERROR: dos newline" && exit 1 || true
-	grep ' $$' -Hn $(JS_FILES) && echo "ERROR: trailing space" && exit 1 || true
+%-d3.2.js: Makefile
+	grep '	' -Hn $(filter %.js,$^) && echo "ERROR: tab" && exit 1 || true
+	grep '' -Hn $(filter %.js,$^) && echo "ERROR: dos newline" && exit 1 || true
+	grep ' $$' -Hn $(filter %.js,$^) && echo "ERROR: trailing space" && exit 1 || true
 	rm -f $@
 	echo "// $(shell git rev-parse HEAD)" >> $@
-	cat $(JS_FILES) >> $@
+	cat $(filter %.js,$^) >> $@
 
-protovis-r3.2.js: $(JS_FILES) Makefile
+%-r3.2.js:: Makefile
 	rm -f $@
 	echo "// $(shell git rev-parse --short HEAD)" >> $@
-	cat $(JS_FILES) | $(JS_COMPILER) >> $@
+	cat $(filter %.js,$^) | $(JS_COMPILER) >> $@
 
 clean:
 	rm -rf protovis-d3.2.js protovis-r3.2.js

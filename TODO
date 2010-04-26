@@ -2,9 +2,6 @@ layout/Layout.js
 - standardize which attributes are populated
 - add support for sort() functions as appropriate (e.g., arc)
 
-layout/Force.js
-- smarter default rest length / charge force constant
-
 mark/Mark.js
 - partial redraw for newly-added marks
 
