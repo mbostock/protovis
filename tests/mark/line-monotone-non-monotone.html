@@ -38,9 +38,7 @@ vis.add(pv.Line)
     .data(data)
     .left(function() x(this.index+1))
     .bottom(y)
-    .interpolate("monotone")
-    .strokeStyle("#33f")
-    .lineWidth(2);
+    .interpolate("monotone");
 
 vis.add(pv.Dot)
     .data(data)

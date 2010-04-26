@@ -49,9 +49,11 @@ pv.SvgScene.lineSegment = function(scenes) {
   var paths;
   var s = scenes[0];
   if(s.interpolate == "basis") {
-     paths = this.curvePathBasisSegments(scenes);
+    paths = this.curvePathBasisSegments(scenes);
   } else if (s.interpolate == "cardinal") {
-     paths = this.curvePathCardinalSegments(scenes, s.tension);
+    paths = this.curvePathCardinalSegments(scenes, s.tension);
+  } else if (s.interpolate == "monotone") {
+    paths = this.curvePathMonotoneSegments(scenes);
   }
 
   for (var i = 0, n = scenes.length - 1; i < n; i++) {

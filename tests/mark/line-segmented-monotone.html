@@ -1,18 +1,16 @@
 <html>
   <head>
-    <title>Segmented Basis Splines</title>
+    <title>Segmented Monotone curve</title>
     <script type="text/javascript" src="../../protovis-d3.2.js"></script>
   </head>
   <body>
     <script type="text/javascript+protovis">
 
-var data = pv.range(10).map(function(x) {
-        return {x: x, y: Math.sin(x * Math.PI + Math.PI / 2)};
-      }),
-    w = 800,
+var data = [4.0, 3.9, 3.0, 2.5, 1.0, 1.0, 1.0, 0.7, 0.2, 0.1],
+    w = 600,
     h = 400,
-    x = pv.Scale.linear(data, function(d) d.x).range(0, w),
-    y = pv.Scale.linear(-1.5, 1.5).range(0, h);
+    x = pv.Scale.linear(0, data.length+1).range(0, w),
+    y = pv.Scale.linear(0, 4.5).range(0, h);
 
 var vis = new pv.Panel()
     .width(w)
@@ -23,7 +21,7 @@ var vis = new pv.Panel()
 vis.add(pv.Rule)
     .data(y.ticks())
     .visible(function() !(this.index % 2))
-    .bottom(y)
+    .bottom(function(d) Math.round(y(d)) - .5)
     .strokeStyle("#eee")
   .anchor("left").add(pv.Label)
     .text(function(d) d.toFixed(1));
@@ -31,24 +29,25 @@ vis.add(pv.Rule)
 vis.add(pv.Rule)
     .data(x.ticks())
     .visible(function(d) d > 0)
-    .left(x)
+    .left(function(d) Math.round(x(d)) - .5)
     .strokeStyle("#eee")
   .anchor("bottom").add(pv.Label)
     .text(function(d) d.toFixed());
 
 vis.add(pv.Line)
     .data(data)
-    .left(function(d) x(d.x))
-    .bottom(function(d) y(d.y))
-    .interpolate("basis")
+    .left(function() x(this.index+1))
+    .bottom(y)
+    .interpolate("monotone")
     .segmented(true)
     .strokeStyle(function() "hsl(" + this.index * 36 + ",50,50)")
     .lineWidth(function() this.index * 2);
 
 vis.add(pv.Dot)
     .data(data)
-    .left(function(d) x(d.x))
-    .bottom(function(d) y(d.y));
+    .left(function() x(this.index+1))
+    .bottom(y)
+    .strokeStyle("#f33");
 
 vis.render();
 
