@@ -1,4 +1,8 @@
-/** @class Force-directed network layout. */
+/**
+ * @class Force-directed network layout.
+ * @extends pv.Layout.Network
+ * @constructor
+ */
 pv.Layout.Force = function() {
   pv.Layout.Network.call(this);
 
@@ -18,6 +22,56 @@ pv.Layout.Force.prototype = pv.extend(pv.Layout.Network)
     .property("springConstant", Number)
     .property("springDamping", Number)
     .property("springLength", Number);
+
+/**
+ * @type boolean
+ * @name pv.Layout.Force.prototype.bound
+ */
+
+/**
+ * @type number
+ * @name pv.Layout.Force.prototype.iterations
+ */
+
+/**
+ * @type number
+ * @name pv.Layout.Force.prototype.dragConstant
+ */
+
+/**
+ * @type number
+ * @name pv.Layout.Force.prototype.chargeConstant
+ */
+
+/**
+ * @type number
+ * @name pv.Layout.Force.prototype.chargeMinDistance
+ */
+
+/**
+ * @type number
+ * @name pv.Layout.Force.prototype.chargeMaxDistance
+ */
+
+/**
+ * @type number
+ * @name pv.Layout.Force.prototype.chargeTheta
+ */
+
+/**
+ * @type number
+ * @name pv.Layout.Force.prototype.springConstant
+ */
+
+/**
+ * @type number
+ * @name pv.Layout.Force.prototype.springDamping
+ */
+
+/**
+ * @type number
+ * @name pv.Layout.Force.prototype.springLength
+ */
 
 pv.Layout.Force.prototype.defaults = new pv.Layout.Force()
     .extend(pv.Layout.Network.prototype.defaults)

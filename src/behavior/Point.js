@@ -1,3 +1,9 @@
+/**
+ * @class
+ * @extends pv.Behavior
+ * @constructor
+ * @param {number} r
+ */
 pv.Behavior.point = function(r) {
   var unpoint, // the current pointer target
       collapse = null, // dimensions to collapse
@@ -39,6 +45,7 @@ pv.Behavior.point = function(r) {
     return point;
   }
 
+  /** @private */
   function mousemove() {
     /* If the closest mark is far away, clear the current target. */
     var point = search(this.scene, this.index);
@@ -61,6 +68,7 @@ pv.Behavior.point = function(r) {
     }
   }
 
+  /** @private */
   function mouseout(e) {
     if (unpoint && !pv.ancestor(this, e.relatedTarget)) {
       pv.Mark.dispatch("unpoint", unpoint.scene, unpoint.index);
@@ -68,6 +76,10 @@ pv.Behavior.point = function(r) {
     }
   }
 
+  /**
+   * @type string
+   * @name pv.Behavior.point.prototype.collapse
+   */
   mousemove.collapse = function(x) {
     if (arguments.length) {
       collapse = String(x);

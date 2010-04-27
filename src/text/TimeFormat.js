@@ -1,3 +1,9 @@
+/**
+ * @class
+ * @extends pv.Format
+ * @constructor
+ * @param {string} type
+ */
 pv.Format.time = function(type) {
   var pad = pv.Format.pad;
 
@@ -52,6 +58,20 @@ pv.Format.time = function(type) {
     }
   }
 
+  /**
+   * @function
+   * @name pv.Format.time.prototype.format
+   * @param {Date} t
+   * @returns {string}
+   */
+  format.format = format;
+
+  /**
+   * @function
+   * @name pv.Format.time.prototype.parse
+   * @param {string} s
+   * @returns {Date}
+   */
   format.parse = function(s) {
     switch (type) {
       case "short": {

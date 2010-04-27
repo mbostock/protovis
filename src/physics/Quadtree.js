@@ -1,5 +1,5 @@
 /**
- * A quadtree.
+ * @class A quadtree.
  *
  * @constructor Constructs a new quadtree for the specified array of particles.
  *
@@ -28,9 +28,9 @@ pv.Quadtree = function(particles) {
   this.yMax = y2;
 
   /**
-   * Recursively inserts the specified particle <i>p</i> at the node <i>n</i> or
-   * one of its descendants. The bounds are defined by [<i>x1</i>, <i>x2</i>]
-   * and [<i>y1</i>, <i>y2</i>].
+   * @ignore Recursively inserts the specified particle <i>p</i> at the node
+   * <i>n</i> or one of its descendants. The bounds are defined by [<i>x1</i>,
+   * <i>x2</i>] and [<i>y1</i>, <i>y2</i>].
    */
   function insert(n, p, x1, y1, x2, y2) {
     if (isNaN(p.x) || isNaN(p.y)) return; // ignore invalid particles
@@ -59,9 +59,9 @@ pv.Quadtree = function(particles) {
   }
 
   /**
-   * Recursively inserts the specified particle <i>p</i> into a descendant of
-   * node <i>n</i>. The bounds are defined by [<i>x1</i>, <i>x2</i>] and
-   * [<i>y1</i>, <i>y2</i>].
+   * @ignore Recursively inserts the specified particle <i>p</i> into a
+   * descendant of node <i>n</i>. The bounds are defined by [<i>x1</i>,
+   * <i>x2</i>] and [<i>y1</i>, <i>y2</i>].
    */
   function insertChild(n, p, x1, y1, x2, y2) {
     /* Compute the split point, and the quadrant in which to insert p. */
@@ -91,32 +91,37 @@ pv.Quadtree = function(particles) {
 };
 
 /**
+ * @field
  * @type pv.Quadtree.Node
- * @field pv.Quadtree.prototype.root
+ * @name pv.Quadtree.prototype.root
  */
 
 /**
+ * @field
  * @type number
- * @field pv.Quadtree.prototype.xMin
+ * @name pv.Quadtree.prototype.xMin
  */
 
 /**
+ * @field
  * @type number
- * @field pv.Quadtree.prototype.xMax
+ * @name pv.Quadtree.prototype.xMax
  */
 
 /**
+ * @field
  * @type number
- * @field pv.Quadtree.prototype.yMin
+ * @name pv.Quadtree.prototype.yMin
  */
 
 /**
+ * @field
  * @type number
- * @field pv.Quadtree.prototype.yMax
+ * @name pv.Quadtree.prototype.yMax
  */
 
 /**
- * A node in a quadtree.
+ * @class A node in a quadtree.
  *
  * @constructor Constructs a new node.
  */
@@ -141,39 +146,45 @@ pv.Quadtree.Node = function() {
  * this is a non-leaf node, then at least one of {@link #c1}, {@link #c2},
  * {@link #c3} or {@link #c4} is guaranteed to be non-null.
  *
+ * @field
  * @type boolean
- * @field pv.Quadtree.Node.prototype.leaf
+ * @name pv.Quadtree.Node.prototype.leaf
  */
 
 /**
+ * @field
  * @type pv.Quadtree.Node
- * @field pv.Quadtree.Node.prototype.next
+ * @name pv.Quadtree.Node.prototype.next
  */
 
 /**
  * The particle associated with this node, if any.
  *
+ * @field
  * @type pv.Particle
- * @field pv.Quadtree.Node.prototype.p
+ * @name pv.Quadtree.Node.prototype.p
  */
 
 /**
  * The child node for the second quadrant, if any.
  *
+ * @field
  * @type pv.Quadtree.Node
- * @field pv.Quadtree.Node.prototype.c2
+ * @name pv.Quadtree.Node.prototype.c2
  */
 
 /**
  * The child node for the third quadrant, if any.
  *
+ * @field
  * @type pv.Quadtree.Node
- * @field pv.Quadtree.Node.prototype.c3
+ * @name pv.Quadtree.Node.prototype.c3
  */
 
 /**
  * The child node for the fourth quadrant, if any.
  *
+ * @field
  * @type pv.Quadtree.Node
- * @field pv.Quadtree.Node.prototype.c4
+ * @name pv.Quadtree.Node.prototype.c4
  */

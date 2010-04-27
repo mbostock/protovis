@@ -1,8 +1,21 @@
 /**
- * @ignore
  * @class
  */
 pv.Format = {};
+
+/**
+ * @function
+ * @name pv.Format.prototype.format
+ * @param {object} x
+ * @returns {string}
+ */
+
+/**
+ * @function
+ * @name pv.Format.prototype.parse
+ * @param {string} x
+ * @returns {object}
+ */
 
 /**
  * @private Given a string that may be used as part of a regular expression,

@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends pv.Layout.Network
+ * @constructor
+ */
 pv.Layout.Rollup = function() {
   pv.Layout.Network.call(this);
   var that = this,
@@ -33,16 +38,30 @@ pv.Layout.Rollup = function() {
 pv.Layout.Rollup.prototype = pv.extend(pv.Layout.Network)
     .property("directed", Boolean);
 
+/**
+ * @type boolean
+ * @name pv.Layout.Rollup.prototype.directed
+ */
+
+/**
+ * @param {function} f
+ * @returns {pv.Layout.Rollup} this.
+ */
 pv.Layout.Rollup.prototype.x = function(f) {
   this.$x = pv.functor(f);
   return this;
 };
 
+/**
+ * @param {function} f
+ * @returns {pv.Layout.Rollup} this.
+ */
 pv.Layout.Rollup.prototype.y = function(f) {
   this.$y = pv.functor(f);
   return this;
 };
 
+/** @private */
 pv.Layout.Rollup.prototype.buildImplied = function(s) {
   if (pv.Layout.Network.prototype.buildImplied.call(this, s)) return;
 

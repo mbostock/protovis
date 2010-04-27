@@ -1,5 +1,4 @@
 /**
- * @ignore
- * @namespace
+ * @class
  */
 pv.Behavior = {};

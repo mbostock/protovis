@@ -1,3 +1,8 @@
+/**
+ * @class
+ * @extends pv.Behavior
+ * @constructor
+ */
 pv.Behavior.drag = function() {
   var scene, // scene context
       index, // scene context
@@ -5,6 +10,7 @@ pv.Behavior.drag = function() {
       v1, // initial mouse-particle offset
       max;
 
+  /** @private */
   function mousedown(d) {
     index = this.index;
     scene = this.scene;
@@ -16,6 +22,7 @@ pv.Behavior.drag = function() {
     };
   }
 
+  /** @private */
   function mousemove() {
     if (!scene) return;
     scene.mark.context(scene, index, function() {
@@ -26,6 +33,7 @@ pv.Behavior.drag = function() {
       });
   }
 
+  /** @private */
   function mouseup() {
     if (!scene) return;
     p.fix = null;
@@ -33,6 +41,12 @@ pv.Behavior.drag = function() {
     scene = null;
   }
 
+  /**
+   * @function
+   * @name pv.Behavior.drag.prototype.render
+   * @param {pv.Mark} mark
+   * @returns {pv.Behavior.drag} this.
+   */
   mousedown.render = function(mark) {
     render = mark;
     return mousedown;

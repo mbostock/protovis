@@ -38,8 +38,8 @@ pv.Scale.log = function() {
   var scale = pv.Scale.quantitative(1, 10),
       b, // logarithm base
       p, // cached Math.log(b)
-      log = function(x) { return Math.log(x) / p; },
-      pow = function(y) { return Math.pow(b, y); };
+      /** @ignore */ log = function(x) { return Math.log(x) / p; },
+      /** @ignore */ pow = function(y) { return Math.pow(b, y); };
 
   /**
    * Returns an array of evenly-spaced, suitably-rounded values in the input

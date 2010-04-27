@@ -48,6 +48,9 @@ physics/LinkConstraint.js
 layout/Tree.js
 - allow depth and breadth offset to be computed automatically
 
+layout/Force.js
+- smarter default rest length / charge force constant
+
 behavior/Pan.js
 - custom bounds
 - lock one axis

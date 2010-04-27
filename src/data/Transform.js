@@ -1,12 +1,24 @@
+/**
+ * @class
+ * @constructor
+ */
 pv.Transform = function() {};
 pv.Transform.prototype = {k: 1, x: 0, y: 0};
 
+/**
+ * @type pv.Transform
+ */
 pv.Transform.identity = new pv.Transform();
 
 // k 0 x   1 0 a   k 0 ka+x
 // 0 k y * 0 1 b = 0 k kb+y
 // 0 0 1   0 0 1   0 0 1
 
+/**
+ * @param {number} x
+ * @param {number} y
+ * @returns pv.Transform
+ */
 pv.Transform.prototype.translate = function(x, y) {
   var v = new pv.Transform();
   v.k = this.k;
@@ -19,6 +31,10 @@ pv.Transform.prototype.translate = function(x, y) {
 // 0 k y * 0 d 0 =  0 kd y
 // 0 0 1   0 0 1    0  0 1
 
+/**
+ * @param {number} k
+ * @returns pv.Transform
+ */
 pv.Transform.prototype.scale = function(k) {
   var v = new pv.Transform();
   v.k = this.k * k;
@@ -27,6 +43,9 @@ pv.Transform.prototype.scale = function(k) {
   return v;
 };
 
+/**
+ * @returns pv.Transform
+ */
 pv.Transform.prototype.invert = function() {
   var v = new pv.Transform(), k = 1 / this.k;
   v.k = k;
@@ -39,6 +58,10 @@ pv.Transform.prototype.invert = function() {
 // 0 k y * 0 d b =  0 kd kb+y
 // 0 0 1   0 0 1    0  0    1
 
+/**
+ * @param {pv.Transform} m
+ * @returns pv.Transform
+ */
 pv.Transform.prototype.times = function(m) {
   var v = new pv.Transform();
   v.k = this.k * m.k;

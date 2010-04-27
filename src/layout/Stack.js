@@ -13,12 +13,14 @@
  *
  * specifies a vertically-stacked area chart.
  *
+ * @extends pv.Layout
+ * @constructor
  * @returns {pv.Layout.Stack} a stack layout.
  */
 pv.Layout.Stack = function() {
   pv.Layout.call(this);
   var that = this,
-      none = function() { return null; },
+      /** @ignore */ none = function() { return null; },
       prop = {t: none, l: none, r: none, b: none, w: none, h: none},
       values,
       buildImplied = that.buildImplied;
@@ -196,8 +198,9 @@ pv.Layout.Stack.prototype.defaults = new pv.Layout.Stack()
     .offset("zero")
     .layers([[]]);
 
+/** @private */
 pv.Layout.Stack.prototype.$x
-    = pv.Layout.Stack.prototype.$y
+    = /** @private */ pv.Layout.Stack.prototype.$y
     = function() { return 0; };
 
 /**
@@ -209,7 +212,7 @@ pv.Layout.Stack.prototype.$x
  * @returns this.
  */
 pv.Layout.Stack.prototype.x = function(f) {
-  this.$x = pv.functor(f);
+  /** @private */ this.$x = pv.functor(f);
   return this;
 };
 
@@ -223,7 +226,7 @@ pv.Layout.Stack.prototype.x = function(f) {
  * @returns this.
  */
 pv.Layout.Stack.prototype.y = function(f) {
-  this.$y = pv.functor(f);
+  /** @private */ this.$y = pv.functor(f);
   return this;
 };
 

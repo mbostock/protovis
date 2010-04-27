@@ -1,4 +1,8 @@
-/** @class Layout for arc diagrams. */
+/**
+ * @class Layout for arc diagrams.
+ * @extends pv.Layout
+ * @constructor
+ **/
 pv.Layout.Arc = function() {
   pv.Layout.Network.call(this);
   var interpolate, // cached interpolate
@@ -94,10 +98,8 @@ pv.Layout.Arc.prototype.buildImplied = function(s) {
  * <li>bottom - bottom-to-top.
  * <li>radial - radially, with the root at the center.</ul>
  *
- * @param {string} v the new orientation.
- * @function
+ * @type string
  * @name pv.Layout.Arc.prototype.orient
- * @returns {pv.Layout.Arc} this, or the current orientation.
  */
 
 /**
@@ -108,8 +110,6 @@ pv.Layout.Arc.prototype.buildImplied = function(s) {
  * links--right, left, bottom and top for left, right, top and bottom,
  * respectively), while reverse links are drawn on the opposite side.
  *
- * @param {boolean} x whether or not this arc digram is directed.
- * @function
+ * @type boolean
  * @name pv.Layout.Arc.prototype.directed
- * @returns {pv.Layout.Arc} this, or the current directedness.
  */

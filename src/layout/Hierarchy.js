@@ -1,4 +1,8 @@
-/** @class Abstract layout for hierarchies. */
+/**
+ * @class Abstract layout for hierarchies.
+ * @extends pv.Layout.Network
+ * @constructor
+ */
 pv.Layout.Hierarchy = function() {
   pv.Layout.Network.call(this);
   this.link.strokeStyle("#ccc");

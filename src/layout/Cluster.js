@@ -1,3 +1,8 @@
+/**
+ * @class Cluster tree layout.
+ * @extends pv.Layout.Hierarchy
+ * @constructor
+ */
 pv.Layout.Cluster = function() {
   pv.Layout.Hierarchy.call(this);
   var interpolate, // cached interpolate
@@ -21,11 +26,32 @@ pv.Layout.Cluster.prototype = pv.extend(pv.Layout.Hierarchy)
     .property("innerRadius", Number)
     .property("outerRadius", Number);
 
+/**
+ * @type number
+ * @name pv.Layout.Cluster.prototype.group
+ */
+
+/**
+ * @type string
+ * @name pv.Layout.Cluster.prototype.orient
+ */
+
+/**
+ * @type number
+ * @name pv.Layout.Cluster.prototype.innerRadius
+ */
+
+/**
+ * @type number
+ * @name pv.Layout.Cluster.prototype.outerRadius
+ */
+
 pv.Layout.Cluster.prototype.defaults = new pv.Layout.Cluster()
     .extend(pv.Layout.Hierarchy.prototype.defaults)
     .group(0)
     .orient("top");
 
+/** @private */
 pv.Layout.Cluster.prototype.buildImplied = function(s) {
   if (pv.Layout.Hierarchy.prototype.buildImplied.call(this, s)) return;
 
@@ -90,7 +116,11 @@ pv.Layout.Cluster.prototype.buildImplied = function(s) {
   pv.Layout.Hierarchy.NodeLink.buildImplied.call(this, s);
 };
 
-/** A variant of cluster layout that is space-filling. */
+/**
+ * @class A variant of cluster layout that is space-filling.
+ * @extends pv.Layout.Cluster
+ * @constructor
+ */
 pv.Layout.Cluster.Fill = function() {
   pv.Layout.Cluster.call(this);
   pv.Layout.Hierarchy.Fill.constructor.call(this);
@@ -98,6 +128,7 @@ pv.Layout.Cluster.Fill = function() {
 
 pv.Layout.Cluster.Fill.prototype = pv.extend(pv.Layout.Cluster);
 
+/** @private */
 pv.Layout.Cluster.Fill.prototype.buildImplied = function(s) {
   if (pv.Layout.Cluster.prototype.buildImplied.call(this, s)) return;
   pv.Layout.Hierarchy.Fill.buildImplied.call(this, s);

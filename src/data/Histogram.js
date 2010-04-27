@@ -1,7 +1,19 @@
-/** Returns a histogram generator for the specified data. */
+/**
+ * @class
+ * @constructor Returns a histogram generator for the specified data.
+ * @param {array} data
+ * @param {function} [f]
+ */
 pv.histogram = function(data, f) {
   var frequency = true;
   return {
+
+    /**
+     * @function
+     * @name pv.histogram.prototype.bins
+     * @param {array} [ticks]
+     * @returns {array}
+     */ /** @private */
     bins: function(ticks) {
       var x = pv.map(data, f), bins = [];
 
@@ -32,6 +44,12 @@ pv.histogram = function(data, f) {
       return bins;
     },
 
+    /**
+     * @function
+     * @name pv.histogram.prototype.frequency
+     * @param {boolean} [x]
+     * @returns {pv.histogram} this.
+     */ /** @private */
     frequency: function(x) {
       if (arguments.length) {
         frequency = Boolean(x);
