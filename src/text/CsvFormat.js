@@ -1,10 +1,13 @@
 /**
- * Supports CSV parsing and formatting.
+ * @class Supports CSV parsing and formatting.
+ * @extends pv.Format
+ * @constructor
  */
 pv.Format.csv = function() {
   return new pv.CsvFormat();
 };
 
+/** @ignore */
 pv.CsvFormat = function() {};
 
 /**
@@ -14,7 +17,10 @@ pv.CsvFormat = function() {};
  * output format: when headers are disabled, a two-dimensional array is used;
  * when headers are enabled, a one-dimensional array of objects is used.
  *
+ * @function
+ * @name pv.Format.csv.prototype.header
  * @param {boolean} x whether to enable the header line.
+ * @returns {pv.CsvFormat} this.
  */
 pv.CsvFormat.prototype.header = function(x) {
   if (arguments.length) {
@@ -30,8 +36,10 @@ pv.CsvFormat.prototype.header = function(x) {
  * objects. The attributes of these objects are determined by the field names
  * from the header line. Otherwise, the return value will be an array of arrays.
  *
+ * @function
+ * @name pv.Format.csv.prototype.parse
  * @param {string} s the CSV string.
- * @param {array} an array of elements parsed from CSV.
+ * @returns {array} an array of elements parsed from CSV.
  */
 pv.CsvFormat.prototype.parse = function(s) {
   var EOL = {}, // sentinel value for end-of-line
@@ -41,7 +49,7 @@ pv.CsvFormat.prototype.parse = function(s) {
       t, // the current token
       eol; // is the current token followed by EOL?
 
-  /* Returns the next token. */
+  /** @private Returns the next token. */
   function token() {
     if (re.lastIndex == s.length) return EOF; // special case: end of file
     if (eol) { eol = false; return EOL; } // special case: end of line
@@ -108,6 +116,8 @@ pv.CsvFormat.prototype.parse = function(s) {
  * of objects. The attributes of the first element will be used to determine the
  * field names. Otherwise, <i>a</i> should be an array of arrays.
  *
+ * @function
+ * @name pv.Format.csv.prototype.format
  * @param {array} a the array of elements to output as CSV.
  * @returns {string} a CSV string.
  */
@@ -131,8 +141,8 @@ pv.CsvFormat.prototype.format = function(a) {
 };
 
 /**
- * Quotes the specified string <i>s</i>, but only if necessary. Quoting is
- * necessary for special characters: double quotes, commas, and newlines.
+ * @private Quotes the specified string <i>s</i>, but only if necessary. Quoting
+ * is necessary for special characters: double quotes, commas, and newlines.
  *
  * @param {string} s a string to quote.
  * @returns {string} the quoted string, or <i>s</i> is quoting is not needed.

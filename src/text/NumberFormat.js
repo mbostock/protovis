@@ -44,6 +44,14 @@ pv.Format.number = function() {
   }
 
   /**
+   * @function
+   * @name pv.Format.number.prototype.format
+   * @param {number} x
+   * @returns {string}
+   */
+  format.format = format;
+
+  /**
    * Parses the specified string as a number. Before parsing, leading and
    * trailing padding is removed. Group separators are also removed, and the
    * decimal separator is replaced with the standard point ("."). The integer

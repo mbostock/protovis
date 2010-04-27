@@ -1,5 +1,4 @@
 /**
- * @ignore
  * @class
  */
 pv.Format = {};
