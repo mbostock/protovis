@@ -1,0 +1,62 @@
+HTML_FILES = \
+	www/index.html \
+	www/ex/antibiotics-burtin.html \
+	www/ex/area.html \
+	www/ex/bar.html \
+	www/ex/barley.html \
+	www/ex/bullet.html \
+	www/ex/cars.html \
+	www/ex/caltrain.html \
+	www/ex/clock.html \
+	www/ex/countries.html \
+	www/ex/crimea-rose.html \
+	www/ex/dot.html \
+	www/ex/eyes.html \
+	www/ex/flowers.html \
+	www/ex/grid.html \
+	www/ex/heatmap.html \
+	www/ex/horizon.html \
+	www/ex/hotel.html \
+	www/ex/icicle.html \
+	www/ex/jobs.html \
+	www/ex/life.html \
+	www/ex/line.html \
+	www/ex/matrix.html \
+	www/ex/minnesota.html \
+	www/ex/napoleon.html \
+	www/ex/oakland.html \
+	www/ex/pie.html \
+	www/ex/segmented.html \
+	www/ex/sunburst.html \
+	www/ex/treemap.html \
+	www/ex/waves.html \
+	www/ex/weather.html \
+	www/ex/wheat.html \
+	www/ex/zoom.html
+
+all: $(HTML_FILES) www/ex/syntax.css
+
+%.d: %.m4 Makefile m4d.sh
+	./m4d.sh $< > $@
+
+include $(HTML_FILES:.html=.d)
+
+PYGMENT = /Library/Pygments-1.1.1/pygmentize
+PYGMENT_STYLE = trac
+
+www/ex/syntax.css: Makefile
+	$(PYGMENT) -f html -S $(PYGMENT_STYLE) > $@
+
+%.html: %.m4 Makefile
+	rm -f $@
+	pushd $(dir $<) && m4 < $(notdir $<) > $(notdir $@) && popd
+	chmod a-w $@
+
+%.html.html: %.html Makefile
+	$(PYGMENT) -f html -O style=$(PYGMENT_STYLE) -l html $(filter %.html,$^) > $@
+
+%.js.html: %.js Makefile
+	$(PYGMENT) -f html -O style=$(PYGMENT_STYLE) -l js $(filter %.js,$^) > $@
+
+clean:
+	rm -f $(HTML_FILES) $(HTML_FILES:.html=.d)

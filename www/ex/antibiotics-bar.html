@@ -1,0 +1,53 @@
+<html>
+  <head>
+    <title>Antibiotic Effectiveness</title>
+    <script type="text/javascript" src="../protovis-r3.1.0.js"></script>
+    <script type="text/javascript" src="antibiotics.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+      var vis = new pv.Panel().width(640).height(480);
+
+      /* Sort by Penicillin's effectiveness, then Gram staining. */
+      antibiotics.sort(function(a, b) {
+          return (a.penicillin < b.penicillin)
+              ? -1 : ((a.penicillin > b.penicillin)
+              ? 1 : ((a.gram < b.gram)
+                  ? 1 : ((a.gram > b.gram)
+                  ? -1 : 0)));
+        });
+
+      /* Use a log scale for the Minimum Inhibitory Concentration. */
+      function mic(v) 14 * Math.log(v * 1E4);
+
+      /* Highlight the most effective drug for a given bacterium. */
+      function highlight(drug) {
+        return function(d) {
+            var min = Math.min(d.penicillin, d.neomycin, d.streptomycin);
+            return (d[drug] == min) ? "rgb(128, 128, 0)" : "rgb(153, 153, 153)";
+          };
+      }
+
+      ["penicillin" , "streptomycin", "neomycin"].forEach(function(drug, i) {
+        var bar = vis.add(pv.Bar)
+            .data(antibiotics)
+            .fillStyle(highlight(drug))
+            .left(i * 250)
+            .height(12)
+            .width(function(d) mic(d[drug]))
+            .top(function(d) this.index * 14 + ((d.gram == "positive") ? 1 : 20));
+
+        vis.add(pv.Rule)
+            .data(pv.range(1, 7))
+            .left(function(i) bar.left() + i * mic(1) * .25)
+            .strokeStyle("rgba(255, 255, 255, .5)");
+
+        bar.anchor("left").add(pv.Label)
+            .textStyle("white")
+            .text(function(d) d[drug]);
+      });
+
+      vis.render();
+    </script>
+  </body>
+</html>

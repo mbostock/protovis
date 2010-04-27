@@ -1,0 +1,160 @@
+<html>
+  <head>
+    <title>R-Style Charts</title>
+    <script src="../protovis-r3.1.0.js" type="text/javascript"></script>
+    <script src="../protovis-chart.js" type="text/javascript"></script>
+    <style type="text/css">
+      body {
+        margin: 1em;
+        font: 14px gill sans;
+        background: #eee;
+      }
+      svg {
+        background: #fff;
+        padding: 10px;
+        margin: 10px;
+        border: solid 10px #ddd;
+      }
+      h1 {
+        font-weight: normal;
+      }
+      h2 {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>R-Style Charts</h1>
+
+    Adapted from R.
+    <p>
+
+    <h2>Column</h2>
+    <script type="text/javascript+protovis">
+
+      var data = [
+        [86, 56, 10, 12, 8],
+        [69, 20, 28, 5, 16],
+        [76, 10, 46, 9, 11],
+      ];
+
+      new pv.RColumnChart()
+          .data(data)
+          .width(640)
+          .height(480)
+          .render();
+
+    </script>
+
+    <h2>Stacked Column</h2>
+    <script type="text/javascript+protovis">
+
+      var data = [
+        [86, 56, 10, 12, 8],
+        [69, 20, 28, 5, 16],
+        [76, 10, 46, 9, 11],
+        [85, 12, 46, 12, 15],
+        [87, 36, 10, 16, 24],
+      ];
+
+      new pv.RStackedColumnChart()
+          .data(data)
+          .width(640)
+          .height(480)
+          .render();
+
+    </script>
+
+    <h2>Column (Single Series)</h2>
+    <script type="text/javascript+protovis">
+
+      var data = [
+        [86, 56, 10, 12, 8],
+      ];
+
+      new pv.RColumnChart()
+          .data(data)
+          .width(640)
+          .height(480)
+          .render();
+
+    </script>
+
+    <h2>Pie</h2>
+    <script type="text/javascript+protovis">
+
+      var data = pv.range(1, 7);
+
+      new pv.RPieChart()
+          .data(data)
+          .width(640)
+          .height(480)
+          .render();
+
+    </script>
+
+    <h2>Pairs</h2>
+    <script type="text/javascript" src="flowers.js"></script>
+    <script type="text/javascript+protovis">
+
+      new pv.RPairsChart()
+          .data(flowers)
+          .width(640)
+          .height(640)
+        .root.render();
+
+    </script>
+
+    <h2>Pairs</h2>
+    <script type="text/javascript+protovis">
+
+      new pv.RPairsChart()
+          .data(flowers)
+          .ignore("species")
+          .width(640)
+          .height(640)
+        .dot
+          .strokeStyle(null)
+          .fillStyle(pv.Colors.category10().by(function(d) d.species))
+        .root.render();
+
+    </script>
+
+    <h2>Pairs</h2>
+    <script type="text/javascript+protovis">
+
+      new pv.RPairsChart()
+          .data(flowers)
+          .ignore("species")
+          .width(640)
+          .height(640)
+        .root.frame
+          .visible(false)
+        .root.label
+          .font("22px Gill Sans")
+          .text(function(d, tx) tx.replace(/([A-Z])/, " $1").toLowerCase())
+        .root.dot
+          .size(12)
+          .strokeStyle(null)
+          .fillStyle(pv.colors(
+              "rgba(128, 0, 0, .5)",
+              "rgba(0, 128, 0, .5)",
+              "rgba(0, 0, 128, .5)").by(function(d) d.species))
+        .root.yTick
+          .strokeStyle("rgba(0, 0, 0, .2)")
+          .lineWidth(1)
+        .add(pv.Rule)
+          .left(null).right(null)
+          .visible(function(d, tx, ty) tx != ty)
+        .root.xTick
+          .strokeStyle("rgba(0, 0, 0, .2)")
+          .lineWidth(1)
+        .add(pv.Rule)
+          .top(null).bottom(null)
+          .visible(function(d, tx, ty) tx != ty)
+        .root.render();
+
+    </script>
+
+  </body>
+</html>

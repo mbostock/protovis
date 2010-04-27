@@ -1,0 +1,71 @@
+<html>
+  <head>
+    <title>Stacked Bar Chart</title>
+    <link type="text/css" rel="stylesheet" href="ex.css?3.1"/>
+    <script type="text/javascript" src="../protovis-r3.1.0.js"></script>
+    <script type="text/javascript" src="bar.js"></script>
+    <style type="text/css">
+      #fig {
+        width: 430px;
+        height: 275px;
+      }
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <script type="text/javascript+protovis">
+
+      /* Sizing and scales. */
+      var w = 400,
+          h = 250,
+          x = pv.Scale.linear(0, pv.max(data, function(d) pv.sum(d))).range(0, w),
+          y = pv.Scale.ordinal(pv.range(10)).splitBanded(0, h, 4/5);
+
+      /* The root panel. */
+      var vis = new pv.Panel()
+          .width(w)
+          .height(h)
+          .bottom(20)
+          .left(20)
+          .right(10)
+          .top(5);
+
+      /* Stacked bars. */
+      var bar = vis.add(pv.Panel)
+          .data(pv.transpose(data))
+        .add(pv.Bar)
+          .data(function(a) a)
+          .top(function() y(this.index))
+          .height(y.range().band)
+          .left(pv.Layout.stack())
+          .width(x);
+
+      /* Labels for data values. */
+      bar.anchor("right").add(pv.Label)
+          .visible(function(d) d > .2)
+          .textStyle("white")
+          .text(function(d) d.toFixed(1));
+
+      /* Labels for series names. */
+      bar.anchor("left").add(pv.Label)
+          .visible(function() !this.parent.index)
+          .textMargin(5)
+          .textAlign("right")
+          .text(function() "ABCDEFGHIJK".charAt(this.index));
+
+      /* X-axis ticks. */
+      vis.add(pv.Rule)
+          .data(x.ticks())
+          .left(function(d) Math.round(x(d)) - .5)
+          .strokeStyle(function(d) d ? "rgba(255,255,255,.3)" : "#000")
+        .add(pv.Rule)
+          .bottom(0)
+          .height(5)
+          .strokeStyle("#000")
+        .anchor("bottom").add(pv.Label)
+          .text(function(d) d.toFixed(1));
+
+      vis.render();
+
+    </script>
+  </div></div></body>
+</html>

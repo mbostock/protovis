@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <title>Rebuild</title>
+    <script type="text/javascript" src="../protovis-r3.1.0.js"></script>
+    <style type="text/css">
+      body {
+        font: small sans-serif;
+        max-width: 8.5in;
+      }
+      div, h3 {
+        margin-bottom: 10px;
+      }
+      #canvas {
+        width: 170px;
+        height: 170px;
+        border: solid 10px #ccc;
+        margin-right: 10px;
+        float: left;
+      }
+    </style>
+  </head>
+  <body>
+    <h3>Rebuild</h3>
+    <div id="canvas">
+    <script type="text/javascript+protovis">
+      function xy() { return {x: Math.random(), y: Math.random()}; }
+
+      var vis = new pv.Panel()
+          .width(150).height(150)
+          .bottom(10).top(10).left(10).right(10);
+
+      vis.add(pv.Dot)
+          .data(function() pv.range(pv.random(10)).map(xy))
+          .top(function(d) d.y * 150)
+          .left(function(d) d.x * 150)
+          .size(function() pv.random(200))
+          .fillStyle("rgba(0, 0, 255, .2)");
+
+      vis.render();
+    </script>
+    </div>
+    <br clear="all">
+
+<a href="javascript:vis.render();">rebuild</a>
+  </body>
+</html>

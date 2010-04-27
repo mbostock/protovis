@@ -1,0 +1,87 @@
+<html>
+  <head>
+    <title>Protovis - Segmented Line</title>
+    <link type="text/css" rel="stylesheet" href="../style.css?3.1a"/>
+    <link type="text/css" rel="stylesheet" href="syntax.css"/>
+    <script type="text/javascript" src="../protovis-r3.1.0.js"></script> 
+  </head>
+  <body>
+
+    <div class="title">
+      <div class="subtitle">
+        A graphical toolkit for visualization
+      </div>
+      <a href="../">Protovis</a>
+    </div>
+
+    <div class="head">
+      <div class="section">
+        <a href="../">Overview</a>
+      </div>
+      <div class="section selected">
+        <a href="./">Examples</a>
+      </div>
+      <div class="section">
+        <a href="../api/">Documentation</a>
+      </div>
+      <div class="section">
+        <a href="../protovis.pdf">Paper</a>
+      </div>
+      <div class="section">
+        <a href="http://protovis-js.googlecode.com/files/protovis-3.1.zip">Download</a>
+      </div>
+    </div>
+    <div class="subhead">
+      <div class="section">
+        <a href="./">Index</a>
+      </div>
+      <div class="section">
+        <a href="clock.html">&laquo; Previous</a> /
+        <a href="life.html">Next &raquo;</a>
+      </div>
+    </div>
+
+    <div class="body">
+      <h1>Segmented Line</h1>
+
+      <iframe style="height:465px;" src="segmented-full.html"></iframe>
+      <p><img src="popout.png" width="16" height="16"
+      style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
+      href="segmented-full.html" target="_blank">View full screen.</a>
+
+      <p>This psychedelic example, reminiscent of
+      an <a href="http://en.wikipedia.org/wiki/Earthworm">earthworm</a>,
+      demonstrates the difference between a segmented and
+      unsegmented <a href="http://protovis-js.googlecode.com/svn/trunk/jsdoc/symbols/pv.Line.html">line</a>.
+      Normally, the line width and stroke style of a line are fixed properties:
+      they are evaluated once, and the line is rendered with the given width and
+      color. However, in some visualizations&mdash;such as Minard's map
+      of <a href="napoleon.html">Napleon's march</a>&mdash;it is desirable to
+      use a variable width and color to encode additional dimensions of data.
+
+      <p><a href="segmented-area.html" target="_blank">Segmented areas</a> are
+      also possible, allowing the fill color and title tooltip to vary across
+      the area.
+
+      <blockquote style="font-size:13px;">
+        Next: <a href="life.html">Conway's Game of Life</a>
+      </blockquote>
+
+      <h3>Source</h3>
+
+include(`segmented-full.html.html')
+
+      <h3>Data</h3>
+
+      This example has no data, making it a meaningless (though fun) visualization!
+
+    </div>
+
+    <div class="foot">
+      Copyright 2009 <a href="http://vis.stanford.edu">Stanford Visualization Group</a>
+    </div>
+
+    <script type="text/javascript" src="http://www.google-analytics.com/ga.js"></script>
+    <script type="text/javascript">_gat._getTracker("UA-10741907-2")._trackPageview();</script>
+  </body>
+</html>

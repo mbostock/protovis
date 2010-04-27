@@ -1,0 +1,107 @@
+<html>
+  <head>
+    <title>Physics Test</title>
+    <script type="text/javascript" src="../protovis-d3.2.0.js"></script>
+    <style type="text/css">
+
+body {
+  margin: 0;
+  display: table;
+  height: 100%;
+  width: 100%;
+  font: 14px/134% Helvetica Neue, sans-serif;
+  background: #222;
+}
+
+#center {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+#fig {
+  position: relative;
+  margin: auto;
+  width: 768px;
+  height: 768px;
+}
+
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <canvas id="canvas" width="768" height="768"></canvas>
+    <script id="vertexShader" type="x-shader/x-vertex">
+
+attribute vec3 position;
+
+void main(void) {
+  gl_PointSize = 1.0;
+  gl_Position = vec4(position, 1.0);
+}
+
+    </script>
+    <script id="fragmentShader" type="x-shader/x-fragment">
+
+void main(void) {
+  gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+}
+
+    </script>
+    <script type="text/javascript+protovis">
+
+var gl = canvas.getContext("experimental-webgl");
+// gl.enable(gl.POINT_SPRITE);
+// gl.enable(gl.BLEND);
+// gl.enable(0x8642 /* gl.VERTEX_PROGRAM_POINT_SIZE */);
+// gl.enable(gl.SAMPLE_COVERAGE);
+// gl.sampleCoverage(10, true);
+
+var shader1 = gl.createShader(gl.FRAGMENT_SHADER);
+gl.shaderSource(shader1, fragmentShader.textContent);
+gl.compileShader(shader1);
+
+var shader2 = gl.createShader(gl.VERTEX_SHADER);
+gl.shaderSource(shader2, vertexShader.textContent);
+gl.compileShader(shader2);
+
+var program = gl.createProgram();
+gl.attachShader(program, shader1);
+gl.attachShader(program, shader2);
+gl.linkProgram(program);
+gl.useProgram(program);
+
+var position = gl.getAttribLocation(program, "position");
+gl.enableVertexAttribArray(position);
+
+var n = 2000;
+var buffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+var vertices = new Array(n * 3);
+
+var sim = pv.simulation();
+var particles = pv.range(n).map(function() {
+  var p = sim.particle();
+  p.px = p.px - (p.y - .5) * .01;
+  p.py = p.py + (p.x - .5) * .01;
+  return p;
+});
+sim.charge(1e-6);
+
+function render() {
+  sim.step();
+  for (var i = 0; i < n; i++) {
+    var p = particles[i];
+    vertices[3 * i] = (p.x - .5);
+    vertices[3 * i + 1] = (p.y - .5);
+  }
+  gl.bufferData(gl.ARRAY_BUFFER, new WebGLFloatArray(vertices), gl.STATIC_DRAW);
+  gl.vertexAttribPointer(position, 3, gl.FLOAT, false, 0, 0);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  gl.drawArrays(gl.POINTS, 0, n);
+  gl.flush();
+}
+
+setInterval(render, 10);
+
+    </script>
+  </div></div></body>
+</html>

@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <title>Flare Icicle</title>
+    <script type="text/javascript" src="../protovis-r3.1.0.js"></script>
+    <script type="text/javascript" src="flare.js"></script>
+    <link rel="stylesheet" type="text/css" href="ex.css"/>
+  </head>
+  <body><center>
+    <script type="text/javascript+protovis">
+
+      /* The root panel. */
+      var vis = new pv.Panel()
+          .width(857)
+          .height(277)
+          .top(1.5)
+          .bottom(20.5)
+          .left(1.5)
+          .right(1.5);
+
+      /* Add a bar with the icicle layout and label. */
+      vis.add(pv.Bar)
+          .extend(pv.Layout.icicle(flare).root("flare"))
+          .fillStyle(pv.Colors.category19()
+              .by(function(n) n.children ? n.keys : n.keys.slice(0, -1)))
+          .strokeStyle(function() this.fillStyle().darker())
+          .title(function(n) n.keys.join(".") + ": " + n.size)
+          .cursor("pointer")
+          .event("click", function(n) window.open(
+              "http://svn.prefuse.org/flare/trunk/flare/flare/src/"
+              + n.keys.join("/") + (n.children ? "" : ".as")))
+        .anchor("center").add(pv.Label)
+          .visible(function(n) n.width >= 10)
+          .textAngle(-Math.PI / 2)
+          .text(function(n) n.keys[n.keys.length - 1])
+
+      vis.render();
+
+    </script>
+  </center></body>
+</html>

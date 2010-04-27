@@ -1,0 +1,100 @@
+<html>
+  <head>
+    <title>Choropleth Map</title>
+    <link type="text/css" rel="stylesheet" href="ex.css?3.1"/>
+    <script type="text/javascript" src="../protovis-r3.1.0.js"></script>
+    <script type="text/javascript" src="countries.js"></script>
+    <script type="text/javascript" src="Geoscale.js"></script>
+    <style type="text/css">
+      #fig {
+        width: 860px; height: 516px;
+      }
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <div>
+      Projection:
+      <select id="menu" onchange="scale.projection(this.value); vis.render();"> 
+        <option value="none" selected>Identity projection</option> 
+        <option value="mercator">Mercator projection</option> 
+        <option value="gall-peters">Gall-Peters projection</option>
+        <option value="sinusoidal">sinusoidal projection</option>
+        <option value="hammer">Hammer projection</option>
+      </select>
+    </div>
+    <script type="text/javascript+protovis">
+  // Generate a random value to visualize (for now).
+  geography.forEach(function(c) c.value = (stats[c.code].area != 0)?stats[c.code].pop/(stats[c.code].area*10):0);
+
+  // Note: the aspect ratio is 5/3 and can be rescaled.
+  var w = 860, h = 516;
+  var scale = pv.Scale.geo("none").range({x:0, y:0}, {x:w, y:h});
+  var col = pv.Scale.linear(0, 400).range("green", "red");
+  
+  var vis = new pv.Panel()
+      .width(w)
+      .height(h)
+      .fillStyle("#EEF")
+      .event("click", function() {
+        var p = this.mouse();
+        var c = scale.invert(p);
+        //alert("Lat = " + c.lat + ", Lon = " + c.lon);
+        dotOverlay.add(pv.Dot)
+          .data([c])
+          .left(function(d) scale(d.lon, d.lat).x)
+          .top(function(d) scale(d.lon, d.lat).y)
+          .lineWidth(0)
+          .fillstyle("#F00")
+         .add(pv.Label)
+          .text(function(c) "Lon = " + c.lon.toFixed(5) + "; Lat = " + c.lat.toFixed(5));
+        
+        dotOverlay.render();
+      });
+
+  var country = vis.add(pv.Panel)
+      .data(geography);
+
+  country.add(pv.Panel)
+      .data(function(c) c.borders)
+    .add(pv.Line)
+      .data(function(l) l)
+      .left(function(d) scale(d[0], d[1]).x)
+      .top(function(d) scale(d[0], d[1]).y)
+      .lineWidth(.5)
+      .strokeStyle("white")
+      .fillStyle(function(d,l,c) col(c.value))
+      .title(function(d,l,c) c.name + ' (' + c.value.toFixed(2) + ' people/km^2)');
+      
+        
+  // Add Latitures
+  vis.add(pv.Panel)
+      .data(pv.range(-80, 81, 10))
+    .add(pv.Line)
+      .data(pv.range(-180, 181, 10))
+      .left(function(lon, lat) Math.round(scale(lon, lat).x) - .5)
+      .bottom(function(lon, lat) Math.round(scale(lon, lat).y) - .5)
+      .strokeStyle(function(lon, lat) (lat != 0)?"#999":"red")
+      .lineWidth(.5);
+      
+  // Add Longetudes
+  vis.add(pv.Panel)
+      .data(pv.range(-180, 181, 10))
+    .add(pv.Line)
+      .data(pv.range(-80, 81, 10))
+      .left(function(lat, lon) Math.round(scale(lon, lat).x) - .5)
+      .bottom(function(lat, lon) Math.round(scale(lon, lat).y) - .5)
+      .strokeStyle(function(lat, lon) (lon != 0)?"#999":"blue")
+      .lineWidth(.5);
+      
+  var dotOverlay = vis.add(pv.Panel);
+      
+   var start = new Date();
+   vis.render();
+   var end = new Date;
+   var out = document.getElementById('msg');
+   out.innerHTML = "Render time: " + (end - start) + 'ms';
+    
+    </script>
+    <div id="msg">Rendering...</div>
+  </div></div></body>
+</html>

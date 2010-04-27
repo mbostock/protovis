@@ -1,0 +1,52 @@
+<html xmlns:v>
+  <head>
+    <script type="text/javascript" src="protovis-dev.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+var vis = new pv.Panel().width(150).height(150);
+
+vis.add(pv.Bar)
+  .data([1, 1.2, 1.7, 1.5, .7])
+  .bottom(0)
+  .width(20)
+  .height(function(d) d * 80)
+  .left(function() this.index * 25)
+  .anchor("top").add(pv.Label)
+    .textAlign("right")
+    .textAngle(-Math.PI / 2);
+
+// vis.add(pv.Wedge)
+//   .data(pv.normalize([1, 1.2, 1.7, 1.5, .7]))
+//   .left(75)
+//   .bottom(75)
+//   .innerRadius(50)
+//   .outerRadius(70)
+//   .angle(function(d) d * 2 * Math.PI);
+
+vis.render();
+    </script>
+    <style>v\:*{behavior:url(#default#VML);}</style>
+    <span style="width:150;height:150;overflow:hidden;position:relative;">
+      <v:group style="width:150;height:150;position:absolute;" coordsize="150,150">
+        <v:shape style="width:100%;height:100%;" path="M-150,-150L150,150E" stroked="t">
+          <v:stroke color="black"/>
+        </v:shape>
+        <v:shape style="width:100%;height:100%;" path="M-150,-150L150,150E" stroked="f">
+          <v:path textpathok="t"/>
+          <v:fill color="black"/>
+          <v:textpath on="t"  style="line-height:10;v-text-align:right;font:10px sans-serif;" string="VML"/>
+        </v:shape>
+      </v:group>
+    </span>
+
+<!--       <v:shape style="width:150;height:150;position:absolute;v-text-align:center;"> -->
+<!-- <\!--         <v:path v="M 0,0 L 50,0 50,50 0,50 X"/> -\-> -->
+<!-- <\!--         <v:path v="AT 0,0,50,50 0,0 50,50 X"/> -\-> -->
+<!-- <\!--         <v:path v="AE 50,50 50,50 0 8796660 50,50 40,40 8796660 -8796660 X"/> -\-> -->
+<!-- <\!--         <v:path v="AE 50,50 50,50 0 23592960 AL 50,50 40,40 0 23592960"/> -\-> -->
+<!--         <v:path v="AE 50,50 50,50 0 23592960"/> -->
+<!--         <v:stroke color="red"/> -->
+<!--         <v:fill color="blue"/> -->
+  </body>
+</html>

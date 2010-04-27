@@ -1,0 +1,42 @@
+<html>
+  <head>
+    <title>Linear Scale</title>
+    <script type="text/javascript" src="../protovis-r3.1.0.js"></script>
+    <style type="text/css">svg { border: solid 1px #ccc; }</style>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+      var x = pv.Scale.linear(0, 100).range(0, 150),
+          y = pv.Scale.linear(0, 100).range(0, 150);
+
+      var vis = new pv.Panel()
+          .width(150)
+          .height(150)
+          .top(10).bottom(15).right(10).left(20);
+
+      vis.add(pv.Rule)
+          .data(x.ticks())
+          .strokeStyle(function() this.index ? (this.index % 2) ? "#eee" : "#bbb" : "#000")
+          .left(function(d) Math.round(x(d)) + .5)
+          .bottom(1).top(-1)
+        .anchor("bottom").add(pv.Label)
+          .visible(function(d) (d > 0) && (d < 100)  && !(this.index % 2));
+
+      vis.add(pv.Rule)
+          .data(y.ticks())
+          .strokeStyle(function() this.index ? (this.index % 2) ? "#eee" : "#bbb" : "#000")
+          .bottom(function(d) Math.round(y(d)) + .5)
+          .left(1).right(-1)
+        .anchor("left").add(pv.Label)
+          .visible(function(d) (d > 0) && (d < 100)  && !(this.index % 2));
+
+      vis.add(pv.Line)
+          .data(pv.range(101))
+          .left(x)
+          .bottom(y)
+          .strokeStyle("black");
+
+      vis.render();
+    </script>
+  </body>
+</html>

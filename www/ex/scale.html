@@ -1,0 +1,306 @@
+<html>
+  <head>
+    <title>Scales</title>
+    <script type="text/javascript" src="../protovis-r3.1.0.js"></script>
+    <style type="text/css">
+      body {
+        margin: 1em;
+        font: 14px gill sans;
+        background: #eee;
+        max-width: 7.5in;
+      }
+      svg {
+        background: #fff;
+        padding: 10px;
+        border: solid 10px #ddd;
+      }
+      h1, h2 {
+        font-weight: normal;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Scales</h1>
+
+    <script type="text/javascript+protovis">
+      function dots(n, max, min) {
+        if (min == undefined) min = 0;
+        var lo = pv.range(n).map(function() (0.1 + 0.9*Math.random())*(max-min)/10 + min);
+        var hi = pv.range(n).map(function() (1.0 + 9.0*Math.random())*(max-min)/10 + min);
+        return lo.concat(hi);
+      }
+    </script>
+
+    <h2>Linear Scale</h2>
+
+    Three linear scales are used here: a scale by <i>index</i> for dots and
+    ticks along the <i>x</i>-axis, a scale for dots and ticks along
+    the <i>y</i>-axis, and a color scale for the dots' fill and stroke
+    style. The associated data is an array of numbers in the range [0, 100]. The
+    first example also demonstrates color derivation using per-channel
+    overrides.
+
+    <p><script type="text/javascript+protovis">
+      var data = dots(50, 100),
+          x = pv.Scale.linear(0, 99).range(0, 440),
+          y = pv.Scale.linear(0, 100).range(0, 360),
+          c = pv.Scale.linear(data).range("#1f77b4", "#ff7f0e");
+
+      var panel = new pv.Panel()
+          .width(480)
+          .height(400)
+        .add(pv.Panel)
+          .left(20)
+          .right(20)
+          .top(20)
+          .bottom(20)
+          .strokeStyle("#ccc");
+
+      panel.add(pv.Rule)
+          .data(x.ticks())
+          .strokeStyle("#eee")
+          .left(x)
+        .anchor("bottom").add(pv.Label)
+        .anchorTarget().add(pv.Rule)
+          .left(null)
+          .bottom(y)
+        .anchor("right").add(pv.Label);
+
+      panel.add(pv.Dot)
+          .data(data)
+          .left(function() x(this.index))
+          .bottom(y)
+          .strokeStyle(c)
+          .fillStyle(function(d) c(d).alpha(.2));
+
+      panel.root.render();
+    </script>
+
+    <h2>Log Scale</h2>
+
+    Log scales support color ramps as well.
+
+    <p><script type="text/javascript+protovis">
+      var data = dots(50, 100),
+          x = pv.Scale.linear(0, 99).range(0, 440),
+          y = pv.Scale.log(1, 100).range(0, 360),
+          c = pv.Scale.log(1, 100).range("#1f77b4", "#ff7f0e");
+
+      var panel = new pv.Panel()
+          .width(480)
+          .height(400)
+        .add(pv.Panel)
+          .left(20)
+          .right(20)
+          .top(20)
+          .bottom(20)
+          .strokeStyle("#ccc");
+
+      panel.add(pv.Rule)
+          .data(x.ticks())
+          .strokeStyle("#eee")
+          .left(x)
+        .anchor("bottom").add(pv.Label);
+
+      panel.add(pv.Rule)
+          .data(y.ticks())
+          .strokeStyle("#eee")
+          .bottom(y)
+        .anchor("right").add(pv.Label);
+
+      panel.add(pv.Dot)
+          .data(data)
+          .left(function() x(this.index))
+          .bottom(y)
+          .strokeStyle(c)
+          .fillStyle(function(d) c(d).alpha(.2));
+
+      panel.root.render();
+    </script>
+
+    <h2>Diverging Scale</h2>
+
+    While domains and ranges for quantitative scales are normally uniform, you
+    can specify any number of contiguous regions. For example, for a diverging
+    color scale:
+
+    <pre>pv.Scale.linear(0, 10, 100).range("red", "yellow", "green")</pre>
+
+    While the domain is specified explicitly in this example, it could be
+    computed from the data if desired.
+
+    <p><script type="text/javascript+protovis">
+      var data = dots(50, 100),
+          x = pv.Scale.linear(0, 99).range(0, 440),
+          y = pv.Scale.linear(0, 100).range(0, 360),
+          c = pv.Scale.linear(0, 10, 100).range("red", "yellow", "green");
+
+      var panel = new pv.Panel()
+          .width(480)
+          .height(400)
+        .add(pv.Panel)
+          .left(20)
+          .right(20)
+          .top(20)
+          .bottom(20)
+          .strokeStyle("#ccc");
+
+      panel.add(pv.Rule)
+          .data(x.ticks())
+          .strokeStyle("#eee")
+          .left(x)
+        .anchor("bottom").add(pv.Label);
+
+      panel.add(pv.Rule)
+          .data(y.ticks())
+          .strokeStyle("#eee")
+          .bottom(y)
+        .anchor("right").add(pv.Label);
+
+      panel.add(pv.Dot)
+          .data(data)
+          .left(function() x(this.index))
+          .bottom(y)
+          .strokeStyle(c)
+          .fillStyle(function(d) c(d).alpha(.2));
+
+      panel.root.render();
+    </script>
+
+    <p>Of course, if we combine a log positional encoding with a log color
+    encoding, the ramp is now linear by position:
+
+    <p><script type="text/javascript+protovis">
+      var data = dots(50, 100),
+          x = pv.Scale.linear(0, 99).range(0, 440),
+          y = pv.Scale.log(1, 100).range(0, 360),
+          c = pv.Scale.log(1, 10, 100).range("red", "yellow", "green");
+
+      var panel = new pv.Panel()
+          .width(480)
+          .height(400)
+        .add(pv.Panel)
+          .left(20)
+          .right(20)
+          .top(20)
+          .bottom(20)
+          .strokeStyle("#ccc");
+
+      panel.add(pv.Rule)
+          .data(x.ticks())
+          .strokeStyle("#eee")
+          .left(x)
+        .anchor("bottom").add(pv.Label);
+
+      panel.add(pv.Rule)
+          .data(y.ticks())
+          .strokeStyle("#eee")
+          .bottom(y)
+        .anchor("right").add(pv.Label);
+
+      panel.add(pv.Dot)
+          .data(data)
+          .left(function() x(this.index))
+          .bottom(y)
+          .strokeStyle(c)
+          .fillStyle(function(d) c(d).alpha(.2));
+
+      panel.root.render();
+    </script>
+
+    <h2>Ordinal Scale</h2>
+
+    Like the first example, three scales are used in this chart: an ordinal
+    scale for <i>x</i>, a linear scale for <i>y</i>, and an ordinal scale for
+    color. Now that ordinal scales can be used for categorical color encodings,
+    they may be able to subsume the current <tt>pv.Colors</tt>.
+
+    <p><script type="text/javascript+protovis">
+      var categories = "ABCDEFGHIJK".split(""),
+          data = categories.map(function(c) [c, Math.random()]).sort(function(a, b) b[1] - a[1]),
+          x = pv.Scale.ordinal(categories).splitBanded(0, 440, 2/3),
+          y = pv.Scale.linear(0, 1).range(0, 360),
+          c = pv.Colors.category19(categories);
+
+      var panel = new pv.Panel()
+          .width(480)
+          .height(400)
+        .add(pv.Panel)
+          .left(20)
+          .right(20)
+          .top(20)
+          .bottom(20)
+          .strokeStyle("#ccc");
+
+      panel.add(pv.Bar)
+          .data(data)
+          .left(function(d) x(d[0]))
+          .width(x.range().band)
+          .bottom(0)
+          .height(function(d) y(d[1]))
+          .fillStyle(function(d) c(d[0]))
+        .anchor("bottom").add(pv.Label)
+          .textBaseline("top")
+          .text(function(d) d[0]);
+
+      panel.add(pv.Rule)
+          .data(y.ticks())
+          .strokeStyle("rgba(255, 255, 255, .5)")
+          .bottom(y)
+        .anchor("right").add(pv.Label)
+          .text(function(d) d.toFixed(1));
+
+      panel.root.render();
+    </script>
+
+    <p><script type="text/javascript+protovis">
+      var categories = "ABCDEF".split(""),
+          data = dots(50, 100).map(function(x, i) [x, categories[i % 4]]),
+          x = pv.Scale.ordinal(categories).split(0, 440),
+          y = pv.Scale.linear(0, 100).range(0, 360),
+          c = pv.Scale.linear(0, 10, 100).range("red", "yellow", "green");
+
+      var panel = new pv.Panel()
+          .width(480)
+          .height(400)
+        .add(pv.Panel)
+          .left(20)
+          .right(20)
+          .top(20)
+          .bottom(20)
+          .strokeStyle("#ccc");
+
+      panel.add(pv.Rule)
+          .data(categories)
+          .strokeStyle("#eee")
+          .left(x)
+        .anchor("bottom").add(pv.Label);
+
+      panel.add(pv.Rule)
+          .data(y.ticks())
+          .strokeStyle("#eee")
+          .bottom(y)
+        .anchor("right").add(pv.Label);
+
+      panel.add(pv.Dot)
+          .data(data)
+          .left(function(d) x(d[1]))
+          .bottom(function(d) y(d[0]))
+          .strokeStyle(function(d) c(d[0]))
+          .fillStyle(function(d) c(d[0]).alpha(.2));
+
+      panel.root.render();
+    </script>
+
+    <h2>Notes</h2>
+
+    <p>Examples:
+    <pre>pv.Scale.linear().range(0, Math.PI) // angle
+pv.Scale.linear().range("red", "green") // quantitative colors</pre>
+
+    <p>Note that for ordinal scales, the domain and range are discrete rather
+    than continuous:
+    <pre>pv.Scale.ordinal().domain("A", "B", "C", "D") // nominal domain
+pv.Scale.ordinal().range("red", "green", "blue") // nominal colors</pre>
+  </body>
+</html>

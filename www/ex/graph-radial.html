@@ -1,0 +1,62 @@
+<html>
+  <head>
+    <title>Flare Sunburst</title>
+    <link rel="stylesheet" type="text/css" href="ex.css"/>
+    <script type="text/javascript" src="../protovis-r3.1.1.js"></script>
+    <script type="text/javascript" src="flare.js"></script>
+    <style type="text/css">
+      #fig {
+        width: 860px;
+        height: 680px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <script type="text/javascript+protovis">
+
+      /* The sunburst layout. */
+      var sunburst = pv.Layout.sunburst(flare)
+          .root("flare")
+          .size(function(n) isNaN(n) ? NaN : 1)
+
+      /* The root panel. */
+      var vis = new pv.Panel()
+          .width(860)
+          .height(680);
+
+      /* Use another panel to oversize the sunburst. */
+      var panel = vis.add(pv.Panel)
+          .width(1024)
+          .height(1024)
+          .top((680 - 1024) / 2 - 30)
+          .left((860 - 1024) / 2);
+
+      /* Rather than rendering a wedge, use a dot. */
+      var dot = panel.add(pv.Wedge)
+          .extend(sunburst)
+          .fillStyle(null)
+        .anchor("inner").add(pv.Dot)
+          .strokeStyle(null);
+
+      /* Create a path from each child node to its parent. */
+      panel.add(pv.Panel)
+          .data(function() dot.scene.map(function(s) s.data))
+        .add(pv.Panel)
+          .data(function(p) p.children || [])
+        .add(pv.Line)
+          .data(function(d, p) [dot.scene[p.index], dot.scene[d.index]])
+          .strokeStyle("steelblue")
+          .left(function(d) d.left)
+          .top(function(d) d.top);
+
+      /* Fill the dot again with white. */
+      dot.add(pv.Dot)
+          .fillStyle("white")
+          .strokeStyle("steelblue")
+          .title(function(d) d.keys.slice(-1));
+
+      vis.render();
+    </script>
+  </div></div></body>
+</html>

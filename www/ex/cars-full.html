@@ -1,0 +1,134 @@
+<html>
+  <head>
+    <title>Cars</title>
+    <link type="text/css" rel="stylesheet" href="ex.css?3.1"/>
+    <script type="text/javascript" src="../protovis-d3.1.0.js"></script>
+    <script type="text/javascript" src="behavior.js"></script>
+    <script type="text/javascript" src="cars.js"></script>
+    <style type="text/css">
+      body {
+        font: oblique small baskerville;
+      }
+      #fig {
+        width: 880px;
+        height: 460px;
+      }
+      #title {
+        position: absolute;
+        top: 70px;
+        left: 200px;
+        padding: 10px;
+        background: white;
+      }
+      large {
+        font-size: medium;
+      }
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <script type="text/javascript+protovis">
+
+/* The dimensions to visualize, in order. */
+var dims = [
+  "cylinders",
+  "displacement",
+  "weight",
+  "horsepower",
+  "acceleration",
+  "mpg",
+  "year",
+  "origin"
+];
+
+/* Sizing and scales. */
+var w = 840,
+    h = 420,
+    x = pv.Scale.ordinal(dims).splitFlush(0, w),
+    y = pv.dict(dims, function(t) pv.Scale.linear(
+        cars.filter(function(d) !isNaN(d[t])),
+        function(d) d[t]).range(0, h)),
+    c = pv.dict(dims, function(t) pv.Scale.linear(
+        cars.filter(function(d) !isNaN(d[t])),
+        function(d) d[t]).range("steelblue", "brown"));
+
+/* Interaction state. */
+var filter = pv.dict(dims, function(t) {
+    return {min: y[t].domain()[0], max: y[t].domain()[1]};
+  }), active = "mpg";
+
+/* The root panel. */
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .left(20)
+    .right(20)
+    .top(20)
+    .bottom(20);
+
+/* A static background image for faster interactivity.  */
+vis.add(pv.Image)
+    .left(-1.5)
+    .right(-1.5)
+    .top(-1.5)
+    .bottom(-1.5)
+    .url("cars-bg.jpg");
+
+/* Rule and label per dimension. */
+vis.add(pv.Rule)
+    .data(dims)
+    .left(x)
+  .anchor("bottom").add(pv.Label);
+
+/* The parallel coordinates display. */
+vis.add(pv.Panel)
+    .data(cars)
+    .visible(function(d) dims.every(function(t)
+        (d[t] >= filter[t].min) && (d[t] <= filter[t].max)))
+  .add(pv.Line)
+    .data(dims)
+    .left(function(t, d) x(t))
+    .bottom(function(t, d) y[t](d[t]))
+    .strokeStyle(function(t, d) c[active](d[active]))
+    .lineWidth(1);
+
+/* Updater for slider and resizer. */
+function update(m1, m2, t) {
+  if (m1.y == m2.y) {
+    filter[t].min = y[t].domain()[0];
+    filter[t].max = y[t].domain()[1];
+  } else {
+    filter[t].min = Math.max(y[t].domain()[0], y[t].invert(h - Math.max(m1.y, m2.y)));
+    filter[t].max = Math.min(y[t].domain()[1], y[t].invert(h - Math.min(m1.y, m2.y)));
+  }
+  active = t;
+  vis.render();
+}
+
+/* Handle mousedown and click to update selection. */
+vis.add(pv.Bar)
+    .data(dims)
+    .left(function(t) x(t) - 30)
+    .width(60)
+    .fillStyle("rgba(0,0,0,.001)")
+    .cursor("crosshair")
+    .event("mousedown", pv.Resizer(update));
+
+/* Displays filter range for each dimension. */
+vis.add(pv.Bar)
+    .data(dims)
+    .left(function(t) x(t) - 5)
+    .width(10)
+    .bottom(function(t) y[t](filter[t].min))
+    .height(function(t) y[t](filter[t].max) - this.bottom())
+    .fillStyle(function(t) t == active
+        ? c[t]((filter[t].max + filter[t].min) / 2)
+        : "hsla(0,0,50%,.5)")
+    .strokeStyle("white")
+    .cursor("move")
+    .event("mousedown", pv.Slider(update));
+
+vis.render();
+
+    </script>
+  </div></div></body>
+</html>

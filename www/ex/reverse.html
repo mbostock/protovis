@@ -1,0 +1,38 @@
+<html>
+  <head>
+    <title>Reverse Test</title>
+    <script type="text/javascript" src="../protovis-r3.1.0.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+      var fill = pv.Colors.category20().by(function() seq++);
+
+      var vis = new pv.Panel()
+          .def("init", function() seq = 0)
+          .width(150).height(150)
+
+      var panel = vis.add(pv.Panel)
+          .data(pv.range(4))
+          .reverse(true)
+          .top(function(d) d * 10)
+          .fillStyle(fill);
+
+      var bar = panel.add(pv.Bar)
+          .data(pv.range(4))
+          .reverse(true)
+          .left(function(d) d * 10)
+          .fillStyle(fill);
+
+      panel.anchor("center").add(pv.Label)
+          .text(function() this.parent.index);
+
+      vis.render();
+
+    </script>
+    <p><input checked id="l1" onchange="panel.reverse(this.value).root.render()"
+    type="checkbox"><label for="l1">reverse panel</label>
+    <br><input checked id="l2" onchange="bar.reverse(this.value).root.render()"
+    type="checkbox"><label for="l2">reverse bar</label>
+  </body>
+</html>

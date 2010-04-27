@@ -1,0 +1,77 @@
+<html>
+  <head>
+    <title>Performance Testing</title>
+    <script src="../protovis.js" type="text/javascript"></script>
+    <script src="../protovis-chart.js" type="text/javascript"></script>
+    <style type="text/css">
+      body {
+        margin: 1em;
+        font: 14px gill sans;
+        background: #eee;
+      }
+      svg {
+        background: #fff;
+        padding: 10px;
+        margin: 10px;
+        border: solid 10px #ddd;
+      }
+      h1 {
+        font-weight: normal;
+      }
+      h2 {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Performance Testing</h1>
+
+    <script type="text/javascript+protovis">
+
+//       // Box-Muller method for generating a normally distributed random sample
+//       var data = pv.range(100).map(function() {
+//         var u = Math.sqrt(-2 * Math.log(Math.random()));
+//         var v = 2 * Math.PI * Math.random();
+//         return [u * Math.cos(v) + Math.PI, u * Math.sin(v) + Math.PI];
+//       });
+
+      var data = pv.range(10).map(function() {
+          return pv.range(5).map(function() {
+              var u = Math.sqrt(-2 * Math.log(Math.random()));
+              var v = 2 * Math.PI * Math.random();
+              return [u * Math.cos(v) + Math.PI, u * Math.sin(v) + Math.PI];
+            });
+        });
+
+//       var data = [
+//         [[86, 80], [56, 50], [10, 15], [12, 20], [8, 10]],
+//         [[69, 70], [20, 25], [28, 25], [5, 10], [16, 15]],
+//         [[70, 69], [25, 20], [25, 28], [10, 5], [15, 16]],
+//       ];
+
+//       var data = pv.range(200).map(function(i) {
+//           return pv.range(500).map(function(j) {
+//               return (i + 1) * Math.cos(10 * j / ((i + 1) * 10)) + (i + 1);
+//             });
+//         });
+
+      self.vis = new pv.AppleScatterChart()
+          .data(data)
+          .width(640)
+          .height(480);
+
+//       self.vis.xLabel.visible(false);
+      self.vis.render();
+
+//       self.vis.xLabel.visible(false);
+//       self.vis.line.parent.children[1].visible(false);
+//       self.vis.render();
+
+//       self.vis.render();
+//       self.vis.xLabel.visible(false);
+//       self.vis.area.fillStyle(function() "hsl(" + this.parent.index * 60 / data.length + ",100%,50%)");
+//       self.vis.root.render();
+
+    </script>
+  </body>
+</html>

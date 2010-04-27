@@ -1,0 +1,24 @@
+<html>
+  <head>
+    <title>Clipping</title>
+    <script type="text/javascript" src="../protovis-d3.1.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+new pv.Panel()
+    .width(200)
+    .height(200)
+  .add(pv.Panel)
+    .data(pv.range(0, 100, 10))
+    .overflow("hidden")
+    .left(pv.identity)
+    .right(pv.identity)
+  .add(pv.Bar)
+    .fillStyle("rgba(255,0,0,.1)")
+    .width(200)
+  .root.render();
+
+    </script>
+  </body>
+</html>

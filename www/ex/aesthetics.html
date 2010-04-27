@@ -1,0 +1,424 @@
+<html>
+  <head>
+    <title>Aesthetics</title>
+    <script type="text/javascript" src="../protovis-r3.1.0.js"></script>
+    <style type="text/css">
+      body {
+        font: small sans-serif;
+        max-width: 8.5in;
+      }
+      svg, h2, h3 {
+        margin-bottom: 10px;
+      }
+      svg {
+        width: 170px;
+        height: 170px;
+        border: solid 10px #ccc;
+        margin-right: 10px;
+        float: left;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Aesthetics</h2>
+
+    <h3>Fill and Stroke</h3>
+    <script type="text/javascript+protovis">
+
+new pv.Panel().width(150).height(150)
+    .bottom(10).top(10).left(10).right(10)
+  .add(pv.Bar)
+    .data([1, 1.2, 1.7, 1.5, .7, .2])
+    .bottom(0).width(20)
+    .height(function(d) d * 70)
+    .left(function() this.index * 26)
+  .root.render();
+
+new pv.Panel().width(150).height(150)
+    .bottom(10).top(10).left(10).right(10)
+  .add(pv.Bar)
+    .data([1, 1.2, 1.7, 1.5, .7, .2])
+    .bottom(0).width(20)
+    .height(function(d) d * 70)
+    .left(function() this.index * 26)
+    .fillStyle("#aec7e8")
+  .root.render();
+
+new pv.Panel().width(150).height(150)
+    .bottom(10).top(10).left(10).right(10)
+  .add(pv.Bar)
+    .data([1, 1.2, 1.7, 1.5, .7, .2])
+    .bottom(0).width(20)
+    .height(function(d) d * 70)
+    .left(function() this.index * 26)
+    .fillStyle("black")
+  .root.render();
+
+new pv.Panel().width(170).height(170)
+  .add(pv.Bar)
+    .fillStyle("#1f77b4")
+  .add(pv.Panel)
+    .bottom(10).top(10).left(10).right(10)
+  .add(pv.Bar)
+    .data([1, 1.2, 1.7, 1.5, .7, .2])
+    .bottom(0).width(20)
+    .height(function(d) d * 70)
+    .left(function() this.index * 26)
+    .fillStyle("white")
+  .root.render();
+
+new pv.Panel().width(170).height(170)
+  .add(pv.Bar)
+    .fillStyle("#aec7e8")
+  .add(pv.Panel)
+    .bottom(10).top(10).left(10).right(10)
+  .add(pv.Bar)
+    .data([1, 1.2, 1.7, 1.5, .7, .2])
+    .bottom(0).width(20)
+    .height(function(d) d * 70)
+    .left(function() this.index * 26)
+    .fillStyle("white")
+  .root.render();
+
+new pv.Panel().width(170).height(170)
+  .add(pv.Bar)
+    .fillStyle("black")
+  .add(pv.Panel)
+    .bottom(10).top(10).left(10).right(10)
+  .add(pv.Bar)
+    .data([1, 1.2, 1.7, 1.5, .7, .2])
+    .bottom(0).width(20)
+    .height(function(d) d * 70)
+    .left(function() this.index * 26)
+    .fillStyle("white")
+  .root.render();
+
+new pv.Panel().width(150).height(150)
+    .bottom(10).top(10).left(10).right(10)
+  .add(pv.Bar)
+    .data([1, 1.2, 1.7, 1.5, .7, .2])
+    .bottom(0).width(20)
+    .height(function(d) d * 70)
+    .left(function() this.index * 26)
+    .fillStyle(null)
+    .strokeStyle("black")
+  .root.render();
+
+new pv.Panel().width(150).height(150)
+    .bottom(10).top(10).left(10).right(10)
+  .add(pv.Bar)
+    .data([1, 1.2, 1.7, 1.5, .7, .2])
+    .bottom(0).width(20)
+    .height(function(d) d * 70)
+    .left(function() this.index * 26)
+    .fillStyle(null)
+    .strokeStyle("#1f77b4")
+  .root.render();
+
+new pv.Panel().width(150).height(150)
+    .bottom(10).top(10).left(10).right(10)
+  .add(pv.Bar)
+    .data([1, 1.2, 1.7, 1.5, .7, .2])
+    .bottom(0).width(20)
+    .height(function(d) d * 70)
+    .left(function() this.index * 26)
+    .fillStyle(null)
+    .strokeStyle("#aec7e8")
+  .root.render();
+
+new pv.Panel().width(150).height(150)
+    .bottom(10).top(10).left(10).right(10)
+  .add(pv.Bar)
+    .data([1, 1.2, 1.7, 1.5, .7, .2])
+    .bottom(0).width(20)
+    .height(function(d) d * 70)
+    .left(function() this.index * 26)
+    .fillStyle(function(d) "hsl(240, 50%, " + (d * 50) + "%)")
+  .root.render();
+
+new pv.Panel().width(150).height(150)
+    .bottom(10).top(10).left(10).right(10)
+  .add(pv.Bar)
+    .data([1, 1.2, 1.7, 1.5, .7, .2])
+    .bottom(0).width(20)
+    .height(function(d) d * 70)
+    .left(function() this.index * 26)
+    .fillStyle(function(d) "hsl(240, 50%, " + (100 - d * 50) + "%)")
+  .root.render();
+
+new pv.Panel().width(150).height(150)
+    .bottom(10).top(10).left(10).right(10)
+  .add(pv.Bar)
+    .data([1, 1.2, 1.7, 1.5, .7, .2])
+    .bottom(0).width(20)
+    .height(function(d) d * 70)
+    .left(function() this.index * 26)
+    .fillStyle(function(d) "hsl(240, " + (d * 50) + "%, 50%)")
+  .root.render();
+
+new pv.Panel().width(150).height(150)
+    .bottom(10).top(10).left(10).right(10)
+  .add(pv.Bar)
+    .data([1, 1.2, 1.7, 1.5, .7, .2])
+    .bottom(0).width(20)
+    .height(function(d) d * 70)
+    .left(function() this.index * 26)
+    .fillStyle(function(d) "hsl(240, " + (100 - d * 50) + "%, 50%)")
+  .root.render();
+
+new pv.Panel().width(150).height(150)
+    .bottom(10).top(10).left(10).right(10)
+  .add(pv.Bar)
+    .data([1, 1.2, 1.7, 1.5, .7, .2])
+    .bottom(0).width(20)
+    .height(function(d) d * 70)
+    .left(function() this.index * 26)
+    .fillStyle(pv.Colors.category20().by(pv.index))
+  .root.render();
+
+new pv.Panel().width(150).height(150)
+    .bottom(10).top(10).left(10).right(10)
+  .add(pv.Bar)
+    .data([1, 1.2, 1.7, 1.5, .7, .2])
+    .bottom(0).width(20)
+    .height(function(d) d * 70)
+    .left(function() this.index * 26)
+    .fillStyle(pv.Colors.category19().by(pv.index))
+  .root.render();
+
+    </script>
+    <br clear="all">
+
+    TODO: foreground gradient, background gradient, ...
+
+    <h3>Labels (accurate or misleading)</h3>
+    <script type="text/javascript+protovis">
+
+new pv.Panel().width(150).height(150)
+    .bottom(10).top(10).left(10).right(10)
+  .add(pv.Bar)
+    .data([1, 1.2, 1.7, 1.5, .7, .2])
+    .bottom(0).width(20)
+    .height(function(d) d * 70)
+    .left(function() this.index * 26)
+  .anchor("bottom").add(pv.Label)
+    .textStyle("white")
+  .root.render();
+
+new pv.Panel().width(150).height(150)
+    .bottom(10).top(10).left(10).right(10)
+  .add(pv.Bar)
+    .data([1, 1.2, 1.7, 1.5, .7, .2])
+    .bottom(0).width(20)
+    .height(function(d) d * 70)
+    .left(function() this.index * 26)
+  .anchor("top").add(pv.Label)
+    .textStyle("white")
+  .root.render();
+
+new pv.Panel().width(150).height(150)
+    .bottom(10).top(10).left(10).right(10)
+  .add(pv.Bar)
+    .data([1, 1.2, 1.7, 1.5, .7, .2])
+    .bottom(0).width(20)
+    .height(function(d) d * 70)
+    .left(function() this.index * 26)
+  .anchor("top").add(pv.Label)
+    .textBaseline("bottom")
+  .root.render();
+
+new pv.Panel().width(150).height(150)
+    .bottom(20).top(0).left(10).right(10)
+  .add(pv.Bar)
+    .data([1, 1.2, 1.7, 1.5, .7, .2])
+    .bottom(0).width(20)
+    .height(function(d) d * 70)
+    .left(function() this.index * 26)
+  .anchor("bottom").add(pv.Label)
+    .textBaseline("top")
+  .root.render();
+
+new pv.Panel().width(150).height(150)
+    .bottom(10).top(10).left(10).right(10)
+  .add(pv.Bar)
+    .data([1, 1.2, 1.7, 1.5, .7, .2])
+    .bottom(0).width(20)
+    .height(function(d) d * 70)
+    .left(function() this.index * 26)
+  .anchor("bottom").add(pv.Label)
+    .data([3, 4, 6, 5, 2, 1])
+    .textStyle("white")
+  .root.render();
+
+new pv.Panel().width(150).height(150)
+    .bottom(10).top(10).left(10).right(10)
+  .add(pv.Bar)
+    .data([1, 1.2, 1.7, 1.5, .7, .2])
+    .bottom(0).width(20)
+    .height(function(d) d * 70)
+    .left(function() this.index * 26)
+  .anchor("top").add(pv.Label)
+    .data([3, 4, 6, 5, 2, 1])
+    .textStyle("white")
+  .root.render();
+
+new pv.Panel().width(150).height(150)
+    .bottom(10).top(10).left(10).right(10)
+  .add(pv.Bar)
+    .data([1, 1.2, 1.7, 1.5, .7, .2])
+    .bottom(0).width(20)
+    .height(function(d) d * 70)
+    .left(function() this.index * 26)
+  .anchor("top").add(pv.Label)
+    .data([3, 4, 6, 5, 2, 1])
+    .textBaseline("bottom")
+  .root.render();
+
+new pv.Panel().width(150).height(150)
+    .bottom(20).top(0).left(10).right(10)
+  .add(pv.Bar)
+    .data([1, 1.2, 1.7, 1.5, .7, .2])
+    .bottom(0).width(20)
+    .height(function(d) d * 70)
+    .left(function() this.index * 26)
+  .anchor("bottom").add(pv.Label)
+    .data([3, 4, 6, 5, 2, 1])
+    .textBaseline("top")
+  .root.render();
+
+    </script>
+    <br clear="all">
+
+    <h3>Axes, Grid Lines, Ticks</h3>
+    <script type="text/javascript+protovis">
+
+new pv.Panel().width(150).height(150)
+    .bottom(10).top(10).left(10).right(10)
+  .add(pv.Bar)
+    .data([1, 1.2, 1.7, 1.5, .7, .2])
+    .bottom(0).width(20)
+    .height(function(d) d * 70)
+    .left(function() this.index * 26)
+  .root.add(pv.Rule)
+    .bottom(0)
+  .root.render();
+
+new pv.Panel().width(150).height(150)
+    .bottom(10).top(10).left(10).right(10)
+  .add(pv.Bar)
+    .data([1, 1.2, 1.7, 1.5, .7, .2])
+    .bottom(0).width(20)
+    .height(function(d) d * 70)
+    .left(function() this.index * 26)
+  .root.add(pv.Rule)
+    .data(pv.range(0, 2.5, .5))
+    .bottom(function(d) d * 70)
+  .root.render();
+
+new pv.Panel().width(150).height(150)
+    .bottom(10).top(10).left(10).right(10)
+  .add(pv.Bar)
+    .data([1, 1.2, 1.7, 1.5, .7, .2])
+    .bottom(0).width(20)
+    .height(function(d) d * 70)
+    .left(function() this.index * 26)
+  .root.add(pv.Rule)
+    .data(pv.range(0, 2.5, .5))
+    .bottom(function(d) d * 70)
+    .strokeStyle(function(d) d ? "white" : "black")
+  .root.render();
+
+new pv.Panel().width(150).height(150)
+    .bottom(10).top(10).left(10).right(10)
+  .add(pv.Rule)
+    .data(pv.range(.5, 2.5, .5))
+    .bottom(function(d) d * 70)
+    .strokeStyle("#999")
+  .add(pv.Bar)
+    .data([1, 1.2, 1.7, 1.5, .7, .2])
+    .bottom(0).width(20)
+    .height(function(d) d * 70)
+    .left(function() this.index * 26)
+    .strokeStyle(null)
+  .root.add(pv.Rule)
+    .bottom(0)
+  .root.render();
+
+new pv.Panel().width(150).height(150)
+    .bottom(10).top(10).left(10).right(10)
+  .add(pv.Dot)
+    .data(pv.range(0, 2.5, .5))
+    .bottom(function(d) d * 70)
+    .right(20)
+    .shape("tick")
+    .size(6)
+    .angle(Math.PI / 2)
+    .lineWidth(1)
+    .strokeStyle("black")
+  .anchor("right").add(pv.Label)
+    .textMargin(6) // TOOD textBaseline seems busted
+  .root.add(pv.Bar)
+    .data([1, 1.2, 1.7, 1.5, .7])
+    .bottom(0).width(20)
+    .height(function(d) d * 70)
+    .left(function() this.index * 26)
+    .strokeStyle(null)
+  .root.add(pv.Rule)
+    .bottom(0)
+    .right(26).left(0)
+  .root.render();
+
+new pv.Panel().width(150).height(150)
+    .bottom(10).top(10).left(10).right(10)
+  .add(pv.Dot)
+    .data(pv.range(0, 2.5, 1))
+    .bottom(function(d) d * 70)
+    .right(20)
+    .shape("tick")
+    .size(6)
+    .angle(Math.PI / 2)
+    .lineWidth(1)
+    .strokeStyle("black")
+  .anchor("right").add(pv.Label)
+    .textMargin(6) // TOOD textBaseline seems busted
+  .root.add(pv.Bar)
+    .data([1, 1.2, 1.7, 1.5, .7])
+    .bottom(0).width(20)
+    .height(function(d) d * 70)
+    .left(function() this.index * 26)
+    .strokeStyle(null)
+  .root.add(pv.Rule)
+    .bottom(0)
+    .right(26).left(0)
+  .root.render();
+
+new pv.Panel().width(150).height(150)
+    .bottom(10).top(10).left(10).right(10)
+  .add(pv.Dot)
+    .data(pv.range(0, 2.5, 1))
+    .bottom(function(d) d * 70)
+    .right(20)
+    .shape("tick")
+    .size(6)
+    .angle(Math.PI / 2)
+    .lineWidth(1)
+    .strokeStyle("black")
+  .anchor("right").add(pv.Label)
+    .textMargin(6) // TOOD textBaseline seems busted
+  .root.add(pv.Bar)
+    .data([1, 1.2, 1.7, 1.5, .7])
+    .bottom(0).width(20)
+    .height(function(d) d * 70)
+    .left(function() this.index * 26)
+    .strokeStyle(null)
+  .root.add(pv.Rule)
+    .data(pv.range(0, 2.5, .5))
+    .bottom(function(d) d * 70)
+    .right(26).left(0)
+    .strokeStyle(function(d) d ? "white" : "black")
+  .root.render();
+
+    </script>
+    <br clear="all">
+  </body>
+</html>

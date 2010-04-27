@@ -1,0 +1,201 @@
+<html>
+  <head>
+    <title>Apple-Style Charts</title>
+    <script src="../protovis-r3.1.0.js" type="text/javascript"></script>
+    <script src="../protovis-chart.js" type="text/javascript"></script>
+    <style type="text/css">
+      body {
+        margin: 1em;
+        font: 14px gill sans;
+        background: #eee;
+      }
+      svg {
+        background: #fff;
+        padding: 10px;
+        margin: 10px;
+        border: solid 10px #ddd;
+      }
+      h1 {
+        font-weight: normal;
+      }
+      h2 {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Apple-Style Charts</h1>
+
+    Adapted from Apple Numbers. Chart colors:
+    <a href="apple.html">spectrum</a> (default),
+    <a href="apple.html?blue">blue</a>,
+    <a href="apple.html?green">green</a>,
+    <a href="apple.html?grey">grey</a>,
+    <a href="apple.html?brown">brown</a>.
+    <p>
+
+    <script type="text/javascript">
+      var s = document.location.search;
+      var colors = s ? pv.AppleColors[s.substring(1)] : pv.AppleColors.spectrum;
+    </script>
+
+    <h2>Area</h2>
+    <script type="text/javascript+protovis">
+
+      var data = [
+        [86, 56, 10, 12, 8],
+        [69, 20, 28, 5, 16],
+        [76, 10, 46, 9, 11],
+      ];
+
+      new pv.AppleAreaChart()
+          .data(data)
+          .width(640)
+          .height(480)
+        .area.fillStyle(colors.parent)
+        .root.render();
+
+    </script>
+
+    <h2>Bar</h2>
+    <script type="text/javascript+protovis">
+
+      var data = [
+        [86, 56, 10, 12, 8],
+        [69, 20, 28, 5, 16],
+        [76, 10, 46, 9, 11],
+      ];
+
+      new pv.AppleBarChart()
+          .data(data)
+          .width(640)
+          .height(480)
+        .bar.fillStyle(colors.parent)
+        .root.render();
+
+    </script>
+
+    <h2>Column</h2>
+    <script type="text/javascript+protovis">
+
+      var data = [
+        [86, 56, 10, 12, 8],
+        [69, 20, 28, 5, 16],
+        [76, 10, 46, 9, 11],
+      ];
+
+      new pv.AppleColumnChart()
+          .data(data)
+          .width(640)
+          .height(480)
+        .bar.fillStyle(colors.parent)
+        .root.render();
+
+    </script>
+
+    <h2>Line</h2>
+    <script type="text/javascript+protovis">
+
+      var data = [
+        [86, 56, 10, 12, 8],
+        [69, 20, 28, 5, 16],
+        [76, 10, 46, 9, 11],
+      ];
+
+      new pv.AppleLineChart()
+          .data(data)
+          .width(640)
+          .height(480)
+        .line.strokeStyle(colors.parent)
+        .root.render();
+
+    </script>
+
+    <h2>Pie</h2>
+    <script type="text/javascript+protovis">
+
+      var data = [86, 56, 10, 12, 8];
+
+      new pv.ApplePieChart()
+          .data(data)
+          .width(640)
+          .height(480)
+        .pie.fillStyle(colors.index)
+        .root.render();
+
+    </script>
+
+    <h2>Scatter</h2>
+    <script type="text/javascript+protovis">
+
+      var data = [
+        [[86, 80], [56, 50], [10, 15], [12, 20], [8, 10]],
+        [[69, 70], [20, 25], [28, 25], [5, 10], [16, 15]],
+        [[70, 69], [25, 20], [25, 28], [10, 5], [15, 16]],
+      ];
+
+      new pv.AppleScatterChart()
+          .data(data)
+          .width(640)
+          .height(480)
+        .dot.strokeStyle(colors.parent)
+        .root.render();
+
+    </script>
+
+    <h2>Stacked Area</h2>
+    <script type="text/javascript+protovis">
+
+      var data = [
+        [86, 56, 10, 12, 8],
+        [69, 20, 28, 5, 16],
+        [76, 10, 46, 9, 11],
+      ];
+
+      new pv.AppleStackedAreaChart()
+          .data(data)
+          .width(640)
+          .height(480)
+        .area.fillStyle(colors.parent)
+        .root.render();
+
+    </script>
+
+    <h2>Stacked Bar</h2>
+    <script type="text/javascript+protovis">
+
+      var data = [
+        [86, 56, 10, 12, 8],
+        [69, 20, 28, 5, 16],
+        [76, 10, 46, 9, 11],
+      ];
+
+      new pv.AppleStackedBarChart()
+          .data(data)
+          .width(640)
+          .height(480)
+        .bar.fillStyle(colors.parent)
+        .root.render();
+
+    </script>
+
+    <h2>Stacked Column</h2>
+    <script type="text/javascript+protovis">
+
+      var data = [
+        [86, 56, 10, 12, 8],
+        [69, 20, 28, 5, 16],
+        [76, 10, 46, 9, 11],
+      ];
+
+      new pv.AppleStackedColumnChart()
+          .data(data)
+          .width(640)
+          .height(480)
+        .bar.fillStyle(colors.parent)
+        .root.render();
+
+    </script>
+
+  </body>
+</html>

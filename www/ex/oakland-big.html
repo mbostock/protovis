@@ -1,0 +1,138 @@
+<html>
+  <head>
+    <title>Oakland Crimespotting</title>
+    <script src="../protovis-r3.1.0.js" type="text/javascript"></script>
+    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=false&amp;key=ABQIAAAAYZ9eMYFYusxZt-1RKXLI7RQGpXqX26B62_lhdlIUxPTUm0CSORRw1BkwdprB1xQ3Xa8KfbgKAacxlw" type="text/javascript"></script>
+    <script src="oakland.js" type="text/javascript"></script>
+    <script type="text/javascript+protovis">
+
+var colors = {
+  violent: { light: "rgba(217, 0, 0, .8)", dark: "rgb(163, 0, 0)" },
+  property: { light: "rgba(35, 150, 94, .8)", dark: "rgb(26, 112, 70)" },
+  quality: { light: "rgba(52, 137, 186, .8)", dark: "rgb(39, 103, 139)" },
+};
+
+codes.forEach(function(x) colors[x.code] = colors[x.category]);
+
+function Canvas(crimes) {
+  this.crimes = crimes;
+}
+
+Canvas.prototype = pv.extend(GOverlay);
+
+Canvas.prototype.initialize = function(map) {
+  this.map = map;
+  this.canvas = document.createElement("div");
+  this.canvas.setAttribute("class", "canvas");
+  map.getPane(G_MAP_MAP_PANE).parentNode.appendChild(this.canvas);
+};
+
+Canvas.prototype.redraw = function(force) {
+  if (!force) return;
+  var c = this.canvas, m = this.map, r = 20;
+
+  /* Get the pixel locations of the crimes. */
+  var pixels = this.crimes.map(function(d) {
+      return m.fromLatLngToDivPixel(new GLatLng(d.lat, d.lon));
+    });
+
+  /* Update the canvas bounds. Note: may be large. */
+  function x(p) p.x; function y(p) p.y;
+  var x = { min: pv.min(pixels, x) - r, max: pv.max(pixels, x) + r };
+  var y = { min: pv.min(pixels, y) - r, max: pv.max(pixels, y) + r };
+  c.style.width = (x.max - x.min) + "px";
+  c.style.height = (y.max - y.min) + "px";
+  c.style.left = x.min + "px";
+  c.style.top = y.min + "px";
+
+  /* Render the visualization. */
+  new pv.Panel().canvas(c)
+      .left(-x.min).top(-y.min)
+    .add(pv.Panel)
+      .data(this.crimes)
+    .add(pv.Dot)
+      .left(function() pixels[this.parent.index].x)
+      .top(function() pixels[this.parent.index].y)
+      .strokeStyle(function(x, d) colors[d.code].dark)
+      .fillStyle(function(x, d) colors[d.code].light)
+      .size(140)
+    .anchor("center").add(pv.Label)
+      .textStyle("white")
+      .text(function(x, d) d.code)
+    .root.render();
+};
+
+if (GBrowserIsCompatible()) {
+  G_NORMAL_MAP.getMinimumResolution = function() 11;
+  G_NORMAL_MAP.getMaximumResolution = function() 14;
+  var map = new GMap2(document.getElementById("map"));
+  map.setCenter(new GLatLng(37.78, -122.22), 12);
+  map.setUI(map.getDefaultUI());
+  map.addOverlay(new Canvas(crimes));
+}
+
+    </script>
+    <style type="text/css">
+      body {
+        font: 12px sans-serif;
+      }
+      #map {
+        height: 450px;
+        border: solid 1px #999;
+        margin-top: 8px;
+        margin-bottom: 8px;
+      }
+      #map .canvas {
+        position: absolute;
+      }
+      #legend {
+        float: left;
+        background-color: #eee;
+        border: solid 1px #ccc;
+        padding: 8px;
+        margin-right: 8px;
+      }
+      #legend svg {
+        padding-top: 8px;
+        padding-right: 8px;
+      }
+    </style>
+  </head>
+  <body onunload="GUnload()">
+    <div id="header">
+      <a href="http://oakland.crimespotting.org/">
+        <img src="oakland-logo.png" width="168" height="73" border="0">
+      </a>
+    </div>
+    <div id="map"></div>
+    <div id="legend">
+      <b>Key to map symbols</b><br>
+      <script type="text/javascript+protovis">
+
+/* Render a legend, grouping codes by category. */
+new pv.Panel().width(130).height(130)
+    .data(pv.nest(codes).key(function(d) d.category).entries())
+  .add(pv.Dot)
+    .data(function(d) d.values)
+    .left(12)
+    .top(function() this.index * 25 + 12)
+    .strokeStyle(function(d) colors[d.code].dark)
+    .fillStyle(function(d) colors[d.code].light)
+    .size(100)
+  .anchor("center").add(pv.Label)
+    .textStyle("white")
+    .text(function(d) d.code)
+  .proto.proto.anchor("right").add(pv.Label)
+    .text(function(d) d.name)
+  .root.render();
+
+      </script>
+    </div>
+    <div>
+      This is a recreation of <a href="http://oakland.crimespotting.org">Oakland
+      Crimespotting</a> in Protovis using the Google Maps API. The original was
+      designed and built by Stamen Design's Michal Migurski, Tom Carden, and
+      Eric Rodenbeck.
+    </div>
+  </body>
+</html>

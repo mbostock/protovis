@@ -1,0 +1,106 @@
+<html>
+  <head>
+    <title>Moody in the Morning</title>
+    <script type="text/javascript" src="../protovis-r3.1.0.js"></script>
+    <script type="text/javascript" src="moody.js"></script>
+    <style type="text/css">
+      body {
+        font: 10px sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    Score by: <select id="menu" onchange="eval('score(' + this.value + ');vis.render();')">
+        <option value="points" selected>points</option>
+        <option value="duration">duration</option>
+        <option value="rides">rides</option>
+      </select><br>
+    <script type="text/javascript+protovis">
+      var w = 1024, h = 1024;
+
+      /* Parse dates and nest data by name. Insert datum for the end date. */
+      bike.forEach(function(d) d.date = Date.parse(d.date, "%m/%d/%Y %H:%M:%S"));
+      var names = pv.nest(bike).key(function(d) d.name).entries();
+      names.forEach(function(n) n.values.push({
+        date: new Date(2009, 8, 8),
+        name: n.values[0].name
+      }));
+
+      /* Scales. */
+      var x = pv.Scale.linear(bike, function(d) d.date).range(0, w),
+          y = pv.Scale.linear().range(0, h),
+          c = pv.Colors.category20();
+
+      /* The root panel, with padding for labels. */
+      var vis = new pv.Panel()
+          .width(w)
+          .height(h)
+          .left(10)
+          .bottom(20)
+          .top(10)
+          .right(40);
+
+      /* Y ticks. */
+      vis.add(pv.Rule)
+          .data(function() y.ticks())
+          .bottom(function(d) Math.round(y(d)) - .5)
+          .strokeStyle(function() this.index ? "#ccc" : "#000")
+        .anchor("right").add(pv.Label)
+          .text(function(d) d.toFixed(0));
+
+      /* X ticks. */
+      vis.add(pv.Rule)
+          .data(function() x.ticks())
+          .left(x)
+          .strokeStyle("#eee")
+        .anchor("bottom").add(pv.Label)
+          .text(function(d) new Date(d).format("%b %d"));
+
+      /* A panel for each person. */
+      var panel = vis.add(pv.Panel)
+          .data(names);
+
+      /* A line curve (with dots) for each person. */
+      panel.add(pv.Line)
+          .data(function(d) d.values)
+          .left(function(d) x(d.date))
+          .bottom(function(d) y(d.score))
+          .strokeStyle(function(d) c(d.name))
+          .lineWidth(3)
+          .interpolate("step-after")
+        .add(pv.Dot)
+          .visible(function(d) d.duration)
+          .size(function(d) d.fixed ? 20 : 1)
+          .fillStyle("#fff")
+          .title(function(d) d.name + ": " + d.duration + " at " + d.date.format("%b %d %H:%M"));
+
+      /* A legend entry for each person. */
+      panel.add(pv.Dot)
+          .left(10)
+          .top(function() this.parent.index * 12 + 10)
+          .fillStyle(function(d) c(d.key))
+          .strokeStyle(null)
+        .anchor("right").add(pv.Label)
+          .text(function(d) d.key + ": " + d.score.toFixed());
+
+      /* Various scoring functions. */
+      function points(d) 300 / (d.duration - 2) * (d.fixed ? 2 : 1);
+      function rides(d) 1;
+      function duration(d) d.duration;
+
+      /* Compute cumulative score; sort by end score; update y-scale. */
+      function score(f) {
+        names.forEach(function(n) n.score = n.values.reduce(
+            function(v, d) d.score = d.duration ? f(d) + v : v, 0));
+        names.sort(function(b, a) a.score - b.score);
+        y.domain(0, pv.max(names, function(n) n.score));
+      }
+
+      /* By default, score by points. */
+      score(points);
+
+      vis.render();
+      menu.focus();
+    </script>
+  </body>
+</html>

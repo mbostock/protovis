@@ -1,0 +1,64 @@
+<html>
+  <head>
+    <title>Barley Yields</title>
+    <script type="text/javascript" src="../protovis-r3.1.0.js"></script>
+    <script type="text/javascript" src="barley.js"></script>
+    <style type="text/css">
+      body {
+        font: 12px sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+      function median(data) pv.median(data, function(d) d.yield);
+      var site = pv.nest(barley).key(function(d) d.site).rollup(median);
+      var variety = pv.nest(barley).key(function(d) d.variety).rollup(median);
+
+      barley = pv.nest(barley)
+          .key(function(d) d.year)
+          .key(function(d) d.site)
+          .sortKeys(function(a, b) site[b] - site[a])
+          .sortValues(function(a, b) variety[b.variety] - variety[a.variety])
+          .entries();
+
+      var vis = new pv.Panel().width(680).height(840);
+
+      vis.add(pv.Panel)
+          .data(barley)
+          .left(function() this.index * 340)
+        .add(pv.Panel)
+          .data(function(year) year.values)
+          .top(function() this.index * 140)
+        .add(pv.Bar)
+          .left(4.5).top(4.5).width(331).height(131)
+          .fillStyle(null).strokeStyle("darkgray").lineWidth(1)
+        .add(pv.Bar)
+          .height(14)
+          .fillStyle("powderblue")
+        .add(pv.Label)
+          .left(165)
+          .textAlign("center").textBaseline("top")
+          .text(function(d, site, year) site.key + " " + year.key)
+        .add(pv.Label)
+          .data(function(site) site.values)
+          .left(95).top(function() this.index * 11 + 27)
+          .textAlign("right").textBaseline("middle")
+          .text(function(d) d.variety)
+        .add(pv.Dot)
+          .fillStyle(null).lineWidth(1.5)
+          .strokeStyle(pv.Colors.category10().by(function() this.parent.parent.index))
+          .left(function(d) d.yield * 3 + 95)
+        .add(pv.Rule)
+          .left(95)
+          .right(function() this.proto.right() + this.proto.radius())
+          .top(function() this.proto.top() + .5)
+          .width(null)
+          .strokeStyle("darkgray").lineWidth(1);
+
+      vis.render();
+    </script>
+    <br>
+    See <a href="barley-alt.html">a variation</a> of this visualization.
+  </body>
+</html>

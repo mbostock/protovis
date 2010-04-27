@@ -1,0 +1,131 @@
+<html>
+  <head>
+    <title>Sizing the Horizon</title>
+    <link type="text/css" rel="stylesheet" href="ex.css?3.1"/>
+    <script type="text/javascript" src="../protovis-r3.1.0.js"></script>
+    <script type="text/javascript" src="horizon.js"></script>
+    <style type="text/css">
+      #fig {
+        width: 300px;
+        height: 430px;
+      }
+      .label {
+        font-size: 13px;
+        padding-top: 2px;
+        padding-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+
+    <script type="text/javascript+protovis">
+new pv.Panel()
+    .width(300)
+    .height(70)
+  .add(pv.Area)
+    .data(data)
+    .fillStyle("rgba(0, 0, 255, .4)")
+    .bottom(35)
+    .height(function(d) d * 20)
+    .left(function() this.index * 3)
+  .root.render();
+    </script>
+    <div class="label">Filled line chart.</div>
+
+    <script type="text/javascript+protovis">
+new pv.Panel()
+    .width(300)
+    .height(70)
+  .add(pv.Area)
+    .data(data)
+    .fillStyle("rgba(0, 0, 255, .4)")
+    .bottom(35)
+    .height(function(d) Math.max(0, d * 20))
+    .left(function() this.index * 3)
+  .add(pv.Area)
+    .fillStyle("rgba(255, 0, 0, .4)")
+    .height(function(d) Math.min(0, d * 20))
+  .root.render();
+    </script>
+    <div class="label">Two-color filled line chart.</div>
+
+    <script type="text/javascript+protovis">
+new pv.Panel()
+    .width(300)
+    .height(35)
+  .add(pv.Area)
+    .data(data)
+    .fillStyle("rgba(0, 0, 255, .4)")
+    .bottom(0)
+    .height(function(d) Math.max(0, d * 20))
+    .left(function() this.index * 3)
+  .add(pv.Area)
+    .fillStyle("rgba(255, 0, 0, .4)")
+    .height(function(d) -Math.min(0, d * 20))
+  .root.render();
+    </script>
+    <div class="label">Mirrored chart.</div>
+
+    <script type="text/javascript+protovis">
+new pv.Panel()
+    .width(300)
+    .height(35)
+  .add(pv.Area)
+    .data(data)
+    .fillStyle("rgba(0, 0, 255, .4)")
+    .bottom(0)
+    .height(function(d) Math.max(0, d * 20))
+    .left(function() this.index * 3)
+  .add(pv.Area)
+    .fillStyle("rgba(255, 0, 0, .4)")
+    .top(0)
+    .height(function(d) -Math.min(0, d * 20))
+  .root.render();
+    </script>
+    <div class="label">Offset chart.</div>
+
+    <script type="text/javascript+protovis">
+new pv.Panel()
+    .width(300)
+    .height(20)
+  .add(pv.Area)
+    .data(data)
+    .fillStyle("rgba(0, 0, 255, .4)")
+    .bottom(0)
+    .height(function(d) Math.max(0, Math.min(20, d * 20)))
+    .left(function() this.index * 3)
+  .add(pv.Area)
+    .height(function(d) Math.max(0, Math.min(20, d * 20 - 20)))
+  .add(pv.Area)
+    .fillStyle("rgba(255, 0, 0, .4)")
+    .height(function(d) -Math.min(0, Math.max(-20, d * 20)))
+  .add(pv.Area)
+    .height(function(d) -Math.min(0, Math.max(-20, d * 20 + 20)))
+  .root.render();
+    </script>
+    <div class="label">2-band mirrored chart.</div>
+
+    <script type="text/javascript+protovis">
+new pv.Panel()
+    .width(300)
+    .height(20)
+  .add(pv.Area)
+    .data(data)
+    .fillStyle("rgba(0, 0, 255, .4)")
+    .bottom(0)
+    .height(function(d) Math.max(0, Math.min(20, d * 20)))
+    .left(function() this.index * 3)
+  .add(pv.Area)
+    .height(function(d) Math.max(0, Math.min(20, d * 20 - 20)))
+  .add(pv.Area)
+    .fillStyle("rgba(255, 0, 0, .4)")
+    .top(0)
+    .height(function(d) -Math.min(0, Math.max(-20, d * 20)))
+  .add(pv.Area)
+    .height(function(d) -Math.min(0, Math.max(-20, d * 20 + 20)))
+  .root.render();
+    </script>
+    <div class="label">2-band offset chart.</div>
+
+  </div></div></body>
+</html>

@@ -1,0 +1,98 @@
+<html>
+  <head>
+    <title>Game of Life</title>
+    <link type="text/css" rel="stylesheet" href="ex.css?3.1"/>
+    <script type="text/javascript" src="../protovis-r3.1.0.js"></script>
+    <script type="text/javascript" src="life.js"></script>
+    <style type="text/css">
+      #fig {
+        width: 300px;
+        height: 300px;
+      }
+      #header, #footer {
+        font: 10px sans-serif;
+        padding: 10px;
+        margin: auto;
+        width: 470px;
+      }
+      #footer {
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <script type="text/javascript+protovis">
+
+      var n = 150, size = 2, life;
+
+      var vis = new pv.Panel()
+          .width(n * size)
+          .height(n * size);
+
+      vis.add(pv.Panel)
+          .data(pv.range(n))
+          .left(function(i) i * size)
+          .width(size)
+        .add(pv.Bar)
+          .data(pv.range(n))
+          .top(function(j) j * size)
+          .height(size)
+          .fillStyle("black")
+          .visible(function(i, j) life[i * n + j]);
+
+      function reset(rand) {
+        life = rand
+            ? breeder.map(function() Math.round(Math.random()))
+            : breeder.concat();
+        life.neighbors = breeder.map(function() 0);
+
+        life.neighbors.add = function(x, y, v) {
+          for (var i = x - 1; i <= x + 1; i++) {
+            for (var j = y - 1; j <= y + 1; j++) {
+              this[i * n + j] += v;
+            }
+          }
+          this[x * n + y] -= v;
+        };
+
+        life.update = function() {
+          var neighbors = this.neighbors.concat();
+          for (var x = 0, p = 0; x < n; x++) {
+            for (var y = 0; y < n; y++, p++) {
+              if (this[p]) {
+                if ((neighbors[p] < 2) || (neighbors[p] > 3)) {
+                  this.neighbors.add(x, y, -1);
+                  this[p] = 0;
+                }
+              } else if (neighbors[p] == 3) {
+                this.neighbors.add(x, y, 1);
+                this[p] = 1;
+              }
+            }
+          }
+        };
+
+        for (var x = 0, p = 0; x < n; x++) {
+          for (var y = 0; y < n; y++, p++) {
+            if (life[p]) {
+              life.neighbors.add(x, y, 1);
+            }
+          }
+        }
+
+        update();
+      };
+
+      function update() {
+        var start = new Date().getTime();
+        life.update();
+        vis.render();
+        var end = new Date().getTime();
+        setTimeout(update, end - start);
+      }
+
+      reset();
+
+    </script>
+  </div></div></body>
+</html>

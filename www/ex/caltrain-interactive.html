@@ -1,0 +1,345 @@
+<html> 
+  <head> 
+    <title>CalTrain Timetable</title> 
+    <script type="text/javascript" src="../protovis-r3.1.0.js"></script>
+    <script type="text/javascript" src="drag.js"></script>
+    <script type="text/javascript" src="caltrain.js"></script>
+    <style type="text/css"> 
+      body {
+        font: 10px sans-serif;
+      }
+      
+      div {
+        padding-left: 100;
+        padding-right: 100;
+      }
+    </style>
+  </head> 
+  <body>
+    <div>
+      Show:
+      <select id="menu" onchange="show = this.value; vis.render();"> 
+        <option value="ALL" selected>all trains</option> 
+        <option value="N">northbound trains only</option> 
+        <option value="S">southbound trains only</option> 
+      </select>
+      operating on
+      <select id="menu" onchange="oper = this.value; vis.render();"> 
+        <option value="Wk" selected>weekdays</option> 
+        <option value="Su">Sunday</option> 
+        <option value="Sa">Saturday</option> 
+      </select>
+    </div>
+    <script type="text/javascript+protovis">
+      // Start with showing all trains on weekdays
+      var show = "ALL",
+          oper = "Wk";
+    
+      // Flatten the data so that we have an array of (Train x Station x Time)
+      northbound = pv.flatten(northbound)
+          .key("train")
+          .key("station", function(i) stationsNS[stationsNS.length - i - 1].name)
+          .key("time")
+          .array();
+          
+      southbound = pv.flatten(southbound)
+          .key("train")
+          .key("station", function(i) stationsNS[i].name)
+          .key("time")
+          .array();
+      
+      // Label the trains with their directions of travel
+      northbound.forEach(function(stop) stop.bound = "N"); 
+      southbound.forEach(function(stop) stop.bound = "S");
+      
+      // Concatinate the northbound and southbound trains to make a list of all trains
+      var allTrains = northbound.concat(southbound).filter(function(stop) stop.time.length > 1);
+      
+      // Parse the stop time and do some extra clean up
+      allTrains.forEach(function(stop) {
+        // parse type
+        stop.type = stop.train.charAt(3);
+        stop.train = stop.train.substr(0,3);
+        
+        // check to see if the stop is an interconnect
+        if(stop.time.charAt(0) == "i") {
+            var time = stop.time.substr(1);
+            stop.conn = true;
+        } else {
+            var time = stop.time;
+            stop.conn = false;
+        }
+        
+        if(time.length == 6) {
+            var h = parseInt(time.substr(0, 1), 10);
+            var m = parseInt(time.substr(2, 2), 10);
+            var pm = (time.substr(4, 2) == "pm");
+        } else {
+            var h = parseInt(time.substr(0, 2), 10);
+            var m = parseInt(time.substr(3, 2), 10); // parseInt("09") == 0 because it assumes octal
+            var pm = (time.substr(5, 2) == "pm");
+        }
+        
+        if(h == 12) pm = !pm // for 12 we have to swap am and pm because time is retarded
+        
+        time = h*60 + m + (pm?720:0); // calculate the number of minutes from midnight
+        stop.time = time + ((time < 180)?1440:0); // make the day switch at 3am instead of midnight
+      })
+      
+      // Double up each stop to with a start and an end (the end is one minute later than the start)
+      var allTrainsDbl = new Array();
+      allTrains.forEach(function(stop) {
+        stop.which = "S";
+        allTrainsDbl.push(stop);
+        var endStop = {
+            type: stop.type,
+            train: stop.train,
+            conn: stop.conn,
+            time: stop.time+1,
+            station: stop.station,
+            which: "E"
+        };
+        allTrainsDbl.push(endStop);
+      });
+      
+      
+      // Nest the trains-stops by train as we will draw one line per train
+      var trains = pv.nest(allTrainsDbl)
+          .key(function(d) d.train)
+          .entries();
+    
+      // Initialize the variables
+      var w = 1200, h = 600,
+          minHour = 4, maxHour = 26,
+          showMin = 4*60, showMax = 26*60;
+      
+      // parse the #hash so get the times to show
+      if(match = /(\d{2,4})-(\d{2,4})/.exec(window.location.hash)) {
+        var minVal = parseInt(match[1], 10);
+        var maxVal = parseInt(match[2], 10);
+        if(minVal+60 < maxVal) {
+          showMin = minVal;
+          showMax =maxVal;
+        }
+      }
+ 
+      // Make the scale functions
+      var x   = pv.Scale.linear(showMin, showMax).range(0, w),
+          s2d = pv.Scale.ordinal(stationsNS, function(s) s.name).range(stationsNS, function(s) s.dist),
+          y   = pv.Scale.linear(stationsNS, function(s) s.dist).range(h, 0).by(s2d);
+
+      // The root panel, with padding for labels
+      var vis = new pv.Panel()
+          .width(w)
+          .height(h)
+          .left(100)
+          .right(100)
+          .bottom(130)
+          .top(30);
+            
+      // Add station lines
+      vis.add(pv.Rule)
+          .data(stationsNS)
+          .bottom(function(s) Math.round(y(s.name)) - 0.5)
+          .strokeStyle("#ccc")
+        .anchor("left").add(pv.Label)
+          .text(function(s) s.name)
+        .anchor("right").add(pv.Label);
+ 
+      // Add hour lines
+      vis.add(pv.Rule)
+          .data(function() pv.range(Math.ceil(showMin/60)*60, showMax+1, 60))
+          .left(function(t) Math.round(x(t)) - 0.5)
+          .strokeStyle("#ddd")
+        .anchor("top").add(pv.Label)
+          .text(function(d) { var h = d/60 % 24; return (h==0?'MIDNIGHT':(h==12?'NOON':(h<12?h:h-12))); })
+        .anchor("bottom").add(pv.Label);
+        
+      // Add now's line
+      vis.add(pv.Rule)
+          .data(function() [new Date()])
+          .left(function(now) Math.round(x(now.getHours()*60 + now.getMinutes() + ((now.getHours()<=minHour)?1440:0))) - 0.5)
+         // .visible(function(now) 0<this.left && this.left<w) // Invisible is off screen
+          .strokeStyle("FF0C0C")
+          .top(-20)
+          .bottom(-20)
+        .anchor("top").add(pv.Label)
+          .text(function(now) { var ds = now.format("NOW: %I:%M %p"); return (ds.charAt(0)=="0"?ds.substr(1):ds); })
+        .anchor("bottom").add(pv.Label);
+      
+      // A panel for each train
+      var panel = vis.add(pv.Panel)
+          .data(trains)
+          .overflow("hidden")
+          .visible(function(train) {
+                var t = train.values[0];
+                if((show!="ALL")&&(show!=t.bound)) return false;
+                if(oper=="Wk") {
+                    return (t.type=="N")||(t.type=="L")||(t.type=="B");
+                } else if(oper=="Su") {
+                    return (t.type=="W")||(t.type=="S");
+                } else { //if(oper=="Su") {
+                    return (t.type=="W");
+                }
+              });
+              
+      // A line curve (with dots) for each station
+      var line = panel.add(pv.Line)
+          .data(function(d) d.values)
+          .left(function(stop) x(stop.time))
+          .bottom(function(stop) y(stop.station))
+          .strokeStyle(function(stop) types[stop.type])
+          .lineWidth(1)
+        .add(pv.Line)  // A transparent fat line for the mouse events
+          .lineWidth(3)
+          .def("active")
+          .event("mouseover", function() this.active(true))
+          .event("mouseout", function() this.active(false)) 
+          .strokeStyle(function(stop) this.active()?types[stop.type]:"rgba(255,255,255,0.001)");
+      
+      // Ticks that indicate the stops
+      line.add(pv.Dot)
+          .size(4)
+          .visible(function(stop) stop.which == "E")
+          .shape("tick")
+          .angle(-Math.PI / 2)
+          .strokeStyle(function(stop) (stop.conn?"#00A50D":types[stop.type]))
+          .lineWidth(function(stop) (stop.conn?2:1));
+
+      // Invisible dots that show stop info
+      line.add(pv.Dot)
+          .size(7)
+          .visible(function(stop) stop.which == "S")
+          .title(function(stop) "Train " + stop.train + " stops at " + stop.station + " at " + Date.parse(Math.floor(stop.time/60) + ":" + stop.time%60, "%H:%M").format("%I:%M %p"));
+
+      ////////////////////////////////////////////////////////
+      // Time selector slider
+          
+      // Updaters for time selector
+      function updateMain(r) {
+        showMin = Math.round(Math.max(barX.invert(r.left), minHour*60));
+        showMax = Math.round(Math.min(barX.invert(w - r.right), maxHour*60));
+        bar.render();
+      }
+      
+      function updateLeft(r) {
+        showMin = Math.round(Math.min(Math.max(barX.invert(r.left), minHour*60), showMax-60));
+        bar.render();
+      }
+      
+      function updateRight(r) {
+        showMax = Math.round(Math.max(Math.min(barX.invert(w - r.right), maxHour*60), showMin+60));
+        bar.render();
+      }
+      
+      function mouseUp() {
+        window.location.hash = showMin + "-" + showMax;
+        x = pv.Scale.linear(showMin, showMax).range(0, w);
+        vis.render();
+      }
+      
+      var barHeight = 12;
+      var barX = pv.Scale.linear(minHour*60, maxHour*60).range(0, w);
+       
+      var bar = vis.add(pv.Panel)
+          .top(h + 50)
+          .height(50);
+          
+      // background
+      bar.add(pv.Bar)
+          .left(0)
+          .right(0)
+          .height(barHeight)
+          .fillStyle("#eee");
+         
+      // Bar scale
+      bar.add(pv.Rule)
+          .data(function() pv.range(minHour, maxHour+1, 1))
+          .left(function(t) Math.round(barX(t*60)) - 0.5)
+          .height(24)
+          .strokeStyle("#ddd")
+        .anchor("bottom").add(pv.Label)
+          .text(function(d) { var h = d % 24; return (h==0?'MIDNIGHT':(h==12?'NOON':(h<12?h:h-12))); }); 
+       
+      // Main bar
+      bar.add(pv.Bar)
+          .left(function() barX(showMin))
+          .right(function() w - barX(showMax))
+          .height(barHeight)
+          .fillStyle("444")
+          .strokeStyle("#444")
+          .cursor("move")
+          .event("mousedown", pv.doDrag(updateMain, mouseUp));
+
+      // Left dragger
+      bar.add(pv.Bar)
+          .left(function() barX(showMin))
+          .width(barHeight)
+          .height(barHeight)
+          .fillStyle("red")
+          .strokeStyle("#444")
+          .cursor("e-resize")
+          .event("mousedown", pv.doDrag(updateLeft, mouseUp));
+     
+      // Right dragger
+      bar.add(pv.Bar)
+          .right(function() w - barX(showMax))
+          .width(barHeight)
+          .height(barHeight)
+          .fillStyle("red")
+          .strokeStyle("#444")
+          .cursor("w-resize")
+          .event("mousedown", pv.doDrag(updateRight, mouseUp));
+
+      ////////////////////////////////////////////////////////
+      // Legend
+      vis.add(pv.Panel)
+          .data([{text:"Normal trains", color:"rgba(34,34,34,1)"}, {text:"Limited trains", color:"rgba(183,116,9,1)"}, {text:"Bullet trains", color:"rgba(196,62,29,1)"}, {text:"Transfer stops", color:"#00A50D"}])
+          .top(h + 100)
+          .height(50)
+        .add(pv.Dot)
+          .size(8)
+          .left(function() this.parent.index * 90 + 6)
+          .strokeStyle(function(d) d.color)
+          .shape("tick")
+          .angle(-Math.PI / 2)
+        .anchor("right").add(pv.Label)
+          .text(function(d) d.text);
+          
+      ////////////////////////////////////////////////////////
+          
+      // render eveything
+      vis.render();
+      
+      // rerender every 30 seconds to make the "NOW" indicator move.
+      setInterval(function() vis.render(), 30000);
+    </script>
+  </body> 
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

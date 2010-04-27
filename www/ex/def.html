@@ -1,0 +1,28 @@
+<html>
+  <head>
+    <script type="text/javascript" src="../protovis-r3.1.0.js"></script>
+    <link rel="stylesheet" type="text/css" href="ex.css"/>
+  </head>
+  <body><center>
+    <script type="text/javascript+protovis">
+      new pv.Panel()
+          .width(640)
+          .height(320)
+        .add(pv.Panel)
+          .data(pv.range(0, 270 + 1, 270 / 19))
+          .top(function() this.index * 16 + .5)
+        .add(pv.Bar)
+          .def("ramp", function(a) pv.ramp(
+              "hsl(" + a + ", 100%, 50%)",
+              "hsl(" + (a + 90) + ", 100%, 50%)"))
+          .data(pv.range(40))
+          .width(16)
+          .height(16)
+          .left(function() this.index * 16 + .5)
+          .fillStyle(function(d) this.ramp()(d / 39))
+          .strokeStyle("#222")
+          .lineWidth(1)
+        .root.render();
+    </script>
+  </center></body>
+</html>

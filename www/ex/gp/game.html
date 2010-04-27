@@ -1,0 +1,146 @@
+<html>
+  <head>
+    <title>Guess That Value!</title>
+    <script type="text/javascript" src="../../protovis-r3.1.0.js"></script>
+    <script type="text/javascript" src="../../protovis-chart.js"></script>
+    <style type="text/css">
+      body {
+        margin: 1em;
+        font: 14px gill sans;
+        background: #eee;
+      }
+      svg {
+        background: #fff;
+        padding: 10px;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        border: solid 10px #ddd;
+        float: left;
+      }
+      h1 {
+        font-weight: normal;
+      }
+      h2 {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Guess That Value!</h1>
+    <script type="text/javascript+protovis">
+
+      function r(n) Math.floor(Math.random() * n) % n;
+      var data = pv.range(3).map(function() pv.range(5).map(function() 5 + r(90)));
+
+      /* Pick guaranteed-unique values. */
+      var i = r(15), j = (i + r(14) + 1) % 15;
+      var i2 = Math.floor(i / 3), i1 = i % 3;
+      var j2 = Math.floor(j / 3), j1 = j % 3;
+
+      var vis = new pv.AppleColumnChart()
+          .data(data)
+          .width(640)
+          .height(480);
+
+      var answer = vis.center.add(pv.Bar)
+          .left(14.5)
+          .width(27.5)
+          .data([0])
+          .bottom(1) // XXX
+          .height(function() vis.bar.$height.apply(this, arguments) - 1)
+          .visible(false)
+          .fillStyle("#2ca02c");
+
+      var anchor = vis.bar.anchor("top").add(pv.Label)
+          .text(function(d) d.toFixed(0))
+          .visible(false)
+          .textBaseline("bottom");
+
+      answer.anchor("top").add(pv.Label)
+          .text(function(d) d.toFixed(0))
+          .textBaseline("bottom");
+
+      var left = vis.bar.$left;
+
+      function fill(opacity, value) {
+        var t = -0.5 * (Math.cos(Math.PI * opacity) - 1); // easeInOutSine
+
+        if (opacity < 1) {
+          answer.visible(true);
+          anchor.visible(function() {
+              return ((this.parent.index == i1) && (this.index == i2))
+                  || ((this.parent.index == j1) && (this.index == j2));
+            });
+        }
+
+        answer.data([Math.round(data[j1][j2] * (value / 100) * (1 - t))]);
+
+        vis.bar.left(function() {
+             var l = left.apply(this, arguments);
+             if ((this.parent.index == i1) && (this.index == i2)) return l * t + 43.5 * (1 - t);
+             if ((this.parent.index == j1) && (this.index == j2)) return l * t + 72.5 * (1 - t);
+             return l;
+          });
+
+        vis.bar.fillStyle(function() {
+             if ((this.parent.index == i1) && (this.index == i2)) return "#1f77b4";
+             if ((this.parent.index == j1) && (this.index == j2)) return "#ff7f0e";
+             if (!t) return null;
+             var color = pv.color(pv.AppleColors.grey.apply(this, arguments));
+             color.opacity = t;
+             return color;
+          });
+
+        vis.render();
+      }
+
+      vis.center.right(30);
+      label(false);
+      grid(false);
+      fill(1, 0);
+
+      function label(on) {
+        vis.yLabel.visible(on);
+        vis.render();
+      }
+
+      function grid(on) {
+        vis.yRule.strokeStyle(on ? "#AEAEAE" : "none");
+        vis.render();
+      }
+
+      function show(value) {
+        var form = document.forms[0];
+        form.elements[1].value = "Please wait...";
+        form.elements[1].disabled = true;
+
+        label(true);
+        grid(true);
+        var opacity = 1;
+        var fade = setInterval(function() {
+            if (opacity >= 0) {
+              fill(Math.max(0, opacity -= .02), value);
+            } else {
+              clearInterval(fade);
+              setTimeout(function() form.submit(), 3000);
+            }
+          }, 10);
+        return false;
+      }
+    </script>
+    <div style="float:left;">
+      <input type="checkbox" onchange="label(this.checked)"> Labels<br>
+      <input type="checkbox" onchange="grid(this.checked)"> Grid lines<br>
+    </div>
+    <div style="clear:left;">
+      <span style="background:#1f77b4;color:white;padding:4px;">Blue</span>
+      is what percentage of
+      <span style="background:#ff7f0e;color:white;padding:4px;">orange</span>?
+      <form style="display:inline;" onsubmit="return show(this.elements[0].value)">
+        <input autocomplete="off" type="text" size="4">
+        <input type="submit">
+      </form>
+      <script type="text/javascript">document.forms[0].elements[0].focus();</script>
+    </div>
+  </body>
+</html>

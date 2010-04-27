@@ -1,0 +1,60 @@
+<html>
+  <head>
+    <title>Scales</title>
+    <script type="text/javascript" src="../protovis-r3.1.0.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+      function datagen(n, max, min) {
+        if (min == undefined) min = 0;
+        var lo = pv.range(n).map(function() (0.1 + 0.9*Math.random())*(max-min)/10 + min);
+        var hi = pv.range(n).map(function() (1.0 + 9.0*Math.random())*(max-min)/10 + min);
+        return lo.concat(hi);
+      }
+
+      function chart(data, xs, ys) {
+        var vis = new pv.Panel()
+            .width(b).height(b)
+            .top(20).left(20).right(20).bottom(20)
+            .strokeStyle("#ccc");
+
+        vis.add(pv.Rule)
+            .data(ys.ticks ? ys.ticks() : [])
+            .bottom(ys)
+            .strokeStyle("#ddd")
+          .anchor("right").add(pv.Label);
+
+        vis.add(pv.Rule)
+            .data(xs.ticks ? xs.ticks() : [])
+            .left(xs)
+            .strokeStyle("#ddd")
+          .anchor("bottom").add(pv.Label);
+
+        vis.add(pv.Dot)
+            .data(data)
+            .left(function() xs(this.index))
+            .bottom(ys);
+
+        vis.render();
+      }
+
+      var data = datagen(50, 100), b = 380;
+
+      var xs = pv.Scale.linear(data, pv.index).range(0, b);
+
+      // Linear Scales
+      chart(data, xs, pv.Scale.linear(data).range(0, b));
+      chart(data, xs, pv.Scale.linear(data).range(0, b).nice());
+
+<!--       // Root Scales -->
+<!--       var ys = pv.Scale.root.fromData(data).range(b); -->
+<!--       chart(data, xs, ys); -->
+<!--       chart(data, xs, ys.nice()); -->
+
+      // Log Scales
+      chart(data, xs, pv.Scale.log(data).range(0, b));
+      chart(data, xs, pv.Scale.log(data).range(0, b).nice());
+
+    </script>
+  </body>
+</html>

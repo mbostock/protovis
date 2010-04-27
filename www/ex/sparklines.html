@@ -1,0 +1,100 @@
+<html>
+  <head>
+    <title>Sparklines</title>
+    <script type="text/javascript" src="../protovis-r3.1.0.js"></script>
+    <script type="text/javascript" src="sunspots.js"></script>
+    <style type="text/css">
+      body { max-width: 7in; }
+    </style>
+  </head>
+  <body>
+
+    <!-- Random line with random error envelope (and red punctuation). -->
+    Lorem ipsum dolor sit <script type="text/javascript+protovis">
+      var w = 89, h = 12, n = 75, r = 0; // TODO bankTo45
+      new pv.Panel()
+          .width(w)
+          .height(h)
+        .add(pv.Area)
+          .data(pv.range(n).map(function(i) 1.5*Math.sin(8.4*Math.PI*i/(n-1))))
+          .bottom(function(d) h / 2 - 1 + d - (r = 4 * Math.random()))
+          .height(function(d) 2 + 2 * r)
+          .left(function() this.index * (w - 3) / (n - 1))
+          .strokeStyle("rgba(200,200,200,0.5)")
+        .add(pv.Line)
+          .bottom(function(d) h / 2 + d)
+          .strokeStyle("#f55")
+        .add(pv.Dot)
+          .visible(function() this.index == (n - 1))
+          .size(6)
+          .fillStyle("#f00")
+          .strokeStyle(null)
+        .root.render();
+    </script> amet.<br>
+
+    <!-- Win/loss tally. -->
+    Lorem ipsum <script type="text/javascript+protovis">
+      var w = 150, h = 12;
+      new pv.Panel()
+          .width(w)
+          .height(h)
+        .add(pv.Rule)
+          .bottom(h / 2 - .5)
+          .strokeStyle("#870")
+          .lineWidth(.5)
+        .add(pv.Bar)
+          .data(pv.range(1, 76).map(function() (Math.random() > 0.5) ? 0 : 1))
+          .width(1)
+          .left(function() 2 * this.index)
+          .bottom(function(d) d ? h / 2 : 0)
+          .height(h / 2)
+          .strokeStyle(null)
+          .fillStyle("#870")
+        .root.render();
+    </script> dolor sit amet.<br>
+
+    <!-- Simple bar chart. -->
+    Lorem <script type="text/javascript+protovis">
+      var w = 60, h = 12;
+      new pv.Panel()
+          .width(w)
+          .height(h)
+        .add(pv.Bar)
+          .data([0.2, 0.3, 0.6, 0.1, 0.9, 0.8, 0.23, 0.77, 0.63, 0.43, 0.59, 0.11])
+          .width(4)
+          .left(function() 5 * this.index)
+          .height(function(d) Math.round(h * d))
+          .bottom(0)
+        .root.render();
+    </script> ipsum dolor sit amet.<br>
+
+    <!-- Sunspots. -->
+    <script type="text/javascript+protovis">
+      var w = 48, h = 12; // TODO bankTo45
+      new pv.Panel()
+          .width(w)
+          .height(h)
+        .add(pv.Line)
+          .data(sunspots)
+          .left(function() this.index * (w / sunspots.length))
+          .bottom(function(d) 1 + d / 220 * h)
+        .root.render();
+    </script> Lorem ipsum dolor sit amet.<br>
+
+    <!-- More sunspots. -->
+    <script type="text/javascript+protovis">
+      var w = 64, h = 16; // TODO bankTo45
+      new pv.Panel()
+          .data(pv.range(31))
+          .width(w + 4)
+          .height(h + 4)
+        .add(pv.Line)
+          .data(sunspots)
+          .left(function() this.index * (w / sunspots.length))
+          .bottom(function(d) 1 + d / 220 * h)
+          .strokeStyle(pv.Colors.category19().by(pv.parent))
+        .root.render();
+    </script>
+
+  </body>
+</html>

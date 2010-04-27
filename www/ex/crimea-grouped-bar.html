@@ -1,0 +1,60 @@
+<html>
+  <head>
+    <title>Crimean War</title>
+    <link type="text/css" rel="stylesheet" href="ex.css?3.1"/>
+    <script type="text/javascript" src="../protovis-r3.1.0.js"></script>
+    <script type="text/javascript" src="crimea.js"></script>
+    <style type="text/css">
+      #fig {
+        width: 600px;
+        height: 300px;
+      }
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <script type="text/javascript+protovis">
+
+      var w = 545,
+          h = 280,
+          x = pv.Scale.ordinal(crimea, function(d) d.date).splitBanded(0, w, 3/4),
+          y = pv.Scale.linear(0, 1500).range(0, h),
+          c = pv.colors("lightblue", "lightpink", "darkgray").domain(causes);
+
+      var vis = new pv.Panel()
+          .width(w)
+          .height(h)
+          .right(40)
+          .bottom(14)
+          .top(.5);
+
+      vis.add(pv.Panel)
+          .data(crimea)
+          .left(function(d) x(d.date))
+          .width(x.range().band)
+        .add(pv.Bar)
+          .data(causes)
+          .bottom(0)
+          .height(function(t, d) y(d[t]))
+          .width(x.range().band / causes.length)
+          .left(function() this.index * this.width())
+          .fillStyle(c)
+          .strokeStyle(function() this.fillStyle().darker())
+          .lineWidth(1)
+        .parent.anchor("bottom").add(pv.Label)
+          .visible(function() !(this.parent.index % 3))
+          .textStyle("#666")
+          .textBaseline("top")
+          .text(function(d) Date.parse(d.date, "%m/%y").format("%b"));
+
+      vis.add(pv.Rule)
+          .data(y.ticks())
+          .strokeStyle(function(i) i ? "white" : "black")
+          .bottom(y)
+        .anchor("right").add(pv.Label)
+          .visible(function() !(this.index % 2))
+          .textStyle("#666");
+
+      vis.render();
+    </script>
+  </div></div></body>
+</html>

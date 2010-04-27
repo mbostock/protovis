@@ -1,0 +1,221 @@
+<html>
+  <head>
+    <title>Colors</title>
+    <script src="../protovis-r3.1.0.js" type="text/javascript"></script>
+    <style type="text/css">
+      body {
+        margin: 1em;
+        font: 14px gill sans;
+        background: #eee;
+      }
+      svg {
+        background: #fff;
+        padding: 10px;
+        margin: 10px;
+        border: solid 10px #ddd;
+      }
+      h1 {
+        font-weight: normal;
+      }
+      h2 {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Colors</h1>
+
+    Each of these examples should display as a solid color with a ten-pixel gray border.
+    <p>
+
+    <h2>#rgb</h2>
+    <style type="text/css">
+      #rgb > svg { background-color: #3c9; }
+    </style>
+    <span id="rgb"></span>
+    <script type="text/javascript+protovis">
+      new pv.Panel().canvas("rgb")
+          .width(480)
+          .height(400)
+        .add(pv.Bar)
+          .data(pv.range(.1, 1, .2))
+          .bottom(0)
+          .left(function() this.index * 100)
+          .width(80)
+          .height(function(d) 400 * d)
+          .fillStyle("#3c9")
+        .root.render();
+    </script>
+
+    <h2>#rrggbb</h2>
+    <style type="text/css">
+      #rrggbb > svg { background-color: #33cc99; }
+    </style>
+    <span id="rrggbb"></span>
+    <script type="text/javascript+protovis">
+      new pv.Panel().canvas("rrggbb")
+          .width(480)
+          .height(400)
+        .add(pv.Bar)
+          .data(pv.range(.1, 1, .2))
+          .bottom(0)
+          .left(function() this.index * 100)
+          .width(80)
+          .height(function(d) 400 * d)
+          .fillStyle("#33cc99")
+        .root.render();
+    </script>
+
+    <h2>rgb(255, 255, 255)</h2>
+    <style type="text/css">
+      #rgbp > svg { background-color: rgb(255, 128, 64); }
+    </style>
+    <span id="rgbp"></span>
+    <script type="text/javascript+protovis">
+      new pv.Panel().canvas("rgbp")
+          .width(480)
+          .height(400)
+        .add(pv.Bar)
+          .data(pv.range(.1, 1, .2))
+          .bottom(0)
+          .left(function() this.index * 100)
+          .width(80)
+          .height(function(d) 400 * d)
+          .fillStyle("rgb(255, 128, 64)")
+        .root.render();
+    </script>
+
+    <h2>rgb(100%, 100%, 100%)</h2>
+    <style type="text/css">
+      #rgbpp > svg { background-color: rgb(100%, 50%, 25%); }
+    </style>
+    <span id="rgbpp"></span>
+    <script type="text/javascript+protovis">
+      new pv.Panel().canvas("rgbpp")
+          .width(480)
+          .height(400)
+        .add(pv.Bar)
+          .data(pv.range(.1, 1, .2))
+          .bottom(0)
+          .left(function() this.index * 100)
+          .width(80)
+          .height(function(d) 400 * d)
+          .fillStyle("rgb(100%, 50%, 25%)")
+        .root.render();
+    </script>
+
+    <h2>rgba(255, 255, 255, 1)</h2>
+    <style type="text/css">
+      #rgbap > svg { background-color: rgba(255, 128, 64, 1); }
+    </style>
+    <span id="rgbap"></span>
+    <script type="text/javascript+protovis">
+      new pv.Panel().canvas("rgbap")
+          .width(480)
+          .height(400)
+        .add(pv.Bar)
+          .data(pv.range(.1, 1, .2))
+          .bottom(0)
+          .left(function() this.index * 100)
+          .width(80)
+          .height(function(d) 400 * d)
+          .fillStyle("rgba(255, 128, 64, 1)")
+        .root.render();
+    </script>
+
+    <h2>rgba(100%, 100%, 100%, 1)</h2>
+    <style type="text/css">
+      #rgbapp > svg { background-color: rgba(100%, 50%, 25%, 1); }
+    </style>
+    <span id="rgbapp"></span>
+    <script type="text/javascript+protovis">
+      new pv.Panel().canvas("rgbapp")
+          .width(480)
+          .height(400)
+        .add(pv.Bar)
+          .data(pv.range(.1, 1, .2))
+          .bottom(0)
+          .left(function() this.index * 100)
+          .width(80)
+          .height(function(d) 400 * d)
+          .fillStyle("rgba(100%, 50%, 25%, 1)")
+        .root.render();
+    </script>
+
+    <h2>hsl(360, 100%, 100%)</h2>
+    <style type="text/css">
+      #hsl > svg { background-color: hsl(120, 50%, 50%); }
+    </style>
+    <span id="hsl"></span>
+    <script type="text/javascript+protovis">
+      new pv.Panel().canvas("hsl")
+          .width(480)
+          .height(400)
+        .add(pv.Bar)
+          .data(pv.range(.1, 1, .2))
+          .bottom(0)
+          .left(function() this.index * 100)
+          .width(80)
+          .height(function(d) 400 * d)
+          .fillStyle("hsl(120, 50%, 50%)")
+        .root.render();
+    </script>
+
+    <h2>hsla(360, 100%, 100%, 1)</h2>
+    <style type="text/css">
+      #hsla > svg { background-color: hsla(120, 50%, 50%, 1); }
+    </style>
+    <span id="hsla"></span>
+    <script type="text/javascript+protovis">
+      new pv.Panel().canvas("hsla")
+          .width(480)
+          .height(400)
+        .add(pv.Bar)
+          .data(pv.range(.1, 1, .2))
+          .bottom(0)
+          .left(function() this.index * 100)
+          .width(80)
+          .height(function(d) 400 * d)
+          .fillStyle("hsla(120, 50%, 50%, 1)")
+        .root.render();
+    </script>
+
+    <h2>name</h2>
+    <style type="text/css">
+      #name > svg { background-color: lightcoral; }
+    </style>
+    <span id="name"></span>
+    <script type="text/javascript+protovis">
+      new pv.Panel().canvas("name")
+          .width(480)
+          .height(400)
+        .add(pv.Bar)
+          .data(pv.range(.1, 1, .2))
+          .bottom(0)
+          .left(function() this.index * 100)
+          .width(80)
+          .height(function(d) 400 * d)
+          .fillStyle("lightcoral")
+        .root.render();
+    </script>
+
+    <h2>transparent</h2>
+    <style type="text/css">
+      #transparent > svg { background-color: transparent; }
+    </style>
+    <span id="transparent"></span>
+    <script type="text/javascript+protovis">
+      new pv.Panel().canvas("transparent")
+          .width(480)
+          .height(400)
+        .add(pv.Bar)
+          .data(pv.range(.1, 1, .2))
+          .bottom(0)
+          .left(function() this.index * 100)
+          .width(80)
+          .height(function(d) 400 * d)
+          .fillStyle("transparent")
+        .root.render();
+    </script>
+  </body>
+</html>

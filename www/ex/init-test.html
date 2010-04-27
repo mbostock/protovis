@@ -1,0 +1,23 @@
+<html>
+  <head>
+    <script type="text/javascript" src="../protovis-d3.2.0.js"></script>
+  </head>
+  <body>
+    <pre id="pre"></pre>
+    <script type="text/javascript">
+      var j = 0;
+      setTimeout("pre.innerHTML += '4: ' + k + '\\n'", 10); // 4. "foo"
+    </script>
+    <script type="text/javascript+protovis">
+      pre.innerHTML += "1: " + typeof i + "\n"; // 1. "undefined"
+      pre.innerHTML += "2: " + typeof j + "\n"; // 2. "number"
+      if (j++ < 10) i = 0; // should not cause script to repeat
+    </script>
+    <script type="text/javascript+protovis">
+      var k = "foo";
+    </script>
+    <script type="text/javascript+protovis">
+      pre.innerHTML += "3: " + typeof k + "\n"; // 3. "string"
+    </script>
+  </body>
+</html>

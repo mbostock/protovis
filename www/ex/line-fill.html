@@ -1,0 +1,21 @@
+<html>
+  <head>
+    <title>Line Fill</title>
+    <script type="text/javascript" src="../protovis-r3.1.0.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+      var vis = new pv.Panel()
+          .data(pv.range(60))
+          .width(204).height(204);
+
+      vis.add(pv.Line)
+          .data(function(n) pv.range(n).map(function(i) [Math.cos(i/9), Math.sin(i/9)]))
+          .left(function(d) d[0] * 100 + 102)
+          .top(function(d) d[1] * 100 + 102)
+          .fillStyle(pv.Colors.category19().by(pv.parent));
+
+      vis.render();
+    </script>
+  </body>
+</html>

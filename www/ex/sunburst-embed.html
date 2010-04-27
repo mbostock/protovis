@@ -1,0 +1,50 @@
+<html>
+  <head>
+    <title>Flare Sunburst</title>
+    <script type="text/javascript" src="../protovis-r3.1.0.js"></script>
+    <script type="text/javascript" src="flare.js"></script>
+    <link rel="stylesheet" type="text/css" href="ex.css"/>
+  </head>
+  <body><center>
+    <script type="text/javascript+protovis">
+
+      var sunburst = pv.Layout.sunburst(flare).root("flare");
+
+      var vis = new pv.Panel()
+          .width(768)
+          .height(768)
+          .top(-75)
+        .add(pv.Wedge)
+          .extend(sunburst)
+          .fillStyle(pv.Colors.category19()
+              .by(function(n) n.children ? n.keys : n.keys.slice(0, -1)))
+          .strokeStyle(function() this.fillStyle().darker())
+          .title(function(n) n.keys.join(".") + ": " + n.size)
+          .cursor("pointer")
+          .event("click", function(n) window.open(
+              "http://svn.prefuse.org/flare/trunk/flare/flare/src/"
+              + n.keys.join("/") + (n.children ? "" : ".as")))
+        .anchor("center").add(pv.Label)
+          .visible(function(n) n.angle * n.depth > .05)
+          .text(function(n) n.keys[n.keys.length - 1])
+          .font("8px sans-serif")
+        .root;
+
+      vis.render();
+      menu.focus();
+
+      function update(method) {
+        switch (method) {
+          case "byte": sunburst.size(Number); break;
+          case "file": sunburst.size(function(n) isNaN(n) ? NaN : 1); break;
+        }
+        vis.render();
+      }
+
+    </script>
+    <p>Size by: <select id="menu" onchange="update(this.value)">
+        <option value="byte" selected>bytes</option>
+        <option value="file">files</option>
+      </select>
+  </center></body>
+</html>

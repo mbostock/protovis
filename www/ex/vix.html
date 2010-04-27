@@ -1,0 +1,57 @@
+<html>
+  <head>
+    <title>VIX</title>
+    <script type="text/javascript" src="../protovis-r3.1.0.js"></script>
+    <script type="text/javascript" src="vix.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+      var vis = new pv.Panel()
+          .width(640)
+          .height(480)
+          .top(9.5)
+          .bottom(20)
+          .left(30)
+          .right(30);
+
+      /* Scales. */
+      vix.forEach(function(d) d.date = Date.parse(d.date, "%d-%b-%y"));
+      var xscale = pv.Scale.linear(vix, function(d) d.date).range(0, 640),
+          yscale = pv.Scale.linear(vix, function(d) d.low, function(d) d.high).range(0, 480);
+
+      /* Prices. */
+      vis.add(pv.Rule)
+           .data(yscale.ticks())
+           .bottom(yscale)
+           .left(-10).right(-10)
+           .strokeStyle("#ccc")
+         .anchor("left").add(pv.Label)
+           .text(function(d) d.toFixed(0));
+
+      /* Dates. TODO: better date interval generation. */
+      vis.add(pv.Rule)
+           .data(pv.range(xscale.domain()[0],
+                          xscale.domain()[1],
+                          7 * 1000 * 60 * 60 * 24))
+           .left(xscale)
+           .strokeStyle("#ccc")
+         .anchor("bottom").add(pv.Label)
+           .text(function(d) new Date(d).format("%b %d"));
+
+      /* Candlestick. */
+      vis.add(pv.Rule)
+          .data(vix)
+          .left(function(d) xscale(d.date))
+          .bottom(function(d) yscale(Math.min(d.high, d.low)))
+          .height(function(d) Math.abs(yscale(d.high) - yscale(d.low)))
+          .strokeStyle(function(d) (d.open < d.close) ? "#ae1325" : "#06982d")
+          .lineWidth(1.5)
+        .add(pv.Rule)
+          .bottom(function(d) yscale(Math.min(d.open, d.close)))
+          .height(function(d) Math.abs(yscale(d.open) - yscale(d.close)))
+          .lineWidth(10);
+
+      vis.render();
+    </script>
+  </body>
+</html>

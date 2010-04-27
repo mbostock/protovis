@@ -1,0 +1,52 @@
+<html>
+  <head>
+    <title>Waves</title>
+    <link rel="stylesheet" type="text/css" href="ex.css"/>
+    <script type="text/javascript" src="../protovis-r3.1.0.js"></script>
+    <style type="text/css">
+      body {
+        background: #222;
+      }
+      #fig {
+        width: 286px;
+        height: 286px;
+        background: #000;
+        padding: 2px;
+      }
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <script type="text/javascript+protovis">
+
+      var x = 5, y = 5, o = -Math.PI;
+
+      var vis = new pv.Panel()
+          .width(286)
+          .height(286);
+
+      vis.add(pv.Panel)
+          .data(pv.range(24))
+          .height(12)
+          .top(function(j) j * 12)
+        .add(pv.Bar)
+          .data(pv.range(24))
+          .width(12)
+          .left(function(i) i * 12)
+          .fillStyle(function(i, j) {
+              var dx = i - x, dy = j - y;
+              var d = Math.sqrt(dx * dx + dy * dy) - o;
+              var e = d ? (Math.sin(d) / d) : 1;
+              return "hsl(300, 20%, " + (e * 60) + "%)";
+            })
+          .cursor("pointer")
+          .event("click", function(i, j) {
+              o = -Math.PI;
+              x = i;
+              y = j;
+            });
+
+      setInterval(function() { o += .3; vis.render(); }, 50);
+
+    </script>
+  </div></div></body>
+</html>

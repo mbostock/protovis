@@ -1,0 +1,34 @@
+<html>
+  <head>
+    <title>Heatmap</title>
+    <link rel="stylesheet" type="text/css" href="ex.css"/>
+    <script type="text/javascript" src="../protovis-r3.1.0.js"></script>
+    <script type="text/javascript" src="heatmap.js"></script>
+    <style type="text/css">
+      body {
+        background: #222;
+      }
+      #fig {
+        width: 522px;
+        height: 366px;
+      }
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <script type="text/javascript+protovis">
+
+      var vis = new pv.Panel()
+          .width(heatmap[0].length * 6)
+          .height(heatmap.length * 6);
+
+      vis.add(pv.Bar)
+          .extend(pv.Layout.grid(heatmap))
+          .fillStyle(pv.Scale.linear()
+              .domain(95, 115, 135, 155, 175, 195)
+              .range("#0a0", "#6c0", "#ee0", "#eb4", "#eb9", "#fff"));
+
+      vis.render();
+
+    </script>
+  </div></div></body>
+</html>

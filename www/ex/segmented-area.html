@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <title>Segmented Areas</title>
+    <link rel="stylesheet" type="text/css" href="ex.css"/>
+    <script type="text/javascript" src="../protovis-r3.1.0.js"></script>
+    <style type="text/css">
+      body {
+        background: #222;
+        color: #eee;
+      }
+      #fig {
+        width: 495px;
+        height: 230px;
+      }
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <script type="text/javascript+protovis">
+
+      var o = 0, vis = new pv.Panel()
+          .width(495)
+          .height(200)
+          .fillStyle("#fff")
+          .strokeStyle("#222");
+
+      vis.add(pv.Area)
+          .data(function() pv.range(0, 10, .1).map(function(d) Math.sin(d + o)))
+          .segmented(true)
+          .bottom(0)
+          .left(function() this.index / 99 * 495)
+          .height(function(d) (d + 2) / 4 * 200)
+          .fillStyle(pv.Scale.linear(-1, 1).range("brown", "orange"));
+
+        setInterval(function() { o += 0.03; vis.render();}, 20);
+
+    </script>
+    <p><input checked id="l" onchange="vis.children[0].segmented(this.value)"
+    type="checkbox"><label for="l">segmented</label>
+  </div></div></body>
+</html>

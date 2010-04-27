@@ -1,0 +1,23 @@
+<html>
+  <head>
+    <title>Rule</title>
+    <script type="text/javascript" src="../protovis.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+      new pv.Panel()
+          .width(640)
+          .height(480)
+          .strokeStyle("#000")
+        .add(pv.Rule)
+          .left(100)
+          .lineWidth(10)
+        .add(pv.Dot)
+          .fillStyle("#fff")
+          .strokeStyle("#000")
+          .lineWidth(1)
+          .size(8)
+        .root.render();
+    </script>
+  </body>
+</html>
