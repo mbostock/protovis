@@ -85,6 +85,9 @@ pv.SvgScene.curvePathBasis = function(points) {
 
 /**
  * @private Interpolates the given points using the basis spline interpolation.
+ * If points.length == tangents.length then a regular Hermite interpolation is performed,
+ * if points.length == tangents.length + 2 then the first and last segments are filled in
+ * with cubic bazier segments.
  * Returns an array of path strings.
  *
  * @param points the array of points.
@@ -121,27 +124,43 @@ pv.SvgScene.curvePathBasisSegments = function(points) {
 
 /**
  * @private Interpolates the given points with respective tangents using the cubic
- * Hermite spline interpolation.
+ * Hermite spline interpolation. If points.length == tangents.length then a regular
+ * Hermite interpolation is performed, if points.length == tangents.length + 2 then
+ * the first and last segments are filled in with cubic bazier segments.
  * Returns an SVG path without the leading M instruction to allow path appending.
  *
  * @param points the array of points.
  * @param tangents the array of tangent vectors.
  */
 pv.SvgScene.curvePathHermite = function(points, tangents) {
-  if(points.length < 2 || points.length != tangents.length) return '';
-  var path = '',
+  if(tangents.length < 2 || (points.length != tangents.length && points.length != tangents.length + 2)) return '';
+  var quad = (points.length != tangents.length),
+      path = '',
       p0 = points[0],
       p  = points[1],
       t0 = tangents[0],
-      t  = tangents[1];
+      t  = tangents[1],
+      pi = 2;
+
+  if(quad) {
+    path += "Q" + (p.left-t0.x*2/3) + ","  + (p.top-t0.y*2/3) + "," + p.left + "," + p.top;
+    p0 = points[1];
+    p  = points[2];
+    pi = 3;
+  }
+
   path += "C" + (p0.left + t0.x) + "," + (p0.top + t0.y)
         + "," + (p.left - t.x) + "," + (p.top - t.y)
         + "," + p.left + "," + p.top;
-  for (var i = 2; i < points.length; i++) {
-    p = points[i];
+  for (var i = 2; i < tangents.length; i++, pi++) {
+    p = points[pi];
     t = tangents[i];
-    path += "S" + (p.left - t.x) + "," + (p.top - t.y)
-          + "," + p.left + "," + p.top;
+    path += "S" + (p.left - t.x) + "," + (p.top - t.y) + "," + p.left + "," + p.top;
+  }
+
+  if(quad) {
+    var lp = points[pi];
+    path += "Q" + (p.left+t.x*2/3) + ","  + (p.top+t.y*2/3) + "," + lp.left + "," + lp.top;
   }
 
   return path;
@@ -156,16 +175,30 @@ pv.SvgScene.curvePathHermite = function(points, tangents) {
  * @param tangents the array of tangent vectors.
  */
 pv.SvgScene.curvePathHermiteSegments = function(points, tangents) {
-  if(points.length < 2 || points.length != tangents.length) return '';
-  var paths = [],
+  if(tangents.length < 2 || (points.length != tangents.length && points.length != tangents.length + 2)) return [];
+  var quad = (points.length != tangents.length),
+      paths = [],
       p0,
       p1  = points[0],
       t0,
-      t1  = tangents[0];
-  for (var i = 1; i < points.length; i++) {
+      t1  = tangents[0],
+      pi = 1;
+
+  if(quad) {
+    p0 = p1;
+    p1 = points[1];
+    paths.push(
+        "M" + p0.left + "," + p0.top
+      + "Q" + (p1.left-t1.x*2/3) + "," + (p1.top-t1.y*2/3)
+      + "," + p1.left + "," + p1.top
+    );
+    pi = 2;
+  }
+
+  for (var i = 1; i < tangents.length; i++, pi++) {
     p0 = p1;
     t0 = t1;
-    p1 = points[i];
+    p1 = points[pi];
     t1 = tangents[i];
     paths.push(
         "M" + p0.left + "," + p0.top
@@ -175,12 +208,23 @@ pv.SvgScene.curvePathHermiteSegments = function(points, tangents) {
     );
   }
 
+  if(quad) {
+    var lp = points[pi];
+    paths.push(
+        "M" + p1.left + "," + p1.top
+      + "Q" + (p1.left+t1.x*2/3) + "," + (p1.top+t1.y*2/3)
+      + "," + lp.left + "," + lp.top
+    );
+  }
+
   return paths;
 };
 
 /**
  * @private Computed the tangents for the given points needed for cardinal spline interpolation.
  * Returns an array of tangent vectors.
+ *
+ * Note: that for n points only the n-2 well defined tangents are returned.
  *
  * @param points the array of points.
  * @param tension the tension of hte cardinal spline.
@@ -192,7 +236,6 @@ pv.SvgScene.computeCardinalTangents = function(points, tension) {
       p1 = points[1],
       p2 = points[2];
 
-  tangents.push({x:a*(p2.left - p0.left), y:a*(p2.top - p0.top)});
   for (var i = 3; i < points.length; i++) {
     tangents.push({x:a*(p2.left - p0.left), y:a*(p2.top - p0.top)});
     p0 = p1;
@@ -200,7 +243,6 @@ pv.SvgScene.computeCardinalTangents = function(points, tension) {
     p2 = points[i];
   }
   var t = {x:a*(p2.left - p0.left), y:a*(p2.top - p0.top)};
-  tangents.push(t);
   tangents.push(t);
 
   return tangents;
