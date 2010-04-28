@@ -1,0 +1,80 @@
+<html>
+  <head>
+    <title>Segmented Cardinal Splines</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var data = pv.range(10).map(function(x) {
+        return {x: x, y: Math.sin(x * Math.PI + Math.PI / 2)};
+      }),
+    w = 800,
+    h = 400,
+    x = pv.Scale.linear(data, function(d) d.x).range(0, w),
+    y = pv.Scale.linear(-1.5, 1.5).range(0, h);
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .strokeStyle("#ccc")
+    .margin(20);
+
+vis.add(pv.Rule)
+    .data(y.ticks())
+    .visible(function() !(this.index % 2))
+    .bottom(y)
+    .strokeStyle("#eee")
+  .anchor("left").add(pv.Label)
+    .text(function(d) d.toFixed(1));
+
+vis.add(pv.Rule)
+    .data(x.ticks())
+    .visible(function(d) d > 0)
+    .left(x)
+    .strokeStyle("#eee")
+  .anchor("bottom").add(pv.Label)
+    .text(function(d) d.toFixed());
+
+vis.add(pv.Line)
+    .data(data)
+    .left(function(d) x(d.x))
+    .bottom(function(d) y(d.y))
+    .interpolate("cardinal")
+    .segmented(true)
+    .strokeStyle(function() "hsl(" + this.index * 36 + ",50,50)")
+    .lineWidth(function() this.index * 2);
+
+vis.add(pv.Panel)
+    .data(data)
+  .add(pv.Dot)
+    .strokeStyle("#1f77b4")
+    .left(function(d) x(d.x))
+    .bottom(function(d) y(d.y))
+  .add(pv.Line)
+    .data(function(d) {
+        var dm = data[this.parent.index - 1],
+            dp = data[this.parent.index + 1];
+        if (!dm) {
+          dm = d;
+          dp = data[this.parent.index + 2];
+        } else if (!dp) {
+          dp = d;
+          dm = data[this.parent.index - 2];
+        }
+        var dx = (dp.x - dm.x) / 4,
+            dy = (dp.y - dm.y)  / 4;
+        return [
+          {x: d.x - dx, y: d.y - dy},
+          {x: d.x + dx, y: d.y + dy}
+        ];
+      })
+    .fillStyle(null)
+    .strokeStyle(pv.colors("orange", "brown").by(function() this.parent.index >> 1 & 1))
+  .add(pv.Dot);
+
+vis.render();
+
+    </script>
+  </body>
+</html>

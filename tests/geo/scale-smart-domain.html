@@ -28,7 +28,7 @@ countries.forEach(function(c) {
 
 var w = window.innerWidth * .8,
     h = 3 / 5 * w,
-    geo = pv.Geo.scale().range(w, h);
+    geo = pv.Geo.scale("sinusoidal").domain({lng:-128, lat:24}, {lng:-64, lat:50}).range(w, h);
 
 var vis = new pv.Panel()
     .width(w)
