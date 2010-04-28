@@ -2,7 +2,7 @@
   <head>
     <title>Heatmap</title>
     <link rel="stylesheet" type="text/css" href="ex.css"/>
-    <script type="text/javascript" src="../protovis-r3.1.0.js"></script>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
     <script type="text/javascript" src="heatmap.js"></script>
     <style type="text/css">
       body {
@@ -21,8 +21,9 @@
           .width(heatmap[0].length * 6)
           .height(heatmap.length * 6);
 
-      vis.add(pv.Bar)
-          .extend(pv.Layout.grid(heatmap))
+      vis.add(pv.Layout.Grid)
+          .rows(heatmap)
+        .add(pv.Bar)
           .fillStyle(pv.Scale.linear()
               .domain(95, 115, 135, 155, 175, 195)
               .range("#0a0", "#6c0", "#ee0", "#eb4", "#eb9", "#fff"));

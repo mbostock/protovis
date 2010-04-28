@@ -1,7 +1,7 @@
 <html>
   <head>
     <title>Moody in the Morning</title>
-    <script type="text/javascript" src="../protovis-r3.1.0.js"></script>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
     <script type="text/javascript" src="moody.js"></script>
     <style type="text/css">
       body {
@@ -19,7 +19,8 @@
       var w = 1024, h = 1024;
 
       /* Parse dates and nest data by name. Insert datum for the end date. */
-      bike.forEach(function(d) d.date = Date.parse(d.date, "%m/%d/%Y %H:%M:%S"));
+      var dateFormat = pv.Format.date("%m/%d/%Y %H:%M:%S");
+      bike.forEach(function(d) d.date = dateFormat.parse(d.date));
       var names = pv.nest(bike).key(function(d) d.name).entries();
       names.forEach(function(n) n.values.push({
         date: new Date(2009, 8, 8),
@@ -29,7 +30,9 @@
       /* Scales. */
       var x = pv.Scale.linear(bike, function(d) d.date).range(0, w),
           y = pv.Scale.linear().range(0, h),
-          c = pv.Colors.category20();
+          c = pv.Colors.category20(),
+          fl = pv.Format.date("%b %d"),
+          ft = pv.Format.date("%b %d %H:%M");
 
       /* The root panel, with padding for labels. */
       var vis = new pv.Panel()
@@ -54,7 +57,7 @@
           .left(x)
           .strokeStyle("#eee")
         .anchor("bottom").add(pv.Label)
-          .text(function(d) new Date(d).format("%b %d"));
+          .text(fl);
 
       /* A panel for each person. */
       var panel = vis.add(pv.Panel)
@@ -72,7 +75,7 @@
           .visible(function(d) d.duration)
           .size(function(d) d.fixed ? 20 : 1)
           .fillStyle("#fff")
-          .title(function(d) d.name + ": " + d.duration + " at " + d.date.format("%b %d %H:%M"));
+          .title(function(d) d.name + ": " + d.duration + " at " + ft(d.date));
 
       /* A legend entry for each person. */
       panel.add(pv.Dot)

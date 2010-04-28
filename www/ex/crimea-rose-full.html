@@ -2,7 +2,7 @@
   <head>
     <title>Crimean War</title>
     <link type="text/css" rel="stylesheet" href="ex.css?3.1"/>
-    <script type="text/javascript" src="../protovis-r3.1.0.js"></script>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
     <script type="text/javascript" src="crimea.js"></script>
     <style type="text/css">
       #fig {
@@ -32,9 +32,11 @@
       <small><small>in the</small> Army <small>of the</small> East</small>
     </center>
     <script type="text/javascript+protovis">
+      var fi = pv.Format.date("%m/%y"),
+          fo = pv.Format.date("%b");
 
       /* Parse dates and compute maximum. */
-      crimea.forEach(function(d) d.date = Date.parse(d.date, "%m/%Y"));
+      crimea.forEach(function(d) d.date = fi.parse(d.date));
       crimea.forEach(function(d) d.max = Math.max(350, d.wounds, d.other, d.disease));
 
       /* Scales for radius, angle, and fill. */
@@ -70,7 +72,7 @@
           .fillStyle(null)
           .strokeStyle(null)
         .anchor("outer").add(pv.Label)
-          .text(function(c, d) d.date.format("%b"))
+          .text(function(c, d) fo(d.date))
           .textAlign("center")
           .textBaseline("bottom")
           .textAngle(function() this.anchorTarget().midAngle() + Math.PI / 2);

@@ -2,7 +2,7 @@
   <head>
     <title>PolarClock</title>
     <link type="text/css" rel="stylesheet" href="ex.css?3.1"/>
-    <script type="text/javascript" src="../protovis-r3.1.0.js"></script>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
     <style type="text/css">
       body {
         background: #222;
@@ -25,8 +25,14 @@
   </head>
   <body><div id="center"><div id="fig">
     <script type="text/javascript+protovis">
-
-      var radius = 768 / 2;
+      
+      var fsec = pv.Format.date("%S s"),
+          fmin = pv.Format.date("%M m"),
+          fhou = pv.Format.date("%H h"),
+          fwee = pv.Format.date("%a"),
+          fdat = pv.Format.date("%d d"),
+          fmon = pv.Format.date("%b"),
+          radius = 768 / 2;
 
       /* Generate the fields for the given date. */
       function fields() {
@@ -44,12 +50,12 @@
         var month = (d.getMonth() + date) / 12;
 
         return [
-            { value: second, index: .7, text: d.format("%S s") },
-            { value: minute, index: .6, text: d.format("%M m") },
-            { value: hour, index: .5, text: d.format("%H h") },
-            { value: weekday, index: .3, text: d.format("%a") },
-            { value: date, index: .2, text: d.format("%d d") },
-            { value: month, index: .1, text: d.format("%b") }
+            { value: second,  index: .7, text: fsec(d) },
+            { value: minute,  index: .6, text: fmin(d) },
+            { value: hour,    index: .5, text: fhou(d) },
+            { value: weekday, index: .3, text: fwee(d) },
+            { value: date,    index: .2, text: fdat(d) },
+            { value: month,   index: .1, text: fmon(d) },
           ];
       }
 

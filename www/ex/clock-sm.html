@@ -1,7 +1,7 @@
 <html>
   <head>
     <title>PolarClock</title>
-    <script type="text/javascript" src="../protovis-r3.1.0.js"></script>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
     <style type="text/css">
       body {
         background: #222;
@@ -28,56 +28,64 @@
   </head>
   <body><center>
     <script type="text/javascript+protovis">
-    var radius = 400 / 2;
 
-    /* Generate the fields for the given date. */
-    function fields() {
-      var d = new Date();
+      var fsec = pv.Format.date("%S s"),
+          fmin = pv.Format.date("%M m"),
+          fhou = pv.Format.date("%H h"),
+          fwee = pv.Format.date("%a"),
+          fdat = pv.Format.date("%d d"),
+          fmon = pv.Format.date("%b"),
+          radius = 400 / 2;
 
-      function days() {
-        return 32 - new Date(d.getYear(), d.getMonth(), 32).getDate();
+      /* Generate the fields for the given date. */
+      function fields() {
+        var d = new Date();
+
+        function days() {
+          return 32 - new Date(d.getYear(), d.getMonth(), 32).getDate();
+        }
+
+        var second = (d.getSeconds() + d.getMilliseconds() / 1000) / 60;
+        var minute = (d.getMinutes() + second) / 60;
+        var hour = (d.getHours() + minute) / 24;
+        var weekday = (d.getDay() + hour) / 7;
+        var date = (d.getDate() - 1 + hour) / days();
+        var month = (d.getMonth() + date) / 12;
+
+        return [
+            { value: second,  index: .7, text: fsec(d) },
+            { value: minute,  index: .6, text: fmin(d) },
+            { value: hour,    index: .5, text: fhou(d) },
+            { value: weekday, index: .3, text: fwee(d) },
+            { value: date,    index: .2, text: fdat(d) },
+            { value: month,   index: .1, text: fmon(d) },
+          ];
       }
 
-      var second = (d.getSeconds() + d.getMilliseconds() / 1000) / 60;
-      var minute = (d.getMinutes() + second) / 60;
-      var hour = (d.getHours() + minute) / 24;
-      var weekday = (d.getDay() + hour) / 7;
-      var date = (d.getDate() - 1 + hour) / days();
-      var month = (d.getMonth() + date) / 12;
+      var vis = new pv.Panel().width(400).height(400);
+      
+      vis.add(pv.Wedge)
+          .data(fields)
+          .left(radius)
+          .bottom(radius)
+          .innerRadius(function(d) radius * d.index)
+          .outerRadius(function(d) radius * (d.index + .1))
+          .startAngle(-Math.PI / 2)
+          .angle(function(d) 2 * Math.PI * d.value)
+          .fillStyle(function(d) "hsl(" + (360 * d.value - 180) + ", 50%, 50%)")
+          .lineWidth(2)
+          .strokeStyle("#222")
+        .anchor("start").add(pv.Label)
+          .font("bold 11px sans-serif")
+          .textStyle("#fff")
+          .textAlign("right")
+          .textAngle(0)
+          .textBaseline("middle")
+          .text(function(d) d.text);
 
-      return [
-          { value: second, index: .7, text: d.format("%S s") },
-          { value: minute, index: .6, text: d.format("%M m") },
-          { value: hour, index: .5, text: d.format("%H h") },
-          { value: weekday, index: .3, text: d.format("%a") },
-          { value: date, index: .2, text: d.format("%d d") },
-          { value: month, index: .1, text: d.format("%b") },
-        ];
-    }
+      vis.render(); // XXX needed for safari
+      setInterval(function() vis.render(), 50);
 
-    var vis = new pv.Panel().width(400).height(400);
-
-    vis.add(pv.Wedge)
-        .data(fields)
-        .left(radius)
-        .bottom(radius)
-        .innerRadius(function(d) radius * d.index)
-        .outerRadius(function(d) radius * (d.index + .1))
-        .startAngle(-Math.PI / 2)
-        .angle(function(d) 2 * Math.PI * d.value)
-        .fillStyle(function(d) "hsl(" + (360 * d.value - 180) + ", 50%, 50%)")
-        .lineWidth(2)
-        .strokeStyle("#222")
-      .anchor("start").add(pv.Label)
-        .font("bold 11px sans-serif")
-        .textStyle("#fff")
-        .textAlign("right")
-        .textAngle(0)
-        .textBaseline("middle")
-        .text(function(d) d.text);
-
-    vis.render(); // XXX needed for safari
-    setInterval(function() vis.render(), 50);
     </script>
     <div id="label">
       Inspired by <a href="http://blog.pixelbreaker.com/polarclock/">pixelbreaker</a>.

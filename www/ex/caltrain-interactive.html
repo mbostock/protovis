@@ -1,7 +1,7 @@
 <html> 
   <head> 
     <title>CalTrain Timetable</title> 
-    <script type="text/javascript" src="../protovis-r3.1.0.js"></script>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
     <script type="text/javascript" src="drag.js"></script>
     <script type="text/javascript" src="caltrain.js"></script>
     <style type="text/css"> 
@@ -111,8 +111,11 @@
       // Initialize the variables
       var w = 1200, h = 600,
           minHour = 4, maxHour = 26,
-          showMin = 4*60, showMax = 26*60;
-      
+          showMin = 4*60, showMax = 26*60,
+          formatNow = pv.Format.date("NOW: %I:%M %p"),
+          formatIn = pv.Format.date("%H:%M"),
+          formatStop = pv.Format.date("%I:%M %p");
+
       // parse the #hash so get the times to show
       if(match = /(\d{2,4})-(\d{2,4})/.exec(window.location.hash)) {
         var minVal = parseInt(match[1], 10);
@@ -164,7 +167,7 @@
           .top(-20)
           .bottom(-20)
         .anchor("top").add(pv.Label)
-          .text(function(now) { var ds = now.format("NOW: %I:%M %p"); return (ds.charAt(0)=="0"?ds.substr(1):ds); })
+          .text(function(now) { var ds = formatNow(now); return (ds.charAt(0)=="0"?ds.substr(1):ds); })
         .anchor("bottom").add(pv.Label);
       
       // A panel for each train
@@ -210,7 +213,7 @@
       line.add(pv.Dot)
           .size(7)
           .visible(function(stop) stop.which == "S")
-          .title(function(stop) "Train " + stop.train + " stops at " + stop.station + " at " + Date.parse(Math.floor(stop.time/60) + ":" + stop.time%60, "%H:%M").format("%I:%M %p"));
+          .title(function(stop) "Train " + stop.train + " stops at " + stop.station + " at " + formatStop(formatIn.parse(Math.floor(stop.time/60) + ":" + stop.time%60)));
 
       ////////////////////////////////////////////////////////
       // Time selector slider

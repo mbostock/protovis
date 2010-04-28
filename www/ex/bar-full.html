@@ -2,7 +2,7 @@
   <head>
     <title>Stacked Bar Chart</title>
     <link type="text/css" rel="stylesheet" href="ex.css?3.1"/>
-    <script type="text/javascript" src="../protovis-r3.1.0.js"></script>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
     <script type="text/javascript" src="bar.js"></script>
     <style type="text/css">
       #fig {
@@ -30,14 +30,14 @@
           .top(5);
 
       /* Stacked bars. */
-      var bar = vis.add(pv.Panel)
-          .data(pv.transpose(data))
-        .add(pv.Bar)
-          .data(function(a) a)
-          .top(function() y(this.index))
-          .height(y.range().band)
-          .left(pv.Layout.stack())
-          .width(x);
+      var bar = vis.add(pv.Layout.Stack)
+          .orient("left-top")
+          .layers(pv.transpose(data))
+          .y(x)
+          .x(function() y(this.index))
+        .layer.add(pv.Bar)
+          .height(y.range().band);
+
 
       /* Labels for data values. */
       bar.anchor("right").add(pv.Label)
