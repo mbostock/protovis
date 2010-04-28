@@ -133,7 +133,7 @@ pv.Area.prototype.type = "area";
  * <p>This property is <i>fixed</i>. See {@link pv.Mark}.
  *
  * @type number
- * @name pv.Line.prototype.tension
+ * @name pv.Area.prototype.tension
  */
 
 /**

@@ -11,7 +11,7 @@ pv.SvgScene.area = function(scenes) {
   var fill = s.fillStyle, stroke = s.strokeStyle;
   if (!fill.opacity && !stroke.opacity) return e;
 
-  /** @private Computes the path for the range [i, j]. */
+  /** @private Computes the straight path for the range [i, j]. */
   function path(i, j) {
     var p1 = [], p2 = [];
     for (var k = j; i <= k; i++, j--) {
@@ -43,30 +43,29 @@ pv.SvgScene.area = function(scenes) {
     return p1.concat(p2).join("L");
   }
 
+  /** @private Computes the curved path for the range [i, j]. */
   function pathCurve(i, j) {
-    var pointsT = [], pointsB = [],
-        pathT, pathB;
+    var pointsT = [], pointsB = [], pathT, pathB;
 
     for (var k = j; i <= k; i++, j--) {
-      var si = scenes[i],
-          sj = scenes[j];
-      pointsT.push(si);
-      pointsB.push({left:(sj.left+sj.width), top:(sj.top+sj.height)});
+      var sj = scenes[j];
+      pointsT.push(scenes[i]);
+      pointsB.push({left: sj.left + sj.width, top: sj.top + sj.height});
     }
 
-    if(s.interpolate == "basis") {
-      pathT = pv.SvgScene.curvePathBasis(pointsT);
-      pathB = pv.SvgScene.curvePathBasis(pointsB);
+    if (s.interpolate == "basis") {
+      pathT = pv.SvgScene.curveBasis(pointsT);
+      pathB = pv.SvgScene.curveBasis(pointsB);
     } else if (s.interpolate == "cardinal") {
-      pathT = pv.SvgScene.curvePathCardinal(pointsT, s.tension);
-      pathB = pv.SvgScene.curvePathCardinal(pointsB, s.tension);
-    } else { // if (s.interpolate == "monotone") {
-      pathT = pv.SvgScene.curvePathMonotone(pointsT);
-      pathB = pv.SvgScene.curvePathMonotone(pointsB);
+      pathT = pv.SvgScene.curveCardinal(pointsT, s.tension);
+      pathB = pv.SvgScene.curveCardinal(pointsB, s.tension);
+    } else { // monotone
+      pathT = pv.SvgScene.curveMonotone(pointsT);
+      pathB = pv.SvgScene.curveMonotone(pointsB);
     }
 
-    return pointsT[0].x + "," + pointsT[0].y + pathT
-     +"L"+ pointsB[0].x + "," + pointsB[0].y + pathB;
+    return pointsT[0].left + "," + pointsT[0].top + pathT
+         + "L" + pointsB[0].left + "," + pointsB[0].top + pathB;
   }
 
   /* points */
@@ -78,11 +77,11 @@ pv.SvgScene.area = function(scenes) {
     }
     if (i && (s.interpolate != "step-after")) i--;
     if ((j < scenes.length) && (s.interpolate != "step-before")) j++;
-    if (j - i > 2 && (s.interpolate == "basis" || s.interpolate == "cardinal" || s.interpolate == "monotone")) {
-      d.push(pathCurve(i, j - 1));
-    } else {
-      d.push(path(i, j - 1));
-    }
+    d.push(((j - i > 2
+        && (s.interpolate == "basis"
+        || s.interpolate == "cardinal"
+        || s.interpolate == "monotone"))
+        ? pathCurve : path)(i, j - 1));
     i = j - 1;
   }
   if (!d.length) return e;
@@ -102,29 +101,27 @@ pv.SvgScene.area = function(scenes) {
 };
 
 pv.SvgScene.areaSegment = function(scenes) {
-  var e = scenes.$g.firstChild;
-
-  var s = scenes[0];
-  var pathsT, pathsB;
-  if(s.interpolate == "basis" || s.interpolate == "cardinal" || s.interpolate == "monotone") {
+  var e = scenes.$g.firstChild, s = scenes[0], pathsT, pathsB;
+  if (s.interpolate == "basis"
+      || s.interpolate == "cardinal"
+      || s.interpolate == "monotone") {
     var pointsT = [], pointsB = [];
 
     for (var i = 0, n = scenes.length; i < n; i++) {
-      var si = scenes[i],
-          sj = scenes[n - i - 1];
-      pointsT.push(si);
-      pointsB.push({left:(sj.left+sj.width), top:(sj.top+sj.height)});
+      var sj = scenes[n - i - 1];
+      pointsT.push(scenes[i]);
+      pointsB.push({left: sj.left + sj.width, top: sj.top + sj.height});
     }
 
-    if(s.interpolate == "basis") {
-      pathsT = pv.SvgScene.curvePathBasisSegments(pointsT);
-      pathsB = pv.SvgScene.curvePathBasisSegments(pointsB);
+    if (s.interpolate == "basis") {
+      pathsT = this.curveBasisSegments(pointsT);
+      pathsB = this.curveBasisSegments(pointsB);
     } else if (s.interpolate == "cardinal") {
-      pathsT = pv.SvgScene.curvePathCardinalSegments(pointsT, s.tension);
-      pathsB = pv.SvgScene.curvePathCardinalSegments(pointsB, s.tension);
-    } else { // if (s.interpolate == "monotone") {
-      pathsT = pv.SvgScene.curvePathMonotoneSegments(pointsT);
-      pathsB = pv.SvgScene.curvePathMonotoneSegments(pointsB);
+      pathsT = this.curveCardinalSegments(pointsT, s.tension);
+      pathsB = this.curveCardinalSegments(pointsB, s.tension);
+    } else { // monotone
+      pathsT = this.curveMonotoneSegments(pointsT);
+      pathsB = this.curveMonotoneSegments(pointsB);
     }
   }
 
@@ -137,7 +134,7 @@ pv.SvgScene.areaSegment = function(scenes) {
     if (!fill.opacity && !stroke.opacity) continue;
 
     var d;
-    if(pathsT) {
+    if (pathsT) {
       var pathT = pathsT[i],
           pathB = "L" + pathsB[n - i - 1].substr(1);
 

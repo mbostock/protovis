@@ -12,12 +12,6 @@ mark/Panel.js
 mark/Anchor.js
 - {min,max}:name "singleton" anchors for center labeling on area and line?
 
-mark/Area.js
-- support for "basis" and "cardinal" interpolation
-
-mark/Line.js
-- support for "basis" and "cardinal" with segmented lines
-
 geo/GeoScale.js
 - determine center point of projection from domain
 - standardize on GeoJSON representation

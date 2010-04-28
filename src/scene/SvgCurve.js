@@ -27,8 +27,8 @@ pv.SvgScene.pathBasis = (function() {
    */
   function weight(w, p0, p1, p2, p3) {
     return {
-      x:(w[0] * p0.left + w[1] * p1.left + w[2] * p2.left + w[3] * p3.left),
-      y:(w[0] * p0.top  + w[1] * p1.top  + w[2] * p2.top  + w[3] * p3.top )
+      x: w[0] * p0.left + w[1] * p1.left + w[2] * p2.left + w[3] * p3.left,
+      y: w[0] * p0.top  + w[1] * p1.top  + w[2] * p2.top  + w[3] * p3.top
     };
   }
 
@@ -57,13 +57,14 @@ pv.SvgScene.pathBasis = (function() {
 
 /**
  * @private Interpolates the given points using the basis spline interpolation.
- * Returns an SVG path without the leading M instruction to allow path appending.
+ * Returns an SVG path without the leading M instruction to allow path
+ * appending.
  *
  * @param points the array of points.
  */
-pv.SvgScene.curvePathBasis = function(points) {
-  if(points.length <= 2) return '';
-  var path = '',
+pv.SvgScene.curveBasis = function(points) {
+  if (points.length <= 2) return "";
+  var path = "",
       p0 = points[0],
       p1 = p0,
       p2 = p0,
@@ -76,38 +77,35 @@ pv.SvgScene.curvePathBasis = function(points) {
     p3 = points[i];
     path += this.pathBasis(p0, p1, p2, p3);
   }
-  // cycle through to get the last point
+  /* Cycle through to get the last point. */
   path += this.pathBasis(p1, p2, p3, p3);
   path += this.pathBasis(p2, p3, p3, p3);
-
   return path;
 };
 
 /**
  * @private Interpolates the given points using the basis spline interpolation.
- * If points.length == tangents.length then a regular Hermite interpolation is performed,
- * if points.length == tangents.length + 2 then the first and last segments are filled in
- * with cubic bazier segments.
- * Returns an array of path strings.
+ * If points.length == tangents.length then a regular Hermite interpolation is
+ * performed, if points.length == tangents.length + 2 then the first and last
+ * segments are filled in with cubic bazier segments.  Returns an array of path
+ * strings.
  *
  * @param points the array of points.
  */
-pv.SvgScene.curvePathBasisSegments = function(points) {
-  if(points.length <= 2) return '';
-  var firstPath = "",
-      paths = [],
+pv.SvgScene.curveBasisSegments = function(points) {
+  if (points.length <= 2) return "";
+  var paths = [],
       p0 = points[0],
       p1 = p0,
       p2 = p0,
-      p3 = points[1];
+      p3 = points[1]
+      firstPath = this.pathBasis.segment(p0, p1, p2, p3);
 
-  // Merge the first path to the second path and the last path to the penultimate path
-  firstPath = this.pathBasis.segment(p0, p1, p2, p3);
   p0 = p1;
   p1 = p2;
   p2 = p3;
   p3 = points[2];
-  paths.push(firstPath + this.pathBasis(p0, p1, p2, p3));
+  paths.push(firstPath + this.pathBasis(p0, p1, p2, p3)); // merge first & second path
   for (var i = 3; i < points.length; i++) {
     p0 = p1;
     p1 = p2;
@@ -116,9 +114,8 @@ pv.SvgScene.curvePathBasisSegments = function(points) {
     paths.push(this.pathBasis.segment(p0, p1, p2, p3));
   }
 
-  // because we have 2 paths too many!
+  // merge last & second-to-last path
   paths.push(this.pathBasis.segment(p1, p2, p3, p3) + this.pathBasis(p2, p3, p3, p3));
-
   return paths;
 };
 
@@ -132,66 +129,70 @@ pv.SvgScene.curvePathBasisSegments = function(points) {
  * @param points the array of points.
  * @param tangents the array of tangent vectors.
  */
-pv.SvgScene.curvePathHermite = function(points, tangents) {
-  if(tangents.length < 2 || (points.length != tangents.length && points.length != tangents.length + 2)) return '';
-  var quad = (points.length != tangents.length),
-      path = '',
+pv.SvgScene.curveHermite = function(points, tangents) {
+  if (tangents.length < 2
+      || (points.length != tangents.length
+      && points.length != tangents.length + 2)) return "";
+  var quad = points.length != tangents.length,
+      path = "",
       p0 = points[0],
-      p  = points[1],
+      p = points[1],
       t0 = tangents[0],
-      t  = tangents[1],
+      t = tangents[1],
       pi = 2;
 
-  if(quad) {
-    path += "Q" + (p.left-t0.x*2/3) + ","  + (p.top-t0.y*2/3) + "," + p.left + "," + p.top;
+  if (quad) {
+    path += "Q" + (p.left - t0.x * 2 / 3) + ","  + (p.top - t0.y * 2 / 3)
+        + "," + p.left + "," + p.top;
     p0 = points[1];
-    p  = points[2];
+    p = points[2];
     pi = 3;
   }
 
   path += "C" + (p0.left + t0.x) + "," + (p0.top + t0.y)
-        + "," + (p.left - t.x) + "," + (p.top - t.y)
-        + "," + p.left + "," + p.top;
+      + "," + (p.left - t.x) + "," + (p.top - t.y)
+      + "," + p.left + "," + p.top;
   for (var i = 2; i < tangents.length; i++, pi++) {
     p = points[pi];
     t = tangents[i];
-    path += "S" + (p.left - t.x) + "," + (p.top - t.y) + "," + p.left + "," + p.top;
+    path += "S" + (p.left - t.x) + "," + (p.top - t.y)
+        + "," + p.left + "," + p.top;
   }
 
-  if(quad) {
+  if (quad) {
     var lp = points[pi];
-    path += "Q" + (p.left+t.x*2/3) + ","  + (p.top+t.y*2/3) + "," + lp.left + "," + lp.top;
+    path += "Q" + (p.left + t.x * 2 / 3) + ","  + (p.top + t.y * 2 / 3) + ","
+        + lp.left + "," + lp.top;
   }
 
   return path;
 };
 
 /**
- * @private Interpolates the given points with respective tangents using the cubic
- * Hermite spline interpolation.
- * Returns an array of path strings.
+ * @private Interpolates the given points with respective tangents using the
+ * cubic Hermite spline interpolation. Returns an array of path strings.
  *
  * @param points the array of points.
  * @param tangents the array of tangent vectors.
  */
-pv.SvgScene.curvePathHermiteSegments = function(points, tangents) {
-  if(tangents.length < 2 || (points.length != tangents.length && points.length != tangents.length + 2)) return [];
-  var quad = (points.length != tangents.length),
+pv.SvgScene.curveHermiteSegments = function(points, tangents) {
+  if (tangents.length < 2
+      || (points.length != tangents.length
+      && points.length != tangents.length + 2)) return [];
+  var quad = points.length != tangents.length,
       paths = [],
       p0,
-      p1  = points[0],
+      p1 = points[0],
       t0,
-      t1  = tangents[0],
+      t1 = tangents[0],
       pi = 1;
 
-  if(quad) {
+  if (quad) {
     p0 = p1;
     p1 = points[1];
-    paths.push(
-        "M" + p0.left + "," + p0.top
-      + "Q" + (p1.left-t1.x*2/3) + "," + (p1.top-t1.y*2/3)
-      + "," + p1.left + "," + p1.top
-    );
+    paths.push("M" + p0.left + "," + p0.top
+        + "Q" + (p1.left - t1.x * 2 / 3) + "," + (p1.top - t1.y * 2 / 3)
+        + "," + p1.left + "," + p1.top);
     pi = 2;
   }
 
@@ -200,65 +201,60 @@ pv.SvgScene.curvePathHermiteSegments = function(points, tangents) {
     t0 = t1;
     p1 = points[pi];
     t1 = tangents[i];
-    paths.push(
-        "M" + p0.left + "," + p0.top
-      + "C" + (p0.left + t0.x) + "," + (p0.top + t0.y)
-      + "," + (p1.left - t1.x) + "," + (p1.top - t1.y)
-      + "," + p1.left + "," + p1.top
-    );
+    paths.push("M" + p0.left + "," + p0.top
+        + "C" + (p0.left + t0.x) + "," + (p0.top + t0.y)
+        + "," + (p1.left - t1.x) + "," + (p1.top - t1.y)
+        + "," + p1.left + "," + p1.top);
   }
 
-  if(quad) {
+  if (quad) {
     var lp = points[pi];
-    paths.push(
-        "M" + p1.left + "," + p1.top
-      + "Q" + (p1.left+t1.x*2/3) + "," + (p1.top+t1.y*2/3)
-      + "," + lp.left + "," + lp.top
-    );
+    paths.push("M" + p1.left + "," + p1.top
+        + "Q" + (p1.left + t1.x * 2 / 3) + "," + (p1.top + t1.y * 2 / 3)
+        + "," + lp.left + "," + lp.top);
   }
 
   return paths;
 };
 
 /**
- * @private Computed the tangents for the given points needed for cardinal spline interpolation.
- * Returns an array of tangent vectors.
- *
- * Note: that for n points only the n-2 well defined tangents are returned.
+ * @private Computed the tangents for the given points needed for cardinal
+ * spline interpolation. Returns an array of tangent vectors. Note: that for n
+ * points only the n-2 well defined tangents are returned.
  *
  * @param points the array of points.
  * @param tension the tension of hte cardinal spline.
  */
-pv.SvgScene.computeCardinalTangents = function(points, tension) {
-  var tangents = [];
-  var a = (1 - tension) / 2,
+pv.SvgScene.cardinalTangents = function(points, tension) {
+  var tangents = [],
+      a = (1 - tension) / 2,
       p0 = points[0],
       p1 = points[1],
       p2 = points[2];
 
   for (var i = 3; i < points.length; i++) {
-    tangents.push({x:a*(p2.left - p0.left), y:a*(p2.top - p0.top)});
+    tangents.push({x: a * (p2.left - p0.left), y: a * (p2.top - p0.top)});
     p0 = p1;
     p1 = p2;
     p2 = points[i];
   }
-  var t = {x:a*(p2.left - p0.left), y:a*(p2.top - p0.top)};
-  tangents.push(t);
 
+  tangents.push({x: a * (p2.left - p0.left), y: a * (p2.top - p0.top)});
   return tangents;
 };
 
 /**
  * @private Interpolates the given points using cardinal spline interpolation.
- * Returns an SVG path without the leading M instruction to allow path appending.
+ * Returns an SVG path without the leading M instruction to allow path
+ * appending.
  *
  * @param points the array of points.
  * @param tension the tension of hte cardinal spline.
  */
-pv.SvgScene.curvePathCardinal = function(points, tension) {
-  if(points.length <= 2) return '';
-  var tangents = this.computeCardinalTangents(points, tension);
-  return this.curvePathHermite(points, tangents);
+pv.SvgScene.curveCardinal = function(points, tension) {
+  if (points.length <= 2) return "";
+  var tangents = this.cardinalTangents(points, tension);
+  return this.curveHermite(points, tangents);
 };
 
 /**
@@ -268,69 +264,65 @@ pv.SvgScene.curvePathCardinal = function(points, tension) {
  * @param points the array of points.
  * @param tension the tension of hte cardinal spline.
  */
-pv.SvgScene.curvePathCardinalSegments = function(points, tension) {
-  if(points.length <= 2) return '';
-  var tangents = this.computeCardinalTangents(points, tension);
-  return this.curvePathHermiteSegments(points, tangents);
+pv.SvgScene.curveCardinalSegments = function(points, tension) {
+  if (points.length <= 2) return "";
+  var tangents = this.cardinalTangents(points, tension);
+  return this.curveHermiteSegments(points, tangents);
 };
 
 /**
  * @private Interpolates the given points using Fritsch-Carlson Monotone cubic
- * Hermite interpolation.
- * Returns an array of tangent vectors.
+ * Hermite interpolation. Returns an array of tangent vectors.
  *
  * @param points the array of points.
  */
-pv.SvgScene.computeMonotoneTangents = function(points) {
+pv.SvgScene.monotoneTangents = function(points) {
   var tangents = [],
       d = [],
       m = [],
       dx = [],
       k = 0;
 
-  // Compute the slopes of the secant lines between successive points
-  for(k = 0; k < points.length-1; k++) {
+  /* Compute the slopes of the secant lines between successive points. */
+  for (k = 0; k < points.length-1; k++) {
     d[k] = (points[k+1].top - points[k].top)/(points[k+1].left - points[k].left);
   }
 
-  // Initialize the tangents at every data point as the average of the secants
+  /* Initialize the tangents at every point as the average of the secants. */
   m[0] = d[0];
-  dx[0] = Math.abs(points[1].left - points[0].left);
-  for(k = 1; k < points.length - 1; k++) {
+  dx[0] = points[1].left - points[0].left;
+  for (k = 1; k < points.length - 1; k++) {
     m[k] = (d[k-1]+d[k])/2;
-    dx[k] = Math.abs(points[k+1].left - points[k-1].left)/2;
+    dx[k] = (points[k+1].left - points[k-1].left)/2;
   }
   m[k] = d[k-1];
-  dx[k] = Math.abs(points[k].left - points[k-1].left);
+  dx[k] = (points[k].left - points[k-1].left);
 
-  // Step 3
-  for(k = 0; k < points.length - 1; k++) {
-    if(d[k] == 0) {
+  /* Step 3. Very important, step 3. Yep. Wouldn't miss it. */
+  for (k = 0; k < points.length - 1; k++) {
+    if (d[k] == 0) {
       m[ k ] = 0;
       m[k+1] = 0;
     }
   }
 
-  // Step 4 + 5
-  for(k = 0; k < points.length-1; k++) {
-    if(Math.abs(m[ k ]) < 1e-5) continue;
-    if(Math.abs(m[k+1]) < 1e-5) continue;
-    var ak = m[ k ]/d[k];
-    var bk = m[k+1]/d[k];
-
-    // check monotone constant
-    var s = ak*ak + bk*bk;
-    if(s > 9) {
-      var tk = 3/Math.sqrt(s);
-      m[ k ] = tk*ak*d[k];
-      m[k+1] = tk*bk*d[k];
+  /* Step 4 + 5. Out of 5 or more steps. */
+  for (k = 0; k < points.length - 1; k++) {
+    if ((Math.abs(m[k]) < 1e-5) || (Math.abs(m[k+1]) < 1e-5)) continue;
+    var ak = m[k] / d[k],
+        bk = m[k + 1] / d[k],
+        s = ak * ak + bk * bk; // monotone constant (?)
+    if (s > 9) {
+      var tk = 3 / Math.sqrt(s);
+      m[k] = tk * ak * d[k];
+      m[k + 1] = tk * bk * d[k];
     }
   }
 
   var len;
-  for(var i = 0; i < points.length; i++) {
-    len = 1 + m[i] * m[i];  // pv.vector(1, m[i]).norm().times(dx[i]/3)
-    tangents.push({x:dx[i]/3/len, y:m[i]*dx[i]/3/len});
+  for (var i = 0; i < points.length; i++) {
+    len = 1 + m[i] * m[i]; // pv.vector(1, m[i]).norm().times(dx[i]/3)
+    tangents.push({x: dx[i] / 3 / len, y: m[i] * dx[i] / 3 / len});
   }
 
   return tangents;
@@ -338,15 +330,14 @@ pv.SvgScene.computeMonotoneTangents = function(points) {
 
 /**
  * @private Interpolates the given points using Fritsch-Carlson Monotone cubic
- * Hermite interpolation.
- * Returns an SVG path without the leading M instruction to allow path appending.
+ * Hermite interpolation. Returns an SVG path without the leading M instruction
+ * to allow path appending.
  *
  * @param points the array of points.
  */
-pv.SvgScene.curvePathMonotone = function(points) {
-  if(points.length <= 2) return '';
-  var tangents = this.computeMonotoneTangents(points);
-  return this.curvePathHermite(points, tangents);
+pv.SvgScene.curveMonotone = function(points) {
+  if (points.length <= 2) return "";
+  return this.curveHermite(points, this.monotoneTangents(points));
 }
 
 /**
@@ -356,8 +347,7 @@ pv.SvgScene.curvePathMonotone = function(points) {
  *
  * @param points the array of points.
  */
-pv.SvgScene.curvePathMonotoneSegments = function(points) {
-  if(points.length <= 2) return '';
-  var tangents = this.computeMonotoneTangents(points);
-  return this.curvePathHermiteSegments(points, tangents);
+pv.SvgScene.curveMonotoneSegments = function(points) {
+  if (points.length <= 2) return "";
+  return this.curveHermiteSegments(points, this.monotoneTangents(points));
 };

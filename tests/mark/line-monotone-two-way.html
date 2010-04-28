@@ -1,0 +1,61 @@
+<html>
+  <head>
+    <title>Monotone curve</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var data = [4.0, 3.9, 3.0, 2.5, 1.0, 1.0, 1.0, 0.7, 0.2, 0.1],
+    rdata = [4.0, 3.9, 3.0, 2.5, 1.0, 1.0, 1.0, 0.7, 0.2, 0.1].reverse(),
+    w = 600,
+    h = 400,
+    x = pv.Scale.linear(0, data.length+1).range(0, w),
+    y = pv.Scale.linear(0, 4.5).range(0, h);
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .strokeStyle("#ccc")
+    .margin(20);
+
+vis.add(pv.Rule)
+    .data(y.ticks())
+    .visible(function() !(this.index % 2))
+    .bottom(function(d) Math.round(y(d)) - .5)
+    .strokeStyle("#eee")
+  .anchor("left").add(pv.Label)
+    .text(function(d) d.toFixed(1));
+
+vis.add(pv.Rule)
+    .data(x.ticks())
+    .visible(function(d) d > 0)
+    .left(function(d) Math.round(x(d)) - .5)
+    .strokeStyle("#eee")
+  .anchor("bottom").add(pv.Label)
+    .text(function(d) d.toFixed());
+
+vis.add(pv.Line)
+    .data(data)
+    .left(function() x(this.index+1))
+    .bottom(y)
+    .interpolate("monotone");
+
+vis.add(pv.Line)
+    .data(rdata)
+    .left(function() x(data.length - this.index))
+    .bottom(y)
+    .interpolate("monotone")
+    .strokeStyle("green");
+
+vis.add(pv.Dot)
+    .data(data)
+    .left(function() x(this.index+1))
+    .bottom(y)
+    .strokeStyle("#f33");
+
+vis.render();
+
+    </script>
+  </body>
+</html>
