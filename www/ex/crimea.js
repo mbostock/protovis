@@ -1,4 +1,4 @@
-var causes = ["disease", "wounds", "other"];
+var causes = ["wounds", "other", "disease"];
 
 var crimea = [
   { date: "4/1854", wounds: 0, other: 110, disease: 110 },
@@ -26,3 +26,8 @@ var crimea = [
   { date: "2/1856", wounds: 0, other: 100, disease: 100 },
   { date: "3/1856", wounds: 0, other: 125, disease: 90 }
 ];
+
+(function() {
+  var format = pv.Format.date("%m/%y");
+  crimea.forEach(function(d) { d.date = format.parse(d.date); });
+})();
