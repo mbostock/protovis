@@ -2,7 +2,7 @@
   <head>
     <title>Geo Scale</title>
     <script type="text/javascript" src="../../protovis-d3.2.js"></script>
-    <script type="text/javascript" src="countries-lowres.js"></script>
+    <script type="text/javascript" src="countries-lores.js"></script>
     <script type="text/javascript" src="population.js"></script>
     <script type="text/javascript" src="../center.js"></script>
   </head>
@@ -27,8 +27,11 @@ countries.forEach(function(c) {
 });
 
 var w = window.innerWidth * .8,
-    h = 3 / 5 * w,
-    geo = pv.Geo.scale("sinusoidal").domain({lng:-128, lat:24}, {lng:-64, lat:50}).range(w, h);
+    h = 3 / 5 * w;
+
+var geo = pv.Geo.scale("sinusoidal")
+    .domain({lng:-128, lat:24}, {lng:-64, lat:50})
+    .range(w, h);
 
 var vis = new pv.Panel()
     .width(w)

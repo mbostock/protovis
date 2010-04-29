@@ -16,9 +16,9 @@ pv.SvgScene.line = function(scenes) {
 
   if (scenes.length > 2 && (s.interpolate == "basis" || s.interpolate == "cardinal" || s.interpolate == "monotone")) {
     switch (s.interpolate) {
-      case "basis": d += this.curvePathBasis(scenes); break;
-      case "cardinal": d += this.curvePathCardinal(scenes, s.tension); break;
-      case "monotone": d += this.curvePathMonotone(scenes); break;
+      case "basis": d += this.curveBasis(scenes); break;
+      case "cardinal": d += this.curveCardinal(scenes, s.tension); break;
+      case "monotone": d += this.curveMonotone(scenes); break;
     }
   } else {
     for (var i = 1; i < scenes.length; i++) {
@@ -47,9 +47,9 @@ pv.SvgScene.lineSegment = function(scenes) {
   var s = scenes[0];
   var paths;
   switch (s.interpolate) {
-    case "basis": paths = this.curvePathBasisSegments(scenes); break;
-    case "cardinal": paths = this.curvePathCardinalSegments(scenes, s.tension); break;
-    case "monotone": paths = this.curvePathMonotoneSegments(scenes); break;
+    case "basis": paths = this.curveBasisSegments(scenes); break;
+    case "cardinal": paths = this.curveCardinalSegments(scenes, s.tension); break;
+    case "monotone": paths = this.curveMonotoneSegments(scenes); break;
   }
 
   for (var i = 0, n = scenes.length - 1; i < n; i++) {
