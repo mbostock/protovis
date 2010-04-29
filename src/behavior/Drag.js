@@ -41,17 +41,6 @@ pv.Behavior.drag = function() {
     scene = null;
   }
 
-  /**
-   * @function
-   * @name pv.Behavior.drag.prototype.render
-   * @param {pv.Mark} mark
-   * @returns {pv.Behavior.drag} this.
-   */
-  mousedown.render = function(mark) {
-    render = mark;
-    return mousedown;
-  };
-
   pv.listen(window, "mousemove", mousemove);
   pv.listen(window, "mouseup", mouseup);
   return mousedown;
