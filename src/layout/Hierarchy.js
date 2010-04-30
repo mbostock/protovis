@@ -1,7 +1,27 @@
 /**
- * @class Abstract layout for hierarchies.
+ * Constructs a new, empty hierarchy layout. Layouts are not typically
+ * constructed directly; instead, they are added to an existing panel via
+ * {@link pv.Mark.#add}.
+ *
+ * @class Represents an abstract layout for hierarchy diagrams. This class is a
+ * specialization of {@link pv.Layout.Network}, providing the basic structure
+ * for both hierarchical node-link diagrams (such as Reingold-Tilford trees) and
+ * space-filling hierarchy diagrams (such as sunbursts and treemaps).
+ *
+ * <p>Unlike general network layouts, the <tt>links</tt> property need not be
+ * defined explicitly. Instead, the links are computed implicitly from the
+ * <tt>parentNode</tt> attribute of the node objects, as defined by the
+ * <tt>nodes</tt> property. This implementation is also available as
+ * {@link #links}, for reuse with non-hierarchical layouts; for example, to
+ * render a tree using force-directed layout.
+ *
+ * <p>Correspondingly, the <tt>nodes</tt> property is represented as a union of
+ * {@link pv.Layout.Network.Node} and {@link pv.Dom.Node}. To construct a node
+ * hierarchy from a simple JSON map, use the {@link pv.Dom} operator; this
+ * operator also provides an easy way to sort nodes before passing them to the
+ * layout.
+ *
  * @extends pv.Layout.Network
- * @constructor
  */
 pv.Layout.Hierarchy = function() {
   pv.Layout.Network.call(this);
@@ -29,7 +49,7 @@ pv.Layout.Hierarchy.links = function() {
       });
 };
 
-/** @private */
+/** @private Provides standard node-link layout based on breadth & depth. */
 pv.Layout.Hierarchy.NodeLink = {
 
   /** @private */
@@ -90,7 +110,7 @@ pv.Layout.Hierarchy.NodeLink = {
   }
 };
 
-/** @private */
+/** @private Provides standard space-filling layout based on breadth & depth. */
 pv.Layout.Hierarchy.Fill = {
 
   /** @private */
