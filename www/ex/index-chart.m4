@@ -1,9 +1,9 @@
 <html>
   <head>
-    <title>Protovis - Horizon Graph</title>
+    <title>Protovis - Index Chart</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.1a"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
-    <script type="text/javascript" src="../protovis-r3.2.0.js"></script>
+    <script type="text/javascript" src="../protovis-r3.2.0.js"></script> 
   </head>
   <body>
 
@@ -42,38 +42,36 @@
     </div>
 
     <div class="body">
-      <h1>Horizon Graph of U.S. Unemployment Rate, 2000-2010</h1>
+      <h1>Index Chart of Technology Stocks, 2000-2010</h1>
 
-      <iframe style="height:210px;" src="horizon-full.html"></iframe>
+      <iframe style="height:400px;" src="index-chart-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
-      href="horizon-full.html" target="_blank">View full screen.</a>
+      href="index-chart-full.html" target="_blank">View full screen.</a>
 
-      <p><i>Horizon graphs</i> are a technique for increasing the data
-      density of a time-series view while preserving resolution. Here we
-      use them to show national unemployment rates as a percentage of the
-      labor force. Negative values represent below average employment and
-      are shown in <span style="color: red;">red</span>. They are either
-      "mirrored" or "offset" to share the same space as positive values,
-      which represent above average employment and are shown in <span
-      style="color: blue;">blue</span>. The charts can be further divided
-      into bands and layered to create a nested form. The resulting charts
-      preserve data resolution but use less display space. While horizon
-      graphs take some time to learn, they have been found to be more
-      effective than standard line and area plots when the chart sizes get
-      quite small.</p>
+      <p>With some forms of time-series data, raw values are less important than
+	  relative changes. Consider investors, who are more interested in a stock's 
+      growth rate than its specific price. Multiple stocks may have dramatically 
+      different baseline prices, but be meaningfully compared when normalized. 
+      An <i>index chart</i> is an interactive line chart that shows percentage 
+      changes for a collection of time-series based on a selected index point. 
+      In this example, we see the percentage change of selected stock prices 
+      according to the day of purchase. For January 2005, one can see the rocky 
+      rise enjoyed by those who invested in Amazon, Apple, or Google at that 
+      time. Mouse over a point in the chart to change the reference month.</p>
 
-      <p>Data source: <a href="http://www.bls.gov/">U.S. Bureau of Labor Statistics</a></p>
+      <p>Data source: <a href="http://finance.yahoo.com/">Yahoo! 
+      Finance</a></p>
 
       <h3>Source</h3>
 
-include(`horizon-full.html.html')
+include(`index-chart-full.html.html')
 
       <h3>Data</h3>
 
-	  Due to size, the data file is omitted from this example.
-      See <a href="unemployment.js" target="_blank">unemployment.js</a>.
-      
+      Due to size, the data file is omitted from this
+      example. See <a href="stocks.js" target="_blank">stocks.js</a>.
+
     </div>
 
     <div class="foot">
