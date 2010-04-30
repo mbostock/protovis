@@ -1,7 +1,7 @@
 <html>
   <head>
-    <title>Protovis - Horizon Graph</title>
-    <link type="text/css" rel="stylesheet" href="../style.css?3.1a"/>
+    <title>Protovis - Stacked Graph of Unemployed U.S. Workers</title>
+    <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.0.js"></script> 
   </head>
@@ -42,38 +42,31 @@
     </div>
 
     <div class="body">
-      <h1>Horizon Graph of U.S. Unemployment Rate, 2000-2010</h1>
+      <h1>Stacked Graph of Unemployed U.S. Workers by Industry</h1>
 
-      <iframe style="height:210px;" src="horizon-full.html"></iframe>
+      <iframe style="height:480px;" src="unemployed-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
-      href="horizon-full.html" target="_blank">View full screen.</a>
+      href="unemployed-full.html" target="_blank">View full screen.</a>
 
-      <p><i>Horizon graphs</i> are a technique for increasing the data
-      density of a time-series view while preserving resolution. Here we
-      use them to show national unemployment rates as a percentage of the
-      labor force. Negative values represent below average employment and
-      are shown in <span style="color: red;">red</span>. They are either
-      "mirrored" or "offset" to share the same space as positive values,
-      which represent above average employment and are shown in <span
-      style="color: blue;">blue</span>. The charts can be further divided
-      into bands and layered to create a nested form. The resulting charts
-      preserve data resolution but use less display space. While horizon
-      graphs take some time to learn, they have been found to be more
-      effective than standard line and area plots when the chart sizes get
-      quite small.</p>
+      <p>By stacking area charts on top of each other, we arrive at a visual 
+      summation of time-series values &mdash; a <i>stacked graph</i>. Stacked 
+      graphs (sometimes called <i>stream graphs</i>) depict aggregate patterns 
+      and often support drill-down into a subset of individual series. This 
+      example shows the number of unemployed workers in the United States over 
+      the last decade, subdivided by industry.</p>
 
       <p>Data source: <a href="http://www.bls.gov/">U.S. Bureau of Labor Statistics</a></p>
 
       <h3>Source</h3>
 
-include(`horizon-full.html.html')
+include(`unemployed-full.html.html')
 
       <h3>Data</h3>
 
-	  Due to size, the data file is omitted from this example.
+      Due to size, the data file is omitted from this example.
       See <a href="unemployment.js" target="_blank">unemployment.js</a>.
-      
+
     </div>
 
     <div class="foot">

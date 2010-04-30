@@ -1,7 +1,7 @@
 <html>
   <head>
-    <title>Protovis - Horizon Graph</title>
-    <link type="text/css" rel="stylesheet" href="../style.css?3.1a"/>
+    <title>Protovis - Quantile-Quantile Plot</title>
+    <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.0.js"></script> 
   </head>
@@ -42,38 +42,35 @@
     </div>
 
     <div class="body">
-      <h1>Horizon Graph of U.S. Unemployment Rate, 2000-2010</h1>
+      <h1>Q-Q Plot of Mechanical Turk Participation Rates</h1>
 
-      <iframe style="height:210px;" src="horizon-full.html"></iframe>
+      <iframe style="height:400px;" src="qqplot-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
-      href="horizon-full.html" target="_blank">View full screen.</a>
+      href="qqplot-full.html" target="_blank">View full screen.</a>
 
-      <p><i>Horizon graphs</i> are a technique for increasing the data
-      density of a time-series view while preserving resolution. Here we
-      use them to show national unemployment rates as a percentage of the
-      labor force. Negative values represent below average employment and
-      are shown in <span style="color: red;">red</span>. They are either
-      "mirrored" or "offset" to share the same space as positive values,
-      which represent above average employment and are shown in <span
-      style="color: blue;">blue</span>. The charts can be further divided
-      into bands and layered to create a nested form. The resulting charts
-      preserve data resolution but use less display space. While horizon
-      graphs take some time to learn, they have been found to be more
-      effective than standard line and area plots when the chart sizes get
-      quite small.</p>
-
-      <p>Data source: <a href="http://www.bls.gov/">U.S. Bureau of Labor Statistics</a></p>
+	  <p><i>Quantile-Quantile (or Q-Q) plots</i> compare two probability 
+      distributions by graphing their
+      <a href="http://en.wikipedia.org/wiki/Quantile"
+      title="Wikipedia: Quantile">quantiles</a> against each other. If the two 
+      are similar, the plotted values will roughly lie along the central 
+      diagonal. If the two are linearly related, values will again lie along a 
+      line, though with varying slope and intercept. This example shows 
+      Mechanical Turk participation data compared to three statistical 
+      distributions. Note how the data forms three distinct components when 
+      compared to uniform and normal (Gaussian) distributions: this suggests 
+      that a statistical model with three components might be more 
+      appropriate, and indeed we see in the final plot that a fitted mixture 
+      of three normal distributions provides a better fit.</p>
 
       <h3>Source</h3>
 
-include(`horizon-full.html.html')
+include(`qqplot-full.html.html')
 
       <h3>Data</h3>
 
-	  Due to size, the data file is omitted from this example.
-      See <a href="unemployment.js" target="_blank">unemployment.js</a>.
-      
+include(`turkers.js.html')
+
     </div>
 
     <div class="foot">
