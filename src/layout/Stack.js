@@ -37,6 +37,11 @@
  * algorithm. In addition, the order of layers can be computed using a built-in
  * algorithm via the <tt>order</tt> property.
  *
+ * <p>With the exception of the "expand" <tt>offset</tt>, the stack layout does
+ * not perform any automatic scaling of data; the values returned from
+ * <tt>x</tt> and <tt>y</tt> specify pixel sizes. To simplify scaling math, use
+ * this layout in conjunction with {@link pv.Scale.linear} or similar.
+ *
  * <p>In other cases, the <tt>values</tt> psuedo-property can be used to define
  * the data more flexibly. As with a typical panel &amp; area, the
  * <tt>layers</tt> property corresponds to the data in the enclosing panel,
@@ -223,6 +228,18 @@ pv.Layout.Stack = function() {
     prop[pdy] = function(i, j) { return dy[i][j]; };
   };
 
+  /**
+   * The layer prototype. This prototype is intended to be used with an area,
+   * bar or panel mark (or subclass thereof). Other mark types may be possible,
+   * though note that the stack layout is not currently designed to support
+   * radial stacked visualizations using wedges.
+   *
+   * <p>The layer is not a direct child of the stack layout; a hidden panel is
+   * used to replicate layers.
+   *
+   * @type pv.Mark
+   * @name pv.Layout.Stack.prototype.layer
+   */
   this.layer = new pv.Mark()
       .data(function() { return values[this.parent.index]; })
       .top(proxy("t"))
@@ -263,7 +280,7 @@ pv.Layout.Stack.prototype.$x
  * default "bottom-left" orientation, this function defines the "left" property.
  *
  * @param {function} f the x function.
- * @returns this.
+ * @returns {pv.Layout.Stack} this.
  */
 pv.Layout.Stack.prototype.x = function(f) {
   /** @private */ this.$x = pv.functor(f);
@@ -277,7 +294,7 @@ pv.Layout.Stack.prototype.x = function(f) {
  * "height" property.
  *
  * @param {function} f the y function.
- * @returns this.
+ * @returns {pv.Layout.Stack} this.
  */
 pv.Layout.Stack.prototype.y = function(f) {
   /** @private */ this.$y = pv.functor(f);
@@ -293,7 +310,7 @@ pv.Layout.Stack.prototype.$values = pv.identity;
  * specified as a two-dimensional (i.e., nested) array.
  *
  * @param {function} f the values function.
- * @returns this.
+ * @returns {pv.Layout.Stack} this.
  */
 pv.Layout.Stack.prototype.values = function(f) {
   this.$values = pv.functor(f);
