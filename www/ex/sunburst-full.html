@@ -11,38 +11,61 @@
       }
       #fig {
         width: 1024px;
-        height: 924px;
+        height: 1024px;
         text-align: center;
       }
     </style>
   </head>
   <body><div id="center"><div id="fig">
+    <p>Size by: <select id="menu" onchange="update(this.value)">
+        <option value="byte" selected>bytes</option>
+        <option value="file">files</option>
+      </select>
     <script type="text/javascript+protovis">
 
-      /* The sunburst layout. */
-      var sunburst = pv.Layout.sunburst(flare).root("flare");
+      function getNodePath(node) {
+        var path = node.nodeName;
+        var parentNode = node.parentNode;
+        while(parentNode) {
+          path = parentNode.nodeName + "." + path;
+          parentNode = parentNode.parentNode;
+        }
+        return path + (node.firstChild ? "" : " (" + node.nodeValue + " bytes)");
+      }
+
+      function onNodeClick(node) {
+        var path = node.nodeName;
+        var parentNode = node.parentNode;
+        while(parentNode) {
+          path = parentNode.nodeName + "/" + path;
+          parentNode = parentNode.parentNode;
+        }
+        top.location = "http://svn.prefuse.org/flare/trunk/flare/flare/src/" + path + (node.firstChild?"/":".as");
+      }
 
       /* The root panel. */
       var vis = new pv.Panel()
           .width(1024)
           .height(1024)
-          .top(-110);
+          .top(40);
 
-      /* Add a wedge with label using the layout. */
-      vis.add(pv.Wedge)
-          .extend(sunburst)
-          .fillStyle(pv.Colors.category19()
-              .by(function(n) n.children ? n.keys : n.keys.slice(0, -1)))
+      var layout = vis.add(pv.Layout.Partition.Fill)
+          .nodes(pv.dom(flare).root("flare").nodes())
+          .size(function(d) d.nodeValue)
+          .order("ascending")
+          .orient("radial");
+
+      layout.node.add(pv.Wedge)
+          .fillStyle(function(n) n.firstChild ? "#aec7e8" : "#ff7f0e")
+          .title(getNodePath)
+          .event("click", onNodeClick)
           .strokeStyle("#222")
           .lineWidth(1)
-          .title(function(n) n.keys.join(".") + ": " + n.size)
-          .cursor("pointer")
-          .event("click", function(n) top.location
-              = "http://svn.prefuse.org/flare/trunk/flare/flare/src/"
-              + n.keys.join("/") + (n.children ? "" : ".as"))
-        .anchor("center").add(pv.Label)
-          .visible(function(n) n.angle * n.depth > .05)
-          .text(function(n) n.keys[n.keys.length - 1]);
+          .title(getNodePath)
+          .cursor("pointer");
+
+      layout.label.add(pv.Label)
+          .visible(function(d) d.angle * d.innerRadius >= 7);
 
       vis.render();
       menu.focus();
@@ -50,16 +73,12 @@
       /* Update the layout's size method and re-render. */
       function update(method) {
         switch (method) {
-          case "byte": sunburst.size(Number); break;
-          case "file": sunburst.size(function(n) isNaN(n) ? NaN : 1); break;
+          case "byte": layout.size(function(d) d.nodeValue); break;
+          case "file": layout.size(function(n) n.firstChild ? 0 : 1); break;
         }
         vis.render();
       }
 
     </script>
-    <p>Size by: <select id="menu" onchange="update(this.value)">
-        <option value="byte" selected>bytes</option>
-        <option value="file">files</option>
-      </select>
   </div></div></body>
 </html>

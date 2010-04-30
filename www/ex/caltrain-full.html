@@ -2,7 +2,6 @@
   <head> 
     <title>CalTrain Timetable</title> 
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
-    <script type="text/javascript" src="drag.js"></script>
     <script type="text/javascript" src="caltrain.js"></script>
     <style type="text/css"> 
       body {
@@ -18,13 +17,13 @@
   <body>
     <div>
       Show:
-      <select id="menu" onchange="show = this.value; vis.render();"> 
+      <select onchange="show = this.value; vis.render();">
         <option value="ALL" selected>all trains</option> 
         <option value="N">northbound trains only</option> 
         <option value="S">southbound trains only</option> 
       </select>
       operating on
-      <select id="menu" onchange="oper = this.value; vis.render();"> 
+      <select onchange="oper = this.value; vis.render();"> 
         <option value="Wk" selected>weekdays</option> 
         <option value="Su">Sunday</option> 
         <option value="Sa">Saturday</option> 
@@ -118,6 +117,11 @@
           s2d = pv.Scale.ordinal(stationsNS, function(s) s.name).range(stationsNS, function(s) s.dist),
           y   = pv.Scale.linear(stationsNS, function(s) s.dist).range(h, 0).by(s2d);
 
+      function hourText(d) {
+        var h = d/60 % 24;
+        return (h==0?'MIDNIGHT':(h==12?'NOON':(h<12?h:h-12)));
+      }
+
       // The root panel, with padding for labels
       var vis = new pv.Panel()
           .width(w)
@@ -128,22 +132,28 @@
           .top(30);
             
       // Add station lines
-      vis.add(pv.Rule)
+      var station = vis.add(pv.Rule)
           .data(stationsNS)
-          .bottom(function(s) Math.round(y(s.name)) - 0.5)
-          .strokeStyle("#ccc")
-        .anchor("left").add(pv.Label)
-          .text(function(s) s.name)
-        .anchor("right").add(pv.Label);
+          .bottom(function(s) y(s.name))
+          .strokeStyle("#ccc");
+
+      station.anchor("left").add(pv.Label)
+          .text(function(s) s.name);
+
+      station.anchor("right").add(pv.Label)
+          .text(function(s) s.name);
  
       // Add hour lines
-      vis.add(pv.Rule)
+      var hour = vis.add(pv.Rule)
           .data(function() pv.range(Math.ceil(showMin/60)*60, showMax+1, 60))
-          .left(function(t) Math.round(x(t)) - 0.5)
-          .strokeStyle("#ddd")
-        .anchor("top").add(pv.Label)
-          .text(function(d) { var h = d/60 % 24; return (h==0?'MIDNIGHT':(h==12?'NOON':(h<12?h:h-12))); })
-        .anchor("bottom").add(pv.Label);
+          .left(x)
+          .strokeStyle("#ddd");
+
+      hour.anchor("top").add(pv.Label)
+          .text(hourText);
+
+      hour.anchor("bottom").add(pv.Label)
+          .text(hourText);
       
       // A panel for each train
       var panel = vis.add(pv.Panel)

@@ -1,0 +1,205 @@
+<html>
+  <head>
+    <title>Graduated Symbol Map</title>
+    <link type="text/css" rel="stylesheet" href="ex.css?3.2"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+    <script type="text/javascript" src="jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="jquery-ui-1.8rc3.custom.min.js"></script>
+    <link type="text/css" href="ui-lightness/jquery-ui-1.8rc3.custom.css" rel="stylesheet"/>
+    <script type="text/javascript" src="centroid.js"></script>
+    <script type="text/javascript" src="us_lowres.js"></script>
+    <script type="text/javascript" src="us_stats.js"></script>
+    <style type="text/css">
+        #fig {
+            width: 800px;
+            height: 650px;
+        }
+
+        #container {
+            width: 640px;
+            height: 10px;
+        }
+
+        #yearSlider {
+            position: absolute;
+            left: 90;
+            right: 90;
+            margin-top: 3;
+        }
+
+        #yearLabel {
+            position: absolute;
+            left: 0;
+            width: 85;
+            text-align: right;
+        }
+
+        #play {
+            position: absolute;
+            right: 50px;
+            cursor: pointer;
+        }
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+	<h3>Graduated Symbol Map of Obesity in the United States (1995 to 2008)</h3>
+    <div id="container">
+      <div id="yearLabel">Year:</div><div id="yearSlider"></div><img id="play" src="play.png" alt="Play" onclick="playClick()">
+    </div>
+    <script type="text/javascript+protovis">
+  $(yearSlider).slider({
+    min: us_stats.minYear, max: us_stats.maxYear, value: us_stats.maxYear, slide: function(e, ui) {
+        //vis.fillStyle(color = color[this.id](ui.value)).render();
+        year = ui.value;
+        vis.render();
+      }
+  });
+  var pie = false;
+  var year = 2008;
+
+  var w = 800, h = 400,
+      scale = pv.Geo.scale().domain({lng:-128, lat:24}, {lng:-64, lat:50}).range({x:0, y:0}, {x:w, y:h}),
+      yearsMargin = 90,
+      yearsScale = pv.Scale.linear(us_stats.minYear, us_stats.maxYear).range(yearsMargin+2, w-yearsMargin),
+      colors = {
+          normal: "#008038",
+          over: "#F7976B",
+          obese: "#ED1C23"
+      },
+      stateToTitle = function(c) {
+          return c.name
+             + " (Normal: " + (100 - us_stats[c.code].over[us_stats.yearIdx(year)] - us_stats[c.code].obese[us_stats.yearIdx(year)]).toFixed(1)
+             + "%, Over: " + us_stats[c.code].over[us_stats.yearIdx(year)].toFixed(1)
+             + "%, Obese: " + us_stats[c.code].obese[us_stats.yearIdx(year)].toFixed(1) + "%)";
+      };
+
+  us_lowres.forEach(function(c) {
+      c.code = c.code.toUpperCase();
+      c.centLatLon = centroid(c.borders[0]);
+  });
+
+  var timer = undefined;
+  function playClick() {
+      if (timer) {
+          stop();
+      } else {
+          if(year == us_stats.maxYear) year = us_stats.minYear;
+          $(yearSlider).slider('value', year);
+          $(play).attr("src", 'stop.png');
+          vis.render();
+          timer = setInterval(function() {
+              year++;
+              if (year >= us_stats.maxYear) {
+                  stop();
+              }
+              $(yearSlider).slider('value', year);
+              vis.render();
+          }, 900);
+      }
+  }
+
+  // Stop the animation
+  function stop() {
+      clearInterval(timer);
+      timer = undefined;
+      $(play).attr("src", 'play.png');
+  }
+
+  // Add the main panel for the visualization
+  var vis = new pv.Panel()
+      .width(w)
+      .height(h)
+      .top(30);
+
+  // Add the ticks and labels for the year slider
+  vis.add(pv.Rule)
+     .data(pv.range(us_stats.minYear, us_stats.maxYear+.1))
+     .left(function(d) Math.round(yearsScale(d))-.5)
+     .height(4)
+     .top(-20)
+   .anchor("bottom")
+     .add(pv.Label)
+     .font("normal 13px sans-serif");
+
+  // Add a panel for each state
+  var state = vis.add(pv.Panel)
+      .data(us_lowres);
+
+  // Add a panel for each state land mass
+  state.add(pv.Panel)
+      .data(function(c) c.borders)
+    .add(pv.Line)
+      .data(function(l) l)
+      .left(scale.x)
+      .top(scale.y)
+      .lineWidth(1)
+      .strokeStyle("white")
+      .fillStyle("#eee");
+      //.title(function(d,l,c) c.name + ' ' + c.obese.toFixed(2));
+
+  var rScale = 1/170;
+
+  // Add the 3 circles of the target
+  vis.add(pv.Dot)
+     .data(us_lowres)
+     .visible(function() !pie)
+     .left(function(c) scale(c.centLatLon).x)
+     .top(function(c) scale(c.centLatLon).y)
+     .strokeStyle(null)
+     .title(stateToTitle)
+     .fillStyle(colors['obese'])
+     .radius(function(c) Math.sqrt(us_stats[c.code].pop[us_stats.yearIdx(year)])*rScale)
+   .add(pv.Dot)
+     .fillStyle(colors['over'])
+     .radius(function(c) Math.sqrt(us_stats[c.code].pop[us_stats.yearIdx(year)] * (100 - us_stats[c.code].obese[us_stats.yearIdx(year)])/100)*rScale)
+   .add(pv.Dot)
+     .fillStyle(colors['normal'])
+     .radius(function(c) Math.sqrt(us_stats[c.code].pop[us_stats.yearIdx(year)] * (100 - us_stats[c.code].over[us_stats.yearIdx(year)] - us_stats[c.code].obese[us_stats.yearIdx(year)])/100)*rScale);
+
+  // Add the pie charts
+  vis.add(pv.Panel)
+     .data(us_lowres)
+     .visible(function() pie)
+     .left(function(c) scale(c.centLatLon).x)
+     .top(function(c) scale(c.centLatLon).y)
+    .add(pv.Wedge)
+     .data(function(c) [(100 - us_stats[c.code].over[us_stats.yearIdx(year)] - us_stats[c.code].obese[us_stats.yearIdx(year)]), us_stats[c.code].over[us_stats.yearIdx(year)], us_stats[c.code].obese[us_stats.yearIdx(year)]])
+     .left(0)
+     .top(0)
+     .title(function(d, c) stateToTitle(c))
+     .outerRadius(function(d, c) Math.sqrt(us_stats[c.code].pop[us_stats.yearIdx(year)])*rScale)
+     .angle(function(d) d /100 * 2 * Math.PI)
+     .fillStyle(function() pv.values(colors)[this.index]);
+
+  // Add the legend background
+  vis.add(pv.Bar)
+     .bottom(3)
+     .left(3)
+     .width(14)
+     .height(46)
+     .strokeStyle(null)
+     .fillStyle("#eee");
+
+  // Add the legend
+  vis.add(pv.Dot)
+     .data(["Obese", "Overweight", "Normal"])
+     .left(10)
+     .bottom(function() this.index * 16 + 10)
+     .strokeStyle(null)
+     .fillStyle(function() pv.values(colors)[2-this.index])
+   .anchor("right")
+     .add(pv.Label)
+
+   vis.render();
+    </script>
+    Symbol: <select onchange="pie = (this.value==1); vis.render()" onkeyup="pie = (this.value==1); vis.render()">
+      <option value="0" selected>Target Graphs</option>
+      <option value="1">Pie Charts</option>
+    </select>
+<div class="caption">
+Each state's population is represented as a "target" with the center circle representing the number of residents with normal Body Mass Index (BMI &lt; 24.9), the middle ring representing the overweight population (25.0 &lt; BMI &lt; 29.9), and the outside ring representing the obese population (30.0 &lt; BMI). The area of the entire target corresponds to the overall population of the state.
+<br/><br/>
+Source: <a class="source"  href="http://apps.nccd.cdc.gov/brfss/page.asp?cat=OB&yr=2008&state=US#OB">National Center for Chronic Disease Prevention and Health Promotion</a>
+</div>
+  </div></div></body>
+</html>

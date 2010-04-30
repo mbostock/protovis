@@ -43,7 +43,18 @@
           .width(860)
           .height(668);
 
-      /* Treemap! */
+      var layout = vis.add(pv.Layout.Treemap)
+          .nodes(pv.dom(flare).root("flare").nodes())
+          .round(true);
+
+      layout.leaf.add(pv.Bar)
+          .fillStyle(pv.Colors.category19().by(function(d) d.parentNode.nodeName))
+          .strokeStyle("#fff")
+          .lineWidth(1);
+
+      layout.label.add(pv.Label);
+
+      /* Treemap!
       vis.add(pv.Bar)
           .extend(pv.Layout.treemap(flare).root("flare").round(true))
           .width(function(n) n.width - 1)
@@ -57,7 +68,7 @@
         .anchor("center").add(pv.Label)
           .textStyle(function() "rgba(0,0,0," + this.fillStyle().opacity + ")")
           .text(function(n) n.keys[n.keys.length - 1]);
-
+      */
       /* Counts the number of matching classes. */
       function count() {
         var nodes = vis.scene[0].children[0].map(function(s) s.data);

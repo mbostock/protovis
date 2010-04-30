@@ -1,0 +1,179 @@
+<html>
+  <head>
+    <title>Choropleth Map</title>
+    <link type="text/css" rel="stylesheet" href="ex.css?3.2"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+    <script type="text/javascript" src="jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="jquery-ui-1.8rc3.custom.min.js"></script>
+    <link type="text/css" href="ui-lightness/jquery-ui-1.8rc3.custom.css" rel="stylesheet"/>
+    <script type="text/javascript" src="centroid.js"></script>
+    <script type="text/javascript" src="us_lowres.js"></script>
+    <script type="text/javascript" src="us_stats.js"></script>
+    <style type="text/css">
+        #fig {
+            width: 800px;
+            height: 600px;
+        }
+
+        #container {
+            width: 640px;
+            height: 10px;
+        }
+
+        #yearSlider {
+            position: absolute;
+            left: 90;
+            right: 90;
+            margin-top: 3;
+        }
+
+        #yearLabel {
+            position: absolute;
+            left: 0;
+            width: 85;
+            text-align: right;
+        }
+
+        #play {
+            position: absolute;
+            right: 50px;
+            cursor: pointer;
+        }
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+	<h3>Choropleth Map of Obesity in the United States (1995 to 2008)</h3>
+    <div id="container">
+      <div id="yearLabel">Year:</div><div id="yearSlider"></div><img id="play" src="play.png" alt="Play" onclick="playClick()">
+    </div>
+    <script type="text/javascript+protovis">
+  $(yearSlider).slider({
+    min: us_stats.minYear, max: us_stats.maxYear, value: us_stats.maxYear, slide: function(e, ui) {
+        //vis.fillStyle(color = color[this.id](ui.value)).render();
+        year = ui.value;
+        updateYear();
+        vis.render();
+      }
+  });
+  var year = 2008;
+
+  var w = 800, h = 400,
+      scale = pv.Geo.scale().domain({lng:-128, lat:24}, {lng:-64, lat:50}).range({x:0, y:0}, {x:w, y:h}),
+      yearsMargin = 90,
+      yearsScale = pv.Scale.linear(us_stats.minYear, us_stats.maxYear).range(yearsMargin+2, w-yearsMargin),
+      col = function(v) {
+          if(v < 17) return "#008038";
+          if(v < 20) return "#A3D396";
+          if(v < 23) return "#FDD2AA";
+          if(v < 26) return "#F7976B";
+          if(v < 29) return "#F26123";
+          if(v < 32) return "#E12816";
+          /* else */ return "#B7161E";
+      };
+
+  // Find the centroid for each state
+  us_lowres.forEach(function(c) {
+      c.code = c.code.toUpperCase();
+      c.centLatLon = centroid(c.borders[0]);
+  });
+
+  function updateYear() {
+      us_lowres.forEach(function(c) c.obese = us_stats[c.code].obese[us_stats.yearIdx(year)]);
+  }
+
+  var timer = undefined;
+  function playClick() {
+      if (timer) {
+          stop();
+      } else {
+          if(year == us_stats.maxYear) year = us_stats.minYear;
+          $(yearSlider).slider('value', year);
+          $(play).attr("src", 'stop.png');
+          updateYear();
+          vis.render();
+          timer = setInterval(function() {
+              year++;
+              if (year >= us_stats.maxYear) {
+                  stop();
+              }
+              $(yearSlider).slider('value', year);
+              updateYear();
+              vis.render();
+          }, 900);
+      }
+  }
+
+  // Stop the animation
+  function stop() {
+      clearInterval(timer);
+      timer = undefined;
+      $(play).attr("src", 'play.png');
+  }
+
+  updateYear();
+
+  // Add the main panel
+  var vis = new pv.Panel()
+      .width(w)
+      .height(h)
+      .top(30)
+      .bottom(20);
+
+  // Add the ticks and labels for the year slider
+  vis.add(pv.Rule)
+     .data(pv.range(us_stats.minYear, us_stats.maxYear+.1))
+     .left(function(d) Math.round(yearsScale(d))-.5)
+     .height(4)
+     .top(-20)
+   .anchor("bottom")
+     .add(pv.Label)
+     .font("normal 13px sans-serif");
+
+  // Add a panel for each state
+  var state = vis.add(pv.Panel)
+      .data(us_lowres);
+
+  // Add a panel for each state land mass
+  state.add(pv.Panel)
+      .data(function(c) c.borders)
+    .add(pv.Line)
+      .data(function(l) l)
+      .left(scale.x)
+      .top(scale.y)
+      .lineWidth(1)
+      .strokeStyle("white")
+      .fillStyle(function(d,l,c) (c.obese>0)?col(c.obese):"#BBB")
+      .title(function(d,l,c) c.name + ': ' + c.obese.toFixed(1) + '%');
+
+  // Add a label with the state code in the middle of every state
+  vis.add(pv.Label)
+     .data(us_lowres)
+     .left(function(c) scale(c.centLatLon).x)
+     .top(function(c) scale(c.centLatLon).y)
+     .text(function(c) c.code)
+     .textAlign("center")
+     .textBaseline("middle");
+
+  // Add the color bars for the color legend
+  vis.add(pv.Bar)
+     .data(pv.range(14,32.1,3))
+     .bottom(function(d) this.index * 15)
+     .height(10)
+     .width(10)
+     .left(5)
+     .fillStyle(function(d) col(14 + 3 * this.index))
+     .lineWidth(null)
+    .anchor("right")
+    .add(pv.Label)
+     .textAlign("left")
+     .text(function(d) d + " - " + (d+3) + "%");
+
+  vis.render();
+    </script>
+<div class="caption">
+Present of population classified as "Obese" (Body Mass Index in excess of 30), by state.  Press the "Play" button to watch the obesity epidemic evolve from 1995 onwards, or drag the slider to a particular year of interest.
+<br/><br/>
+Source: <a class="source" href="http://apps.nccd.cdc.gov/brfss/page.asp?cat=OB&yr=2008&state=US#OB">National Center for Chronic Disease Prevention and Health Promotion</a>
+</div>
+  </div></div></body>
+</html>

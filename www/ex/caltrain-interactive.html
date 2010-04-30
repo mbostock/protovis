@@ -18,13 +18,13 @@
   <body>
     <div>
       Show:
-      <select id="menu" onchange="show = this.value; vis.render();"> 
+      <select onchange="show = this.value; vis.render();">
         <option value="ALL" selected>all trains</option> 
         <option value="N">northbound trains only</option> 
         <option value="S">southbound trains only</option> 
       </select>
       operating on
-      <select id="menu" onchange="oper = this.value; vis.render();"> 
+      <select onchange="oper = this.value; vis.render();"> 
         <option value="Wk" selected>weekdays</option> 
         <option value="Su">Sunday</option> 
         <option value="Sa">Saturday</option> 
@@ -131,6 +131,16 @@
           s2d = pv.Scale.ordinal(stationsNS, function(s) s.name).range(stationsNS, function(s) s.dist),
           y   = pv.Scale.linear(stationsNS, function(s) s.dist).range(h, 0).by(s2d);
 
+      function hourText(d) {
+        var h = d/60 % 24;
+        return (h==0?'MIDNIGHT':(h==12?'NOON':(h<12?h:h-12)));
+      }
+
+      function nowText(now) {
+        var ds = formatNow(now);
+        return (ds.charAt(0)=="0"?ds.substr(1):ds);
+      }
+
       // The root panel, with padding for labels
       var vis = new pv.Panel()
           .width(w)
@@ -141,34 +151,46 @@
           .top(30);
             
       // Add station lines
-      vis.add(pv.Rule)
+      var station = vis.add(pv.Rule)
           .data(stationsNS)
-          .bottom(function(s) Math.round(y(s.name)) - 0.5)
-          .strokeStyle("#ccc")
-        .anchor("left").add(pv.Label)
-          .text(function(s) s.name)
-        .anchor("right").add(pv.Label);
+          .bottom(function(s) y(s.name))
+          .strokeStyle("#ccc");
+
+      station.anchor("left").add(pv.Label)
+          .text(function(s) s.name);
+
+      station.anchor("right").add(pv.Label)
+          .text(function(s) s.name);
  
       // Add hour lines
-      vis.add(pv.Rule)
+      var hour = vis.add(pv.Rule)
           .data(function() pv.range(Math.ceil(showMin/60)*60, showMax+1, 60))
-          .left(function(t) Math.round(x(t)) - 0.5)
-          .strokeStyle("#ddd")
-        .anchor("top").add(pv.Label)
-          .text(function(d) { var h = d/60 % 24; return (h==0?'MIDNIGHT':(h==12?'NOON':(h<12?h:h-12))); })
-        .anchor("bottom").add(pv.Label);
+          .left(x)
+          .strokeStyle("#ddd");
+
+      hour.anchor("top").add(pv.Label)
+          .text(hourText);
+
+      hour.anchor("bottom").add(pv.Label)
+          .text(hourText);
         
       // Add now's line
-      vis.add(pv.Rule)
+      var now = vis.add(pv.Rule)
           .data(function() [new Date()])
-          .left(function(now) Math.round(x(now.getHours()*60 + now.getMinutes() + ((now.getHours()<=minHour)?1440:0))) - 0.5)
-         // .visible(function(now) 0<this.left && this.left<w) // Invisible is off screen
+          .left(function(now) x(now.getHours()*60 + now.getMinutes() + ((now.getHours()<=minHour)?1440:0)))
+          .visible(function(now) {
+             var px = x(now.getHours()*60 + now.getMinutes() + ((now.getHours()<=minHour)?1440:0));
+             return 0 < px && px < w;} // Invisible is off screen
+          )
           .strokeStyle("FF0C0C")
           .top(-20)
-          .bottom(-20)
-        .anchor("top").add(pv.Label)
-          .text(function(now) { var ds = formatNow(now); return (ds.charAt(0)=="0"?ds.substr(1):ds); })
-        .anchor("bottom").add(pv.Label);
+          .bottom(-20);
+
+      now.anchor("top").add(pv.Label)
+          .text(nowText);
+
+      now.anchor("bottom").add(pv.Label)
+          .text(nowText);
       
       // A panel for each train
       var panel = vis.add(pv.Panel)
@@ -219,19 +241,20 @@
       // Time selector slider
           
       // Updaters for time selector
-      function updateMain(r) {
-        showMin = Math.round(Math.max(barX.invert(r.left), minHour*60));
-        showMax = Math.round(Math.min(barX.invert(w - r.right), maxHour*60));
+      function updateMain(d) {
+        showMin = Math.round(Math.max(barX.invert(d.x), minHour*60));
+        showMax = Math.round(Math.min(barX.invert(d.x+d.dx), maxHour*60));
         bar.render();
       }
       
-      function updateLeft(r) {
-        showMin = Math.round(Math.min(Math.max(barX.invert(r.left), minHour*60), showMax-60));
+      function updateLeft(d) {
+        showMin = Math.round(Math.min(Math.max(barX.invert(d.x), minHour*60), showMax-60));
         bar.render();
       }
       
-      function updateRight(r) {
-        showMax = Math.round(Math.max(Math.min(barX.invert(w - r.right), maxHour*60), showMin+60));
+      function updateRight(d) {
+        console.log(d.x);
+        showMax = Math.round(Math.max(Math.min(barX.invert(d.x), maxHour*60), showMin+60));
         bar.render();
       }
       
@@ -262,37 +285,46 @@
           .height(24)
           .strokeStyle("#ddd")
         .anchor("bottom").add(pv.Label)
-          .text(function(d) { var h = d % 24; return (h==0?'MIDNIGHT':(h==12?'NOON':(h<12?h:h-12))); }); 
+          .text(function(d) { var h = d % 24; return (h==0?'MIDNIGHT':(h==12?'NOON':(h<12?h:h-12))); });
        
       // Main bar
       bar.add(pv.Bar)
-          .left(function() barX(showMin))
-          .right(function() w - barX(showMax))
+          .data(function() [{x:barX(showMin), dx:barX(showMax) - barX(showMin)}])
+          .left(function(d) d.x)
+          .width(function(d) d.dx)
           .height(barHeight)
-          .fillStyle("444")
+          .fillStyle("#999")
           .strokeStyle("#444")
-          .cursor("move")
-          .event("mousedown", pv.doDrag(updateMain, mouseUp));
+          .cursor("move");
+          //.event("mousedown", pv.Behavior.drag())
+          //.event("dragend", mouseUp)
+          //.event("drag", updateMain);
 
       // Left dragger
       bar.add(pv.Bar)
-          .left(function() barX(showMin))
-          .width(barHeight)
+          .data([{x:barX(showMin), dx:barHeight}])
+          .left(function(d) d.x)
+          .width(function(d) d.dx)
           .height(barHeight)
           .fillStyle("red")
           .strokeStyle("#444")
           .cursor("e-resize")
-          .event("mousedown", pv.doDrag(updateLeft, mouseUp));
+          .event("mousedown", pv.Behavior.drag())
+          .event("dragend", mouseUp)
+          .event("drag", updateLeft);
      
       // Right dragger
       bar.add(pv.Bar)
-          .right(function() w - barX(showMax))
-          .width(barHeight)
+          .data([{x:barX(showMax)-barHeight, dx:barHeight}])
+          .left(function(d) d.x)
+          .width(function(d) d.dx)
           .height(barHeight)
           .fillStyle("red")
           .strokeStyle("#444")
           .cursor("w-resize")
-          .event("mousedown", pv.doDrag(updateRight, mouseUp));
+          .event("mousedown", pv.Behavior.drag())
+          .event("dragend", mouseUp)
+          .event("drag", updateRight);
 
       ////////////////////////////////////////////////////////
       // Legend

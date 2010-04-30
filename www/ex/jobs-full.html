@@ -2,7 +2,7 @@
   <head>
     <title>Job Voyager</title>
     <link type="text/css" rel="stylesheet" href="ex.css?3.1"/>
-    <script type="text/javascript" src="../protovis-r3.2.0.js"></script>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
     <script type="text/javascript" src="jobs.js"></script>
     <style type="text/css">
       #fig {
@@ -41,10 +41,7 @@
           .key("people")
           .array();
 
-      /*
-       * Use per-year sums to normalize the data, so we can compute a
-       * percentage. Use per-gender+job sums to determine a saturation encoding.
-       */
+      /* Compute per-year and per-job totals. */
       var sumByYear = pv.nest(jobs)
           .key(function(d) d.year)
           .rollup(function(v) pv.sum(v, function(d) d.people)),
@@ -52,82 +49,36 @@
           .key(function(d) d.gender + d.job)
           .rollup(function(v) pv.sum(v, function(d) d.people));
 
-      /* Cache the percentage of people employed per year. */
-      jobs.forEach(function(d) d.percent = 100 * d.people / sumByYear[d.year]);
-
-      /* Sizing parameters and scales. */
       var w = 800,
           h = 480,
-          x = pv.Scale.linear(1850, 2000).range(0, w),
-          y = pv.Scale.linear(0, 100).range(0, h),
-          color = pv.Scale.ordinal(1, 2).range("#33f", "#f33"),
-          alpha = pv.Scale.linear(pv.values(sumByJob)).range(.4, .8);
+          x = pv.Scale.linear(years).range(0, w),
+          y = pv.Scale.linear(0, sumByYear[2000]).range(0, h),
+          c = pv.Scale.ordinal(1, 2).range("#33f", "#f33")
+          a = pv.Scale.linear(pv.values(sumByJob)).range(.4, .8);
 
-      /* The root panel. */
       var vis = new pv.Panel()
           .width(w)
           .height(h)
-          .top(9.5)
-          .left(39.5)
-          .right(20)
-          .bottom(30);
+          .margin(30);
 
-      /* A background bar to reset the search query.  */
-      vis.add(pv.Bar)
-          .fillStyle("white")
-          .event("click", function() search(""))
-          .cursor("pointer");
-
-      /* Y-axis ticks and labels. */
       vis.add(pv.Rule)
-          .data(function() y.ticks())
-          .bottom(y)
-          .strokeStyle(function(y) y ? "#ccc" : "#000")
-        .anchor("left").add(pv.Label)
-          .text(function(d) y.tickFormat(d) + "%");
-
-      /* A stacked area graph. */
-      var area = vis.add(pv.Panel)
-          .data(pv.nest(jobs)
-              .key(function(d) d.gender + d.job)
-              .sortKeys(function(a, b) pv.reverseOrder(a.substring(1), b.substring(1)))
-              .entries())
-          .visible(function(d) test(d.values[0]))
-        .add(pv.Area)
-          .def("alpha", function(d) alpha(sumByJob[d.key]))
-          .data(function(d) d.values)
-          .left(function(d) x(d.year))
-          .bottom(pv.Layout.stack())
-          .height(function(d) y(d.percent))
-          .fillStyle(function(d) color(d.gender).alpha(this.alpha()))
-          .event("mouseover", function(d) this.alpha(1).title(d.job))
-          .event("mouseout", function(d) this.alpha(undefined))
-          .event("click", function(d) search("^" + d.job + "$"))
-          .cursor("pointer")
-        .parent;
-
-      /* The label's datum is the biggest span in the corresponding area. */
-      vis.add(pv.Panel).extend(area)
-        .add(pv.Label)
-          .data(function(d) [area.scene[this.parent.index].children[0]
-              [pv.max.index(d.values, function(d) d.people)]])
-          .visible(function(c) c.height > 1)
-          .left(function(c) c.left)
-          .bottom(function(c) c.bottom + c.height / 2)
-          .textBaseline("middle")
-          .textAlign(function(c) (c.right < 100) ? "right"
-              : ((c.left < 100) ? "left" : "center"))
-          .textStyle(function(c) "rgba(0, 0, 0, " + (Math.sqrt(c.height) / 7) + ")")
-          .font(function(c) Math.round(5 + Math.sqrt(c.height)) + "px sans-serif")
-          .text(function(c, job) job.key.substring(1));
-
-      /* X-axis ticks and labels. */
-      vis.add(pv.Rule)
-          .data(pv.range(1850, 2010, 10))
+          .data(x.ticks())
           .left(x)
-          .bottom(-6)
-          .height(5)
+          .strokeStyle("#ccc")
         .anchor("bottom").add(pv.Label);
+
+      vis.add(pv.Rule)
+          .bottom(0);
+
+      var area = vis.add(pv.Layout.Stack)
+          .layers(pv.nest(jobs).key(function(d) d.gender + d.job).entries())
+          .values(function(d) d.values)
+          .x(function(d) x(d.year))
+          .y(function(d) y(d.people))
+          .order("reverse")
+          .offset("expand")
+        .layer.add(pv.Area)
+          .fillStyle(function(d, p) c(d.gender).alpha(a(sumByJob[p.key])));
 
       /* Update the query regular expression when text is entered. */
       function search(text) {
