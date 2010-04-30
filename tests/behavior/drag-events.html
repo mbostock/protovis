@@ -1,0 +1,47 @@
+<html>
+  <head>
+    <title>Drag</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var w = 400,
+    h = 400;
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .margin(12)
+    .strokeStyle("#ccc")
+    .fillStyle("#fff");
+
+vis.add(pv.Dot)
+    .data([{x:100, y:100}])
+    .left(function(d) d.x)
+    .top(function(d) d.y)
+    .radius(10)
+    .fillStyle("#aec7e8")
+    .cursor("move")
+    .event("mousedown", pv.Behavior.drag())
+    .event("dragstart", function() {
+      var out = document.getElementById('out');
+      out.innerHTML = "Start";
+    })
+    .event("drag", function(d) {
+      var out = document.getElementById('out');
+      out.innerHTML = "drag(" + d.x + ", " + d.y + ")<br/>" + out.innerHTML;
+    })
+    .event("dragend", function() {
+      var out = document.getElementById('out');
+      out.innerHTML = "End<br/>" + out.innerHTML;
+    });
+
+vis.render();
+
+    </script>
+  <div id="out">
+    Drag events
+  </div>
+  </body>
+</html>

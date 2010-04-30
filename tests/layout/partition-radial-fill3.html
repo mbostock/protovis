@@ -18,7 +18,10 @@ var layout = vis.add(pv.Layout.Partition.Fill)
     .orient("radial");
 
 layout.node.add(pv.Wedge);
-layout.label.add(pv.Label);
+
+layout.label.add(pv.Label)
+    .visible(function(d) d.angle * d.innerRadius >= 7); // Use Maths to make sure we have
+                                                        // at least 7 pixels for the label 
 
 vis.render();
 
