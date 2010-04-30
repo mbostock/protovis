@@ -1,5 +1,6 @@
 /**
  * @class
+ * @extends pv.Scale
  */
 pv.Scale.quantile = function() {
   var n = -1, // number of quantiles

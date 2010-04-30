@@ -1,36 +1,35 @@
 /**
  * Returns an abstract quantitative scale for the specified domain. The
- * arguments to this constructor are optional, and equivalent to calling {@link
- * #domain}.
+ * arguments to this constructor are optional, and equivalent to calling
+ * {@link #domain}.
  *
- * @class Represents an abstract quantitative scale. <style
- * type="text/css">sub{line-height:0}</style> A quantitative scale represents a
- * 1-dimensional transformation from a numeric domain of input data
- * [<i>d<sub>0</sub></i>, <i>d<sub>1</sub></i>] to a numeric range of pixels
- * [<i>r<sub>0</sub></i>, <i>r<sub>1</sub></i>]. In addition to readability,
- * scales offer several useful features:
+ * @class Represents an abstract quantitative scale; a function that performs a
+ * numeric transformation. <style type="text/css">sub{line-height:0}</style> A
+ * quantitative scale represents a 1-dimensional transformation from a numeric
+ * domain of input data [<i>d<sub>0</sub></i>, <i>d<sub>1</sub></i>] to a
+ * numeric range of pixels [<i>r<sub>0</sub></i>, <i>r<sub>1</sub></i>]. In
+ * addition to readability, scales offer several useful features:
  *
- * <p>1. The range can be expressed in colors, rather than pixels. Changing the
- * example above to
+ * <p>1. The range can be expressed in colors, rather than pixels. For example:
  *
- * <pre>.fillStyle(pv.Scale.linear(0, 100).range("red", "green"))</pre>
+ * <pre>    .fillStyle(pv.Scale.linear(0, 100).range("red", "green"))</pre>
  *
- * will cause it to fill the marks "red" on an input value of 0, "green" on an
- * input value of 100, and some color in-between for intermediate values.
+ * will fill the marks "red" on an input value of 0, "green" on an input value
+ * of 100, and some color in-between for intermediate values.
  *
  * <p>2. The domain and range can be subdivided for a non-uniform
  * transformation. For example, you may want a diverging color scale that is
  * increasingly red for negative values, and increasingly green for positive
  * values:
  *
- * <pre>.fillStyle(pv.Scale.linear(-1, 0, 1).range("red", "white", "green"))</pre>
+ * <pre>    .fillStyle(pv.Scale.linear(-1, 0, 1).range("red", "white", "green"))</pre>
  *
  * The domain can be specified as a series of <i>n</i> monotonically-increasing
  * values; the range must also be specified as <i>n</i> values, resulting in
  * <i>n - 1</i> contiguous linear scales.
  *
- * <p>3. Quantitative scales can be inverted for interaction. The {@link
- * #invert} method takes a value in the output range, and returns the
+ * <p>3. Quantitative scales can be inverted for interaction. The
+ * {@link #invert} method takes a value in the output range, and returns the
  * corresponding value in the input domain. This is frequently used to convert
  * the mouse location (see {@link pv.Mark#mouse}) to a value in the input
  * domain. Note that inversion is only supported for numeric ranges, and not
@@ -47,7 +46,10 @@
  * up to even numbers.
  *
  * @param {number...} domain... domain values.
- * @returns {pv.Scale.quantitative} a quantitative scale.
+ * @see pv.Scale.linear
+ * @see pv.Scale.log
+ * @see pv.Scale.root
+ * @extends pv.Scale
  */
 pv.Scale.quantitative = function() {
   var d = [0, 1], // default domain
@@ -92,7 +94,7 @@ pv.Scale.quantitative = function() {
    * non-uniform scales, multiple values can be specified. Values can be derived
    * from data using {@link pv.min} and {@link pv.max}. For example:
    *
-   * <pre>.domain(0, pv.max(array))</pre>
+   * <pre>    .domain(0, pv.max(array))</pre>
    *
    * An alternative method for deriving minimum and maximum values from data
    * follows.
@@ -104,13 +106,13 @@ pv.Scale.quantitative = function() {
    * data, followed by zero, one or two accessor functions. For example, if the
    * array of data is just an array of numbers:
    *
-   * <pre>.domain(array)</pre>
+   * <pre>    .domain(array)</pre>
    *
    * On the other hand, if the array elements are objects representing stock
    * values per day, and the domain should consider the stock's daily low and
    * daily high:
    *
-   * <pre>.domain(array, function(d) d.low, function(d) d.high)</pre>
+   * <pre>    .domain(array, function(d) d.low, function(d) d.high)</pre>
    *
    * The first method of setting the domain is preferred because it is more
    * explicit; setting the domain using this second method should be used only
@@ -159,7 +161,7 @@ pv.Scale.quantitative = function() {
    * equivalent strings. For a diverging scale, or other subdivided non-uniform
    * scales, multiple values can be specified. For example:
    *
-   * <pre>.range("red", "white", "green")</pre>
+   * <pre>    .range("red", "white", "green")</pre>
    *
    * <p>Currently, only numbers and colors are supported as range values. The
    * number of range values must exactly match the number of domain values, or
@@ -407,11 +409,11 @@ pv.Scale.quantitative = function() {
    * that have a <tt>score</tt> attribute with the domain [0, 1], the height
    * property could be specified as:
    *
-   * <pre>.height(pv.Scale.linear().range(0, 480).by(function(d) d.score))</pre>
+   * <pre>    .height(pv.Scale.linear().range(0, 480).by(function(d) d.score))</pre>
    *
    * This is equivalent to:
    *
-   * <pre>.height(function(d) d.score * 480)</pre>
+   * <pre>    .height(function(d) d.score * 480)</pre>
    *
    * This method should be used judiciously; it is typically more clear to
    * invoke the scale directly, passing in the value to be scaled.

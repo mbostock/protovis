@@ -9,26 +9,26 @@
  * might map a domain of species ["setosa", "versicolor", "virginica"] to colors
  * ["red", "green", "blue"]. Thus, saying
  *
- * <pre>.fillStyle(function(d) {
- *     switch (d.species) {
- *       case "setosa": return "red";
- *       case "versicolor": return "green";
- *       case "virginica": return "blue";
- *     }
- *   })</pre>
+ * <pre>    .fillStyle(function(d) {
+ *         switch (d.species) {
+ *           case "setosa": return "red";
+ *           case "versicolor": return "green";
+ *           case "virginica": return "blue";
+ *         }
+ *       })</pre>
  *
  * is equivalent to
  *
- * <pre>.fillStyle(pv.Scale.ordinal("setosa", "versicolor", "virginica")
- *     .range("red", "green", "blue")
- *     .by(function(d) d.species))</pre>
+ * <pre>    .fillStyle(pv.Scale.ordinal("setosa", "versicolor", "virginica")
+ *         .range("red", "green", "blue")
+ *         .by(function(d) d.species))</pre>
  *
  * If the mapping from species to color does not need to be specified
  * explicitly, the domain can be omitted. In this case it will be inferred
  * lazily from the data:
  *
- * <pre>.fillStyle(pv.colors("red", "green", "blue")
- *     .by(function(d) d.species))</pre>
+ * <pre>    .fillStyle(pv.colors("red", "green", "blue")
+ *         .by(function(d) d.species))</pre>
  *
  * When the domain is inferred, the first time the scale is invoked, the first
  * element from the range will be returned. Subsequent calls with unique values
@@ -43,15 +43,15 @@
  * <tt>states</tt> is an array of the fifty U.S. state names, the state name can
  * be encoded in the left position:
  *
- * <pre>.left(pv.Scale.ordinal(states)
- *     .split(0, 640)
- *     .by(function(d) d.state))</pre>
+ * <pre>    .left(pv.Scale.ordinal(states)
+ *         .split(0, 640)
+ *         .by(function(d) d.state))</pre>
  *
  * <p>N.B.: ordinal scales are not invertible (at least not yet), since the
  * domain and range and discontinuous. A workaround is to use a linear scale.
  *
  * @param {...} domain... domain values.
- * @returns {pv.Scale.ordinal} an ordinal scale.
+ * @extends pv.Scale
  * @see pv.colors
  */
 pv.Scale.ordinal = function() {
