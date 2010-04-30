@@ -612,7 +612,7 @@ pv.Mark.prototype.anchor = function(name) {
         switch (this.name()) {
           case "bottom":
           case "top":
-          case "center": return s.left + (this.properties.width ? 0 : w / 2);
+          case "center": return s.left + w / 2;
           case "left": return null;
         }
         return s.left + w;
@@ -622,7 +622,7 @@ pv.Mark.prototype.anchor = function(name) {
         switch (this.name()) {
           case "left":
           case "right":
-          case "center": return s.top + (this.properties.height ? 0 : h / 2);
+          case "center": return s.top + h / 2;
           case "top": return null;
         }
         return s.top + h;
