@@ -1,7 +1,7 @@
 /**
  * Constructs a new, empty network layout. Layouts are not typically constructed
  * directly; instead, they are added to an existing panel via
- * {@link pv.Mark.#add}.
+ * {@link pv.Mark#add}.
  *
  * @class Represents an abstract layout for network diagrams. This class
  * provides the basic structure for both node-link diagrams (such as
@@ -68,6 +68,11 @@
  * layout, such as changing the color of a mark on mouseover, do not need to
  * reset the layout.
  *
+ * @see pv.Layout.Hierarchy
+ * @see pv.Layout.Force
+ * @see pv.Layout.Matrix
+ * @see pv.Layout.Arc
+ * @see pv.Layout.Rollup
  * @extends pv.Layout
  */
 pv.Layout.Network = function() {

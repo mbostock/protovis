@@ -1,7 +1,7 @@
 /**
  * Constructs a new, empty hierarchy layout. Layouts are not typically
  * constructed directly; instead, they are added to an existing panel via
- * {@link pv.Mark.#add}.
+ * {@link pv.Mark#add}.
  *
  * @class Represents an abstract layout for hierarchy diagrams. This class is a
  * specialization of {@link pv.Layout.Network}, providing the basic structure
@@ -21,6 +21,15 @@
  * operator also provides an easy way to sort nodes before passing them to the
  * layout.
  *
+ * <p>For more details on how to use this layout, see
+ * {@link pv.Layout.Network}.
+ *
+ * @see pv.Layout.Cluster
+ * @see pv.Layout.Partition
+ * @see pv.Layout.Tree
+ * @see pv.Layout.Treemap
+ * @see pv.Layout.Indent
+ * @see pv.Layout.Pack
  * @extends pv.Layout.Network
  */
 pv.Layout.Hierarchy = function() {

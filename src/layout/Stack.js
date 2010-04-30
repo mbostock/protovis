@@ -1,7 +1,7 @@
 /**
  * Constructs a new, empty stack layout. Layouts are not typically constructed
  * directly; instead, they are added to an existing panel via
- * {@link pv.Mark.#add}.
+ * {@link pv.Mark#add}.
  *
  * @class Represents a layout for stacked visualizations, ranging from simple
  * stacked bar charts to more elaborate "streamgraphs" composed of stacked

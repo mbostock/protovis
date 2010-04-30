@@ -1,7 +1,7 @@
 /**
  * Constructs a new, empty arc layout. Layouts are not typically constructed
  * directly; instead, they are added to an existing panel via
- * {@link pv.Mark.#add}.
+ * {@link pv.Mark#add}.
  *
  * @class Represents a layout for arc diagrams. An arc diagram is a network
  * visualization with a one-dimensional layout of nodes, using circular arcs to

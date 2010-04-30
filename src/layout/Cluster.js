@@ -1,7 +1,25 @@
 /**
- * @class Cluster tree layout.
+ * Constructs a new, empty cluster layout. Layouts are not typically
+ * constructed directly; instead, they are added to an existing panel via
+ * {@link pv.Mark#add}.
+ *
+ * @class Represents a hierarchical layout using the cluster (or dendrogram)
+ * algorithm. This layout provides both node-link and space-filling
+ * implementations of cluster diagrams. In many ways it is similar to
+ * {@link pv.Layout.Partition}, except that leaf nodes are positioned at maximum
+ * depth, and the depth of internal nodes is based on their distance from their
+ * deepest descendant, rather than their distance from the root.
+ *
+ * <p>The cluster layout supports a "group" property, which if true causes
+ * siblings to be positioned closer together than unrelated nodes at the same
+ * depth. Unlike the partition layout, this layout does not support dynamic
+ * sizing for leaf nodes; all leaf nodes are the same size.
+ *
+ * <p>For more details on how to use this layout, see
+ * {@link pv.Layout.Hierarchy}.
+ *
+ * @see pv.Layout.Cluster.Fill
  * @extends pv.Layout.Hierarchy
- * @constructor
  */
 pv.Layout.Cluster = function() {
   pv.Layout.Hierarchy.call(this);
@@ -27,21 +45,49 @@ pv.Layout.Cluster.prototype = pv.extend(pv.Layout.Hierarchy)
     .property("outerRadius", Number);
 
 /**
+ * The group parameter; defaults to 0, disabling grouping of siblings. If this
+ * parameter is set to a positive number (or true, which is equivalent to 1),
+ * then additional space will be allotted between sibling groups. In other
+ * words, siblings (nodes that share the same parent) will be positioned more
+ * closely than nodes at the same depth that do not share a parent.
+ *
  * @type number
  * @name pv.Layout.Cluster.prototype.group
  */
 
 /**
+ * The orientation. The default orientation is "top", which means that the root
+ * node is placed on the top edge, leaf nodes appear on the bottom edge, and
+ * internal nodes are in-between. The following orientations are supported:<ul>
+ *
+ * <li>left - left-to-right.
+ * <li>right - right-to-left.
+ * <li>top - top-to-bottom.
+ * <li>bottom - bottom-to-top.
+ * <li>radial - radially, with the root at the center.</ul>
+ *
  * @type string
  * @name pv.Layout.Cluster.prototype.orient
  */
 
 /**
+ * The inner radius; defaults to 0. This property applies only to radial
+ * orientations, and can be used to compress the layout radially. Note that for
+ * the node-link implementation, the root node is always at the center,
+ * regardless of the value of this property; this property only affects internal
+ * and leaf nodes. For the space-filling implementation, a non-zero value of
+ * this property will result in the root node represented as a ring rather than
+ * a circle.
+ *
  * @type number
  * @name pv.Layout.Cluster.prototype.innerRadius
  */
 
 /**
+ * The outer radius; defaults to fill the containing panel, based on the height
+ * and width of the layout. If the layout has no height and width specified, it
+ * will extend to fill the enclosing panel.
+ *
  * @type number
  * @name pv.Layout.Cluster.prototype.outerRadius
  */
@@ -117,9 +163,27 @@ pv.Layout.Cluster.prototype.buildImplied = function(s) {
 };
 
 /**
- * @class A variant of cluster layout that is space-filling.
+ * Constructs a new, empty space-filling cluster layout. Layouts are not
+ * typically constructed directly; instead, they are added to an existing panel
+ * via {@link pv.Mark#add}.
+ *
+ * @class A variant of cluster layout that is space-filling. The meaning of the
+ * exported mark prototypes changes slightly in the space-filling
+ * implementation:<ul>
+ *
+ * <li><tt>node</tt> - for rendering nodes; typically a {@link pv.Bar} for
+ * non-radial orientations, and a {@link pv.Wedge} for radial orientations.
+ *
+ * <p><li><tt>link</tt> - unsupported; undefined. Links are encoded implicitly
+ * in the arrangement of the space-filling nodes.
+ *
+ * <p><li><tt>label</tt> - for rendering node labels; typically a
+ * {@link pv.Label}.
+ *
+ * </ul>For more details on how to use this layout, see
+ * {@link pv.Layout.Cluster}.
+ *
  * @extends pv.Layout.Cluster
- * @constructor
  */
 pv.Layout.Cluster.Fill = function() {
   pv.Layout.Cluster.call(this);

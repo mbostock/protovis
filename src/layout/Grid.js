@@ -1,7 +1,7 @@
 /**
  * Constructs a new, empty grid layout. Layouts are not typically constructed
  * directly; instead, they are added to an existing panel via
- * {@link pv.Mark.#add}.
+ * {@link pv.Mark#add}.
  *
  * @class Represents a grid layout with regularly-sized rows and columns. The
  * number of rows and columns are determined from their respective

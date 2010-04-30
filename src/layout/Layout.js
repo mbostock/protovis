@@ -1,7 +1,7 @@
 /**
  * Constructs a new, empty layout with default properties. Layouts are not
  * typically constructed directly; instead, a concrete subclass is added to an
- * existing panel via {@link pv.Mark.#add}.
+ * existing panel via {@link pv.Mark#add}.
  *
  * @class Represents an abstract layout, encapsulating a visualization technique
  * such as a streamgraph or treemap. Layouts are themselves containers,
