@@ -36,7 +36,8 @@ layout.node.add(pv.Dot)
     .fillStyle(function(d) d.fix ? "brown" : color(d))
     .strokeStyle(function() this.fillStyle().darker())
     .title(function(d) d.nodeName)
-    .event("mousedown", pv.Behavior.drag());
+    .event("mousedown", pv.Behavior.drag())
+    .event("drag", layout);
 
 vis.render();
 

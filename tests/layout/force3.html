@@ -31,7 +31,8 @@ layout.node.add(pv.Dot)
     .title(function(d) d.nodeName)
     .size(function(d) (d.nodeValue / 100) || 10)
     .fillStyle(function(d) d.fix ? "orange" : (d.firstChild ? "steelblue" : "white"))
-    .event("mousedown", pv.Behavior.drag());
+    .event("mousedown", pv.Behavior.drag())
+    .event("drag", layout);
 
 vis.render();
 

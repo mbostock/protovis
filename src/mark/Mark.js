@@ -1113,7 +1113,7 @@ pv.Mark.prototype.mouse = function() {
  * @returns {pv.Mark} this.
  */
 pv.Mark.prototype.event = function(type, handler) {
-  this.$handlers[type] = handler;
+  this.$handlers[type] = pv.functor(handler);
   return this;
 };
 

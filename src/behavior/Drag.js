@@ -20,6 +20,7 @@ pv.Behavior.drag = function() {
       x: this.parent.width() - (d.dx || 0),
       y: this.parent.height() - (d.dy || 0)
     };
+    scene.mark.context(scene, index, function() { this.render(); });
     pv.Mark.dispatch("dragstart", scene, index);
   }
 
@@ -30,7 +31,7 @@ pv.Behavior.drag = function() {
         var m = this.mouse();
         p.x = p.fix.x = Math.max(0, Math.min(v1.x + m.x, max.x));
         p.y = p.fix.y = Math.max(0, Math.min(v1.y + m.y, max.y));
-        this.parent.render();
+        this.render();
       });
     pv.Mark.dispatch("drag", scene, index);
   }
@@ -39,7 +40,7 @@ pv.Behavior.drag = function() {
   function mouseup() {
     if (!scene) return;
     p.fix = null;
-    scene.mark.context(scene, index, function() { this.parent.render(); });
+    scene.mark.context(scene, index, function() { this.render(); });
     pv.Mark.dispatch("dragend", scene, index);
     scene = null;
   }
