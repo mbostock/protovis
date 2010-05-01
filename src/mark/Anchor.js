@@ -17,7 +17,22 @@
  * the appropriate position properties (top and left), as well as text-rendering
  * properties for convenience (textAlign and textBaseline).
  *
+ * <p>Note that anchors do not <i>inherit</i> from their targets; the positional
+ * properties are copied from the scene graph, which guarantees that the anchors
+ * are positioned correctly, even if the positional properties are not defined
+ * deterministically. (In addition, it also improves performance by avoiding
+ * re-evaluating expensive properties.) If you want the anchor to inherit from
+ * the target, use {@link pv.Mark#extend} before adding. For example:
+ *
+ * <pre>bar.anchor("top").extend(bar).add(pv.Label);</pre>
+ *
+ * The anchor defines it's own positional properties, but other properties (such
+ * as the title property, say) can be inherited using the above idiom. Also note
+ * that you can override positional properties in the anchor for custom
+ * behavior.
+ *
  * @extends pv.Mark
+ * @param {pv.Mark} target the anchor target.
  */
 pv.Anchor = function(target) {
   pv.Mark.call(this);
@@ -46,6 +61,18 @@ pv.Anchor.prototype = pv.extend(pv.Mark)
  * @name pv.Anchor.prototype.name
  */
 
+/**
+ * Returns the anchor target of this mark, if it is derived from an anchor;
+ * otherwise returns null. For example, if a label is derived from a bar anchor,
+ *
+ * <pre>bar.anchor("top").add(pv.Label);</pre>
+ *
+ * then property functions on the label can refer to the bar via the
+ * <tt>anchorTarget</tt> method. This method is also useful for mark types
+ * defining properties on custom anchors.
+ *
+ * @returns {pv.Mark} the anchor target of this mark; possibly null.
+ */
 pv.Anchor.prototype.anchorTarget = function() {
   return this.target;
 };

@@ -88,7 +88,7 @@ pv.Panel.prototype.type = "panel";
  *
  * @type string
  * @name pv.Panel.prototype.overflow
- * @see http://www.w3.org/TR/CSS2/visufx.html#overflow
+ * @see <a href="http://www.w3.org/TR/CSS2/visufx.html#overflow">CSS2</a>
  */
 
 /**
@@ -99,7 +99,7 @@ pv.Panel.prototype.type = "panel";
  *
  * @type pv.Transform
  * @name pv.Panel.prototype.transform
- * @see pv.Mark.prototype.scale
+ * @see pv.Mark#scale
  */
 
 /**

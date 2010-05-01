@@ -63,6 +63,11 @@ pv.Layout.Arc.prototype = pv.extend(pv.Layout.Network)
     .property("orient", String)
     .property("directed", Boolean);
 
+/**
+ * Default properties for arc layouts. By default, the orientation is "bottom".
+ *
+ * @type pv.Layout.Arc
+ */
 pv.Layout.Arc.prototype.defaults = new pv.Layout.Arc()
     .extend(pv.Layout.Network.prototype.defaults)
     .orient("bottom");

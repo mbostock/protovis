@@ -142,58 +142,111 @@ pv.Layout.Network = function() {
 };
 
 /**
- * @class Represents a node in a network layout.
+ * @class Represents a node in a network layout. There is no explicit
+ * constructor; this class merely serves to document the attributes that are
+ * used on nodes in network layouts. (Note that hierarchical nodes place
+ * additional requirements on node representation, vis {@link pv.Dom.Node}.)
+ *
+ * @see pv.Layout.Network
  * @name pv.Layout.Network.Node
  */
 
 /**
+ * The node index, zero-based. This attribute is populated automatically based
+ * on the index in the array returned by the <tt>nodes</tt> property.
+ *
  * @type number
  * @name pv.Layout.Network.Node.prototype.index
  */
 
 /**
+ * The link degree; the sum of link values for all incoming and outgoing links.
+ * This attribute is populated automatically.
+ *
  * @type number
  * @name pv.Layout.Network.Node.prototype.linkDegree
  */
 
 /**
+ * The node name; optional. If present, this attribute will be used to provide
+ * the text for node labels. If not present, the label text will fallback to the
+ * <tt>nodeValue</tt> attribute.
+ *
  * @type string
  * @name pv.Layout.Network.Node.prototype.nodeName
  */
 
 /**
+ * The node value; optional. If present, and no <tt>nodeName</tt> attribute is
+ * present, the node value will be used as the label text. This attribute is
+ * also automatically populated if the nodes are specified as an array of
+ * primitives, such as strings or numbers.
+ *
  * @type object
  * @name pv.Layout.Network.Node.prototype.nodeValue
  */
 
 /**
- * @class Represents a link in a network layout.
+ * @class Represents a link in a network layout. There is no explicit
+ * constructor; this class merely serves to document the attributes that are
+ * used on links in network layouts. For hierarchical layouts, this class is
+ * used to represent the parent-child links.
+ *
+ * @see pv.Layout.Network
  * @name pv.Layout.Network.Link
  */
 
 /**
+ * The link value, or weight; optional. If not specified (or not a number), the
+ * default value of 1 is used.
+ *
  * @type number
  * @name pv.Layout.Network.Link.prototype.linkValue
  */
 
 /**
- * @type number
- * @name pv.Layout.Network.Link.prototype.source
- */
-
-/**
- * @type number
- * @name pv.Layout.Network.Link.prototype.target
- */
-
-/**
+ * The link's source node. If not set, this value will be derived from the
+ * <tt>source</tt> attribute index.
+ *
  * @type pv.Layout.Network.Node
  * @name pv.Layout.Network.Link.prototype.sourceNode
  */
 
 /**
+ * The link's target node. If not set, this value will be derived from the
+ * <tt>target</tt> attribute index.
+ *
  * @type pv.Layout.Network.Node
  * @name pv.Layout.Network.Link.prototype.targetNode
+ */
+
+/**
+ * Alias for <tt>sourceNode</tt>, as expressed by the index of the source node.
+ * This attribute is not populated automatically, but may be used as a more
+ * convenient identification of the link's source, for example in a static JSON
+ * representation.
+ *
+ * @type number
+ * @name pv.Layout.Network.Link.prototype.source
+ */
+
+/**
+ * Alias for <tt>targetNode</tt>, as expressed by the index of the target node.
+ * This attribute is not populated automatically, but may be used as a more
+ * convenient identification of the link's target, for example in a static JSON
+ * representation.
+ *
+ * @type number
+ * @name pv.Layout.Network.Link.prototype.target
+ */
+
+/**
+ * Alias for <tt>linkValue</tt>. This attribute is not populated automatically,
+ * but may be used instead of the <tt>linkValue</tt> attribute when specifying
+ * links.
+ *
+ * @type number
+ * @name pv.Layout.Network.Link.prototype.value
  */
 
 /** @private Transform nodes and links on cast. */

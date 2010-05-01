@@ -275,48 +275,16 @@ pv.Mark.prototype.index = -1;
  * to a panel, the scale affects only the child marks, not the panel itself.
  *
  * @type number
- * @see pv.Panel.prototype.transform
+ * @see pv.Panel#transform
  */
 pv.Mark.prototype.scale = 1;
 
 /**
- * The scene graph. The scene graph is an array of objects; each object (or
- * "node") corresponds to an instance of this mark and an element in the data
- * array. The scene graph can be traversed to lookup previously-evaluated
+ * @private The scene graph. The scene graph is an array of objects; each object
+ * (or "node") corresponds to an instance of this mark and an element in the
+ * data array. The scene graph can be traversed to lookup previously-evaluated
  * properties.
  *
- * <p>For instance, consider a stacked area chart. The bottom property of the
- * area can be defined using the <i>cousin</i> instance, which is the current
- * area instance in the previous instantiation of the parent panel. In this
- * sample code,
- *
- * <pre>new pv.Panel()
- *     .width(150).height(150)
- *   .add(pv.Panel)
- *     .data([[1, 1.2, 1.7, 1.5, 1.7],
- *            [.5, 1, .8, 1.1, 1.3],
- *            [.2, .5, .8, .9, 1]])
- *   .add(pv.Area)
- *     .data(function(d) d)
- *     .bottom(function() {
- *         var c = this.cousin();
- *         return c ? (c.bottom + c.height) : 0;
- *       })
- *     .height(function(d) d * 40)
- *     .left(function() this.index * 35)
- *   .root.render();</pre>
- *
- * the bottom property is computed based on the upper edge of the corresponding
- * datum in the previous series. The area's parent panel is instantiated once
- * per series, so the cousin refers to the previous (below) area mark. (Note
- * that the position of the upper edge is not the same as the top property,
- * which refers to the top margin: the distance from the top edge of the panel
- * to the top edge of the mark.)
- *
- * @see #first
- * @see #last
- * @see #sibling
- * @see #cousin
  * @name pv.Mark.prototype.scene
  */
 
@@ -489,43 +457,17 @@ pv.Mark.prototype.add = function(type) {
 };
 
 /**
- * Defines a local variable on this mark. Local variables are initialized once
- * per mark (i.e., per parent panel instance), and can be used to store local
- * state for the mark. Here are a few reasons you might want to use
- * <tt>def</tt>:
+ * Defines a custom property on this mark. Custom properties are currently
+ * fixed, in that they are initialized once per mark set (i.e., per parent panel
+ * instance). Custom properties can be used to store local state for the mark,
+ * such as data needed by other properties (e.g., a custom scale) or interaction
+ * state.
  *
- * <p>1. To store local state. For example, say you were visualizing employment
- * statistics, and your root panel had an array of occupations. In a child
- * panel, you might want to initialize a local scale, and reference it from a
- * property function:
- *
- * <pre>.def("y", function(d) pv.Scale.linear(0, pv.max(d.values)).range(0, h))
- * .height(function(d) this.y()(d))</pre>
- *
- * In this example, <tt>this.y()</tt> returns the defined local scale. We then
- * invoke the scale function, passing in the datum, to compute the height.  Note
- * that defs are similar to fixed properties: they are only evaluated once per
- * parent panel, and <tt>this.y()</tt> returns a function, rather than
- * automatically evaluating this function as a property.
- *
- * <p>2. To store temporary state for interaction. Say you have an array of
- * bars, and you want to color the bar differently if the mouse is over it. Use
- * <tt>def</tt> to define a local variable, and event handlers to override this
- * variable interactively:
- *
- * <pre>.def("i", -1)
- * .event("mouseover", function() this.i(this.index))
- * .event("mouseout", function() this.i(-1))
- * .fillStyle(function() this.i() == this.index ? "red" : "blue")</pre>
- *
- * Notice that <tt>this.i()</tt> can be used both to set the value of <i>i</i>
- * (when an argument is specified), and to get the value of <i>i</i> (when no
- * arguments are specified). In this way, it's like other property methods.
- *
- * <p>3. To specify fixed properties efficiently. Sometimes, the value of a
- * property may be locally a constant, but dependent on parent panel data which
- * is variable. In this scenario, you can use <tt>def</tt> to define a property;
- * it will only get computed once per mark, rather than once per datum.
+ * <p>WARNING We plan on changing this feature in a future release to define
+ * standard properties, as opposed to <i>fixed</i> properties that behave
+ * idiosyncratically within event handlers. Furthermore, we recommend storing
+ * state in an external data structure, rather than tying it to the
+ * visualization specification as with defs.
  *
  * @param {string} name the name of the local variable.
  * @param {function} [v] an optional initializer; may be a constant or a
@@ -681,9 +623,9 @@ pv.Mark.prototype.margin = function(n) {
 };
 
 /**
- * Returns the current instance of this mark in the scene graph. This is
- * typically equivalent to <tt>this.scene[this.index]</tt>, however if the scene
- * or index is unset, the default instance of the mark is returned. If no
+ * @private Returns the current instance of this mark in the scene graph. This
+ * is typically equivalent to <tt>this.scene[this.index]</tt>, however if the
+ * scene or index is unset, the default instance of the mark is returned. If no
  * default is set, the default is the last instance. Similarly, if the scene or
  * index of the parent panel is unset, the default instance of this mark in the
  * last instance of the enclosing panel is returned, and so on.
@@ -697,9 +639,9 @@ pv.Mark.prototype.instance = function(defaultIndex) {
 };
 
 /**
- * Returns the first instance of this mark in the scene graph. This method can
- * only be called when the mark is bound to the scene graph (for example, from
- * an event handler, or within a property function).
+ * @private Returns the first instance of this mark in the scene graph. This
+ * method can only be called when the mark is bound to the scene graph (for
+ * example, from an event handler, or within a property function).
  *
  * @returns a node in the scene graph.
  */
@@ -708,11 +650,11 @@ pv.Mark.prototype.first = function() {
 };
 
 /**
- * Returns the last instance of this mark in the scene graph. This method can
- * only be called when the mark is bound to the scene graph (for example, from
- * an event handler, or within a property function). In addition, note that mark
- * instances are built sequentially, so the last instance of this mark may not
- * yet be constructed.
+ * @private Returns the last instance of this mark in the scene graph. This
+ * method can only be called when the mark is bound to the scene graph (for
+ * example, from an event handler, or within a property function). In addition,
+ * note that mark instances are built sequentially, so the last instance of this
+ * mark may not yet be constructed.
  *
  * @returns a node in the scene graph.
  */
@@ -721,8 +663,8 @@ pv.Mark.prototype.last = function() {
 };
 
 /**
- * Returns the previous instance of this mark in the scene graph, or null if
- * this is the first instance.
+ * @private Returns the previous instance of this mark in the scene graph, or
+ * null if this is the first instance.
  *
  * @returns a node in the scene graph, or null.
  */
@@ -731,12 +673,10 @@ pv.Mark.prototype.sibling = function() {
 };
 
 /**
- * Returns the current instance in the scene graph of this mark, in the previous
- * instance of the enclosing parent panel. May return null if this instance
- * could not be found. See the {@link pv.Layout.stack} function for an example
- * property function using cousin.
+ * @private Returns the current instance in the scene graph of this mark, in the
+ * previous instance of the enclosing parent panel. May return null if this
+ * instance could not be found.
  *
- * @see pv.Layout.stack
  * @returns a node in the scene graph, or null.
  */
 pv.Mark.prototype.cousin = function() {
@@ -746,7 +686,16 @@ pv.Mark.prototype.cousin = function() {
 
 /**
  * Renders this mark, including recursively rendering all child marks if this is
- * a panel.
+ * a panel. This method finds all instances of this mark and renders them. This
+ * method descends recursively to the level of the mark to be rendered, finding
+ * all visible instances of the mark. After the marks are rendered, the scene
+ * and index attributes are removed from the mark to restore them to a clean
+ * state.
+ *
+ * <p>If an enclosing panel has an index property set (as is the case inside in
+ * an event handler), then only instances of this mark inside the given instance
+ * of the panel will be rendered; otherwise, all visible instances of the mark
+ * will be rendered.
  */
 pv.Mark.prototype.render = function() {
   var parent = this.parent,
@@ -764,18 +713,7 @@ pv.Mark.prototype.render = function() {
     indexes.unshift(mark.childIndex);
   }
 
-  /**
-   * @private Finds all instances of this mark and renders them. This method
-   * descends recursively to the level of the mark to be rendered, finding all
-   * visible instances of the mark. After the marks are rendered, the scene and
-   * index attributes are removed from the mark to restore them to a clean
-   * state.
-   *
-   * <p>If an enclosing panel has an index property set (as is the case inside
-   * in an event handler), then only instances of this mark inside the given
-   * instance of the panel will be rendered; otherwise, all visible instances of
-   * the mark will be rendered.
-   */
+  /** @private */
   function render(mark, depth, scale) {
     mark.scale = scale;
     if (depth < indexes.length) {

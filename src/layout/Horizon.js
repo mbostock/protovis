@@ -1,7 +1,41 @@
 /**
- * @class
+ * Constructs a new, empty horizon layout. Layouts are not typically constructed
+ * directly; instead, they are added to an existing panel via
+ * {@link pv.Mark#add}.
+ *
+ * @class Represents a horizon layout, which is a variation of a single-series
+ * area chart where the area is folded into multiple bands. Color is used to
+ * encode band, allowing the size of the chart to be reduced significantly
+ * without impeding readability. This layout algorithm is based on the work of
+ * J. Heer, N. Kong and M. Agrawala in <a
+ * href="http://hci.stanford.edu/publications/2009/heer-horizon-chi09.pdf">"Sizing
+ * the Horizon: The Effects of Chart Size and Layering on the Graphical
+ * Perception of Time Series Visualizations"</a>, CHI 2009.
+ *
+ * <p>This layout exports a single <tt>band</tt> mark prototype, which is
+ * intended to be used with an area mark. The band mark is contained in a panel
+ * which is replicated per band (and for negative/positive bands). For example,
+ * to create a simple horizon graph given an array of numbers:
+ *
+ * <pre>vis.add(pv.Layout.Horizon)
+ *     .bands(n)
+ *   .band.add(pv.Area)
+ *     .data(data)
+ *     .left(function() this.index * 35)
+ *     .height(function(d) d * 40);</pre>
+ *
+ * The layout can be further customized by changing the number of bands, and
+ * toggling whether the negative bands are mirrored or offset. (See the
+ * above-referenced paper for guidance.)
+ *
+ * <p>The <tt>fillStyle</tt> of the area can be overridden, though typically it
+ * is easier to customize the layout's behavior through the custom
+ * <tt>backgroundStyle</tt>, <tt>positiveStyle</tt> and <tt>negativeStyle</tt>
+ * properties. By default, the background is white, positive bands are blue, and
+ * negative bands are red. For the most accurate presentation, use fully-opaque
+ * colors of equal intensity for the negative and positive bands.
+ *
  * @extends pv.Layout
- * @constructor
  */
 pv.Layout.Horizon = function() {
   pv.Layout.call(this);
@@ -66,6 +100,13 @@ pv.Layout.Horizon.prototype = pv.extend(pv.Layout)
     .property("positiveStyle", pv.color)
     .property("negativeStyle", pv.color);
 
+/**
+ * Default properties for horizon layouts. By default, there are two bands, the
+ * mode is "offset", the background style is "white", the positive style is
+ * blue, negative style is red.
+ *
+ * @type pv.Layout.Horizon
+ */
 pv.Layout.Horizon.prototype.defaults = new pv.Layout.Horizon()
     .extend(pv.Layout.prototype.defaults)
     .bands(2)

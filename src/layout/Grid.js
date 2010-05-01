@@ -19,10 +19,11 @@
  * takes priority over the <tt>columns</tt> property. The data is implicitly
  * transposed, as if the {@link pv.transpose} operator were applied.
  *
- * <p>This layout defines left, top, width, height and data properties. The data
- * property will be the associated element in the array. For example, if the
- * array is a two-dimensional array of values in the range [0,1], a simple
- * heatmap can be generated as:
+ * <p>This layout exports a single <tt>cell</tt> mark prototype, which is
+ * intended to be used with a bar, panel, layout, or subclass thereof. The data
+ * property of the cell prototype is defined as the elements in the array. For
+ * example, if the array is a two-dimensional array of values in the range
+ * [0,1], a simple heatmap can be generated as:
  *
  * <pre>vis.add(pv.Layout.Grid)
  *     .rows(arrays)
@@ -30,7 +31,12 @@
  *     .fillStyle(pv.ramp("white", "black"))</pre>
  *
  * The grid subdivides the full width and height of the parent panel into equal
- * rectangles. For more data-driven subdivision, see {@link pv.Layout.Treemap}.
+ * rectangles. Note, however, that for large, interactive, or animated heatmaps,
+ * you may see significantly better performance through dynamic {@link pv.Image}
+ * generation.
+ *
+ * <p>For irregular grids using value-based spatial partitioning, see {@link
+ * pv.Layout.Treemap}.
  *
  * @extends pv.Layout
  */
@@ -38,6 +44,13 @@ pv.Layout.Grid = function() {
   pv.Layout.call(this);
   var that = this;
 
+  /**
+   * The cell prototype. This prototype is intended to be used with a bar,
+   * panel, or layout (or subclass thereof) to render the grid cells.
+   *
+   * @type pv.Mark
+   * @name pv.Layout.Grid.prototype.cell
+   */
   (this.cell = new pv.Mark()
       .data(function() {
           return that.scene[that.index].$grid;
@@ -60,6 +73,12 @@ pv.Layout.Grid.prototype = pv.extend(pv.Layout)
     .property("rows")
     .property("cols");
 
+/**
+ * Default properties for grid layouts. By default, there is one row and one
+ * column, and the data is the propagated to the child cell.
+ *
+ * @type pv.Layout.Grid
+ */
 pv.Layout.Grid.prototype.defaults = new pv.Layout.Grid()
     .extend(pv.Layout.prototype.defaults)
     .rows(1)

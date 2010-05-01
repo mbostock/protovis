@@ -1,20 +1,21 @@
 /**
  * Constructs a new image with default properties. Images are not typically
- * constructed directly, but by adding to a panel or an existing mark via {@link
- * pv.Mark#add}.
+ * constructed directly, but by adding to a panel or an existing mark via
+ * {@link pv.Mark#add}.
  *
- * @class Represents an image. Images share the same layout and style properties
- * as bars, in conjunction with an external image such as PNG or JPEG. The image
- * is specified via the {@link #url} property. The fill, if specified, appears
- * beneath the image, while the optional stroke appears above the image.
+ * @class Represents an image, either a static resource or a dynamically-
+ * generated pixel buffer. Images share the same layout and style properties as
+ * bars. The external image resource is specified via the {@link #url}
+ * property. The optional fill, if specified, appears beneath the image, while
+ * the optional stroke appears above the image.
  *
  * <p>Dynamic images such as heatmaps are supported using the {@link #image}
- * function. This function is passed the <i>x</i> and <i>y</i> index, in
- * addition to the current data stack. The return value is a {@link pv.Color}.
- *
- * <p>TODO Allow different modes of image placement: "scale" -- scale and
- * preserve aspect ratio, "tile" -- repeat the image, "center" -- center the
- * image, "fill" -- scale without preserving aspect ratio.
+ * psuedo-property. This function is passed the <i>x</i> and <i>y</i> index, in
+ * addition to the current data stack. The return value is a {@link pv.Color},
+ * or null for transparent. A string can also be returned, which will be parsed
+ * into a color; however, it is typically much faster to return an object with
+ * <tt>r</tt>, <tt>g</tt>, <tt>b</tt> and <tt>a</tt> attributes, to avoid the
+ * cost of parsing and object instantiation.
  *
  * <p>See {@link pv.Bar} for details on positioning properties.
  *
@@ -40,6 +41,26 @@ pv.Image.prototype.type = "image";
  */
 
 /**
+ * The width of the image in pixels. For static images, this property is
+ * computed implicitly from the loaded image resources. For dynamic images, this
+ * property can be used to specify the width of the pixel buffer; otherwise, the
+ * value is derived from the <tt>width</tt> property.
+ *
+ * @type number
+ * @name pv.Image.prototype.imageWidth
+ */
+
+/**
+ * The height of the image in pixels. For static images, this property is
+ * computed implicitly from the loaded image resources. For dynamic images, this
+ * property can be used to specify the height of the pixel buffer; otherwise, the
+ * value is derived from the <tt>height</tt> property.
+ *
+ * @type number
+ * @name pv.Image.prototype.imageHeight
+ */
+
+/**
  * Default properties for images. By default, there is no stroke or fill style.
  *
  * @type pv.Image
@@ -48,7 +69,32 @@ pv.Image.prototype.defaults = new pv.Image()
     .extend(pv.Bar.prototype.defaults)
     .fillStyle(null);
 
+/**
+ * Specifies the dynamic image function. By default, no image function is
+ * specified and the <tt>url</tt> property is used to load a static image
+ * resource. If an image function is specified, it will be invoked for each
+ * pixel in the image, based on the related <tt>imageWidth</tt> and
+ * <tt>imageHeight</tt> properties.
+ *
+ * <p>For example, given a two-dimensional array <tt>heatmap</tt>, containing
+ * numbers in the range [0, 1] in row-major order, a simple monochrome heatmap
+ * image can be specified as:
+ *
+ * <pre>vis.add(pv.Image)
+ *     .imageWidth(heatmap[0].length)
+ *     .imageHeight(heatmap.length)
+ *     .image(pv.ramp("white", "black").by(function(x, y) heatmap[y][x]));</pre>
+ *
+ * For fastest performance, use an ordinal scale which caches the fixed color
+ * palette, or return an object literal with <tt>r</tt>, <tt>g</tt>, <tt>b</tt>
+ * and <tt>a</tt> attributes. A {@link pv.Color} or string can also be returned,
+ * though this typically results in slower performance.
+ *
+ * @param {function} f the new sizing function.
+ * @returns {pv.Layout.Pack} this.
+ */
 pv.Image.prototype.image = function(f) {
+  /** @private */
   this.$image = function() {
       var c = f.apply(this, arguments);
       return c == null ? pv.Color.transparent
@@ -67,6 +113,7 @@ pv.Image.prototype.bind = function() {
   } while (!binds.image && (mark = mark.proto));
 };
 
+/** @private */
 pv.Image.prototype.buildImplied = function(s) {
   pv.Bar.prototype.buildImplied.call(this, s);
   if (!s.visible) return;
