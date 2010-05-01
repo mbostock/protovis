@@ -4948,7 +4948,7 @@ pv.SvgScene.curveBasisSegments = function(points) {
  * @param tangents the array of tangent vectors.
  */
 pv.SvgScene.curveHermite = function(points, tangents) {
-  if (tangents.length < 2
+  if (tangents.length < 1
       || (points.length != tangents.length
       && points.length != tangents.length + 2)) return "";
   var quad = points.length != tangents.length,
@@ -4956,25 +4956,29 @@ pv.SvgScene.curveHermite = function(points, tangents) {
       p0 = points[0],
       p = points[1],
       t0 = tangents[0],
-      t = tangents[1],
-      pi = 2;
+      t = t0,
+      pi = 1;
 
   if (quad) {
     path += "Q" + (p.left - t0.x * 2 / 3) + ","  + (p.top - t0.y * 2 / 3)
         + "," + p.left + "," + p.top;
     p0 = points[1];
-    p = points[2];
-    pi = 3;
+    pi = 2;
   }
 
-  path += "C" + (p0.left + t0.x) + "," + (p0.top + t0.y)
-      + "," + (p.left - t.x) + "," + (p.top - t.y)
-      + "," + p.left + "," + p.top;
-  for (var i = 2; i < tangents.length; i++, pi++) {
+  if (tangents.length > 1) {
+    t = tangents[1];
     p = points[pi];
-    t = tangents[i];
-    path += "S" + (p.left - t.x) + "," + (p.top - t.y)
+    pi++;
+    path += "C" + (p0.left + t0.x) + "," + (p0.top + t0.y)
+        + "," + (p.left - t.x) + "," + (p.top - t.y)
         + "," + p.left + "," + p.top;
+    for (var i = 2; i < tangents.length; i++, pi++) {
+      p = points[pi];
+      t = tangents[i];
+      path += "S" + (p.left - t.x) + "," + (p.top - t.y)
+          + "," + p.left + "," + p.top;
+    }
   }
 
   if (quad) {
