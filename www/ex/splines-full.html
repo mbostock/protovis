@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Splines</title>
+    <title>Spline Editor</title>
     <link type="text/css" rel="stylesheet" href="ex.css?3.2"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
     <style type="text/css">
@@ -11,63 +11,68 @@
     </style>
   </head>
   <body><div id="center"><div id="fig">
-    <script type="text/javascript+protovis">
-
-      var interpolate = "cardinal",
-          segmented = false,
-          w = 800,
-          h = 600,
-          c = pv.Colors.category10(),
-          numPoints = 5;
-          points = pv.range(0, numPoints).map(function(v) {
-            return {x:(v+Math.random())*w/numPoints, y:Math.random()*h}
-          });
-
-      var vis = new pv.Panel()
-          .width(w)
-          .height(h)
-          .strokeStyle("#ccc")
-          .fillStyle("#fff");
-
-      vis.add(pv.Line)
-          .data(function() points)
-          .left(function(d) d.x)
-          .top(function(d) d.y)
-          .interpolate(function() interpolate)
-          .segmented(function() segmented)
-          .strokeStyle(function() c(this.index))
-          .tension(0.5)
-          .lineWidth(2);
-      
-      vis.add(pv.Dot)
-          .data(function() points)
-          .left(function(d) d.x)
-          .top(function(d) d.y)
-          .radius(7)
-          .fillStyle("rgba(0,0,0,.001)")
-          .cursor("move")
-          .strokeStyle("#f33")
-          .event("mousedown", pv.Behavior.drag());
-
-      vis.render();
-      
-    </script>
-    Interpolation: 
+    Interpolate:
     <select onchange="interpolate = this.value; vis.render();">
       <option value="cardinal" selected>Cardinal</option>
       <option value="monotone">Monotone</option>
-      <option value="basis">Basis</option> 
+      <option value="basis">Basis</option>
     </select>
-    &nbsp; &nbsp;
-    <input type="checkbox" onchange="segmented = this.checked; vis.render()">
-      Segmented
-    </input>
-    &nbsp; &nbsp;
-    <button onclick="points.push({x:Math.random()*w, y:Math.random()*h}); vis.render()">
-      Add point
-    </button>
-    <button onclick="points.pop(); vis.render()">
-      Remove point
-    </button>
+    &nbsp;
+    <input type="checkbox" onchange="segmented = this.checked; vis.render()">Segmented
+    <script type="text/javascript+protovis">
+
+var w = 766,
+    h = 596,
+    i = 3,
+    interpolate = "cardinal",
+    segmented = false;
+
+var points = pv.range(1, 5).map(function(i) ({
+        x: i * w / 5,
+        y: 50 + Math.random() * (h - 100)
+      }));
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .strokeStyle("#ccc")
+    .fillStyle("#fff")
+    .margin(2)
+    .event("mousedown", function() (i = points.push(this.mouse()) - 1, this));
+
+vis.add(pv.Line)
+    .data(function() points)
+    .left(function(d) d.x)
+    .top(function(d) d.y)
+    .interpolate(function() interpolate)
+    .segmented(function() segmented)
+    .strokeStyle(pv.Colors.category10().by(pv.index))
+    .tension(0.5)
+    .lineWidth(2);
+
+vis.add(pv.Dot)
+    .data(function() points)
+    .left(function(d) d.x)
+    .top(function(d) d.y)
+    .radius(7)
+    .cursor("move")
+    .strokeStyle(function() i == this.index ? "#ff7f0e" : "#1f77b4")
+    .fillStyle(function() this.strokeStyle().alpha(.2))
+    .event("mousedown", pv.Behavior.drag())
+    .event("dragstart", function() (i = this.index, this))
+    .event("drag", vis);
+
+vis.render();
+
+pv.listen(window, "keydown", function(e) {
+  if ((e.keyCode == 8) && (i >= 0)) {
+    points.splice(i--, 1);
+    vis.render();
+    e.preventDefault();
+  }
+});
+
+self.focus();
+    </script>
   </div></div></body>
 </html>

@@ -7,33 +7,34 @@
   <body>
     <script type="text/javascript+protovis">
 
-      var color = pv.Colors.category19().by(function(d) d.group),
-          w = 900,
-          h = 900;
+var color = pv.Colors.category19().by(function(d) d.group),
+    w = 900,
+    h = 900;
 
-      var vis = new pv.Panel()
-          .width(w)
-          .height(h)
-          .fillStyle("white")
-          .event("mousedown", pv.Behavior.pan())
-          .event("mousewheel", pv.Behavior.zoom());
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .fillStyle("white")
+    .event("mousedown", pv.Behavior.pan())
+    .event("mousewheel", pv.Behavior.zoom());
 
-      var layout = vis.add(pv.Layout.Force)
-          .nodes(miserables.nodes)
-          .links(miserables.links)
-          .springConstant(.5)
-          .chargeConstant(-2000);
+var layout = vis.add(pv.Layout.Force)
+    .nodes(miserables.nodes)
+    .links(miserables.links)
+    .springConstant(.5)
+    .chargeConstant(-2000);
 
-      layout.link.add(pv.Line);
+layout.link.add(pv.Line);
 
-      layout.node.add(pv.Dot)
-          .size(function(d) (d.linkDegree + 4) * Math.pow(this.scale, -1.5))
-          .fillStyle(function(d) d.fix ? "brown" : color(d))
-          .strokeStyle(function() this.fillStyle().darker())
-          .title(function(d) d.nodeName)
-          .event("mousedown", pv.Behavior.drag());
+layout.node.add(pv.Dot)
+    .size(function(d) (d.linkDegree + 4) * Math.pow(this.scale, -1.5))
+    .fillStyle(function(d) d.fix ? "brown" : color(d))
+    .strokeStyle(function() this.fillStyle().darker())
+    .title(function(d) d.nodeName)
+    .event("mousedown", pv.Behavior.drag())
+    .event("drag", layout);
 
-      vis.render();
+vis.render();
 
     </script>
   </body>

@@ -20,7 +20,7 @@ HTML_FILES = \
 	www/ex/horizon.html \
 	www/ex/hotel.html \
 	www/ex/icicle.html \
-    www/ex/index-chart.html \
+	www/ex/index-chart.html \
 	www/ex/jobs.html \
 	www/ex/life.html \
 	www/ex/line.html \
@@ -29,13 +29,13 @@ HTML_FILES = \
 	www/ex/napoleon.html \
 	www/ex/oakland.html \
 	www/ex/pie.html \
-    www/ex/qqplot.html \
+	www/ex/qqplot.html \
 	www/ex/segmented.html \
 	www/ex/splines.html \
 	www/ex/sunburst.html \
 	www/ex/symbol.html \
 	www/ex/treemap.html \
-    www/ex/unemployed.html \
+	www/ex/unemployed.html \
 	www/ex/waves.html \
 	www/ex/weather.html \
 	www/ex/wheat.html \
