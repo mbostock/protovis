@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Spline Examples</title>
+    <title>Spline Editor</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script> 
@@ -42,7 +42,7 @@
     </div>
 
     <div class="body">
-      <h1>Spline Examples</h1>
+      <h1>Spline Editor</h1>
 
       <iframe id="iframe" style="height:650px;" src="splines-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
@@ -50,8 +50,10 @@
       href="splines-full.html" target="_blank">View full screen.</a>
       </p>
 
-      <p>A showcase of the spline interpolations supported in Protovis.</p>
-      <p>Drag the points to see how the spline changes.</p>
+      <p>This simple editor showcases the various methods of spline
+      interpolation supported by Protovis. Drag the control points to see how
+      the shape of the spline changes. Click to add new points, and use the
+      DELETE key to delete the selected control point.</p>
 
       <blockquote style="font-size:13px;">
         Next: <a href="treemap.html">Treemap</a>
