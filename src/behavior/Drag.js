@@ -20,6 +20,7 @@ pv.Behavior.drag = function() {
       x: this.parent.width() - (d.dx || 0),
       y: this.parent.height() - (d.dy || 0)
     };
+    pv.Mark.dispatch("dragstart", scene, index);
   }
 
   /** @private */
@@ -31,6 +32,7 @@ pv.Behavior.drag = function() {
         p.y = p.fix.y = Math.max(0, Math.min(v1.y + m.y, max.y));
         this.parent.render();
       });
+    pv.Mark.dispatch("drag", scene, index);
   }
 
   /** @private */
@@ -38,6 +40,7 @@ pv.Behavior.drag = function() {
     if (!scene) return;
     p.fix = null;
     scene.mark.context(scene, index, function() { this.parent.render(); });
+    pv.Mark.dispatch("dragend", scene, index);
     scene = null;
   }
 
