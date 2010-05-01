@@ -1,0 +1,43 @@
+<html>
+  <head>
+    <title>Miserables Random</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../miserables.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+/* Compute random positions for the nodes. */
+miserables.nodes.forEach(function(n) {
+  n.x = Math.random();
+  n.y = Math.random();
+});
+
+var w = 600,
+    h = 600,
+    x = pv.Scale.linear().range(0, w),
+    y = pv.Scale.linear().range(0, h);
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .margin(10)
+    .strokeStyle("#ccc");
+
+var layout = vis.add(pv.Layout.Network)
+    .nodes(miserables.nodes)
+    .links(miserables.links);
+
+/* Override the node prototype's position. */
+layout.node
+    .left(function(d) x(d.x))
+    .top(function(d) y(d.y));
+
+layout.link.add(pv.Line);
+layout.node.add(pv.Dot);
+
+vis.render();
+
+    </script>
+  </body>
+</html>
