@@ -1,4 +1,4 @@
-// 08f76a36af6a4eec4e6bdde538cd06127148ab09
+// 30f6cc600dfe28a55e988b00c8e37b924a0a688d
 /**
  * @class The built-in Array class.
  * @name Array
@@ -2695,13 +2695,43 @@ pv.Vector.prototype.dot = function(x, y) {
       : this.x * x + this.y * y;
 };
 /**
- * @class
- * @constructor
+ * Returns a new identity transform.
+ *
+ * @class Represents a transformation matrix. The transformation matrix is
+ * limited to expressing translate and uniform scale transforms only; shearing,
+ * rotation, general affine, and other transforms are not supported.
+ *
+ * <p>The methods on this class treat the transform as immutable, returning a
+ * copy of the transformation matrix with the specified transform applied. Note,
+ * alternatively, that the matrix fields can be get and set directly.
  */
 pv.Transform = function() {};
 pv.Transform.prototype = {k: 1, x: 0, y: 0};
 
 /**
+ * The scale magnitude; defaults to 1.
+ *
+ * @type number
+ * @name pv.Transform.prototype.k
+ */
+
+/**
+ * The x-offset; defaults to 0.
+ *
+ * @type number
+ * @name pv.Transform.prototype.x
+ */
+
+/**
+ * The y-offset; defaults to 0.
+ *
+ * @type number
+ * @name pv.Transform.prototype.y
+ */
+
+/**
+ * @private The identity transform.
+ *
  * @type pv.Transform
  */
 pv.Transform.identity = new pv.Transform();
@@ -2711,9 +2741,11 @@ pv.Transform.identity = new pv.Transform();
 // 0 0 1   0 0 1   0 0 1
 
 /**
- * @param {number} x
- * @param {number} y
- * @returns pv.Transform
+ * Returns a translated copy of this transformation matrix.
+ *
+ * @param {number} x the x-offset.
+ * @param {number} y the y-offset.
+ * @returns {pv.Transform} the translated transformation matrix.
  */
 pv.Transform.prototype.translate = function(x, y) {
   var v = new pv.Transform();
@@ -2728,8 +2760,10 @@ pv.Transform.prototype.translate = function(x, y) {
 // 0 0 1   0 0 1    0  0 1
 
 /**
+ * Returns a scaled copy of this transformation matrix.
+ *
  * @param {number} k
- * @returns pv.Transform
+ * @returns {pv.Transform} the scaled transformation matrix.
  */
 pv.Transform.prototype.scale = function(k) {
   var v = new pv.Transform();
@@ -2740,7 +2774,9 @@ pv.Transform.prototype.scale = function(k) {
 };
 
 /**
- * @returns pv.Transform
+ * Returns the inverse of this transformation matrix.
+ *
+ * @returns {pv.Transform} the inverted transformation matrix.
  */
 pv.Transform.prototype.invert = function() {
   var v = new pv.Transform(), k = 1 / this.k;
@@ -2755,8 +2791,10 @@ pv.Transform.prototype.invert = function() {
 // 0 0 1   0 0 1    0  0    1
 
 /**
+ * Returns this matrix post-multiplied by the specified matrix <i>m</i>.
+ *
  * @param {pv.Transform} m
- * @returns pv.Transform
+ * @returns {pv.Transform} the post-multiplied transformation matrix.
  */
 pv.Transform.prototype.times = function(m) {
   var v = new pv.Transform();
@@ -2766,8 +2804,33 @@ pv.Transform.prototype.times = function(m) {
   return v;
 };
 /**
- * @ignore
- * @class
+ * @class Represents a scale; a function that performs a transformation from
+ * data domain to visual range. For quantitative and quantile scales, the domain
+ * is expressed as numbers; for ordinal scales, the domain is expressed as
+ * strings (or equivalently objects with unique string representations). The
+ * "visual range" may correspond to pixel space, colors, font sizes, and the
+ * like.
+ *
+ * <p>Note that scales are functions, and thus can be used as properties
+ * directly, assuming that the data associated with a mark is a number. While
+ * this is convenient for single-use scales, frequently it is desirable to
+ * define scales globally:
+ *
+ * <pre>var y = pv.Scale.linear(0, 100).range(0, 640);</pre>
+ *
+ * The <tt>y</tt> scale can now be equivalently referenced within a property:
+ *
+ * <pre>    .height(function(d) y(d))</pre>
+ *
+ * Alternatively, if the data are not simple numbers, the appropriate value can
+ * be passed to the <tt>y</tt> scale (e.g., <tt>d.foo</tt>). The {@link #by}
+ * method similarly allows the data to be mapped to a numeric value before
+ * performing the linear transformation.
+ *
+ * @see pv.Scale.quantitative
+ * @see pv.Scale.quantile
+ * @see pv.Scale.ordinal
+ * @extends function
  */
 pv.Scale = function() {};
 
@@ -2801,37 +2864,36 @@ pv.Scale.interpolator = function(start, end) {
 };
 /**
  * Returns an abstract quantitative scale for the specified domain. The
- * arguments to this constructor are optional, and equivalent to calling {@link
- * #domain}.
+ * arguments to this constructor are optional, and equivalent to calling
+ * {@link #domain}.
  *
- * @class Represents an abstract quantitative scale. <style
- * type="text/css">sub{line-height:0}</style> A quantitative scale represents a
- * 1-dimensional transformation from a numeric domain of input data
- * [<i>d<sub>0</sub></i>, <i>d<sub>1</sub></i>] to a numeric range of pixels
- * [<i>r<sub>0</sub></i>, <i>r<sub>1</sub></i>]. In addition to readability,
- * scales offer several useful features:
+ * @class Represents an abstract quantitative scale; a function that performs a
+ * numeric transformation. <style type="text/css">sub{line-height:0}</style> A
+ * quantitative scale represents a 1-dimensional transformation from a numeric
+ * domain of input data [<i>d<sub>0</sub></i>, <i>d<sub>1</sub></i>] to a
+ * numeric range of pixels [<i>r<sub>0</sub></i>, <i>r<sub>1</sub></i>]. In
+ * addition to readability, scales offer several useful features:
  *
- * <p>1. The range can be expressed in colors, rather than pixels. Changing the
- * example above to
+ * <p>1. The range can be expressed in colors, rather than pixels. For example:
  *
- * <pre>.fillStyle(pv.Scale.linear(0, 100).range("red", "green"))</pre>
+ * <pre>    .fillStyle(pv.Scale.linear(0, 100).range("red", "green"))</pre>
  *
- * will cause it to fill the marks "red" on an input value of 0, "green" on an
- * input value of 100, and some color in-between for intermediate values.
+ * will fill the marks "red" on an input value of 0, "green" on an input value
+ * of 100, and some color in-between for intermediate values.
  *
  * <p>2. The domain and range can be subdivided for a non-uniform
  * transformation. For example, you may want a diverging color scale that is
  * increasingly red for negative values, and increasingly green for positive
  * values:
  *
- * <pre>.fillStyle(pv.Scale.linear(-1, 0, 1).range("red", "white", "green"))</pre>
+ * <pre>    .fillStyle(pv.Scale.linear(-1, 0, 1).range("red", "white", "green"))</pre>
  *
  * The domain can be specified as a series of <i>n</i> monotonically-increasing
  * values; the range must also be specified as <i>n</i> values, resulting in
  * <i>n - 1</i> contiguous linear scales.
  *
- * <p>3. Quantitative scales can be inverted for interaction. The {@link
- * #invert} method takes a value in the output range, and returns the
+ * <p>3. Quantitative scales can be inverted for interaction. The
+ * {@link #invert} method takes a value in the output range, and returns the
  * corresponding value in the input domain. This is frequently used to convert
  * the mouse location (see {@link pv.Mark#mouse}) to a value in the input
  * domain. Note that inversion is only supported for numeric ranges, and not
@@ -2848,7 +2910,10 @@ pv.Scale.interpolator = function(start, end) {
  * up to even numbers.
  *
  * @param {number...} domain... domain values.
- * @returns {pv.Scale.quantitative} a quantitative scale.
+ * @see pv.Scale.linear
+ * @see pv.Scale.log
+ * @see pv.Scale.root
+ * @extends pv.Scale
  */
 pv.Scale.quantitative = function() {
   var d = [0, 1], // default domain
@@ -2893,7 +2958,7 @@ pv.Scale.quantitative = function() {
    * non-uniform scales, multiple values can be specified. Values can be derived
    * from data using {@link pv.min} and {@link pv.max}. For example:
    *
-   * <pre>.domain(0, pv.max(array))</pre>
+   * <pre>    .domain(0, pv.max(array))</pre>
    *
    * An alternative method for deriving minimum and maximum values from data
    * follows.
@@ -2905,13 +2970,13 @@ pv.Scale.quantitative = function() {
    * data, followed by zero, one or two accessor functions. For example, if the
    * array of data is just an array of numbers:
    *
-   * <pre>.domain(array)</pre>
+   * <pre>    .domain(array)</pre>
    *
    * On the other hand, if the array elements are objects representing stock
    * values per day, and the domain should consider the stock's daily low and
    * daily high:
    *
-   * <pre>.domain(array, function(d) d.low, function(d) d.high)</pre>
+   * <pre>    .domain(array, function(d) d.low, function(d) d.high)</pre>
    *
    * The first method of setting the domain is preferred because it is more
    * explicit; setting the domain using this second method should be used only
@@ -2960,7 +3025,7 @@ pv.Scale.quantitative = function() {
    * equivalent strings. For a diverging scale, or other subdivided non-uniform
    * scales, multiple values can be specified. For example:
    *
-   * <pre>.range("red", "white", "green")</pre>
+   * <pre>    .range("red", "white", "green")</pre>
    *
    * <p>Currently, only numbers and colors are supported as range values. The
    * number of range values must exactly match the number of domain values, or
@@ -3208,11 +3273,11 @@ pv.Scale.quantitative = function() {
    * that have a <tt>score</tt> attribute with the domain [0, 1], the height
    * property could be specified as:
    *
-   * <pre>.height(pv.Scale.linear().range(0, 480).by(function(d) d.score))</pre>
+   * <pre>    .height(pv.Scale.linear().range(0, 480).by(function(d) d.score))</pre>
    *
    * This is equivalent to:
    *
-   * <pre>.height(function(d) d.score * 480)</pre>
+   * <pre>    .height(function(d) d.score * 480)</pre>
    *
    * This method should be used judiciously; it is typically more clear to
    * invoke the scale directly, passing in the value to be scaled.
@@ -3236,13 +3301,12 @@ pv.Scale.quantitative = function() {
  * Returns a linear scale for the specified domain. The arguments to this
  * constructor are optional, and equivalent to calling {@link #domain}.
  *
- * @class Represents a linear scale. <style
- * type="text/css">sub{line-height:0}</style> <img src="../linear.png"
- * width="180" height="175" align="right"> Most commonly, a linear scale
- * represents a 1-dimensional linear transformation from a numeric domain of
- * input data [<i>d<sub>0</sub></i>, <i>d<sub>1</sub></i>] to a numeric range of
- * pixels [<i>r<sub>0</sub></i>, <i>r<sub>1</sub></i>]. The equation for such a
- * scale is:
+ * @class Represents a linear scale; a function that performs a linear
+ * transformation. <style type="text/css">sub{line-height:0}</style> Most
+ * commonly, a linear scale represents a 1-dimensional linear transformation
+ * from a numeric domain of input data [<i>d<sub>0</sub></i>,
+ * <i>d<sub>1</sub></i>] to a numeric range of pixels [<i>r<sub>0</sub></i>,
+ * <i>r<sub>1</sub></i>]. The equation for such a scale is:
  *
  * <blockquote><i>f(x) = (x - d<sub>0</sub>) / (d<sub>1</sub> - d<sub>0</sub>) *
  * (r<sub>1</sub> - r<sub>0</sub>) + r<sub>0</sub></i></blockquote>
@@ -3256,14 +3320,30 @@ pv.Scale.quantitative = function() {
  *
  * Thus, saying
  *
- * <pre>.height(function(d) d * 6.4)</pre>
+ * <pre>    .height(function(d) d * 6.4)</pre>
  *
  * is identical to
  *
- * <pre>.height(pv.Scale.linear(0, 100).range(0, 640))</pre>
+ * <pre>    .height(pv.Scale.linear(0, 100).range(0, 640))</pre>
+ *
+ * Note that the scale is itself a function, and thus can be used as a property
+ * directly, assuming that the data associated with a mark is a number. While
+ * this is convenient for single-use scales, frequently it is desirable to
+ * define scales globally:
+ *
+ * <pre>var y = pv.Scale.linear(0, 100).range(0, 640);</pre>
+ *
+ * The <tt>y</tt> scale can now be equivalently referenced within a property:
+ *
+ * <pre>    .height(function(d) y(d))</pre>
+ *
+ * Alternatively, if the data are not simple numbers, the appropriate value can
+ * be passed to the <tt>y</tt> scale (e.g., <tt>d.foo</tt>). The {@link #by}
+ * method similarly allows the data to be mapped to a numeric value before
+ * performing the linear transformation.
  *
  * @param {number...} domain... domain values.
- * @returns {pv.Scale.linear} a linear scale.
+ * @extends pv.Scale.quantitative
  */
 pv.Scale.linear = function() {
   var scale = pv.Scale.quantitative();
@@ -3275,12 +3355,11 @@ pv.Scale.linear = function() {
  * constructor are optional, and equivalent to calling {@link #domain}.
  *
  * @class Represents a log scale. <style
- * type="text/css">sub{line-height:0}</style> <img src="../log.png"
- * width="190" height="175" align="right"> Most commonly, a log scale represents
- * a 1-dimensional log transformation from a numeric domain of input data
- * [<i>d<sub>0</sub></i>, <i>d<sub>1</sub></i>] to a numeric range of pixels
- * [<i>r<sub>0</sub></i>, <i>r<sub>1</sub></i>]. The equation for such a scale
- * is:
+ * type="text/css">sub{line-height:0}</style> Most commonly, a log scale
+ * represents a 1-dimensional log transformation from a numeric domain of input
+ * data [<i>d<sub>0</sub></i>, <i>d<sub>1</sub></i>] to a numeric range of
+ * pixels [<i>r<sub>0</sub></i>, <i>r<sub>1</sub></i>]. The equation for such a
+ * scale is:
  *
  * <blockquote><i>f(x) = (log(x) - log(d<sub>0</sub>)) / (log(d<sub>1</sub>) -
  * log(d<sub>0</sub>)) * (r<sub>1</sub> - r<sub>0</sub>) +
@@ -3297,14 +3376,30 @@ pv.Scale.linear = function() {
  *
  * Thus, saying
  *
- * <pre>.height(function(d) Math.log(d) * 138.974)</pre>
+ * <pre>    .height(function(d) Math.log(d) * 138.974)</pre>
  *
  * is equivalent to
  *
- * <pre>.height(pv.Scale.log(1, 100).range(0, 640))</pre>
+ * <pre>    .height(pv.Scale.log(1, 100).range(0, 640))</pre>
+ *
+ * Note that the scale is itself a function, and thus can be used as a property
+ * directly, assuming that the data associated with a mark is a number. While
+ * this is convenient for single-use scales, frequently it is desirable to
+ * define scales globally:
+ *
+ * <pre>var y = pv.Scale.log(1, 100).range(0, 640);</pre>
+ *
+ * The <tt>y</tt> scale can now be equivalently referenced within a property:
+ *
+ * <pre>    .height(function(d) y(d))</pre>
+ *
+ * Alternatively, if the data are not simple numbers, the appropriate value can
+ * be passed to the <tt>y</tt> scale (e.g., <tt>d.foo</tt>). The {@link #by}
+ * method similarly allows the data to be mapped to a numeric value before
+ * performing the log transformation.
  *
  * @param {number...} domain... domain values.
- * @returns {pv.Scale.log} a log scale.
+ * @extends pv.Scale.quantitative
  */
 pv.Scale.log = function() {
   var scale = pv.Scale.quantitative(1, 10),
@@ -3315,8 +3410,8 @@ pv.Scale.log = function() {
 
   /**
    * Returns an array of evenly-spaced, suitably-rounded values in the input
-   * domain. These values are frequently used in conjunction with {@link
-   * pv.Rule} to display tick marks or grid lines.
+   * domain. These values are frequently used in conjunction with
+   * {@link pv.Rule} to display tick marks or grid lines.
    *
    * @function
    * @name pv.Scale.log.prototype.ticks
@@ -3356,9 +3451,9 @@ pv.Scale.log = function() {
 
   /**
    * "Nices" this scale, extending the bounds of the input domain to
-   * evenly-rounded values. This method uses {@link pv.logFloor} and {@link
-   * pv.logCeil}. Nicing is useful if the domain is computed dynamically from
-   * data, and may be irregular. For example, given a domain of
+   * evenly-rounded values. This method uses {@link pv.logFloor} and
+   * {@link pv.logCeil}. Nicing is useful if the domain is computed dynamically
+   * from data, and may be irregular. For example, given a domain of
    * [0.20147987687960267, 0.996679553296417], a call to <tt>nice()</tt> might
    * extend the domain to [0.1, 1].
    *
@@ -3396,11 +3491,40 @@ pv.Scale.log = function() {
   scale.domain.apply(scale, arguments);
   return scale.base(10);
 };
+/**
+ * Returns a root scale for the specified domain. The arguments to this
+ * constructor are optional, and equivalent to calling {@link #domain}.
+ *
+ * @class Represents a root scale; a function that performs a power
+ * transformation. <style type="text/css">sub{line-height:0}</style> Most
+ * commonly, a root scale represents a 1-dimensional root transformation from a
+ * numeric domain of input data [<i>d<sub>0</sub></i>, <i>d<sub>1</sub></i>] to
+ * a numeric range of pixels [<i>r<sub>0</sub></i>, <i>r<sub>1</sub></i>].
+ *
+ * <p>Note that the scale is itself a function, and thus can be used as a
+ * property directly, assuming that the data associated with a mark is a
+ * number. While this is convenient for single-use scales, frequently it is
+ * desirable to define scales globally:
+ *
+ * <pre>var y = pv.Scale.root(0, 100).range(0, 640);</pre>
+ *
+ * The <tt>y</tt> scale can now be equivalently referenced within a property:
+ *
+ * <pre>    .height(function(d) y(d))</pre>
+ *
+ * Alternatively, if the data are not simple numbers, the appropriate value can
+ * be passed to the <tt>y</tt> scale (e.g., <tt>d.foo</tt>). The {@link #by}
+ * method similarly allows the data to be mapped to a numeric value before
+ * performing the root transformation.
+ *
+ * @param {number...} domain... domain values.
+ * @extends pv.Scale.quantitative
+ */
 pv.Scale.root = function() {
   var scale = pv.Scale.quantitative();
 
   /**
-   * Sets or gets the exponent. Defaults to 2.
+   * Sets or gets the exponent; defaults to 2.
    *
    * @function
    * @name pv.Scale.root.prototype.power
@@ -3432,26 +3556,26 @@ pv.Scale.root = function() {
  * might map a domain of species ["setosa", "versicolor", "virginica"] to colors
  * ["red", "green", "blue"]. Thus, saying
  *
- * <pre>.fillStyle(function(d) {
- *     switch (d.species) {
- *       case "setosa": return "red";
- *       case "versicolor": return "green";
- *       case "virginica": return "blue";
- *     }
- *   })</pre>
+ * <pre>    .fillStyle(function(d) {
+ *         switch (d.species) {
+ *           case "setosa": return "red";
+ *           case "versicolor": return "green";
+ *           case "virginica": return "blue";
+ *         }
+ *       })</pre>
  *
  * is equivalent to
  *
- * <pre>.fillStyle(pv.Scale.ordinal("setosa", "versicolor", "virginica")
- *     .range("red", "green", "blue")
- *     .by(function(d) d.species))</pre>
+ * <pre>    .fillStyle(pv.Scale.ordinal("setosa", "versicolor", "virginica")
+ *         .range("red", "green", "blue")
+ *         .by(function(d) d.species))</pre>
  *
  * If the mapping from species to color does not need to be specified
  * explicitly, the domain can be omitted. In this case it will be inferred
  * lazily from the data:
  *
- * <pre>.fillStyle(pv.colors("red", "green", "blue")
- *     .by(function(d) d.species))</pre>
+ * <pre>    .fillStyle(pv.colors("red", "green", "blue")
+ *         .by(function(d) d.species))</pre>
  *
  * When the domain is inferred, the first time the scale is invoked, the first
  * element from the range will be returned. Subsequent calls with unique values
@@ -3466,15 +3590,15 @@ pv.Scale.root = function() {
  * <tt>states</tt> is an array of the fifty U.S. state names, the state name can
  * be encoded in the left position:
  *
- * <pre>.left(pv.Scale.ordinal(states)
- *     .split(0, 640)
- *     .by(function(d) d.state))</pre>
+ * <pre>    .left(pv.Scale.ordinal(states)
+ *         .split(0, 640)
+ *         .by(function(d) d.state))</pre>
  *
  * <p>N.B.: ordinal scales are not invertible (at least not yet), since the
  * domain and range and discontinuous. A workaround is to use a linear scale.
  *
  * @param {...} domain... domain values.
- * @returns {pv.Scale.ordinal} an ordinal scale.
+ * @extends pv.Scale
  * @see pv.colors
  */
 pv.Scale.ordinal = function() {
@@ -3690,6 +3814,7 @@ pv.Scale.ordinal = function() {
 };
 /**
  * @class
+ * @extends pv.Scale
  */
 pv.Scale.quantile = function() {
   var n = -1, // number of quantiles
@@ -3823,16 +3948,38 @@ pv.Scale.quantile = function() {
   return scale;
 };
 /**
- * @class
- * @constructor Returns a histogram generator for the specified data.
- * @param {array} data
- * @param {function} [f]
+ * Returns a histogram operator for the specified data, with an optional
+ * accessor function. If the data specified is not an array of numbers, an
+ * accessor function must be specified to map the data to numeric values.
+ *
+ * @class Represents a histogram operator.
+ *
+ * @param {array} data an array of numbers or objects.
+ * @param {function} [f] an optional accessor function.
  */
 pv.histogram = function(data, f) {
   var frequency = true;
   return {
 
     /**
+     * Returns the computed histogram bins. An optional array of numbers,
+     * <tt>ticks</tt>, may be specified as the break points. If the ticks are
+     * not specified, default ticks will be computed using a linear scale on the
+     * data domain.
+     *
+     * <p>The returned array contains {@link pv.histogram.Bin}s. The <tt>x</tt>
+     * attribute corresponds to the bin's start value (inclusive), while the
+     * <tt>dx</tt> attribute stores the bin size (end - start). The <tt>y</tt>
+     * attribute stores either the frequency count or probability, depending on
+     * how the histogram operator has been configured.
+     *
+     * <p>The {@link pv.histogram.Bin} objects are themselves arrays, containing
+     * the data elements present in each bin, i.e., the elements in the
+     * <tt>data</tt> array (prior to invoking the accessor function, if any).
+     * For example, if the data represented countries, and the accessor function
+     * returned the GDP of each country, the returned bins would be arrays of
+     * countries (not GDPs).
+     *
      * @function
      * @name pv.histogram.prototype.bins
      * @param {array} [ticks]
@@ -3869,6 +4016,9 @@ pv.histogram = function(data, f) {
     },
 
     /**
+     * Sets or gets whether this histogram operator returns frequencies or
+     * probabilities.
+     *
      * @function
      * @name pv.histogram.prototype.frequency
      * @param {boolean} [x]
@@ -3883,6 +4033,40 @@ pv.histogram = function(data, f) {
     }
   };
 };
+
+/**
+ * @class Represents a bin returned by the {@link pv.histogram} operator. Bins
+ * are themselves arrays containing the data elements present in the given bin
+ * (prior to the accessor function being invoked to convert the data object to a
+ * numeric value). These bin arrays have additional attributes with meta
+ * information about the bin.
+ *
+ * @name pv.histogram.Bin
+ * @extends array
+ * @see pv.histogram
+ */
+
+/**
+ * The start value of the bin's range.
+ *
+ * @type number
+ * @name pv.histogram.Bin.prototype.x
+ */
+
+/**
+ * The magnitude value of the bin's range; end - start.
+ *
+ * @type number
+ * @name pv.histogram.Bin.prototype.dx
+ */
+
+/**
+ * The frequency or probability of the bin, depending on how the histogram
+ * operator was configured.
+ *
+ * @type number
+ * @name pv.histogram.Bin.prototype.y
+ */
 /**
  * Returns the {@link pv.Color} for the specified color format string. Colors
  * may have an associated opacity, or alpha channel. Color formats are specified
@@ -4916,7 +5100,7 @@ pv.SvgScene.curveBasisSegments = function(points) {
       p0 = points[0],
       p1 = p0,
       p2 = p0,
-      p3 = points[1]
+      p3 = points[1],
       firstPath = this.pathBasis.segment(p0, p1, p2, p3);
 
   p0 = p1;
@@ -5071,8 +5255,7 @@ pv.SvgScene.cardinalTangents = function(points, tension) {
  */
 pv.SvgScene.curveCardinal = function(points, tension) {
   if (points.length <= 2) return "";
-  var tangents = this.cardinalTangents(points, tension);
-  return this.curveHermite(points, tangents);
+  return this.curveHermite(points, this.cardinalTangents(points, tension));
 };
 
 /**
@@ -5084,8 +5267,7 @@ pv.SvgScene.curveCardinal = function(points, tension) {
  */
 pv.SvgScene.curveCardinalSegments = function(points, tension) {
   if (points.length <= 2) return "";
-  var tangents = this.cardinalTangents(points, tension);
-  return this.curveHermiteSegments(points, tangents);
+  return this.curveHermiteSegments(points, this.cardinalTangents(points, tension));
 };
 
 /**
@@ -6191,48 +6373,16 @@ pv.Mark.prototype.index = -1;
  * to a panel, the scale affects only the child marks, not the panel itself.
  *
  * @type number
- * @see pv.Panel.prototype.transform
+ * @see pv.Panel#transform
  */
 pv.Mark.prototype.scale = 1;
 
 /**
- * The scene graph. The scene graph is an array of objects; each object (or
- * "node") corresponds to an instance of this mark and an element in the data
- * array. The scene graph can be traversed to lookup previously-evaluated
+ * @private The scene graph. The scene graph is an array of objects; each object
+ * (or "node") corresponds to an instance of this mark and an element in the
+ * data array. The scene graph can be traversed to lookup previously-evaluated
  * properties.
  *
- * <p>For instance, consider a stacked area chart. The bottom property of the
- * area can be defined using the <i>cousin</i> instance, which is the current
- * area instance in the previous instantiation of the parent panel. In this
- * sample code,
- *
- * <pre>new pv.Panel()
- *     .width(150).height(150)
- *   .add(pv.Panel)
- *     .data([[1, 1.2, 1.7, 1.5, 1.7],
- *            [.5, 1, .8, 1.1, 1.3],
- *            [.2, .5, .8, .9, 1]])
- *   .add(pv.Area)
- *     .data(function(d) d)
- *     .bottom(function() {
- *         var c = this.cousin();
- *         return c ? (c.bottom + c.height) : 0;
- *       })
- *     .height(function(d) d * 40)
- *     .left(function() this.index * 35)
- *   .root.render();</pre>
- *
- * the bottom property is computed based on the upper edge of the corresponding
- * datum in the previous series. The area's parent panel is instantiated once
- * per series, so the cousin refers to the previous (below) area mark. (Note
- * that the position of the upper edge is not the same as the top property,
- * which refers to the top margin: the distance from the top edge of the panel
- * to the top edge of the mark.)
- *
- * @see #first
- * @see #last
- * @see #sibling
- * @see #cousin
  * @name pv.Mark.prototype.scene
  */
 
@@ -6405,43 +6555,17 @@ pv.Mark.prototype.add = function(type) {
 };
 
 /**
- * Defines a local variable on this mark. Local variables are initialized once
- * per mark (i.e., per parent panel instance), and can be used to store local
- * state for the mark. Here are a few reasons you might want to use
- * <tt>def</tt>:
+ * Defines a custom property on this mark. Custom properties are currently
+ * fixed, in that they are initialized once per mark set (i.e., per parent panel
+ * instance). Custom properties can be used to store local state for the mark,
+ * such as data needed by other properties (e.g., a custom scale) or interaction
+ * state.
  *
- * <p>1. To store local state. For example, say you were visualizing employment
- * statistics, and your root panel had an array of occupations. In a child
- * panel, you might want to initialize a local scale, and reference it from a
- * property function:
- *
- * <pre>.def("y", function(d) pv.Scale.linear(0, pv.max(d.values)).range(0, h))
- * .height(function(d) this.y()(d))</pre>
- *
- * In this example, <tt>this.y()</tt> returns the defined local scale. We then
- * invoke the scale function, passing in the datum, to compute the height.  Note
- * that defs are similar to fixed properties: they are only evaluated once per
- * parent panel, and <tt>this.y()</tt> returns a function, rather than
- * automatically evaluating this function as a property.
- *
- * <p>2. To store temporary state for interaction. Say you have an array of
- * bars, and you want to color the bar differently if the mouse is over it. Use
- * <tt>def</tt> to define a local variable, and event handlers to override this
- * variable interactively:
- *
- * <pre>.def("i", -1)
- * .event("mouseover", function() this.i(this.index))
- * .event("mouseout", function() this.i(-1))
- * .fillStyle(function() this.i() == this.index ? "red" : "blue")</pre>
- *
- * Notice that <tt>this.i()</tt> can be used both to set the value of <i>i</i>
- * (when an argument is specified), and to get the value of <i>i</i> (when no
- * arguments are specified). In this way, it's like other property methods.
- *
- * <p>3. To specify fixed properties efficiently. Sometimes, the value of a
- * property may be locally a constant, but dependent on parent panel data which
- * is variable. In this scenario, you can use <tt>def</tt> to define a property;
- * it will only get computed once per mark, rather than once per datum.
+ * <p>WARNING We plan on changing this feature in a future release to define
+ * standard properties, as opposed to <i>fixed</i> properties that behave
+ * idiosyncratically within event handlers. Furthermore, we recommend storing
+ * state in an external data structure, rather than tying it to the
+ * visualization specification as with defs.
  *
  * @param {string} name the name of the local variable.
  * @param {function} [v] an optional initializer; may be a constant or a
@@ -6528,7 +6652,7 @@ pv.Mark.prototype.anchor = function(name) {
         switch (this.name()) {
           case "bottom":
           case "top":
-          case "center": return s.left + (this.properties.width ? 0 : w / 2);
+          case "center": return s.left + w / 2;
           case "left": return null;
         }
         return s.left + w;
@@ -6538,7 +6662,7 @@ pv.Mark.prototype.anchor = function(name) {
         switch (this.name()) {
           case "left":
           case "right":
-          case "center": return s.top + (this.properties.height ? 0 : h / 2);
+          case "center": return s.top + h / 2;
           case "top": return null;
         }
         return s.top + h;
@@ -6597,9 +6721,9 @@ pv.Mark.prototype.margin = function(n) {
 };
 
 /**
- * Returns the current instance of this mark in the scene graph. This is
- * typically equivalent to <tt>this.scene[this.index]</tt>, however if the scene
- * or index is unset, the default instance of the mark is returned. If no
+ * @private Returns the current instance of this mark in the scene graph. This
+ * is typically equivalent to <tt>this.scene[this.index]</tt>, however if the
+ * scene or index is unset, the default instance of the mark is returned. If no
  * default is set, the default is the last instance. Similarly, if the scene or
  * index of the parent panel is unset, the default instance of this mark in the
  * last instance of the enclosing panel is returned, and so on.
@@ -6613,9 +6737,9 @@ pv.Mark.prototype.instance = function(defaultIndex) {
 };
 
 /**
- * Returns the first instance of this mark in the scene graph. This method can
- * only be called when the mark is bound to the scene graph (for example, from
- * an event handler, or within a property function).
+ * @private Returns the first instance of this mark in the scene graph. This
+ * method can only be called when the mark is bound to the scene graph (for
+ * example, from an event handler, or within a property function).
  *
  * @returns a node in the scene graph.
  */
@@ -6624,11 +6748,11 @@ pv.Mark.prototype.first = function() {
 };
 
 /**
- * Returns the last instance of this mark in the scene graph. This method can
- * only be called when the mark is bound to the scene graph (for example, from
- * an event handler, or within a property function). In addition, note that mark
- * instances are built sequentially, so the last instance of this mark may not
- * yet be constructed.
+ * @private Returns the last instance of this mark in the scene graph. This
+ * method can only be called when the mark is bound to the scene graph (for
+ * example, from an event handler, or within a property function). In addition,
+ * note that mark instances are built sequentially, so the last instance of this
+ * mark may not yet be constructed.
  *
  * @returns a node in the scene graph.
  */
@@ -6637,8 +6761,8 @@ pv.Mark.prototype.last = function() {
 };
 
 /**
- * Returns the previous instance of this mark in the scene graph, or null if
- * this is the first instance.
+ * @private Returns the previous instance of this mark in the scene graph, or
+ * null if this is the first instance.
  *
  * @returns a node in the scene graph, or null.
  */
@@ -6647,12 +6771,10 @@ pv.Mark.prototype.sibling = function() {
 };
 
 /**
- * Returns the current instance in the scene graph of this mark, in the previous
- * instance of the enclosing parent panel. May return null if this instance
- * could not be found. See the {@link pv.Layout.stack} function for an example
- * property function using cousin.
+ * @private Returns the current instance in the scene graph of this mark, in the
+ * previous instance of the enclosing parent panel. May return null if this
+ * instance could not be found.
  *
- * @see pv.Layout.stack
  * @returns a node in the scene graph, or null.
  */
 pv.Mark.prototype.cousin = function() {
@@ -6662,7 +6784,16 @@ pv.Mark.prototype.cousin = function() {
 
 /**
  * Renders this mark, including recursively rendering all child marks if this is
- * a panel.
+ * a panel. This method finds all instances of this mark and renders them. This
+ * method descends recursively to the level of the mark to be rendered, finding
+ * all visible instances of the mark. After the marks are rendered, the scene
+ * and index attributes are removed from the mark to restore them to a clean
+ * state.
+ *
+ * <p>If an enclosing panel has an index property set (as is the case inside in
+ * an event handler), then only instances of this mark inside the given instance
+ * of the panel will be rendered; otherwise, all visible instances of the mark
+ * will be rendered.
  */
 pv.Mark.prototype.render = function() {
   var parent = this.parent,
@@ -6680,18 +6811,7 @@ pv.Mark.prototype.render = function() {
     indexes.unshift(mark.childIndex);
   }
 
-  /**
-   * @private Finds all instances of this mark and renders them. This method
-   * descends recursively to the level of the mark to be rendered, finding all
-   * visible instances of the mark. After the marks are rendered, the scene and
-   * index attributes are removed from the mark to restore them to a clean
-   * state.
-   *
-   * <p>If an enclosing panel has an index property set (as is the case inside
-   * in an event handler), then only instances of this mark inside the given
-   * instance of the panel will be rendered; otherwise, all visible instances of
-   * the mark will be rendered.
-   */
+  /** @private */
   function render(mark, depth, scale) {
     mark.scale = scale;
     if (depth < indexes.length) {
@@ -7091,7 +7211,7 @@ pv.Mark.prototype.mouse = function() {
  * @returns {pv.Mark} this.
  */
 pv.Mark.prototype.event = function(type, handler) {
-  this.$handlers[type] = handler;
+  this.$handlers[type] = pv.functor(handler);
   return this;
 };
 
@@ -7202,7 +7322,22 @@ pv.Mark.dispatch = function(type, scene, index) {
  * the appropriate position properties (top and left), as well as text-rendering
  * properties for convenience (textAlign and textBaseline).
  *
+ * <p>Note that anchors do not <i>inherit</i> from their targets; the positional
+ * properties are copied from the scene graph, which guarantees that the anchors
+ * are positioned correctly, even if the positional properties are not defined
+ * deterministically. (In addition, it also improves performance by avoiding
+ * re-evaluating expensive properties.) If you want the anchor to inherit from
+ * the target, use {@link pv.Mark#extend} before adding. For example:
+ *
+ * <pre>bar.anchor("top").extend(bar).add(pv.Label);</pre>
+ *
+ * The anchor defines it's own positional properties, but other properties (such
+ * as the title property, say) can be inherited using the above idiom. Also note
+ * that you can override positional properties in the anchor for custom
+ * behavior.
+ *
  * @extends pv.Mark
+ * @param {pv.Mark} target the anchor target.
  */
 pv.Anchor = function(target) {
   pv.Mark.call(this);
@@ -7231,6 +7366,18 @@ pv.Anchor.prototype = pv.extend(pv.Mark)
  * @name pv.Anchor.prototype.name
  */
 
+/**
+ * Returns the anchor target of this mark, if it is derived from an anchor;
+ * otherwise returns null. For example, if a label is derived from a bar anchor,
+ *
+ * <pre>bar.anchor("top").add(pv.Label);</pre>
+ *
+ * then property functions on the label can refer to the bar via the
+ * <tt>anchorTarget</tt> method. This method is also useful for mark types
+ * defining properties on custom anchors.
+ *
+ * @returns {pv.Mark} the anchor target of this mark; possibly null.
+ */
 pv.Anchor.prototype.anchorTarget = function() {
   return this.target;
 };
@@ -7347,10 +7494,8 @@ pv.Area.prototype.type = "area";
  * How to interpolate between values. Linear interpolation ("linear") is the
  * default, producing a straight line between points. For piecewise constant
  * functions (i.e., step functions), either "step-before" or "step-after" can be
- * specified. To draw a clockwise circular arc between points, specify "polar";
- * to draw a counterclockwise circular arc between points, specify
- * "polar-reverse". To draw open uniform b-splines, specify "basis". To draw
- * cardinal splines, specify "cardinal"; see also {@link #tension}.
+ * specified. To draw open uniform b-splines, specify "basis". To draw cardinal
+ * splines, specify "cardinal"; see also {@link #tension}.
  *
  * <p>This property is <i>fixed</i>. See {@link pv.Mark}.
  *
@@ -8379,7 +8524,7 @@ pv.Panel.prototype.type = "panel";
  *
  * @type string
  * @name pv.Panel.prototype.overflow
- * @see http://www.w3.org/TR/CSS2/visufx.html#overflow
+ * @see <a href="http://www.w3.org/TR/CSS2/visufx.html#overflow">CSS2</a>
  */
 
 /**
@@ -8390,7 +8535,7 @@ pv.Panel.prototype.type = "panel";
  *
  * @type pv.Transform
  * @name pv.Panel.prototype.transform
- * @see pv.Mark.prototype.scale
+ * @see pv.Mark#scale
  */
 
 /**
@@ -8564,21 +8709,22 @@ pv.Panel.prototype.buildImplied = function(s) {
 };
 /**
  * Constructs a new image with default properties. Images are not typically
- * constructed directly, but by adding to a panel or an existing mark via {@link
- * pv.Mark#add}.
+ * constructed directly, but by adding to a panel or an existing mark via
+ * {@link pv.Mark#add}.
  *
- * @class Represents an image. Images share the same layout and style properties
- * as bars, in conjunction with an external image such as PNG or JPEG. The image
- * is specified via the {@link #url} property. The fill, if specified, appears
- * beneath the image, while the optional stroke appears above the image.
+ * @class Represents an image, either a static resource or a dynamically-
+ * generated pixel buffer. Images share the same layout and style properties as
+ * bars. The external image resource is specified via the {@link #url}
+ * property. The optional fill, if specified, appears beneath the image, while
+ * the optional stroke appears above the image.
  *
  * <p>Dynamic images such as heatmaps are supported using the {@link #image}
- * function. This function is passed the <i>x</i> and <i>y</i> index, in
- * addition to the current data stack. The return value is a {@link pv.Color}.
- *
- * <p>TODO Allow different modes of image placement: "scale" -- scale and
- * preserve aspect ratio, "tile" -- repeat the image, "center" -- center the
- * image, "fill" -- scale without preserving aspect ratio.
+ * psuedo-property. This function is passed the <i>x</i> and <i>y</i> index, in
+ * addition to the current data stack. The return value is a {@link pv.Color},
+ * or null for transparent. A string can also be returned, which will be parsed
+ * into a color; however, it is typically much faster to return an object with
+ * <tt>r</tt>, <tt>g</tt>, <tt>b</tt> and <tt>a</tt> attributes, to avoid the
+ * cost of parsing and object instantiation.
  *
  * <p>See {@link pv.Bar} for details on positioning properties.
  *
@@ -8604,6 +8750,26 @@ pv.Image.prototype.type = "image";
  */
 
 /**
+ * The width of the image in pixels. For static images, this property is
+ * computed implicitly from the loaded image resources. For dynamic images, this
+ * property can be used to specify the width of the pixel buffer; otherwise, the
+ * value is derived from the <tt>width</tt> property.
+ *
+ * @type number
+ * @name pv.Image.prototype.imageWidth
+ */
+
+/**
+ * The height of the image in pixels. For static images, this property is
+ * computed implicitly from the loaded image resources. For dynamic images, this
+ * property can be used to specify the height of the pixel buffer; otherwise, the
+ * value is derived from the <tt>height</tt> property.
+ *
+ * @type number
+ * @name pv.Image.prototype.imageHeight
+ */
+
+/**
  * Default properties for images. By default, there is no stroke or fill style.
  *
  * @type pv.Image
@@ -8612,7 +8778,32 @@ pv.Image.prototype.defaults = new pv.Image()
     .extend(pv.Bar.prototype.defaults)
     .fillStyle(null);
 
+/**
+ * Specifies the dynamic image function. By default, no image function is
+ * specified and the <tt>url</tt> property is used to load a static image
+ * resource. If an image function is specified, it will be invoked for each
+ * pixel in the image, based on the related <tt>imageWidth</tt> and
+ * <tt>imageHeight</tt> properties.
+ *
+ * <p>For example, given a two-dimensional array <tt>heatmap</tt>, containing
+ * numbers in the range [0, 1] in row-major order, a simple monochrome heatmap
+ * image can be specified as:
+ *
+ * <pre>vis.add(pv.Image)
+ *     .imageWidth(heatmap[0].length)
+ *     .imageHeight(heatmap.length)
+ *     .image(pv.ramp("white", "black").by(function(x, y) heatmap[y][x]));</pre>
+ *
+ * For fastest performance, use an ordinal scale which caches the fixed color
+ * palette, or return an object literal with <tt>r</tt>, <tt>g</tt>, <tt>b</tt>
+ * and <tt>a</tt> attributes. A {@link pv.Color} or string can also be returned,
+ * though this typically results in slower performance.
+ *
+ * @param {function} f the new sizing function.
+ * @returns {pv.Layout.Pack} this.
+ */
 pv.Image.prototype.image = function(f) {
+  /** @private */
   this.$image = function() {
       var c = f.apply(this, arguments);
       return c == null ? pv.Color.transparent
@@ -8631,6 +8822,7 @@ pv.Image.prototype.bind = function() {
   } while (!binds.image && (mark = mark.proto));
 };
 
+/** @private */
 pv.Image.prototype.buildImplied = function(s) {
   pv.Bar.prototype.buildImplied.call(this, s);
   if (!s.visible) return;
@@ -8918,12 +9110,11 @@ pv.Wedge.prototype.buildImplied = function(s) {
   pv.Mark.prototype.buildImplied.call(this, s);
 };
 /**
- * A weighted particle that can participate in a force simulation. There is no
- * explicit constructor corresponding to the class <tt>pv.Particle</tt>; this
- * class merely serves to document the attributes that are used on particles in
- * physics simulations.
+ * @class A weighted particle that can participate in a force simulation. There
+ * is no explicit constructor corresponding to the class <tt>pv.Particle</tt>;
+ * this class merely serves to document the attributes that are used on
+ * particles in physics simulations.
  *
- * @class
  * @name pv.Particle
  */
 
@@ -9834,7 +10025,37 @@ pv.Constraint.bound = function() {
   return constraint;
 };
 /**
- * @class
+ * Constructs a new, empty layout with default properties. Layouts are not
+ * typically constructed directly; instead, a concrete subclass is added to an
+ * existing panel via {@link pv.Mark#add}.
+ *
+ * @class Represents an abstract layout, encapsulating a visualization technique
+ * such as a streamgraph or treemap. Layouts are themselves containers,
+ * extending from {@link pv.Panel}, and defining a set of mark prototypes as
+ * children. These mark prototypes provide default properties that together
+ * implement the given visualization technique.
+ *
+ * <p>Layouts do not initially contain any marks; any exported marks (such as a
+ * network layout's <tt>link</tt> and <tt>node</tt>) are intended to be used as
+ * prototypes. By adding a concrete mark, such as a {@link pv.Bar}, to the
+ * appropriate mark prototype, the mark is added to the layout and inherits the
+ * given properties. This approach allows further customization of the layout,
+ * either by choosing a different mark type to add, or more simply by overriding
+ * some of the layout's defined properties.
+ *
+ * <p>Each concrete layout, such as treemap or circle-packing, has different
+ * behavior and may export different mark prototypes, depending on what marks
+ * are typically needed to render the desired visualization. Therefore it is
+ * important to understand how each layout is structured, such that the provided
+ * mark prototypes are used appropriately.
+ *
+ * <p>In addition to the mark prototypes, layouts may define custom properties
+ * that affect the overall behavior of the layout. For example, a treemap layout
+ * might use a property to specify which layout algorithm to use. These
+ * properties are just like other mark properties, and can be defined as
+ * constants or as functions. As with panels, the data property can be used to
+ * replicate layouts, and properties can be defined to in terms of layout data.
+ *
  * @extends pv.Panel
  */
 pv.Layout = function() {
@@ -9847,6 +10068,9 @@ pv.Layout.prototype = pv.extend(pv.Panel);
  * @private Defines a local property with the specified name and cast. Note that
  * although the property method is only defined locally, the cast function is
  * global, which is necessary since properties are inherited!
+ *
+ * @param {string} name the property name.
+ * @param {function} [cast] the cast function for this property.
  */
 pv.Layout.prototype.property = function(name, cast) {
   if (!this.hasOwnProperty("properties")) {
@@ -9857,9 +10081,81 @@ pv.Layout.prototype.property = function(name, cast) {
   return this;
 };
 /**
- * @class Abstract layout for networks.
+ * Constructs a new, empty network layout. Layouts are not typically constructed
+ * directly; instead, they are added to an existing panel via
+ * {@link pv.Mark#add}.
+ *
+ * @class Represents an abstract layout for network diagrams. This class
+ * provides the basic structure for both node-link diagrams (such as
+ * force-directed graph layout) and space-filling network diagrams (such as
+ * sunbursts and treemaps). Note that "network" here is a general term that
+ * includes hierarchical structures; a tree is represented using links from
+ * child to parent.
+ *
+ * <p>Network layouts require the graph data structure to be defined using two
+ * properties:<ul>
+ *
+ * <li><tt>nodes</tt> - an array of objects representing nodes. Objects in this
+ * array must conform to the {@link pv.Layout.Network.Node} interface; which is
+ * to say, be careful to avoid naming collisions with automatic attributes such
+ * as <tt>index</tt> and <tt>linkDegree</tt>. If the nodes property is defined
+ * as an array of primitives, such as numbers or strings, these primitives are
+ * automatically wrapped in an object; the resulting object's <tt>nodeValue</tt>
+ * attribute points to the original primitive value.
+ *
+ * <p><li><tt>links</tt> - an array of objects representing links. Objects in
+ * this array must conform to the {@link pv.Layout.Network.Link} interface; at a
+ * minimum, either <tt>source</tt> and <tt>target</tt> indexes or
+ * <tt>sourceNode</tt> and <tt>targetNode</tt> references must be set. Note that
+ * if the links property is defined after the nodes property, the links can be
+ * defined in terms of <tt>this.nodes()</tt>.
+ *
+ * </ul>
+ *
+ * <p>Three standard mark prototypes are provided:<ul>
+ *
+ * <li><tt>node</tt> - for rendering nodes; typically a {@link pv.Dot}. The node
+ * mark is added directly to the layout, with the data property defined via the
+ * layout's <tt>nodes</tt> property. Properties such as <tt>strokeStyle</tt> and
+ * <tt>fillStyle</tt> can be overridden to compute properties from node data
+ * dynamically.
+ *
+ * <p><li><tt>link</tt> - for rendering links; typically a {@link pv.Line}. The
+ * link mark is added to a child panel, whose data property is defined as
+ * layout's <tt>links</tt> property. The link's data property is then a
+ * two-element array of the source node and target node. Thus, poperties such as
+ * <tt>strokeStyle</tt> and <tt>fillStyle</tt> can be overridden to compute
+ * properties from either the node data (the first argument) or the link data
+ * (the second argument; the parent panel data) dynamically.
+ *
+ * <p><li><tt>label</tt> - for rendering node labels; typically a
+ * {@link pv.Label}. The label mark is added directly to the layout, with the
+ * data property defined via the layout's <tt>nodes</tt> property. Properties
+ * such as <tt>strokeStyle</tt> and <tt>fillStyle</tt> can be overridden to
+ * compute properties from node data dynamically.
+ *
+ * </ul>Note that some network implementations may not support all three
+ * standard mark prototypes; for example, space-filling hierarchical layouts
+ * typically do not use a <tt>link</tt> prototype, as the parent-child links are
+ * implied by the structure of the space-filling <tt>node</tt> marks.  Check the
+ * specific network layout for implementation details.
+ *
+ * <p>Network layout properties, including <tt>nodes</tt> and <tt>links</tt>,
+ * are typically cached rather than re-evaluated with every call to render. This
+ * is a performance optimization, as network layout algorithms can be
+ * expensive. If the network structure changes, call {@link #reset} to clear the
+ * cache before rendering. Note that although the network layout properties are
+ * cached, child mark properties, such as the marks used to render the nodes and
+ * links, <i>are not</i>. Therefore, non-structural changes to the network
+ * layout, such as changing the color of a mark on mouseover, do not need to
+ * reset the layout.
+ *
+ * @see pv.Layout.Hierarchy
+ * @see pv.Layout.Force
+ * @see pv.Layout.Matrix
+ * @see pv.Layout.Arc
+ * @see pv.Layout.Rollup
  * @extends pv.Layout
- * @constructor
  */
 pv.Layout.Network = function() {
   pv.Layout.call(this);
@@ -9927,6 +10223,114 @@ pv.Layout.Network = function() {
         })).parent = this;
 };
 
+/**
+ * @class Represents a node in a network layout. There is no explicit
+ * constructor; this class merely serves to document the attributes that are
+ * used on nodes in network layouts. (Note that hierarchical nodes place
+ * additional requirements on node representation, vis {@link pv.Dom.Node}.)
+ *
+ * @see pv.Layout.Network
+ * @name pv.Layout.Network.Node
+ */
+
+/**
+ * The node index, zero-based. This attribute is populated automatically based
+ * on the index in the array returned by the <tt>nodes</tt> property.
+ *
+ * @type number
+ * @name pv.Layout.Network.Node.prototype.index
+ */
+
+/**
+ * The link degree; the sum of link values for all incoming and outgoing links.
+ * This attribute is populated automatically.
+ *
+ * @type number
+ * @name pv.Layout.Network.Node.prototype.linkDegree
+ */
+
+/**
+ * The node name; optional. If present, this attribute will be used to provide
+ * the text for node labels. If not present, the label text will fallback to the
+ * <tt>nodeValue</tt> attribute.
+ *
+ * @type string
+ * @name pv.Layout.Network.Node.prototype.nodeName
+ */
+
+/**
+ * The node value; optional. If present, and no <tt>nodeName</tt> attribute is
+ * present, the node value will be used as the label text. This attribute is
+ * also automatically populated if the nodes are specified as an array of
+ * primitives, such as strings or numbers.
+ *
+ * @type object
+ * @name pv.Layout.Network.Node.prototype.nodeValue
+ */
+
+/**
+ * @class Represents a link in a network layout. There is no explicit
+ * constructor; this class merely serves to document the attributes that are
+ * used on links in network layouts. For hierarchical layouts, this class is
+ * used to represent the parent-child links.
+ *
+ * @see pv.Layout.Network
+ * @name pv.Layout.Network.Link
+ */
+
+/**
+ * The link value, or weight; optional. If not specified (or not a number), the
+ * default value of 1 is used.
+ *
+ * @type number
+ * @name pv.Layout.Network.Link.prototype.linkValue
+ */
+
+/**
+ * The link's source node. If not set, this value will be derived from the
+ * <tt>source</tt> attribute index.
+ *
+ * @type pv.Layout.Network.Node
+ * @name pv.Layout.Network.Link.prototype.sourceNode
+ */
+
+/**
+ * The link's target node. If not set, this value will be derived from the
+ * <tt>target</tt> attribute index.
+ *
+ * @type pv.Layout.Network.Node
+ * @name pv.Layout.Network.Link.prototype.targetNode
+ */
+
+/**
+ * Alias for <tt>sourceNode</tt>, as expressed by the index of the source node.
+ * This attribute is not populated automatically, but may be used as a more
+ * convenient identification of the link's source, for example in a static JSON
+ * representation.
+ *
+ * @type number
+ * @name pv.Layout.Network.Link.prototype.source
+ */
+
+/**
+ * Alias for <tt>targetNode</tt>, as expressed by the index of the target node.
+ * This attribute is not populated automatically, but may be used as a more
+ * convenient identification of the link's target, for example in a static JSON
+ * representation.
+ *
+ * @type number
+ * @name pv.Layout.Network.Link.prototype.target
+ */
+
+/**
+ * Alias for <tt>linkValue</tt>. This attribute is not populated automatically,
+ * but may be used instead of the <tt>linkValue</tt> attribute when specifying
+ * links.
+ *
+ * @type number
+ * @name pv.Layout.Network.Link.prototype.value
+ */
+
 /** @private Transform nodes and links on cast. */
 pv.Layout.Network.prototype = pv.extend(pv.Layout)
     .property("nodes", function(v) {
@@ -9977,9 +10381,38 @@ pv.Layout.Network.prototype.buildImplied = function(s) {
     });
 };
 /**
- * @class Abstract layout for hierarchies.
+ * Constructs a new, empty hierarchy layout. Layouts are not typically
+ * constructed directly; instead, they are added to an existing panel via
+ * {@link pv.Mark#add}.
+ *
+ * @class Represents an abstract layout for hierarchy diagrams. This class is a
+ * specialization of {@link pv.Layout.Network}, providing the basic structure
+ * for both hierarchical node-link diagrams (such as Reingold-Tilford trees) and
+ * space-filling hierarchy diagrams (such as sunbursts and treemaps).
+ *
+ * <p>Unlike general network layouts, the <tt>links</tt> property need not be
+ * defined explicitly. Instead, the links are computed implicitly from the
+ * <tt>parentNode</tt> attribute of the node objects, as defined by the
+ * <tt>nodes</tt> property. This implementation is also available as
+ * {@link #links}, for reuse with non-hierarchical layouts; for example, to
+ * render a tree using force-directed layout.
+ *
+ * <p>Correspondingly, the <tt>nodes</tt> property is represented as a union of
+ * {@link pv.Layout.Network.Node} and {@link pv.Dom.Node}. To construct a node
+ * hierarchy from a simple JSON map, use the {@link pv.Dom} operator; this
+ * operator also provides an easy way to sort nodes before passing them to the
+ * layout.
+ *
+ * <p>For more details on how to use this layout, see
+ * {@link pv.Layout.Network}.
+ *
+ * @see pv.Layout.Cluster
+ * @see pv.Layout.Partition
+ * @see pv.Layout.Tree
+ * @see pv.Layout.Treemap
+ * @see pv.Layout.Indent
+ * @see pv.Layout.Pack
  * @extends pv.Layout.Network
- * @constructor
  */
 pv.Layout.Hierarchy = function() {
   pv.Layout.Network.call(this);
@@ -10007,7 +10440,7 @@ pv.Layout.Hierarchy.links = function() {
       });
 };
 
-/** @private */
+/** @private Provides standard node-link layout based on breadth & depth. */
 pv.Layout.Hierarchy.NodeLink = {
 
   /** @private */
@@ -10068,7 +10501,7 @@ pv.Layout.Hierarchy.NodeLink = {
   }
 };
 
-/** @private */
+/** @private Provides standard space-filling layout based on breadth & depth. */
 pv.Layout.Hierarchy.Fill = {
 
   /** @private */
@@ -10197,12 +10630,13 @@ pv.Layout.Hierarchy.Fill = {
   }
 };
 /**
- * Returns a new grid layout.
+ * Constructs a new, empty grid layout. Layouts are not typically constructed
+ * directly; instead, they are added to an existing panel via
+ * {@link pv.Mark#add}.
  *
- * @class A grid layout with regularly-sized rows and columns. <img
- * src="../grid.png" width="160" height="160" align="right"> The number of rows
- * and columns are determined from their respective properties. For example, the
- * 2&times;3 array:
+ * @class Represents a grid layout with regularly-sized rows and columns. The
+ * number of rows and columns are determined from their respective
+ * properties. For example, the 2&times;3 array:
  *
  * <pre>1 2 3
  * 4 5 6</pre>
@@ -10213,31 +10647,42 @@ pv.Layout.Hierarchy.Fill = {
  *
  * If your data is in column-major order, you can equivalently use the
  * <tt>columns</tt> property. If the <tt>rows</tt> property is an array, it
- * takes priority over the <tt>columns</tt> property.
+ * takes priority over the <tt>columns</tt> property. The data is implicitly
+ * transposed, as if the {@link pv.transpose} operator were applied.
  *
- * <p>This layout defines left, top, width, height and data properties. The data
- * property will be the associated element in the array. For example, if the
- * array is a two-dimensional array of values in the range [0,1], a simple
- * heatmap can be generated as:
+ * <p>This layout exports a single <tt>cell</tt> mark prototype, which is
+ * intended to be used with a bar, panel, layout, or subclass thereof. The data
+ * property of the cell prototype is defined as the elements in the array. For
+ * example, if the array is a two-dimensional array of values in the range
+ * [0,1], a simple heatmap can be generated as:
  *
  * <pre>vis.add(pv.Layout.Grid)
  *     .rows(arrays)
- *   .add(pv.Bar)
+ *   .cell.add(pv.Bar)
  *     .fillStyle(pv.ramp("white", "black"))</pre>
  *
  * The grid subdivides the full width and height of the parent panel into equal
- * rectangles. For more data-driven subdivision, see {@link pv.Layout.Treemap}.
+ * rectangles. Note, however, that for large, interactive, or animated heatmaps,
+ * you may see significantly better performance through dynamic {@link pv.Image}
+ * generation.
+ *
+ * <p>For irregular grids using value-based spatial partitioning, see {@link
+ * pv.Layout.Treemap}.
  *
  * @extends pv.Layout
- * @constructor
- * @returns {pv.Layout.Grid} a grid layout.
  */
 pv.Layout.Grid = function() {
   pv.Layout.call(this);
-  var that = this,
-      add = that.add;
+  var that = this;
 
-  var cells = new pv.Panel()
+  /**
+   * The cell prototype. This prototype is intended to be used with a bar,
+   * panel, or layout (or subclass thereof) to render the grid cells.
+   *
+   * @type pv.Mark
+   * @name pv.Layout.Grid.prototype.cell
+   */
+  (this.cell = new pv.Mark()
       .data(function() {
           return that.scene[that.index].$grid;
         })
@@ -10252,17 +10697,19 @@ pv.Layout.Grid = function() {
         })
       .top(function() {
           return this.height() * Math.floor(this.index / that.cols());
-        });
-
-  that.add = function(type) {
-    return add.call(this, pv.Panel).extend(cells).add(type);
-  };
+        })).parent = this;
 };
 
 pv.Layout.Grid.prototype = pv.extend(pv.Layout)
     .property("rows")
     .property("cols");
 
+/**
+ * Default properties for grid layouts. By default, there is one row and one
+ * column, and the data is the propagated to the child cell.
+ *
+ * @type pv.Layout.Grid
+ */
 pv.Layout.Grid.prototype.defaults = new pv.Layout.Grid()
     .extend(pv.Layout.prototype.defaults)
     .rows(1)
@@ -10302,9 +10749,16 @@ pv.Layout.Grid.prototype.buildImplied = function(s) {
  * @name pv.Layout.Grid.prototype.cols
  */
 /**
- * Returns a new stack layout.
+ * Constructs a new, empty stack layout. Layouts are not typically constructed
+ * directly; instead, they are added to an existing panel via
+ * {@link pv.Mark#add}.
  *
- * @class A layout for stacking marks vertically or horizontally. For example,
+ * @class Represents a layout for stacked visualizations, ranging from simple
+ * stacked bar charts to more elaborate "streamgraphs" composed of stacked
+ * areas. Stack layouts uses length as a visual encoding, as opposed to
+ * position, as the layers do not share an aligned axis.
+ *
+ * <p>Marks can be stacked vertically or horizontally. For example,
  *
  * <pre>vis.add(pv.Layout.Stack)
  *     .layers([[1, 1.2, 1.7, 1.5, 1.7],
@@ -10314,11 +10768,63 @@ pv.Layout.Grid.prototype.buildImplied = function(s) {
  *     .y(function(d) d * 40)
  *   .layer.add(pv.Area);</pre>
  *
- * specifies a vertically-stacked area chart.
+ * specifies a vertically-stacked area chart, using the default "bottom-left"
+ * orientation with "zero" offset. This visualization can be easily changed into
+ * a streamgraph using the "wiggle" offset, which attempts to minimize change in
+ * slope weighted by layer thickness. See the {@link #offset} property for more
+ * supported streamgraph algorithms.
+ *
+ * <p>In the simplest case, the layer data can be specified as a two-dimensional
+ * array of numbers. The <tt>x</tt> and <tt>y</tt> psuedo-properties are used to
+ * define the thickness of each layer at the given position, respectively; in
+ * the above example of the "bottom-left" orientation, the <tt>x</tt> and
+ * <tt>y</tt> psuedo-properties are equivalent to the <tt>left</tt> and
+ * <tt>height</tt> properties that you might use if you implemented a stacked
+ * area by hand.
+ *
+ * <p>The advantage of using the stack layout is that the baseline, i.e., the
+ * <tt>bottom</tt> property is computed automatically using the specified offset
+ * algorithm. In addition, the order of layers can be computed using a built-in
+ * algorithm via the <tt>order</tt> property.
+ *
+ * <p>With the exception of the "expand" <tt>offset</tt>, the stack layout does
+ * not perform any automatic scaling of data; the values returned from
+ * <tt>x</tt> and <tt>y</tt> specify pixel sizes. To simplify scaling math, use
+ * this layout in conjunction with {@link pv.Scale.linear} or similar.
+ *
+ * <p>In other cases, the <tt>values</tt> psuedo-property can be used to define
+ * the data more flexibly. As with a typical panel &amp; area, the
+ * <tt>layers</tt> property corresponds to the data in the enclosing panel,
+ * while the <tt>values</tt> psuedo-property corresponds to the data for the
+ * area within the panel. For example, given an array of data values:
+ *
+ * <pre>var crimea = [
+ *  { date: "4/1854", wounds: 0, other: 110, disease: 110 },
+ *  { date: "5/1854", wounds: 0, other: 95, disease: 105 },
+ *  { date: "6/1854", wounds: 0, other: 40, disease: 95 },
+ *  ...</pre>
+ *
+ * and a corresponding array of series names:
+ *
+ * <pre>var causes = ["wounds", "other", "disease"];</pre>
+ *
+ * Separate layers can be defined for each cause like so:
+ *
+ * <pre>vis.add(pv.Layout.Stack)
+ *     .layers(causes)
+ *     .values(crimea)
+ *     .x(function(d) x(d.date))
+ *     .y(function(d, p) y(d[p]))
+ *   .layer.add(pv.Area)
+ *     ...</pre>
+ *
+ * As with the panel &amp; area case, the datum that is passed to the
+ * psuedo-properties <tt>x</tt> and <tt>y</tt> are the values (an element in
+ * <tt>crimea</tt>); the second argument is the layer data (a string in
+ * <tt>causes</tt>). Additional arguments specify the data of enclosing panels,
+ * if any.
  *
  * @extends pv.Layout
- * @constructor
- * @returns {pv.Layout.Stack} a stack layout.
  */
 pv.Layout.Stack = function() {
   pv.Layout.call(this);
@@ -10472,6 +10978,18 @@ pv.Layout.Stack = function() {
     prop[pdy] = function(i, j) { return dy[i][j]; };
   };
 
+  /**
+   * The layer prototype. This prototype is intended to be used with an area,
+   * bar or panel mark (or subclass thereof). Other mark types may be possible,
+   * though note that the stack layout is not currently designed to support
+   * radial stacked visualizations using wedges.
+   *
+   * <p>The layer is not a direct child of the stack layout; a hidden panel is
+   * used to replicate layers.
+   *
+   * @type pv.Mark
+   * @name pv.Layout.Stack.prototype.layer
+   */
   this.layer = new pv.Mark()
       .data(function() { return values[this.parent.index]; })
       .top(proxy("t"))
@@ -10507,12 +11025,12 @@ pv.Layout.Stack.prototype.$x
     = function() { return 0; };
 
 /**
- * The x function; determines the position of the value within the layer.  This
- * typically corresponds to the independent variable. For example, with the
+ * The x psuedo-property; determines the position of the value within the layer.
+ * This typically corresponds to the independent variable. For example, with the
  * default "bottom-left" orientation, this function defines the "left" property.
  *
  * @param {function} f the x function.
- * @returns this.
+ * @returns {pv.Layout.Stack} this.
  */
 pv.Layout.Stack.prototype.x = function(f) {
   /** @private */ this.$x = pv.functor(f);
@@ -10520,13 +11038,13 @@ pv.Layout.Stack.prototype.x = function(f) {
 };
 
 /**
- * The y function; determines the thickness of the layer at the given value.
- * This typically corresponds to the dependent variable. For example, with the
- * default "bottom-left" orientation, this function defines the "height"
- * property.
+ * The y psuedo-property; determines the thickness of the layer at the given
+ * value.  This typically corresponds to the dependent variable. For example,
+ * with the default "bottom-left" orientation, this function defines the
+ * "height" property.
  *
  * @param {function} f the y function.
- * @returns this.
+ * @returns {pv.Layout.Stack} this.
  */
 pv.Layout.Stack.prototype.y = function(f) {
   /** @private */ this.$y = pv.functor(f);
@@ -10538,10 +11056,11 @@ pv.Layout.Stack.prototype.$values = pv.identity;
 
 /**
  * The values function; determines the values for a given layer. The default
- * value is the identity function.
+ * value is the identity function, which assumes that the layers property is
+ * specified as a two-dimensional (i.e., nested) array.
  *
  * @param {function} f the values function.
- * @returns this.
+ * @returns {pv.Layout.Stack} this.
  */
 pv.Layout.Stack.prototype.values = function(f) {
   this.$values = pv.functor(f);
@@ -10549,7 +11068,9 @@ pv.Layout.Stack.prototype.values = function(f) {
 };
 
 /**
- * The layer data in row-major order.
+ * The layer data in row-major order. The value of this property is typically a
+ * two-dimensional (i.e., nested) array, but any array can be used, provided the
+ * values psuedo-property is defined accordingly.
  *
  * @type array[]
  * @name pv.Layout.Stack.prototype.layers
@@ -10583,14 +11104,33 @@ pv.Layout.Stack.prototype.values = function(f) {
 /**
  * The layer order. The following values are supported:<ul>
  *
- * <li><i>null</i>
- * <li>inside-out
- * <li>reverse
+ * <li><i>null</i> - use given layer order.
+ * <li>inside-out - sort by maximum value, with balanced order.
+ * <li>reverse - use reverse of given layer order.
  *
- * </ul>.
+ * </ul>For details on the inside-out order algorithm, refer to "Stacked Graphs
+ * -- Geometry &amp; Aesthetics" by L. Byron and M. Wattenberg, IEEE TVCG
+ * November/December 2008.
  *
  * @type string
  * @name pv.Layout.Stack.prototype.order
+ */
+
+/**
+ * The layer offset; the y-position of the bottom of the lowest layer. The
+ * following values are supported:<ul>
+ *
+ * <li>zero - use a zero baseline, i.e., the y-axis.
+ * <li>silohouette - center the stream, i.e., ThemeRiver.
+ * <li>wiggle - minimize weighted change in slope.
+ * <li>expand - expand layers to fill the enclosing layout dimensions.
+ *
+ * </ul>For details on these offset algorithms, refer to "Stacked Graphs --
+ * Geometry &amp; Aesthetics" by L. Byron and M. Wattenberg, IEEE TVCG
+ * November/December 2008.
+ *
+ * @type string
+ * @name pv.Layout.Stack.prototype.offset
  */
 /**
  * Returns a new treemap layout.
@@ -11144,9 +11684,30 @@ pv.Layout.Tree.prototype.buildImplied = function(s) {
  * @name pv.Layout.Tree.prototype.group
  */
 /**
- * @class
+ * Constructs a new, empty indent layout. Layouts are not typically constructed
+ * directly; instead, they are added to an existing panel via
+ * {@link pv.Mark#add}.
+ *
+ * @class Represents a hierarchical layout using the indent algorithm. This
+ * layout implements a node-link diagram where the nodes are presented in
+ * preorder traversal, and nodes are indented based on their depth from the
+ * root. This technique is used ubiquitously by operating systems to represent
+ * file directories; although it requires much vertical space, indented trees
+ * allow efficient <i>interactive</i> exploration of trees to find a specific
+ * node. In addition they allow rapid scanning of node labels, and multivariate
+ * data such as file sizes can be displayed adjacent to the hierarchy.
+ *
+ * <p>The indent layout can be configured using the <tt>depth</tt> and
+ * <tt>breadth</tt> properties, which control the increments in pixel space for
+ * each indent and row in the layout. This layout does not support multiple
+ * orientations; the root node is rendered in the top-left, while
+ * <tt>breadth</tt> is a vertical offset from the top, and <tt>depth</tt> is a
+ * horizontal offset from the left.
+ *
+ * <p>For more details on how to use this layout, see
+ * {@link pv.Layout.Hierarchy}.
+ *
  * @extends pv.Layout.Hierarchy
- * @constructor
  */
 pv.Layout.Indent = function() {
   pv.Layout.Hierarchy.call(this);
@@ -11158,15 +11719,25 @@ pv.Layout.Indent.prototype = pv.extend(pv.Layout.Hierarchy)
     .property("breadth", Number);
 
 /**
+ * The horizontal offset between different levels of the tree; defaults to 15.
+ *
  * @type number
  * @name pv.Layout.Indent.prototype.depth
  */
 
 /**
+ * The vertical offset between nodes; defaults to 15.
+ *
  * @type number
  * @name pv.Layout.Indent.prototype.breadth
  */
 
+/**
+ * Default properties for indent layouts. By default the depth and breadth
+ * offsets are 15 pixels.
+ *
+ * @type pv.Layout.Indent
+ */
 pv.Layout.Indent.prototype.defaults = new pv.Layout.Indent()
     .extend(pv.Layout.Hierarchy.prototype.defaults)
     .depth(15)
@@ -11645,9 +12216,27 @@ pv.Layout.Force.prototype.buildImplied = function(s) {
   }
 };
 /**
- * @class Cluster tree layout.
+ * Constructs a new, empty cluster layout. Layouts are not typically
+ * constructed directly; instead, they are added to an existing panel via
+ * {@link pv.Mark#add}.
+ *
+ * @class Represents a hierarchical layout using the cluster (or dendrogram)
+ * algorithm. This layout provides both node-link and space-filling
+ * implementations of cluster diagrams. In many ways it is similar to
+ * {@link pv.Layout.Partition}, except that leaf nodes are positioned at maximum
+ * depth, and the depth of internal nodes is based on their distance from their
+ * deepest descendant, rather than their distance from the root.
+ *
+ * <p>The cluster layout supports a "group" property, which if true causes
+ * siblings to be positioned closer together than unrelated nodes at the same
+ * depth. Unlike the partition layout, this layout does not support dynamic
+ * sizing for leaf nodes; all leaf nodes are the same size.
+ *
+ * <p>For more details on how to use this layout, see
+ * {@link pv.Layout.Hierarchy}.
+ *
+ * @see pv.Layout.Cluster.Fill
  * @extends pv.Layout.Hierarchy
- * @constructor
  */
 pv.Layout.Cluster = function() {
   pv.Layout.Hierarchy.call(this);
@@ -11673,21 +12262,49 @@ pv.Layout.Cluster.prototype = pv.extend(pv.Layout.Hierarchy)
     .property("outerRadius", Number);
 
 /**
+ * The group parameter; defaults to 0, disabling grouping of siblings. If this
+ * parameter is set to a positive number (or true, which is equivalent to 1),
+ * then additional space will be allotted between sibling groups. In other
+ * words, siblings (nodes that share the same parent) will be positioned more
+ * closely than nodes at the same depth that do not share a parent.
+ *
  * @type number
  * @name pv.Layout.Cluster.prototype.group
  */
 
 /**
+ * The orientation. The default orientation is "top", which means that the root
+ * node is placed on the top edge, leaf nodes appear on the bottom edge, and
+ * internal nodes are in-between. The following orientations are supported:<ul>
+ *
+ * <li>left - left-to-right.
+ * <li>right - right-to-left.
+ * <li>top - top-to-bottom.
+ * <li>bottom - bottom-to-top.
+ * <li>radial - radially, with the root at the center.</ul>
+ *
  * @type string
  * @name pv.Layout.Cluster.prototype.orient
  */
 
 /**
+ * The inner radius; defaults to 0. This property applies only to radial
+ * orientations, and can be used to compress the layout radially. Note that for
+ * the node-link implementation, the root node is always at the center,
+ * regardless of the value of this property; this property only affects internal
+ * and leaf nodes. For the space-filling implementation, a non-zero value of
+ * this property will result in the root node represented as a ring rather than
+ * a circle.
+ *
  * @type number
  * @name pv.Layout.Cluster.prototype.innerRadius
  */
 
 /**
+ * The outer radius; defaults to fill the containing panel, based on the height
+ * and width of the layout. If the layout has no height and width specified, it
+ * will extend to fill the enclosing panel.
+ *
  * @type number
  * @name pv.Layout.Cluster.prototype.outerRadius
  */
@@ -11763,9 +12380,27 @@ pv.Layout.Cluster.prototype.buildImplied = function(s) {
 };
 
 /**
- * @class A variant of cluster layout that is space-filling.
+ * Constructs a new, empty space-filling cluster layout. Layouts are not
+ * typically constructed directly; instead, they are added to an existing panel
+ * via {@link pv.Mark#add}.
+ *
+ * @class A variant of cluster layout that is space-filling. The meaning of the
+ * exported mark prototypes changes slightly in the space-filling
+ * implementation:<ul>
+ *
+ * <li><tt>node</tt> - for rendering nodes; typically a {@link pv.Bar} for
+ * non-radial orientations, and a {@link pv.Wedge} for radial orientations.
+ *
+ * <p><li><tt>link</tt> - unsupported; undefined. Links are encoded implicitly
+ * in the arrangement of the space-filling nodes.
+ *
+ * <p><li><tt>label</tt> - for rendering node labels; typically a
+ * {@link pv.Label}.
+ *
+ * </ul>For more details on how to use this layout, see
+ * {@link pv.Layout.Cluster}.
+ *
  * @extends pv.Layout.Cluster
- * @constructor
  */
 pv.Layout.Cluster.Fill = function() {
   pv.Layout.Cluster.call(this);
@@ -11780,9 +12415,30 @@ pv.Layout.Cluster.Fill.prototype.buildImplied = function(s) {
   pv.Layout.Hierarchy.Fill.buildImplied.call(this, s);
 };
 /**
- * @class
+ * Constructs a new, empty partition layout. Layouts are not typically
+ * constructed directly; instead, they are added to an existing panel via
+ * {@link pv.Mark#add}.
+ *
+ * @class Represents a hierarchical layout using the partition (or sunburst,
+ * icicle) algorithm. This layout provides both node-link and space-filling
+ * implementations of partition diagrams. In many ways it is similar to
+ * {@link pv.Layout.Cluster}, except that leaf nodes are positioned based on
+ * their distance from the root.
+ *
+ * <p>The partition layout support dynamic sizing for leaf nodes, if a
+ * {@link #size} psuedo-property is specified. The default size function returns
+ * 1, causing all leaf nodes to be sized equally, and all internal nodes to be
+ * sized by the number of leaf nodes they have as descendants. The size function
+ * can be used in conjunction with the order property, which allows the nodes to
+ * the sorted by the computed size. Note: for sorting based on other data
+ * attributes, simply use the default <tt>null</tt> for the order property, and
+ * sort the nodes beforehand using the {@link pv.Dom} operator.
+ *
+ * <p>For more details on how to use this layout, see
+ * {@link pv.Layout.Hierarchy}.
+ *
+ * @see pv.Layout.Partition.Fill
  * @extends pv.Layout.Hierarchy
- * @constructor
  */
 pv.Layout.Partition = function() {
   pv.Layout.Hierarchy.call(this);
@@ -11795,21 +12451,51 @@ pv.Layout.Partition.prototype = pv.extend(pv.Layout.Hierarchy)
     .property("outerRadius", Number);
 
 /**
+ * The sibling node order. The default order is <tt>null</tt>, which means to
+ * use the sibling order specified by the nodes property as-is. A value of
+ * "ascending" will sort siblings in ascending order of size, while "descending"
+ * will do the reverse. For sorting based on data attributes other than size,
+ * use the default <tt>null</tt> for the order property, and sort the nodes
+ * beforehand using the {@link pv.Dom} operator.
+ *
+ * @see pv.Dom.Node#sort
  * @type string
  * @name pv.Layout.Partition.prototype.order
  */
 
 /**
+ * The orientation. The default orientation is "top", which means that the root
+ * node is placed on the top edge, leaf nodes appear at the bottom, and internal
+ * nodes are in-between. The following orientations are supported:<ul>
+ *
+ * <li>left - left-to-right.
+ * <li>right - right-to-left.
+ * <li>top - top-to-bottom.
+ * <li>bottom - bottom-to-top.
+ * <li>radial - radially, with the root at the center.</ul>
+ *
  * @type string
  * @name pv.Layout.Partition.prototype.orient
  */
 
 /**
+ * The inner radius; defaults to 0. This property applies only to radial
+ * orientations, and can be used to compress the layout radially. Note that for
+ * the node-link implementation, the root node is always at the center,
+ * regardless of the value of this property; this property only affects internal
+ * and leaf nodes. For the space-filling implementation, a non-zero value of
+ * this property will result in the root node represented as a ring rather than
+ * a circle.
+ *
  * @type number
  * @name pv.Layout.Partition.prototype.innerRadius
  */
 
 /**
+ * The outer radius; defaults to fill the containing panel, based on the height
+ * and width of the layout. If the layout has no height and width specified, it
+ * will extend to fill the enclosing panel.
+ *
  * @type number
  * @name pv.Layout.Partition.prototype.outerRadius
  */
@@ -11830,7 +12516,10 @@ pv.Layout.Partition.prototype.$size = function() { return 1; };
  * files as leaf nodes, and each file has a <tt>bytes</tt> attribute, you can
  * specify a size function as:
  *
- * <pre>.size(function(d) d.bytes)</pre>
+ * <pre>    .size(function(d) d.bytes)</pre>
+ *
+ * As with other properties, a size function may specify additional arguments to
+ * access the data associated with the layout and any enclosing panels.
  *
  * @param {function} f the new sizing function.
  * @returns {pv.Layout.Partition} this.
@@ -11904,9 +12593,41 @@ pv.Layout.Partition.Fill.prototype.buildImplied = function(s) {
   pv.Layout.Hierarchy.Fill.buildImplied.call(this, s);
 };
 /**
- * @class Layout for arc diagrams.
- * @extends pv.Layout
- * @constructor
+ * Constructs a new, empty arc layout. Layouts are not typically constructed
+ * directly; instead, they are added to an existing panel via
+ * {@link pv.Mark#add}.
+ *
+ * @class Represents a layout for arc diagrams. An arc diagram is a network
+ * visualization with a one-dimensional layout of nodes, using circular arcs to
+ * render links between nodes. For undirected networks, arcs are rendering on a
+ * single side; this makes arc diagrams useful as annotations to other
+ * two-dimensional network layouts, such as rollup, matrix or table layouts. For
+ * directed networks, links in opposite directions can be rendered on opposite
+ * sides using <tt>directed(true)</tt>.
+ *
+ * <p>Arc layouts are particularly sensitive to node ordering; for best results,
+ * order the nodes such that related nodes are close to each other. A poor
+ * (e.g., random) order may result in large arcs with crossovers that impede
+ * visual processing. A future improvement to this layout may include automatic
+ * reordering using, e.g., spectral graph layout or simulated annealing.
+ *
+ * <p>This visualization technique is related to that developed by
+ * M. Wattenberg, <a
+ * href="http://www.research.ibm.com/visual/papers/arc-diagrams.pdf">"Arc
+ * Diagrams: Visualizing Structure in Strings"</a> in <i>IEEE InfoVis</i>, 2002.
+ * However, this implementation is limited to simple node-link networks, as
+ * opposed to structures with hierarchical self-similarity (such as strings).
+ *
+ * <p>As with other network layouts, three mark prototypes are provided:<ul>
+ *
+ * <li><tt>node</tt> - for rendering nodes; typically a {@link pv.Dot}.
+ * <li><tt>link</tt> - for rendering links; typically a {@link pv.Line}.
+ * <li><tt>label</tt> - for rendering node labels; typically a {@link pv.Label}.
+ *
+ * </ul>For more details on how this layout is structured and can be customized,
+ * see {@link pv.Layout.Network}.
+ *
+ * @extends pv.Layout.Network
  **/
 pv.Layout.Arc = function() {
   pv.Layout.Network.call(this);
@@ -11936,6 +12657,11 @@ pv.Layout.Arc.prototype = pv.extend(pv.Layout.Network)
     .property("orient", String)
     .property("directed", Boolean);
 
+/**
+ * Default properties for arc layouts. By default, the orientation is "bottom".
+ *
+ * @type pv.Layout.Arc
+ */
 pv.Layout.Arc.prototype.defaults = new pv.Layout.Arc()
     .extend(pv.Layout.Network.prototype.defaults)
     .orient("bottom");
@@ -11993,22 +12719,22 @@ pv.Layout.Arc.prototype.buildImplied = function(s) {
 };
 
 /**
- * The orientation. The default orientation is "left", which means that the root
- * node is placed on the left edge, leaf nodes appear on the right edge, and
- * internal nodes are in-between. The following orientations are supported:<ul>
+ * The orientation. The default orientation is "left", which means that nodes
+ * will be positioned from left-to-right in the order they are specified in the
+ * <tt>nodes</tt> property. The following orientations are supported:<ul>
  *
  * <li>left - left-to-right.
  * <li>right - right-to-left.
  * <li>top - top-to-bottom.
  * <li>bottom - bottom-to-top.
- * <li>radial - radially, with the root at the center.</ul>
+ * <li>radial - radially, starting at 12 o'clock and proceeding clockwise.</ul>
  *
  * @type string
  * @name pv.Layout.Arc.prototype.orient
  */
 
 /**
- * Whether this arc digram is directed (i.e., bidirectional); only applies to
+ * Whether this arc digram is directed (bidirectional); only applies to
  * non-radial orientations. By default, arc digrams are undirected, such that
  * all arcs appear on one side. If the arc digram is directed, then forward
  * links are drawn on the conventional side (the same as as undirected
@@ -12019,9 +12745,43 @@ pv.Layout.Arc.prototype.buildImplied = function(s) {
  * @name pv.Layout.Arc.prototype.directed
  */
 /**
- * @class
+ * Constructs a new, empty horizon layout. Layouts are not typically constructed
+ * directly; instead, they are added to an existing panel via
+ * {@link pv.Mark#add}.
+ *
+ * @class Represents a horizon layout, which is a variation of a single-series
+ * area chart where the area is folded into multiple bands. Color is used to
+ * encode band, allowing the size of the chart to be reduced significantly
+ * without impeding readability. This layout algorithm is based on the work of
+ * J. Heer, N. Kong and M. Agrawala in <a
+ * href="http://hci.stanford.edu/publications/2009/heer-horizon-chi09.pdf">"Sizing
+ * the Horizon: The Effects of Chart Size and Layering on the Graphical
+ * Perception of Time Series Visualizations"</a>, CHI 2009.
+ *
+ * <p>This layout exports a single <tt>band</tt> mark prototype, which is
+ * intended to be used with an area mark. The band mark is contained in a panel
+ * which is replicated per band (and for negative/positive bands). For example,
+ * to create a simple horizon graph given an array of numbers:
+ *
+ * <pre>vis.add(pv.Layout.Horizon)
+ *     .bands(n)
+ *   .band.add(pv.Area)
+ *     .data(data)
+ *     .left(function() this.index * 35)
+ *     .height(function(d) d * 40);</pre>
+ *
+ * The layout can be further customized by changing the number of bands, and
+ * toggling whether the negative bands are mirrored or offset. (See the
+ * above-referenced paper for guidance.)
+ *
+ * <p>The <tt>fillStyle</tt> of the area can be overridden, though typically it
+ * is easier to customize the layout's behavior through the custom
+ * <tt>backgroundStyle</tt>, <tt>positiveStyle</tt> and <tt>negativeStyle</tt>
+ * properties. By default, the background is white, positive bands are blue, and
+ * negative bands are red. For the most accurate presentation, use fully-opaque
+ * colors of equal intensity for the negative and positive bands.
+ *
  * @extends pv.Layout
- * @constructor
  */
 pv.Layout.Horizon = function() {
   pv.Layout.call(this);
@@ -12086,6 +12846,13 @@ pv.Layout.Horizon.prototype = pv.extend(pv.Layout)
     .property("positiveStyle", pv.color)
     .property("negativeStyle", pv.color);
 
+/**
+ * Default properties for horizon layouts. By default, there are two bands, the
+ * mode is "offset", the background style is "white", the positive style is
+ * blue, negative style is red.
+ *
+ * @type pv.Layout.Horizon
+ */
 pv.Layout.Horizon.prototype.defaults = new pv.Layout.Horizon()
     .extend(pv.Layout.prototype.defaults)
     .bands(2)
@@ -12420,6 +13187,7 @@ pv.Behavior.drag = function() {
       x: this.parent.width() - (d.dx || 0),
       y: this.parent.height() - (d.dy || 0)
     };
+    scene.mark.context(scene, index, function() { this.render(); });
     pv.Mark.dispatch("dragstart", scene, index);
   }
 
@@ -12430,7 +13198,7 @@ pv.Behavior.drag = function() {
         var m = this.mouse();
         p.x = p.fix.x = Math.max(0, Math.min(v1.x + m.x, max.x));
         p.y = p.fix.y = Math.max(0, Math.min(v1.y + m.y, max.y));
-        this.parent.render();
+        this.render();
       });
     pv.Mark.dispatch("drag", scene, index);
   }
@@ -12439,21 +13207,10 @@ pv.Behavior.drag = function() {
   function mouseup() {
     if (!scene) return;
     p.fix = null;
-    scene.mark.context(scene, index, function() { this.parent.render(); });
+    scene.mark.context(scene, index, function() { this.render(); });
     pv.Mark.dispatch("dragend", scene, index);
     scene = null;
   }
-
-  /**
-   * @function
-   * @name pv.Behavior.drag.prototype.render
-   * @param {pv.Mark} mark
-   * @returns {pv.Behavior.drag} this.
-   */
-  mousedown.render = function(mark) {
-    render = mark;
-    return mousedown;
-  };
 
   pv.listen(window, "mousemove", mousemove);
   pv.listen(window, "mouseup", mouseup);

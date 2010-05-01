@@ -59,7 +59,8 @@ vis.add(pv.Dot)
     .strokeStyle(function() i == this.index ? "#ff7f0e" : "#1f77b4")
     .fillStyle(function() this.strokeStyle().alpha(.2))
     .event("mousedown", pv.Behavior.drag())
-    .event("dragstart", function() (i = this.index, this));
+    .event("dragstart", function() (i = this.index, this))
+    .event("drag", vis);
 
 vis.render();
 
