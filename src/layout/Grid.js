@@ -1,10 +1,11 @@
 /**
- * Returns a new grid layout.
+ * Constructs a new, empty grid layout. Layouts are not typically constructed
+ * directly; instead, they are added to an existing panel via
+ * {@link pv.Mark#add}.
  *
- * @class A grid layout with regularly-sized rows and columns. <img
- * src="../grid.png" width="160" height="160" align="right"> The number of rows
- * and columns are determined from their respective properties. For example, the
- * 2&times;3 array:
+ * @class Represents a grid layout with regularly-sized rows and columns. The
+ * number of rows and columns are determined from their respective
+ * properties. For example, the 2&times;3 array:
  *
  * <pre>1 2 3
  * 4 5 6</pre>
@@ -15,31 +16,42 @@
  *
  * If your data is in column-major order, you can equivalently use the
  * <tt>columns</tt> property. If the <tt>rows</tt> property is an array, it
- * takes priority over the <tt>columns</tt> property.
+ * takes priority over the <tt>columns</tt> property. The data is implicitly
+ * transposed, as if the {@link pv.transpose} operator were applied.
  *
- * <p>This layout defines left, top, width, height and data properties. The data
- * property will be the associated element in the array. For example, if the
- * array is a two-dimensional array of values in the range [0,1], a simple
- * heatmap can be generated as:
+ * <p>This layout exports a single <tt>cell</tt> mark prototype, which is
+ * intended to be used with a bar, panel, layout, or subclass thereof. The data
+ * property of the cell prototype is defined as the elements in the array. For
+ * example, if the array is a two-dimensional array of values in the range
+ * [0,1], a simple heatmap can be generated as:
  *
  * <pre>vis.add(pv.Layout.Grid)
  *     .rows(arrays)
- *   .add(pv.Bar)
+ *   .cell.add(pv.Bar)
  *     .fillStyle(pv.ramp("white", "black"))</pre>
  *
  * The grid subdivides the full width and height of the parent panel into equal
- * rectangles. For more data-driven subdivision, see {@link pv.Layout.Treemap}.
+ * rectangles. Note, however, that for large, interactive, or animated heatmaps,
+ * you may see significantly better performance through dynamic {@link pv.Image}
+ * generation.
+ *
+ * <p>For irregular grids using value-based spatial partitioning, see {@link
+ * pv.Layout.Treemap}.
  *
  * @extends pv.Layout
- * @constructor
- * @returns {pv.Layout.Grid} a grid layout.
  */
 pv.Layout.Grid = function() {
   pv.Layout.call(this);
-  var that = this,
-      add = that.add;
+  var that = this;
 
-  var cells = new pv.Panel()
+  /**
+   * The cell prototype. This prototype is intended to be used with a bar,
+   * panel, or layout (or subclass thereof) to render the grid cells.
+   *
+   * @type pv.Mark
+   * @name pv.Layout.Grid.prototype.cell
+   */
+  (this.cell = new pv.Mark()
       .data(function() {
           return that.scene[that.index].$grid;
         })
@@ -54,17 +66,19 @@ pv.Layout.Grid = function() {
         })
       .top(function() {
           return this.height() * Math.floor(this.index / that.cols());
-        });
-
-  that.add = function(type) {
-    return add.call(this, pv.Panel).extend(cells).add(type);
-  };
+        })).parent = this;
 };
 
 pv.Layout.Grid.prototype = pv.extend(pv.Layout)
     .property("rows")
     .property("cols");
 
+/**
+ * Default properties for grid layouts. By default, there is one row and one
+ * column, and the data is the propagated to the child cell.
+ *
+ * @type pv.Layout.Grid
+ */
 pv.Layout.Grid.prototype.defaults = new pv.Layout.Grid()
     .extend(pv.Layout.prototype.defaults)
     .rows(1)

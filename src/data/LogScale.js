@@ -3,12 +3,11 @@
  * constructor are optional, and equivalent to calling {@link #domain}.
  *
  * @class Represents a log scale. <style
- * type="text/css">sub{line-height:0}</style> <img src="../log.png"
- * width="190" height="175" align="right"> Most commonly, a log scale represents
- * a 1-dimensional log transformation from a numeric domain of input data
- * [<i>d<sub>0</sub></i>, <i>d<sub>1</sub></i>] to a numeric range of pixels
- * [<i>r<sub>0</sub></i>, <i>r<sub>1</sub></i>]. The equation for such a scale
- * is:
+ * type="text/css">sub{line-height:0}</style> Most commonly, a log scale
+ * represents a 1-dimensional log transformation from a numeric domain of input
+ * data [<i>d<sub>0</sub></i>, <i>d<sub>1</sub></i>] to a numeric range of
+ * pixels [<i>r<sub>0</sub></i>, <i>r<sub>1</sub></i>]. The equation for such a
+ * scale is:
  *
  * <blockquote><i>f(x) = (log(x) - log(d<sub>0</sub>)) / (log(d<sub>1</sub>) -
  * log(d<sub>0</sub>)) * (r<sub>1</sub> - r<sub>0</sub>) +
@@ -25,14 +24,30 @@
  *
  * Thus, saying
  *
- * <pre>.height(function(d) Math.log(d) * 138.974)</pre>
+ * <pre>    .height(function(d) Math.log(d) * 138.974)</pre>
  *
  * is equivalent to
  *
- * <pre>.height(pv.Scale.log(1, 100).range(0, 640))</pre>
+ * <pre>    .height(pv.Scale.log(1, 100).range(0, 640))</pre>
+ *
+ * Note that the scale is itself a function, and thus can be used as a property
+ * directly, assuming that the data associated with a mark is a number. While
+ * this is convenient for single-use scales, frequently it is desirable to
+ * define scales globally:
+ *
+ * <pre>var y = pv.Scale.log(1, 100).range(0, 640);</pre>
+ *
+ * The <tt>y</tt> scale can now be equivalently referenced within a property:
+ *
+ * <pre>    .height(function(d) y(d))</pre>
+ *
+ * Alternatively, if the data are not simple numbers, the appropriate value can
+ * be passed to the <tt>y</tt> scale (e.g., <tt>d.foo</tt>). The {@link #by}
+ * method similarly allows the data to be mapped to a numeric value before
+ * performing the log transformation.
  *
  * @param {number...} domain... domain values.
- * @returns {pv.Scale.log} a log scale.
+ * @extends pv.Scale.quantitative
  */
 pv.Scale.log = function() {
   var scale = pv.Scale.quantitative(1, 10),
@@ -43,8 +58,8 @@ pv.Scale.log = function() {
 
   /**
    * Returns an array of evenly-spaced, suitably-rounded values in the input
-   * domain. These values are frequently used in conjunction with {@link
-   * pv.Rule} to display tick marks or grid lines.
+   * domain. These values are frequently used in conjunction with
+   * {@link pv.Rule} to display tick marks or grid lines.
    *
    * @function
    * @name pv.Scale.log.prototype.ticks
@@ -84,9 +99,9 @@ pv.Scale.log = function() {
 
   /**
    * "Nices" this scale, extending the bounds of the input domain to
-   * evenly-rounded values. This method uses {@link pv.logFloor} and {@link
-   * pv.logCeil}. Nicing is useful if the domain is computed dynamically from
-   * data, and may be irregular. For example, given a domain of
+   * evenly-rounded values. This method uses {@link pv.logFloor} and
+   * {@link pv.logCeil}. Nicing is useful if the domain is computed dynamically
+   * from data, and may be irregular. For example, given a domain of
    * [0.20147987687960267, 0.996679553296417], a call to <tt>nice()</tt> might
    * extend the domain to [0.1, 1].
    *

@@ -1,7 +1,28 @@
 /**
- * @class
+ * Constructs a new, empty partition layout. Layouts are not typically
+ * constructed directly; instead, they are added to an existing panel via
+ * {@link pv.Mark#add}.
+ *
+ * @class Represents a hierarchical layout using the partition (or sunburst,
+ * icicle) algorithm. This layout provides both node-link and space-filling
+ * implementations of partition diagrams. In many ways it is similar to
+ * {@link pv.Layout.Cluster}, except that leaf nodes are positioned based on
+ * their distance from the root.
+ *
+ * <p>The partition layout support dynamic sizing for leaf nodes, if a
+ * {@link #size} psuedo-property is specified. The default size function returns
+ * 1, causing all leaf nodes to be sized equally, and all internal nodes to be
+ * sized by the number of leaf nodes they have as descendants. The size function
+ * can be used in conjunction with the order property, which allows the nodes to
+ * the sorted by the computed size. Note: for sorting based on other data
+ * attributes, simply use the default <tt>null</tt> for the order property, and
+ * sort the nodes beforehand using the {@link pv.Dom} operator.
+ *
+ * <p>For more details on how to use this layout, see
+ * {@link pv.Layout.Hierarchy}.
+ *
+ * @see pv.Layout.Partition.Fill
  * @extends pv.Layout.Hierarchy
- * @constructor
  */
 pv.Layout.Partition = function() {
   pv.Layout.Hierarchy.call(this);
@@ -14,21 +35,51 @@ pv.Layout.Partition.prototype = pv.extend(pv.Layout.Hierarchy)
     .property("outerRadius", Number);
 
 /**
+ * The sibling node order. The default order is <tt>null</tt>, which means to
+ * use the sibling order specified by the nodes property as-is. A value of
+ * "ascending" will sort siblings in ascending order of size, while "descending"
+ * will do the reverse. For sorting based on data attributes other than size,
+ * use the default <tt>null</tt> for the order property, and sort the nodes
+ * beforehand using the {@link pv.Dom} operator.
+ *
+ * @see pv.Dom.Node#sort
  * @type string
  * @name pv.Layout.Partition.prototype.order
  */
 
 /**
+ * The orientation. The default orientation is "top", which means that the root
+ * node is placed on the top edge, leaf nodes appear at the bottom, and internal
+ * nodes are in-between. The following orientations are supported:<ul>
+ *
+ * <li>left - left-to-right.
+ * <li>right - right-to-left.
+ * <li>top - top-to-bottom.
+ * <li>bottom - bottom-to-top.
+ * <li>radial - radially, with the root at the center.</ul>
+ *
  * @type string
  * @name pv.Layout.Partition.prototype.orient
  */
 
 /**
+ * The inner radius; defaults to 0. This property applies only to radial
+ * orientations, and can be used to compress the layout radially. Note that for
+ * the node-link implementation, the root node is always at the center,
+ * regardless of the value of this property; this property only affects internal
+ * and leaf nodes. For the space-filling implementation, a non-zero value of
+ * this property will result in the root node represented as a ring rather than
+ * a circle.
+ *
  * @type number
  * @name pv.Layout.Partition.prototype.innerRadius
  */
 
 /**
+ * The outer radius; defaults to fill the containing panel, based on the height
+ * and width of the layout. If the layout has no height and width specified, it
+ * will extend to fill the enclosing panel.
+ *
  * @type number
  * @name pv.Layout.Partition.prototype.outerRadius
  */
@@ -49,7 +100,10 @@ pv.Layout.Partition.prototype.$size = function() { return 1; };
  * files as leaf nodes, and each file has a <tt>bytes</tt> attribute, you can
  * specify a size function as:
  *
- * <pre>.size(function(d) d.bytes)</pre>
+ * <pre>    .size(function(d) d.bytes)</pre>
+ *
+ * As with other properties, a size function may specify additional arguments to
+ * access the data associated with the layout and any enclosing panels.
  *
  * @param {function} f the new sizing function.
  * @returns {pv.Layout.Partition} this.

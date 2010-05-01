@@ -22,7 +22,7 @@ vis.add(pv.Bar)
     .left(function(d) d.x)
     .width(function(d) d.dx)
     .strokeStyle("#1f77b4")
-    .fillStyle("#aec7e8")
+    .fillStyle(function(d) d.fix ? "#ff7f0e" : "#aec7e8")
     .cursor("ew-resize")
     .event("mousedown", pv.Behavior.drag());
 

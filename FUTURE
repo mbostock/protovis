@@ -42,6 +42,9 @@ mark/Area.Radial.js
 mark/Line.Radial.js
 mark/Bar.Radial.js
 
+mark/Image.js
+- scale / tile / center / fill / preserveAspectRatio
+
 physics/LinkConstraint.js
 - should support an alpha parameter, like pv.Constraint.position
 

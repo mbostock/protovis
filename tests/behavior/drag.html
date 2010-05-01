@@ -21,7 +21,7 @@ vis.add(pv.Dot)
     .left(function(d) d.x)
     .top(function(d) d.y)
     .radius(10)
-    .fillStyle("#aec7e8")
+    .fillStyle(function(d) d.fix ? "#ff7f0e" : "#aec7e8")
     .cursor("move")
     .event("mousedown", pv.Behavior.drag());
 

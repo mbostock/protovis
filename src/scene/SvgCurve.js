@@ -98,7 +98,7 @@ pv.SvgScene.curveBasisSegments = function(points) {
       p0 = points[0],
       p1 = p0,
       p2 = p0,
-      p3 = points[1]
+      p3 = points[1],
       firstPath = this.pathBasis.segment(p0, p1, p2, p3);
 
   p0 = p1;
@@ -257,8 +257,7 @@ pv.SvgScene.cardinalTangents = function(points, tension) {
  */
 pv.SvgScene.curveCardinal = function(points, tension) {
   if (points.length <= 2) return "";
-  var tangents = this.cardinalTangents(points, tension);
-  return this.curveHermite(points, tangents);
+  return this.curveHermite(points, this.cardinalTangents(points, tension));
 };
 
 /**
@@ -270,8 +269,7 @@ pv.SvgScene.curveCardinal = function(points, tension) {
  */
 pv.SvgScene.curveCardinalSegments = function(points, tension) {
   if (points.length <= 2) return "";
-  var tangents = this.cardinalTangents(points, tension);
-  return this.curveHermiteSegments(points, tangents);
+  return this.curveHermiteSegments(points, this.cardinalTangents(points, tension));
 };
 
 /**

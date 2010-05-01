@@ -1,7 +1,39 @@
 /**
- * @class Layout for arc diagrams.
- * @extends pv.Layout
- * @constructor
+ * Constructs a new, empty arc layout. Layouts are not typically constructed
+ * directly; instead, they are added to an existing panel via
+ * {@link pv.Mark#add}.
+ *
+ * @class Represents a layout for arc diagrams. An arc diagram is a network
+ * visualization with a one-dimensional layout of nodes, using circular arcs to
+ * render links between nodes. For undirected networks, arcs are rendering on a
+ * single side; this makes arc diagrams useful as annotations to other
+ * two-dimensional network layouts, such as rollup, matrix or table layouts. For
+ * directed networks, links in opposite directions can be rendered on opposite
+ * sides using <tt>directed(true)</tt>.
+ *
+ * <p>Arc layouts are particularly sensitive to node ordering; for best results,
+ * order the nodes such that related nodes are close to each other. A poor
+ * (e.g., random) order may result in large arcs with crossovers that impede
+ * visual processing. A future improvement to this layout may include automatic
+ * reordering using, e.g., spectral graph layout or simulated annealing.
+ *
+ * <p>This visualization technique is related to that developed by
+ * M. Wattenberg, <a
+ * href="http://www.research.ibm.com/visual/papers/arc-diagrams.pdf">"Arc
+ * Diagrams: Visualizing Structure in Strings"</a> in <i>IEEE InfoVis</i>, 2002.
+ * However, this implementation is limited to simple node-link networks, as
+ * opposed to structures with hierarchical self-similarity (such as strings).
+ *
+ * <p>As with other network layouts, three mark prototypes are provided:<ul>
+ *
+ * <li><tt>node</tt> - for rendering nodes; typically a {@link pv.Dot}.
+ * <li><tt>link</tt> - for rendering links; typically a {@link pv.Line}.
+ * <li><tt>label</tt> - for rendering node labels; typically a {@link pv.Label}.
+ *
+ * </ul>For more details on how this layout is structured and can be customized,
+ * see {@link pv.Layout.Network}.
+ *
+ * @extends pv.Layout.Network
  **/
 pv.Layout.Arc = function() {
   pv.Layout.Network.call(this);
@@ -31,6 +63,11 @@ pv.Layout.Arc.prototype = pv.extend(pv.Layout.Network)
     .property("orient", String)
     .property("directed", Boolean);
 
+/**
+ * Default properties for arc layouts. By default, the orientation is "bottom".
+ *
+ * @type pv.Layout.Arc
+ */
 pv.Layout.Arc.prototype.defaults = new pv.Layout.Arc()
     .extend(pv.Layout.Network.prototype.defaults)
     .orient("bottom");
@@ -88,22 +125,22 @@ pv.Layout.Arc.prototype.buildImplied = function(s) {
 };
 
 /**
- * The orientation. The default orientation is "left", which means that the root
- * node is placed on the left edge, leaf nodes appear on the right edge, and
- * internal nodes are in-between. The following orientations are supported:<ul>
+ * The orientation. The default orientation is "left", which means that nodes
+ * will be positioned from left-to-right in the order they are specified in the
+ * <tt>nodes</tt> property. The following orientations are supported:<ul>
  *
  * <li>left - left-to-right.
  * <li>right - right-to-left.
  * <li>top - top-to-bottom.
  * <li>bottom - bottom-to-top.
- * <li>radial - radially, with the root at the center.</ul>
+ * <li>radial - radially, starting at 12 o'clock and proceeding clockwise.</ul>
  *
  * @type string
  * @name pv.Layout.Arc.prototype.orient
  */
 
 /**
- * Whether this arc digram is directed (i.e., bidirectional); only applies to
+ * Whether this arc digram is directed (bidirectional); only applies to
  * non-radial orientations. By default, arc digrams are undirected, such that
  * all arcs appear on one side. If the arc digram is directed, then forward
  * links are drawn on the conventional side (the same as as undirected

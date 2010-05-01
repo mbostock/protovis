@@ -31,7 +31,8 @@ layout.node.add(pv.Dot)
     .strokeStyle(null)
     .shape(function(d) d.gender == "M" ? "square" : "circle")
     .fillStyle(function(d) d.group == 1 ? "black" : "grey")
-    .event("mousedown", pv.Behavior.drag());
+    .event("mousedown", pv.Behavior.drag())
+    .event("drag", layout);
 
 layout.label.add(pv.Label)
     .textStyle("white")

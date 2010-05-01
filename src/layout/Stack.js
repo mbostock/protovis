@@ -1,7 +1,14 @@
 /**
- * Returns a new stack layout.
+ * Constructs a new, empty stack layout. Layouts are not typically constructed
+ * directly; instead, they are added to an existing panel via
+ * {@link pv.Mark#add}.
  *
- * @class A layout for stacking marks vertically or horizontally. For example,
+ * @class Represents a layout for stacked visualizations, ranging from simple
+ * stacked bar charts to more elaborate "streamgraphs" composed of stacked
+ * areas. Stack layouts uses length as a visual encoding, as opposed to
+ * position, as the layers do not share an aligned axis.
+ *
+ * <p>Marks can be stacked vertically or horizontally. For example,
  *
  * <pre>vis.add(pv.Layout.Stack)
  *     .layers([[1, 1.2, 1.7, 1.5, 1.7],
@@ -11,11 +18,63 @@
  *     .y(function(d) d * 40)
  *   .layer.add(pv.Area);</pre>
  *
- * specifies a vertically-stacked area chart.
+ * specifies a vertically-stacked area chart, using the default "bottom-left"
+ * orientation with "zero" offset. This visualization can be easily changed into
+ * a streamgraph using the "wiggle" offset, which attempts to minimize change in
+ * slope weighted by layer thickness. See the {@link #offset} property for more
+ * supported streamgraph algorithms.
+ *
+ * <p>In the simplest case, the layer data can be specified as a two-dimensional
+ * array of numbers. The <tt>x</tt> and <tt>y</tt> psuedo-properties are used to
+ * define the thickness of each layer at the given position, respectively; in
+ * the above example of the "bottom-left" orientation, the <tt>x</tt> and
+ * <tt>y</tt> psuedo-properties are equivalent to the <tt>left</tt> and
+ * <tt>height</tt> properties that you might use if you implemented a stacked
+ * area by hand.
+ *
+ * <p>The advantage of using the stack layout is that the baseline, i.e., the
+ * <tt>bottom</tt> property is computed automatically using the specified offset
+ * algorithm. In addition, the order of layers can be computed using a built-in
+ * algorithm via the <tt>order</tt> property.
+ *
+ * <p>With the exception of the "expand" <tt>offset</tt>, the stack layout does
+ * not perform any automatic scaling of data; the values returned from
+ * <tt>x</tt> and <tt>y</tt> specify pixel sizes. To simplify scaling math, use
+ * this layout in conjunction with {@link pv.Scale.linear} or similar.
+ *
+ * <p>In other cases, the <tt>values</tt> psuedo-property can be used to define
+ * the data more flexibly. As with a typical panel &amp; area, the
+ * <tt>layers</tt> property corresponds to the data in the enclosing panel,
+ * while the <tt>values</tt> psuedo-property corresponds to the data for the
+ * area within the panel. For example, given an array of data values:
+ *
+ * <pre>var crimea = [
+ *  { date: "4/1854", wounds: 0, other: 110, disease: 110 },
+ *  { date: "5/1854", wounds: 0, other: 95, disease: 105 },
+ *  { date: "6/1854", wounds: 0, other: 40, disease: 95 },
+ *  ...</pre>
+ *
+ * and a corresponding array of series names:
+ *
+ * <pre>var causes = ["wounds", "other", "disease"];</pre>
+ *
+ * Separate layers can be defined for each cause like so:
+ *
+ * <pre>vis.add(pv.Layout.Stack)
+ *     .layers(causes)
+ *     .values(crimea)
+ *     .x(function(d) x(d.date))
+ *     .y(function(d, p) y(d[p]))
+ *   .layer.add(pv.Area)
+ *     ...</pre>
+ *
+ * As with the panel &amp; area case, the datum that is passed to the
+ * psuedo-properties <tt>x</tt> and <tt>y</tt> are the values (an element in
+ * <tt>crimea</tt>); the second argument is the layer data (a string in
+ * <tt>causes</tt>). Additional arguments specify the data of enclosing panels,
+ * if any.
  *
  * @extends pv.Layout
- * @constructor
- * @returns {pv.Layout.Stack} a stack layout.
  */
 pv.Layout.Stack = function() {
   pv.Layout.call(this);
@@ -169,6 +228,18 @@ pv.Layout.Stack = function() {
     prop[pdy] = function(i, j) { return dy[i][j]; };
   };
 
+  /**
+   * The layer prototype. This prototype is intended to be used with an area,
+   * bar or panel mark (or subclass thereof). Other mark types may be possible,
+   * though note that the stack layout is not currently designed to support
+   * radial stacked visualizations using wedges.
+   *
+   * <p>The layer is not a direct child of the stack layout; a hidden panel is
+   * used to replicate layers.
+   *
+   * @type pv.Mark
+   * @name pv.Layout.Stack.prototype.layer
+   */
   this.layer = new pv.Mark()
       .data(function() { return values[this.parent.index]; })
       .top(proxy("t"))
@@ -204,12 +275,12 @@ pv.Layout.Stack.prototype.$x
     = function() { return 0; };
 
 /**
- * The x function; determines the position of the value within the layer.  This
- * typically corresponds to the independent variable. For example, with the
+ * The x psuedo-property; determines the position of the value within the layer.
+ * This typically corresponds to the independent variable. For example, with the
  * default "bottom-left" orientation, this function defines the "left" property.
  *
  * @param {function} f the x function.
- * @returns this.
+ * @returns {pv.Layout.Stack} this.
  */
 pv.Layout.Stack.prototype.x = function(f) {
   /** @private */ this.$x = pv.functor(f);
@@ -217,13 +288,13 @@ pv.Layout.Stack.prototype.x = function(f) {
 };
 
 /**
- * The y function; determines the thickness of the layer at the given value.
- * This typically corresponds to the dependent variable. For example, with the
- * default "bottom-left" orientation, this function defines the "height"
- * property.
+ * The y psuedo-property; determines the thickness of the layer at the given
+ * value.  This typically corresponds to the dependent variable. For example,
+ * with the default "bottom-left" orientation, this function defines the
+ * "height" property.
  *
  * @param {function} f the y function.
- * @returns this.
+ * @returns {pv.Layout.Stack} this.
  */
 pv.Layout.Stack.prototype.y = function(f) {
   /** @private */ this.$y = pv.functor(f);
@@ -235,10 +306,11 @@ pv.Layout.Stack.prototype.$values = pv.identity;
 
 /**
  * The values function; determines the values for a given layer. The default
- * value is the identity function.
+ * value is the identity function, which assumes that the layers property is
+ * specified as a two-dimensional (i.e., nested) array.
  *
  * @param {function} f the values function.
- * @returns this.
+ * @returns {pv.Layout.Stack} this.
  */
 pv.Layout.Stack.prototype.values = function(f) {
   this.$values = pv.functor(f);
@@ -246,7 +318,9 @@ pv.Layout.Stack.prototype.values = function(f) {
 };
 
 /**
- * The layer data in row-major order.
+ * The layer data in row-major order. The value of this property is typically a
+ * two-dimensional (i.e., nested) array, but any array can be used, provided the
+ * values psuedo-property is defined accordingly.
  *
  * @type array[]
  * @name pv.Layout.Stack.prototype.layers
@@ -280,12 +354,31 @@ pv.Layout.Stack.prototype.values = function(f) {
 /**
  * The layer order. The following values are supported:<ul>
  *
- * <li><i>null</i>
- * <li>inside-out
- * <li>reverse
+ * <li><i>null</i> - use given layer order.
+ * <li>inside-out - sort by maximum value, with balanced order.
+ * <li>reverse - use reverse of given layer order.
  *
- * </ul>.
+ * </ul>For details on the inside-out order algorithm, refer to "Stacked Graphs
+ * -- Geometry &amp; Aesthetics" by L. Byron and M. Wattenberg, IEEE TVCG
+ * November/December 2008.
  *
  * @type string
  * @name pv.Layout.Stack.prototype.order
+ */
+
+/**
+ * The layer offset; the y-position of the bottom of the lowest layer. The
+ * following values are supported:<ul>
+ *
+ * <li>zero - use a zero baseline, i.e., the y-axis.
+ * <li>silohouette - center the stream, i.e., ThemeRiver.
+ * <li>wiggle - minimize weighted change in slope.
+ * <li>expand - expand layers to fill the enclosing layout dimensions.
+ *
+ * </ul>For details on these offset algorithms, refer to "Stacked Graphs --
+ * Geometry &amp; Aesthetics" by L. Byron and M. Wattenberg, IEEE TVCG
+ * November/December 2008.
+ *
+ * @type string
+ * @name pv.Layout.Stack.prototype.offset
  */

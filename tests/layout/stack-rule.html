@@ -1,0 +1,60 @@
+<html>
+  <head>
+    <title>Stacked Column Chart</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var data = pv.range(3).map(function() pv.range(10).map(Math.random)),
+    w = 500,
+    h = 400,
+    x = pv.Scale.ordinal(pv.range(10)).splitBanded(0, w, 2/5),
+    y = pv.Scale.linear(0, 3).range(0, h);
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .bottom(20)
+    .left(20)
+    .right(5)
+    .top(5);
+
+var bar = vis.add(pv.Layout.Stack)
+    .layers(data)
+    .x(function() x(this.index))
+    .y(y)
+  .layer.add(pv.Bar)
+    .width(x.range().band);
+
+bar.anchor("top").add(pv.Label)
+    .visible(function(d) d > .2)
+    .textStyle("white")
+    .text(function(d) d.toFixed(1));
+
+bar.anchor("left").add(pv.Rule)
+    .visible(function(d) d <= .2)
+    .width(5)
+  .anchor("left").add(pv.Label)
+    .textAlign("right")
+    .text(function(d) d.toFixed(1));
+
+bar.anchor("bottom").add(pv.Label)
+    .visible(function() !this.parent.index)
+    .textMargin(5)
+    .textBaseline("top")
+    .text(function() "ABCDEFGHIJK".charAt(this.index));
+
+vis.add(pv.Rule)
+    .data(y.ticks())
+    .bottom(y)
+    .width(function(d) d ? 5 : null)
+    .strokeStyle("#000")
+  .anchor("left").add(pv.Label)
+    .text(y.tickFormat);
+
+vis.render();
+
+    </script>
+  </body>
+</html>

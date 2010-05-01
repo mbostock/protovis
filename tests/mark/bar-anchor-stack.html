@@ -7,8 +7,14 @@
   <body>
     <script type="text/javascript+protovis">
 
-var data = pv.range(10).map(function(x) ({x: x, y: Math.sin(x) + 2})),
-    w = 400,
+var data = pv.range(0, 10, .5).map(function(x) ({
+      x: x,
+      a: Math.cos(x) + 2,
+      b: Math.sin(x) + 2,
+      c: Math.atan(x) + 2
+    }));
+
+var w = 400,
     h = 50,
     x = pv.Scale.ordinal(data, function(d) d.x).splitBanded(0, w, 4 / 5),
     y = pv.Scale.linear(0, 9).range(0, h);
@@ -18,16 +24,25 @@ var vis = new pv.Panel()
     .height(h)
     .margin(10);
 
-var bar = vis.add(pv.Bar)
+var bar1 = vis.add(pv.Bar)
     .data(data)
     .bottom(0)
-    .fillStyle(pv.Colors.category20().by(pv.child))
+    .fillStyle("#1f77b4")
     .left(function(d) x(d.x))
-    .height(function(d) y(d.y))
+    .height(function(d) y(d.a))
     .width(x.range().band);
 
-bar.anchor("top").extend(bar).add(pv.Bar)
-  .anchor("top").extend(bar).add(pv.Bar);
+var bar2 = bar1.anchor("top").add(pv.Bar)
+    .fillStyle("#aec7e8")
+    .left(function(d) x(d.x))
+    .height(function(d) y(d.b))
+    .width(x.range().band);
+
+var bar3 = bar2.anchor("top").add(pv.Bar)
+    .fillStyle("#ff7f0e")
+    .left(function(d) x(d.x))
+    .height(function(d) y(d.c))
+    .width(x.range().band);
 
 vis.render();
 

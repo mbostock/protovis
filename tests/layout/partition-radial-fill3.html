@@ -20,8 +20,7 @@ var layout = vis.add(pv.Layout.Partition.Fill)
 layout.node.add(pv.Wedge);
 
 layout.label.add(pv.Label)
-    .visible(function(d) d.angle * d.innerRadius >= 7); // Use Maths to make sure we have
-                                                        // at least 7 pixels for the label 
+    .visible(function(d) d.angle * d.innerRadius >= 7);
 
 vis.render();
 
