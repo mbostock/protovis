@@ -6,7 +6,9 @@ HTML_FILES = \
 	www/ex/barley.html \
 	www/ex/bullet.html \
 	www/ex/cars.html \
+	www/ex/cartogram.html \
 	www/ex/caltrain.html \
+	www/ex/choropleth.html \
 	www/ex/clock.html \
 	www/ex/countries.html \
 	www/ex/crimea-rose.html \
@@ -30,6 +32,7 @@ HTML_FILES = \
     www/ex/qqplot.html \
 	www/ex/segmented.html \
 	www/ex/sunburst.html \
+	www/ex/symbol.html \
 	www/ex/treemap.html \
     www/ex/unemployed.html \
 	www/ex/waves.html \
@@ -44,7 +47,7 @@ all: $(HTML_FILES) www/ex/syntax.css
 
 include $(HTML_FILES:.html=.d)
 
-PYGMENT = /usr/local/bin/pygmentize
+PYGMENT = /Library/Pygments-1.1.1/pygmentize
 PYGMENT_STYLE = trac
 
 www/ex/syntax.css: Makefile

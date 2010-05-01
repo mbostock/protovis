@@ -3,13 +3,16 @@
     <title>Graduated Symbol Map</title>
     <link type="text/css" rel="stylesheet" href="ex.css?3.2"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
+    <script type="text/javascript" src="../jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="../jquery-ui-1.8rc3.custom.min.js"></script>
+    <link type="text/css" href="../ui-lightness/jquery-ui-1.8rc3.custom.css" rel="stylesheet"/>
     <script type="text/javascript" src="centroid.js"></script>
     <script type="text/javascript" src="us_lowres.js"></script>
     <script type="text/javascript" src="us_stats.js"></script>
     <style type="text/css">
         #fig {
             width: 800px;
-            height: 400px;
+            height: 650px;
         }
 
         #container {
@@ -39,7 +42,18 @@
     </style>
   </head>
   <body><div id="center"><div id="fig">
+	<h3>Graduated Symbol Map of Obesity in the United States (1995 to 2008)</h3>
+    <div id="container">
+      <div id="yearLabel">Year:</div><div id="yearSlider"></div><img id="play" src="play.png" alt="Play" onclick="playClick()">
+    </div>
     <script type="text/javascript+protovis">
+  $(yearSlider).slider({
+    min: us_stats.minYear, max: us_stats.maxYear, value: us_stats.maxYear, slide: function(e, ui) {
+        //vis.fillStyle(color = color[this.id](ui.value)).render();
+        year = ui.value;
+        vis.render();
+      }
+  });
   var pie = false;
   var year = 2008;
 
@@ -64,10 +78,48 @@
       c.centLatLon = centroid(c.borders[0]);
   });
 
+  var timer = undefined;
+  function playClick() {
+      if (timer) {
+          stop();
+      } else {
+          if(year == us_stats.maxYear) year = us_stats.minYear;
+          $(yearSlider).slider('value', year);
+          $(play).attr("src", 'stop.png');
+          vis.render();
+          timer = setInterval(function() {
+              year++;
+              if (year >= us_stats.maxYear) {
+                  stop();
+              }
+              $(yearSlider).slider('value', year);
+              vis.render();
+          }, 900);
+      }
+  }
+
+  // Stop the animation
+  function stop() {
+      clearInterval(timer);
+      timer = undefined;
+      $(play).attr("src", 'play.png');
+  }
+
   // Add the main panel for the visualization
   var vis = new pv.Panel()
       .width(w)
-      .height(h);
+      .height(h)
+      .top(30);
+
+  // Add the ticks and labels for the year slider
+  vis.add(pv.Rule)
+     .data(pv.range(us_stats.minYear, us_stats.maxYear+.1))
+     .left(function(d) Math.round(yearsScale(d))-.5)
+     .height(4)
+     .top(-20)
+   .anchor("bottom")
+     .add(pv.Label)
+     .font("normal 13px sans-serif");
 
   // Add a panel for each state
   var state = vis.add(pv.Panel)
@@ -140,5 +192,14 @@
 
    vis.render();
     </script>
+    Symbol: <select onchange="pie = (this.value==1); vis.render()" onkeyup="pie = (this.value==1); vis.render()">
+      <option value="0" selected>Target Graphs</option>
+      <option value="1">Pie Charts</option>
+    </select>
+<div class="caption">
+Each state's population is represented as a "target" with the center circle representing the number of residents with normal Body Mass Index (BMI &lt; 24.9), the middle ring representing the overweight population (25.0 &lt; BMI &lt; 29.9), and the outside ring representing the obese population (30.0 &lt; BMI). The area of the entire target corresponds to the overall population of the state.
+<br/><br/>
+Source: <a class="source"  href="http://apps.nccd.cdc.gov/brfss/page.asp?cat=OB&yr=2008&state=US#OB">National Center for Chronic Disease Prevention and Health Promotion</a>
+</div>
   </div></div></body>
 </html>
