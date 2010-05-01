@@ -1,0 +1,73 @@
+<html>
+  <head>
+    <title>Splines</title>
+    <link type="text/css" rel="stylesheet" href="ex.css?3.2"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+    <style type="text/css">
+      #fig {
+        width: 800px;
+        height: 600px;
+      }
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <script type="text/javascript+protovis">
+
+      var interpolate = "cardinal",
+          segmented = false,
+          w = 800,
+          h = 600,
+          c = pv.Colors.category10(),
+          numPoints = 5;
+          points = pv.range(0, numPoints).map(function(v) {
+            return {x:(v+Math.random())*w/numPoints, y:Math.random()*h}
+          });
+
+      var vis = new pv.Panel()
+          .width(w)
+          .height(h)
+          .strokeStyle("#ccc")
+          .fillStyle("#fff");
+
+      vis.add(pv.Line)
+          .data(function() points)
+          .left(function(d) d.x)
+          .top(function(d) d.y)
+          .interpolate(function() interpolate)
+          .segmented(function() segmented)
+          .strokeStyle(function() c(this.index))
+          .tension(0.5)
+          .lineWidth(2);
+      
+      vis.add(pv.Dot)
+          .data(function() points)
+          .left(function(d) d.x)
+          .top(function(d) d.y)
+          .radius(7)
+          .fillStyle("rgba(0,0,0,.001)")
+          .cursor("move")
+          .strokeStyle("#f33")
+          .event("mousedown", pv.Behavior.drag());
+
+      vis.render();
+      
+    </script>
+    Interpolation: 
+    <select onchange="interpolate = this.value; vis.render();">
+      <option value="cardinal" selected>Cardinal</option>
+      <option value="monotone">Monotone</option>
+      <option value="basis">Basis</option> 
+    </select>
+    &nbsp; &nbsp;
+    <input type="checkbox" onchange="segmented = this.checked; vis.render()">
+      Segmented
+    </input>
+    &nbsp; &nbsp;
+    <button onclick="points.push({x:Math.random()*w, y:Math.random()*h}); vis.render()">
+      Add point
+    </button>
+    <button onclick="points.pop(); vis.render()">
+      Remove point
+    </button>
+  </div></div></body>
+</html>
