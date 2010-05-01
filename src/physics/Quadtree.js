@@ -121,9 +121,11 @@ pv.Quadtree = function(particles) {
  */
 
 /**
+ * Constructs a new node.
+ *
  * @class A node in a quadtree.
  *
- * @constructor Constructs a new node.
+ * @see pv.Quadtree
  */
 pv.Quadtree.Node = function() {
   /*

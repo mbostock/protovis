@@ -40,6 +40,15 @@ pv.Dot.prototype.type = "dot";
  */
 
 /**
+ * The radius of the dot, in pixels. This is an alternative to using
+ * {@link #size}.
+ *
+ * @see #size
+ * @type number
+ * @name pv.Dot.prototype.radius
+ */
+
+/**
  * The shape name. Several shapes are supported:<ul>
  *
  * <li>cross

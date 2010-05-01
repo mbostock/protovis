@@ -1,14 +1,19 @@
 /**
- * Returns an abstract quantitative scale for the specified domain. The
+ * Returns a default quantitative, linear, scale for the specified domain. The
  * arguments to this constructor are optional, and equivalent to calling
- * {@link #domain}.
+ * {@link #domain}. The default domain and range are [0,1].
+ *
+ * <p>This constructor is typically not used directly; see one of the
+ * quantitative scale implementations instead.
  *
  * @class Represents an abstract quantitative scale; a function that performs a
- * numeric transformation. <style type="text/css">sub{line-height:0}</style> A
- * quantitative scale represents a 1-dimensional transformation from a numeric
- * domain of input data [<i>d<sub>0</sub></i>, <i>d<sub>1</sub></i>] to a
- * numeric range of pixels [<i>r<sub>0</sub></i>, <i>r<sub>1</sub></i>]. In
- * addition to readability, scales offer several useful features:
+ * numeric transformation. This class is typically not used directly; see one of
+ * the quantitative scale implementations (linear, log, root, etc.)
+ * instead. <style type="text/css">sub{line-height:0}</style> A quantitative
+ * scale represents a 1-dimensional transformation from a numeric domain of
+ * input data [<i>d<sub>0</sub></i>, <i>d<sub>1</sub></i>] to a numeric range of
+ * pixels [<i>r<sub>0</sub></i>, <i>r<sub>1</sub></i>]. In addition to
+ * readability, scales offer several useful features:
  *
  * <p>1. The range can be expressed in colors, rather than pixels. For example:
  *
@@ -45,7 +50,7 @@
  * derived from data, you can use {@link #nice} to round these values down and
  * up to even numbers.
  *
- * @param {number...} domain... domain values.
+ * @param {number...} domain... optional domain values.
  * @see pv.Scale.linear
  * @see pv.Scale.log
  * @see pv.Scale.root

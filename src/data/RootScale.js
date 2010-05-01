@@ -1,6 +1,7 @@
 /**
  * Returns a root scale for the specified domain. The arguments to this
  * constructor are optional, and equivalent to calling {@link #domain}.
+ * The default domain and range are [0,1].
  *
  * @class Represents a root scale; a function that performs a power
  * transformation. <style type="text/css">sub{line-height:0}</style> Most
@@ -24,7 +25,7 @@
  * method similarly allows the data to be mapped to a numeric value before
  * performing the root transformation.
  *
- * @param {number...} domain... domain values.
+ * @param {number...} domain... optional domain values.
  * @extends pv.Scale.quantitative
  */
 pv.Scale.root = function() {

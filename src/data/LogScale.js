@@ -1,6 +1,7 @@
 /**
  * Returns a log scale for the specified domain. The arguments to this
  * constructor are optional, and equivalent to calling {@link #domain}.
+ * The default domain is [1,10] and the default range is [0,1].
  *
  * @class Represents a log scale. <style
  * type="text/css">sub{line-height:0}</style> Most commonly, a log scale
@@ -46,7 +47,7 @@
  * method similarly allows the data to be mapped to a numeric value before
  * performing the log transformation.
  *
- * @param {number...} domain... domain values.
+ * @param {number...} domain... optional domain values.
  * @extends pv.Scale.quantitative
  */
 pv.Scale.log = function() {

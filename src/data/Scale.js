@@ -1,4 +1,6 @@
 /**
+ * Abstract; see the various scale implementations.
+ *
  * @class Represents a scale; a function that performs a transformation from
  * data domain to visual range. For quantitative and quantile scales, the domain
  * is expressed as numbers; for ordinal scales, the domain is expressed as
@@ -57,3 +59,28 @@ pv.Scale.interpolator = function(start, end) {
             Math.round(start.b * (1 - t) + end.b * t), a));
   };
 };
+
+/**
+ * Returns a view of this scale by the specified accessor function <tt>f</tt>.
+ * Given a scale <tt>y</tt>, <tt>y.by(function(d) d.foo)</tt> is equivalent to
+ * <tt>function(d) y(d.foo)</tt>.
+ *
+ * <p>This method is provided for convenience, such that scales can be
+ * succinctly defined inline. For example, given an array of data elements that
+ * have a <tt>score</tt> attribute with the domain [0, 1], the height property
+ * could be specified as:
+ *
+ * <pre>    .height(pv.Scale.linear().range(0, 480).by(function(d) d.score))</pre>
+ *
+ * This is equivalent to:
+ *
+ * <pre>    .height(function(d) d.score * 480)</pre>
+ *
+ * This method should be used judiciously; it is typically more clear to invoke
+ * the scale directly, passing in the value to be scaled.
+ *
+ * @function
+ * @name pv.Scale.prototype.by
+ * @param {function} f an accessor function.
+ * @returns {pv.Scale} a view of this scale by the specified accessor function.
+ */
