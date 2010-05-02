@@ -1,4 +1,4 @@
-// 55e57bc8f8d010b306b9ed347f1768d1ea7a004c
+// 2b4856228f84cf52a863703523ec8c7345d6addd
 /**
  * @class The built-in Array class.
  * @name Array
@@ -387,22 +387,56 @@ pv.listen(window, "load", function() {
     delete pv.$;
   });
 /**
- * @class
+ * Abstract; see an implementing class.
+ *
+ * @class Represents an abstract text formatter and parser. A <i>format</i> is a
+ * function that converts an object of a given type, such as a <tt>Date</tt>, to
+ * a human-readable string representation. The format may also have a
+ * {@link #parse} method for converting a string representation back to the
+ * given object type.
+ *
+ * <p>Because formats are themselves functions, they can be used directly as
+ * mark properties. For example, if the data associated with a label are dates,
+ * a date format can be used as label text:
+ *
+ * <pre>    .text(pv.Format.date("%m/%d/%y"))</pre>
+ *
+ * And as with scales, if the format is used in multiple places, it can be
+ * convenient to declare it as a global variable and then reference it from the
+ * appropriate property functions. For example, if the data has a <tt>date</tt>
+ * attribute, and <tt>format</tt> references a given date format:
+ *
+ * <pre>    .text(function(d) format(d.date))</pre>
+ *
+ * Similarly, to parse a string into a date:
+ *
+ * <pre>var date = format.parse("4/30/2010");</pre>
+ *
+ * Not all format implementations support parsing. See the implementing class
+ * for details.
+ *
+ * @see pv.Format.date
+ * @see pv.Format.number
+ * @see pv.Format.time
  */
 pv.Format = {};
 
 /**
+ * Formats the specified object, returning the string representation.
+ *
  * @function
  * @name pv.Format.prototype.format
- * @param {object} x
- * @returns {string}
+ * @param {object} x the object to format.
+ * @returns {string} the formatted string.
  */
 
 /**
+ * Parses the specified string, returning the object representation.
+ *
  * @function
  * @name pv.Format.prototype.parse
- * @param {string} x
- * @returns {object}
+ * @param {string} x the string to parse.
+ * @returns {object} the parsed object.
  */
 
 /**
@@ -431,6 +465,8 @@ pv.Format.pad = function(c, n, s) {
   return (m < 1) ? s : new Array(m + 1).join(c) + s;
 };
 /**
+ * Constructs a new date format with the specified string pattern.
+ *
  * @class The format string is in the same format expected by the
  * <tt>strftime</tt> function in C. The following conversion specifications are
  * supported:<ul>
@@ -500,8 +536,7 @@ pv.Format.pad = function(c, n, s) {
  * href="http://www.opengroup.org/onlinepubs/007908799/xsh/strptime.html">strptime</a>
  * documentation.
  * @extends pv.Format
- * @constructor
- * @param {string} pattern
+ * @param {string} pattern the format pattern.
  */
 pv.Format.date = function(pattern) {
   var pad = pv.Format.pad;
@@ -590,7 +625,6 @@ pv.Format.date = function(pattern) {
    * @function
    * @name pv.Format.date.prototype.parse
    * @param {string} s the string to parse as a date.
-   * @param {string} [format] an optional format string.
    * @returns {Date} the parsed date.
    */
   format.parse = function(s) {
@@ -693,10 +727,16 @@ pv.Format.date = function(pattern) {
   return format;
 };
 /**
- * @class
+ * Returns a time format of the given type, either "short" or "long".
+ *
+ * @class Represents a time format, converting between a <tt>number</tt>
+ * representing a duration in milliseconds, and a <tt>string</tt>. Two types of
+ * time formats are supported: "short" and "long". The <i>short</i> format type
+ * returns a string such as "3.3 days" or "12.1 minutes", while the <i>long</i>
+ * format returns "13:04:12" or similar.
+ *
  * @extends pv.Format
- * @constructor
- * @param {string} type
+ * @param {string} type the type; "short" or "long".
  */
 pv.Format.time = function(type) {
   var pad = pv.Format.pad;
@@ -753,18 +793,22 @@ pv.Format.time = function(type) {
   }
 
   /**
+   * Formats the specified time, returning the string representation.
+   *
    * @function
    * @name pv.Format.time.prototype.format
-   * @param {Date} t
-   * @returns {string}
+   * @param {number} t the duration in milliseconds. May also be a <tt>Date</tt>.
+   * @returns {string} the formatted string.
    */
   format.format = format;
 
   /**
+   * Parses the specified string, returning the time in milliseconds.
+   *
    * @function
    * @name pv.Format.time.prototype.parse
-   * @param {string} s
-   * @returns {Date}
+   * @param {string} s a formatted string.
+   * @returns {number} the parsed duration in milliseconds.
    */
   format.parse = function(s) {
     switch (type) {
@@ -2599,7 +2643,10 @@ pv.vector = function(x, y) {
  * {@link pv.vector} instead.
  *
  * @class Represents a two-dimensional vector; a 2-tuple <i>&#x27e8;x,
- * y&#x27e9;</i>.
+ * y&#x27e9;</i>. The intent of this class is to simplify vector math. Note that
+ * in performance-sensitive cases it may be more efficient to represent 2D
+ * vectors as simple objects with <tt>x</tt> and <tt>y</tt> attributes, rather
+ * than using instances of this class.
  *
  * @param {number} x the <i>x</i> coordinate.
  * @param {number} y the <i>y</i> coordinate.
@@ -2804,6 +2851,8 @@ pv.Transform.prototype.times = function(m) {
   return v;
 };
 /**
+ * Abstract; see the various scale implementations.
+ *
  * @class Represents a scale; a function that performs a transformation from
  * data domain to visual range. For quantitative and quantile scales, the domain
  * is expressed as numbers; for ordinal scales, the domain is expressed as
@@ -2862,17 +2911,47 @@ pv.Scale.interpolator = function(start, end) {
             Math.round(start.b * (1 - t) + end.b * t), a));
   };
 };
+
 /**
- * Returns an abstract quantitative scale for the specified domain. The
+ * Returns a view of this scale by the specified accessor function <tt>f</tt>.
+ * Given a scale <tt>y</tt>, <tt>y.by(function(d) d.foo)</tt> is equivalent to
+ * <tt>function(d) y(d.foo)</tt>.
+ *
+ * <p>This method is provided for convenience, such that scales can be
+ * succinctly defined inline. For example, given an array of data elements that
+ * have a <tt>score</tt> attribute with the domain [0, 1], the height property
+ * could be specified as:
+ *
+ * <pre>    .height(pv.Scale.linear().range(0, 480).by(function(d) d.score))</pre>
+ *
+ * This is equivalent to:
+ *
+ * <pre>    .height(function(d) d.score * 480)</pre>
+ *
+ * This method should be used judiciously; it is typically more clear to invoke
+ * the scale directly, passing in the value to be scaled.
+ *
+ * @function
+ * @name pv.Scale.prototype.by
+ * @param {function} f an accessor function.
+ * @returns {pv.Scale} a view of this scale by the specified accessor function.
+ */
+/**
+ * Returns a default quantitative, linear, scale for the specified domain. The
  * arguments to this constructor are optional, and equivalent to calling
- * {@link #domain}.
+ * {@link #domain}. The default domain and range are [0,1].
+ *
+ * <p>This constructor is typically not used directly; see one of the
+ * quantitative scale implementations instead.
  *
  * @class Represents an abstract quantitative scale; a function that performs a
- * numeric transformation. <style type="text/css">sub{line-height:0}</style> A
- * quantitative scale represents a 1-dimensional transformation from a numeric
- * domain of input data [<i>d<sub>0</sub></i>, <i>d<sub>1</sub></i>] to a
- * numeric range of pixels [<i>r<sub>0</sub></i>, <i>r<sub>1</sub></i>]. In
- * addition to readability, scales offer several useful features:
+ * numeric transformation. This class is typically not used directly; see one of
+ * the quantitative scale implementations (linear, log, root, etc.)
+ * instead. <style type="text/css">sub{line-height:0}</style> A quantitative
+ * scale represents a 1-dimensional transformation from a numeric domain of
+ * input data [<i>d<sub>0</sub></i>, <i>d<sub>1</sub></i>] to a numeric range of
+ * pixels [<i>r<sub>0</sub></i>, <i>r<sub>1</sub></i>]. In addition to
+ * readability, scales offer several useful features:
  *
  * <p>1. The range can be expressed in colors, rather than pixels. For example:
  *
@@ -2909,7 +2988,7 @@ pv.Scale.interpolator = function(start, end) {
  * derived from data, you can use {@link #nice} to round these values down and
  * up to even numbers.
  *
- * @param {number...} domain... domain values.
+ * @param {number...} domain... optional domain values.
  * @see pv.Scale.linear
  * @see pv.Scale.log
  * @see pv.Scale.root
@@ -3300,6 +3379,7 @@ pv.Scale.quantitative = function() {
 /**
  * Returns a linear scale for the specified domain. The arguments to this
  * constructor are optional, and equivalent to calling {@link #domain}.
+ * The default domain and range are [0,1].
  *
  * @class Represents a linear scale; a function that performs a linear
  * transformation. <style type="text/css">sub{line-height:0}</style> Most
@@ -3342,7 +3422,7 @@ pv.Scale.quantitative = function() {
  * method similarly allows the data to be mapped to a numeric value before
  * performing the linear transformation.
  *
- * @param {number...} domain... domain values.
+ * @param {number...} domain... optional domain values.
  * @extends pv.Scale.quantitative
  */
 pv.Scale.linear = function() {
@@ -3353,6 +3433,7 @@ pv.Scale.linear = function() {
 /**
  * Returns a log scale for the specified domain. The arguments to this
  * constructor are optional, and equivalent to calling {@link #domain}.
+ * The default domain is [1,10] and the default range is [0,1].
  *
  * @class Represents a log scale. <style
  * type="text/css">sub{line-height:0}</style> Most commonly, a log scale
@@ -3398,7 +3479,7 @@ pv.Scale.linear = function() {
  * method similarly allows the data to be mapped to a numeric value before
  * performing the log transformation.
  *
- * @param {number...} domain... domain values.
+ * @param {number...} domain... optional domain values.
  * @extends pv.Scale.quantitative
  */
 pv.Scale.log = function() {
@@ -3494,6 +3575,7 @@ pv.Scale.log = function() {
 /**
  * Returns a root scale for the specified domain. The arguments to this
  * constructor are optional, and equivalent to calling {@link #domain}.
+ * The default domain and range are [0,1].
  *
  * @class Represents a root scale; a function that performs a power
  * transformation. <style type="text/css">sub{line-height:0}</style> Most
@@ -3517,7 +3599,7 @@ pv.Scale.log = function() {
  * method similarly allows the data to be mapped to a numeric value before
  * performing the root transformation.
  *
- * @param {number...} domain... domain values.
+ * @param {number...} domain... optional domain values.
  * @extends pv.Scale.quantitative
  */
 pv.Scale.root = function() {
@@ -3597,7 +3679,7 @@ pv.Scale.root = function() {
  * <p>N.B.: ordinal scales are not invertible (at least not yet), since the
  * domain and range and discontinuous. A workaround is to use a linear scale.
  *
- * @param {...} domain... domain values.
+ * @param {...} domain... optional domain values.
  * @extends pv.Scale
  * @see pv.colors
  */
@@ -3813,7 +3895,30 @@ pv.Scale.ordinal = function() {
   return scale;
 };
 /**
- * @class
+ * Constructs a default quantile scale. The arguments to this constructor are
+ * optional, and equivalent to calling {@link #domain}. The default domain is
+ * the empty set, and the default range is [0,1].
+ *
+ * @class Represents a quantile scale; a function that maps from a value within
+ * a sortable domain to a quantized numeric range. Typically, the domain is a
+ * set of numbers, but any sortable value (such as strings) can be used as the
+ * domain of a quantile scale. The range defaults to [0,1], with 0 corresponding
+ * to the smallest value in the domain, 1 the largest, .5 the median, etc.
+ *
+ * <p>By default, the number of quantiles in the range corresponds to the number
+ * of values in the domain. The {@link #quantiles} method can be used to specify
+ * an explicit number of quantiles; for example, <tt>quantiles(4)</tt> produces
+ * a standard quartile scale. A quartile scale's range is a set of four discrete
+ * values, such as [0, 1/3, 2/3, 1]. Calling the {@link #range} method will
+ * scale these discrete values accordingly, similar to {@link
+ * pv.Scale.ordinal#splitFlush}.
+ *
+ * <p>For example, given the strings ["c", "a", "b"], a default quantile scale:
+ *
+ * <pre>pv.Scale.quantile("c", "a", "b")</pre>
+ *
+ * will return 0 for "a", .5 for "b", and 1 for "c".
+ *
  * @extends pv.Scale
  */
 pv.Scale.quantile = function() {
@@ -3847,8 +3952,8 @@ pv.Scale.quantile = function() {
     if (arguments.length) {
       n = Number(x);
       if (n < 0) {
-        q = d;
-        j = q.length - 1;
+        q = [d[0]].concat(d);
+        j = d.length - 1;
       } else {
         q = [];
         q[0] = d[0];
@@ -3901,9 +4006,31 @@ pv.Scale.quantile = function() {
   };
 
   /**
+   * Sets or gets the output range. This method can be invoked several ways:
+   *
+   * <p>1. <tt>range(min, ..., max)</tt>
+   *
+   * <p>The range may be specified as a series of numbers or colors. Most
+   * commonly, two numbers are specified: the minimum and maximum pixel values.
+   * For a color scale, values may be specified as {@link pv.Color}s or
+   * equivalent strings. For a diverging scale, or other subdivided non-uniform
+   * scales, multiple values can be specified. For example:
+   *
+   * <pre>    .range("red", "white", "green")</pre>
+   *
+   * <p>Currently, only numbers and colors are supported as range values. The
+   * number of range values must exactly match the number of domain values, or
+   * the behavior of the scale is undefined.
+   *
+   * <p>2. <tt>range()</tt>
+   *
+   * <p>Invoking the <tt>range</tt> method with no arguments returns the current
+   * range as an array of numbers or colors.
+   *
    * @function
    * @name pv.Scale.quantile.prototype.range
-   * @returns {pv.Scale.quantile}
+   * @param {...} range... range values.
+   * @returns {pv.Scale.quantile} <tt>this</tt>, or the current range.
    */
   scale.range = function() {
     if (arguments.length) {
@@ -7791,6 +7918,15 @@ pv.Dot.prototype.type = "dot";
  */
 
 /**
+ * The radius of the dot, in pixels. This is an alternative to using
+ * {@link #size}.
+ *
+ * @see #size
+ * @type number
+ * @name pv.Dot.prototype.radius
+ */
+
+/**
  * The shape name. Several shapes are supported:<ul>
  *
  * <li>cross
@@ -8879,7 +9015,7 @@ pv.Image.prototype.buildImplied = function(s) {
  * convenient defaults for the construction of radial graphs.
  *
  * <p>The center point of the circle is positioned using the standard box model.
- * The wedge can be stroked and filled, similar to {link Bar}.
+ * The wedge can be stroked and filled, similar to {@link pv.Bar}.
  *
  * <p>See also the <a href="../../api/Wedge.html">Wedge guide</a>.
  *
@@ -9114,10 +9250,11 @@ pv.Wedge.prototype.buildImplied = function(s) {
   pv.Mark.prototype.buildImplied.call(this, s);
 };
 /**
- * @class A weighted particle that can participate in a force simulation. There
- * is no explicit constructor corresponding to the class <tt>pv.Particle</tt>;
- * this class merely serves to document the attributes that are used on
- * particles in physics simulations.
+ * Abstract; not implemented. There is no explicit constructor; this class
+ * merely serves to document the attributes that are used on particles in
+ * physics simulations.
+ *
+ * @class A weighted particle that can participate in a force simulation.
  *
  * @name pv.Particle
  */
@@ -9197,16 +9334,42 @@ pv.Wedge.prototype.buildImplied = function(s) {
  * Constructs a new empty simulation.
  *
  * @param {array} particles
+ * @returns {pv.Simulation} a new simulation for the specified particles.
+ * @see pv.Simulation
  */
 pv.simulation = function(particles) {
   return new pv.Simulation(particles);
 };
 
 /**
- * @class A particle simulation.
+ * Constructs a new simulation for the specified particles.
  *
- * @constructor Constructs a new empty simulation.
- * @param {array} particles
+ * @class Represents a particle simulation. Particles are massive points in
+ * two-dimensional space. Forces can be applied to these particles, causing them
+ * to move. Constraints can also be applied to restrict particle movement, for
+ * example, constraining particles to a fixed position, or simulating collision
+ * between circular particles with area.
+ *
+ * <p>The simulation uses <a
+ * href="http://en.wikipedia.org/wiki/Verlet_integration">Position Verlet</a>
+ * integration, due to the ease with which <a
+ * href="http://www.teknikus.dk/tj/gdc2001.htm">geometric constraints</a> can be
+ * implemented. For each time step, Verlet integration is performed, new forces
+ * are accumulated, and then constraints are applied.
+ *
+ * <p>The simulation makes two simplifying assumptions: all particles are
+ * equal-mass, and the time step of the simulation is fixed. It would be easy to
+ * incorporate variable-mass particles as a future enhancement. Variable time
+ * steps are also possible, but are likely to introduce instability in the
+ * simulation.
+ *
+ * <p>This class can be used directly to simulate particle interaction.
+ * Alternatively, for network diagrams, see {@link pv.Layout.Force}.
+ *
+ * @param {array} particles an array of {@link pv.Particle}s to simulate.
+ * @see pv.Layout.Force
+ * @see pv.Force
+ * @see pv.Constraint
  */
 pv.Simulation = function(particles) {
   for (var i = 0; i < particles.length; i++) this.particle(particles[i]);
@@ -9327,10 +9490,20 @@ pv.Simulation.prototype.step = function() {
   for (f = this.forces; f; f = f.next) f.apply(this.particles, q);
 };
 /**
- * @class A quadtree.
+ * Constructs a new quadtree for the specified array of particles.
  *
- * @constructor Constructs a new quadtree for the specified array of particles.
+ * @class Represents a quadtree: a two-dimensional recursive spatial
+ * subdivision. This particular implementation uses square partitions, dividing
+ * each square into four equally-sized squares. Each particle exists in a unique
+ * node; if multiple particles are in the same position, some particles may be
+ * stored on internal nodes rather than leaf nodes.
  *
+ * <p>This quadtree can be used to accelerate various spatial operations, such
+ * as the Barnes-Hut approximation for computing n-body forces, or collision
+ * detection.
+ *
+ * @see pv.Force.charge
+ * @see pv.Constraint.collision
  * @param {pv.Particle} particles the linked list of particles.
  */
 pv.Quadtree = function(particles) {
@@ -9419,39 +9592,46 @@ pv.Quadtree = function(particles) {
 };
 
 /**
- * @field
+ * The root node of the quadtree.
+ *
  * @type pv.Quadtree.Node
  * @name pv.Quadtree.prototype.root
  */
 
 /**
- * @field
+ * The minimum x-coordinate value of all contained particles.
+ *
  * @type number
  * @name pv.Quadtree.prototype.xMin
  */
 
 /**
- * @field
+ * The maximum x-coordinate value of all contained particles.
+ *
  * @type number
  * @name pv.Quadtree.prototype.xMax
  */
 
 /**
- * @field
+ * The minimum y-coordinate value of all contained particles.
+ *
  * @type number
  * @name pv.Quadtree.prototype.yMin
  */
 
 /**
- * @field
+ * The maximum y-coordinate value of all contained particles.
+ *
  * @type number
  * @name pv.Quadtree.prototype.yMax
  */
 
 /**
+ * Constructs a new node.
+ *
  * @class A node in a quadtree.
  *
- * @constructor Constructs a new node.
+ * @see pv.Quadtree
  */
 pv.Quadtree.Node = function() {
   /*
@@ -9460,7 +9640,6 @@ pv.Quadtree.Node = function() {
    * faster than creating a cache pool.
    */
   this.leaf = true;
-  this.next = null;
   this.c1 = null;
   this.c2 = null;
   this.c3 = null;
@@ -9474,21 +9653,13 @@ pv.Quadtree.Node = function() {
  * this is a non-leaf node, then at least one of {@link #c1}, {@link #c2},
  * {@link #c3} or {@link #c4} is guaranteed to be non-null.
  *
- * @field
  * @type boolean
  * @name pv.Quadtree.Node.prototype.leaf
  */
 
 /**
- * @field
- * @type pv.Quadtree.Node
- * @name pv.Quadtree.Node.prototype.next
- */
-
-/**
  * The particle associated with this node, if any.
  *
- * @field
  * @type pv.Particle
  * @name pv.Quadtree.Node.prototype.p
  */
@@ -9496,7 +9667,6 @@ pv.Quadtree.Node = function() {
 /**
  * The child node for the second quadrant, if any.
  *
- * @field
  * @type pv.Quadtree.Node
  * @name pv.Quadtree.Node.prototype.c2
  */
@@ -9504,7 +9674,6 @@ pv.Quadtree.Node = function() {
 /**
  * The child node for the third quadrant, if any.
  *
- * @field
  * @type pv.Quadtree.Node
  * @name pv.Quadtree.Node.prototype.c3
  */
@@ -9512,35 +9681,56 @@ pv.Quadtree.Node = function() {
 /**
  * The child node for the fourth quadrant, if any.
  *
- * @field
  * @type pv.Quadtree.Node
  * @name pv.Quadtree.Node.prototype.c4
  */
 /**
- * @class
- * @name pv.Force
+ * Abstract; see an implementing class.
+ *
+ * @class Represents a force that acts on particles. Note that this interface
+ * does not specify how to bind a force to specific particles; in general,
+ * forces are applied globally to all particles. However, some forces may be
+ * applied to specific particles or between particles, such as spring forces,
+ * through additional specialization.
+ *
+ * @see pv.Simulation
+ * @see pv.Particle
+ * @see pv.Force.charge
+ * @see pv.Force.drag
+ * @see pv.Force.spring
  */
 pv.Force = {};
 
 /**
+ * Applies this force to the specified particles.
+ *
  * @function
  * @name pv.Force.prototype.apply
- * @param {pv.Particle} particles
- * @param {pv.Quadtree} q
+ * @param {pv.Particle} particles particles to which to apply this force.
+ * @param {pv.Quadtree} q a quadtree for spatial acceleration.
  * @returns {pv.Force} this.
  */
 /**
- * An n-body force, as defined by Coulomb's law or Newton's law of gravitation,
- * inversely proportional to the square of the distance between particles. Note
- * that the force is independent of the <i>mass</i> of the associated particles,
- * and that the particles do not have charges of varying magnitude; instead, the
- * attraction or repulsion of all particles is globally specified as the charge
- * {@link #constant}.
+ * Constructs a new charge force, with an optional charge constant. The charge
+ * constant can be negative for repulsion (e.g., particles with electrical
+ * charge of equal sign), or positive for attraction (e.g., massive particles
+ * with mutual gravity). The default charge constant is -40.
  *
- * @class
+ * @class An n-body force, as defined by Coulomb's law or Newton's law of
+ * gravitation, inversely proportional to the square of the distance between
+ * particles. Note that the force is independent of the <i>mass</i> of the
+ * associated particles, and that the particles do not have charges of varying
+ * magnitude; instead, the attraction or repulsion of all particles is globally
+ * specified as the charge {@link #constant}.
+ *
+ * <p>This particular implementation uses the Barnes-Hut algorithm. For details,
+ * see <a
+ * href="http://www.nature.com/nature/journal/v324/n6096/abs/324446a0.html">"A
+ * hierarchical O(N log N) force-calculation algorithm"</a>, J. Barnes &amp;
+ * P. Hut, <i>Nature</i> 1986.
+ *
  * @name pv.Force.charge
- * @constructor
- * @param {number} k
+ * @param {number} [k] the charge constant.
  */
 pv.Force.charge = function(k) {
   var min = 2, // minimum distance at which to observe forces
@@ -9553,9 +9743,15 @@ pv.Force.charge = function(k) {
   if (!arguments.length) k = -40; // default charge constant (repulsion)
 
   /**
+   * Sets or gets the charge constant. If an argument is specified, it is the
+   * new charge constant. The charge constant can be negative for repulsion
+   * (e.g., particles with electrical charge of equal sign), or positive for
+   * attraction (e.g., massive particles with mutual gravity). The default
+   * charge constant is -40.
+   *
    * @function
    * @name pv.Force.charge.prototype.constant
-   * @param {number} x
+   * @param {number} x the charge constant.
    * @returns {pv.Force.charge} this.
    */
   force.constant = function(x) {
@@ -9567,6 +9763,14 @@ pv.Force.charge = function(k) {
   };
 
   /**
+   * Sets or gets the domain; specifies the minimum and maximum domain within
+   * which charge forces are applied. A minimum distance threshold avoids
+   * applying forces that are two strong (due to granularity of the simulation's
+   * numeric integration). A maximum distance threshold improves performance by
+   * skipping force calculations for particles that are far apart.
+   *
+   * <p>The default domain is [2, 500].
+   *
    * @function
    * @name pv.Force.charge.prototype.domain
    * @param {number} a
@@ -9585,9 +9789,14 @@ pv.Force.charge = function(k) {
   };
 
   /**
+   * Sets or gets the Barnes-Hut approximation factor. The Barnes-Hut
+   * approximation criterion is the ratio of the size of the quadtree node to
+   * the distance from the point to the node's center of mass is beneath some
+   * threshold.
+   *
    * @function
    * @name pv.Force.charge.prototype.theta
-   * @param {number} x
+   * @param {number} x the new Barnes-Hut approximation factor.
    * @returns {pv.Force.charge} this.
    */
   force.theta = function(x) {
@@ -9629,8 +9838,8 @@ pv.Force.charge = function(k) {
 
   /**
    * @ignore Recursively computes forces on the given particle using the given
-   * quadtree node. The Barnes-Hut approximation criterion is if the ratio of
-   * the size of the quadtree node to the distance from the point to the node's
+   * quadtree node. The Barnes-Hut approximation criterion is the ratio of the
+   * size of the quadtree node to the distance from the point to the node's
    * center of mass is beneath some threshold.
    */
   function forces(n, p, x1, y1, x2, y2) {
@@ -9666,10 +9875,15 @@ pv.Force.charge = function(k) {
   }
 
   /**
+   * Applies this force to the specified particles. The force is applied between
+   * all pairs of particles within the domain, using the specified quadtree to
+   * accelerate n-body force calculation using the Barnes-Hut approximation
+   * criterion.
+   *
    * @function
    * @name pv.Force.charge.prototype.apply
-   * @param {pv.Particle} particles
-   * @param {pv.Quadtree} q
+   * @param {pv.Particle} particles particles to which to apply this force.
+   * @param {pv.Quadtree} q a quadtree for spatial acceleration.
    * @returns {pv.Force.charge} this.
    */
   force.apply = function(particles, q) {
@@ -9822,23 +10036,49 @@ pv.Force.spring = function(k) {
   return force;
 };
 /**
- * @class
- * @name pv.Constraint
+ * Abstract; see an implementing class.
+ *
+ * @class Represents a constraint that acts on particles. Note that this
+ * interface does not specify how to bind a constraint to specific particles; in
+ * general, constraints are applied globally to all particles. However, some
+ * constraints may be applied to specific particles or between particles, such
+ * as position constraints, through additional specialization.
+ *
+ * @see pv.Simulation
+ * @see pv.Particle
+ * @see pv.Constraint.bound
+ * @see pv.Constraint.collision
+ * @see pv.Constraint.position
  */
 pv.Constraint = {};
 
 /**
+ * Applies this constraint to the specified particles.
+ *
  * @function
  * @name pv.Constraint.prototype.apply
- * @param {pv.Particle} particles
- * @param {pv.Quadtree} q
+ * @param {pv.Particle} particles particles to which to apply this constraint.
+ * @param {pv.Quadtree} q a quadtree for spatial acceleration.
  * @returns {pv.Constraint} this.
  */
 /**
- * @class
- * @name pv.Constraint.collision
- * @constructor
- * @param {number} radius
+ * Constructs a new collision constraint. The default search radius is 10, and
+ * the default repeat count is 1. A radius function must be specified to compute
+ * the radius of particles.
+ *
+ * @class Constraints circles to avoid overlap. Each particle is treated as a
+ * circle, with the radius of the particle computed using a specified function.
+ * For example, if the particle has an <tt>r</tt> attribute storing the radius,
+ * the radius <tt>function(d) d.r</tt> specifies a collision constraint using
+ * this radius. The radius function is passed each {@link pv.Particle} as the
+ * first argument.
+ *
+ * <p>To accelerate collision detection, this implementation uses a quadtree and
+ * a search radius. The search radius is computed as the maximum radius of all
+ * particles in the simulation.
+ *
+ * @see pv.Constraint
+ * @param {function} radius the radius function.
  */
 pv.Constraint.collision = function(radius) {
   var n = 1, // number of times to repeat the constraint
@@ -9852,9 +10092,15 @@ pv.Constraint.collision = function(radius) {
   if (!arguments.length) r1 = 10; // default search radius
 
   /**
+   * Sets or gets the repeat count. If the repeat count is greater than 1, the
+   * constraint will be applied repeatedly; this is a form of the Gauss-Seidel
+   * method for constraints relaxation. Repeating the collision constraint makes
+   * the constraint have more of an effect when there is a potential for many
+   * co-occurring collisions.
+   *
    * @function
    * @name pv.Constraint.collision.prototype.repeat
-   * @param {number} x
+   * @param {number} x the number of times to repeat this constraint.
    * @returns {pv.Constraint.collision} this.
    */
   constraint.repeat = function(x) {
@@ -9901,11 +10147,13 @@ pv.Constraint.collision = function(radius) {
   }
 
   /**
+   * Applies this constraint to the specified particles.
+   *
    * @function
    * @name pv.Constraint.collision.prototype.apply
-   * @param {pv.Particle} particles
-   * @param {pv.Quadtree} q
-   * @returns {pv.Constraint.position} this.
+   * @param {pv.Particle} particles particles to which to apply this constraint.
+   * @param {pv.Quadtree} q a quadtree for spatial acceleration.
+   * @returns {pv.Constraint.collision} this.
    */
   constraint.apply = function(particles, q) {
     var p, r, max = -Infinity;
@@ -9928,10 +10176,30 @@ pv.Constraint.collision = function(radius) {
   return constraint;
 };
 /**
- * @class
- * @name pv.Constraint.position
- * @constructor
- * @param {function} [f]
+ * Constructs a default position constraint using the <tt>fix</tt> attribute.
+ * An optional position function can be specified to determine how the fixed
+ * position per-particle is determined.
+ *
+ * @class Constraints particles to a fixed position. The fixed position per
+ * particle is determined using a given position function, which defaults to
+ * <tt>function(d) d.fix</tt>.
+ *
+ * <p>If the position function returns null, then no position constraint is
+ * applied to the given particle. Otherwise, the particle's position is set to
+ * the returned position, as expressed by a {@link pv.Vector}. (Note: the
+ * position does not need to be an instance of <tt>pv.Vector</tt>, but simply an
+ * object with <tt>x</tt> and <tt>y</tt> attributes.)
+ *
+ * <p>This constraint also supports a configurable alpha parameter, which
+ * defaults to 1. If the alpha parameter is in the range [0,1], then rather than
+ * setting the particle's new position directly to the position returned by the
+ * supplied position function, the particle's position is interpolated towards
+ * the fixed position. This results is a smooth (exponential) drift towards the
+ * fixed position, which can increase the stability of the physics simulation.
+ * In addition, the alpha parameter can be decayed over time, relaxing the
+ * position constraint, which helps to stabilize on an optimal solution.
+ *
+ * @param {function} [f] the position function.
  */
 pv.Constraint.position = function(f) {
   var a = 1, // default alpha
@@ -9940,9 +10208,15 @@ pv.Constraint.position = function(f) {
   if (!arguments.length) /** @ignore */ f = function(p) { return p.fix; };
 
   /**
+   * Sets or gets the alpha parameter for position interpolation. If the alpha
+   * parameter is in the range [0,1], then rather than setting the particle's
+   * new position directly to the position returned by the supplied position
+   * function, the particle's position is interpolated towards the fixed
+   * position.
+   *
    * @function
    * @name pv.Constraint.position.prototype.alpha
-   * @param {number} x
+   * @param {number} x the new alpha parameter, in the range [0,1].
    * @returns {pv.Constraint.position} this.
    */
   constraint.alpha = function(x) {
@@ -9954,9 +10228,11 @@ pv.Constraint.position = function(f) {
   };
 
   /**
+   * Applies this constraint to the specified particles.
+   *
    * @function
    * @name pv.Constraint.position.prototype.apply
-   * @param {pv.Particle} particles
+   * @param {pv.Particle} particles particles to which to apply this constraint.
    * @returns {pv.Constraint.position} this.
    */
   constraint.apply = function(particles) {
@@ -9972,9 +10248,22 @@ pv.Constraint.position = function(f) {
   return constraint;
 };
 /**
- * @class
- * @name pv.Constraint.bound
- * @constructor
+ * Constructs a new bound constraint. Before the constraint can be used, the
+ * {@link #x} and {@link #y} methods must be call to specify the bounds.
+ *
+ * @class Constrains particles to within fixed rectangular bounds. For example,
+ * this constraint can be used to constrain particles in a physics simulation
+ * within the bounds of an enclosing panel.
+ *
+ * <p>Note that the current implementation treats particles as points, with no
+ * area. If the particles are rendered as dots, be sure to include some
+ * additional padding to inset the bounds such that the edges of the dots do not
+ * get clipped by the panel bounds. If the particles have different radii, this
+ * constraint would need to be extended using a radius function, similar to
+ * {@link pv.Constraint.collision}.
+ *
+ * @see pv.Layout.Force
+ * @extends pv.Constraint
  */
 pv.Constraint.bound = function() {
   var constraint = {},
@@ -9982,10 +10271,12 @@ pv.Constraint.bound = function() {
       y;
 
   /**
+   * Sets or gets the bounds on the x-coordinate.
+   *
    * @function
    * @name pv.Constraint.bound.prototype.x
-   * @param {number} min
-   * @param {number} max
+   * @param {number} min the minimum allowed x-coordinate.
+   * @param {number} max the maximum allowed x-coordinate.
    * @returns {pv.Constraint.bound} this.
    */
   constraint.x = function(min, max) {
@@ -9997,10 +10288,12 @@ pv.Constraint.bound = function() {
   };
 
   /**
+   * Sets or gets the bounds on the y-coordinate.
+   *
    * @function
    * @name pv.Constraint.bound.prototype.y
-   * @param {number} min
-   * @param {number} max
+   * @param {number} min the minimum allowed y-coordinate.
+   * @param {number} max the maximum allowed y-coordinate.
    * @returns {pv.Constraint.bound} this.
    */
   constraint.y = function(min, max) {
@@ -10012,10 +10305,12 @@ pv.Constraint.bound = function() {
   };
 
   /**
+   * Applies this constraint to the specified particles.
+   *
    * @function
    * @name pv.Constraint.bound.prototype.apply
-   * @param {pv.Particle} particles
-   * @returns {pv.Constraint.position} this.
+   * @param {pv.Particle} particles particles to which to apply this constraint.
+   * @returns {pv.Constraint.bound} this.
    */
   constraint.apply = function(particles) {
     if (x) for (var p = particles; p; p = p.next) {
@@ -13471,37 +13766,40 @@ pv.Behavior.zoom = function(speed) {
  */
 pv.Geo = function() {};
 /**
- * A coordinate class used by the <tt>pv.Geo.scale</tt>. There is no explicit
- * constructor corresponding to the class <tt>pv.geo.LatLng</tt>; this class
- * merely serves to document the attributes that are present in coordinate
- * descriptions
+ * Abstract; not implemented. There is no explicit constructor; this class
+ * merely serves to document the representation used by {@link pv.Geo.scale}.
  *
- * @class
+ * @class Represents a pair of geographic coordinates.
+ *
  * @name pv.Geo.LatLng
+ * @see pv.Geo.scale
  */
 
 /**
- * The <i>latitude</i>-of the coordinate in degrees; positive is North.
+ * The <i>latitude</i> coordinate in degrees; positive is North.
  *
  * @type number
  * @name pv.Geo.LatLng.prototype.lat
  */
 
 /**
- * The <i>longitude</i>-of the coordinate in degrees; positive is East.
+ * The <i>longitude</i> coordinate in degrees; positive is East.
  *
  * @type number
  * @name pv.Geo.LatLng.prototype.lng
  */
 /**
- * A projection class used by the <tt>pv.Geo.scale</tt>. There is no explicit
- * constructor corresponding to the class <tt>pv.Geo.Projection</tt>; this class
- * merely serves to document the projection interface. TODO describe in more
- * detail how projections map between {@link pv.Geo.LatLng} and {@link
- * pv.Vector} in [-1,1].
+ * Abstract; not implemented. There is no explicit constructor; this class
+ * merely serves to document the representation used by {@link pv.Geo.scale}.
  *
- * @class
+ * @class Represents a geographic projection.
+ *
+ * TODO describe in more detail how
+ * projections map between {@link pv.Geo.LatLng} and {@link pv.Vector} in
+ * [-1,1].
+ *
  * @name pv.Geo.Projection
+ * @see pv.Geo.scale
  */
 
 /**
@@ -13518,7 +13816,7 @@ pv.Geo = function() {};
  *
  * @function
  * @name pv.Geo.Projection.prototype.invert
- * @param {pv.Vector} point the x- and y-coordinates to invert.
+ * @param {pv.Vector} xy the x- and y-coordinates to invert.
  * @returns {pv.Geo.LatLng} the latitude and longitude of the given point.
  */
 /**
@@ -13639,16 +13937,16 @@ pv.Geo.projections = {
   }
 };
 /**
- * Returns the specified geographical projection. The arguments to this
- * constructor are optional, and equivalent to calling {@link #projection}.
+ * Returns a geographic scale. The arguments to this constructor are optional,
+ * and equivalent to calling {@link #projection}.
  *
- * @class Represents a geographical scale. A geographical scale represents the
+ * @class Represents a geographic scale. A geographic scale represents the
  * mapping between longitude and latitude coordinates and their appropriate
  * positioning on the screen. By default the appropriate domain is inferred so
  * as to map the entire world onto the screen.
  *
  * @param {pv.Geo.Projection} [p] optional projection.
- * @returns {pv.Geo.Scale} a geographical scale.
+ * @returns {pv.Geo.Scale} a geographic scale.
  */
 pv.Geo.scale = function(p) {
   var rmin = {x: 0, y: 0}, // default range minimum
