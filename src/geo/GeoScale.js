@@ -1,14 +1,14 @@
 /**
- * Returns the specified geographical projection. The arguments to this
- * constructor are optional, and equivalent to calling {@link #projection}.
+ * Returns a geographic scale. The arguments to this constructor are optional,
+ * and equivalent to calling {@link #projection}.
  *
- * @class Represents a geographical scale. A geographical scale represents the
+ * @class Represents a geographic scale. A geographic scale represents the
  * mapping between longitude and latitude coordinates and their appropriate
  * positioning on the screen. By default the appropriate domain is inferred so
  * as to map the entire world onto the screen.
  *
  * @param {pv.Geo.Projection} [p] optional projection.
- * @returns {pv.Geo.Scale} a geographical scale.
+ * @returns {pv.Geo.Scale} a geographic scale.
  */
 pv.Geo.scale = function(p) {
   var rmin = {x: 0, y: 0}, // default range minimum

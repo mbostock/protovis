@@ -1,9 +1,12 @@
 /**
- * @class A projection class used by <tt>pv.Geo.scale</tt>. There is no explicit
- * constructor corresponding to the class <tt>pv.Geo.Projection</tt>; this class
- * merely serves to document the projection interface. TODO describe in more
- * detail how projections map between {@link pv.Geo.LatLng} and {@link
- * pv.Vector} in [-1,1].
+ * Abstract; not implemented. There is no explicit constructor; this class
+ * merely serves to document the representation used by {@link pv.Geo.scale}.
+ *
+ * @class Represents a geographic projection.
+ *
+ * TODO describe in more detail how
+ * projections map between {@link pv.Geo.LatLng} and {@link pv.Vector} in
+ * [-1,1].
  *
  * @name pv.Geo.Projection
  * @see pv.Geo.scale
@@ -23,6 +26,6 @@
  *
  * @function
  * @name pv.Geo.Projection.prototype.invert
- * @param {pv.Vector} point the x- and y-coordinates to invert.
+ * @param {pv.Vector} xy the x- and y-coordinates to invert.
  * @returns {pv.Geo.LatLng} the latitude and longitude of the given point.
  */
