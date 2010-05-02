@@ -16,9 +16,15 @@
       <option value="cardinal" selected>Cardinal</option>
       <option value="monotone">Monotone</option>
       <option value="basis">Basis</option>
+      <option value="linear">Linear</option>
+      <option value="step-before">Step (before)</option>
+      <option value="step-after">Step (after)</option>
     </select>
     &nbsp;
     <input type="checkbox" onchange="segmented = this.checked; vis.render()">Segmented
+    &nbsp;
+    &nbsp;
+    (click anywhere to add a point, pres delete to remove the active point)
     <script type="text/javascript+protovis">
 
 var w = 766,
@@ -65,7 +71,8 @@ vis.add(pv.Dot)
 vis.render();
 
 pv.listen(window, "keydown", function(e) {
-  if ((e.keyCode == 8) && (i >= 0)) {
+  // code 8 is backspace, code 46 is delete
+  if ((e.keyCode == 8 || e.keyCode == 46) && (i >= 0)) {
     points.splice(i--, 1);
     vis.render();
     e.preventDefault();

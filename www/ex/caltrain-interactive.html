@@ -180,8 +180,8 @@
           .left(function(now) x(now.getHours()*60 + now.getMinutes() + ((now.getHours()<=minHour)?1440:0)))
           .visible(function(now) {
              var px = x(now.getHours()*60 + now.getMinutes() + ((now.getHours()<=minHour)?1440:0));
-             return 0 < px && px < w;} // Invisible is off screen
-          )
+             return 0 < px && px < w; // Invisible is off screen
+          })
           .strokeStyle("FF0C0C")
           .top(-20)
           .bottom(-20);
@@ -266,7 +266,7 @@
       
       var barHeight = 12;
       var barX = pv.Scale.linear(minHour*60, maxHour*60).range(0, w);
-       
+
       var bar = vis.add(pv.Panel)
           .top(h + 50)
           .height(50);
