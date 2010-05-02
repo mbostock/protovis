@@ -33,6 +33,7 @@ HTML_FILES = \
 	www/ex/segmented.html \
 	www/ex/splines.html \
 	www/ex/sunburst.html \
+	www/ex/stem-and-leaf.html \
 	www/ex/symbol.html \
 	www/ex/treemap.html \
 	www/ex/unemployed.html \
