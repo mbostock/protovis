@@ -37,7 +37,8 @@ vis.add(pv.Panel)
     .left(geo.x)
     .top(geo.y)
     .strokeStyle("#999")
-    .lineWidth(.5);
+    .lineWidth(.5)
+    .interpolate("cardinal");
 
 /* Longitude ticks. */
 vis.add(pv.Panel)
@@ -47,7 +48,8 @@ vis.add(pv.Panel)
     .left(geo.x)
     .top(geo.y)
     .strokeStyle("#999")
-    .lineWidth(.5);
+    .lineWidth(.5)
+    .interpolate("cardinal");
 
 vis.render();
 

@@ -2,7 +2,7 @@
   <head>
     <title>Hammer Projection</title>
     <script type="text/javascript" src="../../protovis-d3.2.js"></script>
-    <script type="text/javascript" src="countries.js"></script>
+    <script type="text/javascript" src="countries-lores.js"></script>
     <script type="text/javascript" src="../center.js"></script>
   </head>
   <body>
@@ -37,7 +37,8 @@ vis.add(pv.Panel)
     .left(geo.x)
     .top(geo.y)
     .strokeStyle("#999")
-    .lineWidth(.5);
+    .lineWidth(.5)
+    .interpolate("cardinal");
 
 /* Longitude ticks. */
 vis.add(pv.Panel)
@@ -47,7 +48,8 @@ vis.add(pv.Panel)
     .left(geo.x)
     .top(geo.y)
     .strokeStyle("#999")
-    .lineWidth(.5);
+    .lineWidth(.5)
+    .interpolate("cardinal");
 
 vis.render();
 
