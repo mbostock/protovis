@@ -1,0 +1,43 @@
+<html>
+  <head>
+    <title>Les Miserables Arc</title>
+    <link type="text/css" rel="stylesheet" href="ex.css?3.2"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+    <script type="text/javascript" src="miserables.js"></script>
+    <style type="text/css">
+        #fig {
+            width: 1000px;
+            height: 600px;
+        }
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <script type="text/javascript+protovis">
+
+      var vis = new pv.Panel()
+          .width(1000)
+          .height(400)
+          .margin(10)
+          .bottom(100);
+
+      var layout = vis.add(pv.Layout.Arc)
+          .nodes(miserables.nodes)
+          .links(miserables.links);
+
+      layout.link.add(pv.Line);
+
+      layout.node.add(pv.Dot)
+          .size(function(d) d.linkDegree + 4)
+          .fillStyle(pv.Colors.category19().by(function(d) d.group))
+          .strokeStyle(function() this.fillStyle().darker());
+
+      layout.label.add(pv.Label)
+
+      vis.render();
+
+    </script>
+<div class="caption">
+Les Miserables character interaction. Each character is represented by a circle and the connecting arc represent interaction. The character's size indicates the number of interactions they have over the entire play.
+</div>
+  </div></div></body>
+</html>

@@ -21,12 +21,14 @@ HTML_FILES = \
 	www/ex/hotel.html \
 	www/ex/icicle.html \
 	www/ex/index-chart.html \
-	www/ex/interaction-matrix.html \
 	www/ex/jobs.html \
 	www/ex/life.html \
 	www/ex/line.html \
 	www/ex/matrix.html \
 	www/ex/minnesota.html \
+	www/ex/miserables-arcs.html \
+	www/ex/miserables-force.html \
+	www/ex/miserables-matrix.html \
 	www/ex/napoleon.html \
 	www/ex/oakland.html \
 	www/ex/pie.html \

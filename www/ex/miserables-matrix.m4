@@ -44,10 +44,10 @@
     <div class="body">
       <h1>Les Misérables Matrix</h1>
 
-      <iframe style="height:790px;" src="interaction-matrix-embed.html"></iframe>
+      <iframe style="height:790px;" src="miserables-matrix-embed.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
-      href="interaction-matrix-full.html" target="_blank">View full screen.</a>
+      href="miserables-matrix-full.html" target="_blank">View full screen.</a>
 
       <p>Les Misérables characters presented in an interaction matrix. Each character is
       represented by a row and a column in the matrix. An entry in the matrix is colored
@@ -55,7 +55,7 @@
 
       <h3>Source</h3>
 
-include(`interaction-matrix-full.html.html')
+include(`miserables-matrix-full.html.html')
 
       <h3>Data</h3>
 
