@@ -21,6 +21,7 @@ HTML_FILES = \
 	www/ex/hotel.html \
 	www/ex/icicle.html \
 	www/ex/index-chart.html \
+	www/ex/interaction-matrix.html \
 	www/ex/jobs.html \
 	www/ex/life.html \
 	www/ex/line.html \
