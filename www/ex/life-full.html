@@ -1,97 +1,93 @@
 <html>
   <head>
     <title>Game of Life</title>
-    <link type="text/css" rel="stylesheet" href="ex.css?3.1"/>
+    <link type="text/css" rel="stylesheet" href="ex.css?3.2"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
     <script type="text/javascript" src="life.js"></script>
     <style type="text/css">
       #fig {
-        width: 300px;
-        height: 300px;
+        width: 600px;
+        height: 600px;
       }
-      #header, #footer {
-        font: 10px sans-serif;
-        padding: 10px;
-        margin: auto;
-        width: 470px;
-      }
-      #footer {
-        text-align: right;
+
+      body {
+        background: #222;
       }
     </style>
   </head>
   <body><div id="center"><div id="fig">
     <script type="text/javascript+protovis">
 
-      var n = 150, size = 2, life;
+      life.neighbors = [];
 
-      var vis = new pv.Panel()
-          .width(n * size)
-          .height(n * size);
+      life.neighbors.add = function(x, y, v) {
+        for (var i = x - 1; i <= x + 1; i++) {
+          for (var j = y - 1; j <= y + 1; j++) {
+            this[i * life.size + j] += v;
+          }
+        }
+        this[x * life.size + y] -= v;
+      };
 
-      vis.add(pv.Panel)
-          .data(pv.range(n))
-          .left(function(i) i * size)
-          .width(size)
-        .add(pv.Bar)
-          .data(pv.range(n))
-          .top(function(j) j * size)
-          .height(size)
-          .fillStyle("black")
-          .visible(function(i, j) life[i * n + j]);
-
-      function reset(rand) {
-        life = rand
-            ? breeder.map(function() Math.round(Math.random()))
-            : breeder.concat();
-        life.neighbors = breeder.map(function() 0);
-
-        life.neighbors.add = function(x, y, v) {
-          for (var i = x - 1; i <= x + 1; i++) {
-            for (var j = y - 1; j <= y + 1; j++) {
-              this[i * n + j] += v;
+      life.reset = function(source) {
+        if (!arguments.length) {
+          source = [];
+          source.size = 150;
+          for (var x = 0, p = 0; x < source.size; x++) {
+            for (var y = 0; y < source.size; y++, p++) {
+              source[p] = Math.random() > .5 ? 1 : 0;
             }
           }
-          this[x * n + y] -= v;
-        };
-
-        life.update = function() {
-          var neighbors = this.neighbors.concat();
-          for (var x = 0, p = 0; x < n; x++) {
-            for (var y = 0; y < n; y++, p++) {
-              if (this[p]) {
-                if ((neighbors[p] < 2) || (neighbors[p] > 3)) {
-                  this.neighbors.add(x, y, -1);
-                  this[p] = 0;
-                }
-              } else if (neighbors[p] == 3) {
-                this.neighbors.add(x, y, 1);
-                this[p] = 1;
-              }
-            }
+        }
+        life.size = source.size;
+        for (var x = 0, p = 0; x < life.size; x++) {
+          for (var y = 0; y < life.size; y++, p++) {
+            life[p] = source[p];
+            life.neighbors[p] = 0;
           }
-        };
-
-        for (var x = 0, p = 0; x < n; x++) {
-          for (var y = 0; y < n; y++, p++) {
+        }
+        for (var x = 0, p = 0; x < life.size; x++) {
+          for (var y = 0; y < life.size; y++, p++) {
             if (life[p]) {
               life.neighbors.add(x, y, 1);
             }
           }
         }
-
-        update();
       };
 
-      function update() {
-        var start = new Date().getTime();
-        life.update();
-        vis.render();
-        var end = new Date().getTime();
-        setTimeout(update, end - start);
-      }
+      life.update = function() {
+        var neighbors = this.neighbors.concat();
+        for (var x = 0, p = 0; x < life.size; x++) {
+          for (var y = 0; y < life.size; y++, p++) {
+            if (this[p]) {
+              if ((neighbors[p] < 2) || (neighbors[p] > 3)) {
+                this.neighbors.add(x, y, -1);
+                this[p] = 0;
+              }
+            } else if (neighbors[p] == 3) {
+              this.neighbors.add(x, y, 1);
+              this[p] = 1;
+            }
+          }
+        }
+      };
 
-      reset();
+      life.reset(life.breeder);
+
+      var vis = new pv.Panel()
+          .width(life.size * 4)
+          .height(life.size * 4);
+
+      vis.add(pv.Image)
+          .def("init", function() life.update())
+          .imageWidth(life.size)
+          .imageHeight(life.size)
+          .image(pv.colors(null, "#0f0").by(function(i, j) life[j * life.size + i]))
+          .event("click", function() life.reset());
+
+      vis.render();
+
+      setInterval(function() vis.render(), 42);
 
     </script>
   </div></div></body>

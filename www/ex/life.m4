@@ -44,8 +44,8 @@
     <div class="body">
       <h1>Conway's Game of Life</h1>
 
-      <div style="float:left;width:310px;">
-      <iframe style="border:solid 4px #ccc;width:300px;height:300px;" src="life-full.html"></iframe>
+      <div style="float:left;width:610px;">
+      <iframe style="border:solid 4px #ccc;width:600px;height:600px;" src="life-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="life-full.html" target="_blank">View full screen.</a>
@@ -53,13 +53,7 @@
 
       <div style="float:left;padding-left:30px;width:500px;">
       John Conway devised this life-like cellular automaton in 1970. Here we
-      visualize the cells by toggling the visibility of 2&times;2 pixel bars. In
-      the future, we intend to restore support for pixel manipulation using
-      SVG's support for <a href="http://www.w3.org/TR/SVG/extend.html">foreign
-      objects</a> and
-      <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html">HTML
-      5 canvas</a>; this will also improve the performance
-      of <a href="heatmap.html">heatmaps</a>.
+      visualize the cells by directly specifying the pixel colors of an image.
 
       <blockquote style="font-size:13px;">
         Next: <a href="waves.html">Waves</a>
