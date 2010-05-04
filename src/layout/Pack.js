@@ -1,7 +1,38 @@
 /**
- * @class
+ * Constructs a new, empty circle-packing layout. Layouts are not typically
+ * constructed directly; instead, they are added to an existing panel via
+ * {@link pv.Mark#add}.
+ *
+ * @class Represents a hierarchical layout using circle-packing. The meaning of
+ * the exported mark prototypes changes slightly in the space-filling
+ * implementation:<ul>
+ *
+ * <li><tt>node</tt> - for rendering nodes; typically a {@link pv.Dot}.
+ *
+ * <p><li><tt>link</tt> - unsupported; undefined. Links are encoded implicitly
+ * in the arrangement of the space-filling nodes.
+ *
+ * <p><li><tt>label</tt> - for rendering node labels; typically a
+ * {@link pv.Label}.
+ *
+ * </ul>The pack layout support dynamic sizing for leaf nodes, if a
+ * {@link #size} psuedo-property is specified. The default size function returns
+ * 1, causing all leaf nodes to be sized equally, and all internal nodes to be
+ * sized by the number of leaf nodes they have as descendants.
+ *
+ * <p>The size function can be used in conjunction with the order property,
+ * which allows the nodes to the sorted by the computed size. Note: for sorting
+ * based on other data attributes, simply use the default <tt>null</tt> for the
+ * order property, and sort the nodes beforehand using the {@link pv.Dom}
+ * operator.
+ *
+ * <p>For more details on how to use this layout, see
+ * {@link pv.Layout.Hierarchy}.
+ *
  * @extends pv.Layout.Hierarchy
- * @constructor
+ * @see <a href="http://portal.acm.org/citation.cfm?id=1124772.1124851"
+ * >"Visualization of large hierarchical data by circle packing"</a> by W. Wang,
+ * H. Wang, G. Dai, and H. Wang, ACM CHI 2006.
  */
 pv.Layout.Pack = function() {
   pv.Layout.Hierarchy.call(this);
@@ -28,11 +59,24 @@ pv.Layout.Pack.prototype.defaults = new pv.Layout.Pack()
     .order("ascending");
 
 /**
+ * The spacing parameter; defaults to 1, which provides a little bit of padding
+ * between sibling nodes and the enclosing circle. Larger values increase the
+ * spacing, by making the sibling nodes smaller; a value of zero makes the leaf
+ * nodes as large as possible, with no padding on enclosing circles.
+ *
  * @type number
  * @name pv.Layout.Pack.prototype.spacing
  */
 
 /**
+ * The sibling node order. The default order is <tt>null</tt>, which means to
+ * use the sibling order specified by the nodes property as-is. A value of
+ * "ascending" will sort siblings in ascending order of size, while "descending"
+ * will do the reverse. For sorting based on data attributes other than size,
+ * use the default <tt>null</tt> for the order property, and sort the nodes
+ * beforehand using the {@link pv.Dom} operator.
+ *
+ * @see pv.Dom.Node#sort
  * @type string
  * @name pv.Layout.Pack.prototype.order
  */
@@ -52,7 +96,10 @@ pv.Layout.Pack.prototype.$radius = function() { return 1; };
  * files as leaf nodes, and each file has a <tt>bytes</tt> attribute, you can
  * specify a size function as:
  *
- * <pre>.size(function(d) d.bytes)</pre>
+ * <pre>    .size(function(d) d.bytes)</pre>
+ *
+ * As with other properties, a size function may specify additional arguments to
+ * access the data associated with the layout and any enclosing panels.
  *
  * @param {function} f the new sizing function.
  * @returns {pv.Layout.Pack} this.

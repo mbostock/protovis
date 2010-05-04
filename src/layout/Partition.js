@@ -12,11 +12,13 @@
  * <p>The partition layout support dynamic sizing for leaf nodes, if a
  * {@link #size} psuedo-property is specified. The default size function returns
  * 1, causing all leaf nodes to be sized equally, and all internal nodes to be
- * sized by the number of leaf nodes they have as descendants. The size function
- * can be used in conjunction with the order property, which allows the nodes to
- * the sorted by the computed size. Note: for sorting based on other data
- * attributes, simply use the default <tt>null</tt> for the order property, and
- * sort the nodes beforehand using the {@link pv.Dom} operator.
+ * sized by the number of leaf nodes they have as descendants.
+ *
+ * <p>The size function can be used in conjunction with the order property,
+ * which allows the nodes to the sorted by the computed size. Note: for sorting
+ * based on other data attributes, simply use the default <tt>null</tt> for the
+ * order property, and sort the nodes beforehand using the {@link pv.Dom}
+ * operator.
  *
  * <p>For more details on how to use this layout, see
  * {@link pv.Layout.Hierarchy}.
@@ -160,9 +162,27 @@ pv.Layout.Partition.prototype.buildImplied = function(s) {
 };
 
 /**
- * @class A variant of partition layout that is space-filling.
+ * Constructs a new, empty space-filling partition layout. Layouts are not
+ * typically constructed directly; instead, they are added to an existing panel
+ * via {@link pv.Mark#add}.
+ *
+ * @class A variant of partition layout that is space-filling. The meaning of
+ * the exported mark prototypes changes slightly in the space-filling
+ * implementation:<ul>
+ *
+ * <li><tt>node</tt> - for rendering nodes; typically a {@link pv.Bar} for
+ * non-radial orientations, and a {@link pv.Wedge} for radial orientations.
+ *
+ * <p><li><tt>link</tt> - unsupported; undefined. Links are encoded implicitly
+ * in the arrangement of the space-filling nodes.
+ *
+ * <p><li><tt>label</tt> - for rendering node labels; typically a
+ * {@link pv.Label}.
+ *
+ * </ul>For more details on how to use this layout, see
+ * {@link pv.Layout.Partition}.
+ *
  * @extends pv.Layout.Partition
- * @constructor
  */
 pv.Layout.Partition.Fill = function() {
   pv.Layout.Partition.call(this);
