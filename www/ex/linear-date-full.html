@@ -1,0 +1,43 @@
+<html>
+  <head>
+    <title>Linear Date Scale</title>
+    <link type="text/css" rel="stylesheet" href="ex.css?3.2"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+    <style type="text/css">
+
+    #fig {
+      width: 660px;
+      height: 4170px;
+    }
+    </style>
+  </head>
+  <body><div id="fig">
+    <script type="text/javascript+protovis">
+
+      var w = 600,
+          h = 10,
+          now = new Date().getTime();
+
+      var vis = new pv.Panel()
+          .data(pv.range(1, 14, .1).map(function(e) Math.pow(10, e)))
+          .fillStyle("#ccc")
+          .width(w)
+          .height(h)
+          .top(5)
+          .bottom(15)
+          .left(30)
+          .right(30);
+
+      vis.add(pv.Rule)
+          .def("x", function(t) pv.Scale.linear(new Date(now), new Date(now + t)).range(0, w))
+          .data(function() this.x().ticks())
+          .strokeStyle("#fff")
+          .left(function(d) this.x()(d))
+        .anchor("bottom").add(pv.Label)
+          .text(function(d) this.anchorTarget().x().tickFormat(d));
+
+      vis.render();
+
+    </script>
+  </div></body>
+</html>

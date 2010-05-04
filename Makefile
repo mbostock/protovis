@@ -24,6 +24,7 @@ HTML_FILES = \
 	www/ex/jobs.html \
 	www/ex/life.html \
 	www/ex/line.html \
+	www/ex/linear-date.html \
 	www/ex/matrix.html \
 	www/ex/minnesota.html \
 	www/ex/miserables-arcs.html \
