@@ -41,6 +41,7 @@ HTML_FILES = \
 	www/ex/symbol.html \
 	www/ex/treemap.html \
 	www/ex/unemployed.html \
+	www/ex/vertical-cluster.html \
 	www/ex/waves.html \
 	www/ex/weather.html \
 	www/ex/wheat.html \

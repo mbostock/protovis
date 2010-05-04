@@ -1,0 +1,71 @@
+<html>
+  <head>
+    <title>Vertical Cluster Layout</title>
+    <link type="text/css" rel="stylesheet" href="ex.css?3.2"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+    <script type="text/javascript" src="flare.js"></script>
+    <style type="text/css">
+        #fig {
+            width: 400px;
+            height: 2220px;
+        }
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <script type="text/javascript+protovis">
+
+      function getNodePath(node) {
+          var path = node.nodeName;
+          var parentNode = node.parentNode;
+          while(parentNode) {
+              path = parentNode.nodeName + "." + path;
+              parentNode = parentNode.parentNode;
+          }
+          return path + (node.firstChild ? "" : " (" + node.nodeValue + " bytes)");
+      }
+
+      function onNodeClick(node) {
+          var path = node.nodeName;
+          var parentNode = node.parentNode;
+          while(parentNode) {
+              path = parentNode.nodeName + "/" + path;
+              parentNode = parentNode.parentNode;
+          }
+          top.location = "http://svn.prefuse.org/flare/trunk/flare/flare/src/" + path + (node.firstChild?"/":".as");
+      }
+
+      var vis = new pv.Panel()
+          .width(200)
+          .height(2200)
+          .left(40)
+          .right(160)
+          .top(10)
+          .bottom(10);
+
+      var layout = vis.add(pv.Layout.Cluster)
+          .nodes(pv.dom(flare)
+              .root("flare")
+              .sort(function(a, b) pv.naturalOrder(a.nodeName, b.nodeName))
+              .nodes())
+          .group(true)
+          .orient("left");
+
+      layout.link.add(pv.Line);
+
+      layout.node.add(pv.Dot)
+          .fillStyle(function(n) n.firstChild ? "#aec7e8" : "#ff7f0e")
+          .title(getNodePath)
+          .event("click", onNodeClick);
+
+      layout.label.add(pv.Label);
+
+      vis.render();
+
+    </script>
+<div class="caption">
+The Flare package tree laid out in vertical layers. All the nodes in a given layer have the same maximum child depth.
+<br/><br/>
+Source: <a class="source" href="http://flare.prefuse.org">Flare Visualization Toolkit</a>
+</div>
+  </div></div></body>
+</html>
