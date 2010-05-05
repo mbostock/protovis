@@ -14,16 +14,6 @@
   <body><div id="center"><div id="fig">
     <script type="text/javascript+protovis">
 
-      function getNodePath(node) {
-          var path = node.nodeName;
-          var parentNode = node.parentNode;
-          while(parentNode) {
-              path = parentNode.nodeName + "." + path;
-              parentNode = parentNode.parentNode;
-          }
-          return path + (node.firstChild ? "" : " (" + node.nodeValue + " bytes)");
-      }
-
       function onNodeClick(node) {
           var path = node.nodeName;
           var parentNode = node.parentNode;
@@ -54,7 +44,7 @@
 
       layout.node.add(pv.Dot)
           .fillStyle(function(n) n.firstChild ? "#aec7e8" : "#ff7f0e")
-          .title(getNodePath)
+          .title(function t(d) d.parentNode ? (t(d.parentNode) + "." + d.nodeName) : d.nodeName)
           .event("click", onNodeClick);
 
       layout.label.add(pv.Label);

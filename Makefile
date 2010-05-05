@@ -9,6 +9,7 @@ HTML_FILES = \
 	www/ex/cartogram.html \
 	www/ex/caltrain.html \
 	www/ex/choropleth.html \
+	www/ex/circle-pack.html \
 	www/ex/clock.html \
 	www/ex/countries.html \
 	www/ex/crimea-rose.html \

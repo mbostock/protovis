@@ -52,7 +52,7 @@
 
       layout.node.add(pv.Bar)
         .fillStyle(function(n) n.firstChild ? "#aec7e8" : "#ff7f0e")
-        .title(getNodePath)
+        .title(function t(d) d.parentNode ? (t(d.parentNode) + "." + d.nodeName) : d.nodeName)
         .event("click", onNodeClick);
 
       layout.label.add(pv.Label)
