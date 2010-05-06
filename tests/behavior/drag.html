@@ -17,7 +17,7 @@ var vis = new pv.Panel()
     .fillStyle("#fff");
 
 vis.add(pv.Dot)
-    .data(function() [{x:200, y:200}])
+    .data([{x:200, y:200}])
     .left(function(d) d.x)
     .top(function(d) d.y)
     .radius(10)

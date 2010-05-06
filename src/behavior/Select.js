@@ -34,12 +34,10 @@
  *
  * <p>The panel being selected is automatically re-rendered for each mouse event
  * as part of the drag operation. This behavior may be enhanced in the future to
- * allow more flexible configuration of select behavior.
- *
- * In some cases, such as with parallel coordinates, making a selection may cause
- * related marks to change, in which case additional marks may also need to be
- * rendered. This can be accomplished by listening for the select
- * psuedo-events:<ul>
+ * allow more flexible configuration of select behavior. In some cases, such as
+ * with parallel coordinates, making a selection may cause related marks to
+ * change, in which case additional marks may also need to be rendered. This can
+ * be accomplished by listening for the select psuedo-events:<ul>
  *
  * <li>selectstart (on mousedown)
  * <li>select (on mousemove)
