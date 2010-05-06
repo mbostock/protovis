@@ -79,11 +79,11 @@ rule.anchor("top")
 
 rule.anchor("bottom")
     .add(pv.Label)
-    .text(function(d) (y[d].domain()[0] + fudge) + units[d].unit)
+    .text(function(d) (y[d].domain()[0] + fudge) + units[d].unit);
 
 rule.anchor("top")
     .add(pv.Label)
-    .text(function(d) (y[d].domain()[1] - fudge) + units[d].unit)
+    .text(function(d) (y[d].domain()[1] - fudge) + units[d].unit);
 
 // The parallel coordinates display.
 vis.add(pv.Panel)
@@ -118,6 +118,20 @@ function update(d) {
   filter[t].max = Math.min(y[t].domain()[1], y[t].invert(h - d.y));
   active = t;
   change.render();
+  return false;
+}
+
+// Updater for slider and resizer.
+function selectAll(d) {
+  if (d.dy < 3) {
+    var t = d.dim;
+    filter[t].min = Math.max(y[t].domain()[0], y[t].invert(0));
+    filter[t].max = Math.min(y[t].domain()[1], y[t].invert(h));
+    d.y = 0; d.dy = h;
+    active = t;
+    change.render();
+  }
+  return false;
 }
 
 /* Handle select and drag */
@@ -129,6 +143,7 @@ change.add(pv.Panel)
     .cursor("crosshair")
     .event("mousedown", pv.Behavior.select())
     .event("select", update)
+    .event("selectend", selectAll)
   .add(pv.Bar)
     .left(20)
     .top(function(d) d.y)

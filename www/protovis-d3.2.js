@@ -1,4 +1,4 @@
-// 2bac587bb8adf8d90e6fd5ee4e791254edcb0a8d
+// e657f1b4bdbef91a3779594eaa676d7d7da587ec
 /**
  * @class The built-in Array class.
  * @name Array
@@ -13799,6 +13799,24 @@ pv.Behavior.point = function(r) {
  * as part of the drag operation. This behavior may be enhanced in the future to
  * allow more flexible configuration of select behavior.
  *
+ * In some cases, such as with parallel coordinates, making a selection may cause
+ * related marks to change, in which case additional marks may also need to be
+ * rendered. This can be accomplished by listening for the select
+ * psuedo-events:<ul>
+ *
+ * <li>selectstart (on mousedown)
+ * <li>select (on mousemove)
+ * <li>selectend (on mouseup)
+ *
+ * </ul>For example, to render the parent panel while selecting, thus
+ * re-rendering all sibling marks:
+ *
+ * <pre>    .event("mousedown", pv.Behavior.drag())
+ *     .event("select", function() this.parent)</pre>
+ *
+ * This behavior may be enhanced in the future to allow more flexible
+ * configuration of the selection behavior.
+ *
  * @extends pv.Behavior
  * @see pv.Behavior.drag
  */
@@ -13836,6 +13854,7 @@ pv.Behavior.select = function() {
 
   /** @private */
   function mouseup() {
+    if (!scene) return;
     pv.Mark.dispatch("selectend", scene, index);
     scene = null;
   }
