@@ -1,7 +1,9 @@
 /**
  * Returns a linear color ramp from the specified <tt>start</tt> color to the
  * specified <tt>end</tt> color. The color arguments may be specified either as
- * <tt>string</tt>s or as {@link pv.Color}s.
+ * <tt>string</tt>s or as {@link pv.Color}s. This is equivalent to:
+ *
+ * <pre>    pv.Scale.linear().domain(0, 1).range(...)</pre>
  *
  * @param {string} start the start color; may be a <tt>pv.Color</tt>.
  * @param {string} end the end color; may be a <tt>pv.Color</tt>.
