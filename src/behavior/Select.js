@@ -89,6 +89,7 @@ pv.Behavior.select = function() {
 
   /** @private */
   function mouseup() {
+    if (!scene) return;
     pv.Mark.dispatch("selectend", scene, index);
     scene = null;
   }
