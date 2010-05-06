@@ -1,8 +1,18 @@
 /**
- * @class A quadtree.
+ * Constructs a new quadtree for the specified array of particles.
  *
- * @constructor Constructs a new quadtree for the specified array of particles.
+ * @class Represents a quadtree: a two-dimensional recursive spatial
+ * subdivision. This particular implementation uses square partitions, dividing
+ * each square into four equally-sized squares. Each particle exists in a unique
+ * node; if multiple particles are in the same position, some particles may be
+ * stored on internal nodes rather than leaf nodes.
  *
+ * <p>This quadtree can be used to accelerate various spatial operations, such
+ * as the Barnes-Hut approximation for computing n-body forces, or collision
+ * detection.
+ *
+ * @see pv.Force.charge
+ * @see pv.Constraint.collision
  * @param {pv.Particle} particles the linked list of particles.
  */
 pv.Quadtree = function(particles) {
@@ -91,39 +101,46 @@ pv.Quadtree = function(particles) {
 };
 
 /**
- * @field
+ * The root node of the quadtree.
+ *
  * @type pv.Quadtree.Node
  * @name pv.Quadtree.prototype.root
  */
 
 /**
- * @field
+ * The minimum x-coordinate value of all contained particles.
+ *
  * @type number
  * @name pv.Quadtree.prototype.xMin
  */
 
 /**
- * @field
+ * The maximum x-coordinate value of all contained particles.
+ *
  * @type number
  * @name pv.Quadtree.prototype.xMax
  */
 
 /**
- * @field
+ * The minimum y-coordinate value of all contained particles.
+ *
  * @type number
  * @name pv.Quadtree.prototype.yMin
  */
 
 /**
- * @field
+ * The maximum y-coordinate value of all contained particles.
+ *
  * @type number
  * @name pv.Quadtree.prototype.yMax
  */
 
 /**
+ * Constructs a new node.
+ *
  * @class A node in a quadtree.
  *
- * @constructor Constructs a new node.
+ * @see pv.Quadtree
  */
 pv.Quadtree.Node = function() {
   /*
@@ -132,7 +149,6 @@ pv.Quadtree.Node = function() {
    * faster than creating a cache pool.
    */
   this.leaf = true;
-  this.next = null;
   this.c1 = null;
   this.c2 = null;
   this.c3 = null;
@@ -146,21 +162,13 @@ pv.Quadtree.Node = function() {
  * this is a non-leaf node, then at least one of {@link #c1}, {@link #c2},
  * {@link #c3} or {@link #c4} is guaranteed to be non-null.
  *
- * @field
  * @type boolean
  * @name pv.Quadtree.Node.prototype.leaf
  */
 
 /**
- * @field
- * @type pv.Quadtree.Node
- * @name pv.Quadtree.Node.prototype.next
- */
-
-/**
  * The particle associated with this node, if any.
  *
- * @field
  * @type pv.Particle
  * @name pv.Quadtree.Node.prototype.p
  */
@@ -168,7 +176,6 @@ pv.Quadtree.Node = function() {
 /**
  * The child node for the second quadrant, if any.
  *
- * @field
  * @type pv.Quadtree.Node
  * @name pv.Quadtree.Node.prototype.c2
  */
@@ -176,7 +183,6 @@ pv.Quadtree.Node = function() {
 /**
  * The child node for the third quadrant, if any.
  *
- * @field
  * @type pv.Quadtree.Node
  * @name pv.Quadtree.Node.prototype.c3
  */
@@ -184,7 +190,6 @@ pv.Quadtree.Node = function() {
 /**
  * The child node for the fourth quadrant, if any.
  *
- * @field
  * @type pv.Quadtree.Node
  * @name pv.Quadtree.Node.prototype.c4
  */

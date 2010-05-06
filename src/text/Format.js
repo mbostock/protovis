@@ -1,20 +1,54 @@
 /**
- * @class
+ * Abstract; see an implementing class.
+ *
+ * @class Represents an abstract text formatter and parser. A <i>format</i> is a
+ * function that converts an object of a given type, such as a <tt>Date</tt>, to
+ * a human-readable string representation. The format may also have a
+ * {@link #parse} method for converting a string representation back to the
+ * given object type.
+ *
+ * <p>Because formats are themselves functions, they can be used directly as
+ * mark properties. For example, if the data associated with a label are dates,
+ * a date format can be used as label text:
+ *
+ * <pre>    .text(pv.Format.date("%m/%d/%y"))</pre>
+ *
+ * And as with scales, if the format is used in multiple places, it can be
+ * convenient to declare it as a global variable and then reference it from the
+ * appropriate property functions. For example, if the data has a <tt>date</tt>
+ * attribute, and <tt>format</tt> references a given date format:
+ *
+ * <pre>    .text(function(d) format(d.date))</pre>
+ *
+ * Similarly, to parse a string into a date:
+ *
+ * <pre>var date = format.parse("4/30/2010");</pre>
+ *
+ * Not all format implementations support parsing. See the implementing class
+ * for details.
+ *
+ * @see pv.Format.date
+ * @see pv.Format.number
+ * @see pv.Format.time
  */
 pv.Format = {};
 
 /**
+ * Formats the specified object, returning the string representation.
+ *
  * @function
  * @name pv.Format.prototype.format
- * @param {object} x
- * @returns {string}
+ * @param {object} x the object to format.
+ * @returns {string} the formatted string.
  */
 
 /**
+ * Parses the specified string, returning the object representation.
+ *
  * @function
  * @name pv.Format.prototype.parse
- * @param {string} x
- * @returns {object}
+ * @param {string} x the string to parse.
+ * @returns {object} the parsed object.
  */
 
 /**

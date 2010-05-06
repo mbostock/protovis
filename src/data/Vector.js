@@ -18,7 +18,10 @@ pv.vector = function(x, y) {
  * {@link pv.vector} instead.
  *
  * @class Represents a two-dimensional vector; a 2-tuple <i>&#x27e8;x,
- * y&#x27e9;</i>.
+ * y&#x27e9;</i>. The intent of this class is to simplify vector math. Note that
+ * in performance-sensitive cases it may be more efficient to represent 2D
+ * vectors as simple objects with <tt>x</tt> and <tt>y</tt> attributes, rather
+ * than using instances of this class.
  *
  * @param {number} x the <i>x</i> coordinate.
  * @param {number} y the <i>y</i> coordinate.

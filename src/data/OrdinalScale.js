@@ -50,7 +50,7 @@
  * <p>N.B.: ordinal scales are not invertible (at least not yet), since the
  * domain and range and discontinuous. A workaround is to use a linear scale.
  *
- * @param {...} domain... domain values.
+ * @param {...} domain... optional domain values.
  * @extends pv.Scale
  * @see pv.colors
  */

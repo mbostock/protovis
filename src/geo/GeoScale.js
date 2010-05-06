@@ -1,14 +1,19 @@
 /**
- * Returns the specified geographical projection. The arguments to this
- * constructor are optional, and equivalent to calling {@link #projection}.
+ * Returns a geographic scale. The arguments to this constructor are optional,
+ * and equivalent to calling {@link #projection}.
  *
- * @class Represents a geographical scale. A geographical scale represents the
- * mapping between longitude and latitude coordinates and their appropriate
- * positioning on the screen. By default the appropriate domain is inferred so
- * as to map the entire world onto the screen.
+ * @class Represents a geographic scale; a mapping between latitude-longitude
+ * coordinates and screen pixel coordinates. By default, the domain is inferred
+ * from the geographic coordinates, so that the domain fills the output range.
+ *
+ * <p>Note that geographic scales are two-dimensional transformations, rather
+ * than the one-dimensional bidrectional mapping typical of other scales.
+ * Rather than mapping (for example) between a numeric domain and a numeric
+ * range, geographic scales map between two coordinate objects: {@link
+ * pv.Geo.LatLng} and {@link pv.Vector}.
  *
  * @param {pv.Geo.Projection} [p] optional projection.
- * @returns {pv.Geo.Scale} a geographical scale.
+ * @see pv.Geo.scale#ticks
  */
 pv.Geo.scale = function(p) {
   var rmin = {x: 0, y: 0}, // default range minimum
@@ -56,10 +61,39 @@ pv.Geo.scale = function(p) {
     return scale(latlng).y;
   };
 
-  /** Tick functions. @namespace */
+  /**
+   * Abstract; this is a local namespace on a given geographic scale.
+   *
+   * @namespace Tick functions for geographic scales. Because geographic scales
+   * represent two-dimensional transformations (as opposed to one-dimensional
+   * transformations typical of other scales), the tick values are similarly
+   * represented as two-dimensional coordinates in the input domain, i.e.,
+   * {@link pv.Geo.LatLng} objects.
+   *
+   * <p>Also, note that non-rectilinear projections, such as sinsuoidal and
+   * aitoff, may not produce straight lines for constant longitude or constant
+   * latitude. Therefore the returned array of ticks is a two-dimensional array,
+   * sampling various latitudes as constant longitude, and vice versa.
+   *
+   * <p>The tick lines can therefore be approximated as polylines, either with
+   * "linear" or "cardinal" interpolation. This is not as accurate as drawing
+   * the true curve through the projection space, but is usually sufficient.
+   *
+   * @name pv.Geo.scale.prototype.ticks
+   * @see pv.Geo.scale
+   * @see pv.Geo.LatLng
+   * @see pv.Line#interpolate
+   */
   scale.ticks = {
 
-    /** Returns longitude ticks. */
+    /**
+     * Returns longitude ticks.
+     *
+     * @function
+     * @param {number} [m] the desired number of ticks.
+     * @returns {array} a nested array of <tt>pv.Geo.LatLng</tt> ticks.
+     * @name pv.Geo.scale.prototype.ticks.prototype.lng
+     */
     lng: function(m) {
       var lat, lng;
       if (d.length > 1) {
@@ -78,7 +112,14 @@ pv.Geo.scale = function(p) {
       });
     },
 
-    /** Returns latitude ticks. */
+    /**
+     * Returns latitude ticks.
+     *
+     * @function
+     * @param {number} [m] the desired number of ticks.
+     * @returns {array} a nested array of <tt>pv.Geo.LatLng</tt> ticks.
+     * @name pv.Geo.scale.prototype.ticks.prototype.lat
+     */
     lat: function(m) {
       return pv.transpose(scale.ticks.lng(m));
     }

@@ -1,7 +1,41 @@
 /**
- * @class
+ * Returns a new pan behavior to be registered on mousedown events.
+ *
+ * @class Implements interactive panning starting with mousedown events.
+ * Register this behavior on panels to allow panning. This behavior can be used
+ * in tandem with {@link pv.Behavior.zoom} to allow both panning and zooming:
+ *
+ * <pre>    .event("mousedown", pv.Behavior.pan())
+ *     .event("mousewheel", pv.Behavior.zoom())</pre>
+ *
+ * The pan behavior currently supports only mouse events; support for keyboard
+ * shortcuts to improve accessibility may be added in the future.
+ *
+ * <p>After the initial mousedown event is triggered, this behavior listens for
+ * mousemove and mouseup events on the window. This allows panning to continue
+ * even if the mouse temporarily leaves the panel that is being panned, or even
+ * the root panel.
+ *
+ * <p>The implementation of this behavior relies on the panel's
+ * <tt>transform</tt> property, which specifies a matrix transformation that is
+ * applied to child marks. Note that the transform property only affects the
+ * panel's children, but not the panel itself; therefore the panel's fill and
+ * stroke will not change when the contents are panned.
+ *
+ * <p>Panels have transparent fill styles by default; this means that panels may
+ * not receive the initial mousedown event to start panning. To fix this
+ * problem, either given the panel a visible fill style (such as "white"), or
+ * set the <tt>events</tt> property to "all" such that the panel receives events
+ * despite its transparent fill.
+ *
+ * <p>The pan behavior has optional support for bounding. If enabled, the user
+ * will not be able to pan the panel outside of the initial bounds. This feature
+ * is designed to work in conjunction with the zoom behavior; otherwise,
+ * bounding the panel effectively disables all panning.
+ *
  * @extends pv.Behavior
- * @constructor
+ * @see pv.Behavior.zoom
+ * @see pv.Panel#transform
  */
 pv.Behavior.pan = function() {
   var scene, // scene context
@@ -47,8 +81,19 @@ pv.Behavior.pan = function() {
   }
 
   /**
-   * @type boolean
+   * Sets or gets the bound parameter. If bounding is enabled, the user will not
+   * be able to pan outside the initial panel bounds; this typically applies
+   * only when the pan behavior is used in tandem with the zoom behavior.
+   * Bounding is not enabled by default.
+   *
+   * <p>Note: enabling bounding after panning has already occurred will not
+   * immediately reset the transform. Bounding should be enabled before the
+   * panning behavior is applied.
+   *
+   * @function
+   * @returns {pv.Behavior.pan} this, or the current bound parameter.
    * @name pv.Behavior.pan.prototype.bound
+   * @param {boolean} [x] the new bound parameter.
    */
   mousedown.bound = function(x) {
     if (arguments.length) {

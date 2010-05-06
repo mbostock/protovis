@@ -1,8 +1,14 @@
 /**
- * @class
+ * Returns a time format of the given type, either "short" or "long".
+ *
+ * @class Represents a time format, converting between a <tt>number</tt>
+ * representing a duration in milliseconds, and a <tt>string</tt>. Two types of
+ * time formats are supported: "short" and "long". The <i>short</i> format type
+ * returns a string such as "3.3 days" or "12.1 minutes", while the <i>long</i>
+ * format returns "13:04:12" or similar.
+ *
  * @extends pv.Format
- * @constructor
- * @param {string} type
+ * @param {string} type the type; "short" or "long".
  */
 pv.Format.time = function(type) {
   var pad = pv.Format.pad;
@@ -59,18 +65,22 @@ pv.Format.time = function(type) {
   }
 
   /**
+   * Formats the specified time, returning the string representation.
+   *
    * @function
    * @name pv.Format.time.prototype.format
-   * @param {Date} t
-   * @returns {string}
+   * @param {number} t the duration in milliseconds. May also be a <tt>Date</tt>.
+   * @returns {string} the formatted string.
    */
   format.format = format;
 
   /**
+   * Parses the specified string, returning the time in milliseconds.
+   *
    * @function
    * @name pv.Format.time.prototype.parse
-   * @param {string} s
-   * @returns {Date}
+   * @param {string} s a formatted string.
+   * @returns {number} the parsed duration in milliseconds.
    */
   format.parse = function(s) {
     switch (type) {

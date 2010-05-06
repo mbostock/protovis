@@ -1,15 +1,24 @@
 /**
- * An n-body force, as defined by Coulomb's law or Newton's law of gravitation,
- * inversely proportional to the square of the distance between particles. Note
- * that the force is independent of the <i>mass</i> of the associated particles,
- * and that the particles do not have charges of varying magnitude; instead, the
- * attraction or repulsion of all particles is globally specified as the charge
- * {@link #constant}.
+ * Constructs a new charge force, with an optional charge constant. The charge
+ * constant can be negative for repulsion (e.g., particles with electrical
+ * charge of equal sign), or positive for attraction (e.g., massive particles
+ * with mutual gravity). The default charge constant is -40.
  *
- * @class
+ * @class An n-body force, as defined by Coulomb's law or Newton's law of
+ * gravitation, inversely proportional to the square of the distance between
+ * particles. Note that the force is independent of the <i>mass</i> of the
+ * associated particles, and that the particles do not have charges of varying
+ * magnitude; instead, the attraction or repulsion of all particles is globally
+ * specified as the charge {@link #constant}.
+ *
+ * <p>This particular implementation uses the Barnes-Hut algorithm. For details,
+ * see <a
+ * href="http://www.nature.com/nature/journal/v324/n6096/abs/324446a0.html">"A
+ * hierarchical O(N log N) force-calculation algorithm"</a>, J. Barnes &amp;
+ * P. Hut, <i>Nature</i> 1986.
+ *
  * @name pv.Force.charge
- * @constructor
- * @param {number} k
+ * @param {number} [k] the charge constant.
  */
 pv.Force.charge = function(k) {
   var min = 2, // minimum distance at which to observe forces
@@ -22,9 +31,15 @@ pv.Force.charge = function(k) {
   if (!arguments.length) k = -40; // default charge constant (repulsion)
 
   /**
+   * Sets or gets the charge constant. If an argument is specified, it is the
+   * new charge constant. The charge constant can be negative for repulsion
+   * (e.g., particles with electrical charge of equal sign), or positive for
+   * attraction (e.g., massive particles with mutual gravity). The default
+   * charge constant is -40.
+   *
    * @function
    * @name pv.Force.charge.prototype.constant
-   * @param {number} x
+   * @param {number} x the charge constant.
    * @returns {pv.Force.charge} this.
    */
   force.constant = function(x) {
@@ -36,6 +51,14 @@ pv.Force.charge = function(k) {
   };
 
   /**
+   * Sets or gets the domain; specifies the minimum and maximum domain within
+   * which charge forces are applied. A minimum distance threshold avoids
+   * applying forces that are two strong (due to granularity of the simulation's
+   * numeric integration). A maximum distance threshold improves performance by
+   * skipping force calculations for particles that are far apart.
+   *
+   * <p>The default domain is [2, 500].
+   *
    * @function
    * @name pv.Force.charge.prototype.domain
    * @param {number} a
@@ -54,9 +77,14 @@ pv.Force.charge = function(k) {
   };
 
   /**
+   * Sets or gets the Barnes-Hut approximation factor. The Barnes-Hut
+   * approximation criterion is the ratio of the size of the quadtree node to
+   * the distance from the point to the node's center of mass is beneath some
+   * threshold.
+   *
    * @function
    * @name pv.Force.charge.prototype.theta
-   * @param {number} x
+   * @param {number} x the new Barnes-Hut approximation factor.
    * @returns {pv.Force.charge} this.
    */
   force.theta = function(x) {
@@ -98,8 +126,8 @@ pv.Force.charge = function(k) {
 
   /**
    * @ignore Recursively computes forces on the given particle using the given
-   * quadtree node. The Barnes-Hut approximation criterion is if the ratio of
-   * the size of the quadtree node to the distance from the point to the node's
+   * quadtree node. The Barnes-Hut approximation criterion is the ratio of the
+   * size of the quadtree node to the distance from the point to the node's
    * center of mass is beneath some threshold.
    */
   function forces(n, p, x1, y1, x2, y2) {
@@ -135,10 +163,15 @@ pv.Force.charge = function(k) {
   }
 
   /**
+   * Applies this force to the specified particles. The force is applied between
+   * all pairs of particles within the domain, using the specified quadtree to
+   * accelerate n-body force calculation using the Barnes-Hut approximation
+   * criterion.
+   *
    * @function
    * @name pv.Force.charge.prototype.apply
-   * @param {pv.Particle} particles
-   * @param {pv.Quadtree} q
+   * @param {pv.Particle} particles particles to which to apply this force.
+   * @param {pv.Quadtree} q a quadtree for spatial acceleration.
    * @returns {pv.Force.charge} this.
    */
   force.apply = function(particles, q) {

@@ -1,8 +1,21 @@
 /**
- * @class
- * @name pv.Constraint.collision
- * @constructor
- * @param {number} radius
+ * Constructs a new collision constraint. The default search radius is 10, and
+ * the default repeat count is 1. A radius function must be specified to compute
+ * the radius of particles.
+ *
+ * @class Constraints circles to avoid overlap. Each particle is treated as a
+ * circle, with the radius of the particle computed using a specified function.
+ * For example, if the particle has an <tt>r</tt> attribute storing the radius,
+ * the radius <tt>function(d) d.r</tt> specifies a collision constraint using
+ * this radius. The radius function is passed each {@link pv.Particle} as the
+ * first argument.
+ *
+ * <p>To accelerate collision detection, this implementation uses a quadtree and
+ * a search radius. The search radius is computed as the maximum radius of all
+ * particles in the simulation.
+ *
+ * @see pv.Constraint
+ * @param {function} radius the radius function.
  */
 pv.Constraint.collision = function(radius) {
   var n = 1, // number of times to repeat the constraint
@@ -16,9 +29,15 @@ pv.Constraint.collision = function(radius) {
   if (!arguments.length) r1 = 10; // default search radius
 
   /**
+   * Sets or gets the repeat count. If the repeat count is greater than 1, the
+   * constraint will be applied repeatedly; this is a form of the Gauss-Seidel
+   * method for constraints relaxation. Repeating the collision constraint makes
+   * the constraint have more of an effect when there is a potential for many
+   * co-occurring collisions.
+   *
    * @function
    * @name pv.Constraint.collision.prototype.repeat
-   * @param {number} x
+   * @param {number} x the number of times to repeat this constraint.
    * @returns {pv.Constraint.collision} this.
    */
   constraint.repeat = function(x) {
@@ -65,11 +84,13 @@ pv.Constraint.collision = function(radius) {
   }
 
   /**
+   * Applies this constraint to the specified particles.
+   *
    * @function
    * @name pv.Constraint.collision.prototype.apply
-   * @param {pv.Particle} particles
-   * @param {pv.Quadtree} q
-   * @returns {pv.Constraint.position} this.
+   * @param {pv.Particle} particles particles to which to apply this constraint.
+   * @param {pv.Quadtree} q a quadtree for spatial acceleration.
+   * @returns {pv.Constraint.collision} this.
    */
   constraint.apply = function(particles, q) {
     var p, r, max = -Infinity;

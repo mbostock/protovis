@@ -1,5 +1,28 @@
 /**
- * @class
+ * Constructs a default quantile scale. The arguments to this constructor are
+ * optional, and equivalent to calling {@link #domain}. The default domain is
+ * the empty set, and the default range is [0,1].
+ *
+ * @class Represents a quantile scale; a function that maps from a value within
+ * a sortable domain to a quantized numeric range. Typically, the domain is a
+ * set of numbers, but any sortable value (such as strings) can be used as the
+ * domain of a quantile scale. The range defaults to [0,1], with 0 corresponding
+ * to the smallest value in the domain, 1 the largest, .5 the median, etc.
+ *
+ * <p>By default, the number of quantiles in the range corresponds to the number
+ * of values in the domain. The {@link #quantiles} method can be used to specify
+ * an explicit number of quantiles; for example, <tt>quantiles(4)</tt> produces
+ * a standard quartile scale. A quartile scale's range is a set of four discrete
+ * values, such as [0, 1/3, 2/3, 1]. Calling the {@link #range} method will
+ * scale these discrete values accordingly, similar to {@link
+ * pv.Scale.ordinal#splitFlush}.
+ *
+ * <p>For example, given the strings ["c", "a", "b"], a default quantile scale:
+ *
+ * <pre>pv.Scale.quantile("c", "a", "b")</pre>
+ *
+ * will return 0 for "a", .5 for "b", and 1 for "c".
+ *
  * @extends pv.Scale
  */
 pv.Scale.quantile = function() {
@@ -33,8 +56,8 @@ pv.Scale.quantile = function() {
     if (arguments.length) {
       n = Number(x);
       if (n < 0) {
-        q = d;
-        j = q.length - 1;
+        q = [d[0]].concat(d);
+        j = d.length - 1;
       } else {
         q = [];
         q[0] = d[0];
@@ -87,9 +110,31 @@ pv.Scale.quantile = function() {
   };
 
   /**
+   * Sets or gets the output range. This method can be invoked several ways:
+   *
+   * <p>1. <tt>range(min, ..., max)</tt>
+   *
+   * <p>The range may be specified as a series of numbers or colors. Most
+   * commonly, two numbers are specified: the minimum and maximum pixel values.
+   * For a color scale, values may be specified as {@link pv.Color}s or
+   * equivalent strings. For a diverging scale, or other subdivided non-uniform
+   * scales, multiple values can be specified. For example:
+   *
+   * <pre>    .range("red", "white", "green")</pre>
+   *
+   * <p>Currently, only numbers and colors are supported as range values. The
+   * number of range values must exactly match the number of domain values, or
+   * the behavior of the scale is undefined.
+   *
+   * <p>2. <tt>range()</tt>
+   *
+   * <p>Invoking the <tt>range</tt> method with no arguments returns the current
+   * range as an array of numbers or colors.
+   *
    * @function
    * @name pv.Scale.quantile.prototype.range
-   * @returns {pv.Scale.quantile}
+   * @param {...} range... range values.
+   * @returns {pv.Scale.quantile} <tt>this</tt>, or the current range.
    */
   scale.range = function() {
     if (arguments.length) {

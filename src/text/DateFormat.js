@@ -1,4 +1,6 @@
 /**
+ * Constructs a new date format with the specified string pattern.
+ *
  * @class The format string is in the same format expected by the
  * <tt>strftime</tt> function in C. The following conversion specifications are
  * supported:<ul>
@@ -68,8 +70,7 @@
  * href="http://www.opengroup.org/onlinepubs/007908799/xsh/strptime.html">strptime</a>
  * documentation.
  * @extends pv.Format
- * @constructor
- * @param {string} pattern
+ * @param {string} pattern the format pattern.
  */
 pv.Format.date = function(pattern) {
   var pad = pv.Format.pad;
@@ -158,7 +159,6 @@ pv.Format.date = function(pattern) {
    * @function
    * @name pv.Format.date.prototype.parse
    * @param {string} s the string to parse as a date.
-   * @param {string} [format] an optional format string.
    * @returns {Date} the parsed date.
    */
   format.parse = function(s) {

@@ -1,8 +1,9 @@
 /**
- * @class A weighted particle that can participate in a force simulation. There
- * is no explicit constructor corresponding to the class <tt>pv.Particle</tt>;
- * this class merely serves to document the attributes that are used on
- * particles in physics simulations.
+ * Abstract; not implemented. There is no explicit constructor; this class
+ * merely serves to document the attributes that are used on particles in
+ * physics simulations.
+ *
+ * @class A weighted particle that can participate in a force simulation.
  *
  * @name pv.Particle
  */
