@@ -56,7 +56,6 @@ pv.Constraint.position = function(f) {
    * @function
    * @name pv.Constraint.position.prototype.apply
    * @param {pv.Particle} particles particles to which to apply this constraint.
-   * @returns {pv.Constraint.position} this.
    */
   constraint.apply = function(particles) {
     for (var p = particles; p; p = p.next) {

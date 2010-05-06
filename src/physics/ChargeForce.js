@@ -172,7 +172,6 @@ pv.Force.charge = function(k) {
    * @name pv.Force.charge.prototype.apply
    * @param {pv.Particle} particles particles to which to apply this force.
    * @param {pv.Quadtree} q a quadtree for spatial acceleration.
-   * @returns {pv.Force.charge} this.
    */
   force.apply = function(particles, q) {
     accumulate(q.root);

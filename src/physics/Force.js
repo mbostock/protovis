@@ -22,5 +22,4 @@ pv.Force = {};
  * @name pv.Force.prototype.apply
  * @param {pv.Particle} particles particles to which to apply this force.
  * @param {pv.Quadtree} q a quadtree for spatial acceleration.
- * @returns {pv.Force} this.
  */

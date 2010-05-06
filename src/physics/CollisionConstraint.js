@@ -90,7 +90,6 @@ pv.Constraint.collision = function(radius) {
    * @name pv.Constraint.collision.prototype.apply
    * @param {pv.Particle} particles particles to which to apply this constraint.
    * @param {pv.Quadtree} q a quadtree for spatial acceleration.
-   * @returns {pv.Constraint.collision} this.
    */
   constraint.apply = function(particles, q) {
     var p, r, max = -Infinity;

@@ -61,7 +61,6 @@ pv.Constraint.bound = function() {
    * @function
    * @name pv.Constraint.bound.prototype.apply
    * @param {pv.Particle} particles particles to which to apply this constraint.
-   * @returns {pv.Constraint.bound} this.
    */
   constraint.apply = function(particles) {
     if (x) for (var p = particles; p; p = p.next) {

@@ -32,15 +32,6 @@
  * Be careful not to use too high an iteration count, as this can lead to an
  * annoying delay on page load.
  *
- * <p>In interactive mode, multiple simulation steps may be run per frame to
- * stabilize more quickly; typically the simulation is cheaper to perform than
- * rendering. With small graphs, this can lead to jerky movement, as many
- * iterations are run per frame. In the future, a property might limit the
- * number of iterations per frame. Note that it is also possible for the
- * simulation to drift due to numerical integration error in force accumulation.
- * (This could be avoided with an additional constraint to center the nodes in
- * the panel, though this would make interactive dragging of nodes awkward.)
- *
  * <p>As with other network layouts, the network data can be updated
  * dynamically, provided the property cache is reset. See
  * {@link pv.Layout.Network} for details. New nodes are initialized with random
@@ -298,8 +289,7 @@ pv.Layout.Force.prototype.buildImplied = function(s) {
       var render = false;
       for (var f = that.binds.$force; f; f = f.next) {
         if (pv.max(f.nodes, speed) > f.min) {
-          var then = Date.now();
-          do { f.sim.step(); } while (Date.now() - then < 20);
+          f.sim.step();
           render = true;
         }
       }
