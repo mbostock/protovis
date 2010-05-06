@@ -36,6 +36,24 @@
  * as part of the drag operation. This behavior may be enhanced in the future to
  * allow more flexible configuration of select behavior.
  *
+ * In some cases, such as with parallel coordinates, making a selection may cause
+ * related marks to change, in which case additional marks may also need to be
+ * rendered. This can be accomplished by listening for the select
+ * psuedo-events:<ul>
+ *
+ * <li>selectstart (on mousedown)
+ * <li>select (on mousemove)
+ * <li>selectend (on mouseup)
+ *
+ * </ul>For example, to render the parent panel while selecting, thus
+ * re-rendering all sibling marks:
+ *
+ * <pre>    .event("mousedown", pv.Behavior.drag())
+ *     .event("select", function() this.parent)</pre>
+ *
+ * This behavior may be enhanced in the future to allow more flexible
+ * configuration of the selection behavior.
+ *
  * @extends pv.Behavior
  * @see pv.Behavior.drag
  */
@@ -54,6 +72,7 @@ pv.Behavior.select = function() {
     r.x = m1.x;
     r.y = m1.y;
     r.dx = r.dy = 0;
+    pv.Mark.dispatch("selectstart", scene, index);
   }
 
   /** @private */
@@ -67,10 +86,12 @@ pv.Behavior.select = function() {
         r.dy = Math.min(this.height(), Math.max(m2.y, m1.y)) - r.y;
         this.render();
       });
+    pv.Mark.dispatch("select", scene, index);
   }
 
   /** @private */
   function mouseup() {
+    pv.Mark.dispatch("selectend", scene, index);
     scene = null;
   }
 
