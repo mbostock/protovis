@@ -7,7 +7,9 @@
   <body>
     <script type="text/javascript+protovis">
 
-      var w = 200, h = 30;
+      var w = 200,
+          h = 30,
+          dateFormat = pv.Format.date("%B %Y");
 
       /* Color by maximum number of people employed in that job. */
       var c = pv.Scale.log(minnesota, function(d) pv.max(d.values))
@@ -60,7 +62,7 @@
           .textAlign(function() panel.i() < 0 ? "left" : "right")
           .textStyle(function() panel.i() < 0 ? "#999" : "#000")
           .text(function(d) panel.i() < 0 ? d.name
-              : new Date(2000, panel.i() * 3, 1).format("%B %Y")
+              : dateFormat(new Date(2000, panel.i() * 3, 1))
               + ": " + d.values[panel.i()]);
 
       /* An invisible bar to capture events (without flickering). */

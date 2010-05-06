@@ -1,12 +1,18 @@
 <html>
-    <head>
-        <title>Bullet Graph</title>
-        <script type="text/javascript" src="../protovis-r3.2.js"></script>
-        <script type="text/javascript" src="bullet.js"></script>
-    </head>
-    <body>
-        <div>
-            <script type="text/javascript+protovis">
+  <head>
+    <title>Bullet Graph</title>
+    <link type="text/css" rel="stylesheet" href="ex.css?3.2"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+    <script type="text/javascript" src="bullet.js"></script>
+    <style type="text/css">
+      #fig {
+        width: 600px;
+        height: 110px;
+      }
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <script type="text/javascript+protovis">
     /* Original authors: Clint Ivy, Jamie Love */
 
     var w = 500, //size of the bullet chart
@@ -22,18 +28,18 @@
         function formatter(v) {
           return "$" + (v / 1e6) + "M";
         }
- 
+
         // Check maximum - adjust if necessary
         if(data.range[1] < data.runrate) data.range[1] = data.runrate;
-    
+
         var xscale = pv.Scale.linear(data.range[0], data.range[1]).range(0, w - bufferLeft - bufferRight).nice();
-    
+
         //this is the "master" panel and acts as the canvas for the everything else
         var basevis = new pv.Panel()
             .width(w)
             .height(h)
             .fillStyle("#fff");
-    
+
         // This is the actual core bullet graph panel
         var vis = basevis.add(pv.Panel)
             .data([0])
@@ -43,7 +49,7 @@
             .right(bufferRight)
             .top(bufferTop)
             .bottom(bufferBottom);
-    
+
         // X-axis ticks
         var xticks = vis.add(pv.Rule)
             .data(xscale.ticks())
@@ -57,7 +63,7 @@
                 .textBaseline("top")
                 .text(formatter)
                 .font("9px Verdana, Futura, Arial, Helvetica, sans-serif");
-            
+
         // Draw the grey background ranges and give them titles.
         var ranges = [
             {
@@ -75,14 +81,14 @@
                 c: "#e7e7e8",
                 t: "target range: a >=" + formatter(data.min + data.accpt)
             }].reverse();
-    
+
         vis.add(pv.Bar)
             .data(ranges)
             .left(0)
             .width(function(d) xscale(d.v))
             .fillStyle(function(d) d.c)
             .title(function(d) d.t);
-        
+
         // Draw the actual/forcast values
         ranges = [
             {
@@ -95,11 +101,11 @@
                 c: data.runrate < data.goal ? data.vwarn[1] : data.vnorm[1],
                 t: "forecast: " + formatter(data.runrate)
             }];
-    
+
         if(data.actuals < data.goal) {
             ranges.reverse();
         }
-    
+
         vis.add(pv.Bar)
             .data(ranges)
             .left(0)
@@ -108,7 +114,7 @@
             .width(function(d) xscale(d.v))
             .fillStyle(function(d) d.c)
             .title(function(d) d.t);
-        
+
         // Now draw previous value, and goal value.
         vis.add(pv.Rule)
             .data([data.prev, data.goal])
@@ -116,7 +122,7 @@
             .top(function(d) this.index == 0 ? 6 : 4)
           .bottom(function(d) this.index == 0 ? 6 : 4)
             .strokeStyle("#333");
-    
+
         // Now add titles etc.
         var titles = [{
           text: data.title,
@@ -146,20 +152,19 @@
           textStyle: "#333"
         }
        ];
-    
-        basevis.add(pv.Label)
-          .data(titles)
-          .left(function(d) d.left)
-          .top(function(d) d.top)
-          .font(function(d) d.font)
-          .text(function(d) d.text)
-          .textBaseline(function(d) d.textBaseline)
-          .textStyle(function(d) d.textStyle)
-          .textAlign(function(d) d.textAlign);
-    
-        basevis.render();
 
-            </script>
-        </div>
-    </body>
+       basevis.add(pv.Label)
+         .data(titles)
+         .left(function(d) d.left)
+         .top(function(d) d.top)
+         .font(function(d) d.font)
+         .text(function(d) d.text)
+         .textBaseline(function(d) d.textBaseline)
+         .textStyle(function(d) d.textStyle)
+         .textAlign(function(d) d.textAlign);
+
+       basevis.render();
+
+    </script>
+  </div></div></body>
 </html>

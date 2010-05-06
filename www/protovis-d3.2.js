@@ -1,4 +1,4 @@
-// 2b4856228f84cf52a863703523ec8c7345d6addd
+// 2bac587bb8adf8d90e6fd5ee4e791254edcb0a8d
 /**
  * @class The built-in Array class.
  * @name Array
@@ -13461,13 +13461,102 @@ pv.Layout.Matrix.prototype.buildImplied = function(s) {
   }
 };
 /**
- * @class
+ * Abstract; see an implementing class for details.
+ *
+ * @class Represents a reusable interaction; applies an interactive behavior to
+ * a given mark. Behaviors are themselves functions designed to be used as event
+ * handlers. For example, to add pan and zoom support to any panel, say:
+ *
+ * <pre>    .event("mousedown", pv.Behavior.pan())
+ *     .event("mousewheel", pv.Behavior.zoom())</pre>
+ *
+ * The behavior should be registered on the event that triggers the start of the
+ * behavior. Typically, the behavior will take care of registering for any
+ * additional events that are necessary. For example, dragging starts on
+ * mousedown, while the drag behavior automatically listens for mousemove and
+ * mouseup events on the window. By listening to the window, the behavior can
+ * continue to receive mouse events even if the mouse briefly leaves the mark
+ * being dragged, or even the root panel.
+ *
+ * <p>Each behavior implementation has specific requirements as to which events
+ * it supports, and how it should be used. For example, the drag behavior
+ * requires that the data associated with the mark be an object with <tt>x</tt>
+ * and <tt>y</tt> attributes, such as a {@link pv.Vector}, storing the mark's
+ * position. See an implementing class for details.
+ *
+ * @see pv.Behavior.drag
+ * @see pv.Behavior.pan
+ * @see pv.Behavior.point
+ * @see pv.Behavior.select
+ * @see pv.Behavior.zoom
+ * @extends function
  */
 pv.Behavior = {};
 /**
- * @class
+ * Returns a new drag behavior to be registered on mousedown events.
+ *
+ * @class Implements interactive dragging starting with mousedown events.
+ * Register this behavior on marks that should be draggable by the user, such as
+ * the selected region for brushing and linking. This behavior can be used in
+ * tandom with {@link pv.Behavior.select} to allow the selected region to be
+ * dragged interactively.
+ *
+ * <p>After the initial mousedown event is triggered, this behavior listens for
+ * mousemove and mouseup events on the window. This allows dragging to continue
+ * even if the mouse temporarily leaves the mark that is being dragged, or even
+ * the root panel.
+ *
+ * <p>This behavior requires that the data associated with the mark being
+ * dragged have <tt>x</tt> and <tt>y</tt> attributes that correspond to the
+ * mark's location in pixels. The mark's positional properties are not set
+ * directly by this behavior; instead, the positional properties should be
+ * defined as:
+ *
+ * <pre>    .left(function(d) d.x)
+ *     .top(function(d) d.y)</pre>
+ *
+ * Thus, the behavior does not move the mark directly, but instead updates the
+ * mark position by updating the underlying data. Note that if the positional
+ * properties are defined with bottom and right (rather than top and left), the
+ * drag behavior will be inverted, which will confuse users!
+ *
+ * <p>The drag behavior is bounded by the parent panel; the <tt>x</tt> and
+ * <tt>y</tt> attributes are clamped such that the mark being dragged does not
+ * extend outside the enclosing panel's bounds. To facilitate this, the drag
+ * behavior also queries for <tt>dx</tt> and <tt>dy</tt> attributes on the
+ * underlying data, to determine the dimensions of the bar being dragged. For
+ * non-rectangular marks, the drag behavior simply treats the mark as a point,
+ * which means that only the mark's center is bounded.
+ *
+ * <p>The mark being dragged is automatically re-rendered for each mouse event
+ * as part of the drag operation. In addition, a <tt>fix</tt> attribute is
+ * populated on the mark, which allows visual feedback for dragging. For
+ * example, to change the mark fill color while dragging:
+ *
+ * <pre>    .fillStyle(function(d) d.fix ? "#ff7f0e" : "#aec7e8")</pre>
+ *
+ * In some cases, such as with network layouts, dragging the mark may cause
+ * related marks to change, in which case additional marks may also need to be
+ * rendered. This can be accomplished by listening for the drag
+ * psuedo-events:<ul>
+ *
+ * <li>dragstart (on mousedown)
+ * <li>drag (on mousemove)
+ * <li>dragend (on mouseup)
+ *
+ * </ul>For example, to render the parent panel while dragging, thus
+ * re-rendering all sibling marks:
+ *
+ * <pre>    .event("mousedown", pv.Behavior.drag())
+ *     .event("drag", function() this.parent)</pre>
+ *
+ * This behavior may be enhanced in the future to allow more flexible
+ * configuration of drag behavior.
+ *
  * @extends pv.Behavior
- * @constructor
+ * @see pv.Behavior
+ * @see pv.Behavior.select
+ * @see pv.Layout.force
  */
 pv.Behavior.drag = function() {
   var scene, // scene context
@@ -13516,10 +13605,60 @@ pv.Behavior.drag = function() {
   return mousedown;
 };
 /**
- * @class
+ * Returns a new point behavior to be registered on mousemove events.
+ *
+ * @class Implements interactive fuzzy pointing, identifying marks that are in
+ * close proximity to the mouse cursor. This behavior is an alternative to the
+ * native mouseover and mouseout events, improving usability. Rather than
+ * requiring the user to mouseover a mark exactly, the mouse simply needs to
+ * move near the given mark and a "point" event is triggered. In addition, if
+ * multiple marks overlap, the point behavior can be used to identify the mark
+ * instance closest to the cursor, as opposed to the one that is rendered on
+ * top.
+ *
+ * <p>The point behavior can also identify the closest mark instance for marks
+ * that produce a continuous graphic primitive. The point behavior can thus be
+ * used to provide details-on-demand for both discrete marks (such as dots and
+ * bars), as well as continuous marks (such as lines and areas).
+ *
+ * <p>This behavior is implemented by finding the closest mark instance to the
+ * mouse cursor on every mousemove event. If this closest mark is within the
+ * given radius threshold, which defaults to 30 pixels, a "point" psuedo-event
+ * is dispatched to the given mark instance. If any mark were previously
+ * pointed, it would receive a corresponding "unpoint" event. These two
+ * psuedo-event types correspond to the native "mouseover" and "mouseout"
+ * events, respectively. To increase the radius at which the point behavior can
+ * be applied, specify an appropriate threshold to the constructor, up to
+ * <tt>Infinity</tt>.
+ *
+ * <p>By default, the standard Cartesian distance is computed. However, with
+ * some visualizations it is desirable to consider only a single dimension, such
+ * as the <i>x</i>-dimension for an independent variable. In this case, the
+ * collapse parameter can be set to collapse the <i>y</i> dimension:
+ *
+ * <pre>    .event("mousemove", pv.Behavior.point(Infinity).collapse("y"))</pre>
+ *
+ * <p>This behavior only listens to mousemove events on the assigned panel,
+ * which is typically the root panel. The behavior will search recursively for
+ * descendant marks to point. If the mouse leaves the assigned panel, the
+ * behavior no longer receives mousemove events; an unpoint psuedo-event is
+ * automatically dispatched to unpoint any pointed mark. Marks may be re-pointed
+ * when the mouse reenters the panel.
+ *
+ * <p>Panels have transparent fill styles by default; this means that panels may
+ * not receive the initial mousemove event to start pointing. To fix this
+ * problem, either given the panel a visible fill style (such as "white"), or
+ * set the <tt>events</tt> property to "all" such that the panel receives events
+ * despite its transparent fill.
+ *
+ * <p>Note: this behavior does not currently wedge marks.
+ *
  * @extends pv.Behavior
- * @constructor
- * @param {number} r
+ *
+ * @param {number} [r] the fuzzy radius threshold in pixels
+ * @see <a href="http://www.tovigrossman.com/papers/chi2005bubblecursor.pdf"
+ * >"The Bubble Cursor: Enhancing Target Acquisition by Dynamic Resizing of the
+ * Cursor's Activation Area"</a> by T. Grossman &amp; R. Balakrishnan, CHI 2005.
  */
 pv.Behavior.point = function(r) {
   var unpoint, // the current pointer target
@@ -13594,8 +13733,18 @@ pv.Behavior.point = function(r) {
   }
 
   /**
-   * @type string
+   * Sets or gets the collapse parameter. By default, the standard Cartesian
+   * distance is computed. However, with some visualizations it is desirable to
+   * consider only a single dimension, such as the <i>x</i>-dimension for an
+   * independent variable. In this case, the collapse parameter can be set to
+   * collapse the <i>y</i> dimension:
+   *
+   * <pre>    .event("mousemove", pv.Behavior.point(Infinity).collapse("y"))</pre>
+   *
+   * @function
+   * @returns {pv.Behavior.point} this, or the current collapse parameter.
    * @name pv.Behavior.point.prototype.collapse
+   * @param {string} [x] the new collapse parameter
    */
   mousemove.collapse = function(x) {
     if (arguments.length) {
@@ -13613,9 +13762,45 @@ pv.Behavior.point = function(r) {
   return mousemove;
 };
 /**
- * @class
+ * Returns a new select behavior to be registered on mousedown events.
+ *
+ * @class Implements interactive selecting starting with mousedown events.
+ * Register this behavior on panels that should be selectable by the user, such
+ * for brushing and linking. This behavior can be used in tandom with
+ * {@link pv.Behavior.drag} to allow the selected region to be dragged
+ * interactively.
+ *
+ * <p>After the initial mousedown event is triggered, this behavior listens for
+ * mousemove and mouseup events on the window. This allows selecting to continue
+ * even if the mouse temporarily leaves the assigned panel, or even the root
+ * panel.
+ *
+ * <p>This behavior requires that the data associated with the mark being
+ * dragged have <tt>x</tt>, <tt>y</tt>, <tt>dx</tt> and <tt>dy</tt> attributes
+ * that correspond to the mark's location and dimensions in pixels. The mark's
+ * positional properties are not set directly by this behavior; instead, the
+ * positional properties should be defined as:
+ *
+ * <pre>    .left(function(d) d.x)
+ *     .top(function(d) d.y)
+ *     .width(function(d) d.dx)
+ *     .height(function(d) d.dy)</pre>
+ *
+ * Thus, the behavior does not resize the mark directly, but instead updates the
+ * selection by updating the assigned panel's underlying data. Note that if the
+ * positional properties are defined with bottom and right (rather than top and
+ * left), the drag behavior will be inverted, which will confuse users!
+ *
+ * <p>The select behavior is bounded by the assigned panel; the positional
+ * attributes are clamped such that the selection does not extend outside the
+ * panel's bounds.
+ *
+ * <p>The panel being selected is automatically re-rendered for each mouse event
+ * as part of the drag operation. This behavior may be enhanced in the future to
+ * allow more flexible configuration of select behavior.
+ *
  * @extends pv.Behavior
- * @constructor
+ * @see pv.Behavior.drag
  */
 pv.Behavior.select = function() {
   var scene, // scene context
@@ -13632,6 +13817,7 @@ pv.Behavior.select = function() {
     r.x = m1.x;
     r.y = m1.y;
     r.dx = r.dy = 0;
+    pv.Mark.dispatch("selectstart", scene, index);
   }
 
   /** @private */
@@ -13643,12 +13829,14 @@ pv.Behavior.select = function() {
         r.y = Math.max(0, Math.min(m1.y, m2.y));
         r.dx = Math.min(this.width(), Math.max(m2.x, m1.x)) - r.x;
         r.dy = Math.min(this.height(), Math.max(m2.y, m1.y)) - r.y;
-        this.parent.render();
+        this.render();
       });
+    pv.Mark.dispatch("select", scene, index);
   }
 
   /** @private */
   function mouseup() {
+    pv.Mark.dispatch("selectend", scene, index);
     scene = null;
   }
 
@@ -13657,9 +13845,43 @@ pv.Behavior.select = function() {
   return mousedown;
 };
 /**
- * @class
+ * Returns a new pan behavior to be registered on mousedown events.
+ *
+ * @class Implements interactive panning starting with mousedown events.
+ * Register this behavior on panels to allow panning. This behavior can be used
+ * in tandem with {@link pv.Behavior.zoom} to allow both panning and zooming:
+ *
+ * <pre>    .event("mousedown", pv.Behavior.pan())
+ *     .event("mousewheel", pv.Behavior.zoom())</pre>
+ *
+ * The pan behavior currently supports only mouse events; support for keyboard
+ * shortcuts to improve accessibility may be added in the future.
+ *
+ * <p>After the initial mousedown event is triggered, this behavior listens for
+ * mousemove and mouseup events on the window. This allows panning to continue
+ * even if the mouse temporarily leaves the panel that is being panned, or even
+ * the root panel.
+ *
+ * <p>The implementation of this behavior relies on the panel's
+ * <tt>transform</tt> property, which specifies a matrix transformation that is
+ * applied to child marks. Note that the transform property only affects the
+ * panel's children, but not the panel itself; therefore the panel's fill and
+ * stroke will not change when the contents are panned.
+ *
+ * <p>Panels have transparent fill styles by default; this means that panels may
+ * not receive the initial mousedown event to start panning. To fix this
+ * problem, either given the panel a visible fill style (such as "white"), or
+ * set the <tt>events</tt> property to "all" such that the panel receives events
+ * despite its transparent fill.
+ *
+ * <p>The pan behavior has optional support for bounding. If enabled, the user
+ * will not be able to pan the panel outside of the initial bounds. This feature
+ * is designed to work in conjunction with the zoom behavior; otherwise,
+ * bounding the panel effectively disables all panning.
+ *
  * @extends pv.Behavior
- * @constructor
+ * @see pv.Behavior.zoom
+ * @see pv.Panel#transform
  */
 pv.Behavior.pan = function() {
   var scene, // scene context
@@ -13705,8 +13927,19 @@ pv.Behavior.pan = function() {
   }
 
   /**
-   * @type boolean
+   * Sets or gets the bound parameter. If bounding is enabled, the user will not
+   * be able to pan outside the initial panel bounds; this typically applies
+   * only when the pan behavior is used in tandem with the zoom behavior.
+   * Bounding is not enabled by default.
+   *
+   * <p>Note: enabling bounding after panning has already occurred will not
+   * immediately reset the transform. Bounding should be enabled before the
+   * panning behavior is applied.
+   *
+   * @function
+   * @returns {pv.Behavior.pan} this, or the current bound parameter.
    * @name pv.Behavior.pan.prototype.bound
+   * @param {boolean} [x] the new bound parameter.
    */
   mousedown.bound = function(x) {
     if (arguments.length) {
@@ -13721,9 +13954,42 @@ pv.Behavior.pan = function() {
   return mousedown;
 };
 /**
- * @class
+ * Returns a new zoom behavior to be registered on mousewheel events.
+ *
+ * @class Implements interactive zooming using mousewheel events. Register this
+ * behavior on panels to allow zooming. This behavior can be used in tandem with
+ * {@link pv.Behavior.pan} to allow both panning and zooming:
+ *
+ * <pre>    .event("mousedown", pv.Behavior.pan())
+ *     .event("mousewheel", pv.Behavior.zoom())</pre>
+ *
+ * The zoom behavior currently supports only mousewheel events; support for
+ * keyboard shortcuts and gesture events to improve accessibility may be added
+ * in the future.
+ *
+ * <p>The implementation of this behavior relies on the panel's
+ * <tt>transform</tt> property, which specifies a matrix transformation that is
+ * applied to child marks. Note that the transform property only affects the
+ * panel's children, but not the panel itself; therefore the panel's fill and
+ * stroke will not change when the contents are zoomed. The built-in support for
+ * transforms only supports uniform scaling and translates, which is sufficient
+ * for panning and zooming.  Note that this is not a strict geometric
+ * transformation, as the <tt>lineWidth</tt> property is scale-aware: strokes
+ * are drawn at constant size independent of scale.
+ *
+ * <p>Panels have transparent fill styles by default; this means that panels may
+ * not receive mousewheel events to zoom. To fix this problem, either given the
+ * panel a visible fill style (such as "white"), or set the <tt>events</tt>
+ * property to "all" such that the panel receives events despite its transparent
+ * fill.
+ *
+ * <p>The zoom behavior has optional support for bounding. If enabled, the user
+ * will not be able to zoom out farther than the initial bounds. This feature is
+ * designed to work in conjunction with the pan behavior.
+ *
  * @extends pv.Behavior
- * @constructor
+ * @see pv.Panel#transform
+ * @see pv.Mark#scale
  * @param {number} speed
  */
 pv.Behavior.zoom = function(speed) {
@@ -13747,8 +14013,19 @@ pv.Behavior.zoom = function(speed) {
   }
 
   /**
-   * @type boolean
+   * Sets or gets the bound parameter. If bounding is enabled, the user will not
+   * be able to zoom out farther than the initial panel bounds. Bounding is not
+   * enabled by default. If this behavior is used in tandem with the pan
+   * behavior, both should use the same bound parameter.
+   *
+   * <p>Note: enabling bounding after zooming has already occurred will not
+   * immediately reset the transform. Bounding should be enabled before the zoom
+   * behavior is applied.
+   *
+   * @function
+   * @returns {pv.Behavior.zoom} this, or the current bound parameter.
    * @name pv.Behavior.zoom.prototype.bound
+   * @param {boolean} [x] the new bound parameter.
    */
   mousewheel.bound = function(x) {
     if (arguments.length) {
@@ -13792,11 +14069,23 @@ pv.Geo = function() {};
  * Abstract; not implemented. There is no explicit constructor; this class
  * merely serves to document the representation used by {@link pv.Geo.scale}.
  *
- * @class Represents a geographic projection.
+ * @class Represents a geographic projection. This class provides the core
+ * implementation for {@link pv.Geo.scale}s, mapping between geographic
+ * coordinates (latitude and longitude) and normalized screen space in the range
+ * [-1,1]. The remaining mapping between normalized screen space and actual
+ * pixels is performed by <tt>pv.Geo.scale</tt>.
  *
- * TODO describe in more detail how
- * projections map between {@link pv.Geo.LatLng} and {@link pv.Vector} in
- * [-1,1].
+ * <p>Many geographic projections have a point around which the projection is
+ * centered. Rather than have each implementation add support for a
+ * user-specified center point, the <tt>pv.Geo.scale</tt> translates the
+ * geographic coordinates relative to the center point for both the forward and
+ * inverse projection.
+ *
+ * <p>In general, this class should not be used directly, unless the desire is
+ * to implement a new geographic projection. Instead, use <tt>pv.Geo.scale</tt>.
+ * Implementations are not required to implement inverse projections, but are
+ * needed for some forms of interactivity. Also note that some inverse
+ * projections are ambiguous, such as the connecting points in Dymaxian maps.
  *
  * @name pv.Geo.Projection
  * @see pv.Geo.scale
@@ -13940,13 +14229,18 @@ pv.Geo.projections = {
  * Returns a geographic scale. The arguments to this constructor are optional,
  * and equivalent to calling {@link #projection}.
  *
- * @class Represents a geographic scale. A geographic scale represents the
- * mapping between longitude and latitude coordinates and their appropriate
- * positioning on the screen. By default the appropriate domain is inferred so
- * as to map the entire world onto the screen.
+ * @class Represents a geographic scale; a mapping between latitude-longitude
+ * coordinates and screen pixel coordinates. By default, the domain is inferred
+ * from the geographic coordinates, so that the domain fills the output range.
+ *
+ * <p>Note that geographic scales are two-dimensional transformations, rather
+ * than the one-dimensional bidrectional mapping typical of other scales.
+ * Rather than mapping (for example) between a numeric domain and a numeric
+ * range, geographic scales map between two coordinate objects: {@link
+ * pv.Geo.LatLng} and {@link pv.Vector}.
  *
  * @param {pv.Geo.Projection} [p] optional projection.
- * @returns {pv.Geo.Scale} a geographic scale.
+ * @see pv.Geo.scale#ticks
  */
 pv.Geo.scale = function(p) {
   var rmin = {x: 0, y: 0}, // default range minimum
@@ -13994,10 +14288,39 @@ pv.Geo.scale = function(p) {
     return scale(latlng).y;
   };
 
-  /** Tick functions. @namespace */
+  /**
+   * Abstract; this is a local namespace on a given geographic scale.
+   *
+   * @namespace Tick functions for geographic scales. Because geographic scales
+   * represent two-dimensional transformations (as opposed to one-dimensional
+   * transformations typical of other scales), the tick values are similarly
+   * represented as two-dimensional coordinates in the input domain, i.e.,
+   * {@link pv.Geo.LatLng} objects.
+   *
+   * <p>Also, note that non-rectilinear projections, such as sinsuoidal and
+   * aitoff, may not produce straight lines for constant longitude or constant
+   * latitude. Therefore the returned array of ticks is a two-dimensional array,
+   * sampling various latitudes as constant longitude, and vice versa.
+   *
+   * <p>The tick lines can therefore be approximated as polylines, either with
+   * "linear" or "cardinal" interpolation. This is not as accurate as drawing
+   * the true curve through the projection space, but is usually sufficient.
+   *
+   * @name pv.Geo.scale.prototype.ticks
+   * @see pv.Geo.scale
+   * @see pv.Geo.LatLng
+   * @see pv.Line#interpolate
+   */
   scale.ticks = {
 
-    /** Returns longitude ticks. */
+    /**
+     * Returns longitude ticks.
+     *
+     * @function
+     * @param {number} [m] the desired number of ticks.
+     * @returns {array} a nested array of <tt>pv.Geo.LatLng</tt> ticks.
+     * @name pv.Geo.scale.prototype.ticks.prototype.lng
+     */
     lng: function(m) {
       var lat, lng;
       if (d.length > 1) {
@@ -14016,7 +14339,14 @@ pv.Geo.scale = function(p) {
       });
     },
 
-    /** Returns latitude ticks. */
+    /**
+     * Returns latitude ticks.
+     *
+     * @function
+     * @param {number} [m] the desired number of ticks.
+     * @returns {array} a nested array of <tt>pv.Geo.LatLng</tt> ticks.
+     * @name pv.Geo.scale.prototype.ticks.prototype.lat
+     */
     lat: function(m) {
       return pv.transpose(scale.ticks.lng(m));
     }
