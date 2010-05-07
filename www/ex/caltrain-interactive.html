@@ -196,6 +196,7 @@
       var panel = vis.add(pv.Panel)
           .data(trains)
           .overflow("hidden")
+          .event("mousemove", pv.Behavior.point(Infinity))
           .visible(function(train) {
                 var t = train.values[0];
                 if((show!="ALL")&&(show!=t.bound)) return false;
@@ -214,14 +215,11 @@
           .left(function(stop) x(stop.time))
           .bottom(function(stop) y(stop.station))
           .strokeStyle(function(stop) types[stop.type])
-          .lineWidth(1)
-        .add(pv.Line)  // A transparent fat line for the mouse events
-          .lineWidth(3)
           .def("active")
-          .event("mouseover", function() this.active(true))
-          .event("mouseout", function() this.active(false)) 
-          .strokeStyle(function(stop) this.active()?types[stop.type]:"rgba(255,255,255,0.001)");
-      
+          .lineWidth(function() this.active() ? 3 : 1)
+          .event("point", function() this.active(true))
+          .event("unpoint", function() this.active(false));
+
       // Ticks that indicate the stops
       line.add(pv.Dot)
           .size(4)
@@ -233,7 +231,8 @@
 
       // Invisible dots that show stop info
       line.add(pv.Dot)
-          .size(7)
+          .size(15)
+          .strokeStyle("rgba(0,0,0,.001)")
           .visible(function(stop) stop.which == "S")
           .title(function(stop) "Train " + stop.train + " stops at " + stop.station + " at " + formatStop(formatIn.parse(Math.floor(stop.time/60) + ":" + stop.time%60)));
 

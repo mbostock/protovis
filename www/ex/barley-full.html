@@ -61,13 +61,23 @@
       var dot = cell.add(pv.Panel)
           .data(function(site) site.values)
           .top(23)
+          .events("all")
+          .event("mousemove", pv.Behavior.point(30))
         .add(pv.Dot)
           .data(function(year) year.values)
+          .def("active", -1)
           .left(function(d) x(d.yield))
           .top(function() this.index * 11)
           .size(10)
           .lineWidth(2)
-          .strokeStyle(function(d) c(d.year));
+          .strokeStyle(function(d) c(d.year))
+          .event("point", function() this.active(this.index).parent)
+          .event("unpoint", function() this.active(-1).parent);
+
+      /* A label showing the value on demand. */
+      dot.anchor("right").add(pv.Label)
+          .visible(function() dot.active() == this.index)
+          .text(function(d) d.yield.toFixed(1));
 
       /* A label showing the variety. */
       dot.anchor("left").add(pv.Label)

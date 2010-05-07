@@ -30,7 +30,9 @@
           .def("i", -1)
           .def("x", function(d) pv.Scale.linear(d.values, pv.index).range(0, w))
           .def("y", function(d) pv.Scale.linear(0, pv.max(d.values)).range(0, h))
-          .bottom(10);
+          .bottom(10)
+          .events("all")
+          .event("mousemove", pv.Behavior.point(Infinity).collapse("y"));
 
       /* The area. */
       panel.add(pv.Area)
@@ -38,14 +40,16 @@
           .def("fillStyle", function(d) panel.i() < 0 ? c(pv.max(d.values)) : "#2ca02c")
           .left(function() panel.x()(this.index))
           .height(function(d) panel.y()(d))
-          .bottom(0);
+          .bottom(0)
+          .event("point", function() (panel.i(this.index), label.render(), dot))
+          .event("unpoint", function() (panel.i(-1), label.render(), dot));
 
       /* The x-axis. */
       panel.add(pv.Rule)
           .bottom(.5);
 
       /* The mouseover dot. */
-      panel.add(pv.Dot)
+      var dot = panel.add(pv.Dot)
           .visible(function() panel.i() >= 0)
           .left(function() panel.x()(panel.i()))
           .bottom(function(d) panel.y()(d.values[panel.i()]))
@@ -54,7 +58,7 @@
           .size(10);
 
       /* The label: either the job name, or the month and value. */
-      panel.add(pv.Label)
+      var label = panel.add(pv.Label)
           .bottom(-1)
           .textBaseline("top")
           .left(function() panel.i() < 0 ? 0 : null)
@@ -64,12 +68,6 @@
           .text(function(d) panel.i() < 0 ? d.name
               : dateFormat(new Date(2000, panel.i() * 3, 1))
               + ": " + d.values[panel.i()]);
-
-      /* An invisible bar to capture events (without flickering). */
-      panel.add(pv.Bar)
-          .fillStyle("rgba(0,0,0,.001)")
-          .event("mouseout", function() panel.i(-1))
-          .event("mousemove", function() panel.i(panel.x().invert(panel.mouse().x) >> 0));
 
       vis.render();
 
