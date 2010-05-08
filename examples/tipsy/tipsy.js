@@ -7,7 +7,7 @@ pv.Behavior.tipsy = function(opts) {
    * lines) when the mouse isn't actually over the span.
    */
   function trigger() {
-    $(tip).trigger("mouseleave");
+    $(tip).tipsy("hide");
   }
 
   /**
@@ -64,6 +64,6 @@ pv.Behavior.tipsy = function(opts) {
        * Cleanup the tooltip span on mouseout. Immediately trigger the tooltip;
        * this is necessary for dimensionless marks.
        */
-      $(tip).mouseleave(cleanup).trigger("mouseenter");
+      $(tip).mouseleave(cleanup).tipsy("show");
     };
 };
