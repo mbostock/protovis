@@ -1,0 +1,69 @@
+<html>
+  <head>
+    <title>Resize</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var w = 400,
+    h = 30,
+    range = {x: 50, dx: 300},
+    x = pv.Scale.linear(new Date(2010, 0, 1), new Date(2011, 0, 1)).range(0, w);
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .top(15)
+    .bottom(15)
+    .left(30)
+    .right(30);
+
+vis.add(pv.Rule)
+    .data(x.ticks())
+    .left(x)
+    .bottom(0)
+    .height(3)
+  .anchor("bottom").add(pv.Label)
+    .text(function(d) x.tickFormat(d));
+
+var select = vis.add(pv.Panel)
+    .data([range])
+    .cursor("crosshair")
+    .events("all")
+    .event("mousedown", pv.Behavior.select());
+
+var bar = select.add(pv.Bar)
+    .left(function(d) d.x)
+    .width(function(d) d.dx)
+    .bottom(0)
+    .height(h)
+    .cursor("move")
+    .fillStyle("rgba(255,128,128,.4)")
+    .event("mousedown", pv.Behavior.drag())
+    .event("drag", select);
+
+bar.anchor("left").add(pv.Bar)
+    .fillStyle("#ccc")
+    .top(0)
+    .width(3)
+    .cursor("col-resize")
+    .event("mousedown", pv.Behavior.resize("left"))
+    .event("resize", select);
+
+bar.anchor("right").add(pv.Bar)
+    .fillStyle("#ccc")
+    .top(0)
+    .width(3)
+    .cursor("col-resize")
+    .event("mousedown", pv.Behavior.resize("right"))
+    .event("resize", select);
+
+vis.add(pv.Rule)
+    .bottom(0);
+
+vis.render();
+
+    </script>
+  </body>
+</html>

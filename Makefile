@@ -84,6 +84,7 @@ JS_LAYOUT_FILES = \
 	src/behavior/Drag.js \
 	src/behavior/Point.js \
 	src/behavior/Select.js \
+	src/behavior/Resize.js \
 	src/behavior/Pan.js \
 	src/behavior/Zoom.js
 
