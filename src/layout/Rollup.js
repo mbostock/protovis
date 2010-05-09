@@ -14,12 +14,13 @@
  * connections.</blockquote>
  *
  * This layout requires two psuedo-properties to be specified, which assign node
- * positions along the two dimensions {@link #x} and {@link #y}. Typically,
- * these functions are specified using an {@link pv.Scale.ordinal}. Nodes that
- * share the same position in <i>x</i> and <i>y</i> are "rolled up" into a
- * meta-node, and similarly links are aggregated between meta-nodes. For
- * example, to construct a rollup to analyze links by gender and affiliation,
- * first define two ordinal scales:
+ * positions along the two dimensions {@link #x} and {@link #y}, corresponding
+ * to the left and top properties, respectively. Typically, these functions are
+ * specified using an {@link pv.Scale.ordinal}. Nodes that share the same
+ * position in <i>x</i> and <i>y</i> are "rolled up" into a meta-node, and
+ * similarly links are aggregated between meta-nodes. For example, to construct
+ * a rollup to analyze links by gender and affiliation, first define two ordinal
+ * scales:
  *
  * <pre>var x = pv.Scale.ordinal(nodes, function(d) d.gender).split(0, w),
  *     y = pv.Scale.ordinal(nodes, function(d) d.aff).split(0, h);</pre>
@@ -36,12 +37,13 @@
  *
  * <p>Note that because this layout provides a visualization of the rolled up
  * graph, the data properties for the mark prototypes (<tt>node</tt>,
- * <tt>link</tt> and <tt>label</tt>) have nonstandard data properties: they
- * reference the rolled-up nodes and links, rather than the nodes and links of
- * the full network. The underlying nodes and links for each rolled-up node and
- * link can be accessed via the <tt>nodes</tt> and <tt>links</tt> attributes,
- * respectively. The aggregated link values for rolled-up links can similarly be
- * accessed via the <tt>linkValue</tt> attribute.
+ * <tt>link</tt> and <tt>label</tt>) are different from most other network
+ * layouts: they reference the rolled-up nodes and links, rather than the nodes
+ * and links of the full network. The underlying nodes and links for each
+ * rolled-up node and link can be accessed via the <tt>nodes</tt> and
+ * <tt>links</tt> attributes, respectively. The aggregated link values for
+ * rolled-up links can similarly be accessed via the <tt>linkValue</tt>
+ * attribute.
  *
  * <p>For undirected networks, links are duplicated in both directions. For
  * directed networks, use <tt>directed(true)</tt>. The graph is assumed to be

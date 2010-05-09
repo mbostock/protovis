@@ -3,7 +3,7 @@
  * directly; instead, they are added to an existing panel via
  * {@link pv.Mark#add}.
  *
- * @class Represents a hierarchical layout using the indent algorithm. This
+ * @class Implements a hierarchical layout using the indent algorithm. This
  * layout implements a node-link diagram where the nodes are presented in
  * preorder traversal, and nodes are indented based on their depth from the
  * root. This technique is used ubiquitously by operating systems to represent

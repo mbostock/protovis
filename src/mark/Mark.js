@@ -616,6 +616,10 @@ pv.Mark.prototype.anchorTarget = function() {
 /**
  * Alias for setting the left, right, top and bottom properties simultaneously.
  *
+ * @see #left
+ * @see #right
+ * @see #top
+ * @see #bottom
  * @returns {pv.Mark} this.
  */
 pv.Mark.prototype.margin = function(n) {

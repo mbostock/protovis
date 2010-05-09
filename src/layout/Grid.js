@@ -3,7 +3,7 @@
  * directly; instead, they are added to an existing panel via
  * {@link pv.Mark#add}.
  *
- * @class Represents a grid layout with regularly-sized rows and columns. The
+ * @class Implements a grid layout with regularly-sized rows and columns. The
  * number of rows and columns are determined from their respective
  * properties. For example, the 2&times;3 array:
  *

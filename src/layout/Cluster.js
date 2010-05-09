@@ -3,7 +3,7 @@
  * constructed directly; instead, they are added to an existing panel via
  * {@link pv.Mark#add}.
  *
- * @class Represents a hierarchical layout using the cluster (or dendrogram)
+ * @class Implements a hierarchical layout using the cluster (or dendrogram)
  * algorithm. This layout provides both node-link and space-filling
  * implementations of cluster diagrams. In many ways it is similar to
  * {@link pv.Layout.Partition}, except that leaf nodes are positioned at maximum
@@ -92,6 +92,12 @@ pv.Layout.Cluster.prototype = pv.extend(pv.Layout.Hierarchy)
  * @name pv.Layout.Cluster.prototype.outerRadius
  */
 
+/**
+ * Defaults for cluster layouts. The default group parameter is 0 and the
+ * default orientation is "top".
+ *
+ * @type pv.Layout.Cluster
+ */
 pv.Layout.Cluster.prototype.defaults = new pv.Layout.Cluster()
     .extend(pv.Layout.Hierarchy.prototype.defaults)
     .group(0)

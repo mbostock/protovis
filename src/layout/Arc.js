@@ -3,7 +3,7 @@
  * directly; instead, they are added to an existing panel via
  * {@link pv.Mark#add}.
  *
- * @class Represents a layout for arc diagrams. An arc diagram is a network
+ * @class Implements a layout for arc diagrams. An arc diagram is a network
  * visualization with a one-dimensional layout of nodes, using circular arcs to
  * render links between nodes. For undirected networks, arcs are rendering on a
  * single side; this makes arc diagrams useful as annotations to other

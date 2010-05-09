@@ -3,7 +3,7 @@
  * constructed directly; instead, they are added to an existing panel via
  * {@link pv.Mark#add}.
  *
- * @class Represents a hierarchical layout using the partition (or sunburst,
+ * @class Implemeents a hierarchical layout using the partition (or sunburst,
  * icicle) algorithm. This layout provides both node-link and space-filling
  * implementations of partition diagrams. In many ways it is similar to
  * {@link pv.Layout.Cluster}, except that leaf nodes are positioned based on
@@ -86,6 +86,11 @@ pv.Layout.Partition.prototype = pv.extend(pv.Layout.Hierarchy)
  * @name pv.Layout.Partition.prototype.outerRadius
  */
 
+/**
+ * Default properties for partition layouts. The default orientation is "top".
+ *
+ * @type pv.Layout.Partition
+ */
 pv.Layout.Partition.prototype.defaults = new pv.Layout.Partition()
     .extend(pv.Layout.Hierarchy.prototype.defaults)
     .orient("top");

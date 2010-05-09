@@ -3,7 +3,7 @@
  * directly; instead, they are added to an existing panel via
  * {@link pv.Mark#add}.
  *
- * @class Represents a horizon layout, which is a variation of a single-series
+ * @class Implements a horizon layout, which is a variation of a single-series
  * area chart where the area is folded into multiple bands. Color is used to
  * encode band, allowing the size of the chart to be reduced significantly
  * without impeding readability. This layout algorithm is based on the work of

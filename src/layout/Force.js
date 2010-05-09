@@ -196,6 +196,14 @@ pv.Layout.Force.prototype = pv.extend(pv.Layout.Network)
  * @see pv.Force.spring#length
  */
 
+/**
+ * Default properties for force-directed layouts. The default drag constant is
+ * 0.1, the default charge constant is -40 (with a domain of [2, 500] and theta
+ * of 0.9), and the default spring constant is 0.1 (with a damping of 0.3 and a
+ * rest length of 20).
+ *
+ * @type pv.Layout.Force
+ */
 pv.Layout.Force.prototype.defaults = new pv.Layout.Force()
     .extend(pv.Layout.Network.prototype.defaults)
     .dragConstant(.1)

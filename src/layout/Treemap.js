@@ -1,31 +1,37 @@
 /**
- * Returns a new treemap layout.
+ * Constructs a new, empty treemap layout. Layouts are not typically
+ * constructed directly; instead, they are added to an existing panel via
+ * {@link pv.Mark#add}.
  *
- * @class A tree layout in the form of an treemap.
- * <img src="../treemap.png" width="160" height="160" align="right"> Treemaps
- * are a form of space-filling layout that represents nodes as boxes, with child
+ * @class Implements a space-filling rectangular layout, with the hierarchy
+ * represented via containment. Treemaps represent nodes as boxes, with child
  * nodes placed within parent boxes. The size of each box is proportional to the
- * size of the node in the tree.
+ * size of the node in the tree. This particular algorithm is taken from Bruls,
+ * D.M., C. Huizing, and J.J. van Wijk, <a
+ * href="http://www.win.tue.nl/~vanwijk/stm.pdf">"Squarified Treemaps"</a> in
+ * <i>Data Visualization 2000, Proceedings of the Joint Eurographics and IEEE
+ * TCVG Sumposium on Visualization</i>, 2000, pp. 33-42.
  *
- * <p>This particular algorithm is taken from Bruls, D.M., C. Huizing, and
- * J.J. van Wijk, <a href="http://www.win.tue.nl/~vanwijk/stm.pdf">"Squarified
- * Treemaps"</a> in <i>Data Visualization 2000, Proceedings of the Joint
- * Eurographics and IEEE TCVG Sumposium on Visualization</i>, 2000, pp. 33-42.
+ * <p>The meaning of the exported mark prototypes changes slightly in the
+ * space-filling implementation:<ul>
  *
- * <p>This tree layout is intended to be used with a {@link pv.Bar} or {@link
- * pv.Panel}. The nodes will be populated with the following attributes:
+ * <li><tt>node</tt> - for rendering nodes; typically a {@link pv.Bar}. The node
+ * data is populated with <tt>dx</tt> and <tt>dy</tt> attributes, in addition to
+ * the standard <tt>x</tt> and <tt>y</tt> position attributes.
  *
- * <ul>
- * <li><tt>x</tt> - the cell left position.
- * <li><tt>y</tt> - the cell top position.
- * <li><tt>dx</tt> - the cell width.
- * <li><tt>dy</tt> - the cell height.
- * <li><tt>depth</tt> - the node depth (tier; the root is 0).
- * </ul>
+ * <p><li><tt>leaf</tt> - for rendering leaf nodes only, with no fill or stroke
+ * style by default; typically a {@link pv.Panel} or another layout!
+ *
+ * <p><li><tt>link</tt> - unsupported; undefined. Links are encoded implicitly
+ * in the arrangement of the space-filling nodes.
+ *
+ * <p><li><tt>label</tt> - for rendering node labels; typically a
+ * {@link pv.Label}.
+ *
+ * </ul>For more details on how to use this layout, see
+ * {@link pv.Layout.Hierarchy}.
  *
  * @extends pv.Layout.Hierarchy
- * @constructor
- * @returns {pv.Layout.Treemap} a treemap layout.
  */
 pv.Layout.Treemap = function() {
   pv.Layout.Hierarchy.call(this);
@@ -62,42 +68,81 @@ pv.Layout.Treemap.prototype = pv.extend(pv.Layout.Hierarchy)
     .property("mode", String)
     .property("order", String);
 
+/**
+ * Default propertiess for treemap layouts. The default mode is "squarify" and
+ * the default order is "ascending".
+ *
+ * @type pv.Layout.Treemap
+ */
 pv.Layout.Treemap.prototype.defaults = new pv.Layout.Treemap()
     .extend(pv.Layout.Hierarchy.prototype.defaults)
     .mode("squarify") // squarify, slice-and-dice, slice, dice
     .order("ascending"); // ascending, descending, reverse, null
 
 /**
+ * Whether node sizes should be rounded to integer values. This has a similar
+ * effect to setting <tt>antialias(false)</tt> for node values, but allows the
+ * treemap algorithm to accumulate error related to pixel rounding.
+ *
  * @type boolean
  * @name pv.Layout.Treemap.prototype.round
  */
 
 /**
+ * The left inset between parent add child in pixels. Defaults to 0.
+ *
  * @type number
  * @name pv.Layout.Treemap.prototype.paddingLeft
+ * @see #padding
  */
 
 /**
+ * The right inset between parent add child in pixels. Defaults to 0.
+ *
  * @type number
  * @name pv.Layout.Treemap.prototype.paddingRight
+ * @see #padding
  */
 
 /**
+ * The top inset between parent and child in pixels. Defaults to 0.
+ *
  * @type number
  * @name pv.Layout.Treemap.prototype.paddingTop
+ * @see #padding
  */
 
 /**
+ * The bottom inset between parent and child in pixels. Defaults to 0.
+ *
  * @type number
  * @name pv.Layout.Treemap.prototype.paddingBottom
+ * @see #padding
  */
 
 /**
+ * The treemap algorithm. The default value is "squarify". The "slice-and-dice"
+ * algorithm may also be used, which alternates between horizontal and vertical
+ * slices for different depths. In addition, the "slice" and "dice" algorithms
+ * may be specified explicitly to control whether horizontal or vertical slices
+ * are used, which may be useful for nested treemap layouts.
+ *
  * @type string
  * @name pv.Layout.Treemap.prototype.mode
+ * @see <a
+ * href="ftp://ftp.cs.umd.edu/pub/hcil/Reports-Abstracts-Bibliography/2001-06html/2001-06.pdf"
+ * >"Ordered Treemap Layouts"</a> by B. Shneiderman &amp; M. Wattenberg, IEEE
+ * InfoVis 2001.
  */
 
 /**
+ * The sibling node order. A <tt>null</tt> value means to use the sibling order
+ * specified by the nodes property as-is; "reverse" will reverse the given
+ * order. The default value "ascending" will sort siblings in ascending order of
+ * size, while "descending" will do the reverse. For sorting based on data
+ * attributes other than size, use the default <tt>null</tt> for the order
+ * property, and sort the nodes beforehand using the {@link pv.Dom} operator.
+ *
  * @type string
  * @name pv.Layout.Treemap.prototype.order
  */
@@ -106,27 +151,32 @@ pv.Layout.Treemap.prototype.defaults = new pv.Layout.Treemap()
  * Alias for setting the left, right, top and bottom padding properties
  * simultaneously.
  *
+ * @see #paddingLeft
+ * @see #paddingRight
+ * @see #paddingTop
+ * @see #paddingBottom
  * @returns {pv.Layout.Treemap} this.
  */
 pv.Layout.Treemap.prototype.padding = function(n) {
   return this.paddingLeft(n).paddingRight(n).paddingTop(n).paddingBottom(n);
 };
 
-/** @private */
+/** @private The default size function. */
 pv.Layout.Treemap.prototype.$size = function(d) {
   return Number(d.nodeValue);
 };
 
 /**
- * Specifies the sizing function. By default, a sizing function is disabled and
- * all nodes are given constant size. The sizing function is invoked for each
- * leaf node in the tree (passed to the constructor).
+ * Specifies the sizing function. By default, the size function uses the
+ * <tt>nodeValue</tt> attribute of nodes as a numeric value: <tt>function(d)
+ * Number(d.nodeValue)</tt>.
  *
- * <p>For example, if the tree data structure represents a file system, with
- * files as leaf nodes, and each file has a <tt>bytes</tt> attribute, you can
- * specify a size function as:
+ * <p>The sizing function is invoked for each leaf node in the tree, per the
+ * <tt>nodes</tt> property. For example, if the tree data structure represents a
+ * file system, with files as leaf nodes, and each file has a <tt>bytes</tt>
+ * attribute, you can specify a size function as:
  *
- * <pre>.size(function(d) d.bytes)</pre>
+ * <pre>    .size(function(d) d.bytes)</pre>
  *
  * @param {function} f the new sizing function.
  * @returns {pv.Layout.Treemap} this.

@@ -1,8 +1,25 @@
 /**
- * @class
+ * Constructs a new, empty tree layout. Layouts are not typically constructed
+ * directly; instead, they are added to an existing panel via
+ * {@link pv.Mark#add}.
+ *
+ * @class Implements a node-link tree diagram using the Reingold-Tilford "tidy"
+ * tree layout algorithm. The specific algorithm used by this layout is based on
+ * <a href="http://citeseer.ist.psu.edu/buchheim02improving.html">"Improving
+ * Walker's Algorithm to Run in Linear Time"</A> by C. Buchheim, M. J&uuml;nger
+ * &amp; S. Leipert, Graph Drawing 2002. This layout supports both cartesian and
+ * radial orientations orientations for node-link diagrams.
+ *
+ * <p>The tree layout supports a "group" property, which if true causes siblings
+ * to be positioned closer together than unrelated nodes at the same depth. The
+ * layout can be configured using the <tt>depth</tt> and <tt>breadth</tt>
+ * properties, which control the increments in pixel space between nodes in both
+ * dimensions, similar to the indent layout.
+ *
+ * <p>For more details on how to use this layout, see
+ * {@link pv.Layout.Hierarchy}.
+ *
  * @extends pv.Layout.Hierarchy
- * @see http://citeseer.ist.psu.edu/buchheim02improving.html
- * @constructor
  */
 pv.Layout.Tree = function() {
   pv.Layout.Hierarchy.call(this);
@@ -14,6 +31,13 @@ pv.Layout.Tree.prototype = pv.extend(pv.Layout.Hierarchy)
     .property("depth", Number)
     .property("orient", String);
 
+/**
+ * Default properties for tree layouts. The default orientation is "top", the
+ * default group parameter is 1, and the default breadth and depth offsets are
+ * 15 and 60 respectively.
+ *
+ * @type pv.Layout.Tree
+ */
 pv.Layout.Tree.prototype.defaults = new pv.Layout.Tree()
     .extend(pv.Layout.Hierarchy.prototype.defaults)
     .group(1)
@@ -219,19 +243,23 @@ pv.Layout.Tree.prototype.buildImplied = function(s) {
 };
 
 /**
+ * The offset between siblings nodes; defaults to 15.
+ *
  * @type number
  * @name pv.Layout.Tree.prototype.breadth
  */
 
 /**
+ * The offset between parent and child nodes; defaults to 60.
+ *
  * @type number
  * @name pv.Layout.Tree.prototype.depth
  */
 
 /**
- * The orientation. The default orientation is "left", which means that the root
- * node is placed on the left edge, leaf nodes appear on the right edge, and
- * internal nodes are in-between. The following orientations are supported:<ul>
+ * The orientation. The default orientation is "top", which means that the root
+ * node is placed on the top edge, leaf nodes appear at the bottom, and internal
+ * nodes are in-between. The following orientations are supported:<ul>
  *
  * <li>left - left-to-right.
  * <li>right - right-to-left.

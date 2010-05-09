@@ -3,7 +3,7 @@
  * directly; instead, they are added to an existing panel via
  * {@link pv.Mark#add}.
  *
- * @class Represents a layout for stacked visualizations, ranging from simple
+ * @class Implements a layout for stacked visualizations, ranging from simple
  * stacked bar charts to more elaborate "streamgraphs" composed of stacked
  * areas. Stack layouts uses length as a visual encoding, as opposed to
  * position, as the layers do not share an aligned axis.
@@ -263,6 +263,13 @@ pv.Layout.Stack.prototype = pv.extend(pv.Layout)
     .property("order", String)
     .property("layers");
 
+/**
+ * Default properties for stack layouts. The default orientation is
+ * "bottom-left", the default offset is "zero", and the default layers is
+ * <tt>[[]]</tt>.
+ *
+ * @type pv.Layout.Stack
+ */
 pv.Layout.Stack.prototype.defaults = new pv.Layout.Stack()
     .extend(pv.Layout.prototype.defaults)
     .orient("bottom-left")

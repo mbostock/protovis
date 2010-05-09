@@ -3,7 +3,7 @@
  * constructed directly; instead, they are added to an existing panel via
  * {@link pv.Mark#add}.
  *
- * @class Represents a hierarchical layout using circle-packing. The meaning of
+ * @class Implements a hierarchical layout using circle-packing. The meaning of
  * the exported mark prototypes changes slightly in the space-filling
  * implementation:<ul>
  *
@@ -53,6 +53,12 @@ pv.Layout.Pack.prototype = pv.extend(pv.Layout.Hierarchy)
     .property("spacing", Number)
     .property("order", String); // ascending, descending, reverse, null
 
+/**
+ * Default properties for circle-packing layouts. The default spacing parameter
+ * is 1 and the default order is "ascending".
+ *
+ * @type pv.Layout.Pack
+ */
 pv.Layout.Pack.prototype.defaults = new pv.Layout.Pack()
     .extend(pv.Layout.Hierarchy.prototype.defaults)
     .spacing(1)
