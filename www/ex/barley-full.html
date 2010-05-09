@@ -48,7 +48,9 @@
           .height(h)
           .left(90)
           .top(function() this.index * h)
-          .strokeStyle("#999");
+          .strokeStyle("#999")
+          .events("all")
+          .event("mousemove", pv.Behavior.point(30));
 
       /* Title bar. */
       cell.add(pv.Bar)
@@ -61,8 +63,6 @@
       var dot = cell.add(pv.Panel)
           .data(function(site) site.values)
           .top(23)
-          .events("all")
-          .event("mousemove", pv.Behavior.point(30))
         .add(pv.Dot)
           .data(function(year) year.values)
           .def("active", -1)
