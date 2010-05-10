@@ -7,7 +7,7 @@ pv.Behavior.tipsy = function(opts) {
    * lines) when the mouse isn't actually over the span.
    */
   function trigger() {
-    $(tip).trigger("mouseleave");
+    $(tip).tipsy("hide");
   }
 
   /**
@@ -49,21 +49,21 @@ pv.Behavior.tipsy = function(opts) {
        * rounding implementation can be off by one pixel.
        */
       if (this.properties.width) {
-        tip.style.width = Math.ceil(this.width() * t.k) + 1;
-        tip.style.height = Math.ceil(this.height() * t.k) + 1;
+        tip.style.width = Math.ceil(this.width() * t.k) + 1 + "px";
+        tip.style.height = Math.ceil(this.height() * t.k) + 1 + "px";
       } else if (this.properties.radius) {
         var r = this.radius();
         t.x -= r;
         t.y -= r;
-        tip.style.height = tip.style.width = Math.ceil(2 * r * t.k);
+        tip.style.height = tip.style.width = Math.ceil(2 * r * t.k) + "px";
       }
-      tip.style.left = Math.floor(this.left() * t.k + t.x);
-      tip.style.top = Math.floor(this.top() * t.k + t.y);
+      tip.style.left = Math.floor(this.left() * t.k + t.x) + "px";
+      tip.style.top = Math.floor(this.top() * t.k + t.y) + "px";
 
       /*
        * Cleanup the tooltip span on mouseout. Immediately trigger the tooltip;
        * this is necessary for dimensionless marks.
        */
-      $(tip).mouseleave(cleanup).trigger("mouseenter");
+      $(tip).mouseleave(cleanup).tipsy("show");
     };
 };
