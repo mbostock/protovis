@@ -47,13 +47,13 @@
       <iframe id="iframe" style="height:760px;" src="caltrain-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
-      href="caltrain-interactive.html" target="_blank">View full screen.</a>
+      href="caltrain-full.html" target="_blank">View full screen.</a>
       </p>
 
       <p>This example displays the <a href="http://www.caltrain.com/timetable.html">CalTrain Timetable</a> in the style of <a href="http://en.wikipedia.org/wiki/%C3%89tienne-Jules_Marey">E. J. Marey’s</a> <a href="marey-train-schedule.jpg">graphical train schedule</a>.
       Arrivals and departures from a station are indicated by the horizontal lines. Stations are separated in proportion to their actual distance apart.
       The slope of the line reflects the speed of the train: the more nearly vertical the line, the faster the train.</p>
-      <p>A more complicated example that includes more interaction can be found <a href="caltrain-interactive.html">here</a>.</p>
+      <p>A more complicated example that includes more interaction can be found <a href="caltrain-full.html">here</a>.</p>
 
       <blockquote style="font-size:13px;">
         Next: <a href="treemap.html">Treemap</a>

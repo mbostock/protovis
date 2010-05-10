@@ -1,37 +1,44 @@
 <html> 
   <head> 
-    <title>CalTrain Timetable</title> 
+    <title>CalTrain Timetable</title>
+    <link type="text/css" rel="stylesheet" href="../ex.css?3.2"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
     <script type="text/javascript" src="caltrain.js"></script>
     <style type="text/css"> 
       body {
         font: 10px sans-serif;
       }
+
+      #fig {
+        width: 800px;
+        height: 1400px;
+      }
       
-      div {
+      #controls {
         padding-left: 100;
         padding-right: 100;
       }
     </style>
   </head> 
-  <body>
-    <div>
+  <body><div id="center"><div id="fig">
+    <div id="controls" >
       Show:
-      <select onchange="show = this.value; vis.render();">
-        <option value="ALL" selected>all trains</option> 
-        <option value="N">northbound trains only</option> 
-        <option value="S">southbound trains only</option> 
-      </select>
+      <input type="checkbox" checked onchange="showN = this.value; vis.render();">
+      Northbound
+      <input type="checkbox" checked onchange="showS = this.value; vis.render();">
+      Sorthbound
       operating on
-      <select onchange="oper = this.value; vis.render();"> 
-        <option value="Wk" selected>weekdays</option> 
-        <option value="Su">Sunday</option> 
-        <option value="Sa">Saturday</option> 
-      </select>
+      <input name="daySelect" value="Wk" type="radio" checked onchange="oper = this.value; vis.render();">
+      weekdays
+      <input name="daySelect" value="Su" type="radio" onchange="oper = this.value; vis.render();">
+      Sunday
+      <input name="daySelect" value="Sa" type="radio" onchange="oper = this.value; vis.render();">
+      Saturday
     </div>
     <script type="text/javascript+protovis">
       // Start with showing all trains on weekdays
-      var show = "ALL",
+      var showN = true,
+          showS = true,
           oper = "Wk";
     
       // Flatten the data so that we have an array of (Train x Station x Time)
@@ -59,16 +66,14 @@
         // parse type
         stop.type = stop.train.charAt(3);
         stop.train = stop.train.substr(0,3);
-        
+
         // check to see if the stop is an interconnect
         if(stop.time.charAt(0) == "i") {
             var time = stop.time.substr(1);
-            stop.conn = true;
         } else {
             var time = stop.time;
-            stop.conn = false;
         }
-        
+
         if(time.length == 6) {
             var h = parseInt(time.substr(0, 1), 10);
             var m = parseInt(time.substr(2, 2), 10);
@@ -85,25 +90,8 @@
         stop.time = time + ((time < 180)?1440:0); // make the day switch at 3am instead of midnight
       })
       
-      // Double up each stop to with a start and an end (the end is one minute later than the start)
-      var allTrainsDbl = new Array();
-      allTrains.forEach(function(stop) {
-        stop.which = "S";
-        allTrainsDbl.push(stop);
-        var endStop = {
-            type: stop.type,
-            train: stop.train,
-            conn: stop.conn,
-            time: stop.time+1,
-            station: stop.station,
-            which: "E"
-        };
-        allTrainsDbl.push(endStop);
-      });
-      
-      
       // Nest the trains-stops by train as we will draw one line per train
-      var trains = pv.nest(allTrainsDbl)
+      var trains = pv.nest(allTrains)
           .key(function(d) d.train)
           .entries();
     
@@ -161,7 +149,8 @@
           .overflow("hidden")
           .visible(function(train) {
                 var t = train.values[0];
-                if((show!="ALL")&&(show!=t.bound)) return false;
+                if(!showN && t.bound=="N") return false;
+                if(!showS && t.bound=="S") return false;
                 if(oper=="Wk") {
                     return (t.type=="N")||(t.type=="L")||(t.type=="B");
                 } else if(oper=="Su") {
@@ -181,12 +170,8 @@
       
       // Ticks that indicate the stops
       line.add(pv.Dot)
-          .size(4)
-          .visible(function(stop) stop.which == "E")
-          .shape("tick")
-          .angle(-Math.PI / 2)
-          .strokeStyle(function(stop) (stop.conn?"#00A50D":types[stop.type]))
-          .lineWidth(function(stop) (stop.conn?2:1));
+          .size(2)
+          .fillStyle(function(stop) types[stop.type]);
 
       ////////////////////////////////////////////////////////
       // Legend
@@ -208,7 +193,7 @@
       // render eveything
       vis.render();
     </script>
-  </body> 
+  </div></div></body>
 </html>
 
 

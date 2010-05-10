@@ -35,14 +35,14 @@
           .event("mousemove", pv.Behavior.point(Infinity).collapse("y"));
 
       /* The area. */
-      panel.add(pv.Area)
+      var area = panel.add(pv.Area)
           .data(function(d) d.values)
-          .def("fillStyle", function(d) panel.i() < 0 ? c(pv.max(d.values)) : "#2ca02c")
+          .fillStyle(function(d, p) panel.i() < 0 ? c(pv.max(p.values)) : "#2ca02c")
           .left(function() panel.x()(this.index))
           .height(function(d) panel.y()(d))
           .bottom(0)
-          .event("point", function() (panel.i(this.index), label.render(), dot))
-          .event("unpoint", function() (panel.i(-1), label.render(), dot));
+          .event("point", function() (panel.i(this.index), area.render(), label.render(), dot))
+          .event("unpoint", function() (panel.i(-1), area.render(), label.render(), dot));
 
       /* The x-axis. */
       panel.add(pv.Rule)
