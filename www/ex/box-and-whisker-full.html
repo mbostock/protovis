@@ -1,0 +1,80 @@
+<html>
+  <head>
+    <title>Box and Whisker plot</title>
+    <link rel="stylesheet" type="text/css" href="ex.css"/>
+    <script type="text/javascript" src="../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="box-and-whisker.js"></script>
+    <style type="text/css">
+      #fig {
+        width: 440px;
+        height: 440px;
+      }
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <script type="text/javascript+protovis">
+
+      var w = 400,
+          h = 400,
+          x = pv.Scale.ordinal(experiments, function(e) e.id).split(0, w)
+          y = pv.Scale.linear(0, 1).range(0, h);
+
+      var vis = new pv.Panel()
+        .width(w)
+        .height(h)
+        .margin(20);
+
+      /* Add the y-axis rules */
+      vis.add(pv.Rule)
+        .data(y.ticks())
+        .bottom(y)
+        .strokeStyle(function() this.index ? "#ccc" : "#000")
+       .anchor("left").add(pv.Label)
+        .text(function(d) d.toFixed(1));
+
+      /* Add a panel for each data point */
+      var points = vis.add(pv.Panel)
+        .data(experiments)
+        .left(function(d) x(d.id));
+
+      /* Add the experiment id label */
+      points.add(pv.Label)
+        .bottom(-20)
+        .textAlign("center")
+        .text(function(d) d.id);
+
+      /* Add the range line */
+      points.add(pv.Rule)
+        .left(0)
+        .bottom(function(d) y(d.min))
+        .height(function(d) y(d.max) - y(d.min));
+
+      /* Add the min and max indicators */
+      points.add(pv.Rule)
+        .data(function(d) [d.min,d.max])
+        .bottom(y)
+        .left(-5)
+        .width(10);
+
+      /* Add the upper/lower quartile ranges */
+      points.add(pv.Bar)
+        .left(-10)
+        .width(20)
+        .bottom(function(d) y(d.lq))
+        .height(function(d) y(d.uq) - y(d.lq))
+        .fillStyle("#ffc")
+        .strokeStyle("black")
+        .antialias(false)
+        .lineWidth(1);
+
+      /* Add the median line */
+      points.add(pv.Rule)
+        .bottom(function(d) y(d.median))
+        .left(-10)
+        .width(20);
+
+      vis.render();
+
+    </script>
+  </div></div></body>
+</html>

@@ -4,6 +4,7 @@ HTML_FILES = \
 	www/ex/area.html \
 	www/ex/bar.html \
 	www/ex/barley.html \
+	www/ex/box-and-whisker.html \
 	www/ex/bullet.html \
 	www/ex/cars.html \
 	www/ex/cartogram.html \
@@ -14,6 +15,7 @@ HTML_FILES = \
 	www/ex/countries.html \
 	www/ex/crimea-rose.html \
 	www/ex/dot.html \
+	www/ex/error-points.html \
 	www/ex/eyes.html \
 	www/ex/flowers.html \
 	www/ex/grid.html \

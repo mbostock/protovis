@@ -1,0 +1,84 @@
+<html>
+  <head>
+    <title>2D Errors</title>
+    <link rel="stylesheet" type="text/css" href="ex.css"/>
+    <script type="text/javascript" src="../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="error-points.js"></script>
+    <style type="text/css">
+      #fig {
+        width: 440px;
+        height: 440px;
+      }
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <script type="text/javascript+protovis">
+
+      var w = 400,
+          h = 400,
+          x = pv.Scale.linear(0, 10).range(0, w),
+          y = pv.Scale.linear(0, 10).range(0, h);
+
+      var vis = new pv.Panel()
+        .width(w)
+        .height(h)
+        .margin(20);
+
+      /* Add the x-axis rules */
+      vis.add(pv.Rule)
+        .data(x.ticks())
+        .left(x)
+        .strokeStyle(function() this.index ? "#ccc" : "#000")
+       .anchor("bottom")
+        .add(pv.Label);
+
+      /* Add the y-axis rules */
+      vis.add(pv.Rule)
+        .data(y.ticks())
+        .bottom(y)
+        .strokeStyle(function() this.index ? "#ccc" : "#000")
+       .anchor("left")
+        .add(pv.Label);
+
+      /* Add a panel for each data point */
+      var points = vis.add(pv.Panel)
+        .data(error_points)
+        .left(function(d) x(d.x))
+        .bottom(function(d) y(d.y));
+
+      /* Add x-error indicators */
+      points.add(pv.Rule)
+        .bottom(0)
+        .left(function(d) x(-d.xerr) - x(0))
+        .width(function(d) x(2*d.xerr) - x(0));
+
+      points.add(pv.Rule)
+        .data(function(d) [-1,1])
+        .left(function(s, d) x(s * d.xerr) - x(0))
+        .bottom(-5)
+        .height(10);
+
+      /* Add y-error indicators */
+      points.add(pv.Rule)
+        .left(0)
+        .bottom(function(d) y(-d.yerr) - y(0))
+        .height(function(d) y(2*d.yerr) - y(0));
+
+      points.add(pv.Rule)
+        .data(function(d) [-1,1])
+        .bottom(function(s, d) y(s * d.yerr) - y(0))
+        .left(-5)
+        .width(10);
+
+      /* Add the data dots */
+      points.add(pv.Dot)
+        .left(0)
+        .bottom(0)
+        .strokeStyle(null)
+        .fillStyle("steelblue");
+
+      vis.render();
+
+    </script>
+  </div></div></body>
+</html>

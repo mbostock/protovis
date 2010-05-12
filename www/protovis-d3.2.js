@@ -1,4 +1,4 @@
-// e657f1b4bdbef91a3779594eaa676d7d7da587ec
+// 4bd89f38d5f5898105647d6d70f39cc91b8e7991
 /**
  * @class The built-in Array class.
  * @name Array
@@ -4930,7 +4930,9 @@ pv.Colors.category19 = function() {
 /**
  * Returns a linear color ramp from the specified <tt>start</tt> color to the
  * specified <tt>end</tt> color. The color arguments may be specified either as
- * <tt>string</tt>s or as {@link pv.Color}s.
+ * <tt>string</tt>s or as {@link pv.Color}s. This is equivalent to:
+ *
+ * <pre>    pv.Scale.linear().domain(0, 1).range(...)</pre>
  *
  * @param {string} start the start color; may be a <tt>pv.Color</tt>.
  * @param {string} end the end color; may be a <tt>pv.Color</tt>.
@@ -6845,6 +6847,10 @@ pv.Mark.prototype.anchorTarget = function() {
 /**
  * Alias for setting the left, right, top and bottom properties simultaneously.
  *
+ * @see #left
+ * @see #right
+ * @see #top
+ * @see #bottom
  * @returns {pv.Mark} this.
  */
 pv.Mark.prototype.margin = function(n) {
@@ -9708,7 +9714,6 @@ pv.Force = {};
  * @name pv.Force.prototype.apply
  * @param {pv.Particle} particles particles to which to apply this force.
  * @param {pv.Quadtree} q a quadtree for spatial acceleration.
- * @returns {pv.Force} this.
  */
 /**
  * Constructs a new charge force, with an optional charge constant. The charge
@@ -9884,7 +9889,6 @@ pv.Force.charge = function(k) {
    * @name pv.Force.charge.prototype.apply
    * @param {pv.Particle} particles particles to which to apply this force.
    * @param {pv.Quadtree} q a quadtree for spatial acceleration.
-   * @returns {pv.Force.charge} this.
    */
   force.apply = function(particles, q) {
     accumulate(q.root);
@@ -9896,21 +9900,32 @@ pv.Force.charge = function(k) {
   return force;
 };
 /**
- * @class
- * @name pv.Force.drag
- * @constructor
- * @param {number} k
+ * Constructs a new drag force with the specified constant.
+ *
+ * @class Implements a drag force, simulating friction. The drag force is
+ * applied in the opposite direction of the particle's velocity. Since Position
+ * Verlet integration does not track velocities explicitly, the error term with
+ * this estimate of velocity is fairly high, so the drag force may be
+ * inaccurate.
+ *
+ * @extends pv.Force
+ * @param {number} k the drag constant.
+ * @see #constant
  */
 pv.Force.drag = function(k) {
   var force = {};
 
-  if (!arguments.length) k = .1;
+  if (!arguments.length) k = .1; // default drag constant
 
   /**
+   * Sets or gets the drag constant, in the range [0,1]. The default drag
+   * constant is 0.1. The drag forces scales linearly with the particle's
+   * velocity based on the given drag constant.
+   *
    * @function
    * @name pv.Force.drag.prototype.constant
-   * @param {number} x
-   * @returns {pv.Force.drag} this.
+   * @param {number} x the new drag constant.
+   * @returns {pv.Force.drag} this, or the current drag constant.
    */
   force.constant = function(x) {
     if (arguments.length) { k = x; return force; }
@@ -9918,24 +9933,43 @@ pv.Force.drag = function(k) {
   };
 
   /**
+   * Applies this force to the specified particles.
+   *
    * @function
    * @name pv.Force.drag.prototype.apply
-   * @param {pv.Particle} particles
-   * @returns {pv.Force.drag} this.
+   * @param {pv.Particle} particles particles to which to apply this force.
    */
   force.apply = function(particles) {
     if (k) for (var p = particles; p; p = p.next) {
-      p.fx = k * (p.fx - p.x + p.px);
-      p.fy = k * (p.fy - p.y + p.py);
+      p.fx -= k * p.vx;
+      p.fy -= k * p.vy;
     }
   };
 
   return force;
 };
 /**
- * @class
- * @constructor
- * @param {number} k
+ * Constructs a new spring force with the specified constant. The links
+ * associated with this spring force must be specified before the spring force
+ * can be applied.
+ *
+ * @class Implements a spring force, per Hooke's law. The spring force can be
+ * configured with a tension constant, rest length, and damping factor. The
+ * tension and damping will automatically be normalized using the inverse square
+ * root of the maximum link degree of attached nodes; this makes springs weaker
+ * between nodes of high link degree.
+ *
+ * <p>Unlike other forces (such as charge and drag forces) which may be applied
+ * globally, spring forces are only applied between linked particles. Therefore,
+ * an array of links must be specified before this force can be applied; the
+ * links should be an array of {@link pv.Layout.Network.Link}s. See also
+ * {@link pv.Layout.Force} for an example of using spring and charge forces for
+ * network layout.
+ *
+ * @extends pv.Force
+ * @param {number} k the spring constant.
+ * @see #constant
+ * @see #links
  */
 pv.Force.spring = function(k) {
   var d = .1, // default damping factor
@@ -9947,10 +9981,16 @@ pv.Force.spring = function(k) {
   if (!arguments.length) k = .1; // default spring constant (tension)
 
   /**
+   * Sets or gets the links associated with this spring force. Unlike other
+   * forces (such as charge and drag forces) which may be applied globally,
+   * spring forces are only applied between linked particles. Therefore, an
+   * array of links must be specified before this force can be applied; the
+   * links should be an array of {@link pv.Layout.Network.Link}s.
+   *
    * @function
    * @name pv.Force.spring.prototype.links
-   * @param {array} x
-   * @returns {pv.Force.spring} this.
+   * @param {array} x the new array of links.
+   * @returns {pv.Force.spring} this, or the current array of links.
    */
   force.links = function(x) {
     if (arguments.length) {
@@ -9966,10 +10006,15 @@ pv.Force.spring = function(k) {
   };
 
   /**
+   * Sets or gets the spring constant. The default value is 0.1; greater values
+   * will result in stronger tension. The spring tension is automatically
+   * normalized using the inverse square root of the maximum link degree of
+   * attached nodes.
+   *
    * @function
    * @name pv.Force.spring.prototype.constant
-   * @param {number} x
-   * @returns {pv.Force.spring} this.
+   * @param {number} x the new spring constant.
+   * @returns {pv.Force.spring} this, or the current spring constant.
    */
   force.constant = function(x) {
     if (arguments.length) {
@@ -9980,10 +10025,16 @@ pv.Force.spring = function(k) {
   };
 
   /**
+   * The spring damping factor, in the range [0,1]. Damping functions
+   * identically to drag forces, damping spring bounciness by applying a force
+   * in the opposite direction of attached nodes' velocities. The default value
+   * is 0.1. The spring damping is automatically normalized using the inverse
+   * square root of the maximum link degree of attached nodes.
+   *
    * @function
    * @name pv.Force.spring.prototype.damping
-   * @param {number} x
-   * @returns {pv.Force.spring} this.
+   * @param {number} x the new spring damping factor.
+   * @returns {pv.Force.spring} this, or the current spring damping factor.
    */
   force.damping = function(x) {
     if (arguments.length) {
@@ -9994,10 +10045,12 @@ pv.Force.spring = function(k) {
   };
 
   /**
+   * The spring rest length. The default value is 20 pixels.
+   *
    * @function
    * @name pv.Force.spring.prototype.length
-   * @param {number} x
-   * @returns {pv.Force.spring} this.
+   * @param {number} x the new spring rest length.
+   * @returns {pv.Force.spring} this, or the current spring rest length.
    */
   force.length = function(x) {
     if (arguments.length) {
@@ -10008,10 +10061,11 @@ pv.Force.spring = function(k) {
   };
 
   /**
+   * Applies this force to the specified particles.
+   *
    * @function
    * @name pv.Force.spring.prototype.apply
-   * @param {pv.Particle} particles
-   * @returns {pv.Force.spring} this.
+   * @param {pv.Particle} particles particles to which to apply this force.
    */
   force.apply = function(particles) {
     for (var i = 0; i < links.length; i++) {
@@ -10153,7 +10207,6 @@ pv.Constraint.collision = function(radius) {
    * @name pv.Constraint.collision.prototype.apply
    * @param {pv.Particle} particles particles to which to apply this constraint.
    * @param {pv.Quadtree} q a quadtree for spatial acceleration.
-   * @returns {pv.Constraint.collision} this.
    */
   constraint.apply = function(particles, q) {
     var p, r, max = -Infinity;
@@ -10233,7 +10286,6 @@ pv.Constraint.position = function(f) {
    * @function
    * @name pv.Constraint.position.prototype.apply
    * @param {pv.Particle} particles particles to which to apply this constraint.
-   * @returns {pv.Constraint.position} this.
    */
   constraint.apply = function(particles) {
     for (var p = particles; p; p = p.next) {
@@ -10310,7 +10362,6 @@ pv.Constraint.bound = function() {
    * @function
    * @name pv.Constraint.bound.prototype.apply
    * @param {pv.Particle} particles particles to which to apply this constraint.
-   * @returns {pv.Constraint.bound} this.
    */
   constraint.apply = function(particles) {
     if (x) for (var p = particles; p; p = p.next) {
@@ -10933,7 +10984,7 @@ pv.Layout.Hierarchy.Fill = {
  * directly; instead, they are added to an existing panel via
  * {@link pv.Mark#add}.
  *
- * @class Represents a grid layout with regularly-sized rows and columns. The
+ * @class Implements a grid layout with regularly-sized rows and columns. The
  * number of rows and columns are determined from their respective
  * properties. For example, the 2&times;3 array:
  *
@@ -11052,7 +11103,7 @@ pv.Layout.Grid.prototype.buildImplied = function(s) {
  * directly; instead, they are added to an existing panel via
  * {@link pv.Mark#add}.
  *
- * @class Represents a layout for stacked visualizations, ranging from simple
+ * @class Implements a layout for stacked visualizations, ranging from simple
  * stacked bar charts to more elaborate "streamgraphs" composed of stacked
  * areas. Stack layouts uses length as a visual encoding, as opposed to
  * position, as the layers do not share an aligned axis.
@@ -11312,6 +11363,13 @@ pv.Layout.Stack.prototype = pv.extend(pv.Layout)
     .property("order", String)
     .property("layers");
 
+/**
+ * Default properties for stack layouts. The default orientation is
+ * "bottom-left", the default offset is "zero", and the default layers is
+ * <tt>[[]]</tt>.
+ *
+ * @type pv.Layout.Stack
+ */
 pv.Layout.Stack.prototype.defaults = new pv.Layout.Stack()
     .extend(pv.Layout.prototype.defaults)
     .orient("bottom-left")
@@ -11432,33 +11490,39 @@ pv.Layout.Stack.prototype.values = function(f) {
  * @name pv.Layout.Stack.prototype.offset
  */
 /**
- * Returns a new treemap layout.
+ * Constructs a new, empty treemap layout. Layouts are not typically
+ * constructed directly; instead, they are added to an existing panel via
+ * {@link pv.Mark#add}.
  *
- * @class A tree layout in the form of an treemap.
- * <img src="../treemap.png" width="160" height="160" align="right"> Treemaps
- * are a form of space-filling layout that represents nodes as boxes, with child
+ * @class Implements a space-filling rectangular layout, with the hierarchy
+ * represented via containment. Treemaps represent nodes as boxes, with child
  * nodes placed within parent boxes. The size of each box is proportional to the
- * size of the node in the tree.
+ * size of the node in the tree. This particular algorithm is taken from Bruls,
+ * D.M., C. Huizing, and J.J. van Wijk, <a
+ * href="http://www.win.tue.nl/~vanwijk/stm.pdf">"Squarified Treemaps"</a> in
+ * <i>Data Visualization 2000, Proceedings of the Joint Eurographics and IEEE
+ * TCVG Sumposium on Visualization</i>, 2000, pp. 33-42.
  *
- * <p>This particular algorithm is taken from Bruls, D.M., C. Huizing, and
- * J.J. van Wijk, <a href="http://www.win.tue.nl/~vanwijk/stm.pdf">"Squarified
- * Treemaps"</a> in <i>Data Visualization 2000, Proceedings of the Joint
- * Eurographics and IEEE TCVG Sumposium on Visualization</i>, 2000, pp. 33-42.
+ * <p>The meaning of the exported mark prototypes changes slightly in the
+ * space-filling implementation:<ul>
  *
- * <p>This tree layout is intended to be used with a {@link pv.Bar} or {@link
- * pv.Panel}. The nodes will be populated with the following attributes:
+ * <li><tt>node</tt> - for rendering nodes; typically a {@link pv.Bar}. The node
+ * data is populated with <tt>dx</tt> and <tt>dy</tt> attributes, in addition to
+ * the standard <tt>x</tt> and <tt>y</tt> position attributes.
  *
- * <ul>
- * <li><tt>x</tt> - the cell left position.
- * <li><tt>y</tt> - the cell top position.
- * <li><tt>dx</tt> - the cell width.
- * <li><tt>dy</tt> - the cell height.
- * <li><tt>depth</tt> - the node depth (tier; the root is 0).
- * </ul>
+ * <p><li><tt>leaf</tt> - for rendering leaf nodes only, with no fill or stroke
+ * style by default; typically a {@link pv.Panel} or another layout!
+ *
+ * <p><li><tt>link</tt> - unsupported; undefined. Links are encoded implicitly
+ * in the arrangement of the space-filling nodes.
+ *
+ * <p><li><tt>label</tt> - for rendering node labels; typically a
+ * {@link pv.Label}.
+ *
+ * </ul>For more details on how to use this layout, see
+ * {@link pv.Layout.Hierarchy}.
  *
  * @extends pv.Layout.Hierarchy
- * @constructor
- * @returns {pv.Layout.Treemap} a treemap layout.
  */
 pv.Layout.Treemap = function() {
   pv.Layout.Hierarchy.call(this);
@@ -11495,42 +11559,81 @@ pv.Layout.Treemap.prototype = pv.extend(pv.Layout.Hierarchy)
     .property("mode", String)
     .property("order", String);
 
+/**
+ * Default propertiess for treemap layouts. The default mode is "squarify" and
+ * the default order is "ascending".
+ *
+ * @type pv.Layout.Treemap
+ */
 pv.Layout.Treemap.prototype.defaults = new pv.Layout.Treemap()
     .extend(pv.Layout.Hierarchy.prototype.defaults)
     .mode("squarify") // squarify, slice-and-dice, slice, dice
     .order("ascending"); // ascending, descending, reverse, null
 
 /**
+ * Whether node sizes should be rounded to integer values. This has a similar
+ * effect to setting <tt>antialias(false)</tt> for node values, but allows the
+ * treemap algorithm to accumulate error related to pixel rounding.
+ *
  * @type boolean
  * @name pv.Layout.Treemap.prototype.round
  */
 
 /**
+ * The left inset between parent add child in pixels. Defaults to 0.
+ *
  * @type number
  * @name pv.Layout.Treemap.prototype.paddingLeft
+ * @see #padding
  */
 
 /**
+ * The right inset between parent add child in pixels. Defaults to 0.
+ *
  * @type number
  * @name pv.Layout.Treemap.prototype.paddingRight
+ * @see #padding
  */
 
 /**
+ * The top inset between parent and child in pixels. Defaults to 0.
+ *
  * @type number
  * @name pv.Layout.Treemap.prototype.paddingTop
+ * @see #padding
  */
 
 /**
+ * The bottom inset between parent and child in pixels. Defaults to 0.
+ *
  * @type number
  * @name pv.Layout.Treemap.prototype.paddingBottom
+ * @see #padding
  */
 
 /**
+ * The treemap algorithm. The default value is "squarify". The "slice-and-dice"
+ * algorithm may also be used, which alternates between horizontal and vertical
+ * slices for different depths. In addition, the "slice" and "dice" algorithms
+ * may be specified explicitly to control whether horizontal or vertical slices
+ * are used, which may be useful for nested treemap layouts.
+ *
  * @type string
  * @name pv.Layout.Treemap.prototype.mode
+ * @see <a
+ * href="ftp://ftp.cs.umd.edu/pub/hcil/Reports-Abstracts-Bibliography/2001-06html/2001-06.pdf"
+ * >"Ordered Treemap Layouts"</a> by B. Shneiderman &amp; M. Wattenberg, IEEE
+ * InfoVis 2001.
  */
 
 /**
+ * The sibling node order. A <tt>null</tt> value means to use the sibling order
+ * specified by the nodes property as-is; "reverse" will reverse the given
+ * order. The default value "ascending" will sort siblings in ascending order of
+ * size, while "descending" will do the reverse. For sorting based on data
+ * attributes other than size, use the default <tt>null</tt> for the order
+ * property, and sort the nodes beforehand using the {@link pv.Dom} operator.
+ *
  * @type string
  * @name pv.Layout.Treemap.prototype.order
  */
@@ -11539,27 +11642,32 @@ pv.Layout.Treemap.prototype.defaults = new pv.Layout.Treemap()
  * Alias for setting the left, right, top and bottom padding properties
  * simultaneously.
  *
+ * @see #paddingLeft
+ * @see #paddingRight
+ * @see #paddingTop
+ * @see #paddingBottom
  * @returns {pv.Layout.Treemap} this.
  */
 pv.Layout.Treemap.prototype.padding = function(n) {
   return this.paddingLeft(n).paddingRight(n).paddingTop(n).paddingBottom(n);
 };
 
-/** @private */
+/** @private The default size function. */
 pv.Layout.Treemap.prototype.$size = function(d) {
   return Number(d.nodeValue);
 };
 
 /**
- * Specifies the sizing function. By default, a sizing function is disabled and
- * all nodes are given constant size. The sizing function is invoked for each
- * leaf node in the tree (passed to the constructor).
+ * Specifies the sizing function. By default, the size function uses the
+ * <tt>nodeValue</tt> attribute of nodes as a numeric value: <tt>function(d)
+ * Number(d.nodeValue)</tt>.
  *
- * <p>For example, if the tree data structure represents a file system, with
- * files as leaf nodes, and each file has a <tt>bytes</tt> attribute, you can
- * specify a size function as:
+ * <p>The sizing function is invoked for each leaf node in the tree, per the
+ * <tt>nodes</tt> property. For example, if the tree data structure represents a
+ * file system, with files as leaf nodes, and each file has a <tt>bytes</tt>
+ * attribute, you can specify a size function as:
  *
- * <pre>.size(function(d) d.bytes)</pre>
+ * <pre>    .size(function(d) d.bytes)</pre>
  *
  * @param {function} f the new sizing function.
  * @returns {pv.Layout.Treemap} this.
@@ -11729,10 +11837,27 @@ pv.Layout.Treemap.prototype.buildImplied = function(s) {
   root.visitBefore(layout);
 };
 /**
- * @class
+ * Constructs a new, empty tree layout. Layouts are not typically constructed
+ * directly; instead, they are added to an existing panel via
+ * {@link pv.Mark#add}.
+ *
+ * @class Implements a node-link tree diagram using the Reingold-Tilford "tidy"
+ * tree layout algorithm. The specific algorithm used by this layout is based on
+ * <a href="http://citeseer.ist.psu.edu/buchheim02improving.html">"Improving
+ * Walker's Algorithm to Run in Linear Time"</A> by C. Buchheim, M. J&uuml;nger
+ * &amp; S. Leipert, Graph Drawing 2002. This layout supports both cartesian and
+ * radial orientations orientations for node-link diagrams.
+ *
+ * <p>The tree layout supports a "group" property, which if true causes siblings
+ * to be positioned closer together than unrelated nodes at the same depth. The
+ * layout can be configured using the <tt>depth</tt> and <tt>breadth</tt>
+ * properties, which control the increments in pixel space between nodes in both
+ * dimensions, similar to the indent layout.
+ *
+ * <p>For more details on how to use this layout, see
+ * {@link pv.Layout.Hierarchy}.
+ *
  * @extends pv.Layout.Hierarchy
- * @see http://citeseer.ist.psu.edu/buchheim02improving.html
- * @constructor
  */
 pv.Layout.Tree = function() {
   pv.Layout.Hierarchy.call(this);
@@ -11744,6 +11869,13 @@ pv.Layout.Tree.prototype = pv.extend(pv.Layout.Hierarchy)
     .property("depth", Number)
     .property("orient", String);
 
+/**
+ * Default properties for tree layouts. The default orientation is "top", the
+ * default group parameter is 1, and the default breadth and depth offsets are
+ * 15 and 60 respectively.
+ *
+ * @type pv.Layout.Tree
+ */
 pv.Layout.Tree.prototype.defaults = new pv.Layout.Tree()
     .extend(pv.Layout.Hierarchy.prototype.defaults)
     .group(1)
@@ -11949,19 +12081,23 @@ pv.Layout.Tree.prototype.buildImplied = function(s) {
 };
 
 /**
+ * The offset between siblings nodes; defaults to 15.
+ *
  * @type number
  * @name pv.Layout.Tree.prototype.breadth
  */
 
 /**
+ * The offset between parent and child nodes; defaults to 60.
+ *
  * @type number
  * @name pv.Layout.Tree.prototype.depth
  */
 
 /**
- * The orientation. The default orientation is "left", which means that the root
- * node is placed on the left edge, leaf nodes appear on the right edge, and
- * internal nodes are in-between. The following orientations are supported:<ul>
+ * The orientation. The default orientation is "top", which means that the root
+ * node is placed on the top edge, leaf nodes appear at the bottom, and internal
+ * nodes are in-between. The following orientations are supported:<ul>
  *
  * <li>left - left-to-right.
  * <li>right - right-to-left.
@@ -11987,7 +12123,7 @@ pv.Layout.Tree.prototype.buildImplied = function(s) {
  * directly; instead, they are added to an existing panel via
  * {@link pv.Mark#add}.
  *
- * @class Represents a hierarchical layout using the indent algorithm. This
+ * @class Implements a hierarchical layout using the indent algorithm. This
  * layout implements a node-link diagram where the nodes are presented in
  * preorder traversal, and nodes are indented based on their depth from the
  * root. This technique is used ubiquitously by operating systems to represent
@@ -12066,9 +12202,40 @@ pv.Layout.Indent.prototype.buildImplied = function(s) {
   position(nodes[0], 1, 1);
 };
 /**
- * @class
+ * Constructs a new, empty circle-packing layout. Layouts are not typically
+ * constructed directly; instead, they are added to an existing panel via
+ * {@link pv.Mark#add}.
+ *
+ * @class Implements a hierarchical layout using circle-packing. The meaning of
+ * the exported mark prototypes changes slightly in the space-filling
+ * implementation:<ul>
+ *
+ * <li><tt>node</tt> - for rendering nodes; typically a {@link pv.Dot}.
+ *
+ * <p><li><tt>link</tt> - unsupported; undefined. Links are encoded implicitly
+ * in the arrangement of the space-filling nodes.
+ *
+ * <p><li><tt>label</tt> - for rendering node labels; typically a
+ * {@link pv.Label}.
+ *
+ * </ul>The pack layout support dynamic sizing for leaf nodes, if a
+ * {@link #size} psuedo-property is specified. The default size function returns
+ * 1, causing all leaf nodes to be sized equally, and all internal nodes to be
+ * sized by the number of leaf nodes they have as descendants.
+ *
+ * <p>The size function can be used in conjunction with the order property,
+ * which allows the nodes to the sorted by the computed size. Note: for sorting
+ * based on other data attributes, simply use the default <tt>null</tt> for the
+ * order property, and sort the nodes beforehand using the {@link pv.Dom}
+ * operator.
+ *
+ * <p>For more details on how to use this layout, see
+ * {@link pv.Layout.Hierarchy}.
+ *
  * @extends pv.Layout.Hierarchy
- * @constructor
+ * @see <a href="http://portal.acm.org/citation.cfm?id=1124772.1124851"
+ * >"Visualization of large hierarchical data by circle packing"</a> by W. Wang,
+ * H. Wang, G. Dai, and H. Wang, ACM CHI 2006.
  */
 pv.Layout.Pack = function() {
   pv.Layout.Hierarchy.call(this);
@@ -12089,17 +12256,36 @@ pv.Layout.Pack.prototype = pv.extend(pv.Layout.Hierarchy)
     .property("spacing", Number)
     .property("order", String); // ascending, descending, reverse, null
 
+/**
+ * Default properties for circle-packing layouts. The default spacing parameter
+ * is 1 and the default order is "ascending".
+ *
+ * @type pv.Layout.Pack
+ */
 pv.Layout.Pack.prototype.defaults = new pv.Layout.Pack()
     .extend(pv.Layout.Hierarchy.prototype.defaults)
     .spacing(1)
     .order("ascending");
 
 /**
+ * The spacing parameter; defaults to 1, which provides a little bit of padding
+ * between sibling nodes and the enclosing circle. Larger values increase the
+ * spacing, by making the sibling nodes smaller; a value of zero makes the leaf
+ * nodes as large as possible, with no padding on enclosing circles.
+ *
  * @type number
  * @name pv.Layout.Pack.prototype.spacing
  */
 
 /**
+ * The sibling node order. The default order is <tt>null</tt>, which means to
+ * use the sibling order specified by the nodes property as-is. A value of
+ * "ascending" will sort siblings in ascending order of size, while "descending"
+ * will do the reverse. For sorting based on data attributes other than size,
+ * use the default <tt>null</tt> for the order property, and sort the nodes
+ * beforehand using the {@link pv.Dom} operator.
+ *
+ * @see pv.Dom.Node#sort
  * @type string
  * @name pv.Layout.Pack.prototype.order
  */
@@ -12119,7 +12305,10 @@ pv.Layout.Pack.prototype.$radius = function() { return 1; };
  * files as leaf nodes, and each file has a <tt>bytes</tt> attribute, you can
  * specify a size function as:
  *
- * <pre>.size(function(d) d.bytes)</pre>
+ * <pre>    .size(function(d) d.bytes)</pre>
+ *
+ * As with other properties, a size function may specify additional arguments to
+ * access the data associated with the layout and any enclosing panels.
  *
  * @param {function} f the new sizing function.
  * @returns {pv.Layout.Pack} this.
@@ -12336,9 +12525,49 @@ pv.Layout.Pack.prototype.buildImplied = function(s) {
   transform(root, w / 2, h / 2, k);
 };
 /**
- * @class Force-directed network layout.
+ * Constructs a new, empty force-directed layout. Layouts are not typically
+ * constructed directly; instead, they are added to an existing panel via
+ * {@link pv.Mark#add}.
+ *
+ * @class Implements force-directed network layout as a node-link diagram. This
+ * layout uses the Fruchterman-Reingold algorithm, which applies an attractive
+ * spring force between neighboring nodes, and a repulsive electrical charge
+ * force between all nodes. An additional drag force improves stability of the
+ * simulation. See {@link pv.Force.spring}, {@link pv.Force.drag} and {@link
+ * pv.Force.charge} for more details; note that the n-body charge force is
+ * approximated using the Barnes-Hut algorithm.
+ *
+ * <p>This layout is implemented on top of {@link pv.Simulation}, which can be
+ * used directly for more control over simulation parameters. The simulation
+ * uses Position Verlet integration, which does not compute velocities
+ * explicitly, but allows for easy geometric constraints, such as bounding the
+ * nodes within the layout panel. Many of the configuration properties supported
+ * by this layout are simply passed through to the underlying forces and
+ * constraints of the simulation.
+ *
+ * <p>Force layouts are typically interactive. The gradual movement of the nodes
+ * as they stabilize to a local stress minimum can help reveal the structure of
+ * the network, as can {@link pv.Behavior.drag}, which allows the user to pick
+ * up nodes and reposition them while the physics simulation continues. This
+ * layout can also be used with pan &amp; zoom behaviors for interaction.
+ *
+ * <p>To facilitate interaction, this layout by default automatically re-renders
+ * using a <tt>setInterval</tt> every 42 milliseconds. This can be disabled via
+ * the <tt>iterations</tt> property, which if non-null specifies the number of
+ * simulation iterations to run before the force-directed layout is finalized.
+ * Be careful not to use too high an iteration count, as this can lead to an
+ * annoying delay on page load.
+ *
+ * <p>As with other network layouts, the network data can be updated
+ * dynamically, provided the property cache is reset. See
+ * {@link pv.Layout.Network} for details. New nodes are initialized with random
+ * positions near the center. Alternatively, positions can be specified manually
+ * by setting the <tt>x</tt> and <tt>y</tt> attributes on nodes.
+ *
  * @extends pv.Layout.Network
- * @constructor
+ * @see <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.13.8444&rep=rep1&type=pdf"
+ * >"Graph Drawing by Force-directed Placement"</a> by T. Fruchterman &amp;
+ * E. Reingold, Software--Practice &amp; Experience, November 1991.
  */
 pv.Layout.Force = function() {
   pv.Layout.Network.call(this);
@@ -12361,55 +12590,146 @@ pv.Layout.Force.prototype = pv.extend(pv.Layout.Network)
     .property("springLength", Number);
 
 /**
+ * The bound parameter; true if nodes should be constrained within the layout
+ * panel. Bounding is disabled by default. Currently the layout does not observe
+ * the radius of the nodes; strictly speaking, only the center of the node is
+ * constrained to be within the panel, with an additional 6-pixel offset for
+ * padding. A future enhancement could extend the bound constraint to observe
+ * the node's radius, which would also support bounding for variable-size nodes.
+ *
+ * <p>Note that if this layout is used in conjunction with pan &amp; zoom
+ * behaviors, those behaviors should have their bound parameter set to the same
+ * value.
+ *
  * @type boolean
  * @name pv.Layout.Force.prototype.bound
  */
 
 /**
+ * The number of simulation iterations to run, or null if this layout is
+ * interactive. Force-directed layouts are interactive by default, using a
+ * <tt>setInterval</tt> to advance the physics simulation and re-render
+ * automatically.
+ *
  * @type number
  * @name pv.Layout.Force.prototype.iterations
  */
 
 /**
+ * The drag constant, in the range [0,1]. A value of 0 means no drag (a
+ * perfectly frictionless environment), while a value of 1 means friction
+ * immediately cancels all momentum. The default value is 0.1, which provides a
+ * minimum amount of drag that helps stabilize bouncy springs; lower values may
+ * result in excessive bounciness, while higher values cause the simulation to
+ * take longer to converge.
+ *
  * @type number
  * @name pv.Layout.Force.prototype.dragConstant
+ * @see pv.Force.drag#constant
  */
 
 /**
+ * The charge constant, which should be a negative number. The default value is
+ * -40; more negative values will result in a stronger repulsive force, which
+ * may lead to faster convergence at the risk of instability. Too strong
+ * repulsive charge forces can cause comparatively weak springs to be stretched
+ * well beyond their rest length, emphasizing global structure over local
+ * structure. A nonnegative value will break the Fruchterman-Reingold algorithm,
+ * and is for entertainment purposes only.
+ *
  * @type number
  * @name pv.Layout.Force.prototype.chargeConstant
+ * @see pv.Force.charge#constant
  */
 
 /**
+ * The minimum distance at which charge forces are applied. The default minimum
+ * distance of 2 avoids applying forces that are two strong; because the physics
+ * simulation is run at discrete time intervals, it is possible for two same-
+ * charged particles to become very close or even a singularity! Since the
+ * charge force is inversely proportional to the square of the distance, very
+ * small distances can break the simulation.
+ *
+ * <p>In rare cases, two particles can become stuck on top of each other, as a
+ * minimum distance threshold will prevent the charge force from repelling them.
+ * However, this occurs very rarely because other forces and momentum typically
+ * cause the particles to become separated again, at which point the repulsive
+ * charge force kicks in.
+ *
  * @type number
  * @name pv.Layout.Force.prototype.chargeMinDistance
+ * @see pv.Force.charge#domain
  */
 
 /**
+ * The maximum distance at which charge forces are applied. This improves
+ * performance by ignoring weak charge forces at great distances. Note that this
+ * parameter is partly redundant, as the Barnes-Hut algorithm for n-body forces
+ * already improves performance for far-away particles through approximation.
+ *
  * @type number
  * @name pv.Layout.Force.prototype.chargeMaxDistance
+ * @see pv.Force.charge#domain
  */
 
 /**
+ * The Barnes-Hut approximation factor. The Barnes-Hut approximation criterion
+ * is the ratio of the size of the quadtree node to the distance from the point
+ * to the node's center of mass is beneath some threshold. The default value is
+ * 0.9.
+ *
  * @type number
  * @name pv.Layout.Force.prototype.chargeTheta
+ * @see pv.Force.charge#theta
  */
 
 /**
+ * The spring constant, which should be a positive number. The default value is
+ * 0.1; greater values will result in a stronger attractive force, which may
+ * lead to faster convergence at the risk of instability. Too strong spring
+ * forces can cause comparatively weak charge forces to be ignored, emphasizing
+ * local structure over global structure. A nonpositive value will break the
+ * Fruchterman-Reingold algorithm, and is for entertainment purposes only.
+ *
+ * <p>The spring tension is automatically normalized using the inverse square
+ * root of the maximum link degree of attached nodes.
+ *
  * @type number
  * @name pv.Layout.Force.prototype.springConstant
+ * @see pv.Force.spring#constant
  */
 
 /**
+ * The spring damping factor, in the range [0,1]. Damping functions identically
+ * to drag forces, damping spring bounciness by applying a force in the opposite
+ * direction of attached nodes' velocities. The default value is 0.3.
+ *
+ * <p>The spring damping is automatically normalized using the inverse square
+ * root of the maximum link degree of attached nodes.
+ *
  * @type number
  * @name pv.Layout.Force.prototype.springDamping
+ * @see pv.Force.spring#damping
  */
 
 /**
+ * The spring rest length. The default value is 20 pixels. Larger values may be
+ * appropriate if the layout panel is larger, or if the nodes are rendered
+ * larger than the default dot size of 20.
+ *
  * @type number
  * @name pv.Layout.Force.prototype.springLength
+ * @see pv.Force.spring#length
  */
 
+/**
+ * Default properties for force-directed layouts. The default drag constant is
+ * 0.1, the default charge constant is -40 (with a domain of [2, 500] and theta
+ * of 0.9), and the default spring constant is 0.1 (with a damping of 0.3 and a
+ * rest length of 20).
+ *
+ * @type pv.Layout.Force
+ */
 pv.Layout.Force.prototype.defaults = new pv.Layout.Force()
     .extend(pv.Layout.Network.prototype.defaults)
     .dragConstant(.1)
@@ -12418,7 +12738,7 @@ pv.Layout.Force.prototype.defaults = new pv.Layout.Force()
     .chargeMaxDistance(500)
     .chargeTheta(.9)
     .springConstant(.1)
-    .springDamping(.1)
+    .springDamping(.3)
     .springLength(20);
 
 /** @private Initialize the physics simulation. */
@@ -12503,12 +12823,11 @@ pv.Layout.Force.prototype.buildImplied = function(s) {
       var render = false;
       for (var f = that.binds.$force; f; f = f.next) {
         if (pv.max(f.nodes, speed) > f.min) {
-          var then = Date.now();
-          do { f.sim.step(); } while (Date.now() - then < 20);
+          f.sim.step();
           render = true;
         }
       }
-      if (render) that.parent.render();
+      if (render) that.render();
     }, 42);
   } else for (var i = 0; i < k; i++) {
     sim.step();
@@ -12519,7 +12838,7 @@ pv.Layout.Force.prototype.buildImplied = function(s) {
  * constructed directly; instead, they are added to an existing panel via
  * {@link pv.Mark#add}.
  *
- * @class Represents a hierarchical layout using the cluster (or dendrogram)
+ * @class Implements a hierarchical layout using the cluster (or dendrogram)
  * algorithm. This layout provides both node-link and space-filling
  * implementations of cluster diagrams. In many ways it is similar to
  * {@link pv.Layout.Partition}, except that leaf nodes are positioned at maximum
@@ -12608,6 +12927,12 @@ pv.Layout.Cluster.prototype = pv.extend(pv.Layout.Hierarchy)
  * @name pv.Layout.Cluster.prototype.outerRadius
  */
 
+/**
+ * Defaults for cluster layouts. The default group parameter is 0 and the
+ * default orientation is "top".
+ *
+ * @type pv.Layout.Cluster
+ */
 pv.Layout.Cluster.prototype.defaults = new pv.Layout.Cluster()
     .extend(pv.Layout.Hierarchy.prototype.defaults)
     .group(0)
@@ -12718,7 +13043,7 @@ pv.Layout.Cluster.Fill.prototype.buildImplied = function(s) {
  * constructed directly; instead, they are added to an existing panel via
  * {@link pv.Mark#add}.
  *
- * @class Represents a hierarchical layout using the partition (or sunburst,
+ * @class Implemeents a hierarchical layout using the partition (or sunburst,
  * icicle) algorithm. This layout provides both node-link and space-filling
  * implementations of partition diagrams. In many ways it is similar to
  * {@link pv.Layout.Cluster}, except that leaf nodes are positioned based on
@@ -12727,11 +13052,13 @@ pv.Layout.Cluster.Fill.prototype.buildImplied = function(s) {
  * <p>The partition layout support dynamic sizing for leaf nodes, if a
  * {@link #size} psuedo-property is specified. The default size function returns
  * 1, causing all leaf nodes to be sized equally, and all internal nodes to be
- * sized by the number of leaf nodes they have as descendants. The size function
- * can be used in conjunction with the order property, which allows the nodes to
- * the sorted by the computed size. Note: for sorting based on other data
- * attributes, simply use the default <tt>null</tt> for the order property, and
- * sort the nodes beforehand using the {@link pv.Dom} operator.
+ * sized by the number of leaf nodes they have as descendants.
+ *
+ * <p>The size function can be used in conjunction with the order property,
+ * which allows the nodes to the sorted by the computed size. Note: for sorting
+ * based on other data attributes, simply use the default <tt>null</tt> for the
+ * order property, and sort the nodes beforehand using the {@link pv.Dom}
+ * operator.
  *
  * <p>For more details on how to use this layout, see
  * {@link pv.Layout.Hierarchy}.
@@ -12799,6 +13126,11 @@ pv.Layout.Partition.prototype = pv.extend(pv.Layout.Hierarchy)
  * @name pv.Layout.Partition.prototype.outerRadius
  */
 
+/**
+ * Default properties for partition layouts. The default orientation is "top".
+ *
+ * @type pv.Layout.Partition
+ */
 pv.Layout.Partition.prototype.defaults = new pv.Layout.Partition()
     .extend(pv.Layout.Hierarchy.prototype.defaults)
     .orient("top");
@@ -12875,9 +13207,27 @@ pv.Layout.Partition.prototype.buildImplied = function(s) {
 };
 
 /**
- * @class A variant of partition layout that is space-filling.
+ * Constructs a new, empty space-filling partition layout. Layouts are not
+ * typically constructed directly; instead, they are added to an existing panel
+ * via {@link pv.Mark#add}.
+ *
+ * @class A variant of partition layout that is space-filling. The meaning of
+ * the exported mark prototypes changes slightly in the space-filling
+ * implementation:<ul>
+ *
+ * <li><tt>node</tt> - for rendering nodes; typically a {@link pv.Bar} for
+ * non-radial orientations, and a {@link pv.Wedge} for radial orientations.
+ *
+ * <p><li><tt>link</tt> - unsupported; undefined. Links are encoded implicitly
+ * in the arrangement of the space-filling nodes.
+ *
+ * <p><li><tt>label</tt> - for rendering node labels; typically a
+ * {@link pv.Label}.
+ *
+ * </ul>For more details on how to use this layout, see
+ * {@link pv.Layout.Partition}.
+ *
  * @extends pv.Layout.Partition
- * @constructor
  */
 pv.Layout.Partition.Fill = function() {
   pv.Layout.Partition.call(this);
@@ -12896,7 +13246,7 @@ pv.Layout.Partition.Fill.prototype.buildImplied = function(s) {
  * directly; instead, they are added to an existing panel via
  * {@link pv.Mark#add}.
  *
- * @class Represents a layout for arc diagrams. An arc diagram is a network
+ * @class Implements a layout for arc diagrams. An arc diagram is a network
  * visualization with a one-dimensional layout of nodes, using circular arcs to
  * render links between nodes. For undirected networks, arcs are rendering on a
  * single side; this makes arc diagrams useful as annotations to other
@@ -13048,7 +13398,7 @@ pv.Layout.Arc.prototype.buildImplied = function(s) {
  * directly; instead, they are added to an existing panel via
  * {@link pv.Mark#add}.
  *
- * @class Represents a horizon layout, which is a variation of a single-series
+ * @class Implements a horizon layout, which is a variation of a single-series
  * area chart where the area is folded into multiple bands. Color is used to
  * encode band, allowing the size of the chart to be reduced significantly
  * without impeding readability. This layout algorithm is based on the work of
@@ -13203,9 +13553,59 @@ pv.Layout.Horizon.prototype.defaults = new pv.Layout.Horizon()
  * @name pv.Layout.Horizon.prototype.backgroundStyle
  */
 /**
- * @class
+ * Constructs a new, empty rollup network layout. Layouts are not typically
+ * constructed directly; instead, they are added to an existing panel via
+ * {@link pv.Mark#add}.
+ *
+ * @class Implements a network visualization using a node-link diagram where
+ * nodes are rolled up along two dimensions. This implementation is based on the
+ * "PivotGraph" designed by Martin Wattenberg:
+ *
+ * <blockquote>The method is designed for graphs that are "multivariate", i.e.,
+ * where each node is associated with several attributes. Unlike visualizations
+ * which emphasize global graph topology, PivotGraph uses a simple grid-based
+ * approach to focus on the relationship between node attributes &amp;
+ * connections.</blockquote>
+ *
+ * This layout requires two psuedo-properties to be specified, which assign node
+ * positions along the two dimensions {@link #x} and {@link #y}, corresponding
+ * to the left and top properties, respectively. Typically, these functions are
+ * specified using an {@link pv.Scale.ordinal}. Nodes that share the same
+ * position in <i>x</i> and <i>y</i> are "rolled up" into a meta-node, and
+ * similarly links are aggregated between meta-nodes. For example, to construct
+ * a rollup to analyze links by gender and affiliation, first define two ordinal
+ * scales:
+ *
+ * <pre>var x = pv.Scale.ordinal(nodes, function(d) d.gender).split(0, w),
+ *     y = pv.Scale.ordinal(nodes, function(d) d.aff).split(0, h);</pre>
+ *
+ * Next, define the position psuedo-properties:
+ *
+ * <pre>    .x(function(d) x(d.gender))
+ *     .y(function(d) y(d.aff))</pre>
+ *
+ * Linear and other quantitative scales can alternatively be used to position
+ * the nodes along either dimension. Note, however, that the rollup requires
+ * that the positions match exactly, and thus ordinal scales are recommended to
+ * avoid precision errors.
+ *
+ * <p>Note that because this layout provides a visualization of the rolled up
+ * graph, the data properties for the mark prototypes (<tt>node</tt>,
+ * <tt>link</tt> and <tt>label</tt>) are different from most other network
+ * layouts: they reference the rolled-up nodes and links, rather than the nodes
+ * and links of the full network. The underlying nodes and links for each
+ * rolled-up node and link can be accessed via the <tt>nodes</tt> and
+ * <tt>links</tt> attributes, respectively. The aggregated link values for
+ * rolled-up links can similarly be accessed via the <tt>linkValue</tt>
+ * attribute.
+ *
+ * <p>For undirected networks, links are duplicated in both directions. For
+ * directed networks, use <tt>directed(true)</tt>. The graph is assumed to be
+ * undirected by default.
+ *
  * @extends pv.Layout.Network
- * @constructor
+ * @see <a href="http://www.research.ibm.com/visual/papers/pivotgraph.pdf"
+ * >"Visual Exploration of Multivariate Graphs"</a> by M. Wattenberg, CHI 2006.
  */
 pv.Layout.Rollup = function() {
   pv.Layout.Network.call(this);
@@ -13243,13 +13643,24 @@ pv.Layout.Rollup.prototype = pv.extend(pv.Layout.Network)
     .property("directed", Boolean);
 
 /**
+ * Whether the underlying network is directed. By default, the graph is assumed
+ * to be undirected, and links are rendered in both directions. If the network
+ * is directed, then forward links are drawn above the diagonal, while reverse
+ * links are drawn below.
+ *
  * @type boolean
  * @name pv.Layout.Rollup.prototype.directed
  */
 
 /**
- * @param {function} f
+ * Specifies the <i>x</i>-position function used to rollup nodes. The rolled up
+ * nodes are positioned horizontally using the return values from the given
+ * function. Typically the function is specified as an ordinal scale. For
+ * single-dimension rollups, a constant value can be specified.
+ *
+ * @param {function} f the <i>x</i>-position function.
  * @returns {pv.Layout.Rollup} this.
+ * @see pv.Scale.ordinal
  */
 pv.Layout.Rollup.prototype.x = function(f) {
   this.$x = pv.functor(f);
@@ -13257,8 +13668,14 @@ pv.Layout.Rollup.prototype.x = function(f) {
 };
 
 /**
- * @param {function} f
+ * Specifies the <i>y</i>-position function used to rollup nodes. The rolled up
+ * nodes are positioned vertically using the return values from the given
+ * function. Typically the function is specified as an ordinal scale. For
+ * single-dimension rollups, a constant value can be specified.
+ *
+ * @param {function} f the <i>y</i>-position function.
  * @returns {pv.Layout.Rollup} this.
+ * @see pv.Scale.ordinal
  */
 pv.Layout.Rollup.prototype.y = function(f) {
   this.$y = pv.functor(f);
@@ -13339,9 +13756,48 @@ pv.Layout.Rollup.prototype.buildImplied = function(s) {
   };
 };
 /**
- * @class
+ * Constructs a new, empty matrix network layout. Layouts are not typically
+ * constructed directly; instead, they are added to an existing panel via
+ * {@link pv.Mark#add}.
+ *
+ * @class Implements a network visualization using a matrix view. This is, in
+ * effect, a visualization of the graph's <i>adjacency matrix</i>: the cell at
+ * row <i>i</i>, column <i>j</i>, corresponds to the link from node <i>i</i> to
+ * node <i>j</i>. The fill color of each cell is binary by default, and
+ * corresponds to whether a link exists between the two nodes. If the underlying
+ * graph has links with variable values, the <tt>fillStyle</tt> property can be
+ * substited to use an appropriate color function, such as {@link pv.ramp}.
+ *
+ * <p>For undirected networks, the matrix is symmetric around the diagonal. For
+ * directed networks, links in opposite directions can be rendered on opposite
+ * sides of the diagonal using <tt>directed(true)</tt>. The graph is assumed to
+ * be undirected by default.
+ *
+ * <p>The mark prototypes for this network layout are slightly different than
+ * other implementations:<ul>
+ *
+ * <li><tt>node</tt> - unsupported; undefined. No mark is needed to visualize
+ * nodes directly, as the nodes are implicit in the location (rows and columns)
+ * of the links.
+ *
+ * <p><li><tt>link</tt> - for rendering links; typically a {@link pv.Bar}. The
+ * link mark is added directly to the layout, with the data property defined as
+ * all possible pairs of nodes. Each pair is represented as a
+ * {@link pv.Network.Layout.Link}, though the <tt>linkValue</tt> attribute may
+ * be 0 if no link exists in the graph.
+ *
+ * <p><li><tt>label</tt> - for rendering node labels; typically a
+ * {@link pv.Label}. The label mark is added directly to the layout, with the
+ * data property defined via the layout's <tt>nodes</tt> property; note,
+ * however, that the nodes are duplicated so as to provide a label across the
+ * top and down the side. Properties such as <tt>strokeStyle</tt> and
+ * <tt>fillStyle</tt> can be overridden to compute properties from node data
+ * dynamically.
+ *
+ * </ul>For more details on how to use this layout, see
+ * {@link pv.Layout.Network}.
+ *
  * @extends pv.Layout.Network
- * @constructor
  */
 pv.Layout.Matrix = function() {
   pv.Layout.Network.call(this);
@@ -13395,14 +13851,30 @@ pv.Layout.Matrix.prototype = pv.extend(pv.Layout.Network)
     .property("directed", Boolean);
 
 /**
+ * Whether this matrix visualization is directed (bidirectional). By default,
+ * the graph is assumed to be undirected, such that the visualization is
+ * symmetric across the matrix diagonal. If the network is directed, then
+ * forward links are drawn above the diagonal, while reverse links are drawn
+ * below.
+ *
  * @type boolean
  * @name pv.Layout.Matrix.prototype.directed
  */
 
 /**
- * Specifies an optional sort function.
+ * Specifies an optional sort function. The sort function follows the same
+ * comparator contract required by {@link pv.Dom.Node#sort}. Specifying a sort
+ * function provides an alternative to sort the nodes as they are specified by
+ * the <tt>nodes</tt> property; the main advantage of doing this is that the
+ * comparator function can access implicit fields populated by the network
+ * layout, such as the <tt>linkDegree</tt>.
  *
- * @param {function} f
+ * <p>Note that matrix visualizations are particularly sensitive to order. This
+ * is referred to as the seriation problem, and many different techniques exist
+ * to find good node orders that emphasize clusters, such as spectral layout and
+ * simulated annealing.
+ *
+ * @param {function} f comparator function for nodes.
  * @returns {pv.Layout.Matrix} this.
  */
 pv.Layout.Matrix.prototype.sort = function(f) {
@@ -13797,12 +14269,10 @@ pv.Behavior.point = function(r) {
  *
  * <p>The panel being selected is automatically re-rendered for each mouse event
  * as part of the drag operation. This behavior may be enhanced in the future to
- * allow more flexible configuration of select behavior.
- *
- * In some cases, such as with parallel coordinates, making a selection may cause
- * related marks to change, in which case additional marks may also need to be
- * rendered. This can be accomplished by listening for the select
- * psuedo-events:<ul>
+ * allow more flexible configuration of select behavior. In some cases, such as
+ * with parallel coordinates, making a selection may cause related marks to
+ * change, in which case additional marks may also need to be rendered. This can
+ * be accomplished by listening for the select psuedo-events:<ul>
  *
  * <li>selectstart (on mousedown)
  * <li>select (on mousemove)
@@ -13856,6 +14326,110 @@ pv.Behavior.select = function() {
   function mouseup() {
     if (!scene) return;
     pv.Mark.dispatch("selectend", scene, index);
+    scene = null;
+  }
+
+  pv.listen(window, "mousemove", mousemove);
+  pv.listen(window, "mouseup", mouseup);
+  return mousedown;
+};
+/**
+ * Returns a new resize behavior to be registered on mousedown events.
+ *
+ * @class Implements interactive resizing of a selection starting with mousedown
+ * events. Register this behavior on selection handles that should be resizeable
+ * by the user, such for brushing and linking. This behavior can be used in
+ * tandom with {@link pv.Behavior.select} and {@link pv.Behavior.drag} to allow
+ * the selected region to be selected and dragged interactively.
+ *
+ * <p>After the initial mousedown event is triggered, this behavior listens for
+ * mousemove and mouseup events on the window. This allows resizing to continue
+ * even if the mouse temporarily leaves the assigned panel, or even the root
+ * panel.
+ *
+ * <p>This behavior requires that the data associated with the mark being
+ * resized have <tt>x</tt>, <tt>y</tt>, <tt>dx</tt> and <tt>dy</tt> attributes
+ * that correspond to the mark's location and dimensions in pixels. The mark's
+ * positional properties are not set directly by this behavior; instead, the
+ * positional properties should be defined as:
+ *
+ * <pre>    .left(function(d) d.x)
+ *     .top(function(d) d.y)
+ *     .width(function(d) d.dx)
+ *     .height(function(d) d.dy)</pre>
+ *
+ * Thus, the behavior does not resize the mark directly, but instead updates the
+ * size by updating the assigned panel's underlying data. Note that if the
+ * positional properties are defined with bottom and right (rather than top and
+ * left), the resize behavior will be inverted, which will confuse users!
+ *
+ * <p>The resize behavior is bounded by the assigned mark's enclosing panel; the
+ * positional attributes are clamped such that the selection does not extend
+ * outside the panel's bounds.
+ *
+ * <p>The mark being resized is automatically re-rendered for each mouse event
+ * as part of the resize operation. This behavior may be enhanced in the future
+ * to allow more flexible configuration. In some cases, such as with parallel
+ * coordinates, resizing the selection may cause related marks to change, in
+ * which case additional marks may also need to be rendered. This can be
+ * accomplished by listening for the select psuedo-events:<ul>
+ *
+ * <li>resizestart (on mousedown)
+ * <li>resize (on mousemove)
+ * <li>resizeend (on mouseup)
+ *
+ * </ul>For example, to render the parent panel while resizing, thus
+ * re-rendering all sibling marks:
+ *
+ * <pre>    .event("mousedown", pv.Behavior.resize("left"))
+ *     .event("resize", function() this.parent)</pre>
+ *
+ * This behavior may be enhanced in the future to allow more flexible
+ * configuration of the selection behavior.
+ *
+ * @extends pv.Behavior
+ * @see pv.Behavior.select
+ * @see pv.Behavior.drag
+ */
+pv.Behavior.resize = function(side) {
+  var scene, // scene context
+      index, // scene context
+      r, // region being selected
+      m1; // initial mouse position
+
+  /** @private */
+  function mousedown(d) {
+    index = this.index;
+    scene = this.scene;
+    m1 = this.mouse();
+    r = d;
+    switch (side) {
+      case "left": m1.x = r.x + r.dx; break;
+      case "right": m1.x = r.x; break;
+      case "top": m1.y = r.y + r.dy; break;
+      case "bottom": m1.y = r.y; break;
+    }
+    pv.Mark.dispatch("resizestart", scene, index);
+  }
+
+  /** @private */
+  function mousemove() {
+    if (!scene) return;
+    scene.mark.context(scene, index, function() {
+        var m2 = this.mouse();
+        r.x = Math.max(0, Math.min(m1.x, m2.x));
+        r.y = Math.max(0, Math.min(m1.y, m2.y));
+        r.dx = Math.min(this.parent.width(), Math.max(m2.x, m1.x)) - r.x;
+        r.dy = Math.min(this.parent.height(), Math.max(m2.y, m1.y)) - r.y;
+        this.render();
+      });
+    pv.Mark.dispatch("resize", scene, index);
+  }
+
+  /** @private */
+  function mouseup() {
+    if (!scene) return;
+    pv.Mark.dispatch("resizeend", scene, index);
     scene = null;
   }
 
