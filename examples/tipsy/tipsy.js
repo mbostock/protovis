@@ -37,6 +37,7 @@ pv.Behavior.tipsy = function(opts) {
 
         tip = c.appendChild(document.createElement("div"));
         tip.style.position = "absolute";
+        tip.style.pointerEvents = "none"; // ignore mouse events
         $(tip).tipsy(opts);
       }
 
