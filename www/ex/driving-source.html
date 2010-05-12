@@ -1,0 +1,54 @@
+<html>
+  <head>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var w = 1151,
+    h = 1145,
+    m = null,
+    year = 1956,
+    x = pv.Scale.linear(3380, 10320).range(0, w),
+    y = pv.Scale.linear(0.41, 3.42).range(0, h);
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .margin(20)
+    .events("all")
+    .event("mousemove", function() (m = this.mouse(), dot))
+    .event("click", function() console.log("  {year: " + year++ + ", miles: " + x.invert(m.x).toFixed(0) + ", gas: " + y.invert(h - m.y).toFixed(2) + "},"));
+
+vis.add(pv.Image)
+    .url("driving.jpg");
+
+vis.add(pv.Rule)
+    .data(y.ticks())
+    .bottom(y)
+    .strokeStyle("#ccc")
+  .anchor("left").add(pv.Label)
+    .text(y.tickFormat);
+
+vis.add(pv.Rule)
+    .data(x.ticks())
+    .left(x)
+    .strokeStyle("#ccc")
+  .anchor("top").add(pv.Label)
+    .text(x.tickFormat);
+
+var dot = vis.add(pv.Panel)
+    .visible(function() m);
+
+dot.add(pv.Dot)
+    .top(function() m.y)
+    .left(function() m.x)
+  .anchor("right").add(pv.Label)
+    .font("24px sans-serif")
+    .text(function() x.invert(m.x).toFixed(0) + ", " + y.invert(h - m.y).toFixed(2));
+
+vis.render();
+
+    </script>
+  </body>
+</html>
