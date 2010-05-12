@@ -23,14 +23,22 @@ vis.add(pv.Rule)
     .bottom(y)
     .strokeStyle("#ccc")
   .anchor("left").add(pv.Label)
-    .text(y.tickFormat);
+    .font("bold 12px sans-serif")
+    .textMargin(6)
+    .textAlign("left")
+    .textBaseline("bottom")
+    .text(function(d) "$" + d.toFixed(2));
 
 vis.add(pv.Rule)
     .data(x.ticks())
     .left(x)
     .strokeStyle("#ccc")
   .anchor("top").add(pv.Label)
-    .text(x.tickFormat);
+    .font("bold 12px sans-serif")
+    .textMargin(6)
+    .textAlign("left")
+    .textBaseline("top")
+    .text(function(d) pv.Format.number()(d) + " mi");
 
 vis.add(pv.Line)
     .data(driving)
