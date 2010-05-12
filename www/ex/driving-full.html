@@ -16,37 +16,29 @@ var w = 1151,
 var vis = new pv.Panel()
     .width(w)
     .height(h)
-    .margin(20)
-<!--     .events("all") -->
-<!--     .event("mousemove", function() (m = this.mouse(), dot)) -->
-<!--     .event("click", function() console.log("  {year: " + year++ + ", miles: " + x.invert(m.x).toFixed(0) + ", gas: " + y.invert(h - m.y).toFixed(2) + "},")); -->
-
-<!-- vis.add(pv.Image) -->
-<!--     .url("driving.jpg"); -->
+    .margin(20);
 
 vis.add(pv.Rule)
     .data(y.ticks())
     .bottom(y)
     .strokeStyle("#ccc")
   .anchor("left").add(pv.Label)
-    .text(y.tickFormat);
+    .font("bold 12px sans-serif")
+    .textMargin(6)
+    .textAlign("left")
+    .textBaseline("bottom")
+    .text(function(d) "$" + d.toFixed(2));
 
 vis.add(pv.Rule)
     .data(x.ticks())
     .left(x)
     .strokeStyle("#ccc")
   .anchor("top").add(pv.Label)
-    .text(x.tickFormat);
-
-<!-- var dot = vis.add(pv.Panel) -->
-<!--     .visible(function() m); -->
-
-<!-- dot.add(pv.Dot) -->
-<!--     .top(function() m.y) -->
-<!--     .left(function() m.x) -->
-<!--   .anchor("right").add(pv.Label) -->
-<!--     .font("24px sans-serif") -->
-<!--     .text(function() x.invert(m.x).toFixed(0) + ", " + y.invert(h - m.y).toFixed(2)); -->
+    .font("bold 12px sans-serif")
+    .textMargin(6)
+    .textAlign("left")
+    .textBaseline("top")
+    .text(function(d) pv.Format.number()(d) + " mi");
 
 vis.add(pv.Line)
     .data(driving)
