@@ -64,7 +64,8 @@
   });
 
 var i = 0,
-    w = 800, h = 400,
+    w = 800,
+    h = 400,
     mapMargin = 30,
     scale = pv.Geo.scale().domain({lng:-128, lat:24}, {lng:-64, lat:50}).range({x:mapMargin, y:mapMargin}, {x:w-mapMargin, y:h-mapMargin}),
     legendMargin = 20,
@@ -111,8 +112,6 @@ var i = 0,
     });
 
   function updateYear() {
-      if(ease) return;
-
       nodes.forEach(function(n) n.r = numToRad(us_stats[n.code].pop[us_stats.yearIdx(year)]*us_stats[n.code].obese[us_stats.yearIdx(year)]/100));
       links.forEach(function(l) l.length = (l.sourceNode.r + l.targetNode.r + 2));
       i = 0;
@@ -125,11 +124,6 @@ var i = 0,
 
   var timer = undefined;
   function playClick() {
-      if(ease) {
-          alert("Please wait for the map to settle.")
-          return;
-      }
-
       if (timer) {
           stop();
       } else {
@@ -170,18 +164,15 @@ var sim = pv.simulation(nodes)
 var vis = new pv.Panel()
     .width(w)
     .height(h)
-    .top(30)
-    .bottom(30)
-    //.event("mousedown", pv.Behavior.pan())
-    //.event("mousewheel", pv.Behavior.zoom())
-    .fillStyle("white");
+    .top(50)
+    .bottom(30);
 
 // Add the ticks and labels for the year slider
 vis.add(pv.Rule)
      .data(pv.range(us_stats.minYear, us_stats.maxYear+.1))
      .left(function(d) Math.round(yearsScale(d))-.5)
      .height(4)
-     .top(-20)
+     .top(-40)
    .anchor("bottom")
      .add(pv.Label)
      .font("normal 13px sans-serif");
@@ -213,8 +204,7 @@ vis.add(pv.Dot)
     .left(150)
     .bottom(-30)
     .radius(function(d) numToRad(d.v))
-  .anchor("top")
-  .add(pv.Label)
+  .anchor("top").add(pv.Label)
     .text(function(d) d.l)
 
   // Add the color bars for the color legend
@@ -242,11 +232,15 @@ ease = setInterval(function() {
     vis.render();
   }, 42);
 
-    </script>
-<div class="caption">
-Absolute number of obese people per state and percentage of obese people, represented with circle area and color respectively. California dominates the map due to its large population size, while color indicates that Mississippi and Alabama are the states with the highest obesity rate.
-<br/><br/>
-Source: <a class="source" href="http://apps.nccd.cdc.gov/brfss/page.asp?cat=OB&yr=2008&state=US#OB">National Center for Chronic Disease Prevention and Health Promotion</a>
-</div>
+    </script><p>
+    <div class="caption">
+      Absolute number of obese people per state and percentage of obese people,
+      represented with circle area and color respectively. California dominates
+      the map due to its large population size, while color indicates that
+      Mississippi and Alabama are the states with the highest obesity rate.
+      <p/> Source: <a class="source"
+      href="http://apps.nccd.cdc.gov/brfss/page.asp?cat=OB&yr=2008&state=US#OB">National
+      Center for Chronic Disease Prevention and Health Promotion</a>
+    </div>
   </div></div></body>
 </html>
