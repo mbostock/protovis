@@ -1,30 +1,30 @@
 var stationsNS = [
- {name: "San Francisco", dist: 0, zone: 1},
- {name: "22nd Street", dist: 40, zone: 1},
+ {name: "San Francisco", dist: 0, zone: 1, bullet: 1},
+ {name: "22nd Street", dist: 40, zone: 1, bullet: 1},
  {name: "Bayshore", dist: 124, zone: 1},
  {name: "So. San Francisco", dist: 178, zone: 1},
  {name: "San Bruno", dist: 216, zone: 1},
- {name: "Millbrae", dist: 249, zone: 2},
+ {name: "Millbrae", dist: 249, zone: 2, bullet: 1},
  {name: "Broadway", dist: 280, zone: 2},
  {name: "Burlingame", dist: 307, zone: 2},
- {name: "San Mateo", dist: 334, zone: 2},
+ {name: "San Mateo", dist: 334, zone: 2, bullet: 1},
  {name: "Hayward Park", dist: 354, zone: 2},
- {name: "Hillsdale", dist: 391, zone: 2},
+ {name: "Hillsdale", dist: 391, zone: 2, bullet: 1},
  {name: "Belmont", dist: 428, zone: 2},
  {name: "San Carlos", dist: 458, zone: 2},
- {name: "Redwood City", dist: 499, zone: 2},
+ {name: "Redwood City", dist: 499, zone: 2, bullet: 1},
  {name: "Atherton", dist: 543, zone: 3},
- {name: "Menlo Park", dist: 574, zone: 3},
- {name: "Palo Alto", dist: 604, zone: 3},
+ {name: "Menlo Park", dist: 574, zone: 3, bullet: 1},
+ {name: "Palo Alto", dist: 604, zone: 3, bullet: 1},
  {name: "California Ave", dist: 649, zone: 3},
  {name: "San Antonio", dist: 676, zone: 3},
- {name: "Mountain View", dist: 702, zone: 3},
- {name: "Sunnyvale", dist: 731, zone: 3},
+ {name: "Mountain View", dist: 702, zone: 3, bullet: 1},
+ {name: "Sunnyvale", dist: 731, zone: 3, bullet: 1},
  {name: "Lawrence", dist: 757, zone: 4},
  {name: "Santa Clara", dist: 805, zone: 4},
  {name: "College Park", dist: 833, zone: 4},
- {name: "San Jose", dist: 862, zone: 4},
- {name: "Tamien", dist: 906, zone: 4},
+ {name: "San Jose", dist: 862, zone: 4, bullet: 1},
+ {name: "Tamien", dist: 906, zone: 4, bullet: 1},
  {name: "Capitol", dist: 939, zone: 5},
  {name: "Blossom Hill", dist: 966, zone: 5},
  {name: "Morgan Hill", dist: 997, zone: 6},
@@ -33,11 +33,11 @@ var stationsNS = [
 ];
 
 var types = {
-    "L": "rgba(183,116,9,1)",
-    "B": "rgba(196,62,29,1)",
-    "N": "rgba(34,34,34,1)",
-    "W": "rgba(34,34,34,1)",
-    "S": "rgba(34,34,34,1)"
+  "L": "rgba(183,116,9,1)",
+  "B": "rgba(196,62,29,1)",
+  "N": "rgba(34,34,34,1)",
+  "W": "rgba(34,34,34,1)",
+  "S": "rgba(34,34,34,1)"
 };
 
 var northbound = {
@@ -102,7 +102,7 @@ var northbound = {
  "447W": ["X","X","X","X","X","X","8:00pm","-","8:05pm","8:10pm","8:14pm","8:19pm","8:23pm","8:27pm","8:31pm","8:34pm","8:37pm","8:41pm","8:45pm","8:48pm","8:51pm","8:54pm","8:57pm","9:00pm","9:03pm","9:08pm","9:12pm","9:17pm","9:23pm","9:28pm","9:36pm"],
  "449W": ["X","X","X","X","X","X","9:00pm","-","9:05pm","9:10pm","9:14pm","9:19pm","9:23pm","9:27pm","9:31pm","9:34pm","9:37pm","9:41pm","9:45pm","9:48pm","9:51pm","9:54pm","9:57pm","10:00pm","10:03pm","10:08pm","10:12pm","10:17pm","10:23pm","10:28pm","10:36pm"],
  "451S": ["X","X","X","X","X","X","10:30pm","-","10:35pm","10:40pm","10:44pm","10:49pm","10:53pm","10:57pm","11:01pm","11:04pm","11:07pm","11:11pm","11:15pm","11:18pm","11:21pm","11:24pm","11:27pm","11:30pm","11:33pm","11:38pm","11:42pm","11:47pm","11:53pm","11:58pm","12:06am"],
-}
+};
 
 var southbound = {
  "102N": ["4:55am","5:00am","5:05am","5:11am","5:15am","5:19am","-","5:23am","5:26am","5:29am","5:32am","5:35am","5:38am","5:43am","-","5:48am","5:51am","5:55am","5:59am","6:03am","6:08am","6:12am","6:17am","-","6:26am","X","X","X","X","X","X"],
@@ -166,4 +166,4 @@ var southbound = {
  "448W": ["9:15pm","9:20pm","9:25pm","9:31pm","9:35pm","9:39pm","9:43pm","9:45pm","9:49pm","9:52pm","9:55pm","9:58pm","10:01pm","10:07pm","10:11pm","10:14pm","10:17pm","10:21pm","10:25pm","10:29pm","10:34pm","10:38pm","10:43pm","-","10:51pm","X","X","X","X","X","X"],
  "450S": ["10:15pm","10:20pm","10:25pm","10:31pm","10:35pm","10:39pm","10:43pm","10:45pm","10:49pm","10:52pm","10:55pm","10:58pm","11:01pm","11:07pm","11:11pm","11:14pm","11:17pm","11:21pm","11:25pm","11:29pm","11:34pm","11:38pm","11:43pm","-","11:51pm","X","X","X","X","X","X"],
  "454S": ["12:01am","12:06am","12:11am","12:17am","12:21am","12:25am","12:29am","12:31am","12:35am","12:38am","12:41am","12:44am","12:47am","12:53am","12:57am","1:00am","1:03am","1:07am","1:11am","1:15am","1:20am","1:24am","1:29am","-","1:37am","X","X","X","X","X","X"],
-}
+};

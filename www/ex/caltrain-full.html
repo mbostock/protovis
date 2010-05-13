@@ -1,224 +1,193 @@
-<html> 
-  <head> 
+<html>
+  <head>
     <title>CalTrain Timetable</title>
-    <link type="text/css" rel="stylesheet" href="../ex.css?3.2"/>
+    <link type="text/css" rel="stylesheet" href="ex.css?3.2"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
     <script type="text/javascript" src="caltrain.js"></script>
-    <style type="text/css"> 
-      body {
-        font: 10px sans-serif;
-      }
+    <style type="text/css">
 
-      #fig {
-        width: 800px;
-        height: 1400px;
-      }
-      
-      #controls {
-        padding-left: 100;
-        padding-right: 100;
-      }
+#fig {
+  height: 680px;
+  width: 1400px;
+}
+
+#controls {
+  padding-left: 100px;
+}
+
     </style>
-  </head> 
+  </head>
   <body><div id="center"><div id="fig">
     <div id="controls" >
-      Show:
-      <input type="checkbox" checked onchange="showN = this.value; vis.render();">
-      Northbound
-      <input type="checkbox" checked onchange="showS = this.value; vis.render();">
-      Sorthbound
-      operating on
-      <input name="daySelect" value="Wk" type="radio" checked onchange="oper = this.value; vis.render();">
-      weekdays
-      <input name="daySelect" value="Su" type="radio" onchange="oper = this.value; vis.render();">
-      Sunday
-      <input name="daySelect" value="Sa" type="radio" onchange="oper = this.value; vis.render();">
-      Saturday
+      <b>Speed:</b>
+      <input type="checkbox" id="normal" checked onchange="speedn = this.value; vis.render();"
+      ><label for="normal" style="color:rgb(34,34,34);">Normal</label>
+      <input type="checkbox" id="limited" checked onchange="speedl = this.value; vis.render();"
+      ><label for="limited" style="color:rgb(183,116,9);">Limited</label>
+      <input type="checkbox" id="bullet" checked onchange="speedb = this.value; vis.render();"
+      ><label for="bullet" style="color:rgb(192,62,29);">Bullet</label>
+      <b style="margin-left:6em;">Direction:</b>
+      <input type="checkbox" id="northbound" checked onchange="dirn = this.value; vis.render();"
+      ><label for="northbound">Northbound</label>
+      <input type="checkbox" id="southbound" checked onchange="dirs = this.value; vis.render();"
+      ><label for="southbound">Sorthbound</label>
+      <b style="margin-left:6em;">Days:</b>
+      <input id="weekdays" name="daySelect" value="Wk" type="radio" checked onchange="oper = this.value; vis.render();"
+      ><label for="weekdays">Weekdays</label>
+      <input name="daySelect" id="saturday" value="Sa" type="radio" onchange="oper = this.value; vis.render();"
+      ><label for="saturday">Saturday</label>
+      <input name="daySelect" id="sunday" value="Su" type="radio" onchange="oper = this.value; vis.render();"
+      ><label for="sunday">Sunday</label>
     </div>
     <script type="text/javascript+protovis">
-      // Start with showing all trains on weekdays
-      var showN = true,
-          showS = true,
-          oper = "Wk";
-    
-      // Flatten the data so that we have an array of (Train x Station x Time)
-      northbound = pv.flatten(northbound)
-          .key("train")
-          .key("station", function(i) stationsNS[stationsNS.length - i - 1].name)
-          .key("time")
-          .array();
-          
-      southbound = pv.flatten(southbound)
-          .key("train")
-          .key("station", function(i) stationsNS[i].name)
-          .key("time")
-          .array();
-      
-      // Label the trains with their directions of travel
-      northbound.forEach(function(stop) stop.bound = "N"); 
-      southbound.forEach(function(stop) stop.bound = "S");
-      
-      // Concatinate the northbound and southbound trains to make a list of all trains
-      var allTrains = northbound.concat(southbound).filter(function(stop) stop.time.length > 1);
-      
-      // Parse the stop time and do some extra clean up
-      allTrains.forEach(function(stop) {
-        // parse type
-        stop.type = stop.train.charAt(3);
-        stop.train = stop.train.substr(0,3);
 
-        // check to see if the stop is an interconnect
-        if(stop.time.charAt(0) == "i") {
-            var time = stop.time.substr(1);
-        } else {
-            var time = stop.time;
-        }
+// Start with showing all trains on weekdays
+var dirn = true,
+    dirs = true,
+    oper = "Wk",
+    speedn = true,
+    speedl = true,
+    speedb = true;
 
-        if(time.length == 6) {
-            var h = parseInt(time.substr(0, 1), 10);
-            var m = parseInt(time.substr(2, 2), 10);
-            var pm = (time.substr(4, 2) == "pm");
-        } else {
-            var h = parseInt(time.substr(0, 2), 10);
-            var m = parseInt(time.substr(3, 2), 10); // parseInt("09") == 0 because it assumes octal
-            var pm = (time.substr(5, 2) == "pm");
-        }
-        
-        if(h == 12) pm = !pm // for 12 we have to swap am and pm because time is retarded
-        
-        time = h*60 + m + (pm?720:0); // calculate the number of minutes from midnight
-        stop.time = time + ((time < 180)?1440:0); // make the day switch at 3am instead of midnight
-      })
-      
-      // Nest the trains-stops by train as we will draw one line per train
-      var trains = pv.nest(allTrains)
-          .key(function(d) d.train)
-          .entries();
-    
-      // Initialize the variables
-      var w = 1200, h = 600,
-          minHour = 4, maxHour = 26,
-          showMin = 4*60, showMax = 26*60;
- 
-      // Make the scale functions
-      var x   = pv.Scale.linear(showMin, showMax).range(0, w),
-          s2d = pv.Scale.ordinal(stationsNS, function(s) s.name).range(stationsNS, function(s) s.dist),
-          y   = pv.Scale.linear(stationsNS, function(s) s.dist).range(h, 0).by(s2d);
+// Flatten the data so that we have an array of (Train x Station x Time)
+northbound = pv.flatten(northbound)
+    .key("train")
+    .key("station", function(i) stationsNS[stationsNS.length - i - 1].name)
+    .key("time")
+    .array();
 
-      function hourText(d) {
-        var h = d/60 % 24;
-        return (h==0?'MIDNIGHT':(h==12?'NOON':(h<12?h:h-12)));
-      }
+southbound = pv.flatten(southbound)
+    .key("train")
+    .key("station", function(i) stationsNS[i].name)
+    .key("time")
+    .array();
 
-      // The root panel, with padding for labels
-      var vis = new pv.Panel()
-          .width(w)
-          .height(h)
-          .left(100)
-          .right(100)
-          .bottom(70)
-          .top(30);
-            
-      // Add station lines
-      var station = vis.add(pv.Rule)
-          .data(stationsNS)
-          .bottom(function(s) y(s.name))
-          .strokeStyle("#ccc");
+// Label the trains with their directions of travel
+northbound.forEach(function(stop) stop.bound = "N");
+southbound.forEach(function(stop) stop.bound = "S");
 
-      station.anchor("left").add(pv.Label)
-          .text(function(s) s.name);
+// Concatinate the northbound and southbound trains to make a list of all trains
+var allTrains = northbound.concat(southbound).filter(function(stop) stop.time.length > 1);
 
-      station.anchor("right").add(pv.Label)
-          .text(function(s) s.name);
- 
-      // Add hour lines
-      var hour = vis.add(pv.Rule)
-          .data(function() pv.range(Math.ceil(showMin/60)*60, showMax+1, 60))
-          .left(x)
-          .strokeStyle("#ddd");
+// Parse the stop time and do some extra clean up
+allTrains.forEach(function(stop) {
+  // parse type
+  stop.type = stop.train.charAt(3);
+  stop.train = stop.train.substr(0,3);
 
-      hour.anchor("top").add(pv.Label)
-          .text(hourText);
+  // check to see if the stop is an interconnect
+  var time = stop.time.charAt(0) == "i" ? stop.time.substr(1) : stop.time;
+  if (time.length == 6) {
+    var h = parseInt(time.substr(0, 1), 10);
+    var m = parseInt(time.substr(2, 2), 10);
+    var pm = (time.substr(4, 2) == "pm");
+  } else {
+    var h = parseInt(time.substr(0, 2), 10);
+    var m = parseInt(time.substr(3, 2), 10); // parseInt("09") == 0 because it assumes octal
+    var pm = (time.substr(5, 2) == "pm");
+  }
 
-      hour.anchor("bottom").add(pv.Label)
-          .text(hourText);
-      
-      // A panel for each train
-      var panel = vis.add(pv.Panel)
-          .data(trains)
-          .overflow("hidden")
-          .visible(function(train) {
-                var t = train.values[0];
-                if(!showN && t.bound=="N") return false;
-                if(!showS && t.bound=="S") return false;
-                if(oper=="Wk") {
-                    return (t.type=="N")||(t.type=="L")||(t.type=="B");
-                } else if(oper=="Su") {
-                    return (t.type=="W")||(t.type=="S");
-                } else { //if(oper=="Su") {
-                    return (t.type=="W");
-                }
-              });
-              
-      // A line curve (with dots) for each station
-      var line = panel.add(pv.Line)
-          .data(function(d) d.values)
-          .left(function(stop) x(stop.time))
-          .bottom(function(stop) y(stop.station))
-          .strokeStyle(function(stop) types[stop.type])
-          .lineWidth(1);
-      
-      // Ticks that indicate the stops
-      line.add(pv.Dot)
-          .size(2)
-          .fillStyle(function(stop) types[stop.type]);
+  if (h == 12) pm = !pm // for 12 we have to swap am and pm because time is retarded
+  time = h*60 + m + (pm?720:0); // calculate the number of minutes from midnight
+  stop.mins = time + ((time < 180)?1440:0); // make the day switch at 3am instead of midnight
+});
 
-      ////////////////////////////////////////////////////////
-      // Legend
-      vis.add(pv.Panel)
-          .data([{text:"Normal trains", color:"rgba(34,34,34,1)"}, {text:"Limited trains", color:"rgba(183,116,9,1)"}, {text:"Bullet trains", color:"rgba(196,62,29,1)"}, {text:"Transfer stops", color:"#00A50D"}])
-          .top(h + 50)
-          .height(50)
-        .add(pv.Dot)
-          .size(8)
-          .left(function() this.parent.index * 90 + 6)
-          .strokeStyle(function(d) d.color)
-          .shape("tick")
-          .angle(-Math.PI / 2)
-        .anchor("right").add(pv.Label)
-          .text(function(d) d.text);
-          
-      ////////////////////////////////////////////////////////
-          
-      // render eveything
-      vis.render();
+// Nest the trains-stops by train as we will draw one line per train
+var trains = pv.nest(allTrains)
+    .key(function(d) d.train)
+    .entries();
+
+// Initialize the variables
+var w = 1200,
+    h = 600,
+    minHour = 4,
+    maxHour = 26,
+    showMin = 4 * 60,
+    showMax = 26 * 60;
+
+// Make the scale functions
+var x = pv.Scale.linear(showMin, showMax).range(0, w),
+    s2d = pv.Scale.ordinal(stationsNS, function(s) s.name).range(stationsNS, function(s) s.dist),
+    y = pv.Scale.linear(stationsNS, function(s) s.dist).range(h, 0).by(s2d);
+
+function hourText(d) {
+  var h = d/60 % 24;
+  return (h==0?'MIDNIGHT':(h==12?'NOON':(h<12?h:h-12)));
+}
+
+// The root panel, with padding for labels
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .left(100)
+    .right(100)
+    .bottom(30)
+    .top(30);
+
+// Add hour lines
+var hour = vis.add(pv.Rule)
+    .data(function() pv.range(Math.ceil(showMin / 60) * 60, showMax + 1, 60))
+    .left(x)
+    .strokeStyle("#eee");
+
+hour.anchor("top").add(pv.Label)
+    .textStyle(function(h) (h / 60 % 24) % 12 ? "#999" : "#000")
+    .text(hourText);
+
+hour.anchor("bottom").add(pv.Label)
+    .textStyle(function(h) (h / 60 % 24) % 12 ? "#999" : "#000")
+    .text(hourText);
+
+// Add station lines
+var station = vis.add(pv.Rule)
+    .data(stationsNS)
+    .bottom(function(s) y(s.name))
+    .strokeStyle(function(s) s.bullet ? "#bbb" : "#eee");
+
+station.anchor("left").add(pv.Label)
+    .textStyle(function(s) s.bullet ? "#000" : "#888")
+    .text(function(s) s.name);
+
+station.anchor("right").add(pv.Label)
+    .textStyle(function(s) s.bullet ? "#000" : "#888")
+    .text(function(s) s.name);
+
+// A panel for each train
+var panel = vis.add(pv.Panel)
+    .data(trains)
+    .visible(function(train) {
+          var t = train.values[0];
+          if (!speedb && t.type == "B") return false;
+          if (!speedl && t.type == "L") return false;
+          if (!speedn && /N|W|S/.test(t.type)) return false;
+          if (!dirn && t.bound == "N") return false;
+          if (!dirs && t.bound == "S") return false;
+          switch (oper) {
+            case "Wk": return /N|L|B/.test(t.type);
+            case "Su": return /W|S/.test(t.type);
+            default: return t.type == "W";
+          }
+        });
+
+// A line curve (with dots) for each station
+var line = panel.add(pv.Line)
+    .data(function(d) d.values)
+    .left(function(stop) x(stop.mins))
+    .bottom(function(stop) y(stop.station))
+    .strokeStyle(function(stop) types[stop.type])
+    .lineWidth(1);
+
+// Ticks that indicate the stops
+line.add(pv.Dot)
+    .radius(2.5)
+    .lineWidth(.75)
+    .strokeStyle("white")
+    .fillStyle(function(stop) types[stop.type])
+    .title(function(stop) stop.type + stop.train + "-" + stop.bound + "B: "
+        + stop.station + " at " + stop.time);
+
+vis.render();
+
     </script>
   </div></div></body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
