@@ -25,13 +25,16 @@
   <body>
     <div id="center"><div id="fig">
     <div style="text-align:right;padding-right:20;">
-      Show: <select id="gender" onchange="update()">
-        <option value=0 selected>Men and Women</option>
-        <option value=1>Men Only</option>
-        <option value=2>Women Only</option>
-      </select>
+      <b style="margin-left:6em;">Show:</b>
+      <input type="checkbox" id="men" checked onchange="showMen = this.value; update();"
+      ><label for="men">Men</label>
+      <input type="checkbox" id="women" checked onchange="showWomen = this.value; update();"
+      ><label for="women">Women</label>
     </div>
     <script type="text/javascript+protovis">
+
+      var showMen = true,
+          showWomen = true;
 
       /* Flatten the tree into an array to faciliate transformation. */
       var jobs = pv.flatten(jobs)
@@ -104,12 +107,12 @@
           .event("mouseout", function(d) this.alpha(undefined))
           .event("click", function(d) search("^" + d.job + "$"))
           .cursor("pointer")
-        .parent;
+        //.parent;
 
       /* The label's datum is the biggest span in the corresponding area. */
       /*
       vis.add(pv.Panel).extend(area)
-        .add(pv.Label)
+         .add(pv.Label)
           .data(function(d) [area.scene[this.parent.index].children[0]
               [pv.max.index(d.values, function(d) d.people)]])
           .visible(function(c) c.height > 1)
@@ -121,7 +124,7 @@
           .textStyle(function(c) "rgba(0, 0, 0, " + (Math.sqrt(c.height) / 7) + ")")
           .font(function(c) Math.round(5 + Math.sqrt(c.height)) + "px sans-serif")
           .text(function(c, job) job.key.substring(1));
-        */
+      */
       
       /* X-axis ticks and labels. */
       vis.add(pv.Rule)
@@ -146,7 +149,7 @@
       /* Tests to see whether the specified datum matches the current filters. */
       var re = "";
       function test(d) {
-        return (!Number(gender.value) || (gender.value == d.gender))
+        return ((showMen && d.gender == 1) || (showWomen && d.gender == 2))
             && d.job.match(re);
       }
 
