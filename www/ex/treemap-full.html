@@ -24,14 +24,31 @@
         outline: 0;
       }
       #title {
+        float: right;
         text-align: right;
       }
     </style>
   </head>
   <body><div id="center"><div id="fig">
+    <input id="sq" name="mode" type="radio" onclick="mode='squarify'; resetAndRender()" checked
+    ><label for="sq">Squarify</label>
+    <input id="sd" name="mode" type="radio" onclick="mode='slice-and-dice'; resetAndRender()"
+    ><label for="sd">Slice-and-Dice</label>
+    <input id="so" name="mode" type="radio" onclick="mode='slice'; resetAndRender()"
+    ><label for="so">Slice only</label>
+    <input id="do" name="mode" type="radio" onclick="mode='dice'; resetAndRender()"
+    ><label for="do">Dice only</label>
     <div id="title"></div>
     <script type="text/javascript+protovis">
 
+      var mode = "squarify";
+
+      function resetAndRender() {
+        // This is needed to flush the layout cache
+        layout.reset();
+        layout.render();
+      }
+      
       function onNodeClick(node) {
         var path = node.nodeName;
         var parentNode = node.parentNode;
@@ -61,7 +78,9 @@
       /* Treemap! */
       var layout = vis.add(pv.Layout.Treemap)
           .nodes(nodes)
-          .round(true);
+          .round(true)
+          .mode(function() mode)
+          .order("descending");
 
       var bar = layout.leaf.add(pv.Bar)
           .strokeStyle("#fff")
