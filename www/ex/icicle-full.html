@@ -18,16 +18,6 @@
   <body><div id="center"><div id="fig">
     <script type="text/javascript+protovis">
 
-      function getNodePath(node) {
-        var path = node.nodeName;
-        var parentNode = node.parentNode;
-        while(parentNode) {
-          path = parentNode.nodeName + "." + path;
-          parentNode = parentNode.parentNode;
-        }
-        return path + (node.firstChild ? "" : " (" + node.nodeValue + " bytes)");
-      }
-
       function onNodeClick(node) {
         var path = node.nodeName;
         var parentNode = node.parentNode;

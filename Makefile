@@ -23,6 +23,7 @@ HTML_FILES = \
 	www/ex/horizon.html \
 	www/ex/hotel.html \
 	www/ex/icicle.html \
+	www/ex/indent.html \
 	www/ex/index-chart.html \
 	www/ex/jobs.html \
 	www/ex/life.html \
