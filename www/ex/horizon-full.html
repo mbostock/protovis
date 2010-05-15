@@ -52,51 +52,52 @@
 </div>
 <div style="display: table; height: 168px; margin-top: 10px;">
 <div style="display: table-cell; vertical-align: middle;">
-<script type="text/javascript+protovis">
+  <script type="text/javascript+protovis">
 
-var data = pv.nest(all)
-    .key(function(d) d.series)
-    .entries()
-    .filter(function(d) d.key==0)[0].values;
-var avg = pv.mean(data, function(d) d.rate);
-data.map(function(d) d.rate -= avg);
+    var data = pv.nest(all)
+        .key(function(d) d.series)
+        .entries()
+        .filter(function(d) d.key==0)[0].values;
+    var avg = pv.mean(data, function(d) d.rate);
+    data.map(function(d) d.rate -= avg);
 
-var w = 500,
-    h = 84,
-    bands = 2,
-    mode = "mirror",
-    fx = function(d) d.date,
-    fy = function(d) d.rate,
-    m = Math.max(pv.max(data,fy), -pv.min(data,fy)),
-    x = pv.Scale.linear(data, fx).range(0, w).by(fx),
-    y = pv.Scale.linear(-m, m).range(-h, h).by(fy);
+    var w = 500,
+        h = 84,
+        bands = 2,
+        mode = "mirror",
+        fx = function(d) d.date,
+        fy = function(d) d.rate,
+        m = Math.max(pv.max(data,fy), -pv.min(data,fy)),
+        x = pv.Scale.linear(data, fx).range(0, w).by(fx),
+        y = pv.Scale.linear(-m, m).range(-h, h).by(fy);
 
-var vis = new pv.Panel()
-    .width(w)
-    .height(function() bands==0 ? 2*h : h/bands);
+    var vis = new pv.Panel()
+        .width(w)
+        .height(function() bands==0 ? 2*h : h/bands);
 
-vis.add(pv.Layout.Horizon)
-    .bands(function() Math.max(1, bands))
-    .mode(function() bands==0 ? "color" : mode)
-  .band.add(pv.Area)
-    .data(data)
-    .left(x)
-    .height(y);
+    vis.add(pv.Layout.Horizon)
+        .bands(function() Math.max(1, bands))
+        .mode(function() bands==0 ? "color" : mode)
+      .band.add(pv.Area)
+        .data(data)
+        .left(x)
+        .height(y);
 
-vis.render();
-
-$(slider).slider({
-    min: 0, max: 5, value: 2, slide: function(e, ui) {
-        $("#bands").html(bands = ui.value);
-        vis.render();
-    }
-});
-
-$([mirror, offset]).change(function() {
-    mode = this.value;
     vis.render();
-});
-</script>
+
+    $(slider).slider({
+        min: 0, max: 5, value: 2, slide: function(e, ui) {
+            $("#bands").html(bands = ui.value);
+            vis.render();
+        }
+    });
+
+    $([mirror, offset]).change(function() {
+        mode = this.value;
+        vis.render();
+    });
+
+  </script>
 </div></div>
 
   </div></div></body>

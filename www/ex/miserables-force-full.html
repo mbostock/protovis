@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Les Miserables Force Directed Layout</title>
+    <title>Les Mis&eacute;rables Force Directed Layout</title>
     <link type="text/css" rel="stylesheet" href="ex.css?3.2"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
     <script type="text/javascript" src="miserables.js"></script>
@@ -27,9 +27,7 @@
 
       var layout = vis.add(pv.Layout.Force)
           .nodes(miserables.nodes)
-          .links(miserables.links)
-          .springConstant(.5)
-          .chargeConstant(-2000);
+          .links(miserables.links);
 
       layout.link.add(pv.Line);
 
@@ -45,7 +43,7 @@
 
     </script>
 <div class="caption">
-Les Miserables character interaction presented as a force directed graph. Each character is represented by a circle and the connecting lines (or springs) represent interaction. The character's size indicates the number of interactions they have over the entire play. Drag and zoom the graph the get a better view.
+Les Mis&eacute;rables character interaction presented as a force directed graph. Each character is represented by a circle and the connecting lines (or springs) represent interaction. The character's size indicates the number of interactions they have over the entire play. Drag and zoom the graph the get a better view.
 </div>
   </div></div></body>
 </html>

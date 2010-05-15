@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Les Miserables Force Directed Layout</title>
+    <title>Les Mis&eacute;rables Force Directed Layout</title>
     <link type="text/css" rel="stylesheet" href="ex.css?3.2"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
     <script type="text/javascript" src="miserables.js"></script>
@@ -27,9 +27,7 @@
 
       var layout = vis.add(pv.Layout.Force)
           .nodes(miserables.nodes)
-          .links(miserables.links)
-          .springConstant(.5)
-          .chargeConstant(-2000);
+          .links(miserables.links);
 
       layout.link.add(pv.Line);
 

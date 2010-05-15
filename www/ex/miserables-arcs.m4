@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - Les Misérables Arc Layout</title>
+    <title>Protovis - Les Mis&eacute;rables Arc Layout</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.1a"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.0.js"></script> 
@@ -42,14 +42,14 @@
     </div>
 
     <div class="body">
-      <h1>Les Misérables Arc Layout</h1>
+      <h1>Les Mis&eacute;rables Arc Layout</h1>
 
       <iframe style="height:500px;" src="miserables-arcs-embed.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="miserables-arcs-full.html" target="_blank">View full screen.</a>
 
-      <p>Les Miserables character interaction. Each character is represented by a circle and
+      <p>Les Mis&eacute;rables character interaction. Each character is represented by a circle and
       the connecting arc represent interaction. The character's size indicates the number of
       interactions they have over the entire play.</p>
 

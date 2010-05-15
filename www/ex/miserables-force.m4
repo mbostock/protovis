@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - Les Misérables Force Directed Layout</title>
+    <title>Protovis - Les Mis&eacute;rables Force Directed Layout</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.1a"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.0.js"></script> 
@@ -42,14 +42,14 @@
     </div>
 
     <div class="body">
-      <h1>Les Misérables Matrix</h1>
+      <h1>Les Mis&eacute;rables Matrix</h1>
 
       <iframe style="height:700px;" src="miserables-force-embed.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="miserables-force-full.html" target="_blank">View full screen.</a>
 
-      <p>Les Miserables character interaction presented as a force directed graph. Each
+      <p>Les Mis&eacute;rables character interaction presented as a force directed graph. Each
       character is represented by a circle and the connecting lines (or springs) represent
       interaction. The character's size indicates the number of interactions they have over
       the entire play. Drag and zoom the graph the get a better view.</p>

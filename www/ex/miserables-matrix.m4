@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - Les Misérables Matrix</title>
+    <title>Protovis - Les Mis&eacute;rables Matrix</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.1a"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.0.js"></script> 
@@ -42,14 +42,14 @@
     </div>
 
     <div class="body">
-      <h1>Les Misérables Matrix</h1>
+      <h1>Les Mis&eacute;rables Matrix</h1>
 
       <iframe style="height:790px;" src="miserables-matrix-embed.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="miserables-matrix-full.html" target="_blank">View full screen.</a>
 
-      <p>Les Misérables characters presented in an interaction matrix. Each character is
+      <p>Les Mis&eacute;rables characters presented in an interaction matrix. Each character is
       represented by a row and a column in the matrix. An entry in the matrix is colored
       if it's row and column characters interact.</p>
 
