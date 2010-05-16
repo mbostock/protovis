@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - Choropleth Map</title>
+    <title>Protovis - Dymaxion map</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
@@ -42,23 +42,24 @@
     </div>
 
     <div class="body">
-      <h1>Choropleth Map</h1>
+      <h1>Dymaxion map</h1>
 
-      <iframe style="width:860px;height:610px;" src="countries-full.html"></iframe>
+      <iframe style="width:860px;height:540px;" src="dymax-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
-      href="countries-full.html" target="_blank">View full screen.</a>
+      href="dymax-full.html" target="_blank">View full screen.</a>
 
-      <p>Choropleth maps represent data by shading the area of a country to represent a value.
-      This example shades contrived based on their population density.</p>
-
+      <p>The <a href="http://en.wikipedia.org/wiki/Dymaxion_map">Dymaxion map</a> (also known as
+      Fuller map) is a projection of a World map onto the surface of a polyhedron, which can then
+      be unfolded onto a two dimensional plane.
+      
       <blockquote style="font-size:13px;">
         Next: <a href="bullet.html">Bullet</a>
       </blockquote>
 
       <h3>Source</h3>
 
-include(`countries-full.html.html')
+include(`dymax-full.html.html')
 
       <h3>Data</h3>
 

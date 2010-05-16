@@ -16,6 +16,7 @@ HTML_FILES = \
 	www/ex/countries.html \
 	www/ex/crimea-rose.html \
 	www/ex/dot.html \
+	www/ex/dymax.html \
 	www/ex/error-points.html \
 	www/ex/eyes.html \
 	www/ex/flowers.html \
