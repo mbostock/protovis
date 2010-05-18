@@ -41,6 +41,7 @@ HTML_FILES = \
 	www/ex/pie.html \
 	www/ex/qqplot.html \
 	www/ex/radial-cluster.html \
+	www/ex/reaction.html \
 	www/ex/segmented.html \
 	www/ex/splines.html \
 	www/ex/sunburst.html \
