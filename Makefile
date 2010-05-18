@@ -46,6 +46,7 @@ HTML_FILES = \
 	www/ex/sunburst.html \
 	www/ex/stem-and-leaf.html \
 	www/ex/symbol.html \
+	www/ex/tree.html \
 	www/ex/treemap.html \
 	www/ex/unemployed.html \
 	www/ex/vertical-cluster.html \
