@@ -32,16 +32,68 @@
     <div class="body">
       <h1>Layouts</h1>
 
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam vulputate
-      diam id est gravida non facilisis purus ullamcorper. Ut quis purus
-      libero. Vivamus in lorem sed nisi congue pharetra. Quisque nibh sem,
-      tincidunt ac consequat in, scelerisque a elit. Maecenas tristique, tellus
-      vitae facilisis semper, ipsum purus iaculis lectus, in luctus neque erat
-      vitae ligula. Maecenas cursus fermentum auctor. Morbi ac neque in lacus
-      facilisis placerat ut sodales diam. Praesent suscipit ullamcorper eros, eu
-      vulputate lacus pellentesque in.
+      <blockquote>[When] you see excellent graphics, find out how they were
+      done. Borrow strength from demonstrated excellence. The idea for
+      information design is: Don't get it original, get it right. <a
+      href="http://www.edwardtufte.com/bboard/q-and-a-fetch-msg?msg_id=00000p"
+      >&mdash;Edward Tufte</a></blockquote>
 
-      <h2>Mark Prototypes</h2>
+      <h2>Introduction</h2>
+
+      <p>At its core, Protovis is intended as a concise, declarative
+      representation of custom data graphics. Implicit in the
+      label <i>custom</i> is that visualization specifications are largely
+      unique: the code is simple enough to not require reuse across charts,
+      beyond basic copy-and-paste. Yet despite the value in increased
+      expressiveness and flexibility, necessary to support custom graphics, it
+      is obvious that most visualization design is <i>not</i> unique. Thus, we
+      introduce a mechanism to encapsulate useful techniques for reuse across
+      visualizations, called <b>layouts</b>.
+
+      <p>Layouts (in various forms) are common to many visualization and user
+      interface toolkits&mdash;they reduce the code required to implement common
+      visualizations types, while offering more consistent behavior by
+      eliminating implementation-specific idiosyncrasies. Most importantly, they
+      make available an extensible set of visualization designs for much lower
+      cost, allowing these designs to see wider adoption.
+
+      <p>Despite the prevalence of this approach, the exact form of layout
+      abstraction matters. Competing with the desire to reuse layouts are two
+      serious usability concerns: first, that the new abstraction will be
+      difficult to learn; second, that the user must sacrifice expressiveness
+      (i.e., customization and control) to facilitate reuse. To avoid these
+      pitfalls, Protovis layouts are implemented as a set of related <b>mark
+      prototypes</b>. Unlike previous approaches, layouts in Protovis are thus
+      not a new fundamental abstraction, but a repurposing of existing
+      prototypal inheritance; prototype marks provide default properties to
+      instantiate the layout design, while allowing a great deal of
+      customization through property overrides and construction.
+
+      <h2>Design</h2>
+
+      Layouts in Protovis are a minor variation of <b>panels</b>, which contain
+      and replicate child marks. The only difference between the two
+      classes <tt>pv.Panel</tt> and <tt>pv.Layout</tt> is that the latter
+      supports custom properties. These custom properties allow high-level
+      configuration of the layout; for example, a treemap layout might support
+      multiple algorithms (e.g., "slide-and-dice", "squarify", "voronoi"), or a
+      force-directed network layout might allow customization of spring tension
+      or drag coefficients.
+
+      <p>By reusing panels and properties, the design is familiar to existing
+      users; the mental model required to understand layouts is smaller. In
+      addition, this leverages the expressiveness of the core language: layouts
+      can be replicated and embedded in the mark hierarchy as any other mark or
+      panel, and, any layout properties can be specified using data-driven
+      functions. This simplifies the creation of small multiples of layouts with
+      varying parameters, and allows layouts to be nested hierarchically,
+      similar to <a href="http://gicentre.org/hierarchical_layouts/" >HiVE</a>.
+
+      <h3>Mark Prototypes</h3>
+
+      To better illustrate how mark prototypes can be used to instantiate
+      reusable visualization designs, we will now go through a series of
+      examples of layouts implemented in Protovis.
 
       <p>Sed iaculis commodo vestibulum. Pellentesque blandit mollis quam vitae
       egestas. Sed vehicula augue sed orci placerat id suscipit nulla
@@ -141,7 +193,7 @@ include(`layouts/treemap.js.html')
       facilisis placerat ut sodales diam. Praesent suscipit ullamcorper eros, eu
       vulputate lacus pellentesque in.
 
-      <h2>Implicit Replication</h2>
+      <h3>Implicit Replication</h3>
 
       <p>Sed iaculis commodo vestibulum. Pellentesque blandit mollis quam vitae
       egestas. Sed vehicula augue sed orci placerat id suscipit nulla
