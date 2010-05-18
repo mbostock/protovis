@@ -54,6 +54,11 @@
 
 include(`layouts/grid.js.html')
 
+      <p>Customize properties. Define custom layout parameters. Layout
+      parameters can be defined as functions, like any other property in
+      Protovis; this provides a great deal of flexibility and hierarchical
+      nesting of layouts.
+
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam vulputate
       diam id est gravida non facilisis purus ullamcorper. Ut quis purus
       libero. Vivamus in lorem sed nisi congue pharetra. Quisque nibh sem,
@@ -107,6 +112,8 @@ include(`layouts/grid.js.html')
       vulputate lacus pellentesque in.
 
 include(`layouts/treemap.js.html')
+
+      <p>Override default properties. Access underlying data structure.
 
       <p>Sed iaculis commodo vestibulum. Pellentesque blandit mollis quam vitae
       egestas. Sed vehicula augue sed orci placerat id suscipit nulla
@@ -215,6 +222,11 @@ include(`layouts/stack.js.html')
       vitae ligula. Maecenas cursus fermentum auctor. Morbi ac neque in lacus
       facilisis placerat ut sodales diam. Praesent suscipit ullamcorper eros, eu
       vulputate lacus pellentesque in.
+
+include(`layouts/tree.js.html')
+
+      <p>Add order affects z-order. Can also be selective about which marks to
+      include.
 
       <p>Sed iaculis commodo vestibulum. Pellentesque blandit mollis quam vitae
       egestas. Sed vehicula augue sed orci placerat id suscipit nulla
