@@ -78,7 +78,9 @@
       configuration of the layout; for example, a treemap layout might support
       multiple algorithms (e.g., "slide-and-dice", "squarify", "voronoi"), or a
       force-directed network layout might allow customization of spring tension
-      or drag coefficients.
+      or drag coefficients. Whereas standard properties, such as
+      <tt>fillStyle</tt> and <tt>visible</tt>, share a single namespace, layout
+      properties tend to be specialized and are thus defined locally.
 
       <p>By reusing panels and properties, the design is familiar to existing
       users; the mental model required to understand layouts is smaller. In
@@ -91,9 +93,12 @@
 
       <h3>Mark Prototypes</h3>
 
-      To better illustrate how mark prototypes can be used to instantiate
-      reusable visualization designs, we will now go through a series of
-      examples of layouts implemented in Protovis.
+      To better illustrate how mark prototypes are used to instantiate reusable
+      visualization designs, we now go through a series of example layouts
+      implemented in Protovis. For each example, a diagram shows panel enclosure
+      (using nested rectangles) and property inheritance (using directed
+      arrows). Off-screen mark prototypes that are not directly visible are
+      shown with a dashed outline.
 
       <p>Sed iaculis commodo vestibulum. Pellentesque blandit mollis quam vitae
       egestas. Sed vehicula augue sed orci placerat id suscipit nulla
