@@ -2,6 +2,7 @@
   <head>
     <title>Protovis - Layouts</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.1a"/>
+    <link type="text/css" rel="stylesheet" href="../ex/syntax.css?3.1"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
   </head>
   <body>
@@ -51,6 +52,17 @@
       dictum quis euismod non, condimentum accumsan risus. Class aptent taciti
       sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
 
+include(`layouts/grid.js.html')
+
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam vulputate
+      diam id est gravida non facilisis purus ullamcorper. Ut quis purus
+      libero. Vivamus in lorem sed nisi congue pharetra. Quisque nibh sem,
+      tincidunt ac consequat in, scelerisque a elit. Maecenas tristique, tellus
+      vitae facilisis semper, ipsum purus iaculis lectus, in luctus neque erat
+      vitae ligula. Maecenas cursus fermentum auctor. Morbi ac neque in lacus
+      facilisis placerat ut sodales diam. Praesent suscipit ullamcorper eros, eu
+      vulputate lacus pellentesque in.
+
       <p><table width="100%"><tr><td>
         <img src="layouts/grid.png">
       </td><td width="350" align="right" valign="middle">
@@ -93,6 +105,8 @@
       vitae ligula. Maecenas cursus fermentum auctor. Morbi ac neque in lacus
       facilisis placerat ut sodales diam. Praesent suscipit ullamcorper eros, eu
       vulputate lacus pellentesque in.
+
+include(`layouts/treemap.js.html')
 
       <p>Sed iaculis commodo vestibulum. Pellentesque blandit mollis quam vitae
       egestas. Sed vehicula augue sed orci placerat id suscipit nulla
@@ -147,6 +161,8 @@
       vitae ligula. Maecenas cursus fermentum auctor. Morbi ac neque in lacus
       facilisis placerat ut sodales diam. Praesent suscipit ullamcorper eros, eu
       vulputate lacus pellentesque in.
+
+include(`layouts/stack.js.html')
 
       <p>Sed iaculis commodo vestibulum. Pellentesque blandit mollis quam vitae
       egestas. Sed vehicula augue sed orci placerat id suscipit nulla
