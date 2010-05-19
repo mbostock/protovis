@@ -55,8 +55,9 @@ pv.Dot.prototype.type = "dot";
  * <li>triangle
  * <li>diamond
  * <li>square
- * <li>tick
  * <li>circle
+ * <li>tick
+ * <li>bar
  *
  * </ul>These shapes can be further changed using the {@link #angle} property;
  * for instance, a cross can be turned into a plus by rotating. Similarly, the

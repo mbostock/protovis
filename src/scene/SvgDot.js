@@ -47,6 +47,10 @@ pv.SvgScene.dot = function(scenes) {
         path = "M0,0L0," + -s.size;
         break;
       }
+      case "bar": {
+        path = "M0," + (s.size / 2) + "L0," + -(s.size / 2);
+        break;
+      }
     }
 
     /* Use <circle> for circles, <path> for everything else. */
