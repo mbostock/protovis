@@ -353,9 +353,9 @@ pv.Scale.quantitative = function() {
     else if (err <= .35) step *= 5;
     else if (err <= .75) step *= 2;
     var start = Math.ceil(min / step) * step,
-        end = Math.floor(max / step) * step,
-        precision = Math.max(0, -Math.floor(pv.log(step, 10) + .01));
-    /** @ignore */ tickFormat = function(x) { return x.toFixed(precision); };
+        end = Math.floor(max / step) * step;
+    tickFormat = pv.Format.number()
+        .fractionDigits(Math.max(0, -Math.floor(pv.log(step, 10) + .01)));
     var ticks = pv.range(start, end + step, step);
     return reverse ? ticks.reverse() : ticks;
   };

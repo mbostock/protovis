@@ -6,7 +6,7 @@ pv.Layout.Bullet = function() {
   pv.Layout.call(this);
   var that = this,
       buildImplied = that.buildImplied,
-      scale,
+      scale = that.x = pv.Scale.linear(),
       orient,
       horizontal,
       rangeColor,
@@ -16,7 +16,6 @@ pv.Layout.Bullet = function() {
   /** @private Cache layout state to optimize properties. */
   this.buildImplied = function(s) {
     buildImplied.call(this, x = s);
-    scale = s.$bullet;
     orient = s.orient;
     horizontal = /^left|right$/.test(orient);
     rangeColor = pv.ramp("#bbb", "#eee")
@@ -60,7 +59,7 @@ pv.Layout.Bullet = function() {
       .parent = that;
 
   (this.tick = new pv.Mark())
-      .data(function() { return scale.ticks(); })
+      .data(function() { return scale.ticks(7); })
       .left(function(d) { return orient == "left" ? scale(d) : null; })
       .top(function(d) { return orient == "top" ? scale(d) : null; })
       .right(function(d) { return orient == "right" ? scale(d) : horizontal ? null : -6; })
@@ -89,5 +88,5 @@ pv.Layout.Bullet.prototype.buildImplied = function(s) {
   pv.Layout.prototype.buildImplied.call(this, s);
   var size = this.parent[/^left|right$/.test(s.orient) ? "width" : "height"]();
   s.maximum = s.maximum || pv.max([].concat(s.ranges, s.markers, s.measures));
-  s.$bullet = pv.Scale.linear(0, s.maximum).range(0, size);
+  this.x.domain(0, s.maximum).range(0, size);
 };
