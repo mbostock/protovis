@@ -50,7 +50,7 @@
         <a href="icicle.html">Next &raquo;</a>
       </div>
     s="body">
-      <h1>VIX</h1>
+      <h1>Candlestick chart</h1>
 
       <iframe style="height:510px;" src="vix-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
