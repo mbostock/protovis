@@ -1,5 +1,6 @@
 HTML_FILES = \
 	www/index.html \
+	www/docs/layouts.html \
 	www/ex/antibiotics-burtin.html \
 	www/ex/area.html \
 	www/ex/bar.html \
