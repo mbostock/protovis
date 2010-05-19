@@ -1,0 +1,53 @@
+<html>
+  <head>
+    <title>Diamond Force</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../diamond.js"></script>
+    <link type="text/css" href="../style.css" rel="stylesheet"/>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+/* Assign nodes in the tree to one of three random states. */
+var nodes = pv.dom(diamond(4, 4, 4)).nodes();
+nodes.forEach(function(d) d.state = pv.random(3));
+
+var vis = new pv.Panel()
+    .width(500)
+    .height(330)
+    .margin(5);
+
+var force = vis.add(pv.Layout.Force)
+    .nodes(nodes)
+    .links(pv.Layout.Hierarchy.links)
+    .height(100)
+    .bound(true);
+
+/* Replicate the force layout, filtering each view by state. */
+var cell = force.add(pv.Panel)
+    .data(pv.range(3))
+    .height(100)
+    .top(function() this.index * 110)
+    .strokeStyle("#ccc");
+
+cell.add(pv.Panel)
+    .data(function() force.links())
+  .add(pv.Line)
+    .extend(force.link)
+    .strokeStyle(function(x, d)
+        (d.sourceNode.state == this.parent.parent.index
+        && d.targetNode.state == this.parent.parent.index)
+        ? "black" : "#eee");
+
+cell.add(pv.Dot)
+    .extend(force.node)
+    .visible(function(d) d.state == this.parent.index)
+    .strokeStyle(pv.Colors.category10().by(function(d) d.state))
+    .event("mousedown", pv.Behavior.drag());
+
+vis.render();
+
+    </script>
+
+  </body>
+</html>
