@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - Vertical Cluster Layout</title>
+    <title>Protovis - Dendrogram</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <style type="text/css">
@@ -52,24 +52,27 @@
     </div>
 
     <div class="body">
-      <h1>Vertical Cluster Layout</h1>
+      <h1>Dendrogram</h1>
 
-      <iframe style="height:700px;" src="vertical-cluster-embed.html"></iframe>
+      <div style="float:right;width:420px;">
+      <iframe style="height:500px;width:420px;" src="dendrogram-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
-      href="vertical-cluster-full.html" target="_blank">View full screen.</a>
+      href="dendrogram-full.html" target="_blank">View full screen.</a>
+      </div>
 
-      <p>Another built-in layout algorithm is the vertical-cluster layout, used
+      <p>Another built-in layout algorithm is the dendrogram layout, used
       here to show the various ActionScript classes of
       the <a href="http://flare.prefuse.org">Flare</a> visualization toolkit.
 
       <blockquote style="font-size:13px;">
         Next: <a href="icicle.html">Icicle Layout</a>
       </blockquote>
+      <br clear="all">
 
       <h3>Source</h3>
 
-include(`vertical-cluster-full.html.html')
+include(`dendrogram-full.html.html')
 
       <h3>Data</h3>
 
