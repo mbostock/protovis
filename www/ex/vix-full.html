@@ -1,10 +1,17 @@
 <html>
   <head>
     <title>VIX</title>
+    <link type="text/css" rel="stylesheet" href="ex.css?3.2"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
     <script type="text/javascript" src="vix.js"></script>
+    <style type="text/css">
+      #fig {
+          width: 700px;
+          height: 510px;
+      }
+    </style>
   </head>
-  <body>
+  <body><div id="center"><div id="fig">
     <script type="text/javascript+protovis">
       var dateFormat = pv.Format.date("%d-%b-%y"),
           dateText = pv.Format.date("%b %d");
@@ -12,7 +19,7 @@
       var vis = new pv.Panel()
           .width(640)
           .height(480)
-          .top(9.5)
+          .top(10)
           .bottom(20)
           .left(30)
           .right(30);
@@ -46,7 +53,7 @@
           .bottom(function(d) y(Math.min(d.high, d.low)))
           .height(function(d) Math.abs(y(d.high) - y(d.low)))
           .strokeStyle(function(d) (d.open < d.close) ? "#ae1325" : "#06982d")
-          .lineWidth(1.5)
+          .lineWidth(1)
         .add(pv.Rule)
           .bottom(function(d) y(Math.min(d.open, d.close)))
           .height(function(d) Math.abs(y(d.open) - y(d.close)))
@@ -55,5 +62,5 @@
       vis.render();
 
     </script>
-  </body>
+  </div></div></body>
 </html>

@@ -1,6 +1,5 @@
 HTML_FILES = \
 	www/index.html \
-	www/docs/layouts.html \
 	www/ex/antibiotics-burtin.html \
 	www/ex/area.html \
 	www/ex/bar.html \
@@ -22,6 +21,7 @@ HTML_FILES = \
 	www/ex/error.html \
 	www/ex/eyes.html \
 	www/ex/flowers.html \
+	www/ex/force-toggle.html \
 	www/ex/grid.html \
 	www/ex/heatmap.html \
 	www/ex/horizon.html \
@@ -42,14 +42,17 @@ HTML_FILES = \
 	www/ex/pie.html \
 	www/ex/qqplot.html \
 	www/ex/radial-cluster.html \
+	www/ex/reaction.html \
 	www/ex/segmented.html \
 	www/ex/splines.html \
 	www/ex/sunburst.html \
 	www/ex/stem-and-leaf.html \
 	www/ex/symbol.html \
+	www/ex/tree.html \
 	www/ex/treemap.html \
 	www/ex/unemployed.html \
 	www/ex/dendrogram.html \
+	www/ex/vix.html \
 	www/ex/waves.html \
 	www/ex/weather.html \
 	www/ex/wheat.html \
