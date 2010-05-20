@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - Matrix</title>
+    <title>Protovis - Bubbles</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script> 
@@ -42,7 +42,7 @@
     </div>
 
     <div class="body">
-      <h1>Matrix</h1>
+      <h1>Bubbles</h1>
 
       <div style="float:left;width:200px;">
       <script type="text/javascript+protovis">
@@ -70,7 +70,7 @@
       </script>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
-      href="matrix-full.html" target="_blank">View full screen.</a>
+      href="bubbles-full.html" target="_blank">View full screen.</a>
       </div>
 
       <div style="float:left;padding-left:30px;width:640px;">
@@ -91,7 +91,7 @@
 
       <h3>Source</h3>
 
-include(`matrix-full.html.html')
+include(`bubbles-full.html.html')
 
       <h3>Data</h3>
 
