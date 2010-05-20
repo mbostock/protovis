@@ -1,65 +1,68 @@
 <html>
   <head>
-    <title>VIX</title>
+    <title>Candlestick</title>
     <link type="text/css" rel="stylesheet" href="ex.css?3.2"/>
     <script type="text/javascript" src="../protovis-d3.2.js"></script>
     <script type="text/javascript" src="vix.js"></script>
     <style type="text/css">
-      #fig {
-          width: 700px;
-          height: 510px;
-      }
+
+#fig {
+  width: 680px;
+  height: 500px;
+}
+
     </style>
   </head>
   <body><div id="center"><div id="fig">
     <script type="text/javascript+protovis">
-      var dateFormat = pv.Format.date("%d-%b-%y"),
-          dateText = pv.Format.date("%b %d");
 
-      var vis = new pv.Panel()
-          .width(640)
-          .height(480)
-          .top(10)
-          .bottom(20)
-          .left(30)
-          .right(30);
+/* Parse dates. */
+var dateFormat = pv.Format.date("%d-%b-%y");
+vix.forEach(function(d) d.date = dateFormat.parse(d.date));
 
-      /* Scales. */
-      vix.forEach(function(d) d.date = dateFormat.parse(d.date));
-      var x = pv.Scale.linear(vix, function(d) d.date).range(0, 640),
-          y = pv.Scale.linear(vix, function(d) d.low, function(d) d.high).range(0, 480);
+/* Scales. */
+var w = 640,
+    h = 480,
+    x = pv.Scale.linear(vix, function(d) d.date).range(0, w),
+    y = pv.Scale.linear(vix, function(d) d.low, function(d) d.high).range(0, h).nice();
 
-      /* Prices. */
-      vis.add(pv.Rule)
-           .data(y.ticks())
-           .bottom(y)
-           .left(-10).right(-10)
-           .strokeStyle("#ccc")
-         .anchor("left").add(pv.Label)
-           .text(function(d) d.toFixed(0));
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .margin(10)
+    .left(30);
 
-      /* Dates. */
-      vis.add(pv.Rule)
-           .data(x.ticks())
-           .left(x)
-           .strokeStyle("#ccc")
-         .anchor("bottom").add(pv.Label)
-           .text(dateText);
+/* Dates. */
+vis.add(pv.Rule)
+     .data(x.ticks())
+     .left(x)
+     .strokeStyle("#eee")
+   .anchor("bottom").add(pv.Label)
+     .text(x.tickFormat);
 
-      /* Candlestick. */
-      vis.add(pv.Rule)
-          .data(vix)
-          .left(function(d) x(d.date))
-          .bottom(function(d) y(Math.min(d.high, d.low)))
-          .height(function(d) Math.abs(y(d.high) - y(d.low)))
-          .strokeStyle(function(d) (d.open < d.close) ? "#ae1325" : "#06982d")
-          .lineWidth(1)
-        .add(pv.Rule)
-          .bottom(function(d) y(Math.min(d.open, d.close)))
-          .height(function(d) Math.abs(y(d.open) - y(d.close)))
-          .lineWidth(10);
+/* Prices. */
+vis.add(pv.Rule)
+     .data(y.ticks())
+     .bottom(y)
+     .left(-10)
+     .right(-10)
+     .strokeStyle("#ccc")
+   .anchor("left").add(pv.Label)
+     .text(y.tickFormat);
 
-      vis.render();
+/* Candlestick. */
+vis.add(pv.Rule)
+    .data(vix)
+    .left(function(d) x(d.date))
+    .bottom(function(d) y(Math.min(d.high, d.low)))
+    .height(function(d) Math.abs(y(d.high) - y(d.low)))
+    .strokeStyle(function(d) d.open < d.close ? "#ae1325" : "#06982d")
+  .add(pv.Rule)
+    .bottom(function(d) y(Math.min(d.open, d.close)))
+    .height(function(d) Math.abs(y(d.open) - y(d.close)))
+    .lineWidth(8);
+
+vis.render();
 
     </script>
   </div></div></body>
