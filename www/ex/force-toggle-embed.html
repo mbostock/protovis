@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <title>Flare Force Toggle</title>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+    <script type="text/javascript" src="flare.js"></script>
+    <style type="text/css">
+
+body {
+  margin: 0;
+}
+
+    </style>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var root = pv.dom(flare).root("flare");
+root.toggle(true);
+root.toggle();
+
+var vis = new pv.Panel()
+    .width(600)
+    .height(600)
+    .fillStyle("white")
+    .event("mousedown", pv.Behavior.pan())
+    .event("mousewheel", pv.Behavior.zoom());
+
+var layout = vis.add(pv.Layout.Force)
+    .nodes(function() root.nodes())
+    .links(pv.Layout.Hierarchy.links);
+
+layout.link.add(pv.Line);
+
+layout.node.add(pv.Dot)
+    .title(function(n) n.nodeName)
+    .size(function(n) (n.nodeValue / 100) || 10)
+    .fillStyle(function(n) n.toggled ? "#1f77b4" : n.firstChild ? "#aec7e8" : "#ff7f0e")
+    .event("mousedown", pv.Behavior.drag())
+    .event("drag", layout)
+    .event("dblclick", function(n) (n.toggle(pv.event.altKey), layout.reset()));
+
+vis.render();
+
+    </script>
+  </body>
+</html>

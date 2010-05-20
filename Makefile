@@ -1,6 +1,5 @@
 HTML_FILES = \
 	www/index.html \
-	www/docs/layouts.html \
 	www/ex/antibiotics-burtin.html \
 	www/ex/area.html \
 	www/ex/bar.html \
@@ -21,6 +20,7 @@ HTML_FILES = \
 	www/ex/error-points.html \
 	www/ex/eyes.html \
 	www/ex/flowers.html \
+	www/ex/force-toggle.html \
 	www/ex/grid.html \
 	www/ex/heatmap.html \
 	www/ex/horizon.html \
