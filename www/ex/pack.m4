@@ -52,9 +52,9 @@
     </div>
 
     <div class="body">
-      <h1>Circle Packing Layout</h1>
+      <h1>Circle Packing</h1>
 
-      <iframe style="height:800px;" src="circle-pack-full.html"></iframe>
+      <iframe style="height:800px;" src="pack-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="circle-pack-full.html" target="_blank">View full screen.</a>
@@ -72,7 +72,7 @@
 
       <h3>Source</h3>
 
-include(`circle-pack-full.html.html')
+include(`pack-full.html.html')
 
       <h3>Data</h3>
 
