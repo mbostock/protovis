@@ -80,26 +80,22 @@ var w = 310,
     h = 310,
     q1 = quantile(100, pv.range(0,10000).map(uniform)),
     q2 = quantile(100, turkers.percent.values),
-    x = pv.Scale.linear(-0.5,1.5).range(0,w),
-    y = pv.Scale.linear(-0.5,1.5).range(0,h);
+    x = pv.Scale.linear(-0.5, 1.5).range(0, w),
+    y = pv.Scale.linear(-0.5, 1.5).range(0, h);
 
 /* The Q-Q plot panel. */
 var vis = new pv.Panel()
     .top(5.5).bottom(20.5).left(50).right(20)
     .width(w)
-    .height(h);
+    .height(h)
+    .strokeStyle("#aaa");
 
 /* Plot frame and diagonal. */
-vis.add(pv.Rule).left(0);
-vis.add(pv.Rule).top(0);
-vis.add(pv.Rule).bottom(0);
-vis.add(pv.Rule).right(0);
 vis.add(pv.Line)
     .data([0,1])
     .left(function(d) w*d)
     .bottom(function(d) h*d)
-    .strokeStyle("black")
-    .lineWidth(2);
+    .strokeStyle("#ccc");
 
 /* Y-axis label. */
 vis.add(pv.Label)
@@ -114,7 +110,7 @@ vis.add(pv.Dot)
     .data(pv.range(0,1.1,0.5))
     .left(x).bottom(-5).size(5)
     .shape("tick")
-    .strokeStyle("black").lineWidth(1)
+    .strokeStyle("#999")
   .anchor("bottom").add(pv.Label);
 
 /* Y-axis ticks and labels. */
@@ -122,7 +118,7 @@ vis.add(pv.Dot)
     .data(pv.range(0,1.1,0.5))
     .bottom(x).left(-5).size(5)
     .shape("tick").angle(Math.PI/2)
-    .strokeStyle("black").lineWidth(1)
+    .strokeStyle("#999")
   .anchor("left").add(pv.Label);
 
 /* Data points by quantiles. */
@@ -130,7 +126,7 @@ vis.add(pv.Dot)
     .data(pv.range(0.01,1.0,0.01))
     .left(function(f) x(qi(f,q1)))
     .bottom(function(f) y(qi(f,q2)))
-    .fillStyle("rgba(1,1,1,0.01)")
+    .events("all")
     .title(function(f) (100*f).toFixed(0)+suffix(100*f)+
         " Percentile: "+qi(f,q1).toFixed(2)+", "+qi(f,q2).toFixed(2));
 
