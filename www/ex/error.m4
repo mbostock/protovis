@@ -44,10 +44,10 @@
     <div class="body">
       <h1>2D Errors</h1>
 
-      <iframe id="iframe" style="height:440px;" src="error-points-full.html"></iframe>
+      <iframe id="iframe" style="height:440px;" src="error-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
-      href="error-points-full.html" target="_blank">View full screen.</a>
+      href="error-full.html" target="_blank">View full screen.</a>
 
       <p>An experiment the measures the dependence between two physical quantities will
       likely have some measure of error in both dimensions. The two dimensional error
@@ -59,11 +59,11 @@
 
       <h3>Source</h3>
 
-include(`error-points-full.html.html')
+include(`error-full.html.html')
 
       <h3>Data</h3>
 
-include(`error-points.js.html')
+include(`error.js.html')
 
     </div>
 

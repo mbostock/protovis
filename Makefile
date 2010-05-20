@@ -6,6 +6,7 @@ HTML_FILES = \
 	www/ex/barley.html \
 	www/ex/box-and-whisker.html \
 	www/ex/browser-wars.html \
+	www/ex/bubbles.html \
 	www/ex/bullet.html \
 	www/ex/cars.html \
 	www/ex/cartogram.html \
@@ -17,7 +18,7 @@ HTML_FILES = \
 	www/ex/crimea-rose.html \
 	www/ex/dot.html \
 	www/ex/dymax.html \
-	www/ex/error-points.html \
+	www/ex/error.html \
 	www/ex/eyes.html \
 	www/ex/flowers.html \
 	www/ex/force-toggle.html \
@@ -32,7 +33,6 @@ HTML_FILES = \
 	www/ex/life.html \
 	www/ex/line.html \
 	www/ex/linear-date.html \
-	www/ex/matrix.html \
 	www/ex/minnesota.html \
 	www/ex/miserables-arcs.html \
 	www/ex/miserables-force.html \

@@ -63,11 +63,11 @@
       difficult to learn; second, that the user must sacrifice expressiveness
       (i.e., customization and control) to facilitate reuse. To avoid these
       pitfalls, Protovis layouts are implemented as a set of related <b>mark
-      prototypes</b>. Unlike previous approaches, layouts in Protovis are thus
-      not a new fundamental abstraction, but a repurposing of existing
-      prototypal inheritance; prototype marks provide default properties to
-      instantiate the layout design, while allowing a great deal of
-      customization through property overrides and construction.
+      prototypes</b>. Unlike previous approaches, layouts in Protovis do not
+      introduce new fundamental abstractions, instead repurposing prototypal
+      inheritance; prototype marks provide default properties to instantiate the
+      layout design, while allowing a great deal of customization through
+      property overrides and construction.
 
       <h2>Design</h2>
 
@@ -90,6 +90,12 @@
       functions. This simplifies the creation of small multiples of layouts with
       varying parameters, and allows layouts to be nested hierarchically,
       similar to <a href="http://gicentre.org/hierarchical_layouts/" >HiVE</a>.
+
+      <p>Two caveats: lack of consistency across layout implementations means
+      that users must understand the semantics of the mark prototypes in order
+      to instantiate and customize the layout; layout implementations often
+      require an additional pre-processing step per instance
+      (<tt>buildImplied</tt>).
 
       <h3>Mark Prototypes</h3>
 
