@@ -1,4 +1,4 @@
-// ee2831567e6a737753f7fd461744ac10760fadb0
+// 97d88b77a7185618bf6add0ffed203eba3639e2e
 /**
  * @class The built-in Array class.
  * @name Array
@@ -3198,23 +3198,23 @@ pv.Scale.quantitative = function() {
       }
 
       var precision, format, increment, step = 1;
-      if (span >= 2 * 31536e6) {
+      if (span >= 3 * 31536e6) {
         precision = 31536e6;
         format = "%Y";
         /** @ignore */ increment = function(d) { d.setFullYear(d.getFullYear() + step); };
-      } else if (span >= 2 * 2592e6) {
+      } else if (span >= 3 * 2592e6) {
         precision = 2592e6;
         format = "%m/%Y";
         /** @ignore */ increment = function(d) { d.setMonth(d.getMonth() + step); };
-      } else if (span >= 2 * 6048e5) {
+      } else if (span >= 3 * 6048e5) {
         precision = 6048e5;
         format = "%m/%d";
         /** @ignore */ increment = function(d) { d.setDate(d.getDate() + 7 * step); };
-      } else if (span >= 2 * 864e5) {
+      } else if (span >= 3 * 864e5) {
         precision = 864e5;
         format = "%m/%d";
         /** @ignore */ increment = function(d) { d.setDate(d.getDate() + step); };
-      } else if (span >= 2 * 36e5) {
+      } else if (span >= 3 * 36e5) {
         precision = 36e5;
         format = "%I:%M %p";
         /** @ignore */ increment = function(d) { d.setHours(d.getHours() + step); };
@@ -3291,9 +3291,9 @@ pv.Scale.quantitative = function() {
     else if (err <= .35) step *= 5;
     else if (err <= .75) step *= 2;
     var start = Math.ceil(min / step) * step,
-        end = Math.floor(max / step) * step,
-        precision = Math.max(0, -Math.floor(pv.log(step, 10) + .01));
-    /** @ignore */ tickFormat = function(x) { return x.toFixed(precision); };
+        end = Math.floor(max / step) * step;
+    tickFormat = pv.Format.number()
+        .fractionDigits(Math.max(0, -Math.floor(pv.log(step, 10) + .01)));
     var ticks = pv.range(start, end + step, step);
     return reverse ? ticks.reverse() : ticks;
   };
@@ -5733,6 +5733,10 @@ pv.SvgScene.dot = function(scenes) {
         path = "M0,0L0," + -s.size;
         break;
       }
+      case "bar": {
+        path = "M0," + (s.size / 2) + "L0," + -(s.size / 2);
+        break;
+      }
     }
 
     /* Use <circle> for circles, <path> for everything else. */
@@ -7939,8 +7943,9 @@ pv.Dot.prototype.type = "dot";
  * <li>triangle
  * <li>diamond
  * <li>square
- * <li>tick
  * <li>circle
+ * <li>tick
+ * <li>bar
  *
  * </ul>These shapes can be further changed using the {@link #angle} property;
  * for instance, a cross can be turned into a plus by rotating. Similarly, the
@@ -13931,6 +13936,98 @@ pv.Layout.Matrix.prototype.buildImplied = function(s) {
     map[source + "." + target].linkValue += value;
     if (!s.directed) map[target + "." + source].linkValue += value;
   }
+};
+// ranges (bad, satisfactory, good)
+// measures (actual, forecast)
+// markers (previous, goal)
+
+pv.Layout.Bullet = function() {
+  pv.Layout.call(this);
+  var that = this,
+      buildImplied = that.buildImplied,
+      scale = that.x = pv.Scale.linear(),
+      orient,
+      horizontal,
+      rangeColor,
+      meausureColor,
+      x;
+
+  /** @private Cache layout state to optimize properties. */
+  this.buildImplied = function(s) {
+    buildImplied.call(this, x = s);
+    orient = s.orient;
+    horizontal = /^left|right$/.test(orient);
+    rangeColor = pv.ramp("#bbb", "#eee")
+        .domain(0, Math.max(1, x.ranges.length - 1));
+    measureColor = pv.ramp("steelblue", "lightsteelblue")
+        .domain(0, Math.max(1, x.measures.length - 1));
+  };
+
+  (this.range = new pv.Mark())
+      .data(function() { return x.ranges; })
+      .reverse(true)
+      .left(function() { return orient == "left" ? 0 : null; })
+      .top(function() { return orient == "top" ? 0 : null; })
+      .right(function() { return orient == "right" ? 0 : null; })
+      .bottom(function() { return orient == "bottom" ? 0 : null; })
+      .width(function(d) { return horizontal ? scale(d) : null; })
+      .height(function(d) { return horizontal ? null : scale(d); })
+      .fillStyle(function() { return rangeColor(this.index); })
+      .antialias(false)
+      .parent = that;
+
+  (this.measure = new pv.Mark())
+      .extend(this.range)
+      .data(function() { return x.measures; })
+      .left(function() { return orient == "left" ? 0 : horizontal ? null : this.parent.width() / 3.25; })
+      .top(function() { return orient == "top" ? 0 : horizontal ? this.parent.height() / 3.25 : null; })
+      .right(function() { return orient == "right" ? 0 : horizontal ? null : this.parent.width() / 3.25; })
+      .bottom(function() { return orient == "bottom" ? 0 : horizontal ? this.parent.height() / 3.25 : null; })
+      .fillStyle(function() { return measureColor(this.index); })
+      .parent = that;
+
+  (this.marker = new pv.Mark())
+      .data(function() { return x.markers; })
+      .left(function(d) { return orient == "left" ? scale(d) : horizontal ? null : this.parent.width() / 2; })
+      .top(function(d) { return orient == "top" ? scale(d) : horizontal ? this.parent.height() / 2 : null; })
+      .right(function(d) { return orient == "right" ? scale(d) : null; })
+      .bottom(function(d) { return orient == "bottom" ? scale(d) : null; })
+      .strokeStyle("black")
+      .shape("bar")
+      .angle(function() { return horizontal ? 0 : Math.PI / 2; })
+      .parent = that;
+
+  (this.tick = new pv.Mark())
+      .data(function() { return scale.ticks(7); })
+      .left(function(d) { return orient == "left" ? scale(d) : null; })
+      .top(function(d) { return orient == "top" ? scale(d) : null; })
+      .right(function(d) { return orient == "right" ? scale(d) : horizontal ? null : -6; })
+      .bottom(function(d) { return orient == "bottom" ? scale(d) : horizontal ? -8 : null; })
+      .height(function() { return horizontal ? 6 : null; })
+      .width(function() { return horizontal ? null : 6; })
+      .parent = that;
+};
+
+pv.Layout.Bullet.prototype = pv.extend(pv.Layout)
+    .property("orient", String) // left, right, top, bottom
+    .property("ranges")
+    .property("markers")
+    .property("measures")
+    .property("maximum", Number);
+
+pv.Layout.Bullet.prototype.defaults = new pv.Layout.Bullet()
+    .extend(pv.Layout.prototype.defaults)
+    .orient("left")
+    .ranges([])
+    .markers([])
+    .measures([]);
+
+/** @private */
+pv.Layout.Bullet.prototype.buildImplied = function(s) {
+  pv.Layout.prototype.buildImplied.call(this, s);
+  var size = this.parent[/^left|right$/.test(s.orient) ? "width" : "height"]();
+  s.maximum = s.maximum || pv.max([].concat(s.ranges, s.markers, s.measures));
+  this.x.domain(0, s.maximum).range(0, size);
 };
 /**
  * Abstract; see an implementing class for details.

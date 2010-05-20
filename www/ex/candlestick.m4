@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - VIX</title>
+    <title>Protovis - Candlestick</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <style type="text/css">
@@ -13,7 +13,7 @@
         border-left: solid 4px #ccc;
       }
     </style>
-    <script type="text/javascript" src="../protovis-r3.2.js"></script> 
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
   </head>
   <body>
 
@@ -49,15 +49,19 @@
         <a href="treemap.html">&laquo; Previous</a> /
         <a href="icicle.html">Next &raquo;</a>
       </div>
-    s="body">
-      <h1>Candlestick chart</h1>
+    </div>
 
-      <iframe style="height:510px;" src="vix-full.html"></iframe>
+    <div class="body">
+      <h1>Candlestick</h1>
+
+      <iframe style="height:510px;" src="candlestick-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
-      href="vix-full.html" target="_blank">View full screen.</a>
+      href="candlestick-full.html" target="_blank">View full screen.</a>
 
-      <p>VIX volatility data displayed as a <a href="http://en.wikipedia.org/wiki/Candlestick_chart">Candlestick chart</a>
+      <p>VIX volatility data displayed as a <a
+      href="http://en.wikipedia.org/wiki/Candlestick_chart">Candlestick
+      chart</a>
 
       <blockquote style="font-size:13px;">
         Next: <a href="icicle.html">Icicle Layout</a>
@@ -65,7 +69,7 @@
 
       <h3>Source</h3>
 
-include(`vix-full.html.html')
+include(`candlestick-full.html.html')
 
       <h3>Data</h3>
 

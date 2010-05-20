@@ -53,7 +53,7 @@ HTML_FILES = \
 	www/ex/treemap.html \
 	www/ex/unemployed.html \
 	www/ex/dendrogram.html \
-	www/ex/vix.html \
+	www/ex/candlestick.html \
 	www/ex/waves.html \
 	www/ex/weather.html \
 	www/ex/wheat.html \
