@@ -1,9 +1,9 @@
 <html>
   <head>
-    <title>Protovis - Les Mis&eacute;rables Force Directed Layout</title>
-    <link type="text/css" rel="stylesheet" href="../style.css?3.1a"/>
+    <title>Protovis - N-Body Simulation</title>
+    <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
-    <script type="text/javascript" src="../protovis-r3.2.0.js"></script> 
+    <script type="text/javascript" src="../protovis-r3.2.js"></script> 
   </head>
   <body>
 
@@ -28,7 +28,7 @@
         <a href="../protovis.pdf">Paper</a>
       </div>
       <div class="section">
-        <a href="http://protovis-js.googlecode.com/files/protovis-3.2.zip">Download</a>
+        <a href="http://protovis-js.googlecode.com/files/protovis-3.1.zip">Download</a>
       </div>
     </div>
     <div class="subhead">
@@ -36,37 +36,38 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="barley.html">&laquo; Previous</a> /
-        <a href="weather.html">Next &raquo;</a>
+        <a href="bullet.html">&laquo; Previous</a> /
+        <a href="area.html">Next &raquo;</a>
       </div>
     </div>
 
     <div class="body">
-      <h1>Les Mis&eacute;rables Force Directed Layout</h1>
+      <h1>N-Body Simulation</h1>
 
-      <iframe style="height:700px;" src="miserables-force-embed.html"></iframe>
+      <iframe id="iframe" style="height:600px;" src="nbody-embed.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
-      href="miserables-force-full.html" target="_blank">View full screen.</a>
+      href="nbody-full.html" target="_blank">View full screen.</a>
 
-      <p>Les Mis&eacute;rables character interaction presented as a force directed graph. Each
-      character is represented by a circle and the connecting lines (or springs) represent
-      interaction. The character's size indicates the number of interactions they have over
-      the entire play. Drag and zoom the graph the get a better view.</p>
+      <p>This multi-agent simulation shows the bunching behaviour that naturally arises from
+      the simple agent definitions.
+
+      <blockquote style="font-size:13px;">
+        Next: <a href="area.html">Area</a>
+      </blockquote>
 
       <h3>Source</h3>
 
-include(`miserables-force-full.html.html')
+include(`nbody-full.html.html')
 
       <h3>Data</h3>
 
-      Due to size, the data file is omitted from this
-      example. See <a href="miserables.js" target="_blank">miserables.js</a>.
+      This example has no data.
 
     </div>
 
     <div class="foot">
-      Copyright 2010 <a href="http://vis.stanford.edu">Stanford Visualization Group</a>
+      Copyright 2009 <a href="http://vis.stanford.edu">Stanford Visualization Group</a>
     </div>
 
     <script type="text/javascript" src="http://www.google-analytics.com/ga.js"></script>

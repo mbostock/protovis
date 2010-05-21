@@ -50,8 +50,8 @@
         var vis = new pv.Panel()
             .width(200)
             .height(200)
-            .fillStyle("#222")
-            .strokeStyle("#aaa");
+            .strokeStyle("#aaa")
+            .fillStyle("#222");
 
         vis.add(pv.Panel)
             .data(pv.range(0, 201, 20))
@@ -60,12 +60,12 @@
             .data(pv.range(0, 201, 20))
             .top(function(y) y)
           .add(pv.Dot)
-            .fillStyle("rgba(255, 255, 255, .5)")
+            .fillStyle("#fff")
             .strokeStyle(null)
             .size(function() this.mouse().length());
 
         vis.render();
-        window.onmousemove = function() vis.render();
+        pv.listen(self, "mousemove", function() vis.render());
 
       </script>
       <p><img src="popout.png" width="16" height="16"
