@@ -1,4 +1,4 @@
-// 97d88b77a7185618bf6add0ffed203eba3639e2e
+// 2f4b8412e567fd14045dc9f2ea0e729ae9a7d7e2
 /**
  * @class The built-in Array class.
  * @name Array
@@ -10298,6 +10298,7 @@ pv.Constraint.position = function(f) {
       if (v) {
         p.x += (v.x - p.x) * a;
         p.y += (v.y - p.y) * a;
+        p.fx = p.fy = p.vx = p.vy = 0;
       }
     }
   };
