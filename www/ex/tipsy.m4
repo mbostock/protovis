@@ -49,14 +49,11 @@
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="tipsy-full.html" target="_blank">View full screen.</a>
 
-      <div style="float:left;padding-left:30px;width:500px;">
       The tipsy label is a more aesthetic way to present the details-on-demand tooltip.
 
       <blockquote style="font-size:13px;">
         Next: <a href="flowers.html">Anderson's Flowers</a>
       </blockquote>
-      </div>
-      <br clear="all">
 
       <h3>Source</h3>
 

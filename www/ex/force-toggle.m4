@@ -54,12 +54,10 @@
     <div class="body">
       <h1>Force Toggle Layout</h1>
 
-      <div style="float:left;width:300px;">
       <iframe style="height:400px;width:290px" src="force-toggle-embed.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="force-toggle-full.html" target="_blank">View full screen.</a>
-      </div>
 
       <p>This force directed layout allows the user to dynamically expand and
       collapse nodes by double clicking on them. Use the Alt key to propagate

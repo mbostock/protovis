@@ -44,21 +44,22 @@
     <div class="body">
       <h1>Belousov-Zhabotinsky reaction</h1>
 
-      <div style="float:left;width:610px;">
+      <div style="float:left;width:430px;">
       <iframe style="border:solid 4px #ccc;width:400px;height:400px;" src="bzr-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="bzr-full.html" target="_blank">View full screen.</a>
       </div>
 
-      <div style="float:left;padding-left:30px;width:500px;">
-      A <a href="http://en.wikipedia.org/wiki/Belousov-Zhabotinsky_reaction">Belousov–Zhabotinsky reaction</a>
-      is an example of a nonlinear chemical oscillator.
+      A <a href="http://en.wikipedia.org/wiki/Belousov-Zhabotinsky_reaction"
+      >Belousov-Zhabotinsky reaction</a> is a nonlinear chemical oscillator.
+      This simulation is based on the work of <a
+      href="http://www.nitorijournal.org/?p=2109">Nitori Kawashiro</a>, and uses
+      a two-dimensional cellular automaton similar to Conway's Game of Life.
 
       <blockquote style="font-size:13px;">
         Next: <a href="waves.html">Waves</a>
       </blockquote>
-      </div>
       <br clear="all">
 
       <h3>Source</h3>
@@ -67,8 +68,7 @@ include(`bzr-full.html.html')
 
       <h3>Data</h3>
 
-      Due to size, the data file is omitted from this
-      example. See <a href="bzr.js" target="_blank">bzr.js</a>.
+include(`bzr.js.html')
 
     </div>
 

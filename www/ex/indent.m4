@@ -69,6 +69,7 @@
       <blockquote style="font-size:13px;">
         Next: <a href="icicle.html">Icicle Layout</a>
       </blockquote>
+      <br clear="all">
 
       <h3>Source</h3>
 

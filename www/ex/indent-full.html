@@ -8,57 +8,63 @@
   <body>
     <script type="text/javascript+protovis">
 
-      var root = pv.dom(flare)
-          .root("flare")
-          .sort(function(a, b) pv.naturalOrder(a.nodeName, b.nodeName));
+var root = pv.dom(flare)
+    .root("flare")
+    .sort(function(a, b) pv.naturalOrder(a.nodeName, b.nodeName));
 
-      /* Recursively compute the package sizes & toggle the nodes. */
-      root.visitAfter(function(n) {
-        if (n.firstChild) {
-          n.nodeValue = pv.sum(n.childNodes, function(n) n.nodeValue);
-          if (n.parentNode) n.toggle();
-        }
-      });
+/* Recursively compute the package sizes & toggle the nodes. */
+root.visitAfter(function(n) {
+  if (n.firstChild) {
+    n.nodeValue = pv.sum(n.childNodes, function(n) n.nodeValue);
+    if (n.parentNode) n.toggle();
+  }
+});
 
-      var vis = new pv.Panel()
-          .width(260)
-          .height(function() (root.nodes().length + 1) * 12)
-          .strokeStyle("#ccc")
-          .margin(5);
+/* Open a few child nodes to begin. */
+root.childNodes[0].toggle();
+root.childNodes[1].toggle();
+root.childNodes[3].toggle();
+root.childNodes[4].toggle();
 
-      var layout = vis.add(pv.Layout.Indent)
-          .nodes(function() root.nodes())
-          .depth(12)
-          .breadth(12);
+var vis = new pv.Panel()
+    .width(260)
+    .height(function() (root.nodes().length + 1) * 12)
+    .strokeStyle("#ccc")
+    .margin(5);
 
-      layout.link.add(pv.Line);
+var layout = vis.add(pv.Layout.Indent)
+    .nodes(function() root.nodes())
+    .depth(12)
+    .breadth(12);
 
-      var node = layout.node.add(pv.Panel)
-          .top(function(n) n.y - 6)
-          .height(12)
-          .right(6)
-          .strokeStyle(null)
-          .events("all")
-          .event("mousedown", toggle);
+layout.link.add(pv.Line);
 
-      node.anchor("left").add(pv.Dot)
-          .strokeStyle("#1f77b4")
-          .fillStyle(function(n) n.toggled ? "#1f77b4" : n.firstChild ? "#aec7e8" : "#ff7f0e")
-          .title(function t(d) d.parentNode ? (t(d.parentNode) + "." + d.nodeName) : d.nodeName)
-        .anchor("right").add(pv.Label)
-          .text(function(n) n.nodeName);
+var node = layout.node.add(pv.Panel)
+    .top(function(n) n.y - 6)
+    .height(12)
+    .right(6)
+    .strokeStyle(null)
+    .events("all")
+    .event("mousedown", toggle);
 
-      node.anchor("right").add(pv.Label)
-          .textStyle(function(n) n.firstChild || n.toggled ? "#aaa" : "#000")
-          .text(function(n) (n.nodeValue >> 10) + "KB");
+node.anchor("left").add(pv.Dot)
+    .strokeStyle("#1f77b4")
+    .fillStyle(function(n) n.toggled ? "#1f77b4" : n.firstChild ? "#aec7e8" : "#ff7f0e")
+    .title(function t(d) d.parentNode ? (t(d.parentNode) + "." + d.nodeName) : d.nodeName)
+  .anchor("right").add(pv.Label)
+    .text(function(n) n.nodeName);
 
-      vis.render();
+node.anchor("right").add(pv.Label)
+    .textStyle(function(n) n.firstChild || n.toggled ? "#aaa" : "#000")
+    .text(function(n) (n.nodeValue >> 10) + "KB");
 
-      /* Toggles the selected node, then updates the layout. */
-      function toggle(n) {
-        n.toggle(pv.event.altKey);
-        return layout.reset().root;
-      }
+vis.render();
+
+/* Toggles the selected node, then updates the layout. */
+function toggle(n) {
+  n.toggle(pv.event.altKey);
+  return layout.reset().root;
+}
 
     </script>
   </body>
