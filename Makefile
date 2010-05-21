@@ -41,6 +41,7 @@ HTML_FILES = \
 	www/ex/miserables-force.html \
 	www/ex/miserables-matrix.html \
 	www/ex/napoleon.html \
+	www/ex/nbody.html \
 	www/ex/oakland.html \
 	www/ex/pie.html \
 	www/ex/qqplot.html \

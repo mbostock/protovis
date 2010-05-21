@@ -38,7 +38,10 @@ vis.add(pv.Panel)
     .strokeStyle(null)
     .size(function(d) d.r * d.r)
   .add(pv.Dot)
-    .def("v", function(d) this.mouse().norm().times(d.r / 2))
+    .def("v", function(d) {
+      var m = this.mouse();
+      return (m.length() > d.r / 2) ? m.norm().times(d.r / 2) : m;
+    })
     .fillStyle("#aaa")
     .left(function(d) this.v().x)
     .top(function(d) this.v().y)

@@ -53,7 +53,7 @@
             .fillStyle("#666")
             .strokeStyle("#ccc");
 
-          vis.add(pv.Panel)
+        vis.add(pv.Panel)
             .data([{x:50, y:16, r:40},
                    {x:64, y:85, r:20},
                    {x:90, y:200, r:60},
@@ -66,14 +66,17 @@
             .strokeStyle(null)
             .size(function(d) d.r * d.r)
           .add(pv.Dot)
-            .def("v", function(d) this.mouse().norm().times(d.r / 2))
+            .def("v", function(d) {
+              var m = this.mouse();
+              return (m.length() > d.r / 2) ? m.norm().times(d.r / 2) : m;
+            })
             .fillStyle("#aaa")
             .left(function(d) this.v().x)
             .top(function(d) this.v().y)
             .size(function(d) d.r * d.r / 4);
 
         vis.render();
-        self.onmousemove = function() vis.render();
+        pv.listen(self, "mousemove", function() vis.render());
 
       </script>
       <p><img src="popout.png" width="16" height="16"
