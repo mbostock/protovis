@@ -52,19 +52,20 @@
       </div>
 
       <div style="float:left;padding-left:30px;width:400px;">
-      This stacked bar chart is constructed using
-      a <a href="http://code.google.com/p/protovis-js/wiki/PvBar">bar</a>
-      mark with the
-       <a href="http://protovis-js.googlecode.com/svn/trunk/jsdoc/symbols/pv.Layout.stack.html">stack
-      layout</a>. Next, <a href="http://code.google.com/p/protovis-js/wiki/PvRule">rules</a>
+
+      This simple bar chart is constructed using a <a
+      href="http://code.google.com/p/protovis-js/wiki/PvBar">bar</a> mark. A
+      linear scale is used to compute the width of the bar, while an ordinal
+      scale sets the top position and height for the categorical dimension.
+      Next, <a href="http://code.google.com/p/protovis-js/wiki/PvRule">rules</a>
       and <a href="http://code.google.com/p/protovis-js/wiki/PvLabel">labels</a>
       are added for reference values.
 
-      <p>Bars can be used in a variety of ways. For instance, they can
-      be <a href="http://protovis-js.googlecode.com/svn/trunk/examples/bar-grouped.html" target="_blank">grouped</a> rather than
-      stacked, or arranged as <a href="http://protovis-js.googlecode.com/svn/trunk/examples/column-grouped.html"
-      target="_blank">grouped</a> or <a href="http://protovis-js.googlecode.com/svn/trunk/examples/column-stacked.html"
-      target="_blank">stacked columns</a>.
+      <p>Bars can be used in a variety of ways. For instance, they can be <a
+      href="stack.html">stacked</a> or <a href="group.html">grouped</a> to show
+      multiple data series, or arranged as vertical <a
+      href="http://protovis-js.googlecode.com/svn/trunk/examples/column.html"
+      target="_blank">columns</a> rather than bars.
 
       <blockquote style="font-size:13px;">
         Next: <a href="dot.html">Dot Charts</a>

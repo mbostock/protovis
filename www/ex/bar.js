@@ -1,3 +1,1 @@
-var data = pv.range(10).map(function() {
-    return pv.range(4).map(Math.random);
-  });
+var data = pv.range(10).map(function(d) { return Math.random() + .1; });
