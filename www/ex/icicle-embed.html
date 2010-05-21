@@ -5,7 +5,7 @@
     <script type="text/javascript" src="flare.js"></script>
     <link rel="stylesheet" type="text/css" href="ex.css"/>
   </head>
-  <body><center>
+  <body>
     <script type="text/javascript+protovis">
 
       /* The root panel. */
@@ -17,24 +17,26 @@
           .left(1.5)
           .right(1.5);
 
-      /* Add a bar with the icicle layout and label. */
-      vis.add(pv.Bar)
-          .extend(pv.Layout.icicle(flare).root("flare"))
-          .fillStyle(pv.Colors.category19()
-              .by(function(n) n.children ? n.keys : n.keys.slice(0, -1)))
-          .strokeStyle(function() this.fillStyle().darker())
-          .title(function(n) n.keys.join(".") + ": " + n.size)
-          .cursor("pointer")
-          .event("click", function(n) window.open(
-              "http://svn.prefuse.org/flare/trunk/flare/flare/src/"
-              + n.keys.join("/") + (n.children ? "" : ".as")))
-        .anchor("center").add(pv.Label)
-          .visible(function(n) n.width >= 10)
-          .textAngle(-Math.PI / 2)
-          .text(function(n) n.keys[n.keys.length - 1])
+      var layout = vis.add(pv.Layout.Partition.Fill)
+        .nodes(pv.dom(flare)
+          .root("flare")
+          .sort(function(a, b) pv.naturalOrder(a.nodeName, b.nodeName))
+          .nodes())
+        .orient("top")
+        .size(function(d) d.nodeValue);
+
+      layout.node.add(pv.Bar)
+        .fillStyle(function(n) n.firstChild ? "#aec7e8" : "#ff7f0e")
+        .title(function t(d) d.parentNode ? (t(d.parentNode) + "." + d.nodeName) : d.nodeName)
+        .cursor("pointer");
+
+      layout.label.add(pv.Label)
+        .textAngle(-Math.PI / 2)
+        .visible(function(n) n.dx > 10)
+        .text(function(n) n.nodeName);
 
       vis.render();
 
     </script>
-  </center></body>
+  </body>
 </html>
