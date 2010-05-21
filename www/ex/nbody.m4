@@ -44,7 +44,7 @@
     <div class="body">
       <h1>N-Body Simulation</h1>
 
-      <iframe id="iframe" style="height:600px;" src="nbody-embed.html"></iframe>
+      <iframe id="iframe" style="height:600px;width:900px;" src="nbody-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="nbody-full.html" target="_blank">View full screen.</a>

@@ -14,8 +14,8 @@ body {
   <body>
     <script type="text/javascript+protovis">
 
-var w = window.innerWidth,
-    h = window.innerHeight,
+var w = document.body.clientWidth,
+    h = document.body.clientHeight,
     nodes = pv.range(200).map(function(i) {
       return {x: w * Math.random(),
               y: h * Math.random(),
