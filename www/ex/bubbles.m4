@@ -3,7 +3,7 @@
     <title>Protovis - Bubbles</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
-    <script type="text/javascript" src="../protovis-r3.2.js"></script> 
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
   </head>
   <body>
 
@@ -47,25 +47,25 @@
       <div style="float:left;width:200px;">
       <script type="text/javascript+protovis">
 
-        var vis = new pv.Panel()
-            .width(200)
-            .height(200)
-            .strokeStyle("#aaa")
-            .fillStyle("#222");
+var vis = new pv.Panel()
+    .width(200)
+    .height(200)
+    .fillStyle("#222")
+    .strokeStyle("#aaa");
 
-        vis.add(pv.Panel)
-            .data(pv.range(0, 201, 20))
-            .left(function(x) x)
-          .add(pv.Panel)
-            .data(pv.range(0, 201, 20))
-            .top(function(y) y)
-          .add(pv.Dot)
-            .fillStyle("#fff")
-            .strokeStyle(null)
-            .size(function() this.mouse().length());
+vis.add(pv.Panel)
+    .data(pv.range(0, 201, 20))
+    .left(function(x) x)
+  .add(pv.Panel)
+    .data(pv.range(0, 201, 20))
+    .top(function(y) y)
+  .add(pv.Dot)
+    .fillStyle("rgba(255, 255, 255, .5)")
+    .strokeStyle(null)
+    .size(function() this.mouse().length());
 
-        vis.render();
-        pv.listen(self, "mousemove", function() vis.render());
+vis.render();
+pv.listen(self, "mousemove", function() vis.render());
 
       </script>
       <p><img src="popout.png" width="16" height="16"
@@ -78,7 +78,7 @@
       Processing <a href="http://processing.org/learning/basics/distance2d.html">Distance
       2D</a> example. We demonstrate an equivalent technique for computing the
       distance from the panel to the mouse
-      using <tt><a href="http://protovis-js.googlecode.com/svn/trunk/jsdoc/symbols/pv.Mark.html#mouse">pv.Mark.mouse</a></tt>. One
+      using <tt><a href="http://protovis-js.googlecode.com/svn/trunk/jsdoc/symbols/pv.Mark.html#mouse">pv.Mark#mouse</a></tt>. One
       benefit of a pure-JavaScript approach is that user interface events that
       happen outside of the canvas&mdash;such as mouse movement&mdash;can still
       be captured by visualization.

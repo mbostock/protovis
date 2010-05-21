@@ -1,4 +1,4 @@
-// 2f4b8412e567fd14045dc9f2ea0e729ae9a7d7e2
+// eb17b8abfae4c73e9579858650ddb3249a6619ea
 /**
  * @class The built-in Array class.
  * @name Array
@@ -7284,8 +7284,8 @@ pv.Mark.prototype.buildImplied = function(s) {
 pv.Mark.prototype.mouse = function() {
 
   /* Compute xy-coordinates relative to the panel. */
-  var x = pv.event.pageX,
-      y = pv.event.pageY,
+  var x = pv.event.pageX || 0,
+      y = pv.event.pageY || 0,
       n = this.root.canvas();
   do {
     x -= n.offsetLeft;
@@ -13950,7 +13950,7 @@ pv.Layout.Bullet = function() {
       orient,
       horizontal,
       rangeColor,
-      meausureColor,
+      measureColor,
       x;
 
   /** @private Cache layout state to optimize properties. */

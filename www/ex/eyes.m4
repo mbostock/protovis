@@ -89,7 +89,7 @@
       Processing <a href="http://processing.org/learning/basics/arctangent.html">Arctangent</a>
       example. We demonstrate an equivalent technique for computing the vector
       from the dot center to the mouse
-      using <tt><a href="http://protovis-js.googlecode.com/svn/trunk/jsdoc/symbols/pv.Mark.html#mouse">pv.Mark.mouse</a></tt>.
+      using <tt><a href="http://protovis-js.googlecode.com/svn/trunk/jsdoc/symbols/pv.Mark.html#mouse">pv.Mark#mouse</a></tt>.
 
       <blockquote style="font-size:13px;">
         Next: <a href="zoom.html">Focus + Context</a>
