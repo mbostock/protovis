@@ -1049,8 +1049,8 @@ pv.Mark.prototype.buildImplied = function(s) {
 pv.Mark.prototype.mouse = function() {
 
   /* Compute xy-coordinates relative to the panel. */
-  var x = pv.event.pageX,
-      y = pv.event.pageY,
+  var x = pv.event.pageX || 0,
+      y = pv.event.pageY || 0,
       n = this.root.canvas();
   do {
     x -= n.offsetLeft;
