@@ -1,9 +1,9 @@
 <html>
   <head>
-    <title>Protovis - Les Mis&eacute;rables Force Directed Layout</title>
+    <title>Protovis - Force-Directed Graphs</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.1a"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
-    <script type="text/javascript" src="../protovis-r3.2.0.js"></script> 
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
   </head>
   <body>
 
@@ -36,27 +36,37 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="barley.html">&laquo; Previous</a> /
-        <a href="weather.html">Next &raquo;</a>
+        <a href="arc.html">&laquo; Previous</a> /
+        <a href="matrix.html">Next &raquo;</a>
       </div>
     </div>
 
     <div class="body">
-      <h1>Les Mis&eacute;rables Force Directed Layout</h1>
+      <h1>Force-Directed Graphs</h1>
 
-      <iframe style="height:700px;" src="miserables-force-embed.html"></iframe>
+      <div style="float:left;width:450px;">
+      <iframe style="height:350px;" src="force-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
-      href="miserables-force-full.html" target="_blank">View full screen.</a>
+      href="force-full.html" target="_blank">View full screen.</a>
+      </div>
 
-      <p>Les Mis&eacute;rables character interaction presented as a force directed graph. Each
-      character is represented by a circle and the connecting lines (or springs) represent
-      interaction. The character's size indicates the number of interactions they have over
-      the entire play. Drag and zoom the graph the get a better view.</p>
+      <div style="float:left;width:450px;">
+      <p>Les Mis&eacute;rables character interaction presented as a
+      force-directed graph. Each character is represented by a circle and the
+      connecting lines (or springs) represent interaction. The character's size
+      indicates the number of interactions they have over the entire play. Drag
+      and zoom the graph the get a better view.</p>
+
+      <blockquote style="font-size:13px;">
+        Next: <a href="matrix.html">Matrix Diagrams</a>
+      </blockquote>
+      </div>
+      <br clear="all">
 
       <h3>Source</h3>
 
-include(`miserables-force-full.html.html')
+include(`force-full.html.html')
 
       <h3>Data</h3>
 

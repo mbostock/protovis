@@ -25,6 +25,7 @@ www/ex/error.html
 www/ex/eyes.html
 www/ex/flowers.html
 www/ex/force-toggle.html
+www/ex/force.html
 www/ex/grid.html
 www/ex/group.html
 www/ex/heatmap.html
@@ -38,7 +39,6 @@ www/ex/life.html
 www/ex/line.html
 www/ex/linear-date.html
 www/ex/minnesota.html
-www/ex/miserables-force.html
 www/ex/miserables-matrix.html
 www/ex/napoleon.html
 www/ex/nbody.html

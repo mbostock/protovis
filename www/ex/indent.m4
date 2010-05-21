@@ -61,7 +61,8 @@
       href="indent-full.html" target="_blank">View full screen.</a>
       </div>
 
-      <p>The Indent layout should look very familiar given it's popularity in file system
+      <div style="float:left;width:600px;">
+      The Indent layout should look very familiar given it's popularity in file system
       browses in many operating systems. This built-in layout algorithm is used
       here to show the various ActionScript classes of
       the <a href="http://flare.prefuse.org">Flare</a> visualization toolkit.
@@ -69,6 +70,7 @@
       <blockquote style="font-size:13px;">
         Next: <a href="icicle.html">Icicle Layout</a>
       </blockquote>
+      </div>
       <br clear="all">
 
       <h3>Source</h3>

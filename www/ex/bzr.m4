@@ -51,6 +51,7 @@
       href="bzr-full.html" target="_blank">View full screen.</a>
       </div>
 
+      <div style="float:left;width:450px;">
       A <a href="http://en.wikipedia.org/wiki/Belousov-Zhabotinsky_reaction"
       >Belousov-Zhabotinsky reaction</a> is a nonlinear chemical oscillator.
       This simulation is based on the work of <a
@@ -60,6 +61,7 @@
       <blockquote style="font-size:13px;">
         Next: <a href="waves.html">Waves</a>
       </blockquote>
+      </div>
       <br clear="all">
 
       <h3>Source</h3>

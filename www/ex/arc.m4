@@ -3,7 +3,7 @@
     <title>Protovis - Arc Diagrams</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.1a"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
-    <script type="text/javascript" src="../protovis-r3.2.0.js"></script> 
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
   </head>
   <body>
 
@@ -36,8 +36,8 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="barley.html">&laquo; Previous</a> /
-        <a href="weather.html">Next &raquo;</a>
+        <a href="treemap.html">&laquo; Previous</a> /
+        <a href="force.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -53,6 +53,10 @@
       represented by a circle and the connecting arc represent interaction. The
       character's size indicates the number of interactions they have over the
       entire play.</p>
+
+      <blockquote style="font-size:13px;">
+        Next: <a href="force.html">Force-Directed Graphs</a>
+      </blockquote>
 
       <h3>Source</h3>
 
