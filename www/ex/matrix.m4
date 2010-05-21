@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - Les Mis&eacute;rables Matrix</title>
+    <title>Protovis - Matrix Diagrams</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.1a"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
@@ -36,26 +36,31 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="barley.html">&laquo; Previous</a> /
-        <a href="weather.html">Next &raquo;</a>
+        <a href="force.html">&laquo; Previous</a> /
+        <a href="napoleon.html">Next &raquo;</a>
       </div>
     </div>
 
     <div class="body">
-      <h1>Les Mis&eacute;rables Matrix</h1>
+      <h1>Matrix Diagrams</h1>
 
-      <iframe style="height:790px;" src="miserables-matrix-embed.html"></iframe>
+      <iframe style="height:800px;" src="matrix-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
-      href="miserables-matrix-full.html" target="_blank">View full screen.</a>
+      href="matrix-full.html" target="_blank">View full screen.</a>
 
-      <p>Les Mis&eacute;rables characters presented in an interaction matrix. Each character is
-      represented by a row and a column in the matrix. An entry in the matrix is colored
-      if it's row and column characters interact.</p>
+      <p>Les Mis&eacute;rables characters presented in an interaction
+      matrix. Each character is represented by a row and a column in the
+      matrix. An entry in the matrix is colored if it's row and column
+      characters interact.</p>
+
+      <blockquote style="font-size:13px;">
+        Next: <a href="napoleon.html">Minard's Napoleon</a>
+      </blockquote>
 
       <h3>Source</h3>
 
-include(`miserables-matrix-full.html.html')
+include(`matrix-full.html.html')
 
       <h3>Data</h3>
 

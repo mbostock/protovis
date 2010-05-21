@@ -38,8 +38,8 @@ HTML_FILES = \
 	www/ex/life.html \
 	www/ex/line.html \
 	www/ex/linear-date.html \
+	www/ex/matrix.html \
 	www/ex/minnesota.html \
-	www/ex/miserables-matrix.html \
 	www/ex/napoleon.html \
 	www/ex/nbody.html \
 	www/ex/oakland.html \
