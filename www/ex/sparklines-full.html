@@ -1,17 +1,21 @@
 <html>
   <head>
     <title>Sparklines</title>
+    <link type="text/css" rel="stylesheet" href="ex.css?3.2"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
     <script type="text/javascript" src="sunspots.js"></script>
     <style type="text/css">
-      body { max-width: 7in; }
+      #fig {
+        width: 500px;
+        height: 200px;
+      }
     </style>
   </head>
-  <body>
+  <body><div id="center"><div id="fig">
 
     <!-- Random line with random error envelope (and red punctuation). -->
-    Lorem ipsum dolor sit <script type="text/javascript+protovis">
-      var w = 89, h = 12, n = 75, r = 0; // TODO bankTo45
+    The quick brown fox jumps <script type="text/javascript+protovis">
+      var w = 89, h = 12, n = 75, r = 0;
       new pv.Panel()
           .width(w)
           .height(h)
@@ -30,10 +34,10 @@
           .fillStyle("#f00")
           .strokeStyle(null)
         .root.render();
-    </script> amet.<br>
+    </script> over the lazy dog.<br>
 
     <!-- Win/loss tally. -->
-    Lorem ipsum <script type="text/javascript+protovis">
+    The quick brown <script type="text/javascript+protovis">
       var w = 150, h = 12;
       new pv.Panel()
           .width(w)
@@ -51,10 +55,10 @@
           .strokeStyle(null)
           .fillStyle("#870")
         .root.render();
-    </script> dolor sit amet.<br>
+    </script> fox jumps over the lazy dog.<br>
 
     <!-- Simple bar chart. -->
-    Lorem <script type="text/javascript+protovis">
+    The <script type="text/javascript+protovis">
       var w = 60, h = 12;
       new pv.Panel()
           .width(w)
@@ -66,11 +70,13 @@
           .height(function(d) Math.round(h * d))
           .bottom(0)
         .root.render();
-    </script> ipsum dolor sit amet.<br>
+    </script> quick brown fox jumps over the lazy dog.<br>
 
     <!-- Sunspots. -->
+    This
     <script type="text/javascript+protovis">
-      var w = 48, h = 12; // TODO bankTo45
+      var w = 48, h = 12;
+      var avg = pv.sum(sunspots) / sunspots.length;
       new pv.Panel()
           .width(w)
           .height(h)
@@ -78,12 +84,15 @@
           .data(sunspots)
           .left(function() this.index * (w / sunspots.length))
           .bottom(function(d) 1 + d / 220 * h)
+        .root.add(pv.Rule)
+          .bottom(1 + avg / 220 * h)
+          .strokeStyle("#ccc")
         .root.render();
-    </script> Lorem ipsum dolor sit amet.<br>
+    </script> demonstrates the fluctuation in sunspots.<br>
 
     <!-- More sunspots. -->
     <script type="text/javascript+protovis">
-      var w = 64, h = 16; // TODO bankTo45
+      var w = 64, h = 16;
       new pv.Panel()
           .data(pv.range(31))
           .width(w + 4)
@@ -96,5 +105,5 @@
         .root.render();
     </script>
 
-  </body>
+  </div></div></body>
 </html>

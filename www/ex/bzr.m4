@@ -45,10 +45,10 @@
       <h1>Belousov-Zhabotinsky reaction</h1>
 
       <div style="float:left;width:610px;">
-      <iframe style="border:solid 4px #ccc;width:400px;height:400px;" src="reaction-full.html"></iframe>
+      <iframe style="border:solid 4px #ccc;width:400px;height:400px;" src="bzr-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
-      href="life-full.html" target="_blank">View full screen.</a>
+      href="bzr-full.html" target="_blank">View full screen.</a>
       </div>
 
       <div style="float:left;padding-left:30px;width:500px;">
@@ -63,7 +63,7 @@
 
       <h3>Source</h3>
 
-include(`reaction-full.html.html')
+include(`bzr-full.html.html')
 
       <h3>Data</h3>
 
