@@ -63,6 +63,7 @@ pv.Constraint.position = function(f) {
       if (v) {
         p.x += (v.x - p.x) * a;
         p.y += (v.y - p.y) * a;
+        p.fx = p.fy = p.vx = p.vy = 0;
       }
     }
   };
