@@ -5,61 +5,61 @@
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
     <script type="text/javascript" src="area.js"></script>
     <style type="text/css">
-      #fig {
-        width: 430px;
-        height: 225px;
-      }
+
+#fig {
+  width: 430px;
+  height: 225px;
+}
+
     </style>
   </head>
   <body><div id="center"><div id="fig">
     <script type="text/javascript+protovis">
 
-      /* Sizing and scales. */
-      var w = 410,
-          h = 200,
-          x = pv.Scale.linear(data, function(d) d.x).range(0, w),
-          y = pv.Scale.linear(0, 4).range(0, h);
+/* Sizing and scales. */
+var w = 410,
+    h = 200,
+    x = pv.Scale.linear(data, function(d) d.x).range(0, w),
+    y = pv.Scale.linear(0, 4).range(0, h);
 
-      /* The root panel. */
-      var vis = new pv.Panel()
-          .width(w)
-          .height(h)
-          .bottom(20)
-          .left(10)
-          .right(10)
-          .top(5);
+/* The root panel. */
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .bottom(20)
+    .left(10)
+    .right(10)
+    .top(5);
 
-      /* Y-axis and ticks. */
-      vis.add(pv.Rule)
-          .data(y.ticks())
-          .visible(function() !(this.index % 2))
-          .bottom(function(d) Math.round(y(d)) - .5)
-          .strokeStyle(function(d) d ? "#eee" : "#000")
-        .anchor("left").add(pv.Label)
-          .text(function(d) d.toFixed());
+/* Y-axis and ticks. */
+vis.add(pv.Rule)
+    .data(y.ticks(5))
+    .bottom(y)
+    .strokeStyle(function(d) d ? "#eee" : "#000")
+  .anchor("left").add(pv.Label)
+    .text(y.tickFormat);
 
-      /* X-axis and ticks. */
-      vis.add(pv.Rule)
-          .data(x.ticks())
-          .visible(function(d) d > 0)
-          .left(function(d) Math.round(x(d)) - .5)
-          .bottom(-5)
-          .height(5)
-        .anchor("bottom").add(pv.Label)
-          .text(function(d) d.toFixed());
+/* X-axis and ticks. */
+vis.add(pv.Rule)
+    .data(x.ticks())
+    .visible(function(d) d)
+    .left(x)
+    .bottom(-5)
+    .height(5)
+  .anchor("bottom").add(pv.Label)
+    .text(x.tickFormat);
 
-      /* The area with top line. */
-      vis.add(pv.Area)
-          .data(data)
-          .bottom(0)
-          .left(function(d) x(d.x))
-          .height(function(d) y(d.y))
-          .fillStyle("rgb(121,173,210)")
-        .anchor("top").add(pv.Line)
-          .lineWidth(3)
-          .fillStyle(null);
+/* The area with top line. */
+vis.add(pv.Area)
+    .data(data)
+    .bottom(1)
+    .left(function(d) x(d.x))
+    .height(function(d) y(d.y))
+    .fillStyle("rgb(121,173,210)")
+  .anchor("top").add(pv.Line)
+    .lineWidth(3);
 
-      vis.render();
+vis.render();
 
     </script>
   </div></div></body>
