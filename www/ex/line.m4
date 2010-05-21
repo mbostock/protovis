@@ -37,7 +37,7 @@
       </div>
       <div class="section">
         <a href="pie.html">&laquo; Previous</a> /
-        <a href="horizon.html">Next &raquo;</a>
+        <a href="stack.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -59,12 +59,14 @@
       cases, the data does <i>not</i> vary smoothly, but instead changes in
       response to discrete events.
 
-      <p>Using
-      the <a href="http://protovis-js.googlecode.com/svn/trunk/jsdoc/symbols/pv.Line.html#interpolate"><tt>interpolate</tt></a>
+      <p>Using the <a
+      href="http://protovis-js.googlecode.com/svn/trunk/jsdoc/symbols/pv.Line.html#interpolate"><tt>interpolate</tt></a>
       property, it is easy to change this behavior for lines and areas.
+      Protovis also supports various nonlinear interpolation methods, including
+      cardinal spline, Catmull-Rom spline, B-spline, and monotone cubic!
 
       <blockquote style="font-size:13px;">
-        Next: <a href="horizon.html">Sizing the Horizon</a>
+        Next: <a href="stack.html">Stacked Charts</a>
       </blockquote>
       </div>
       <br clear="all">
