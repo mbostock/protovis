@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - Node-Link Tree Layout</title>
+    <title>Protovis - Node-Link Tree</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <style type="text/css">
@@ -52,16 +52,16 @@
     </div>
 
     <div class="body">
-      <h1>Node-Link Tree Layout</h1>
+      <h1>Node-Link Tree</h1>
 
-      <iframe style="height:640px;" src="tree-full.html"></iframe>
+      <iframe style="height:700px;" src="tree-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="tree-full.html" target="_blank">View full screen.</a>
 
-      <p>Another built-in layout algorithm is the node-link tree layout, used
-      here to show the various ActionScript classes of
-      the <a href="http://flare.prefuse.org">Flare</a> visualization toolkit.
+      <p>Another built-in layout algorithm is the node-link tree, used here to
+      show the various ActionScript classes of the <a
+      href="http://flare.prefuse.org">Flare</a> visualization toolkit.
 
       <blockquote style="font-size:13px;">
         Next: <a href="icicle.html">Icicle Layout</a>

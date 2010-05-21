@@ -1,56 +1,43 @@
 <html>
   <head>
-    <title>Node-Link Tree Layout</title>
-    <link type="text/css" rel="stylesheet" href="../ex.css?3.1"/>
+    <title>Node-Link Tree</title>
+    <link type="text/css" rel="stylesheet" href="ex.css?3.1"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
     <script type="text/javascript" src="flare.js"></script>
     <style type="text/css">
-        #fig {
-            width: 1450px;
-            height: 640px;
-        }
+
+#fig {
+  width: 800px;
+  height: 700px;
+}
+
     </style>
   </head>
   <body><div id="center"><div id="fig">
     <script type="text/javascript+protovis">
 
-      function onNodeClick(node) {
-          var path = node.nodeName;
-          var parentNode = node.parentNode;
-          while(parentNode) {
-              path = parentNode.nodeName + "/" + path;
-              parentNode = parentNode.parentNode;
-          }
-          top.location = "http://svn.prefuse.org/flare/trunk/flare/flare/src/" + path + (node.firstChild?"/":".as");
-      }
+var vis = new pv.Panel()
+    .width(800)
+    .height(800)
+    .left(75)
+    .right(-75)
+    .top(-30)
+    .bottom(-80);
 
-      var vis = new pv.Panel()
-          .width(1450)
-          .height(600)
-          .top(40)
-          .right(400);
+var tree = vis.add(pv.Layout.Tree)
+    .nodes(pv.dom(flare).root("flare").nodes())
+    .depth(85)
+    .breadth(7.25)
+    .orient("radial");
 
-      var layout = vis.add(pv.Layout.Tree)
-          .nodes(pv.dom(flare)
-              .root("flare")
-              .sort(function(a, b) pv.naturalOrder(a.nodeName, b.nodeName))
-              .nodes())
-          .depth(120)
-          .breadth(10)
-          .orient("top")
-          .group(.5);
+tree.link.add(pv.Line);
 
-      layout.link.add(pv.Line);
+tree.node.add(pv.Dot)
+    .fillStyle(function(n) n.firstChild ? "#aec7e8" : "#ff7f0e");
 
-      layout.node.add(pv.Dot)
-          .fillStyle(function(n) n.firstChild ? "#aec7e8" : "#ff7f0e")
-          .title(function t(d) d.parentNode ? (t(d.parentNode) + "." + d.nodeName) : d.nodeName)
-          .event("click", onNodeClick);
-      
-      layout.label.add(pv.Label)
-          .textAngle(Math.PI / 2);
+tree.label.add(pv.Label);
 
-      vis.render();
+vis.render();
 
     </script>
   </div></div></body>
