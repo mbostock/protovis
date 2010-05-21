@@ -58,7 +58,7 @@
     </script> fox jumps over the lazy dog.<br>
 
     <!-- Simple bar chart. -->
-    The <script type="text/javascript+protovis">
+    The quick brown fox <script type="text/javascript+protovis">
       var w = 60, h = 12;
       new pv.Panel()
           .width(w)
@@ -70,10 +70,10 @@
           .height(function(d) Math.round(h * d))
           .bottom(0)
         .root.render();
-    </script> quick brown fox jumps over the lazy dog.<br>
+    </script> jumps over the lazy dog.<br>
 
-    <!-- Sunspots. -->
-    This
+    <!-- Sunspots line. -->
+    This sparkline
     <script type="text/javascript+protovis">
       var w = 48, h = 12;
       var avg = pv.sum(sunspots) / sunspots.length;
@@ -84,17 +84,37 @@
           .data(sunspots)
           .left(function() this.index * (w / sunspots.length))
           .bottom(function(d) 1 + d / 220 * h)
+          .lineWidth(1)
         .root.add(pv.Rule)
           .bottom(1 + avg / 220 * h)
           .strokeStyle("#ccc")
         .root.render();
-    </script> demonstrates the fluctuation in sunspots.<br>
+    </script>
+    demonstrates the fluctuation in sunspots as a line graph and this
+    <script type="text/javascript+protovis">
+      var w = 48, h = 12;
+      var avg = pv.sum(sunspots) / sunspots.length;
+      new pv.Panel()
+          .width(w)
+          .height(h)
+        .add(pv.Line)
+          .data(sunspots)
+          .left(function() this.index * (w / sunspots.length))
+          .bottom(function(d) 1 + d / 220 * h)
+          .interpolate("step-after")
+          .antialias(false)
+          .lineWidth(1)
+        .root.add(pv.Rule)
+          .bottom(1 + avg / 220 * h)
+          .strokeStyle("#ccc")
+        .root.render();
+    </script> demonstrates the fluctuation as a step graph.<br>
 
     <!-- More sunspots. -->
     <script type="text/javascript+protovis">
       var w = 64, h = 16;
       new pv.Panel()
-          .data(pv.range(31))
+          .data(pv.range(26))
           .width(w + 4)
           .height(h + 4)
         .add(pv.Line)
