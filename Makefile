@@ -25,6 +25,7 @@ HTML_FILES = \
 	www/ex/flowers.html \
 	www/ex/force-toggle.html \
 	www/ex/grid.html \
+	www/ex/group.html \
 	www/ex/heatmap.html \
 	www/ex/horizon.html \
 	www/ex/hotel.html \

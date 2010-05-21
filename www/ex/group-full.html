@@ -1,9 +1,9 @@
 <html>
   <head>
-    <title>Bar Chart</title>
+    <title>Grouped Bar Chart</title>
     <link type="text/css" rel="stylesheet" href="ex.css?3.1"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
-    <script type="text/javascript" src="bar.js"></script>
+    <script type="text/javascript" src="group.js"></script>
     <style type="text/css">
 
 #fig {
@@ -20,7 +20,7 @@
 var w = 400,
     h = 250,
     x = pv.Scale.linear(0, 1.1).range(0, w),
-    y = pv.Scale.ordinal(pv.range(10)).splitBanded(0, h, 4/5);
+    y = pv.Scale.ordinal(pv.range(n)).splitBanded(0, h, 4/5);
 
 /* The root panel. */
 var vis = new pv.Panel()
@@ -32,12 +32,17 @@ var vis = new pv.Panel()
     .top(5);
 
 /* The bars. */
-var bar = vis.add(pv.Bar)
+var bar = vis.add(pv.Panel)
     .data(data)
     .top(function() y(this.index))
     .height(y.range().band)
+  .add(pv.Bar)
+    .data(function(d) d)
+    .top(function() this.index * y.range().band / m)
+    .height(y.range().band / m)
     .left(0)
-    .width(x);
+    .width(x)
+    .fillStyle(pv.Colors.category20().by(pv.index));
 
 /* The value label. */
 bar.anchor("right").add(pv.Label)
@@ -45,10 +50,10 @@ bar.anchor("right").add(pv.Label)
     .text(function(d) d.toFixed(1));
 
 /* The variable label. */
-bar.anchor("left").add(pv.Label)
-    .textMargin(5)
+bar.parent.anchor("left").add(pv.Label)
     .textAlign("right")
-    .text(function() "ABCDEFGHIJK".charAt(this.index));
+    .textMargin(5)
+    .text(function() "ABCDEFGHIJK".charAt(this.parent.index));
 
 /* X-axis ticks. */
 vis.add(pv.Rule)

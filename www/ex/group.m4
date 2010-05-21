@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - Sparklines</title>
+    <title>Protovis - Grouped Charts</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script> 
@@ -36,41 +36,44 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="group.html">&laquo; Previous</a> /
-        <a href="barley.html">Next &raquo;</a>
+        <a href="stack.html">&laquo; Previous</a> /
+        <a href="sparklines.html">Next &raquo;</a>
       </div>
     </div>
 
     <div class="body">
-      <h1>Sparklines</h1>
+      <h1>Grouped Charts</h1>
 
-      <div style="float:left;width:500px;">
-      <iframe id="iframe" style="height:200px;" src="sparklines-full.html"></iframe>
+      <div style="float:left;width:430px;">
+      <iframe style="height:275px;" src="group-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
-      href="sparklines-full.html" target="_blank">View full screen.</a>
-      </p>
+      href="group-full.html" target="_blank">View full screen.</a>
       </div>
 
-      <div style="float:left;padding-left:30px;width:500px;">
-      Sparklines are a simple, condensed way to present trends and variation, associated
-      with a measurement such as average temperature or stock market activity. These are
-      often used as elements of a small multiple with several lines used together. Sparklines
-      can be used inline like words to augment the sentence with meaning.
+      <div style="float:left;padding-left:30px;width:400px;">
+
+      In this multi-series bar chart, we group bars together rather than <a
+      href="http://protovis-js.googlecode.com/svn/trunk/examples/bar-stacked.html">stack
+      them</a>. A grouped chart allows accurate comparison of individual values
+      thanks to an aligned baseline: a position, rather than length, judgment is
+      used. An ordinal scale positions the groups vertically; the bars are then
+      replicated inside a panel, a technique that is also used for <a
+      href="hotel.html">small multiples</a>.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="barley.html">Small Multiples (Becker)</a>
+        Next: <a href="sparklines.html">Sparklines</a>
       </blockquote>
       </div>
       <br clear="all">
 
       <h3>Source</h3>
 
-include(`sparklines-full.html.html')
+include(`group-full.html.html')
 
       <h3>Data</h3>
 
-include(`sunspots.js.html')
+include(`group.js.html')
 
     </div>
 
