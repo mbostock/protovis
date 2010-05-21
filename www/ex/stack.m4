@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - Bar &amp; Column Charts</title>
+    <title>Protovis - Stacked Charts</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script> 
@@ -36,49 +36,45 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="area.html">&laquo; Previous</a> /
-        <a href="dot.html">Next &raquo;</a>
+        <a href="line.html">&laquo; Previous</a> /
+        <a href="group.html">Next &raquo;</a>
       </div>
     </div>
 
     <div class="body">
-      <h1>Bar &amp; Column Charts</h1>
+      <h1>Stacked Charts</h1>
 
       <div style="float:left;width:430px;">
-      <iframe style="height:275px;" src="bar-full.html"></iframe>
+      <iframe style="height:230px;" src="stack-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
-      href="bar-full.html" target="_blank">View full screen.</a>
+      href="stack-full.html" target="_blank">View full screen.</a>
       </div>
 
-      <div style="float:left;padding-left:30px;width:400px;">
-      This simple bar chart is constructed using a <a
-      href="http://code.google.com/p/protovis-js/wiki/PvBar">bar</a> mark. A
-      linear scale is used to compute the width of the bar, while an ordinal
-      scale sets the top position and height for the categorical dimension.
-      Next, <a href="http://code.google.com/p/protovis-js/wiki/PvRule">rules</a>
-      and <a href="http://code.google.com/p/protovis-js/wiki/PvLabel">labels</a>
-      are added for reference values.
-
-      <p>Bars can be used in a variety of ways. For instance, they can be <a
-      href="stack.html">stacked</a> or <a href="group.html">grouped</a> to show
-      multiple data series, or arranged as vertical <a
-      href="http://protovis-js.googlecode.com/svn/trunk/examples/column.html"
-      target="_blank">columns</a> rather than bars.
+      <div style="float:left;padding-left:30px;width:400px;"> Protovis includes
+      flexible layouts that can simplify the implementation of common
+      visualization techniques. One such layout is <i>stack</i>, which in this
+      example is used to stack area marks vertically with a zero baseline. The
+      stack layout can also be used to <a
+      href="http://protovis-js.googlecode.com/svn/trunk/examples/bar-stacked.html">stack
+      bars</a> or <a
+      href="http://protovis-js.googlecode.com/svn/trunk/examples/column-stacked.html">columns</a>
+      as well as areas, and supports several <a
+      href="stream.html">streamgraph</a> algorithms.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="dot.html">Dot Charts</a>
+        Next: <a href="group.html">Grouped Charts</a>
       </blockquote>
       </div>
       <br clear="all">
 
       <h3>Source</h3>
 
-include(`bar-full.html.html')
+include(`stack-full.html.html')
 
       <h3>Data</h3>
 
-include(`bar.js.html')
+include(`stack.js.html')
 
     </div>
 
