@@ -57,7 +57,9 @@
       href="http://protovis-js.googlecode.com/svn/trunk/examples/bar-stacked.html">stack
       them</a>. A grouped chart allows accurate comparison of individual values
       thanks to an aligned baseline: a position, rather than length, judgment is
-      used. An ordinal scale positions the groups vertically; the bars are then
+      used.
+
+      <p>An ordinal scale positions the groups vertically; the bars are then
       replicated inside a panel, a technique that is also used for <a
       href="hotel.html">small multiples</a>.
 

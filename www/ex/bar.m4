@@ -67,7 +67,7 @@
       target="_blank">columns</a> rather than bars.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="dot.html">Dot Charts</a>
+        Next: <a href="dot.html">Scatterplots</a>
       </blockquote>
       </div>
       <br clear="all">

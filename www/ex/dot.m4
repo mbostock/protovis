@@ -42,7 +42,7 @@
     </div>
 
     <div class="body">
-      <h1>Dot Charts</h1>
+      <h1>Scatterplots</h1>
 
       <div style="float:left;width:430px;">
       <iframe style="height:425px;" src="dot-full.html"></iframe>

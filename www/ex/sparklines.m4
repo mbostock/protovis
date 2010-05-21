@@ -59,7 +59,7 @@
       can be used inline like words to augment the sentence with meaning.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="barley.html">Small Multiples (Becker)</a>
+        Next: <a href="barley.html">Becker's Barley</a>
       </blockquote>
       </div>
       <br clear="all">
