@@ -10,7 +10,7 @@ pv.Layout.Bullet = function() {
       orient,
       horizontal,
       rangeColor,
-      meausureColor,
+      measureColor,
       x;
 
   /** @private Cache layout state to optimize properties. */
