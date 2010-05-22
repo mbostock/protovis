@@ -62,11 +62,11 @@
 
       <h3>Source</h3>
 
-include(`weather-full.html.html')
+m4_include(`weather-full.html.html')
 
       <h3>Data</h3>
 
-include(`weather.js.html')
+m4_include(`weather.js.html')
 
     </div>
 

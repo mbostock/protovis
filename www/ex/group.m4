@@ -71,11 +71,11 @@
 
       <h3>Source</h3>
 
-include(`group-full.html.html')
+m4_include(`group-full.html.html')
 
       <h3>Data</h3>
 
-include(`group.js.html')
+m4_include(`group.js.html')
 
     </div>
 

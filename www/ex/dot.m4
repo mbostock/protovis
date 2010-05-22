@@ -71,11 +71,11 @@
 
       <h3>Source</h3>
 
-include(`dot-full.html.html')
+m4_include(`dot-full.html.html')
 
       <h3>Data</h3>
 
-include(`dot.js.html')
+m4_include(`dot.js.html')
 
     </div>
 

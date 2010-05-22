@@ -57,7 +57,7 @@
 
       <h3>Source</h3>
 
-include(`linear-date-full.html.html')
+m4_include(`linear-date-full.html.html')
 
       <h3>Data</h3>
 

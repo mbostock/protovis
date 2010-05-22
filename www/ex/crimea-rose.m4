@@ -72,11 +72,11 @@
 
       <h3>Source</h3>
 
-include(`crimea-rose-full.html.html')
+m4_include(`crimea-rose-full.html.html')
 
       <h3>Data</h3>
 
-include(`crimea.js.html')
+m4_include(`crimea.js.html')
 
     </div>
 

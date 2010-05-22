@@ -79,11 +79,11 @@
 
       <h3>Source</h3>
 
-include(`sunburst-full.html.html')
+m4_include(`sunburst-full.html.html')
 
       <h3>Data</h3>
 
-include(`flare.js.html')
+m4_include(`flare.js.html')
 
     </div>
 

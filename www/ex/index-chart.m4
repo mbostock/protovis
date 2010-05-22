@@ -65,7 +65,7 @@
 
       <h3>Source</h3>
 
-include(`index-chart-full.html.html')
+m4_include(`index-chart-full.html.html')
 
       <h3>Data</h3>
 

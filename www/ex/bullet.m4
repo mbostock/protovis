@@ -61,11 +61,11 @@
 
       <h3>Source</h3>
 
-include(`bullet-full.html.html')
+m4_include(`bullet-full.html.html')
 
       <h3>Data</h3>
 
-include(`bullet.js.html')
+m4_include(`bullet.js.html')
 
     </div>
 

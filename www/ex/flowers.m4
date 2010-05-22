@@ -69,11 +69,11 @@
 
       <h3>Source</h3>
 
-include(`flowers-full.html.html')
+m4_include(`flowers-full.html.html')
 
       <h3>Data</h3>
 
-include(`flowers.js.html')
+m4_include(`flowers.js.html')
 
     </div>
 

@@ -67,11 +67,11 @@
 
       <h3>Source</h3>
 
-include(`grid-full.html.html')
+m4_include(`grid-full.html.html')
 
       <h3>Data</h3>
 
-include(`grid.js.html')
+m4_include(`grid.js.html')
 
     </div>
 

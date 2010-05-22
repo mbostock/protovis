@@ -62,11 +62,11 @@
 
       <h3>Source</h3>
 
-include(`zoom-full.html.html')
+m4_include(`zoom-full.html.html')
 
       <h3>Data</h3>
 
-include(`zoom.js.html')
+m4_include(`zoom.js.html')
 
     </div>
 

@@ -91,7 +91,7 @@ pv.listen(self, "mousemove", function() vis.render());
 
       <h3>Source</h3>
 
-include(`bubbles-full.html.html')
+m4_include(`bubbles-full.html.html')
 
       <h3>Data</h3>
 

@@ -59,11 +59,11 @@
 
       <h3>Source</h3>
 
-include(`browser-wars-full.html.html')
+m4_include(`browser-wars-full.html.html')
 
       <h3>Data</h3>
 
-include(`browsers.js.html')
+m4_include(`browsers.js.html')
 
     </div>
 

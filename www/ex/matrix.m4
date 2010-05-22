@@ -60,7 +60,7 @@
 
       <h3>Source</h3>
 
-include(`matrix-full.html.html')
+m4_include(`matrix-full.html.html')
 
       <h3>Data</h3>
 

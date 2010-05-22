@@ -73,11 +73,11 @@
 
       <h3>Source</h3>
 
-include(`line-full.html.html')
+m4_include(`line-full.html.html')
 
       <h3>Data</h3>
 
-include(`line.js.html')
+m4_include(`line.js.html')
 
     </div>
 

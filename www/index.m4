@@ -128,7 +128,7 @@
         an array of numbers with height:
 
         <p><table><tr><td>
-include(`bar-chart.js.html')
+m4_include(`bar-chart.js.html')
         </td><td width="150">
           <img src="ex/bar-chart.png?3.0" width="150" height="150">
         </td></tr></table>
@@ -149,7 +149,7 @@ include(`bar-chart.js.html')
         properties. For example, here we derive labels for a rule and bar:
 
         <p><table><tr><td>
-include(`bar-chart2.js.html')
+m4_include(`bar-chart2.js.html')
         </td><td width="150">
           <img src="ex/bar-chart2.png?3.0" width="150" height="150">
         </td></tr></table></blockquote>

@@ -79,11 +79,11 @@
 
       <h3>Source</h3>
 
-include(`hotel-full.html.html')
+m4_include(`hotel-full.html.html')
 
       <h3>Data</h3>
 
-include(`hotel.js.html')
+m4_include(`hotel.js.html')
 
     </div>
 

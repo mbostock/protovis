@@ -61,7 +61,7 @@
 
       <h3>Source</h3>
 
-include(`cars-full.html.html')
+m4_include(`cars-full.html.html')
 
       <h3>Data</h3>
 

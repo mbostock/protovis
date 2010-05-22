@@ -3,7 +3,7 @@
     <title>Protovis - Sparklines</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
-    <script type="text/javascript" src="../protovis-r3.2.js"></script> 
+    <script type="text/javascript" src="../protovis-d3.2.js"></script>
   </head>
   <body>
 
@@ -44,15 +44,8 @@
     <div class="body">
       <h1>Sparklines</h1>
 
-      <div style="float:left;width:500px;">
-      <iframe id="iframe" style="height:200px;" src="sparklines-full.html"></iframe>
-      <p><img src="popout.png" width="16" height="16"
-      style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
-      href="sparklines-full.html" target="_blank">View full screen.</a>
-      </p>
-      </div>
+m4_include(`sparklines-full.html')
 
-      <div style="float:left;padding-left:30px;width:500px;">
       Sparklines are a simple, condensed way to present trends and variation, associated
       with a measurement such as average temperature or stock market activity. These are
       often used as elements of a small multiple with several lines used together. Sparklines
@@ -61,16 +54,14 @@
       <blockquote style="font-size:13px;">
         Next: <a href="barley.html">Becker's Barley</a>
       </blockquote>
-      </div>
-      <br clear="all">
 
       <h3>Source</h3>
 
-include(`sparklines-full.html.html')
+m4_include(`sparklines-full.html.html')
 
       <h3>Data</h3>
 
-include(`sunspots.js.html')
+m4_include(`sunspots.js.html')
 
     </div>
 

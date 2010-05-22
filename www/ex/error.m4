@@ -59,11 +59,11 @@
 
       <h3>Source</h3>
 
-include(`error-full.html.html')
+m4_include(`error-full.html.html')
 
       <h3>Data</h3>
 
-include(`error.js.html')
+m4_include(`error.js.html')
 
     </div>
 

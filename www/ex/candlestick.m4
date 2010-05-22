@@ -69,11 +69,11 @@
 
       <h3>Source</h3>
 
-include(`candlestick-full.html.html')
+m4_include(`candlestick-full.html.html')
 
       <h3>Data</h3>
 
-include(`vix.js.html')
+m4_include(`vix.js.html')
 
     </div>
 

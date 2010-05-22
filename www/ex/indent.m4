@@ -75,11 +75,11 @@
 
       <h3>Source</h3>
 
-include(`indent-full.html.html')
+m4_include(`indent-full.html.html')
 
       <h3>Data</h3>
 
-include(`flare.js.html')
+m4_include(`flare.js.html')
 
     </div>
 

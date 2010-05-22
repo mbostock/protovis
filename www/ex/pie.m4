@@ -75,11 +75,11 @@
 
       <h3>Source</h3>
 
-include(`pie-full.html.html')
+m4_include(`pie-full.html.html')
 
       <h3>Data</h3>
 
-include(`pie.js.html')
+m4_include(`pie.js.html')
 
     </div>
 

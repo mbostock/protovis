@@ -70,11 +70,11 @@
 
       <h3>Source</h3>
 
-include(`stack-full.html.html')
+m4_include(`stack-full.html.html')
 
       <h3>Data</h3>
 
-include(`stack.js.html')
+m4_include(`stack.js.html')
 
     </div>
 

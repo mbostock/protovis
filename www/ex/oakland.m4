@@ -62,11 +62,11 @@
 
       <h3>Source</h3>
 
-include(`oakland-full.html.html')
+m4_include(`oakland-full.html.html')
 
       <h3>Data</h3>
 
-include(`oakland.js.html')
+m4_include(`oakland.js.html')
 
     </div>
 

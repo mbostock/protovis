@@ -80,7 +80,7 @@ www/ex/syntax.css: Makefile
 
 %.html: %.m4 Makefile
 	rm -f $@
-	pushd $(dir $<) && m4 < $(notdir $<) > $(notdir $@) && popd
+	pushd $(dir $<) && m4 -P < $(notdir $<) > $(notdir $@) && popd
 	chmod a-w $@
 
 %.html.html: %.html Makefile

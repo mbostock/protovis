@@ -59,11 +59,11 @@
 
       <h3>Source</h3>
 
-include(`sort-full.html.html')
+m4_include(`sort-full.html.html')
 
       <h3>Data</h3>
 
-include(`sort.js.html')
+m4_include(`sort.js.html')
 
     </div>
 

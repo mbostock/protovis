@@ -77,11 +77,11 @@
 
       <h3>Source</h3>
 
-include(`area-full.html.html')
+m4_include(`area-full.html.html')
 
       <h3>Data</h3>
 
-include(`area.js.html')
+m4_include(`area.js.html')
 
     </div>
 

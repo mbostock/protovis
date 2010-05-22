@@ -66,7 +66,7 @@
 
       <h3>Source</h3>
 
-include(`force-full.html.html')
+m4_include(`force-full.html.html')
 
       <h3>Data</h3>
 

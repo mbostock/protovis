@@ -66,11 +66,11 @@
 
       <h3>Source</h3>
 
-include(`wheat-full.html.html')
+m4_include(`wheat-full.html.html')
 
       <h3>Data</h3>
 
-include(`wheat.js.html')
+m4_include(`wheat.js.html')
 
     </div>
 

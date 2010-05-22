@@ -115,7 +115,7 @@
       dictum quis euismod non, condimentum accumsan risus. Class aptent taciti
       sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
 
-include(`layouts/grid.js.html')
+m4_include(`layouts/grid.js.html')
 
       <p>Customize properties. Define custom layout parameters. Layout
       parameters can be defined as functions, like any other property in
@@ -174,7 +174,7 @@ include(`layouts/grid.js.html')
       facilisis placerat ut sodales diam. Praesent suscipit ullamcorper eros, eu
       vulputate lacus pellentesque in.
 
-include(`layouts/treemap.js.html')
+m4_include(`layouts/treemap.js.html')
 
       <p>Override default properties. Access underlying data structure.
 
@@ -232,7 +232,7 @@ include(`layouts/treemap.js.html')
       facilisis placerat ut sodales diam. Praesent suscipit ullamcorper eros, eu
       vulputate lacus pellentesque in.
 
-include(`layouts/stack.js.html')
+m4_include(`layouts/stack.js.html')
 
       <p>Sed iaculis commodo vestibulum. Pellentesque blandit mollis quam vitae
       egestas. Sed vehicula augue sed orci placerat id suscipit nulla
@@ -286,7 +286,7 @@ include(`layouts/stack.js.html')
       facilisis placerat ut sodales diam. Praesent suscipit ullamcorper eros, eu
       vulputate lacus pellentesque in.
 
-include(`layouts/tree.js.html')
+m4_include(`layouts/tree.js.html')
 
       <p>Add order affects z-order. Can also be selective about which marks to
       include.

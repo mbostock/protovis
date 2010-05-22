@@ -80,7 +80,7 @@
 
       <h3>Source</h3>
 
-include(`jobs-full.html.html')
+m4_include(`jobs-full.html.html')
 
       <h3>Data</h3>
 

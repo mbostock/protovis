@@ -61,7 +61,7 @@
 
       <h3>Source</h3>
 
-include(`caltrain-full.html.html')
+m4_include(`caltrain-full.html.html')
 
       <h3>Data</h3>
 

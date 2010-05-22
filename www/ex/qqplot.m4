@@ -65,11 +65,11 @@
 
       <h3>Source</h3>
 
-include(`qqplot-full.html.html')
+m4_include(`qqplot-full.html.html')
 
       <h3>Data</h3>
 
-include(`turkers.js.html')
+m4_include(`turkers.js.html')
 
     </div>
 

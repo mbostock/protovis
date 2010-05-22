@@ -66,11 +66,11 @@
 
       <h3>Source</h3>
 
-include(`bzr-full.html.html')
+m4_include(`bzr-full.html.html')
 
       <h3>Data</h3>
 
-include(`bzr.js.html')
+m4_include(`bzr.js.html')
 
     </div>
 

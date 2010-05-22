@@ -69,7 +69,7 @@
 
       <h3>Source</h3>
 
-include(`segmented-full.html.html')
+m4_include(`segmented-full.html.html')
 
       <h3>Data</h3>
 

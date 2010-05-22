@@ -59,7 +59,7 @@
 
       <h3>Source</h3>
 
-include(`dymax-full.html.html')
+m4_include(`dymax-full.html.html')
 
       <h3>Data</h3>
 

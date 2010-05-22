@@ -72,11 +72,11 @@
 
       <h3>Source</h3>
 
-include(`barley-full.html.html')
+m4_include(`barley-full.html.html')
 
       <h3>Data</h3>
 
-include(`barley.js.html')
+m4_include(`barley.js.html')
 
     </div>
 

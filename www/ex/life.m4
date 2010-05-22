@@ -63,7 +63,7 @@
 
       <h3>Source</h3>
 
-include(`life-full.html.html')
+m4_include(`life-full.html.html')
 
       <h3>Data</h3>
 

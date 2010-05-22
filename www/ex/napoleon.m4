@@ -63,11 +63,11 @@
 
       <h3>Source</h3>
 
-include(`napoleon-full.html.html')
+m4_include(`napoleon-full.html.html')
 
       <h3>Data</h3>
 
-include(`napoleon.js.html')
+m4_include(`napoleon.js.html')
 
     </div>
 

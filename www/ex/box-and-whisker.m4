@@ -59,11 +59,11 @@
 
       <h3>Source</h3>
 
-include(`box-and-whisker-full.html.html')
+m4_include(`box-and-whisker-full.html.html')
 
       <h3>Data</h3>
 
-include(`box-and-whisker.js.html')
+m4_include(`box-and-whisker.js.html')
 
     </div>
 

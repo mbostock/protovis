@@ -74,11 +74,11 @@
 
       <h3>Source</h3>
 
-include(`bar-full.html.html')
+m4_include(`bar-full.html.html')
 
       <h3>Data</h3>
 
-include(`bar.js.html')
+m4_include(`bar.js.html')
 
     </div>
 

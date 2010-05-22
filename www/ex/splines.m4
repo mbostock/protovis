@@ -61,7 +61,7 @@
 
       <h3>Source</h3>
 
-include(`splines-full.html.html')
+m4_include(`splines-full.html.html')
 
       <h3>Data</h3>
 

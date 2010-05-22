@@ -72,11 +72,11 @@
 
       <h3>Source</h3>
 
-include(`antibiotics-burtin-full.html.html')
+m4_include(`antibiotics-burtin-full.html.html')
 
       <h3>Data</h3>
 
-include(`antibiotics.js.html')
+m4_include(`antibiotics.js.html')
 
     </div>
 

@@ -72,11 +72,11 @@
 
       <h3>Source</h3>
 
-include(`icicle-full.html.html')
+m4_include(`icicle-full.html.html')
 
       <h3>Data</h3>
 
-include(`flare.js.html')
+m4_include(`flare.js.html')
 
     </div>
 
