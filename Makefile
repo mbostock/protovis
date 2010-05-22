@@ -48,6 +48,7 @@ HTML_FILES = \
 	www/ex/qqplot.html \
 	www/ex/radial-cluster.html \
 	www/ex/segmented.html \
+	www/ex/sort.html \
 	www/ex/sparklines.html \
 	www/ex/splines.html \
 	www/ex/stack.html \

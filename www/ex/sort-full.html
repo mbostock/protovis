@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <title>Merge Sort</title>
+    <link type="text/css" rel="stylesheet" href="ex.css?3.1"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+    <script type="text/javascript" src="sort.js"></script>
+    <style type="text/css">
+
+#fig {
+  width: 820px;
+  height: 370px;
+}
+
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <script type="text/javascript+protovis">
+
+/* Sizing and scales. */
+var w = 760,
+    h = 20;
+
+/* The root panel. */
+var vis = new pv.Panel()
+    .data(mergesort(data).slice(2))
+    .width(w)
+    .height(h)
+    .margin(30)
+    .bottom(0);
+
+/* The wedge with angle encoding. A line would also work. */
+vis.add(pv.Panel)
+    .data(function(d) d)
+    .left(pv.Scale.linear(data, pv.index).range(0, w).by(pv.index))
+  .add(pv.Wedge)
+    .outerRadius(30)
+    .bottom(0)
+    .angle(0)
+    .startAngle(pv.Scale.linear().range(-Math.PI / 2 - 1, -Math.PI / 2 + 1))
+    .strokeStyle("black");
+
+vis.render();
+
+    </script>
+  </div></div></body>
+</html>
