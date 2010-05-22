@@ -69,7 +69,7 @@ include(`dymax-full.html.html')
     </div>
 
     <div class="foot">
-      Copyright 2009 <a href="http://vis.stanford.edu">Stanford Visualization Group</a>
+      Copyright 2010 <a href="http://vis.stanford.edu">Stanford Visualization Group</a>
     </div>
 
     <script type="text/javascript" src="http://www.google-analytics.com/ga.js"></script>
