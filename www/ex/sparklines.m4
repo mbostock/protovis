@@ -4,6 +4,7 @@
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="sparklines.js"></script>
   </head>
   <body>
 
@@ -46,11 +47,6 @@
 
 m4_include(`sparklines-full.html')
 
-      Sparklines are a simple, condensed way to present trends and variation, associated
-      with a measurement such as average temperature or stock market activity. These are
-      often used as elements of a small multiple with several lines used together. Sparklines
-      can be used inline like words to augment the sentence with meaning.
-
       <blockquote style="font-size:13px;">
         Next: <a href="barley.html">Becker's Barley</a>
       </blockquote>
@@ -61,7 +57,7 @@ m4_include(`sparklines-full.html.html')
 
       <h3>Data</h3>
 
-m4_include(`sunspots.js.html')
+m4_include(`sparklines.js.html')
 
     </div>
 

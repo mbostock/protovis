@@ -1,162 +1,104 @@
-<script type="text/javascript" src="sunspots.js"></script>
-<script type="text/javascript" src="walk.js"></script>
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ac velit
-elit. Pellentesque placerat urna nec augue porta at adipiscing tortor
-varius. Maecenas et eros eros. Aliquam vitae nisl erat, at iaculis
-nibh. Suspendisse potenti. Morbi feugiat tincidunt est vel tincidunt. Nam congue
-rhoncus viverra. In nisi dolor, adipiscing eu consequat sit amet, egestas tempor
-eros.
-
 <script type="text/javascript+protovis">
 
-/* Scale and sizing. */
-var data = walk(100),
-    w = 100,
-    h = 10,
-    f = function(d) d.y,
-    x = pv.Scale.linear(data, function(d) d.x).range(0, w),
-    y = pv.Scale.linear(data, f).range(0, h);
+function sparkline(data, dots) {
+  var n = data.length,
+      w = n,
+      h = 10,
+      min = pv.min.index(data),
+      max = pv.max.index(data);
 
-var vis = new pv.Panel()
-    .width(w)
-    .height(h)
-    .margin(2);
-
-vis.add(pv.Line)
-    .data(data)
-    .left(function(d) x(d.x))
-    .bottom(function(d) y(d.y))
-    .strokeStyle("#999")
-  .add(pv.Dot)
-    .data([data[0], data[data.length - 1]])
-    .strokeStyle(null)
-    .fillStyle("brown")
-    .radius(2)
-  .add(pv.Dot)
-    .data([data[pv.min.index(data, f)], data[pv.max.index(data, f)]])
-    .fillStyle("steelblue");
-
-vis.render();
-
-</script>
-
-Etiam rhoncus neque sit amet lectus fringilla sed luctus sem interdum. Nullam
-non tellus turpis, sit amet mattis lorem. Nulla facilisi. Suspendisse quis dui
-elit. Vivamus mollis lobortis nisi in adipiscing. In non erat sit amet arcu
-tristique convallis. Pellentesque commodo interdum eros in interdum. Donec
-fringilla imperdiet nisi, at sagittis tellus suscipit quis. Vestibulum arcu
-erat, pellentesque ut porta sit amet, interdum id nunc.
-<p>
-
-<!-- Random line with random error envelope (and red punctuation). -->
-The quick brown fox jumps <script type="text/javascript+protovis">
-  var w = 89, h = 12, n = 75, r = 0;
-  new pv.Panel()
+  var vis = new pv.Panel()
       .width(w)
       .height(h)
-    .add(pv.Area)
-      .data(pv.range(n).map(function(i) 1.5*Math.sin(8.4*Math.PI*i/(n-1))))
-      .bottom(function(d) h / 2 - 1 + d - (r = 4 * Math.random()))
-      .height(function(d) 2 + 2 * r)
-      .left(function() this.index * (w - 3) / (n - 1))
-      .strokeStyle("rgba(200,200,200,0.5)")
-    .add(pv.Line)
-      .bottom(function(d) h / 2 + d)
-      .strokeStyle("#f55")
+      .margin(2);
+
+  vis.add(pv.Line)
+      .data(data)
+      .left(pv.Scale.linear(0, n - 1).range(0, w).by(pv.index))
+      .bottom(pv.Scale.linear(data).range(0, h))
+      .strokeStyle("#000")
+      .lineWidth(1)
     .add(pv.Dot)
-      .visible(function() this.index == (n - 1))
-      .size(6)
-      .fillStyle("#f00")
+      .visible(function() (dots && this.index == 0) || this.index == n - 1)
       .strokeStyle(null)
-    .root.render();
-</script> over the lazy dog.<br>
+      .fillStyle("brown")
+      .radius(2)
+    .add(pv.Dot)
+      .visible(function() dots && (this.index == min || this.index == max))
+      .fillStyle("steelblue");
 
-<!-- Win/loss tally. -->
-The quick brown <script type="text/javascript+protovis">
-  var w = 150, h = 12;
-  new pv.Panel()
+  vis.render();
+}
+
+function sparktick(data) {
+  var w = data.length * 2,
+      h = 11;
+
+  var vis = new pv.Panel()
       .width(w)
-      .height(h)
-    .add(pv.Rule)
-      .bottom(h / 2 - .5)
+      .height(h);
+
+  vis.add(pv.Rule)
+      .bottom(h / 2)
       .strokeStyle("#870")
-      .lineWidth(.5)
-    .add(pv.Bar)
-      .data(pv.range(1, 76).map(function() (Math.random() > 0.5) ? 0 : 1))
-      .width(1)
+    .add(pv.Rule)
+      .data(data)
       .left(function() 2 * this.index)
       .bottom(function(d) d ? h / 2 : 0)
-      .height(h / 2)
-      .strokeStyle(null)
-      .fillStyle("#870")
-    .root.render();
-</script> fox jumps over the lazy dog.<br>
+      .height(h / 2);
 
-<!-- Simple bar chart. -->
-The quick brown fox <script type="text/javascript+protovis">
-  var w = 60, h = 12;
-  new pv.Panel()
+  vis.render();
+}
+
+function sparkbar(data) {
+  var w = 60,
+      h = 12;
+
+  var vis = new pv.Panel()
       .width(w)
-      .height(h)
-    .add(pv.Bar)
-      .data([0.2, 0.3, 0.6, 0.1, 0.9, 0.8, 0.23, 0.77, 0.63, 0.43, 0.59, 0.11])
+      .height(h);
+
+  vis.add(pv.Bar)
+      .data(bars)
       .width(4)
       .left(function() 5 * this.index)
       .height(function(d) Math.round(h * d))
-      .bottom(0)
-    .root.render();
-</script> jumps over the lazy dog.<br>
+      .bottom(0);
 
-<!-- Sunspots line. -->
-This sparkline
-<script type="text/javascript+protovis">
-  var w = 48, h = 12;
-  var avg = pv.sum(sunspots) / sunspots.length;
-  new pv.Panel()
-      .width(w)
-      .height(h)
-    .add(pv.Line)
-      .data(sunspots)
-      .left(function() this.index * (w / sunspots.length))
-      .bottom(function(d) 1 + d / 220 * h)
-      .lineWidth(1)
-    .root.add(pv.Rule)
-      .bottom(1 + avg / 220 * h)
-      .strokeStyle("#ccc")
-    .root.render();
-</script>
-demonstrates the fluctuation in sunspots as a line graph and this
-<script type="text/javascript+protovis">
-  var w = 48, h = 12;
-  var avg = pv.sum(sunspots) / sunspots.length;
-  new pv.Panel()
-      .width(w)
-      .height(h)
-    .add(pv.Line)
-      .data(sunspots)
-      .left(function() this.index * (w / sunspots.length))
-      .bottom(function(d) 1 + d / 220 * h)
-      .interpolate("step-after")
-      .antialias(false)
-      .lineWidth(1)
-    .root.add(pv.Rule)
-      .bottom(1 + avg / 220 * h)
-      .strokeStyle("#ccc")
-    .root.render();
-</script> demonstrates the fluctuation as a step graph.<br>
+  vis.render();
+}
 
-<!-- More sunspots. -->
-<script type="text/javascript+protovis">
-  var w = 64, h = 16;
+function dot(color) {
   new pv.Panel()
-      .data(pv.range(26))
-      .width(w + 4)
-      .height(h + 4)
-    .add(pv.Line)
-      .data(sunspots)
-      .left(function() this.index * (w / sunspots.length))
-      .bottom(function(d) 1 + d / 220 * h)
-      .strokeStyle(pv.Colors.category19().by(pv.parent))
+      .width(6)
+      .height(9)
+    .anchor("center").add(pv.Dot)
+      .strokeStyle(null)
+      .fillStyle(color)
+      .radius(2)
     .root.render();
+}
+
 </script>
+
+A sparkline is a word-sized data visualization, such
+as <script type="text/javascript+protovis">sparkline(sunspots);</script>
+or <script type="text/javascript+protovis">sparkbar(bars);</script>, allowing
+visual representations of data to be embedded directly in prose. This avoids any
+interruption in the flow of text, with the data presented in descriptive
+context. Sparklines can be used where space is limited, unlike standalone
+figures.
+
+<p>The necessarily-small size of sparklines introduces special constraints on
+their design: minimalist designs that show data as succinctly as possible are
+favored. For example, the win-loss record of a baseball team might be use
+up-ticks for wins and down-ticks for losses: <script
+type="text/javascript+protovis">sparktick(random(150));</script>. Similarly,
+rather than using axes, ticks, labels and a legend for a line chart, a sparkline
+can show a single-series trend simply as <script
+type="text/javascript+protovis">sparkline(walk(100),1);</script>. This
+particular design comes from Edward Tufte, with red dots (<script
+type="text/javascript+protovis">dot("brown");</script>) to emphasize
+start and end, and blue dots (<script
+type="text/javascript+protovis">dot("steelblue");</script>) for minimum and
+maximum.
