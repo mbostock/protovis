@@ -50,8 +50,8 @@
       href="stream-full.html" target="_blank">View full screen.</a>
 
       <p>Streamgraphs are a generalization of <a href="stack.html">stacked area
-      graphs</a> where the baseline is not fixed. By shifting the baseline, it
-      is possible to minimize the change in slope (or &ldquo;wiggle&rdquo;) in
+      graphs</a> where the baseline is free. By shifting the baseline, it is
+      possible to minimize the change in slope (or &ldquo;wiggle&rdquo;) in
       individual series, thereby making it easier to perceive the thickness of
       any given layer across the data. Byron &amp; Wattenberg describe several
       streamgraph algorithms in <a
