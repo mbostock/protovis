@@ -52,7 +52,7 @@
       <p>This is a simplified recreation
       of <a href="http://oakland.crimespotting.org">Oakland Crimespotting</a> in
       Protovis using the Google Maps API. The original was designed and built by
-      Stamen Design's Michal Migurski, Tom Carden, and Eric Rodenbeck. Each
+      Stamen Design&rsquo;s Michal Migurski, Tom Carden, and Eric Rodenbeck. Each
       colored circle corresponds to a crime; the color encodes the category of
       crime (such as <i>violent</i> or <i>quality of life</i>).
 

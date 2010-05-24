@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - Playfair's Wheat</title>
+    <title>Protovis - Playfair&rsquo;s Wheat</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script> 
@@ -42,7 +42,7 @@
     </div>
 
     <div class="body">
-      <h1>Playfair's Wheat</h1>
+      <h1>Playfair&rsquo;s Wheat</h1>
 
       <iframe style="width:860px;height:465px;" src="wheat-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
@@ -61,7 +61,7 @@
       target="_blank"><i>relative</i> price</a> of wheat in terms of weekly wages.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="crimea-rose.html">Nightingale's Rose</a>
+        Next: <a href="crimea-rose.html">Nightingale&rsquo;s Rose</a>
       </blockquote>
 
       <h3>Source</h3>

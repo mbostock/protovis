@@ -51,7 +51,7 @@
 
       <p>Les Mis&eacute;rables characters presented in an interaction
       matrix. Each character is represented by a row and a column in the
-      matrix. An entry in the matrix is colored if it's row and column
+      matrix. An entry in the matrix is colored if its row and column
       characters interact.</p>
 
       <blockquote style="font-size:13px;">

@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - Bertin's Hotel</title>
+    <title>Protovis - Bertin&rsquo;s Hotel</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <style type="text/css">
@@ -52,7 +52,7 @@
     </div>
 
     <div class="body">
-      <h1>Bertin's Hotel</h1>
+      <h1>Bertin&rsquo;s Hotel</h1>
 
       <div style="float:left;width:520px;">
       <iframe style="width:520px;height:520px;" src="hotel-full.html"></iframe>

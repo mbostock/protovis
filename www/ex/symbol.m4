@@ -50,12 +50,12 @@
       href="symbol-interactive.html" target="_blank">View full screen.</a>
       </p>
 
-      <p>Each state's population is represented as a "target" with the center
-      circle representing the number of residents with normal Body Mass Index
-      (BMI &lt; 24.9), the middle ring representing the overweight population
-      (25.0 &lt; BMI &lt; 29.9), and the outside ring representing the obese
-      population (30.0 &lt; BMI).  The area of the entire target corresponds to
-      the overall population of the state.</p>
+      <p>Each state&rsquo;s population is represented as a &ldquo;target&rdquo;
+      with the center circle representing the number of residents with normal
+      Body Mass Index (BMI &lt; 24.9), the middle ring representing the
+      overweight population (25.0 &lt; BMI &lt; 29.9), and the outside ring
+      representing the obese population (30.0 &lt; BMI).  The area of the entire
+      target corresponds to the overall population of the state.</p>
 
       <p>A more complicated example that includes more interaction can be found
       <a href="symbol-interactive.html">here</a>.</p>

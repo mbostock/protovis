@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - Minard's Napoleon</title>
+    <title>Protovis - Minard&rsquo;s Napoleon</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
@@ -42,7 +42,7 @@
     </div>
 
     <div class="body">
-      <h1>Minard's Napoleon</h1>
+      <h1>Minard&rsquo;s Napoleon</h1>
 
       <iframe style="height:460px;" src="napoleon-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
@@ -50,7 +50,7 @@
       href="napoleon-full.html" target="_blank">View full screen.</a>
 
       <p><a href="http://en.wikipedia.org/wiki/Charles_Minard">Charles
-      Minard</a>'s depiction of Napleon's disastrous march to Moscow, in the
+      Minard</a>&rsquo;s depiction of Napleon&rsquo;s disastrous march to Moscow, in the
       winter of 1812, is heralded by
       <a href="http://www.edwardtufte.com/tufte/posters">Edward Tufte</a> as
       "probably the best statistical graphic ever drawn." Our adaption includes
@@ -58,7 +58,7 @@
       Maps API</a>.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="antibiotics-burtin.html">Burtin's Antibiotics</a>
+        Next: <a href="antibiotics-burtin.html">Burtin&rsquo;s Antibiotics</a>
       </blockquote>
 
       <h3>Source</h3>

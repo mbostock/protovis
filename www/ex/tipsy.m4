@@ -52,7 +52,7 @@
       The tipsy label is a more aesthetic way to present the details-on-demand tooltip.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="flowers.html">Anderson's Flowers</a>
+        Next: <a href="flowers.html">Anderson&rsquo;s Flowers</a>
       </blockquote>
 
       <h3>Source</h3>

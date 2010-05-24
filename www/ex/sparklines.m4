@@ -48,7 +48,7 @@
 m4_include(`sparklines-full.html')
 
       <blockquote style="font-size:13px;">
-        Next: <a href="barley.html">Becker's Barley</a>
+        Next: <a href="barley.html">Becker&rsquo;s Barley</a>
       </blockquote>
 
       <h3>Source</h3>

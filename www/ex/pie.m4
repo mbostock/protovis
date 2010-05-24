@@ -61,11 +61,11 @@
       <p>Both pie and donut charts are made
       using <a href="http://code.google.com/p/protovis-js/wiki/PvWedge">wedges</a>,
       which can also be used to make other sorts of visualizations, as we saw in
-      the <a href="sunburst.html">sunburst</a>, <a href="antibiotics-burtin.html">Burtin's
+      the <a href="sunburst.html">sunburst</a>, <a href="antibiotics-burtin.html">Burtin&rsquo;s
       antibiotics</a> and <a href="clock.html">PolarClock</a> examples.
 
       <p>Note that we sort the data in descending order, so that by convention
-      the largest wedge starts at 12 o'clock.
+      the largest wedge starts at 12 o&rsquo;clock.
 
       <blockquote style="font-size:13px;">
         Next: <a href="line.html">Line &amp; Step Charts</a>

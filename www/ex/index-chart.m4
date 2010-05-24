@@ -50,15 +50,16 @@
       href="index-chart-full.html" target="_blank">View full screen.</a>
 
       <p>With some forms of time-series data, raw values are less important than
-	  relative changes. Consider investors, who are more interested in a stock's 
-      growth rate than its specific price. Multiple stocks may have dramatically 
-      different baseline prices, but be meaningfully compared when normalized. 
-      An <i>index chart</i> is an interactive line chart that shows percentage 
-      changes for a collection of time-series based on a selected index point. 
-      In this example, we see the percentage change of selected stock prices 
-      according to the day of purchase. For January 2005, one can see the rocky 
-      rise enjoyed by those who invested in Amazon, Apple, or Google at that 
-      time. Mouse over a point in the chart to change the reference month.</p>
+      relative changes. Consider investors, who are more interested in a
+      stock&rsquo;s growth rate than its specific price. Multiple stocks may
+      have dramatically different baseline prices, but be meaningfully compared
+      when normalized.  An <i>index chart</i> is an interactive line chart that
+      shows percentage changes for a collection of time-series based on a
+      selected index point.  In this example, we see the percentage change of
+      selected stock prices according to the day of purchase. For January 2005,
+      one can see the rocky rise enjoyed by those who invested in Amazon, Apple,
+      or Google at that time. Mouse over a point in the chart to change the
+      reference month.</p>
 
       <p>Data source: <a href="http://finance.yahoo.com/">Yahoo! 
       Finance</a></p>

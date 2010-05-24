@@ -60,8 +60,8 @@
 
       <p>A useful extension of scatterplots is
       the <a href="http://code.google.com/p/protovis-js/wiki/PairsPlot">scatterplot
-      matrix</a>, as shown in the <a href="flowers.html">Anderson's Flowers</a>
-      example.
+      matrix</a>, as shown in the <a href="flowers.html">Anderson&rsquo;s
+      Flowers</a> example.
 
       <blockquote style="font-size:13px;">
         Next: <a href="pie.html">Pie &amp; Donut Charts</a>

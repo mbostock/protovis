@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - Becker's Barley</title>
+    <title>Protovis - Becker&rsquo;s Barley</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script> 
@@ -42,7 +42,7 @@
     </div>
 
     <div class="body">
-      <h1>Becker's Barley</h1>
+      <h1>Becker&rsquo;s Barley</h1>
 
       <div style="float:left;width:355px;">
       <iframe style="width:355px;height:833px;" src="barley-full.html"></iframe>
@@ -57,7 +57,7 @@
       for understanding interactions in studies of how a response depends on
       explanatory variables". Here we reproduce a trellis of Barley yields from
       the 1930s, complete with main-effects ordering to facilitate
-      comparison. These examples demonstrate Protovis' support for data
+      comparison. These examples demonstrate Protovis&rsquo; support for data
       transformation via the <i>nest</i> operator.
 
       <p>Notice anything unusual about one of the sites? This anomaly led Becker
@@ -65,7 +65,7 @@
       decades.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="hotel.html">Bertin's Hotel</a>
+        Next: <a href="hotel.html">Bertin&rsquo;s Hotel</a>
       </blockquote>
       </div>
       <br clear="all">

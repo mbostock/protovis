@@ -51,8 +51,8 @@
 
       <p>Les Mis&eacute;rables character interaction. Each character is
       represented by a circle and the connecting arc represent interaction. The
-      character's size indicates the number of interactions they have over the
-      entire play.</p>
+      character&rsquo;s size indicates the number of interactions they have over
+      the entire play.</p>
 
       <blockquote style="font-size:13px;">
         Next: <a href="force.html">Force-Directed Graphs</a>

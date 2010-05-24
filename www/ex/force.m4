@@ -52,11 +52,11 @@
       </div>
 
       <div style="float:left;width:450px;">
-      <p>Les Mis&eacute;rables character interaction presented as a
-      force-directed graph. Each character is represented by a circle and the
-      connecting lines (or springs) represent interaction. The character's size
-      indicates the number of interactions they have over the entire play. Drag
-      and zoom the graph the get a better view.</p>
+      Les Mis&eacute;rables character interaction presented as a force-directed
+      graph. Each character is represented by a circle and the connecting lines
+      (or springs) represent interaction. The character&rsquo;s size indicates
+      the number of interactions they have over the entire play. Drag and zoom
+      the graph the get a better view.
 
       <blockquote style="font-size:13px;">
         Next: <a href="matrix.html">Matrix Diagrams</a>
