@@ -4,21 +4,25 @@
     <link type="text/css" rel="stylesheet" href="ex.css?3.2"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
     <script type="text/javascript" src="cars.js"></script>
-    <style type="text/css">    
-      #fig {
-        width: 880px;
-        height: 460px;
-      }
-      #title {
-        position: absolute;
-        top: 70px;
-        left: 200px;
-        padding: 10px;
-        background: white;
-      }
-      large {
-        font-size: medium;
-      }
+    <style type="text/css">
+
+#fig {
+  width: 880px;
+  height: 460px;
+}
+
+#title {
+  position: absolute;
+  top: 70px;
+  left: 200px;
+  padding: 10px;
+  background: white;
+}
+
+large {
+  font-size: medium;
+}
+
     </style>
   </head>
   <body><div id="center"><div id="fig">
@@ -26,13 +30,13 @@
 
 // The units and dimensions to visualize, in order.
 var units = {
-  "cylinders": {unit: ""},
-  "displacement": {unit: " cubic inch"},
-  "weight": {unit: " lbs"},
-  "horsepower": {unit: " hp"},
-  "acceleration": {unit: " (0 to 60mph)"},
-  "mpg": {unit: " miles/gallon"},
-  "year": {unit: ""}
+  cyl: {name: "cylinders", unit: ""},
+  dsp: {name: "displacement", unit: " sq in"},
+  lbs: {name: "weight", unit: " lbs"},
+  hp: {name: "horsepower", unit: " hp"},
+  acc: {name: "acceleration (0-60 mph)", unit: " sec"},
+  mpg: {name: "mileage", unit: " mpg"},
+  year: {name: "year", unit: ""}
 }
 
 var dims = pv.keys(units);
@@ -67,24 +71,6 @@ var vis = new pv.Panel()
     .top(30)
     .bottom(20);
 
-// Rule per dimension.
-rule = vis.add(pv.Rule)
-    .data(dims)
-    .left(x);
-
-// Dimension label
-rule.anchor("top")
-    .add(pv.Label)
-    .top(-12);
-
-rule.anchor("bottom")
-    .add(pv.Label)
-    .text(function(d) (y[d].domain()[0] + fudge) + units[d].unit);
-
-rule.anchor("top")
-    .add(pv.Label)
-    .text(function(d) (y[d].domain()[1] - fudge) + units[d].unit);
-
 // The parallel coordinates display.
 vis.add(pv.Panel)
     .data(cars)
@@ -94,8 +80,20 @@ vis.add(pv.Panel)
     .data(dims)
     .left(function(t, d) x(t))
     .bottom(function(t, d) y[t](d[t]))
-    .strokeStyle(pv.color("#bbb").alpha(0.5))
-    .lineWidth(1);
+    .strokeStyle("#ddd")
+    .lineWidth(1)
+    .antialias(false);
+
+// Rule per dimension.
+rule = vis.add(pv.Rule)
+    .data(dims)
+    .left(x);
+
+// Dimension label
+rule.anchor("top").add(pv.Label)
+    .top(-12)
+    .font("bold 10px sans-serif")
+    .text(function(d) units[d].name);
 
 // The parallel coordinates display.
 var change = vis.add(pv.Panel);
@@ -135,7 +133,7 @@ function selectAll(d) {
 }
 
 /* Handle select and drag */
-change.add(pv.Panel)
+var handle = change.add(pv.Panel)
     .data(dims.map(function(dim) { return {y:0, dy:h, dim:dim}; }))
     .left(function(t) x(t.dim) - 30)
     .width(60)
@@ -157,6 +155,14 @@ change.add(pv.Panel)
     .event("mousedown", pv.Behavior.drag())
     .event("drag", update)
     .event("dragend", update);
+
+handle.anchor("bottom").add(pv.Label)
+    .textBaseline("top")
+    .text(function(d) filter[d.dim].min.toFixed(0) + units[d.dim].unit);
+
+handle.anchor("top").add(pv.Label)
+    .textBaseline("bottom")
+    .text(function(d) filter[d.dim].max.toFixed(0) + units[d.dim].unit);
 
 vis.render();
 

@@ -36,27 +36,27 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="bullet.html">&laquo; Previous</a> /
-        <a href="area.html">Next &raquo;</a>
+        <a href="index-chart.html">&laquo; Previous</a> /
+        <a href="jobs.html">Next &raquo;</a>
       </div>
     </div>
 
     <div class="body">
       <h1>Parallel Coordinates</h1>
 
-      <iframe id="iframe" style="height:460px;" src="cars-full.html"></iframe>
+      <iframe id="iframe" style="height:480px;" src="cars-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="cars-full.html" target="_blank">View full screen.</a>
 
       <p><a href="http://en.wikipedia.org/wiki/Parallel_coordinates">Parallel
-      coordinates</a> is a popular method of visualizing high-dimensional
-      data. In this example, hundreds of cars can be quickly compared by
-      filtering along any dimension. Click and drag along the red rule for a
-      given dimension to update the filter.
+      coordinates</a> is a popular method of visualizing high-dimensional data
+      using dynamic queries. In this example, hundreds of cars can be quickly
+      compared by filtering along any dimension. Click and drag along the red
+      rule for a given dimension to update the filter.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="area.html">Area</a>
+        Next: <a href="jobs.html">Query + Filter</a>
       </blockquote>
 
       <h3>Source</h3>
