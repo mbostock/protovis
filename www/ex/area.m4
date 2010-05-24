@@ -62,12 +62,11 @@
       are added for reference values.
 
       <p>Although this example is basic, it provides a good starting point for
-      adding more complex features. For
-      instance, <a href="http://code.google.com/p/protovis-js/wiki/ScaleInvert">mouseover
+      adding more complex features. For instance, <a
+      href="http://code.google.com/p/protovis-js/wiki/ScaleInvert">mouseover
       interaction</a> can be added to allow precise reading of data values. Or
-      multiple series of data can be added to produce
-      a <a href="http://protovis-js.googlecode.com/svn/trunk/examples/area-stacked.html"
-      target="_blank">stacked area chart</a>.
+      multiple series of data can be added to produce a <a
+      href="stack.html">stacked area chart</a>.
 
       <blockquote style="font-size:13px;">
         Next: <a href="bar.html">Bar &amp; Column Charts</a>

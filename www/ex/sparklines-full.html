@@ -1,5 +1,6 @@
 <script type="text/javascript+protovis">
 
+/** A simple sparkline with optional dots. */
 function sparkline(data, dots) {
   var n = data.length,
       w = n,
@@ -30,6 +31,7 @@ function sparkline(data, dots) {
   vis.render();
 }
 
+/** An uptick/downtick sparkline for binary data. */
 function sparktick(data) {
   var w = data.length * 2,
       h = 11;
@@ -50,6 +52,7 @@ function sparktick(data) {
   vis.render();
 }
 
+/** A sparkline bar chart. */
 function sparkbar(data) {
   var w = 60,
       h = 12;
@@ -68,6 +71,7 @@ function sparkbar(data) {
   vis.render();
 }
 
+/** A small colored dot. */
 function dot(color) {
   new pv.Panel()
       .width(6)
