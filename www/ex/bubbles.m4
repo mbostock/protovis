@@ -36,7 +36,7 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="minnesota.html">&laquo; Previous</a> /
+        <a href="sort.html">&laquo; Previous</a> /
         <a href="eyes.html">Next &raquo;</a>
       </div>
     </div>

@@ -37,7 +37,7 @@
       </div>
       <div class="section">
         <a href="jobs.html">&laquo; Previous</a> /
-        <a href="matrix.html">Next &raquo;</a>
+        <a href="zoom.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -67,7 +67,7 @@
       mouse.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="matrix.html">Matrix</a>
+        Next: <a href="zoom.html">Focus + Context</a>
       </blockquote>
 
       <h3>Source</h3>

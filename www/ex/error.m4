@@ -36,8 +36,8 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="bullet.html">&laquo; Previous</a> /
-        <a href="area.html">Next &raquo;</a>
+        <a href="histogram.html">&laquo; Previous</a> /
+        <a href="life.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -54,7 +54,7 @@
       whiskers are a convenient way of illustrating the observed measurements and their error.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="area.html">Area</a>
+        Next: <a href="life.html">Conway's Game of Life</a>
       </blockquote>
 
       <h3>Source</h3>

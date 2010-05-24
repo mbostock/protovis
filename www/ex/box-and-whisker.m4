@@ -36,8 +36,8 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="bullet.html">&laquo; Previous</a> /
-        <a href="area.html">Next &raquo;</a>
+        <a href="qqplot.html">&laquo; Previous</a> /
+        <a href="histogram.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -54,7 +54,7 @@
       the smallest observation, lower quartile, median, upper quartile, and largest observation.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="area.html">Area</a>
+        Next: <a href="histogram.html">Histogram</a>
       </blockquote>
 
       <h3>Source</h3>

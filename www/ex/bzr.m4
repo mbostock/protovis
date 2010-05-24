@@ -36,8 +36,8 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="segmented.html">&laquo; Previous</a> /
-        <a href="waves.html">Next &raquo;</a>
+        <a href="life.html">&laquo; Previous</a> /
+        <a href="nbody.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -60,7 +60,7 @@
       Life.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="waves.html">Waves</a>
+        Next: <a href="nbody.html">N-Body Simulation</a>
       </blockquote>
       </div>
       <br clear="all">

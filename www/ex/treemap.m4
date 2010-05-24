@@ -46,8 +46,8 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="caltrain.html">&laquo; Previous</a> /
-        <a href="sunburst.html">Next &raquo;</a>
+        <a href="tree.html">&laquo; Previous</a> /
+        <a href="arc.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -73,7 +73,7 @@
       file.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="sunburst.html">Sunburst Layout</a>
+        Next: <a href="arc.html">Arc Diagrams</a>
       </blockquote>
 
       <h3>Source</h3>

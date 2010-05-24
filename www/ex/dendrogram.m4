@@ -46,8 +46,8 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="treemap.html">&laquo; Previous</a> /
-        <a href="icicle.html">Next &raquo;</a>
+        <a href="point.html">&laquo; Previous</a> /
+        <a href="sunburst.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -66,7 +66,7 @@
       the <a href="http://flare.prefuse.org">Flare</a> visualization toolkit.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="icicle.html">Icicle Layout</a>
+        Next: <a href="sunburst.html">Sunburst Layout</a>
       </blockquote>
       <br clear="all">
 

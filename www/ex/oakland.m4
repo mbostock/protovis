@@ -36,8 +36,8 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="weather.html">&laquo; Previous</a> /
-        <a href="caltrain.html">Next &raquo;</a>
+        <a href="napoleon.html">&laquo; Previous</a> /
+        <a href="choropleth.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -57,7 +57,7 @@
       crime (such as <i>violent</i> or <i>quality of life</i>).
 
       <blockquote style="font-size:13px;">
-        Next: <a href="caltrain.html">CalTrain Timetable</a>
+        Next: <a href="choropleth.html">Choropleth Map</a>
       </blockquote>
 
       <h3>Source</h3>

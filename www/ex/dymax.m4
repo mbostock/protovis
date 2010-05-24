@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - Dymaxion map</title>
+    <title>Protovis - Dymaxion Map</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
@@ -36,15 +36,15 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="waves.html">&laquo; Previous</a> /
-        <a href="bullet.html">Next &raquo;</a>
+        <a href="heatmap.html">&laquo; Previous</a> /
+        <a href="qqplot.html">Next &raquo;</a>
       </div>
     </div>
 
     <div class="body">
-      <h1>Dymaxion map</h1>
+      <h1>Dymaxion Map</h1>
 
-      <iframe style="width:860px;height:540px;" src="dymax-full.html"></iframe>
+      <iframe style="width:860px;height:516px;" src="dymax-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="dymax-full.html" target="_blank">View full screen.</a>
@@ -54,7 +54,7 @@
       be unfolded onto a two dimensional plane.
       
       <blockquote style="font-size:13px;">
-        Next: <a href="bullet.html">Bullet</a>
+        Next: <a href="qqplot.html">Q-Q Plot</a>
       </blockquote>
 
       <h3>Source</h3>

@@ -36,8 +36,8 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="hotel.html">&laquo; Previous</a> /
-        <a href="antibiotics-burtin.html">Next &raquo;</a>
+        <a href="matrix.html">&laquo; Previous</a> /
+        <a href="oakland.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -58,7 +58,7 @@
       Maps API</a>.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="antibiotics-burtin.html">Burtin&rsquo;s Antibiotics</a>
+        Next: <a href="oakland.html">Oakland Crimespotting</a>
       </blockquote>
 
       <h3>Source</h3>

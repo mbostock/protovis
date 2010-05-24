@@ -14,41 +14,54 @@
     <div>
       Projection:
       <select id="menu" onchange="geo.projection(this.value); vis.render();">
-        <option value="none" selected>Identity projection</option> 
-        <option value="mercator">Mercator projection</option> 
+        <option value="none" selected>Identity projection</option>
+        <option value="mercator">Mercator projection</option>
         <option value="gall-peters">Gall-Peters projection</option>
         <option value="sinusoidal">Sinusoidal projection</option>
         <option value="hammer">Hammer projection</option>
       </select>
     </div>
     <script type="text/javascript+protovis">
-  // Generate a random value to visualize (for now).
-  countries.forEach(function(c) c.value = (stats[c.code].area != 0)?stats[c.code].pop/(stats[c.code].area*10):0);
 
-  // Note: the aspect ratio is 5/3 and can be rescaled.
-  var w = 860, h = 516;
-  var geo = pv.Geo.scale("identity").range({x:0, y:0}, {x:w, y:h});
-  var col = pv.Scale.linear(0, 400).range("green", "red");
-  
+  /*
+   * A diverging color scale, using previously-computed quantiles of population
+   * densities; in the future, we might use a quantile scale here to do this
+   * automatically. Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer,
+   * Penn State.
+   */
+  var fill = pv.Scale.linear()
+      .domain(140, 650, 1900)
+      .range("#91bfdb", "#ffffbf", "#fc8d59");
+
+  /* Precompute the country's population density and color. */
+  countries.forEach(function(c) {
+    c.color = stats[c.code].area
+        ? fill(stats[c.code].pop / stats[c.code].area)
+        : "#ccc"; // unknown
+  });
+
+  var w = 860,
+      h = 3 / 5 * w,
+      geo = pv.Geo.scale().range(w, h);
+
   var vis = new pv.Panel()
       .width(w)
-      .height(h)
-      .fillStyle("#EEF");
+      .height(h);
 
-  var country = vis.add(pv.Panel)
-      .data(countries);
-
-  country.add(pv.Panel)
+  /* Countries. */
+  vis.add(pv.Panel)
+      .data(countries)
+    .add(pv.Panel)
       .data(function(c) c.borders)
     .add(pv.Line)
-      .data(function(l) l)
+      .data(function(b) b)
       .left(geo.x)
       .top(geo.y)
-      .lineWidth(.5)
-      .strokeStyle("white")
-      .fillStyle(function(d,l,c) col(c.value))
-      .title(function(d,l,c) c.name + ' (' + c.value.toFixed(2) + ' people/km^2)');
-      
+      .title(function(d, b, c) c.name)
+      .fillStyle(function(d, b, c) c.color)
+      .strokeStyle(function() this.fillStyle().darker())
+      .lineWidth(1);
+
   /* Latitude ticks. */
   vis.add(pv.Panel)
       .data(geo.ticks.lat())
@@ -71,13 +84,8 @@
       .lineWidth(.5)
       .interpolate("cardinal");
 
-   var start = new Date();
    vis.render();
-   var end = new Date;
-   var out = document.getElementById('msg');
-   out.innerHTML = "Render time: " + (end - start) + 'ms';
-    
+
     </script>
-    <div id="msg">Rendering...</div>
   </div></div></body>
 </html>

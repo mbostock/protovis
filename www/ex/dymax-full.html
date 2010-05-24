@@ -8,7 +8,7 @@
     <style type="text/css">
       #fig {
         width: 860px;
-        height: 540px;
+        height: 516px;
       }
     </style>
   </head>
@@ -68,13 +68,8 @@
           .strokeStyle("#bbb")
           .lineWidth(.5);
 
-      var start = new Date();
       vis.render();
-      var end = new Date;
-      var out = document.getElementById('msg');
-      out.innerHTML = "Render time: " + (end - start) + 'ms';
     
     </script>
-    <div id="msg">Rendering...</div>
   </div></div></body>
 </html>

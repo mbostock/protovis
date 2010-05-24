@@ -46,7 +46,7 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="treemap.html">&laquo; Previous</a> /
+        <a href="dendrogram.html">&laquo; Previous</a> /
         <a href="icicle.html">Next &raquo;</a>
       </div>
     </div>

@@ -36,8 +36,8 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="matrix.html">&laquo; Previous</a> /
-        <a href="zoom.html">Next &raquo;</a>
+        <a href="bubbles.html">&laquo; Previous</a> /
+        <a href="clock.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -92,7 +92,7 @@
       using <tt><a href="http://protovis-js.googlecode.com/svn/trunk/jsdoc/symbols/pv.Mark.html#mouse">pv.Mark#mouse</a></tt>.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="zoom.html">Focus + Context</a>
+        Next: <a href="clock.html">PolarClock</a>
       </blockquote>
       </div>
       <br clear="all">

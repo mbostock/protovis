@@ -36,8 +36,8 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="oakland.html">&laquo; Previous</a> /
-        <a href="treemap.html">Next &raquo;</a>
+        <a href="choropleth.html">&laquo; Previous</a> /
+        <a href="cartogram.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -50,18 +50,21 @@
       href="symbol-interactive.html" target="_blank">View full screen.</a>
       </p>
 
-      <p>Each state&rsquo;s population is represented as a &ldquo;target&rdquo;
-      with the center circle representing the number of residents with normal
-      Body Mass Index (BMI &lt; 24.9), the middle ring representing the
-      overweight population (25.0 &lt; BMI &lt; 29.9), and the outside ring
-      representing the obese population (30.0 &lt; BMI).  The area of the entire
-      target corresponds to the overall population of the state.</p>
+      <p>An alternative to <a href="choropleth.html">choropleth maps</a> is the graduated
+      symbol map, which instead places symbols over an underlying map. This approach avoids
+      confounding geographic area with data values and allows for more dimensions to be
+      visualized (e.g., symbol size, shape, and color). In addition to simple shapes like
+      circles, graduated symbol maps may use more complicated glyphs such as pie charts.
+
+      <p>In the example above the total circle size represents a state's population, and
+      each slice indicates the proportion of people with a specific BMI rating. The area of
+      the entire circle corresponds to the overall population of the state.</p>
 
       <p>A more complicated example that includes more interaction can be found
       <a href="symbol-interactive.html">here</a>.</p>
 
       <blockquote style="font-size:13px;">
-        Next: <a href="treemap.html">Treemap</a>
+        Next: <a href="cartogram.html">Dorling Cartogram</a>
       </blockquote>
 
       <h3>Source</h3>

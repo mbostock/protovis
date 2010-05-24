@@ -36,8 +36,8 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="icicle.html">&laquo; Previous</a> /
-        <a href="jobs.html">Next &raquo;</a>
+        <a href="projection.html">&laquo; Previous</a> /
+        <a href="dymax.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -66,7 +66,7 @@
       heatmap visualizations will be more efficiently rendered as images.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="jobs.html">Job Voyager</a>
+        Next: <a href="dymax.html">Dymaxion Map</a>
       </blockquote>
       </div>
       <br clear="all">

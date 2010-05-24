@@ -36,8 +36,8 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="segmented.html">&laquo; Previous</a> /
-        <a href="waves.html">Next &raquo;</a>
+        <a href="error.html">&laquo; Previous</a> /
+        <a href="bzr.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -56,7 +56,7 @@
       visualize the cells by directly specifying the pixel colors of an image.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="waves.html">Waves</a>
+        Next: <a href="bzr.html">Belousov-Zhabotinsky reaction</a>
       </blockquote>
       </div>
       <br clear="all">
