@@ -7,69 +7,69 @@
   <body>
     <script type="text/javascript+protovis">
 
-      var w = 200,
-          h = 30,
-          dateFormat = pv.Format.date("%B %Y");
+var w = 200,
+    h = 30,
+    dateFormat = pv.Format.date("%B %Y");
 
-      /* Color by maximum number of people employed in that job. */
-      var c = pv.Scale.log(minnesota, function(d) pv.max(d.values))
-          .range("#ccc", "#1f77b4");
+/* Color by maximum number of people employed in that job. */
+var c = pv.Scale.log(minnesota, function(d) pv.max(d.values))
+    .range("#ccc", "#1f77b4");
 
-      /* Tile the visualization for each job. */
-      var vis = new pv.Panel()
-          .data(minnesota)
-          .width(w)
-          .height(h + 10)
-          .top(6)
-          .left(6)
-          .right(6)
-          .bottom(6);
+/* Tile the visualization for each job. */
+var vis = new pv.Panel()
+    .data(minnesota)
+    .width(w)
+    .height(h + 10)
+    .top(6)
+    .left(6)
+    .right(6)
+    .bottom(6);
 
-      /* A panel instance to store scales (x, y) and the mouseover index (i). */
-      var panel = vis.add(pv.Panel)
-          .def("i", -1)
-          .def("x", function(d) pv.Scale.linear(d.values, pv.index).range(0, w))
-          .def("y", function(d) pv.Scale.linear(0, pv.max(d.values)).range(0, h))
-          .bottom(10)
-          .events("all")
-          .event("mousemove", pv.Behavior.point(Infinity).collapse("y"));
+/* A panel instance to store scales (x, y) and the mouseover index (i). */
+var panel = vis.add(pv.Panel)
+    .def("i", -1)
+    .def("x", function(d) pv.Scale.linear(d.values, pv.index).range(0, w))
+    .def("y", function(d) pv.Scale.linear(0, pv.max(d.values)).range(0, h))
+    .bottom(10)
+    .events("all")
+    .event("mousemove", pv.Behavior.point(Infinity).collapse("y"));
 
-      /* The area. */
-      var area = panel.add(pv.Area)
-          .data(function(d) d.values)
-          .fillStyle(function(d, p) panel.i() < 0 ? c(pv.max(p.values)) : "#2ca02c")
-          .left(function() panel.x()(this.index))
-          .height(function(d) panel.y()(d))
-          .bottom(0)
-          .event("point", function() (panel.i(this.index), area.render(), label.render(), dot))
-          .event("unpoint", function() (panel.i(-1), area.render(), label.render(), dot));
+/* The area. */
+var area = panel.add(pv.Area)
+    .data(function(d) d.values)
+    .fillStyle(function(d, p) panel.i() < 0 ? c(pv.max(p.values)) : "#2ca02c")
+    .left(function() panel.x()(this.index))
+    .height(function(d) panel.y()(d))
+    .bottom(0)
+    .event("point", function() (panel.i(this.index), area.render(), label.render(), dot))
+    .event("unpoint", function() (panel.i(-1), area.render(), label.render(), dot));
 
-      /* The x-axis. */
-      panel.add(pv.Rule)
-          .bottom(.5);
+/* The x-axis. */
+panel.add(pv.Rule)
+    .bottom(.5);
 
-      /* The mouseover dot. */
-      var dot = panel.add(pv.Dot)
-          .visible(function() panel.i() >= 0)
-          .left(function() panel.x()(panel.i()))
-          .bottom(function(d) panel.y()(d.values[panel.i()]))
-          .fillStyle("#ff7f0e")
-          .strokeStyle(null)
-          .size(10);
+/* The mouseover dot. */
+var dot = panel.add(pv.Dot)
+    .visible(function() panel.i() >= 0)
+    .left(function() panel.x()(panel.i()))
+    .bottom(function(d) panel.y()(d.values[panel.i()]))
+    .fillStyle("#ff7f0e")
+    .strokeStyle(null)
+    .size(10);
 
-      /* The label: either the job name, or the month and value. */
-      var label = panel.add(pv.Label)
-          .bottom(-1)
-          .textBaseline("top")
-          .left(function() panel.i() < 0 ? 0 : null)
-          .right(function() panel.i() < 0 ? null : 0)
-          .textAlign(function() panel.i() < 0 ? "left" : "right")
-          .textStyle(function() panel.i() < 0 ? "#999" : "#000")
-          .text(function(d) panel.i() < 0 ? d.name
-              : dateFormat(new Date(2000, panel.i() * 3, 1))
-              + ": " + d.values[panel.i()]);
+/* The label: either the job name, or the month and value. */
+var label = panel.add(pv.Label)
+    .bottom(-1)
+    .textBaseline("top")
+    .left(function() panel.i() < 0 ? 0 : null)
+    .right(function() panel.i() < 0 ? null : 0)
+    .textAlign(function() panel.i() < 0 ? "left" : "right")
+    .textStyle(function() panel.i() < 0 ? "#999" : "#000")
+    .text(function(d) panel.i() < 0 ? d.name
+        : dateFormat(new Date(2000, panel.i() * 3, 1))
+        + ": " + d.values[panel.i()]);
 
-      vis.render();
+vis.render();
 
     </script>
   </body>
