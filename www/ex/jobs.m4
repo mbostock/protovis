@@ -36,7 +36,7 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="query.html">&laquo; Previous</a> /
+        <a href="cars.html">&laquo; Previous</a> /
         <a href="minnesota.html">Next &raquo;</a>
       </div>
     </div>

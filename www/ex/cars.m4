@@ -56,7 +56,7 @@
       rule for a given dimension to update the filter.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="jobs.html">Query + Filter</a>
+        Next: <a href="jobs.html">Job Voyager</a>
       </blockquote>
 
       <h3>Source</h3>
