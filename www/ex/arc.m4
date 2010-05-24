@@ -1,7 +1,7 @@
 <html>
   <head>
     <title>Protovis - Arc Diagrams</title>
-    <link type="text/css" rel="stylesheet" href="../style.css?3.1a"/>
+    <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
   </head>

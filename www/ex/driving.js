@@ -1,3 +1,12 @@
+/*
+ * This data was extracted from the New York Times article "Driving Shifts Into
+ * Reverse" by Hannah Fairfield, published on May 2, 2010. The original source
+ * is the Energy Information Administration, the Federal Highway Administration,
+ * and the Brookings Institution. These figures may not be accurate.
+ *
+ * @see http://www.nytimes.com/imagepages/2010/05/02/business/02metrics.html
+ */
+
 var driving = [
   {side: "left", year: 1956, miles: 3675, gas: 2.38},
   {side: "right", year: 1957, miles: 3706, gas: 2.40},

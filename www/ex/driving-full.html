@@ -1,25 +1,45 @@
 <html>
   <head>
+    <title>Gas &amp; Driving</title>
+    <link type="text/css" rel="stylesheet" href="ex.css?3.2"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
     <script type="text/javascript" src="driving.js"></script>
+    <style type="text/css">
+
+#fig {
+  width: 900px;
+  height: 600px;
+}
+
+.caption {
+  position: absolute;
+  font: bold 11px serif;
+  line-height: 1em;
+  text-align: center;
+}
+
+.caption p {
+  font: 10px sans-serif;
+  line-height: 1.1em;
+}
+
+    </style>
   </head>
-  <body>
+  <body><div id="center"><div id="fig">
     <script type="text/javascript+protovis">
 
-var w = 1151,
-    h = 1145,
-    m = null,
-    year = 1956,
-    x = pv.Scale.linear(3380, 10320).range(0, w),
-    y = pv.Scale.linear(0.41, 3.42).range(0, h);
+var w = 900,
+    h = 590,
+    x = pv.Scale.linear(3380, 10500).range(0, w),
+    y = pv.Scale.linear(1.25, 3.49).range(0, h);
 
 var vis = new pv.Panel()
     .width(w)
     .height(h)
-    .margin(20);
+    .top(10);
 
 vis.add(pv.Rule)
-    .data(y.ticks())
+    .data(y.ticks(5))
     .bottom(y)
     .strokeStyle("#ccc")
   .anchor("left").add(pv.Label)
@@ -30,7 +50,7 @@ vis.add(pv.Rule)
     .text(function(d) "$" + d.toFixed(2));
 
 vis.add(pv.Rule)
-    .data(x.ticks())
+    .data(x.ticks(5))
     .left(x)
     .strokeStyle("#ccc")
   .anchor("top").add(pv.Label)
@@ -56,5 +76,22 @@ vis.add(pv.Line)
 vis.render();
 
     </script>
-  </body>
+    <div class="caption" style="top:320px;left:150px;">
+      Cheap gas,<br>longer commutes
+    </div>
+    <div class="caption" style="top:350px;left:350px;">
+      The Arab<br>oil embargo
+    </div>
+    <div class="caption" style="top:100px;left:440px;">
+      Energy crisis
+    </div>
+    <div class="caption" style="top:430px;left:670px;">
+      Record low prices
+    </div>
+    <div class="caption" style="top:96px;left:670px;width:110px;">
+      The swing backward
+      <p>The average number of miles that Americans drive annually beings to
+      fall, so the chart appears to turn around.</p>
+    </div>
+  </div></div></body>
 </html>
