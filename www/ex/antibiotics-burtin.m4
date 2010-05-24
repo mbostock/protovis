@@ -36,8 +36,8 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="napoleon.html">&laquo; Previous</a> /
-        <a href="barley.html">Next &raquo;</a>
+        <a href="candlestick.html">&laquo; Previous</a> /
+        <a href="crimea-rose.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -67,7 +67,7 @@
       exaggeration of some values for penicillin.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="barley.html">Becker&rsquo;s Barley</a>
+        Next: <a href="crimea-rose.html">Nightingale&rsquo;s Rose</a>
       </blockquote>
 
       <h3>Source</h3>
