@@ -1,104 +1,103 @@
 <html>
   <head>
     <title>Horizon Graph</title>
-    <script type="text/javascript" src="unemployment.js"></script>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
     <script type="text/javascript" src="../jquery-1.4.2.min.js"></script>
     <script type="text/javascript" src="../jquery-ui-1.8rc3.custom.min.js"></script>
+    <script type="text/javascript" src="unemployment.js"></script>
     <link type="text/css" rel="stylesheet" href="ex.css"/>
     <link type="text/css" href="../ui-lightness/jquery-ui-1.8rc3.custom.css" rel="stylesheet"/>
     <style type="text/css">
-      #fig {
-        width: 500px;
-        height: 190px;
-        font-family: Arial;
-      }
-      .label {
-        font-size: 13px;
-        padding-top: 2px;
-        padding-bottom: 10px;
-      }
-      .ui-slider {
-        font-size: 10px;
-        width: 300px;
-        margin-top: 5px;
-      }
-      .ui-state-focus {
-        outline: none;
-      }
-      #slider {
-        width: 120px;
-        display: inline-block;
-        margin-left: 10px;
-        margin-right: 10px;
-      }
-      #bands {
-        display: inline-block;
-        width: 20px;
-        text-align: right;
-      }
+
+#fig {
+  width: 500px;
+  height: 115px;
+}
+
+#slider {
+  width: 120px;
+  display: inline-block;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+#bands {
+  display: inline-block;
+  width: 10px;
+  text-align: right;
+}
+
+.ui-slider {
+  font-size: 10px;
+  width: 300px;
+  margin-top: 5px;
+}
+
+.ui-state-focus {
+  outline: none;
+}
+
     </style>
   </head>
   <body><div id="center"><div id="fig">
-<div style="width:500px;">
-  Bands: <span id="slider"></span><span id="bands">2</span>
-  <span style="float:right;">
-    Negative Values:
-    <input type="radio" id="mirror" name="mode" value="mirror" checked/>
-    <label for="mirror">mirror</label>
-    <input type="radio" id="offset" name="mode" value="offset"/>
-    <label for="offset">offset</label>
-  </span>
-</div>
-<div style="display: table; height: 168px; margin-top: 10px;">
-<div style="display: table-cell; vertical-align: middle;">
-  <script type="text/javascript+protovis">
+    <div style="width:500px;">
+      <b>Bands:</b><span id="slider"></span><span id="bands">2</span>
+      <span style="float:right;"><b>Negative:</b>
+      <input type="radio" id="mirror" name="mode" value="mirror" checked/><label
+      for="mirror">mirror</label>
+      <input type="radio" id="offset" name="mode" value="offset"/><label
+      for="offset">offset</label></span>
+    </div>
+    <script type="text/javascript+protovis">
 
-    var data = pv.nest(all)
-        .key(function(d) d.series)
-        .entries()
-        .filter(function(d) d.key==0)[0].values;
-    var avg = pv.mean(data, function(d) d.rate);
-    data.map(function(d) d.rate -= avg);
+var data = pv.nest(all)
+    .key(function(d) d.series)
+    .entries()
+    .filter(function(d) d.key == 0)[0].values;
 
-    var w = 500,
-        h = 84,
-        bands = 2,
-        mode = "mirror",
-        fx = function(d) d.date,
-        fy = function(d) d.rate,
-        m = Math.max(pv.max(data,fy), -pv.min(data,fy)),
-        x = pv.Scale.linear(data, fx).range(0, w).by(fx),
-        y = pv.Scale.linear(-m, m).range(-h, h).by(fy);
+/* Offset so that positive is above-average and negative is below-average. */
+var avg = pv.mean(data, function(d) d.rate);
+data.map(function(d) d.rate -= avg);
 
-    var vis = new pv.Panel()
-        .width(w)
-        .height(function() bands==0 ? 2*h : h/bands);
+var w = 500,
+    h = 84,
+    bands = 2,
+    mode = "mirror",
+    fx = function(d) d.date,
+    fy = function(d) d.rate,
+    m = Math.max(pv.max(data, fy), -pv.min(data, fy)),
+    x = pv.Scale.linear(data, fx).range(0, w).by(fx),
+    y = pv.Scale.linear(-m, m).range(-h, h).by(fy);
 
-    vis.add(pv.Layout.Horizon)
-        .bands(function() Math.max(1, bands))
-        .mode(function() bands==0 ? "color" : mode)
-      .band.add(pv.Area)
-        .data(data)
-        .left(x)
-        .height(y);
+var vis = new pv.Panel()
+    .top(10)
+    .width(w)
+    .height(h);
 
-    vis.render();
+vis.add(pv.Layout.Horizon)
+    .bands(function() bands)
+    .mode(function() mode)
+    .height(function() h / bands)
+    .bottom(0)
+  .band.add(pv.Area)
+    .data(data)
+    .left(x)
+    .height(y);
 
-    $(slider).slider({
-        min: 0, max: 5, value: 2, slide: function(e, ui) {
-            $("#bands").html(bands = ui.value);
-            vis.render();
-        }
-    });
+vis.render();
 
-    $([mirror, offset]).change(function() {
-        mode = this.value;
-        vis.render();
-    });
+$(slider).slider({
+    min: 1, max: 5, value: 2, slide: function(e, ui) {
+      $("#bands").html(bands = ui.value);
+      vis.render();
+    }
+});
 
-  </script>
-</div></div>
+$([mirror, offset]).change(function() {
+  mode = this.value;
+  vis.render();
+});
 
+    </script>
   </div></div></body>
 </html>
