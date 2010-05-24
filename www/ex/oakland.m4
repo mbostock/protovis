@@ -37,7 +37,7 @@
       </div>
       <div class="section">
         <a href="napoleon.html">&laquo; Previous</a> /
-        <a href="symbol.html">Next &raquo;</a>
+        <a href="choropleth.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -57,7 +57,7 @@
       crime (such as <i>violent</i> or <i>quality of life</i>).
 
       <blockquote style="font-size:13px;">
-        Next: <a href="symbol.html">Graduated Symbol Map</a>
+        Next: <a href="choropleth.html">Choropleth Map</a>
       </blockquote>
 
       <h3>Source</h3>

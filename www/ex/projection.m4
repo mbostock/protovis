@@ -49,8 +49,10 @@
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="projection-full.html" target="_blank">View full screen.</a>
 
-      <p>Choropleth maps represent data by shading the area of a country to represent a value.
-      This example shades contrived based on their population density.</p>
+      <p>This population density map showcases the different projections available in
+      Protovis. Try selecting the different projections from the drop down box.</p>
+
+      <p>Map colors based on <a href="http://colorbrewer2.org/">www.ColorBrewer.org</a>, by Cynthia A. Brewer, Penn State.
 
       <blockquote style="font-size:13px;">
         Next: <a href="heatmap.html">Heatmaps</a>

@@ -36,8 +36,8 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="symbol.html">&laquo; Previous</a> /
-        <a href="cartogram.html">Next &raquo;</a>
+        <a href="oakland.html">&laquo; Previous</a> /
+        <a href="symbol.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -50,12 +50,18 @@
       href="choropleth-interactive.html" target="_blank">View full screen.</a>
       </p>
 
-      <p>Present of population classified as "Obese" (Body Mass Index in excess of 30), by state.
-      Press the "Play" button to watch the obesity epidemic evolve from 1995 onwards, or drag the slider to a particular year of interest.</p>
+      <p>Data is often collected and aggregated by geographical areas such as states. A standard
+      approach to communicating this data is to use a color encoding of the geographic area,
+      resulting in a choropleth map. Here, we use a color encoding to communicate the prevalence
+      of obesity in each U.S. state. Though this is a widely used visualization technique, some
+      care is required. One common error is to encode raw data values (such as population) rather
+      than using normalized values to produce a density map.
+      <p>The above example present of population classified as "Obese" (Body Mass Index in excess
+      of 30), by state.
       <p>A more complicated example that includes more interaction can be found <a href="choropleth-interactive.html">here</a>.</p>
 
       <blockquote style="font-size:13px;">
-        Next: <a href="cartogram.html">Dorling Cartogram</a>
+        Next: <a href="symbol.html">Graduated Symbol Map</a>
       </blockquote>
 
       <h3>Source</h3>

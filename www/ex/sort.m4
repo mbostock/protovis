@@ -53,6 +53,8 @@
       sort. Excellent sparkline-like graphics from Robert Sedgewick,
       <i>Algorithms in C</i> (1998).
 
+      <p>For comparison have a look at the same visualization technique applied to <a href="qsort-full.html">QuickSort</a> (with breadth first traversal).
+
       <blockquote style="font-size:13px;">
         Next: <a href="bubbles.html">Bubbles</a>
       </blockquote>
