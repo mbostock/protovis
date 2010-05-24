@@ -52,7 +52,6 @@
       </div>
 
       <div style="float:left;padding-left:30px;width:350px;">
-
       Designed by <a
       href="http://www.perceptualedge.com/articles/misc/Bullet_Graph_Design_Spec.pdf"
       >Stephen Few</a>, a bullet chart "provides a rich display of data in a

@@ -7,6 +7,7 @@ HTML_FILES = \
 	www/ex/barley.html \
 	www/ex/box-and-whisker.html \
 	www/ex/browser-wars.html \
+	www/ex/bubble.html \
 	www/ex/bubbles.html \
 	www/ex/bullet.html \
 	www/ex/bzr.html \
