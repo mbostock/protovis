@@ -62,14 +62,21 @@
       </div>
 
       <div style="float:left;padding-left:30px;width:630px;">
-      Arrival times of CalTrain trains to station. The minutes of each
-      northbound and southbound arrival are placed to the left and right,
-      respectively, of their corresponding hour. Each arrival is colored to
-      indicate whether the train service is <span style="color:
+      Stemplots use the clever arrangement of text to convey the distribution of
+      data: an alternative to a <a href="histogram.html">histogram</a>. Although
+      originally designed for monospaced text displays, such as typewriters and
+      computer terminals, they still find use today for train schedules and
+      other applications that seek quick scanning and efficient use of space.
+
+      <p>Here we show <a
+      href="http://www.caltrain.com/timetable.html">CalTrain</a> weekday arrival
+      times. The minutes of each northbound and southbound arrival are placed to
+      the left and right, respectively, of their corresponding hour. The time is
+      colored to indicate whether the train service is <span style="color:
       rgba(34,34,34,1);">normal</span>, <span style="color: rgba(183,116,9,1);">
       limited</span> or <span style="color: rgba(196,62,29,1);">bullet</span>.
-      Times of morning and evening rush hour can be easily seen by the increased
-      activity at the station.
+      Peak times of morning and evening rush hour can be seen by increased
+      activity.
 
       <blockquote style="font-size:13px;">
         Next: <a href="index-chart.html">Index Charts</a>
