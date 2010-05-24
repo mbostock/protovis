@@ -36,7 +36,7 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="sparklines.html">&laquo; Previous</a> /
+        <a href="group.html">&laquo; Previous</a> /
         <a href="barley.html">Next &raquo;</a>
       </div>
     </div>

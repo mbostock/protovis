@@ -37,7 +37,7 @@
       </div>
       <div class="section">
         <a href="stack.html">&laquo; Previous</a> /
-        <a href="sparklines.html">Next &raquo;</a>
+        <a href="flowers.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -64,7 +64,7 @@
       href="hotel.html">small multiples</a>.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="sparklines.html">Sparklines</a>
+        Next: <a href="flowers.html">Anderson&rsquo;s Flowers</a>
       </blockquote>
       </div>
       <br clear="all">

@@ -37,8 +37,8 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="group.html">&laquo; Previous</a> /
-        <a href="flowers.html">Next &raquo;</a>
+        <a href="stream.html">&laquo; Previous</a> /
+        <a href="bullet.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -48,7 +48,7 @@
 m4_include(`sparklines-full.html')
 
       <blockquote style="font-size:13px;">
-        Next: <a href="flowers.html">Anderson&rsquo;s Flowers</a>
+        Next: <a href="bullet.html">Bullet Charts</a>
       </blockquote>
 
       <h3>Source</h3>

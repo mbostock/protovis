@@ -24,6 +24,9 @@ classes.slice(1).forEach(function(d) {
   d.nodeValue = d.nodeValue.value;
 });
 
+/* For pretty number formatting. */
+var format = pv.Format.number();
+
 var vis = new pv.Panel()
     .width(document.body.clientWidth)
     .height(document.body.clientHeight);
@@ -39,7 +42,7 @@ vis.add(pv.Layout.Pack)
     .fillStyle(pv.Colors.category20().by(function(d) d.packageName))
     .strokeStyle(function() this.fillStyle().darker())
     .visible(function(d) d.parentNode)
-    .title(function(d) d.nodeName)
+    .title(function(d) d.nodeName + ": " + format(d.nodeValue))
   .anchor("center").add(pv.Label)
     .text(function(d) d.className.substring(0, Math.sqrt(d.nodeValue) >> 4));
 

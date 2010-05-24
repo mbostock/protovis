@@ -37,7 +37,7 @@
       </div>
       <div class="section">
         <a href="hotel.html">&laquo; Previous</a> /
-        <a href="bullet.html">Next &raquo;</a>
+        <a href="sparklines.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -63,7 +63,7 @@
       statistics.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="bullet.html">Bullet Charts</a>
+        Next: <a href="sparklines.html">Sparklines</a>
       </blockquote>
 
       <h3>Source</h3>
