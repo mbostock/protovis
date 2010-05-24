@@ -56,7 +56,8 @@
       >Belousov-Zhabotinsky reaction</a> is a nonlinear chemical oscillator.
       This simulation is based on the work of <a
       href="http://www.nitorijournal.org/?p=2109">Nitori Kawashiro</a>, and uses
-      a two-dimensional cellular automaton similar to Conway's Game of Life.
+      a two-dimensional cellular automaton similar to Conway&rsquo;s Game of
+      Life.
 
       <blockquote style="font-size:13px;">
         Next: <a href="nbody.html">N-Body Simulation</a>

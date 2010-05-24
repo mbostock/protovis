@@ -19,6 +19,7 @@ HTML_FILES = \
 	www/ex/crimea-rose.html \
 	www/ex/dendrogram.html \
 	www/ex/dot.html \
+	www/ex/driving.html \
 	www/ex/dymax.html \
 	www/ex/error.html \
 	www/ex/eyes.html \

@@ -1,7 +1,7 @@
 <html>
   <head>
     <title>Protovis - Arc Diagrams</title>
-    <link type="text/css" rel="stylesheet" href="../style.css?3.1a"/>
+    <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
   </head>
@@ -51,8 +51,8 @@
 
       <p>Les Mis&eacute;rables character interaction. Each character is
       represented by a circle and the connecting arc represent interaction. The
-      character's size indicates the number of interactions they have over the
-      entire play.</p>
+      character&rsquo;s size indicates the number of interactions they have over
+      the entire play.</p>
 
       <blockquote style="font-size:13px;">
         Next: <a href="force.html">Force-Directed Graphs</a>

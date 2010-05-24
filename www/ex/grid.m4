@@ -51,11 +51,11 @@
 
       <p>Here we create an interface for testing the intensity of grid lines on
       a scatterplot. The interface is modeled after Stone &amp;
-      Bartram's <a href="http://www.stonesc.com/pubs/CIC16%20Stone-Bartram.pdf">alpha
-      contrast experiment</a>. Using a slider would introduce a learning bias,
-      so instead we allow the subject to drag the gray dot to the left (for a
-      lighter grid) or the right (for a darker grid). Dragging the dot farther
-      causes the intensity change to accelerate.
+      Bartram&rsquo;s <a href="http://www.stonesc.com/pubs/CIC16%20Stone-Bartram.pdf"
+      >alpha contrast experiment</a>. Using a slider would introduce a learning
+      bias, so instead we allow the subject to drag the gray dot to the left
+      (for a lighter grid) or the right (for a darker grid). Dragging the dot
+      farther causes the intensity change to accelerate.
 
       <p>At what intensity does the grid become invisible for you? When does it
       become visually obtrusive? Experiment with different intensities to find

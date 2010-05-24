@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - Bertin's Hotel</title>
+    <title>Protovis - Bertin&rsquo;s Hotel</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <style type="text/css">
@@ -52,7 +52,7 @@
     </div>
 
     <div class="body">
-      <h1>Bertin's Hotel</h1>
+      <h1>Bertin&rsquo;s Hotel</h1>
 
       <div style="float:left;width:520px;">
       <iframe style="width:520px;height:520px;" src="hotel-full.html"></iframe>
@@ -62,14 +62,14 @@
       </div>
 
       <div style="float:left;padding-left:30px;width:350px;">
-      <a href="http://en.wikipedia.org/wiki/Jacques_Bertin">Jacques
-      Bertin</a>, one of the founding researchers of information visualization,
-      used this small multiples bar chart to reveal seasonal patterns in guests
-      staying at a hotel. Twenty metrics for twelve months are shown, repeated
-      to assist the identification of annual cycles. Black bars emphasize values
-      above the mean, allowing the eye to resolve groups; these were then
-      hypothesized as "active and slow periods", "discovery factors", and
-      "recovery factors".
+      <a href="http://en.wikipedia.org/wiki/Jacques_Bertin">Jacques Bertin</a>,
+      one of the founding researchers of information visualization, used this
+      small multiples bar chart to reveal seasonal patterns in guests staying at
+      a hotel. Twenty metrics for twelve months are shown, repeated to assist
+      the identification of annual cycles. Black bars emphasize values above the
+      mean, allowing the eye to resolve groups; these were then hypothesized as
+      &ldquo;active and slow periods&rdquo;, &ldquo;discovery factors&rdquo;,
+      and &ldquo;recovery factors&rdquo;.
 
       <blockquote style="font-size:13px;">
         Next: <a href="stream.html">Streamgraphs</a>

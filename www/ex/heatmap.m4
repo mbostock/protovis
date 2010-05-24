@@ -54,7 +54,7 @@
 
       <div style="float:left;padding-left:30px;width:300px;">
       <p>The R <tt>volcano</tt> data set gives topographic information for
-      Auckland's Maungawhau volcano, also known
+      Auckland&rsquo;s Maungawhau volcano, also known
       as <a href="http://en.wikipedia.org/wiki/Mt_Eden">Mt. Eden</a>. Here we
       reproduce a heatmap encoding elevation with a partitioned linear color
       scale.

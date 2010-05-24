@@ -54,13 +54,14 @@
       <div style="float:left;padding-left:30px;width:350px;">
       Designed by <a
       href="http://www.perceptualedge.com/articles/misc/Bullet_Graph_Design_Spec.pdf"
-      >Stephen Few</a>, a bullet chart "provides a rich display of data in a
-      small space." A variation on a <a href="bar.html">bar chart</a>, bullet
-      charts compare a given quantitative measure (such as profit or revenue)
-      against qualitative ranges (e.g., <span style="color:#333;">poor</span>,
-      <span style="color:#666;">satisfactory</span>, <span style="color:#999;"
-      >good</span>) and related markers (e.g.,
-      <script type="text/javascript+protovis">
+      >Stephen Few</a>, a bullet chart &ldquo;provides a rich display of data in
+      a small space.&rdquo; A variation on a <a href="bar.html">bar chart</a>,
+      bullet charts compare a given quantitative measure (such as profit or
+      revenue) against qualitative ranges (e.g., <span
+      style="color:#333;">poor</span>, <span
+      style="color:#666;">satisfactory</span>, <span style="color:#999;"
+      >good</span>) and related markers (e.g., <script
+      type="text/javascript+protovis">
 
 new pv.Panel()
     .width(12)

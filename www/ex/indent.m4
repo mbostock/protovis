@@ -62,7 +62,7 @@
       </div>
 
       <div style="float:left;width:600px;">
-      The Indent layout should look very familiar given it's popularity in file system
+      The Indent layout should look very familiar given its popularity in file system
       browses in many operating systems. This built-in layout algorithm is used
       here to show the various ActionScript classes of
       the <a href="http://flare.prefuse.org">Flare</a> visualization toolkit.

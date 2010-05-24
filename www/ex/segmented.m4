@@ -55,8 +55,8 @@
       unsegmented <a href="http://protovis-js.googlecode.com/svn/trunk/jsdoc/symbols/pv.Line.html">line</a>.
       Normally, the line width and stroke style of a line are fixed properties:
       they are evaluated once, and the line is rendered with the given width and
-      color. However, in some visualizations&mdash;such as Minard's map
-      of <a href="napoleon.html">Napleon's march</a>&mdash;it is desirable to
+      color. However, in some visualizations&mdash;such as Minard&rsquo;s map
+      of <a href="napoleon.html">Napleon&rsquo;s march</a>&mdash;it is desirable to
       use a variable width and color to encode additional dimensions of data.
 
       <p><a href="segmented-area.html" target="_blank">Segmented areas</a> are

@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - Conway's Game of Life</title>
+    <title>Protovis - Conway&rsquo;s Game of Life</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script> 
@@ -42,7 +42,7 @@
     </div>
 
     <div class="body">
-      <h1>Conway's Game of Life</h1>
+      <h1>Conway&rsquo;s Game of Life</h1>
 
       <div style="float:left;width:610px;">
       <iframe style="border:solid 4px #ccc;width:600px;height:600px;" src="life-full.html"></iframe>

@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - Tipsy Label</title>
+    <title>Protovis - Bubble Charts</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script> 
@@ -36,36 +36,40 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="brush.html">&laquo; Previous</a> /
-        <a href="point.html">Next &raquo;</a>
+        <a href="bullet.html">&laquo; Previous</a> /
+        <a href="horizon.html">Next &raquo;</a>
       </div>
     </div>
 
     <div class="body">
-      <h1>Tipsy Label</h1>
+      <h1>Bubble Charts</h1>
 
-      <iframe style="height:280px;" src="tipsy-full.html"></iframe>
+      <iframe style="height:700px;" src="bubble-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
-      href="tipsy-full.html" target="_blank">View full screen.</a>
+      href="bubble-full.html" target="_blank">View full screen.</a>
 
-      The tipsy label is a more aesthetic way to present the details-on-demand tooltip.
+      <p>Bubble charts, such as those provided by <a
+      href="http://manyeyes.alphaworks.ibm.com/manyeyes/page/Bubble_Chart.html">Many
+      Eyes</a>, encode data in the area of circles. Although less perceptually
+      accurate than <a href="bar.html">bar charts</a>, they can pack hundreds of
+      values into a small space. A similar technique is the <a
+      href="dorling.html">Dorling cartogram</a>, where circles are positioned
+      according to geography rather than arbitrarily. Here we compare the file
+      sizes of the <a href="http://flare.prefuse.org">Flare</a> visualization
+      toolkit.
 
       <blockquote style="font-size:13px;">
-<<<<<<< HEAD:www/ex/tipsy.m4
-        Next: <a href="point.html">Pointing</a>
-=======
-        Next: <a href="flowers.html">Anderson&rsquo;s Flowers</a>
->>>>>>> 11ee5643564ce6f7fe6afa984859f11a0c37da08:www/ex/tipsy.m4
+        Next: <a href="horizon.html">Sizing the Horizon</a>
       </blockquote>
 
       <h3>Source</h3>
 
-m4_include(`tipsy-full.html.html')
+m4_include(`bubble-full.html.html')
 
       <h3>Data</h3>
 
-      This example has no meaningful data.
+m4_include(`flare.js.html')
 
     </div>
 

@@ -1,9 +1,9 @@
 <html>
   <head>
-    <title>Protovis - Tipsy Label</title>
+    <title>Protovis - Gas &amp; Driving</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
-    <script type="text/javascript" src="../protovis-r3.2.js"></script> 
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
   </head>
   <body>
 
@@ -36,36 +36,38 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="brush.html">&laquo; Previous</a> /
-        <a href="point.html">Next &raquo;</a>
+        <a href="wheat.html">&laquo; Previous</a> /
+        <a href="weather.html">Next &raquo;</a>
       </div>
     </div>
 
     <div class="body">
-      <h1>Tipsy Label</h1>
+      <h1>Gas &amp; Driving</h1>
 
-      <iframe style="height:280px;" src="tipsy-full.html"></iframe>
+      <iframe style="height:600px;" src="driving-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
-      href="tipsy-full.html" target="_blank">View full screen.</a>
+      href="driving-full.html" target="_blank">View full screen.</a>
 
-      The tipsy label is a more aesthetic way to present the details-on-demand tooltip.
+      <p>This visualization is based on the article <a
+      href="http://www.nytimes.com/imagepages/2010/05/02/business/02metrics.html">&ldquo;Driving
+      Shifts Into Reverse&rdquo;</a>, published in <i>The New York Times</i> May
+      2, 2010. It shows the relationship between driving habits (miles driven
+      per capita each year) and gasoline prices (annual average for regular
+      grade, adjusted for inflation). Note that the visualization is oriented
+      such that reading from left-to-right roughly matches chronological order!
 
       <blockquote style="font-size:13px;">
-<<<<<<< HEAD:www/ex/tipsy.m4
-        Next: <a href="point.html">Pointing</a>
-=======
-        Next: <a href="flowers.html">Anderson&rsquo;s Flowers</a>
->>>>>>> 11ee5643564ce6f7fe6afa984859f11a0c37da08:www/ex/tipsy.m4
+        Next: <a href="weather.html">Seattle Weather</a>
       </blockquote>
 
       <h3>Source</h3>
 
-m4_include(`tipsy-full.html.html')
+m4_include(`driving-full.html.html')
 
       <h3>Data</h3>
 
-      This example has no meaningful data.
+m4_include(`driving.js.html')
 
     </div>
 

@@ -38,7 +38,7 @@
       </div>
       <div class="section">
         <a href="group.html">&laquo; Previous</a> /
-        <a href="barley.html">Next &raquo;</a>
+        <a href="flowers.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -48,7 +48,7 @@
 m4_include(`sparklines-full.html')
 
       <blockquote style="font-size:13px;">
-        Next: <a href="barley.html">Becker's Barley</a>
+        Next: <a href="flowers.html">Anderson&rsquo;s Flowers</a>
       </blockquote>
 
       <h3>Source</h3>

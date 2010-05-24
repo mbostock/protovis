@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - Burtin's Antibiotics</title>
+    <title>Protovis - Burtin&rsquo;s Antibiotics</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
@@ -42,7 +42,7 @@
     </div>
 
     <div class="body">
-      <h1>Burtin's Antibiotics</h1>
+      <h1>Burtin&rsquo;s Antibiotics</h1>
 
       <iframe style="border:solid 1px #aaa;height:800px;"
       src="antibiotics-burtin-full.html"></iframe>
@@ -54,11 +54,11 @@
       drugs&rdquo; for quickly treating previously-incurable diseases. Data was
       gathered to determine which drug worked best for each bacterial
       infection. Comparing drug performance was an enormous aid for
-      practitioners and scientists alike. In the fall of
-      1951, <a href="http://en.wikipedia.org/wiki/Will_Burtin">Will Burtin</a>
-      published this graph showing the effectiveness of three popular
-      antibiotics on 16 different bacteria, measured in terms
-      of <a href="http://en.wikipedia.org/wiki/Minimum_inhibitory_concentration">minimum
+      practitioners and scientists alike. In the fall of 1951, <a
+      href="http://en.wikipedia.org/wiki/Will_Burtin">Will Burtin</a> published
+      this graph showing the effectiveness of three popular antibiotics on 16
+      different bacteria, measured in terms of <a
+      href="http://en.wikipedia.org/wiki/Minimum_inhibitory_concentration">minimum
       inhibitory concentration</a>.
 
       <p>Recreating this display revealed some minor errors in
@@ -67,7 +67,7 @@
       exaggeration of some values for penicillin.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="crimea-rose.html">Nightingale's Rose</a>
+        Next: <a href="crimea-rose.html">Nightingale&rsquo;s Rose</a>
       </blockquote>
 
       <h3>Source</h3>

@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - Nightingale's Rose</title>
+    <title>Protovis - Nightingale&rsquo;s Rose</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script> 
@@ -42,7 +42,7 @@
     </div>
 
     <div class="body">
-      <h1>Nightingale's Rose</h1>
+      <h1>Nightingale&rsquo;s Rose</h1>
 
       <iframe style="height:520px;" src="crimea-rose-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
@@ -51,12 +51,12 @@
 
       <p><a href="http://en.wikipedia.org/wiki/Florence_Nightingale">Florence
       Nightingale</a> used this <i>rose</i> or <i>coxcomb</i> diagram to
-      emphasize the number of deaths due to "preventible or mitigable zymotic
-      diseases" in
-      the <a href="http://en.wikipedia.org/wiki/Crimean_War">Crimean War</a>.
-      Like <a href="antibiotics-burtin.html">Burtin</a>, Nightingale employed a
-      polar bar chart, though Nightingale employed a clever ordering of wedges
-      by value to minimize occlusion. Color encodes the cause of death: blue is
+      emphasize the number of deaths due to &ldquo;preventible or mitigable
+      zymotic diseases&rdquo; in the <a
+      href="http://en.wikipedia.org/wiki/Crimean_War">Crimean War</a>.  Like <a
+      href="antibiotics-burtin.html">Burtin</a>, Nightingale employed a polar
+      bar chart, though Nightingale employed a clever ordering of wedges by
+      value to minimize occlusion. Color encodes the cause of death: blue is
       disease, red is wounds, and black is uncategorized.
 
       <p>For comparison, see the same data as a <a target="_blank"
@@ -67,7 +67,7 @@
       think best shows the data, and why?
 
       <blockquote style="font-size:13px;">
-        Next: <a href="wheat.html">Playfair's Wheat</a>
+        Next: <a href="wheat.html">Playfair&rsquo;s Wheat</a>
       </blockquote>
 
       <h3>Source</h3>

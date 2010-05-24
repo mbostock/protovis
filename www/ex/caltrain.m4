@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - CalTrain Timetable</title>
+    <title>Protovis - Marey&rsquo;s Trains</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script> 
@@ -37,26 +37,33 @@
       </div>
       <div class="section">
         <a href="weather.html">&laquo; Previous</a> /
-        <a href="flowers.html">Next &raquo;</a>
+        <a href="stem-and-leaf.html">Next &raquo;</a>
       </div>
     </div>
 
     <div class="body">
-      <h1>CalTrain Timetable</h1>
+      <h1>Marey&rsquo;s Trains</h1>
 
-      <iframe id="iframe" style="height:760px;" src="caltrain-full.html"></iframe>
+      <iframe id="iframe" style="height:700px;" src="caltrain-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="caltrain-full.html" target="_blank">View full screen.</a>
       </p>
 
-      <p>This example displays the <a href="http://www.caltrain.com/timetable.html">CalTrain Timetable</a> in the style of <a href="http://en.wikipedia.org/wiki/%C3%89tienne-Jules_Marey">E. J. Marey’s</a> <a href="marey-train-schedule.jpg">graphical train schedule</a>.
-      Arrivals and departures from a station are indicated by the horizontal lines. Stations are separated in proportion to their actual distance apart.
-      The slope of the line reflects the speed of the train: the more nearly vertical the line, the faster the train.</p>
-      <p>A more complicated example that includes more interaction can be found <a href="caltrain-full.html">here</a>.</p>
+      <p>This example recreates the <a
+      href="http://www.caltrain.com/timetable.html">CalTrain timetable</a> in
+      the style of <a
+      href="http://en.wikipedia.org/wiki/%C3%89tienne-Jules_Marey">E. J. Marey</a>&rsquo;s
+      <a href="marey-train-schedule.jpg" target="_blank">graphical
+      schedule</a>. Stations are separated vertically in proportion to
+      geography; thus, the slope of the line reflects the actual speed of the
+      train: the steeper the line, the faster the train. This display also
+      reveals when and where <span style="color:rgb(183,116,9);">limited
+      service</span> trains are passed by <span
+      style="color:rgb(192,62,29);">baby bullets</span>.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="flowers.html">Anderson's Flowers</a>
+        Next: <a href="stem-and-leaf.html">Stem-and-Leaf</a>
       </blockquote>
 
       <h3>Source</h3>
