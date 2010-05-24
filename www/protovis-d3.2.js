@@ -1,4 +1,4 @@
-// eb17b8abfae4c73e9579858650ddb3249a6619ea
+// ffbc25be5f547964f0acb3aebaee89817ce23fc6
 /**
  * @class The built-in Array class.
  * @name Array
@@ -12525,8 +12525,8 @@ pv.Layout.Pack.prototype.buildImplied = function(s) {
   root.y = 0;
   root.radius = packTree(root);
 
-  var w = this.parent.width(),
-      h = this.parent.height(),
+  var w = this.width(),
+      h = this.height(),
       k = 1 / Math.max(2 * root.radius / w, 2 * root.radius / h);
   transform(root, w / 2, h / 2, k);
 };
@@ -13941,6 +13941,12 @@ pv.Layout.Matrix.prototype.buildImplied = function(s) {
 // ranges (bad, satisfactory, good)
 // measures (actual, forecast)
 // markers (previous, goal)
+
+/*
+ * Chart design based on the recommendations of Stephen Few. Implementation
+ * based on the work of Clint Ivy, Jamie Love, and Jason Davies.
+ * http://projects.instantcognition.com/protovis/bulletchart/
+ */
 
 pv.Layout.Bullet = function() {
   pv.Layout.call(this);
