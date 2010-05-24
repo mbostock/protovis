@@ -53,6 +53,7 @@ HTML_FILES = \
 	www/ex/splines.html \
 	www/ex/stack.html \
 	www/ex/stem-and-leaf.html \
+	www/ex/stream.html \
 	www/ex/sunburst.html \
 	www/ex/symbol.html \
 	www/ex/tipsy.html \

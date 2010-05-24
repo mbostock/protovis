@@ -36,8 +36,8 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="antibiotics-burtin.html">&laquo; Previous</a> /
-        <a href="flowers.html">Next &raquo;</a>
+        <a href="sparklines.html">&laquo; Previous</a> /
+        <a href="hotel.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -65,7 +65,7 @@
       decades.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="flowers.html">Anderson's Flowers</a>
+        Next: <a href="hotel.html">Bertin's Hotel</a>
       </blockquote>
       </div>
       <br clear="all">

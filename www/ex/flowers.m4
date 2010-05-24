@@ -49,15 +49,15 @@
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="flowers-full.html" target="_blank">View full screen.</a>
 
-      <p>A <a href="dot.html">scatterplot</a> matrix is well-suited to visualize
-      Edgar Anderson's data
-      on <a href="http://en.wikipedia.org/wiki/Iris_flower_data_set">Iris
-      flowers in the Gasp&eacute; Peninsula</a>. Here we can easily see how the
-      three species of Iris cluster in any two dimensions: sepal width, sepal
-      length, petal width and petal length. <i>Iris setosa</i> is shown with a
-      red dot, <i>versicolor</i> in green and <i>virginica</i> in blue.  Note
-      that some of the data points overlap; alpha blending improves
-      perceptibility of colocated dots.
+      <p>A matrix of <a href="dot.html">scatterplots</a> is well-suited to
+      visualize Edgar Anderson's data on <a
+      href="http://en.wikipedia.org/wiki/Iris_flower_data_set">Iris flowers in
+      the Gasp&eacute; Peninsula</a>. Here we can easily see how the three
+      species of Iris cluster in any two dimensions: sepal width, sepal length,
+      petal width and petal length. <i>Iris setosa</i> is shown with a red dot,
+      <i>versicolor</i> in green and <i>virginica</i> in blue.  Note that some
+      of the data points overlap; alpha blending improves perceptibility of
+      colocated dots.
 
       <p>This style of chart is modeled after
       R's <a href="http://code.google.com/p/protovis-js/wiki/PairsPlot"><tt>pairs</tt>

@@ -2,65 +2,67 @@
   <head>
     <title>Hotel Stays</title>
     <link type="text/css" rel="stylesheet" href="ex.css?3.1"/>
-    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
     <script type="text/javascript" src="hotel.js"></script>
     <style type="text/css">
-      #fig {
-        width: 520px;
-        height: 520px;
-      }
+
+#fig {
+  width: 520px;
+  height: 520px;
+}
+
     </style>
   </head>
   <body><div id="center"><div id="fig">
     <script type="text/javascript+protovis">
 
-      /* Sizing and spacing parameters. */
-      var h = 20, ch = 24, cw = 11;
+/* Sizing and spacing parameters. */
+var h = 20, ch = 24, cw = 11;
 
-      /* Bertin's order, grouping metrics by seasonal pattern. */
-      var order = [18,17,19,7,10,3,11,12,15,13,0,1,6,8,9,16,5,2,4,14];
+/* Bertin's order, grouping metrics by seasonal pattern. */
+var order = [18,17,19,7,10,3,11,12,15,13,0,1,6,8,9,16,5,2,4,14];
 
-      /* Compute the mean per metric. */
-      var type = pv.nest(hotel).key(function(d) d.type);
-      var means = type.rollup(function(values) pv.mean(values, function(d) d.count));
+/* Compute the mean per metric. */
+var type = pv.nest(hotel).key(function(d) d.type),
+    means = type.rollup(function(values) pv.mean(values, function(d) d.count));
 
-      /* The root panel. */
-      var vis = new pv.Panel()
-          .width(520)
-          .height(520)
-          .left(.5)
-          .top(.5);
+/* The root panel. */
+var vis = new pv.Panel()
+    .width(520)
+    .height(520);
 
-      /* A panel per series, with a bar chart and label. */
-      vis.add(pv.Panel)
-          .data(pv.permute(type.entries(), order))
-          .top(function() ch * (this.index + 1))
-          .height(h)
-        .add(pv.Label)
-          .font("13px Georgia")
-          .left(cw * 24 + 8)
-          .bottom(0)
-          .text(function(x, d) d.key)
-        .add(pv.Bar)
-          .def("y", function(d) pv.Scale.linear(0, pv.max(d.values, function(d) d.count)))
-          .data(function(d) pv.repeat(d.values))
-          .left(function() cw * this.index)
-          .bottom(0)
-          .width(cw)
-          .height(function(d) Math.round(this.y()(d.count) * h))
-          .strokeStyle("#000")
-          .lineWidth(1)
-          .fillStyle(function(d) (d.count > means[d.type]) ? "#000" : null);
+/* A panel per series, with a bar chart and label. */
+vis.add(pv.Panel)
+    .data(pv.permute(type.entries(), order))
+    .top(function() ch * (this.index + 1))
+    .height(h)
+  .add(pv.Label)
+    .font("13px Georgia")
+    .left(cw * 24 + 8)
+    .bottom(0)
+    .text(function(x, d) d.key)
+  .add(pv.Bar)
+    .def("y", function(d) pv.Scale.linear(0, pv.max(d.values, function(d) d.count)))
+    .data(function(d) pv.repeat(d.values))
+    .left(function() cw * this.index)
+    .bottom(0)
+    .width(cw)
+    .height(function(d) this.y()(d.count) * h)
+    .strokeStyle("#000")
+    .lineWidth(1)
+    .antialias(false)
+    .fillStyle(function(d) d.count > means[d.type] ? "#000" : null);
 
-      /* Month labels. */
-      vis.add(pv.Label)
-          .data(pv.repeat("JFMAMJJASOND".split("")))
-          .top(function() ((this.index % 6) > 2) ? 16 : 14)
-          .left(function() cw * (this.index + .5))
-          .textAlign("center")
-          .font("bold 15px Arial");
+/* Month labels. */
+vis.add(pv.Label)
+    .data(pv.repeat("JFMAMJJASOND".split("")))
+    .top(function() ((this.index % 6) > 2) ? 16 : 14)
+    .left(function() cw * (this.index + .5))
+    .textAlign("center")
+    .font("bold 15px Arial");
 
-      vis.render();
+vis.render();
+
     </script>
   </div></div></body>
 </html>

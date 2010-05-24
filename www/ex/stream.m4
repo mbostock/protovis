@@ -1,19 +1,9 @@
 <html>
   <head>
-    <title>Protovis - Bertin's Hotel</title>
+    <title>Protovis - Streamgraphs</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
-    <style type="text/css">
-      iframe {
-        border: none;
-        width: 100%;
-      }
-      .highlight {
-        padding-left: 20px;
-        border-left: solid 4px #ccc;
-      }
-    </style>
-    <script type="text/javascript" src="../protovis-r3.2.js"></script> 
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
   </head>
   <body>
 
@@ -46,44 +36,42 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="barley.html">&laquo; Previous</a> /
-        <a href="stream.html">Next &raquo;</a>
+        <a href="hotel.html">&laquo; Previous</a> /
+        <a href="bullet.html">Next &raquo;</a>
       </div>
     </div>
 
     <div class="body">
-      <h1>Bertin's Hotel</h1>
+      <h1>Streamgraphs</h1>
 
-      <div style="float:left;width:520px;">
-      <iframe style="width:520px;height:520px;" src="hotel-full.html"></iframe>
+      <iframe style="width:900px;height:400px;" src="stream-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
-      href="hotel-full.html" target="_blank">View full screen.</a>
-      </div>
+      href="stream-full.html" target="_blank">View full screen.</a>
 
-      <div style="float:left;padding-left:30px;width:350px;">
-      <a href="http://en.wikipedia.org/wiki/Jacques_Bertin">Jacques
-      Bertin</a>, one of the founding researchers of information visualization,
-      used this small multiples bar chart to reveal seasonal patterns in guests
-      staying at a hotel. Twenty metrics for twelve months are shown, repeated
-      to assist the identification of annual cycles. Black bars emphasize values
-      above the mean, allowing the eye to resolve groups; these were then
-      hypothesized as "active and slow periods", "discovery factors", and
-      "recovery factors".
+      <p>Streamgraphs are a generalization of <a href="stack.html">stacked area
+      graphs</a> where the baseline is non-zero. By shifting the baseline, it is
+      possible to reduce the "wiggle" (change in slope) in individual series,
+      thereby making it easier to perceive the thickness of any given layer
+      across the data. Byron &amp; Wattenberg describe several streamgraph
+      algorithms in <a href="http://www.leebyron.com/else/streamgraph/">"Stacked
+      Graphs&mdash;Geometry &amp; Aesthetics"</a>, several of which are
+      implemented by <tt>pv.Layout.Stack</tt>. As additional examples, see
+      stacked graphs of <a href="jobs.html">employment</a> and <a
+      href="http://hci.stanford.edu/jheer/files/zoo/ex/time/stack.html">unemployment</a>
+      statistics.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="stream.html">Streamgraphs</a>
+        Next: <a href="bullet.html">Bullet Charts</a>
       </blockquote>
-      </div>
-      <br clear="all">
 
       <h3>Source</h3>
 
-m4_include(`hotel-full.html.html')
+m4_include(`stream-full.html.html')
 
       <h3>Data</h3>
 
-m4_include(`hotel.js.html')
+m4_include(`stream.js.html')
 
     </div>
 
