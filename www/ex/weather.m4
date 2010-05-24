@@ -36,29 +36,34 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="flowers.html">&laquo; Previous</a> /
-        <a href="oakland.html">Next &raquo;</a>
+        <a href="driving.html">&laquo; Previous</a> /
+        <a href="caltrain.html">Next &raquo;</a>
       </div>
     </div>
 
     <div class="body">
       <h1>Seattle Weather</h1>
 
+      <div style="float:left;width:200px;">
       <iframe style="width:200px;height:250px;" src="weather-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="weather-full.html" target="_blank">View full screen.</a>
+      </div>
 
-      <p><i><a href="http://www.nytimes.com">The New York Times</a></i>
-      regularly publishes compelling information displays online and in
-      print. Even their weekly weather forecast is rich with information,
-      showing the range of record, normal, actual and forecast temperatures
-      (along with error bars!)  for each day. Here we recreate the display for a
-      recent week in Seattle.
+      <div style="float:left;padding-left:30px;width:670px;">
+      Another compelling information display from <i>The New York Times</i>,
+      this weekly weather forecast is rich with information: it shows the range
+      of record, normal, actual and forecast temperatures (along with error
+      bars!) for each day. The design is similar to a <a
+      href="candlestick.html">candlestick chart</a>. Here we recreate the
+      display for a recent week in Seattle.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="oakland.html">Oakland Crimespotting</a>
+        Next: <a href="caltrain.html">Marey&rsquo;s Trains</a>
       </blockquote>
+      </div>
+      <br clear="all">
 
       <h3>Source</h3>
 

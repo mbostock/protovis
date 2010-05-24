@@ -51,7 +51,7 @@
 
       <p>This visualization is based on the article <a
       href="http://www.nytimes.com/imagepages/2010/05/02/business/02metrics.html">&ldquo;Driving
-      Shifts Into Reverse&rdquo;</a>, published in the <i>New York Times</i> May
+      Shifts Into Reverse&rdquo;</a>, published in <i>The New York Times</i> May
       2, 2010. It shows the relationship between driving habits (miles driven
       per capita each year) and gasoline prices (annual average for regular
       grade, adjusted for inflation). Note that the visualization is oriented

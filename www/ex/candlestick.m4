@@ -59,9 +59,7 @@
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="candlestick-full.html" target="_blank">View full screen.</a>
 
-      <p>Similar to the <i>New York Times</i>&rsquo; <a href="weather.html"
-      >weather forecasts</a>, a <a
-      href="http://en.wikipedia.org/wiki/Candlestick_chart">candlestick
+      <p>A <a href="http://en.wikipedia.org/wiki/Candlestick_chart">candlestick
       chart</a> concisely encodes several dimensions of data into a simple
       glyph. This example shows the performance of the Chicago Board Options
       Exchange <a href="http://en.wikipedia.org/wiki/VIX">Volatility Index</a>
