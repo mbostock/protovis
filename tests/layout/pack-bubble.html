@@ -3,6 +3,13 @@
     <title>Flare Pack</title>
     <script type="text/javascript" src="../../protovis-d3.2.js"></script>
     <script type="text/javascript" src="../flare.js"></script>
+    <style type="text/css">
+
+body {
+  margin: 0;
+}
+
+    </style>
   </head>
   <body>
     <script type="text/javascript+protovis">
@@ -11,18 +18,23 @@
 var classes = pv.nodes(pv.flatten(flare).leaf(Number).array());
 classes.slice(1).forEach(function(d) {
   d.nodeName = "flare." + d.nodeValue.keys.join(".");
+  d.packageName = d.nodeName.substring(0, d.nodeName.lastIndexOf("."));
   d.nodeValue = d.nodeValue.value;
 });
 
 var vis = new pv.Panel()
-    .width(800)
-    .height(800);
+    .width(document.body.clientWidth)
+    .height(document.body.clientHeight);
 
 vis.add(pv.Layout.Pack)
     .nodes(classes)
     .size(function(d) d.nodeValue)
     .spacing(0)
+    .order(null)
   .node.add(pv.Dot)
+    .lineWidth(.5)
+    .strokeStyle("black")
+    .fillStyle(pv.Colors.category20().by(function(d) d.packageName))
     .visible(function(d) d.parentNode)
     .title(function(d) d.nodeName);
 

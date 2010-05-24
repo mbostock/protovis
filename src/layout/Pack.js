@@ -316,8 +316,8 @@ pv.Layout.Pack.prototype.buildImplied = function(s) {
   root.y = 0;
   root.radius = packTree(root);
 
-  var w = this.parent.width(),
-      h = this.parent.height(),
+  var w = this.width(),
+      h = this.height(),
       k = 1 / Math.max(2 * root.radius / w, 2 * root.radius / h);
   transform(root, w / 2, h / 2, k);
 };
