@@ -44,14 +44,14 @@
     <div class="body">
       <h1>Becker's Barley</h1>
 
-      <div style="float:left;width:334px;">
-      <iframe style="width:334px;height:833px;" src="barley-full.html"></iframe>
+      <div style="float:left;width:355px;">
+      <iframe style="width:355px;height:833px;" src="barley-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="barley-full.html" target="_blank">View full screen.</a>
       </div>
 
-      <div style="float:left;padding-left:30px;width:500px;">
+      <div style="float:left;padding-left:30px;width:505px;">
       The <a href="http://www.jstor.org/pss/1390777">Trellis display</a> by
       Becker et al. helped establish small multiples as a "powerful mechanism
       for understanding interactions in studies of how a response depends on
