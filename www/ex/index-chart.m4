@@ -36,8 +36,8 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="barley.html">&laquo; Previous</a> /
-        <a href="weather.html">Next &raquo;</a>
+        <a href="cars.html">&laquo; Previous</a> /
+        <a href="query.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -62,6 +62,10 @@
 
       <p>Data source: <a href="http://finance.yahoo.com/">Yahoo! 
       Finance</a></p>
+      
+      <blockquote style="font-size:13px;">
+        Next: <a href="query.html">Dynamic Queries</a>
+      </blockquote>
 
       <h3>Source</h3>
 

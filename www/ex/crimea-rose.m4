@@ -36,8 +36,8 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="wheat.html">&laquo; Previous</a> /
-        <a href="hotel.html">Next &raquo;</a>
+        <a href="antibiotics-burtin.html">&laquo; Previous</a> /
+        <a href="wheat.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -67,7 +67,7 @@
       think best shows the data, and why?
 
       <blockquote style="font-size:13px;">
-        Next: <a href="hotel.html">Bertin's Hotel</a>
+        Next: <a href="wheat.html">Playfair's Wheat</a>
       </blockquote>
 
       <h3>Source</h3>

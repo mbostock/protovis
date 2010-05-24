@@ -36,8 +36,8 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="countries.html">&laquo; Previous</a> /
-        <a href="cars.html">Next &raquo;</a>
+        <a href="stream.html">&laquo; Previous</a> /
+        <a href="bubble.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -56,7 +56,7 @@
       <p>This example is a simplification of the excellent Protovis Bullet Graph component originally written by Clint Ivy and Jamie Love.</p>
       
       <blockquote style="font-size:13px;">
-        Next: <a href="cars.html">Parallel Coordinates</a>
+        Next: <a href="bubble.html">Bubble Charts</a>
       </blockquote>
 
       <h3>Source</h3>

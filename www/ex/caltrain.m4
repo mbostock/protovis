@@ -36,8 +36,8 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="oakland.html">&laquo; Previous</a> /
-        <a href="treemap.html">Next &raquo;</a>
+        <a href="weather.html">&laquo; Previous</a> /
+        <a href="flowers.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -56,7 +56,7 @@
       <p>A more complicated example that includes more interaction can be found <a href="caltrain-full.html">here</a>.</p>
 
       <blockquote style="font-size:13px;">
-        Next: <a href="treemap.html">Treemap</a>
+        Next: <a href="flowers.html">Anderson's Flowers</a>
       </blockquote>
 
       <h3>Source</h3>

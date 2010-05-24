@@ -16,7 +16,6 @@ HTML_FILES = \
 	www/ex/cartogram.html \
 	www/ex/choropleth.html \
 	www/ex/clock.html \
-	www/ex/countries.html \
 	www/ex/crimea-rose.html \
 	www/ex/dendrogram.html \
 	www/ex/dot.html \
@@ -45,6 +44,7 @@ HTML_FILES = \
 	www/ex/oakland.html \
 	www/ex/pack.html \
 	www/ex/pie.html \
+	www/ex/projection.html \
 	www/ex/qqplot.html \
 	www/ex/radial-cluster.html \
 	www/ex/segmented.html \

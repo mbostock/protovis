@@ -36,8 +36,8 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="eyes.html">&laquo; Previous</a> /
-        <a href="grid.html">Next &raquo;</a>
+        <a href="minnesota.html">&laquo; Previous</a> /
+        <a href="transform.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -57,7 +57,7 @@
       region can be dynamically resized and repositioned.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="grid.html">Grid Intensity</a>
+        Next: <a href="transform.html">Pan + Zoom</a>
       </blockquote>
 
       <h3>Source</h3>

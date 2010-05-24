@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Cartogram</title>
+    <title>Dorling Cartogram</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script> 
@@ -36,13 +36,13 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="oakland.html">&laquo; Previous</a> /
-        <a href="treemap.html">Next &raquo;</a>
+        <a href="choropleth.html">&laquo; Previous</a> /
+        <a href="projection.html">Next &raquo;</a>
       </div>
     </div>
 
     <div class="body">
-      <h1>Cartogram</h1>
+      <h1>Dorling Cartogram</h1>
 
       <iframe id="iframe" style="height:430px;" src="cartogram-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
@@ -55,7 +55,7 @@
       <p>A more complicated example that includes more interaction can be found <a href="cartogram-interactive.html">here</a>.</p>
 
       <blockquote style="font-size:13px;">
-        Next: <a href="treemap.html">Treemap</a>
+        Next: <a href="projection.html">Map Projections</a>
       </blockquote>
 
       <h3>Source</h3>

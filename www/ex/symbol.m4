@@ -37,7 +37,7 @@
       </div>
       <div class="section">
         <a href="oakland.html">&laquo; Previous</a> /
-        <a href="treemap.html">Next &raquo;</a>
+        <a href="choropleth.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -61,7 +61,7 @@
       <a href="symbol-interactive.html">here</a>.</p>
 
       <blockquote style="font-size:13px;">
-        Next: <a href="treemap.html">Treemap</a>
+        Next: <a href="choropleth.html">Choropleth Map</a>
       </blockquote>
 
       <h3>Source</h3>

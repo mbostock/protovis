@@ -46,8 +46,8 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="sunburst.html">&laquo; Previous</a> /
-        <a href="heatmap.html">Next &raquo;</a>
+        <a href="indent.html">&laquo; Previous</a> /
+        <a href="tree.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -67,7 +67,7 @@
       encodes the size of the source code in bytes.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="heatmap.html">Grid Layout</a>
+        Next: <a href="tree.html">Node-Link Tree</a>
       </blockquote>
 
       <h3>Source</h3>

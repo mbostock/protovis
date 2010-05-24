@@ -36,8 +36,8 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="bullet.html">&laquo; Previous</a> /
-        <a href="area.html">Next &raquo;</a>
+        <a href="bzr.html">&laquo; Previous</a> /
+        <a href="sort.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -53,7 +53,7 @@
       the simple agent definitions.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="area.html">Area</a>
+        Next: <a href="sort.html">Merge Sort</a>
       </blockquote>
 
       <h3>Source</h3>

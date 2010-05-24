@@ -36,8 +36,8 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="barley.html">&laquo; Previous</a> /
-        <a href="weather.html">Next &raquo;</a>
+        <a href="dymax.html">&laquo; Previous</a> /
+        <a href="box-and-whisker.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -63,6 +63,10 @@
       appropriate, and indeed we see in the final plot that a fitted mixture 
       of three normal distributions provides a better fit.</p>
 
+      <blockquote style="font-size:13px;">
+        Next: <a href="box-and-whisker.html">Box and Whisker</a>
+      </blockquote>
+      
       <h3>Source</h3>
 
 m4_include(`qqplot-full.html.html')

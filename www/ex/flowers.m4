@@ -36,8 +36,8 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="barley.html">&laquo; Previous</a> /
-        <a href="weather.html">Next &raquo;</a>
+        <a href="caltrain.html">&laquo; Previous</a> /
+        <a href="stem-and-leaf.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -64,7 +64,7 @@
       plot</a>.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="weather.html">Seattle Weather</a>
+        Next: <a href="stem-and-leaf.html">Stem-and-Leaf</a>
       </blockquote>
 
       <h3>Source</h3>

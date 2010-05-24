@@ -36,8 +36,8 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="flowers.html">&laquo; Previous</a> /
-        <a href="oakland.html">Next &raquo;</a>
+        <a href="driving.html">&laquo; Previous</a> /
+        <a href="caltrain.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -57,7 +57,7 @@
       recent week in Seattle.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="oakland.html">Oakland Crimespotting</a>
+        Next: <a href="caltrain.html">CalTrain Timetable</a>
       </blockquote>
 
       <h3>Source</h3>

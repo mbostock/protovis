@@ -36,8 +36,8 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="./">&laquo; Previous</a> /
-        <a href="crimea-rose.html">Next &raquo;</a>
+        <a href="crimea-rose.html">&laquo; Previous</a> /
+        <a href="driving.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -61,7 +61,7 @@
       target="_blank"><i>relative</i> price</a> of wheat in terms of weekly wages.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="crimea-rose.html">Nightingale's Rose</a>
+        Next: <a href="driving.html">Gas & Driving</a>
       </blockquote>
 
       <h3>Source</h3>

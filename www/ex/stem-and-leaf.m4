@@ -46,8 +46,8 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="treemap.html">&laquo; Previous</a> /
-        <a href="icicle.html">Next &raquo;</a>
+        <a href="flowers.html">&laquo; Previous</a> /
+        <a href="cars.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -68,7 +68,7 @@
       station.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="icicle.html">Icicle Layout</a>
+        Next: <a href="cars.html">Parallel Coordinates</a>
       </blockquote>
 
       <h3>Source</h3>

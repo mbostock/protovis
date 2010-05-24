@@ -36,8 +36,8 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="barley.html">&laquo; Previous</a> /
-        <a href="weather.html">Next &raquo;</a>
+        <a href="bubble.html">&laquo; Previous</a> /
+        <a href="candlestick.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -65,6 +65,10 @@
 
       <p>Data source: <a href="http://www.bls.gov/">U.S. Bureau of Labor Statistics</a></p>
 
+      <blockquote style="font-size:13px;">
+        Next: <a href="candlestick.html">Candlestick Charts</a>
+      </blockquote>
+      
       <h3>Source</h3>
 
 m4_include(`horizon-full.html.html')

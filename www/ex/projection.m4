@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - Choropleth Map</title>
+    <title>Protovis - Map Projections</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
@@ -36,29 +36,29 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="waves.html">&laquo; Previous</a> /
-        <a href="bullet.html">Next &raquo;</a>
+        <a href="cartogram.html">&laquo; Previous</a> /
+        <a href="heatmap.html">Next &raquo;</a>
       </div>
     </div>
 
     <div class="body">
-      <h1>Choropleth Map</h1>
+      <h1>Map Projections</h1>
 
-      <iframe style="width:860px;height:610px;" src="countries-full.html"></iframe>
+      <iframe style="width:860px;height:610px;" src="projection-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
-      href="countries-full.html" target="_blank">View full screen.</a>
+      href="projection-full.html" target="_blank">View full screen.</a>
 
       <p>Choropleth maps represent data by shading the area of a country to represent a value.
       This example shades contrived based on their population density.</p>
 
       <blockquote style="font-size:13px;">
-        Next: <a href="bullet.html">Bullet</a>
+        Next: <a href="heatmap.html">Heatmaps</a>
       </blockquote>
 
       <h3>Source</h3>
 
-m4_include(`countries-full.html.html')
+m4_include(`projection-full.html.html')
 
       <h3>Data</h3>
 

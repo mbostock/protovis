@@ -36,8 +36,8 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="bullet.html">&laquo; Previous</a> /
-        <a href="area.html">Next &raquo;</a>
+        <a href="stem-and-leaf.html">&laquo; Previous</a> /
+        <a href="index-chart.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -56,7 +56,7 @@
       given dimension to update the filter.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="area.html">Area</a>
+        Next: <a href="index-chart.html">Index Chart</a>
       </blockquote>
 
       <h3>Source</h3>

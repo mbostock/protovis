@@ -37,7 +37,7 @@
       </div>
       <div class="section">
         <a href="clock.html">&laquo; Previous</a> /
-        <a href="life.html">Next &raquo;</a>
+        <a href="./">Next &raquo;</a>
       </div>
     </div>
 
@@ -62,10 +62,6 @@
       <p><a href="segmented-area.html" target="_blank">Segmented areas</a> are
       also possible, allowing the fill color and title tooltip to vary across
       the area.
-
-      <blockquote style="font-size:13px;">
-        Next: <a href="life.html">Conway's Game of Life</a>
-      </blockquote>
 
       <h3>Source</h3>
 
