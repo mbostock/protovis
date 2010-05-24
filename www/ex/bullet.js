@@ -1,14 +1,37 @@
-var data = {
-    range: [0, 3500000], //range of values in an array -> first position: min, last position: max
-    min: 2100000, //minimum acceptable value
-    accpt: 750000, //incremental distance to ok range outer bound
-    goal: 3000000, //goal
-    prev: 1150000, //last period reported actuals
-    actuals: 2300000, //current reported actuals
-    runrate: 3010000, //runrate or forecast 
-    title: "Revenue Q3 2009", //above the chart
-    subtitle: "as of 11/21/09", //below the value label
-    vnorm: ["#1e71b8", "#5b93c4"], //define the normal colors for actuals and runrate
-    vwarn: ["#c43a34", "#ce7874"] //define the warning colors for actuals and runrate
-};
-
+var bullets = [
+  {
+    title: "Revenue",
+    subtitle: "US$, in thousands",
+    ranges: [150, 225, 300],
+    measures: [270],
+    markers: [250]
+  },
+  {
+    title: "Profit",
+    subtitle: "%",
+    ranges: [20, 25, 30],
+    measures: [23],
+    markers: [26]
+  },
+  {
+    title: "Order Size",
+    subtitle: "US$, average",
+    ranges: [350, 500, 600],
+    measures: [320],
+    markers: [550]
+  },
+  {
+    title: "New Customers",
+    subtitle: "count",
+    ranges: [1400, 2000, 2500],
+    measures: [1650],
+    markers: [2100]
+  },
+  {
+    title: "Satisfaction",
+    subtitle: "out of 5",
+    ranges: [3.5, 4.25, 5],
+    measures: [4.7],
+    markers: [4.4]
+  }
+];

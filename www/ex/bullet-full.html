@@ -1,169 +1,64 @@
 <html>
   <head>
-    <title>Bullet Graph</title>
+    <title>Bullet Charts</title>
     <link type="text/css" rel="stylesheet" href="ex.css?3.2"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
     <script type="text/javascript" src="bullet.js"></script>
     <style type="text/css">
-      #fig {
-        width: 600px;
-        height: 110px;
-      }
+
+span {
+  display: block !important;
+}
+
+#fig {
+  width: 520px;
+  height: 350px;
+}
+
     </style>
   </head>
   <body><div id="center"><div id="fig">
     <script type="text/javascript+protovis">
-    /* Original authors: Clint Ivy, Jamie Love */
 
-    var w = 500, //size of the bullet chart
-        h = 70, //height of the bullet chart
-        barHeight = 10; //qualitative bar height
+var format = pv.Format.number();
 
-        bufferLeft = 80; // For label to the left.
-        bufferRight = 20; // For a bit of space for the rightmost x-axis tick
-        bufferTop = 20; // For the top label
-        bufferBottom = 20; // For the ticks
+var vis = new pv.Panel()
+    .data(bullets)
+    .width(400)
+    .height(30)
+    .margin(20)
+    .left(100);
 
-        //Magnitude: 1e1->ones, 1e3->thousands, 1e6->millions, 1e9->billions, 1e12->trillions, etc
-        function formatter(v) {
-          return "$" + (v / 1e6) + "M";
-        }
+var bullet = vis.add(pv.Layout.Bullet)
+    .orient("left")
+    .ranges(function(d) d.ranges)
+    .measures(function(d) d.measures)
+    .markers(function(d) d.markers);
 
-        // Check maximum - adjust if necessary
-        if(data.range[1] < data.runrate) data.range[1] = data.runrate;
+bullet.range.add(pv.Bar);
+bullet.measure.add(pv.Bar);
 
-        var xscale = pv.Scale.linear(data.range[0], data.range[1]).range(0, w - bufferLeft - bufferRight).nice();
+bullet.marker.add(pv.Dot)
+    .shape("triangle")
+    .fillStyle("white");
 
-        //this is the "master" panel and acts as the canvas for the everything else
-        var basevis = new pv.Panel()
-            .width(w)
-            .height(h)
-            .fillStyle("#fff");
+bullet.tick.add(pv.Rule)
+  .anchor("bottom").add(pv.Label)
+    .text(bullet.x.tickFormat);
 
-        // This is the actual core bullet graph panel
-        var vis = basevis.add(pv.Panel)
-            .data([0])
-            .width(w - bufferLeft - bufferRight)
-            .height(h - bufferTop - bufferBottom)
-            .left(bufferLeft)
-            .right(bufferRight)
-            .top(bufferTop)
-            .bottom(bufferBottom);
+bullet.anchor("left").add(pv.Label)
+    .font("bold 12px sans-serif")
+    .textAlign("right")
+    .textBaseline("bottom")
+    .text(function(d) d.title);
 
-        // X-axis ticks
-        var xticks = vis.add(pv.Rule)
-            .data(xscale.ticks())
-            .left(function(d) xscale(d))
-            .bottom(-6)
-            .height(5)
-            .strokeStyle("#666")
-            .anchor("bottom").add(pv.Label)
-                .textStyle("#666")
-                .textAlign("center")
-                .textBaseline("top")
-                .text(formatter)
-                .font("9px Verdana, Futura, Arial, Helvetica, sans-serif");
+bullet.anchor("left").add(pv.Label)
+    .textStyle("#666")
+    .textAlign("right")
+    .textBaseline("top")
+    .text(function(d) d.subtitle);
 
-        // Draw the grey background ranges and give them titles.
-        var ranges = [
-            {
-                v: data.min,
-                c: "#a6a8aa",
-                t: "min: <" + formatter(data.min)
-            },
-            {
-                v: data.accpt + data.min,
-                c: "#c6c7c9",
-                t: "acceptable: " + formatter(data.min) + " <= a < " + formatter(data.min + data.accpt)
-            },
-            {
-                v: pv.max(xscale.ticks()),
-                c: "#e7e7e8",
-                t: "target range: a >=" + formatter(data.min + data.accpt)
-            }].reverse();
-
-        vis.add(pv.Bar)
-            .data(ranges)
-            .left(0)
-            .width(function(d) xscale(d.v))
-            .fillStyle(function(d) d.c)
-            .title(function(d) d.t);
-
-        // Draw the actual/forcast values
-        ranges = [
-            {
-                v: data.actuals,
-                c: data.runrate < data.goal ? data.vwarn[0] : data.vnorm[0],
-                t: "actuals: " + formatter(data.actuals)
-            },
-            {
-                v: data.runrate,
-                c: data.runrate < data.goal ? data.vwarn[1] : data.vnorm[1],
-                t: "forecast: " + formatter(data.runrate)
-            }];
-
-        if(data.actuals < data.goal) {
-            ranges.reverse();
-        }
-
-        vis.add(pv.Bar)
-            .data(ranges)
-            .left(0)
-            .top((h - bufferTop - bufferBottom - barHeight) / 2)
-            .height(barHeight)
-            .width(function(d) xscale(d.v))
-            .fillStyle(function(d) d.c)
-            .title(function(d) d.t);
-
-        // Now draw previous value, and goal value.
-        vis.add(pv.Rule)
-            .data([data.prev, data.goal])
-            .left(function(d) xscale(d))
-            .top(function(d) this.index == 0 ? 6 : 4)
-          .bottom(function(d) this.index == 0 ? 6 : 4)
-            .strokeStyle("#333");
-
-        // Now add titles etc.
-        var titles = [{
-          text: data.title,
-          left: bufferLeft,
-          top: bufferTop,
-          textBaseline: "bottom",
-          textAlign: "left",
-          font: "bold 12px Verdana, Futura, Arial, Helvetica, sans-serif",
-          textStyle: "#666"
-        },
-        {
-          text: formatter(data.actuals),
-          left: bufferLeft,
-          top: h / 2,
-          textBaseline: "middle",
-          textAlign: "right",
-          font: "bold 18px Verdana, Futura, Arial, Helvetica, sans-serif",
-          textStyle: data.runrate < data.goal ? data.vwarn[0] : data.vnorm[0]
-        },
-        {
-          text: data.subtitle,
-          left: bufferLeft,
-          top: h - bufferBottom,
-          textBaseline: "middle",
-          textAlign: "right",
-          font: "8px Verdana, Futura, Arial, Helvetica, sans-serif",
-          textStyle: "#333"
-        }
-       ];
-
-       basevis.add(pv.Label)
-         .data(titles)
-         .left(function(d) d.left)
-         .top(function(d) d.top)
-         .font(function(d) d.font)
-         .text(function(d) d.text)
-         .textBaseline(function(d) d.textBaseline)
-         .textStyle(function(d) d.textStyle)
-         .textAlign(function(d) d.textAlign);
-
-       basevis.render();
+vis.render();
 
     </script>
   </div></div></body>
