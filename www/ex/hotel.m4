@@ -62,14 +62,14 @@
       </div>
 
       <div style="float:left;padding-left:30px;width:350px;">
-      <a href="http://en.wikipedia.org/wiki/Jacques_Bertin">Jacques
-      Bertin</a>, one of the founding researchers of information visualization,
-      used this small multiples bar chart to reveal seasonal patterns in guests
-      staying at a hotel. Twenty metrics for twelve months are shown, repeated
-      to assist the identification of annual cycles. Black bars emphasize values
-      above the mean, allowing the eye to resolve groups; these were then
-      hypothesized as "active and slow periods", "discovery factors", and
-      "recovery factors".
+      <a href="http://en.wikipedia.org/wiki/Jacques_Bertin">Jacques Bertin</a>,
+      one of the founding researchers of information visualization, used this
+      small multiples bar chart to reveal seasonal patterns in guests staying at
+      a hotel. Twenty metrics for twelve months are shown, repeated to assist
+      the identification of annual cycles. Black bars emphasize values above the
+      mean, allowing the eye to resolve groups; these were then hypothesized as
+      &ldquo;active and slow periods&rdquo;, &ldquo;discovery factors&rdquo;,
+      and &ldquo;recovery factors&rdquo;.
 
       <blockquote style="font-size:13px;">
         Next: <a href="stream.html">Streamgraphs</a>

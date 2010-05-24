@@ -55,7 +55,9 @@
       accurate than <a href="bar.html">bar charts</a>, they can pack hundreds of
       values into a small space. A similar technique is the <a
       href="dorling.html">Dorling cartogram</a>, where circles are positioned
-      according to geography rather than arbitrarily.
+      according to geography rather than arbitrarily. Here we compare the file
+      sizes of the <a href="http://flare.prefuse.org">Flare</a> visualization
+      toolkit.
 
       <blockquote style="font-size:13px;">
         Next: <a href="horizon.html">Sizing the Horizon</a>

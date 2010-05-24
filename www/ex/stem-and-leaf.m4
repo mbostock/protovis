@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - Stem and Leaf CalTrain timetable</title>
+    <title>Protovis - Stem-and-Leaf</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <style type="text/css">
@@ -46,30 +46,36 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="treemap.html">&laquo; Previous</a> /
-        <a href="icicle.html">Next &raquo;</a>
+        <a href="caltrain.html">&laquo; Previous</a> /
+        <a href="index-chart.html">Next &raquo;</a>
       </div>
     </div>
 
     <div class="body">
       <h1>Stem-and-Leaf</h1>
 
-      <iframe style="height:420px;" src="stem-and-leaf-embed.html"></iframe>
+      <div style="float:left;width:240px;">
+      <iframe style="height:460px;" src="stem-and-leaf-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="stem-and-leaf-full.html" target="_blank">View full screen.</a>
+      </div>
 
-      <p>Arrival times of CalTrain trains to station. The minutes of each northbound and
-      southbound arrival are placed to the left and right, respectively, of their corresponding
-      hour. Each arrival is colored to indicate whether the train is
-      <span style="color: rgba(34,34,34,1);">Normal</span>, <span style="color: rgba(183,116,9,1);">
-      Limited Service</span> or <span style="color: rgba(196,62,29,1);">Bullet Express</span>.
-      Times of morning and evening rush hour can be easily seen by the increased activity at the
-      station.
+      <div style="float:left;padding-left:30px;width:630px;">
+      Arrival times of CalTrain trains to station. The minutes of each
+      northbound and southbound arrival are placed to the left and right,
+      respectively, of their corresponding hour. Each arrival is colored to
+      indicate whether the train service is <span style="color:
+      rgba(34,34,34,1);">normal</span>, <span style="color: rgba(183,116,9,1);">
+      limited</span> or <span style="color: rgba(196,62,29,1);">bullet</span>.
+      Times of morning and evening rush hour can be easily seen by the increased
+      activity at the station.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="icicle.html">Icicle Layout</a>
+        Next: <a href="index-chart.html">Index Charts</a>
       </blockquote>
+      </div>
+      <br clear="all">
 
       <h3>Source</h3>
 
@@ -77,8 +83,8 @@ m4_include(`stem-and-leaf-full.html.html')
 
       <h3>Data</h3>
 
-i      Due to size, the data file is omitted from this
-      example. See <a href="caltrain.js" target="_blank">caltrain.js</a>.
+      Due to size, the data file is omitted from this example. See <a
+      href="caltrain.js" target="_blank">caltrain.js</a>.
 
     </div>
 

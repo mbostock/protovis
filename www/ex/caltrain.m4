@@ -37,7 +37,7 @@
       </div>
       <div class="section">
         <a href="weather.html">&laquo; Previous</a> /
-        <a href="flowers.html">Next &raquo;</a>
+        <a href="stem-and-leaf.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -63,7 +63,7 @@
       style="color:rgb(192,62,29);">baby bullets</span>.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="flowers.html">Anderson&rsquo;s Flowers</a>
+        Next: <a href="stem-and-leaf.html">Stem-and-Leaf</a>
       </blockquote>
 
       <h3>Source</h3>

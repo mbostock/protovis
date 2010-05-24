@@ -3,7 +3,7 @@
     <title>Protovis - Focus + Context</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
-    <script type="text/javascript" src="../protovis-d3.1.0.js"></script>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
   </head>
   <body>
 

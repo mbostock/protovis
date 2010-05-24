@@ -36,7 +36,7 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="sparklines.html">&laquo; Previous</a> /
+        <a href="flowers.html">&laquo; Previous</a> /
         <a href="hotel.html">Next &raquo;</a>
       </div>
     </div>
@@ -51,12 +51,12 @@
       href="barley-full.html" target="_blank">View full screen.</a>
       </div>
 
-      <div style="float:left;padding-left:30px;width:505px;">
-      The <a href="http://www.jstor.org/pss/1390777">Trellis display</a> by
-      Becker et al. helped establish small multiples as a "powerful mechanism
-      for understanding interactions in studies of how a response depends on
-      explanatory variables". Here we reproduce a trellis of Barley yields from
-      the 1930s, complete with main-effects ordering to facilitate
+      <div style="float:left;padding-left:30px;width:505px;"> The <a
+      href="http://www.jstor.org/pss/1390777">Trellis display</a> by Becker et
+      al. helped establish small multiples as a &ldquo;powerful mechanism for
+      understanding interactions in studies of how a response depends on
+      explanatory variables&rdquo;. Here we reproduce a trellis of Barley yields
+      from the 1930s, complete with main-effects ordering to facilitate
       comparison. These examples demonstrate Protovis&rsquo; support for data
       transformation via the <i>nest</i> operator.
 
