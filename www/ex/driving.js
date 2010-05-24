@@ -1,8 +1,9 @@
 /*
  * This data was extracted from the New York Times article "Driving Shifts Into
- * Reverse" by Hannah Fairfield, published on May 2, 2010. The original source
- * is the Energy Information Administration, the Federal Highway Administration,
- * and the Brookings Institution. These figures may not be accurate.
+ * Reverse" by Hannah Fairfield, published on May 2, 2010. The original sources
+ * are the Energy Information Administration, the Federal Highway
+ * Administration, and the Brookings Institution. Due to error in extraction,
+ * these figures may not be accurate.
  *
  * @see http://www.nytimes.com/imagepages/2010/05/02/business/02metrics.html
  */
