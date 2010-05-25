@@ -53,9 +53,9 @@
 
       <div style="float:left;padding-left:30px;width:430px;">
 
-      Protovis supports basic tooltips using the <tt title="Hello,
-      tooltip!">title</tt> property. While convenient, some applications may
-      require more control over tooltip appearance; consider the <a
+      Protovis supports basic tooltips using the <tt title="Hello, tooltip!"
+      >title</tt> property. While convenient, some applications may require more
+      control over tooltip appearance; consider the <a
       href="http://onehackoranother.com/projects/jquery/tipsy/">Tipsy</a> jQuery
       plugin, which creates flexible tooltips in multiple orientations that can
       fade and contain HTML. This example demonstrates how to use Tipsy with
