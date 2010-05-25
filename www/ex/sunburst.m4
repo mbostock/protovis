@@ -42,29 +42,24 @@
     </div>
 
     <div class="body">
-      <h1>Sunburst Layout</h1>
+      <h1>Sunbursts</h1>
 
-      <iframe style="height:750px;" src="sunburst-embed.html"></iframe>
+      <iframe style="height:860px;" src="sunburst-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="sunburst-full.html" target="_blank">View full screen.</a>
 
-      <p>Another built-in layout algorithm is the
-      <a href="http://protovis-js.googlecode.com/svn/trunk/jsdoc/symbols/pv.Layout.sunburst.html">radial
-      sunburst</a>, used here to show the various ActionScript classes of
-      the <a href="http://flare.prefuse.org">Flare</a> visualization toolkit.
-      The color of each cell corresponds to the package, while the wedge angle
-      encodes the size of the source code in bytes.
-
-      <p>The layout algorithms can be customized to show different aspects of
-      the data. For instance, you might wish to size wedges by file count rather
-      than bytes; experiment with different sizing functions using the drop-down
-      menu. Also, while the layout is designed to work with wedges, it can be
-      configured to work with alternate marks, such as dots in
-      this <a href="sunburst-alt.html" target="_blank">radial layout example</a>.
+      <p>A sunburst is an <i>adjacency diagram</i>: a space-filling variant of
+      the node-link diagram. Rather than drawing a link between parent and child
+      in the hierarchy, nodes are drawn as solid areas (either wedges or bars),
+      and their placement relative to adjacent nodes reveals their position in
+      the hierarchy. Because the nodes are now space-filling, we can use an
+      angle encoding for the size of software classes and packages. This reveals
+      an additional dimension that would be difficult to show in a node-link
+      diagram.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="icicle.html">Icicle Layout</a>
+        Next: <a href="icicle.html">Icicles</a>
       </blockquote>
 
       <h3>Source</h3>

@@ -1,74 +1,57 @@
 <html>
   <head>
-    <title>Flare Sunburst</title>
+    <title>Sunburst</title>
     <link rel="stylesheet" type="text/css" href="ex.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
     <script type="text/javascript" src="flare.js"></script>
     <style type="text/css">
-      body {
-        background: #222;
-        color: #eee;
-      }
-      #fig {
-        width: 1024px;
-        height: 1024px;
-        text-align: center;
-      }
+
+#fig {
+  width: 900px;
+  height: 860px;
+  text-align: center;
+}
+
     </style>
   </head>
   <body><div id="center"><div id="fig">
-    <p>Size by: <select id="menu" onchange="update(this.value)">
-        <option value="byte" selected>bytes</option>
-        <option value="file">files</option>
-      </select>
     <script type="text/javascript+protovis">
 
-      function onNodeClick(node) {
-        var path = node.nodeName;
-        var parentNode = node.parentNode;
-        while(parentNode) {
-          path = parentNode.nodeName + "/" + path;
-          parentNode = parentNode.parentNode;
-        }
-        top.location = "http://svn.prefuse.org/flare/trunk/flare/flare/src/" + path + (node.firstChild?"/":".as");
-      }
+var vis = new pv.Panel()
+    .width(900)
+    .height(900)
+    .bottom(-80);
 
-      /* The root panel. */
-      var vis = new pv.Panel()
-          .width(1024)
-          .height(1024)
-          .top(40);
+var partition = vis.add(pv.Layout.Partition.Fill)
+    .nodes(pv.dom(flare).root("flare").nodes())
+    .size(function(d) d.nodeValue)
+    .order("descending")
+    .orient("radial");
 
-      var layout = vis.add(pv.Layout.Partition.Fill)
-          .nodes(pv.dom(flare).root("flare").nodes())
-          .size(function(d) d.nodeValue)
-          .order("ascending")
-          .orient("radial");
+partition.node.add(pv.Wedge)
+    .fillStyle(pv.Colors.category19().by(function(d) d.parentNode && d.parentNode.nodeName))
+    .strokeStyle("#222")
+    .lineWidth(.5);
 
-      layout.node.add(pv.Wedge)
-          .fillStyle(function(n) n.firstChild ? "#aec7e8" : "#ff7f0e")
-          .title(function t(d) d.parentNode ? (t(d.parentNode) + "." + d.nodeName) : d.nodeName)
-          .event("click", onNodeClick)
-          .strokeStyle("#222")
-          .lineWidth(1)
-          .title(function t(d) d.parentNode ? (t(d.parentNode) + "." + d.nodeName) : d.nodeName)
-          .cursor("pointer");
+partition.label.add(pv.Label)
+    .visible(function(d) d.angle * d.outerRadius >= 6);
 
-      layout.label.add(pv.Label)
-          .visible(function(d) d.angle * d.innerRadius >= 7);
+vis.render();
+menu.focus();
 
-      vis.render();
-      menu.focus();
-
-      /* Update the layout's size method and re-render. */
-      function update(method) {
-        switch (method) {
-          case "byte": layout.size(function(d) d.nodeValue); break;
-          case "file": layout.size(function(n) n.firstChild ? 0 : 1); break;
-        }
-        vis.render();
-      }
+/* Update the layout's size method and re-render. */
+function update(method) {
+  switch (method) {
+    case "byte": partition.size(function(d) d.nodeValue); break;
+    case "file": partition.size(function(d) d.firstChild ? 0 : 1); break;
+  }
+  vis.render();
+}
 
     </script>
+    <p><b>Size:</b> <select id="menu" onchange="update(this.value)">
+      <option value="byte" selected>bytes</option>
+      <option value="file">files</option>
+    </select>
   </div></div></body>
 </html>
