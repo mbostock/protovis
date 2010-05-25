@@ -1,0 +1,83 @@
+<html>
+  <head>
+    <title>Pan + Zoom</title>
+    <link type="text/css" rel="stylesheet" href="ex.css?3.2"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+    <script type="text/javascript" src="transform.js"></script>
+    <style type="text/css">
+
+#fig {
+  width: 860px;
+  height: 550px;
+}
+
+    </style>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+/* Sizing parameters and scales. */
+var w = 800,
+    h = 500,
+    kx = w / h,
+    ky = 1,
+    x = pv.Scale.linear(-kx, kx).range(0, w),
+    y = pv.Scale.linear(-ky, ky).range(0, h);
+
+/* The root panel. */
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .top(30)
+    .left(40)
+    .right(20)
+    .bottom(20)
+    .strokeStyle("#ccc");
+
+/* X-axis and ticks. */
+vis.add(pv.Rule)
+    .data(function() x.ticks())
+    .strokeStyle("#ccc")
+    .left(x)
+  .anchor("bottom").add(pv.Label)
+    .text(x.tickFormat);
+
+/* Y-axis and ticks. */
+vis.add(pv.Rule)
+    .data(function() y.ticks())
+    .strokeStyle("#ccc")
+    .top(y)
+  .anchor("left").add(pv.Label)
+    .text(y.tickFormat);
+
+/* The dot plot. */
+vis.add(pv.Panel)
+    .overflow("hidden")
+  .add(pv.Dot)
+    .data(data)
+    .left(function(d) x(d.x))
+    .top(function(d) y(d.y))
+    .fillStyle(pv.rgb(121, 173, 210, .5))
+    .radius(function() 5 / this.scale);
+
+/* Use an invisible panel to capture pan & zoom events. */
+vis.add(pv.Panel)
+    .events("all")
+    .event("mousedown", pv.Behavior.pan())
+    .event("mousewheel", pv.Behavior.zoom())
+    .event("pan", transform)
+    .event("zoom", transform);
+
+/** Update the x- and y-scale domains per the new transform. */
+function transform() {
+  var t = this.transform().invert();
+  x.domain(t.x / w * 2 * kx - kx, (t.k + t.x / w) * 2 * kx - kx);
+  y.domain(t.y / h * 2 * ky - ky, (t.k + t.y / h) * 2 * ky - ky);
+  vis.render();
+}
+
+vis.render();
+
+    </script>
+  </body>
+</html>

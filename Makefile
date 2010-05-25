@@ -59,6 +59,7 @@ HTML_FILES = \
 	www/ex/sunburst.html \
 	www/ex/symbol.html \
 	www/ex/tipsy.html \
+	www/ex/transform.html \
 	www/ex/tree.html \
 	www/ex/treemap.html \
 	www/ex/unemployed.html \

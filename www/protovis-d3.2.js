@@ -1,4 +1,4 @@
-// ffbc25be5f547964f0acb3aebaee89817ce23fc6
+// 2d86fe03fa3f4c545a78b1ccb303125c6e665891
 /**
  * @class The built-in Array class.
  * @name Array
@@ -14616,6 +14616,7 @@ pv.Behavior.pan = function() {
         }
         this.transform(m).render();
       });
+    pv.Mark.dispatch("pan", scene, index);
   }
 
   /** @private */
@@ -14707,6 +14708,7 @@ pv.Behavior.zoom = function(speed) {
       m.y = Math.max((1 - m.k) * this.height(), Math.min(0, m.y));
     }
     this.transform(m).render();
+    pv.Mark.dispatch("zoom", this.scene, this.index);
   }
 
   /**
