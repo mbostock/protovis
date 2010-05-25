@@ -1,19 +1,9 @@
 <html>
   <head>
-    <title>Protovis - Dendrogram</title>
+    <title>Protovis - Dendrograms</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
-    <style type="text/css">
-      iframe {
-        border: none;
-        width: 100%;
-      }
-      .highlight {
-        padding-left: 20px;
-        border-left: solid 4px #ccc;
-      }
-    </style>
-    <script type="text/javascript" src="../protovis-r3.2.js"></script> 
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
   </head>
   <body>
 
@@ -52,22 +42,27 @@
     </div>
 
     <div class="body">
-      <h1>Dendrogram</h1>
+      <h1>Dendrograms</h1>
 
-      <div style="float:right;width:420px;">
-      <iframe style="height:500px;width:420px;" src="dendrogram-full.html"></iframe>
-      <p><img src="popout.png" width="16" height="16"
-      style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
-      href="dendrogram-full.html" target="_blank">View full screen.</a>
-      </div>
+      <div style="float:left;width:420px;">
+      <iframe style="border:solid 4px #ccc;height:500px;"
+      src="dendrogram-full.html"></iframe><p><img src="popout.png" width="16"
+      height="16" style="padding:0;vertical-align:top;"> <a
+      style="font-size:13px;" href="dendrogram-full.html" target="_blank">View
+      full screen.</a> </div>
 
-      <p>Another built-in layout algorithm is the dendrogram layout, used
-      here to show the various ActionScript classes of
-      the <a href="http://flare.prefuse.org">Flare</a> visualization toolkit.
+      <div style="float:left;padding-left:30px;width:450px;">
+      A <i><a href="http://en.wikipedia.org/wiki/Dendrogram">dendrogram</a></i>
+      (or cluster layout) is a node-link diagram that places leaf nodes of the
+      tree at the same depth. In this example, the classes (orange leaf nodes)
+      are aligned on the right edge, with the packages (blue internal nodes) to
+      the left. As with other <a href="tree.html">tree layouts</a>, dendrograms
+      can also be oriented radially.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="sunburst.html">Sunburst Layout</a>
+        Next: <a href="sunburst.html">Sunbursts</a>
       </blockquote>
+      </div>
       <br clear="all">
 
       <h3>Source</h3>

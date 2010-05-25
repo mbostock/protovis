@@ -32,7 +32,10 @@ var layout = vis.add(pv.Layout.Cluster)
     .group(true)
     .orient("left");
 
-layout.link.add(pv.Line);
+layout.link.add(pv.Line)
+    .strokeStyle("#ccc")
+    .lineWidth(1)
+    .antialias(false);
 
 layout.node.add(pv.Dot)
     .fillStyle(function(n) n.firstChild ? "#aec7e8" : "#ff7f0e");
