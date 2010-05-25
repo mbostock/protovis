@@ -1,57 +1,43 @@
 <html>
   <head>
-    <title>Flare Icicle</title>
+    <title>Icicle</title>
     <link rel="stylesheet" type="text/css" href="ex.css"/>
-    <script type="text/javascript" src="../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
     <script type="text/javascript" src="flare.js"></script>
     <style type="text/css">
-      body {
-        background: #222;
-        color: #eee;
-      }
-      #fig {
-        width: 1200px;
-        height: 700px;
-      }
+
+#fig {
+  width: 900px;
+  height: 330px;
+}
+
     </style>
   </head>
   <body><div id="center"><div id="fig">
     <script type="text/javascript+protovis">
 
-      function onNodeClick(node) {
-        var path = node.nodeName;
-        var parentNode = node.parentNode;
-        while(parentNode) {
-          path = parentNode.nodeName + "/" + path;
-          parentNode = parentNode.parentNode;
-        }
-        top.location = "http://svn.prefuse.org/flare/trunk/flare/flare/src/" + path + (node.firstChild?"/":".as");
-      }
+var vis = new pv.Panel()
+    .width(900)
+    .height(300)
+    .bottom(30);
 
-      var vis = new pv.Panel()
-        .width(1200)
-        .height(600);
+var layout = vis.add(pv.Layout.Partition.Fill)
+    .nodes(pv.dom(flare).root("flare").nodes())
+    .order("descending")
+    .orient("top")
+    .size(function(d) d.nodeValue);
 
-      var layout = vis.add(pv.Layout.Partition.Fill)
-        .nodes(pv.dom(flare)
-          .root("flare")
-          .sort(function(a, b) pv.naturalOrder(a.nodeName, b.nodeName))
-          .nodes())
-        .orient("top")
-        .size(function(d) d.nodeValue);
+layout.node.add(pv.Bar)
+    .fillStyle(pv.Colors.category19().by(function(d) d.parentNode && d.parentNode.nodeName))
+    .strokeStyle("rgba(255,255,255,.5)")
+    .lineWidth(1)
+    .antialias(false);
 
-      layout.node.add(pv.Bar)
-        .fillStyle(function(n) n.firstChild ? "#aec7e8" : "#ff7f0e")
-        .title(function t(d) d.parentNode ? (t(d.parentNode) + "." + d.nodeName) : d.nodeName)
-        .cursor("pointer")
-        .event("click", onNodeClick);
+layout.label.add(pv.Label)
+    .textAngle(-Math.PI / 2)
+    .visible(function(d) d.dx > 6);
 
-      layout.label.add(pv.Label)
-        .textAngle(-Math.PI / 2)
-        .visible(function(n) n.dx > 10)
-        .text(function(n) n.nodeName);
-
-      vis.render();
+vis.render();
 
     </script>
   </div></div></body>

@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - Icicle Layout</title>
+    <title>Protovis - Icicles</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
@@ -39,22 +39,21 @@
     </div>
 
     <div class="body">
-      <h1>Icicle Layout</h1>
+      <h1>Icicles</h1>
 
-      <iframe style="height:300px;" src="icicle-embed.html"></iframe>
+      <iframe style="height:330px;" src="icicle-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="icicle-full.html" target="_blank">View full screen.</a>
 
-      <p>The <a href="http://protovis-js.googlecode.com/svn/trunk/jsdoc/symbols/pv.Layout.icicle.html">icicle
-      layout</a> takes a <a href="sunburst.html">sunburst</a> and transforms it
-      from polar to cartesian coordinates. Here we show the various ActionScript
-      classes of the <a href="http://flare.prefuse.org">Flare</a> visualization
-      toolkit. The color of each cell corresponds to the package, while the area
-      encodes the size of the source code in bytes.
+      <p>An <i>icicle</i> is simply a <a href="sunburst.html">sunburst</a>
+      transformed from polar to cartesian coordinates. Here we show the various
+      ActionScript classes of the <a href="http://flare.prefuse.org">Flare</a>
+      visualization toolkit; the color of each cell corresponds to the package,
+      while the area encodes the size of the source code in bytes.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="indent.html">Indent Layout</a>
+        Next: <a href="indent.html">Indented Trees</a>
       </blockquote>
 
       <h3>Source</h3>
