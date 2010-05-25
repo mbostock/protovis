@@ -47,6 +47,7 @@ HTML_FILES = \
 	www/ex/oakland.html \
 	www/ex/pack.html \
 	www/ex/pie.html \
+	www/ex/point.html \
 	www/ex/projection.html \
 	www/ex/qqplot.html \
 	www/ex/radial-cluster.html \
