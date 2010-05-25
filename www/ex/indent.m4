@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - Indent Layout</title>
+    <title>Protovis - Indented Trees</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
@@ -39,20 +39,25 @@
     </div>
 
     <div class="body">
-      <h1>Indent Layout</h1>
+      <h1>Indented Trees</h1>
 
-      <div style="float:left;width:300px;">
-      <iframe style="height:400px;width:290px" src="indent-full.html"></iframe>
-      <p><img src="popout.png" width="16" height="16"
-      style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
-      href="indent-full.html" target="_blank">View full screen.</a>
-      </div>
+      <div style="float:left;width:285px;">
+      <iframe style="border:solid 4px #ccc;height:400px;"
+      src="indent-full.html"></iframe><p><img src="popout.png" width="16"
+      height="16" style="padding:0;vertical-align:top;"> <a
+      style="font-size:13px;" href="indent-full.html" target="_blank">View full
+      screen.</a> </div>
 
-      <div style="float:left;width:600px;">
-      The Indent layout should look very familiar given its popularity in file system
-      browses in many operating systems. This built-in layout algorithm is used
-      here to show the various ActionScript classes of
-      the <a href="http://flare.prefuse.org">Flare</a> visualization toolkit.
+      <div style="float:left;padding-left:30px;width:575px;">
+      Indented trees are widely-used to represent file systems, among
+      other applications. Although indented trees require much vertical space
+      and do not easily facilitate multiscale inference, they do allow efficient
+      interactive exploration of the tree to find a specific node.
+
+      <p>In addition, the <i>indent</i> layout allows rapid scanning of node
+      labels, and multivariate data such as file size can be displayed adjacent
+      to the hierarchy. Click on package nodes to expand and collapse the
+      descendants.
 
       <blockquote style="font-size:13px;">
         Next: <a href="pack.html">Circle Packing</a>
