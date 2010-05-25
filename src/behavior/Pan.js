@@ -73,6 +73,7 @@ pv.Behavior.pan = function() {
         }
         this.transform(m).render();
       });
+    pv.Mark.dispatch("pan", scene, index);
   }
 
   /** @private */
