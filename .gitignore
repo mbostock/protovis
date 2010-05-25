@@ -1,4 +1,5 @@
 *.d
+www/docs/index.html
 www/docs/layouts.html
 www/ex/antibiotics-burtin.html
 www/ex/arc.html
@@ -18,7 +19,6 @@ www/ex/cars.html
 www/ex/cartogram.html
 www/ex/choropleth.html
 www/ex/clock.html
-www/ex/countries.html
 www/ex/crimea-rose.html
 www/ex/dendrogram.html
 www/ex/dot.html

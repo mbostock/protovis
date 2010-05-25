@@ -1,8 +1,8 @@
 <html>
   <head>
     <title>Protovis - Layouts</title>
-    <link type="text/css" rel="stylesheet" href="../style.css?3.1a"/>
-    <link type="text/css" rel="stylesheet" href="../ex/syntax.css?3.1"/>
+    <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
+    <link type="text/css" rel="stylesheet" href="../ex/syntax.css?3.2"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
   </head>
   <body>
@@ -25,7 +25,7 @@
         <a href="../docs/">Documentation</a>
       </div>
       <div class="section">
-        <a href="http://protovis-js.googlecode.com/files/protovis-3.1.zip">Download</a>
+        <a href="http://protovis-js.googlecode.com/files/protovis-3.2.zip">Download</a>
       </div>
     </div>
 

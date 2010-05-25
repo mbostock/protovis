@@ -1,9 +1,9 @@
 <html>
   <head>
     <title>Protovis</title>
-    <link type="text/css" rel="stylesheet" href="style.css?3.1a"/>
-    <link type="text/css" rel="stylesheet" href="ex/syntax.css?3.1"/>
-    <script type="text/javascript" src="protovis-r3.1.0.js"></script>
+    <link type="text/css" rel="stylesheet" href="style.css?3.2"/>
+    <link type="text/css" rel="stylesheet" href="ex/syntax.css?3.2"/>
+    <script type="text/javascript" src="protovis-r3.2.js"></script>
   </head>
   <body>
 
@@ -22,13 +22,10 @@
         <a href="ex/">Examples</a>
       </div>
       <div class="section">
-        <a href="api/">Documentation</a>
+        <a href="docs/">Documentation</a>
       </div>
       <div class="section">
-        <a href="protovis.pdf">Paper</a>
-      </div>
-      <div class="section">
-        <a href="http://protovis-js.googlecode.com/files/protovis-3.1.zip">Download</a>
+        <a href="http://protovis-js.googlecode.com/files/protovis-3.2.zip">Download</a>
       </div>
     </div>
 
@@ -52,10 +49,10 @@
 
         <h3>Download</h3>
         <a style="font-size:13px;"
-        href="http://protovis-js.googlecode.com/files/protovis-3.1.zip">protovis-3.1.zip (774 KB)</a>
+        href="http://protovis-js.googlecode.com/files/protovis-3.2.zip">protovis-3.2.zip (774 KB)</a>
       </div>
 
-      <div style="float:left;width:610px;">
+      <div style="float:left;width:640px;">
         <h1>
           <div class="subtitle">A graphical approach to visualization</div>
           Protovis
@@ -81,18 +78,19 @@
         mostly declarative and designed to be learned <a href="ex/">by
         example</a>.
 
-        <p>This project is led
-        by <a href="http://graphics.stanford.edu/~mbostock/">Mike Bostock</a>
-        and <a href="http://hci.stanford.edu/jheer/">Jeff Heer</a> of the
-        <a href="http://vis.stanford.edu/">Stanford Visualization Group</a>. We
-        welcome
-        your <a href="http://code.google.com/p/protovis-js/">contributions</a>
-        and <a href="http://groups.google.com/group/protovis">suggestions</a>.
+        <p>This project is led by <a
+        href="http://graphics.stanford.edu/~mbostock/">Mike Bostock</a> and <a
+        href="http://hci.stanford.edu/jheer/">Jeff Heer</a> of the <a
+        href="http://vis.stanford.edu/">Stanford Visualization Group</a>, with
+        significant help from <a
+        href="http://vadim.ogievetsky.com/">Vadim Ogievetsky</a>. We welcome
+        your <a href="http://gitorious.org/protovis/">contributions</a> and <a
+        href="http://groups.google.com/group/protovis">suggestions</a>.
 
         <blockquote class="button">
-          <a href="http://protovis-js.googlecode.com/files/protovis-3.1.zip">
-            <div>protovis-3.1.zip (774 KB)</div>
-            Download Protovis 3.1 &raquo;
+          <a href="http://protovis-js.googlecode.com/files/protovis-3.2.zip">
+            <div>protovis-3.2.zip (774 KB)</div>
+            Download Protovis 3.2 &raquo;
           </a>
         </blockquote>
 
@@ -103,6 +101,12 @@
           .update { text-indent: -20px; margin-left: 20px; }
           .highlight { width: 300px; }
         </style>
+
+        <p class="update"><i>May 28, 2010</i> - ZOMG! Release 3.2 is finally
+        available! Enjoy the powerful new layouts and the variety of new
+        examples in the gallery. We've also moved from SVN to <a
+        href="http://gitorious.org/protovis">Gitorious</a> to make it easier for
+        you to participate in development!
 
         <p class="update"><i>October 1, 2009</i> - Release 3.1 is available,
         including minor bug fixes. We've also spruced up the home page and
@@ -162,7 +166,7 @@ m4_include(`bar-chart2.js.html')
         bar.
 
         <p>Want to learn more? Peruse our <a href="ex/">examples</a>
-        and <a href="api/">documentation</a>.
+        and <a href="docs/">documentation</a>.
       </div>
       <br clear="all">
     </div>

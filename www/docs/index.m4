@@ -105,28 +105,14 @@
         a <tt>for</tt> loop and a call to <tt>arc</tt>, which immediately draws
         a single arc to the canvas:
 
-<div class="highlight"><pre><span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">data</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
-  <span class="n">fill</span><span class="o">(</span><span class="n">data</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">*</span> <span class="mi">120</span><span class="o">);</span>
-  <span class="kt">float</span> <span class="n">ang</span> <span class="o">=</span> <span class="n">data</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">/</span> <span class="n">sum</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">PI</span><span class="o">;</span>
-  <span class="n">arc</span><span class="o">(</span><span class="mi">75</span><span class="o">,</span> <span class="mi">75</span><span class="o">,</span> <span class="mi">140</span><span class="o">,</span> <span class="mi">140</span><span class="o">,</span> <span class="n">lastAng</span><span class="o">,</span> <span class="n">lastAng</span> <span class="o">+</span> <span class="n">ang</span><span class="o">);</span>
-  <span class="n">lastAng</span> <span class="o">+=</span> <span class="n">ang</span><span class="o">;</span>
-<span class="o">}</span>
-</pre></div>
-
+m4_include(`pie-processing.java.html')
 
         <p>In Protovis, you almost never use a <tt>for</tt> loop. A set of related
         graphical elements, such as the arcs in a pie chart, are specified as a
         single mark. The mark is associated with data, and the properties are
         specified as functions, encoding the data graphically:
 
-<div class="highlight"><pre><span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Wedge</span><span class="p">)</span>
-    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span>
-    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="mi">75</span><span class="p">)</span>
-    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">75</span><span class="p">)</span>
-    <span class="p">.</span><span class="nx">outerRadius</span><span class="p">(</span><span class="mi">70</span><span class="p">)</span>
-    <span class="p">.</span><span class="nx">angle</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">sum</span><span class="p">(</span><span class="nx">data</span><span class="p">)).</span><span class="nx">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span><span class="p">));</span>
-</pre></div>
-
+m4_include(`pie-protovis.js.html')
 
         <p>Note that in Processing, you have to increment the start angle
         (<tt>lastAng</tt>) by hand. In Protovis, the angle encoding is specified

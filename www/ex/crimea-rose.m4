@@ -22,13 +22,10 @@
         <a href="./">Examples</a>
       </div>
       <div class="section">
-        <a href="../api/">Documentation</a>
+        <a href="../docs/">Documentation</a>
       </div>
       <div class="section">
-        <a href="../protovis.pdf">Paper</a>
-      </div>
-      <div class="section">
-        <a href="http://protovis-js.googlecode.com/files/protovis-3.1.zip">Download</a>
+        <a href="http://protovis-js.googlecode.com/files/protovis-3.2.zip">Download</a>
       </div>
     </div>
     <div class="subhead">
