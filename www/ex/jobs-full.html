@@ -30,15 +30,17 @@
     <div id="center"><div id="fig">
     <div style="text-align:right;padding-right:20;">
       <b>Gender:</b>
-      <input type="checkbox" id="men" checked onchange="showMen = this.value; update();"
+      <input type="radio" name="gender" id="men" onchange="update(gender = 1);"
       ><label for="men">Men</label>
-      <input type="checkbox" id="women" checked onchange="showWomen = this.value; update();"
+      <input type="radio" name="gender" id="women" onchange="update(gender = 2);"
       ><label for="women">Women</label>
+      <input type="radio" name="gender" id="any" checked onchange="update(gender = 0);"
+      ><label for="any">Any</label>
     </div>
     <script type="text/javascript+protovis">
 
-var showMen = true,
-    showWomen = true,
+/* Interaction state. */
+var gender = 0,
     re = "";
 
 /* Flatten the tree into an array to faciliate transformation. */
@@ -142,15 +144,13 @@ function search(text) {
       query.focus();
     }
     re = new RegExp(text, "i");
-    console.log(re);
     update();
   }
 }
 
 /* Tests to see whether the specified datum matches the current filters. */
 function test(d) {
-  return ((showMen && d.gender == 1) || (showWomen && d.gender == 2))
-      && d.job.match(re);
+  return (!gender || d.gender == gender) && d.job.match(re);
 }
 
 /* Recompute the y-scale domain based on query filtering. */
