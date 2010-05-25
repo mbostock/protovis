@@ -44,11 +44,11 @@
     <div class="body">
       <h1>Marey&rsquo;s Trains</h1>
 
-      <iframe id="iframe" style="height:700px;" src="caltrain-full.html"></iframe>
-      <p><img src="popout.png" width="16" height="16"
-      style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
-      href="caltrain-full.html" target="_blank">View full screen.</a>
-      </p>
+      <iframe id="iframe" style="border:solid 4px #ccc;height:720px;"
+      src="caltrain-full.html"></iframe><p><img src="popout.png" width="16"
+      height="16" style="padding:0;vertical-align:top;"> <a
+      style="font-size:13px;" href="caltrain-full.html" target="_blank">View
+      full screen.</a> </p>
 
       <p>This example recreates the <a
       href="http://www.caltrain.com/timetable.html">CalTrain timetable</a> in
