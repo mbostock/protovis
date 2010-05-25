@@ -1,19 +1,9 @@
 <html>
   <head>
-    <title>Protovis - Sunburst Layout</title>
+    <title>Protovis - Sunbursts</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
-    <style type="text/css">
-      iframe {
-        border: none;
-        width: 100%;
-      }
-      .highlight {
-        padding-left: 20px;
-        border-left: solid 4px #ccc;
-      }
-    </style>
-    <script type="text/javascript" src="../protovis-r3.2.js"></script> 
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
   </head>
   <body>
 
