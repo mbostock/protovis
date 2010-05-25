@@ -1,68 +1,74 @@
-<!DOCTYPE html>
 <html>
   <head>
-    <title>Tipsy Bar</title>
+    <title>Tooltips</title>
     <link type="text/css" rel="stylesheet" href="ex.css?3.2"/>
     <script src="../protovis-r3.2.js" type="text/javascript"></script>
     <script src="../jquery-1.4.2.min.js" type="text/javascript"></script>
     <script src="../jquery.tipsy.js" type="text/javascript"></script>
     <script src="tipsy.js" type="text/javascript"></script>
+    <script src="bar.js" type="text/javascript"></script>
     <link href="tipsy.css" type="text/css" rel="stylesheet"/>
     <style type="text/css">
-      body {
-        font: 10px sans-serif;
-      }
-      #fig {
-        width: 430px;
-        height: 280px;
-      }
+
+body {
+  font: 10px sans-serif;
+}
+
+#fig {
+  width: 460px;
+  height: 275px;
+}
+
     </style>
   </head>
   <body><div id="center"><div id="fig">
     <script type="text/javascript+protovis">
 
-      var data = pv.range(10).map(Math.random),
-          w = 400,
-          h = 250,
-          x = pv.Scale.linear(0, 1).range(0, w),
-          y = pv.Scale.ordinal(pv.range(10)).splitBanded(0, h, 4/5);
+/* Sizing and scales. */
+var w = 400,
+    h = 250,
+    x = pv.Scale.linear(0, 1.1).range(0, w),
+    y = pv.Scale.ordinal(pv.range(10)).splitBanded(0, h, 4/5);
 
-      var vis = new pv.Panel()
-          .width(w)
-          .height(h)
-          .bottom(20)
-          .left(20)
-          .right(10)
-          .top(10);
+/* The root panel. */
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .bottom(20)
+    .left(20)
+    .right(40)
+    .top(5);
 
-      var bar = vis.add(pv.Bar)
-          .data(data)
-          .top(function() y(this.index))
-          .height(y.range().band)
-          .left(0)
-          .width(x)
-          .title(function(d) d.toFixed(1))
-          .event("mouseover", pv.Behavior.tipsy({gravity: "w", fade: true}));
+/* The bars. */
+var bar = vis.add(pv.Bar)
+    .data(data)
+    .top(function() y(this.index))
+    .height(y.range().band)
+    .left(0)
+    .width(x)
+    .text(function(d) d.toFixed(1))
+    .event("mouseover", pv.Behavior.tipsy({gravity: "w", fade: true}));
 
-      bar.anchor("left").add(pv.Label)
-          .textMargin(5)
-          .textAlign("right")
-          .text(function() "ABCDEFGHIJK".charAt(this.index));
+/* The variable label. */
+bar.anchor("left").add(pv.Label)
+    .textMargin(5)
+    .textAlign("right")
+    .text(function() "ABCDEFGHIJK".charAt(this.index));
 
-      vis.add(pv.Rule)
-          .data(x.ticks())
-          .left(function(d) Math.round(x(d)) - .5)
-          .strokeStyle(function(d) d ? "rgba(255,255,255,.3)" : "#000")
-        .add(pv.Rule)
-          .bottom(0)
-          .height(5)
-          .strokeStyle("#000")
-        .anchor("bottom").add(pv.Label)
-          .text(function(d) d.toFixed(1));
+/* X-axis ticks. */
+vis.add(pv.Rule)
+    .data(x.ticks(5))
+    .left(x)
+    .strokeStyle(function(d) d ? "rgba(255,255,255,.3)" : "#000")
+  .add(pv.Rule)
+    .bottom(0)
+    .height(5)
+    .strokeStyle("#000")
+  .anchor("bottom").add(pv.Label)
+    .text(x.tickFormat);
 
-      vis.render();
+vis.render();
 
     </script>
-    <div id="example"></div>
   </div></div></body>
 </html>

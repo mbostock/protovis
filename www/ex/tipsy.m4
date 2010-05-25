@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - Tipsy Label</title>
+    <title>Protovis - Tooltips</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script> 
@@ -42,18 +42,32 @@
     </div>
 
     <div class="body">
-      <h1>Tipsy Label</h1>
+      <h1>Tooltips</h1>
 
-      <iframe style="height:280px;" src="tipsy-full.html"></iframe>
+      <div style="float:left;width:440px;">
+      <iframe style="height:280px;" src="tipsy-full.html" scrolling="no"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="tipsy-full.html" target="_blank">View full screen.</a>
+      </div>
 
-      The tipsy label is a more aesthetic way to present the details-on-demand tooltip.
+      <div style="float:left;padding-left:30px;width:430px;">
+
+      Protovis supports basic tooltips using the <tt title="Hello,
+      tooltip!">title</tt> property. While convenient, some applications may
+      require more control over tooltip appearance; consider the <a
+      href="http://onehackoranother.com/projects/jquery/tipsy/">Tipsy</a> jQuery
+      plugin, which creates flexible tooltips in multiple orientations that can
+      fade and contain HTML. This example demonstrates how to use Tipsy with
+      Protovis via <tt><a
+      href="http://gitorious.org/protovis/protovis/blobs/master/examples/tipsy/tipsy.js"
+      >pv.Behavior.tipsy</a></tt>.
 
       <blockquote style="font-size:13px;">
         Next: <a href="point.html">Pointing</a>
       </blockquote>
+      </div>
+      <br clear="all">
 
       <h3>Source</h3>
 
@@ -61,7 +75,7 @@ m4_include(`tipsy-full.html.html')
 
       <h3>Data</h3>
 
-      This example has no meaningful data.
+m4_include(`bar.js.html')
 
     </div>
 
