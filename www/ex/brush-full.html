@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Anderson&rsquo;s Flowers</title>
+    <title>Brush + Link</title>
     <link type="text/css" rel="stylesheet" href="ex.css?3.2"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
     <script type="text/javascript" src="flowers.js"></script>
@@ -20,11 +20,15 @@
 var size = 150,
     padding = 20;
 
+/* Interaction state. */
+var s;
+
 /* Scales for color and position. */
-var color = pv.colors(
+var grey = pv.color("#ccc"),
+    color = pv.colors(
         "rgba(50%, 0%, 0%, .5)",
         "rgba(0%, 50%, 0%, .5)",
-        "rgba(0%, 0%, 50%, .5)");
+        "rgba(0%, 0%, 50%, .5)"),
     position = pv.dict(traits, function(t)
         pv.Scale.linear(flowers, function(d) d[t])
         .range(0, size));
@@ -84,13 +88,36 @@ ytick.anchor("right").add(pv.Label)
     .text(function(d, t) position[t.py].tickFormat(d));
 
 /* Frame and dot plot. */
-plot.add(pv.Dot)
+var dot = plot.add(pv.Dot)
     .data(flowers)
     .left(function(d, t) position[t.px](d[t.px]))
     .bottom(function(d, t) position[t.py](d[t.py]))
     .size(10)
     .strokeStyle(null)
-    .fillStyle(function(d) color(d.species));
+    .fillStyle(function(d) s
+        && ((d[s.px] < s.x1) || (d[s.px] > s.x2)
+        || (d[s.py] < s.y1) || (d[s.py] > s.y2))
+        ? grey : color(d.species));
+
+/* Interaction: new selection and display and drag selection */
+plot.add(pv.Panel)
+   .data([{x:20, y:20, dx:100, dy:100}])
+   .cursor("crosshair")
+   .events("all")
+   .event("mousedown", pv.Behavior.select())
+   .event("selectstart", function() (s = null, vis))
+   .event("select", update)
+ .add(pv.Bar)
+   .visible(function(d, k, t) s && s.px == t.px && s.py == t.py)
+   .left(function(d) d.x)
+   .top(function(d) d.y)
+   .width(function(d) d.dx)
+   .height(function(d) d.dy)
+   .fillStyle("rgba(0,0,0,.15)")
+   .strokeStyle("white")
+   .cursor("move")
+   .event("mousedown", pv.Behavior.drag())
+   .event("drag", update);
 
 /* Labels along the diagonal. */
 cell.anchor("center").add(pv.Label)
@@ -109,6 +136,18 @@ vis.add(pv.Dot)
   .anchor("right").add(pv.Label);
 
 vis.render();
+
+/* Interaction: update selection. */
+function update(d, t) {
+  s = d;
+  s.px = t.px;
+  s.py = t.py;
+  s.x1 = position[t.px].invert(d.x);
+  s.x2 = position[t.px].invert(d.x + d.dx);
+  s.y1 = position[t.py].invert(size - d.y - d.dy);
+  s.y2 = position[t.py].invert(size - d.y);
+  dot.context(null, 0, function() this.render());
+}
 
     </script>
   </div></div></body>

@@ -32,12 +32,12 @@ var vis = new pv.Panel()
     .left(40)
     .right(20)
     .bottom(20)
-    .strokeStyle("#ccc");
+    .strokeStyle("#aaa");
 
 /* X-axis and ticks. */
 vis.add(pv.Rule)
     .data(function() x.ticks())
-    .strokeStyle("#ccc")
+    .strokeStyle(function(d) d ? "#ccc" : "#999")
     .left(x)
   .anchor("bottom").add(pv.Label)
     .text(x.tickFormat);
@@ -45,7 +45,7 @@ vis.add(pv.Rule)
 /* Y-axis and ticks. */
 vis.add(pv.Rule)
     .data(function() y.ticks())
-    .strokeStyle("#ccc")
+    .strokeStyle(function(d) d ? "#ccc" : "#999")
     .top(y)
   .anchor("left").add(pv.Label)
     .text(y.tickFormat);

@@ -1,4 +1,4 @@
-var data = pv.range(100).map(function() {
-    var r = Math.random(), a = 2 * Math.PI * Math.random();
+var data = pv.range(100).map(function(i) {
+    var r = .5 + .2 * Math.random(), a = Math.PI * i / 50;
     return {x: r * Math.cos(a), y: r * Math.sin(a)};
   });
