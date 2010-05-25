@@ -44,7 +44,7 @@
     <div class="body">
       <h1>Map Projections</h1>
 
-      <iframe style="width:860px;height:610px;" src="projection-full.html"></iframe>
+      <iframe style="width:860px;height:540px;" src="projection-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="projection-full.html" target="_blank">View full screen.</a>
