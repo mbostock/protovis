@@ -63,7 +63,7 @@
       style="color:rgb(192,62,29);">baby bullets</span>.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="stem-and-leaf.html">Stem-and-Leaf</a>
+        Next: <a href="stem-and-leaf.html">Stemplots</a>
       </blockquote>
 
       <h3>Source</h3>

@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - Stem-and-Leaf</title>
+    <title>Protovis - Stemplots</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <style type="text/css">
@@ -52,7 +52,7 @@
     </div>
 
     <div class="body">
-      <h1>Stem-and-Leaf</h1>
+      <h1>Stemplots</h1>
 
       <div style="float:left;width:240px;">
       <iframe style="height:460px;" src="stem-and-leaf-full.html"></iframe>
