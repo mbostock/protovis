@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Choropleth Map</title>
+    <title>Choropleth Maps</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
@@ -39,26 +39,30 @@
     </div>
 
     <div class="body">
-      <h1>Choropleth Map</h1>
+      <h1>Choropleth Maps</h1>
 
-      <iframe id="iframe" style="height:400px;" src="choropleth-full.html"></iframe>
+      <iframe id="iframe" style="height:480px;" src="choropleth-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
-      href="choropleth-interactive.html" target="_blank">View full screen.</a>
+      href="choropleth-full.html" target="_blank">View full screen.</a>
       </p>
 
-      <p>Data is often collected and aggregated by geographical areas such as states. A standard
-      approach to communicating this data is to use a color encoding of the geographic area,
-      resulting in a choropleth map. Here, we use a color encoding to communicate the prevalence
-      of obesity in each U.S. state. Though this is a widely used visualization technique, some
-      care is required. One common error is to encode raw data values (such as population) rather
-      than using normalized values to produce a density map.
-      <p>The above example present of population classified as "Obese" (Body Mass Index in excess
-      of 30), by state.
-      <p>A more complicated example that includes more interaction can be found <a href="choropleth-interactive.html">here</a>.</p>
+      <p>Data is often collected and aggregated by geographical area, such as
+      states. A standard approach to communicating this data is to fill the area
+      with a solid color, resulting in a <i><a
+      href="http://en.wikipedia.org/wiki/Choropleth_map">choropleth
+      map</a></i>. Here, we use color to show the prevalence of obesity across
+      the U.S.
+
+      <p>Though this technique is a widely used, some care is required. A common
+      error is to encode raw data values (such as population) rather than
+      normalizing values by area to produce a density map. Another concern is
+      the <i><a href="http://en.wikipedia.org/wiki/Contrast_effect">contrast
+      effect</a></i>: one&rsquo;s perception of the shaded value is affected
+      by the surrounding areas.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="symbol.html">Graduated Symbol Map</a>
+        Next: <a href="symbol.html">Graduated Symbol Maps</a>
       </blockquote>
 
       <h3>Source</h3>

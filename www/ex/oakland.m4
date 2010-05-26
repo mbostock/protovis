@@ -56,7 +56,7 @@
       crime (such as <i>violent</i> or <i>quality of life</i>).
 
       <blockquote style="font-size:13px;">
-        Next: <a href="choropleth.html">Choropleth Map</a>
+        Next: <a href="choropleth.html">Choropleth Maps</a>
       </blockquote>
 
       <h3>Source</h3>
