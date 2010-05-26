@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - Force-Directed Graphs</title>
+    <title>Protovis - Force-Directed Layouts</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
@@ -39,7 +39,7 @@
     </div>
 
     <div class="body">
-      <h1>Force-Directed Graphs</h1>
+      <h1>Force-Directed Layouts</h1>
 
       <div style="float:left;width:450px;">
       <iframe style="height:350px;" src="force-full.html"></iframe>

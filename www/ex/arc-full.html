@@ -8,7 +8,7 @@
 
 #fig {
   width: 880px;
-  height: 480px;
+  height: 380px;
 }
 
     </style>
@@ -18,13 +18,13 @@
 
 var vis = new pv.Panel()
     .width(880)
-    .height(400)
-    .top(-30)
-    .bottom(70);
+    .height(290)
+    .bottom(90);
 
 var arc = vis.add(pv.Layout.Arc)
     .nodes(miserables.nodes)
-    .links(miserables.links);
+    .links(miserables.links)
+    .sort(function(a, b) b.group - a.group);
 
 arc.link.add(pv.Line);
 

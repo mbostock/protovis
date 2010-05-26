@@ -41,18 +41,27 @@
     <div class="body">
       <h1>Arc Diagrams</h1>
 
-      <iframe style="height:500px;" src="arc-full.html"></iframe>
+      <iframe style="height:380px;" src="arc-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="arc-full.html" target="_blank">View full screen.</a>
 
-      <p>Les Mis&eacute;rables character interaction. Each character is
-      represented by a circle and the connecting arc represent interaction. The
-      character&rsquo;s size indicates the number of interactions they have over
-      the entire play.</p>
+      <p>An <i>arc diagram</i> uses a one-dimensional layout of nodes, with
+      circular arcs to represent links. Though an arc diagram may not convey the
+      overall structure of the graph as effectively as a <a
+      href="force.html">two-dimensional layout</a>, with a good ordering of
+      nodes it is easy to identify cliques and bridges. Further, as with the <a
+      href="indent.html">indented tree</a>, multivariate data can easily be
+      displayed alongside nodes.
+
+      <p>This network represents character co-occurrence in the chapters of
+      Victor Hugo's classic novel, <i>Les Mis&eacute;rables</i>. Node colors
+      depict cluster memberships computed by a community-detection algorithm.
+      Source: Knuth, D. E. 1993. <i>The Stanford GraphBase: A Platform for
+      Combinatorial Computing</i>, Addison-Wesley.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="force.html">Force-Directed Graphs</a>
+        Next: <a href="force.html">Force-Directed Layouts</a>
       </blockquote>
 
       <h3>Source</h3>
