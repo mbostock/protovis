@@ -32,17 +32,17 @@
     <div class="body">
       <div style="float:left;width:260px;">
         <h3>Gallery</h3>
+        <a href="ex/pack.html" class="item">
+          <img src="ex/pack-sm.png?3.2" width="200" height="180">
+          Circle Packing
+        </a>
         <a href="ex/jobs.html" class="item">
           <img src="ex/jobs-sm.png?3.0" width="200" height="180">
           Job Voyager
         </a>
-        <a href="ex/treemap.html" class="item">
-          <img src="ex/treemap-sm.png?3.0" width="200" height="180">
-          Treemap Layout
-        </a>
-        <a href="ex/antibiotics-burtin.html" class="item">
-          <img src="ex/antibiotics-burtin-sm.png?3.0" width="200" height="180">
-          Burtin's Antibiotics
+        <a href="ex/cars.html" class="item">
+          <img src="ex/cars-sm.png?3.2" width="200" height="180">
+          Parallel Coordinates
         </a>
         <br clear="all">
         <a style="font-size:13px;" href="ex/">More examples &raquo;</a>
@@ -137,7 +137,7 @@ m4_include(`bar-chart.js.html')
           <img src="ex/bar-chart.png?3.0" width="150" height="150">
         </td></tr></table>
 
-        <p>This blue bar is rendered once per datum, mapping the data to height
+        <p>This blue bar is rendered once per number, mapping the data to height
         using a little function (<tt>d * 80</tt>). Thus, a <i>mark</i>
         represents a <i>set</i> of graphical elements that share data and visual
         encodings. Although marks are simple by themselves, you can combine them

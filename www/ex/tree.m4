@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - Node-Link Tree</title>
+    <title>Protovis - Node-Link Trees</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
@@ -39,19 +39,22 @@
     </div>
 
     <div class="body">
-      <h1>Node-Link Tree</h1>
+      <h1>Node-Link Trees</h1>
 
       <iframe style="height:700px;" src="tree-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="tree-full.html" target="_blank">View full screen.</a>
 
-      <p>Another built-in layout algorithm is the node-link tree, used here to
-      show the various ActionScript classes of the <a
-      href="http://flare.prefuse.org">Flare</a> visualization toolkit.
+      <p>The <i>tree</i> layout implements the <a
+      href="http://www.springerlink.com/content/u73fyc4tlxp3uwt8/">Reingold-Tilford</a>
+      algorithm for efficient, tidy arrangement of layered nodes. This node-link
+      diagram is similar to the <a href="dendrogram.html">dendrogram</a>, except
+      the depth of nodes is computed by distance from the root, leading to a
+      ragged appearance. Cartesian orientations are also supported.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="treemap.html">Treemap Layout</a>
+        Next: <a href="treemap.html">Treemaps</a>
       </blockquote>
 
       <h3>Source</h3>
