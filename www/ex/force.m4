@@ -41,25 +41,32 @@
     <div class="body">
       <h1>Force-Directed Layouts</h1>
 
-      <div style="float:left;width:450px;">
-      <iframe style="height:350px;" src="force-full.html"></iframe>
-      <p><img src="popout.png" width="16" height="16"
-      style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
-      href="force-full.html" target="_blank">View full screen.</a>
-      </div>
+      <iframe style="border:solid 4px #ccc;height:450px;"
+      src="force-full.html"></iframe> <p><img src="popout.png" width="16"
+      height="16" style="padding:0;vertical-align:top;"> <a
+      style="font-size:13px;" href="force-full.html" target="_blank">View full
+      screen.</a>
 
-      <div style="float:left;width:450px;">
-      Les Mis&eacute;rables character interaction presented as a force-directed
-      graph. Each character is represented by a circle and the connecting lines
-      (or springs) represent interaction. The character&rsquo;s size indicates
-      the number of interactions they have over the entire play. Drag and zoom
-      the graph the get a better view.
+      <p>An intuitive approach to network layout is to model the graph as a
+      physical system: nodes are charged particles that repel each other, and
+      links are dampened springs that pull related nodes together. A physical
+      simulation of these forces then determines node positions; approximation
+      techniques that avoid computing all pairwise forces enable the layout of
+      large numbers of nodes. In addition, interactivity allows the user to
+      direct the layout and jiggle nodes to disambiguate links. Such a <i><a
+      href="http://en.wikipedia.org/wiki/Force-based_algorithms_(graph_drawing)">force-directed
+      layout</a></i> is a good starting point for understanding the structure of
+      a general undirected graph.
+
+      <p>This network represents character co-occurrence in the chapters of
+      Victor Hugo's classic novel, <i>Les Mis&eacute;rables</i>. Node colors
+      depict cluster memberships computed by a community-detection algorithm.
+      Source: Knuth, D. E. 1993. <i>The Stanford GraphBase: A Platform for
+      Combinatorial Computing</i>, Addison-Wesley.
 
       <blockquote style="font-size:13px;">
         Next: <a href="matrix.html">Matrix Diagrams</a>
       </blockquote>
-      </div>
-      <br clear="all">
 
       <h3>Source</h3>
 

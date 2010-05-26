@@ -35,6 +35,7 @@ force.node.add(pv.Dot)
     .size(function(d) (d.linkDegree + 4) * Math.pow(this.scale, -1.5))
     .fillStyle(function(d) d.fix ? "brown" : colors(d.group))
     .strokeStyle(function() this.fillStyle().darker())
+    .lineWidth(1)
     .title(function(d) d.nodeName)
     .event("mousedown", pv.Behavior.drag())
     .event("drag", force);
