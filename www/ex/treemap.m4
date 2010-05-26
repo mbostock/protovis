@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - Treemap Layout</title>
+    <title>Protovis - Treemaps</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
@@ -39,25 +39,29 @@
     </div>
 
     <div class="body">
-      <h1>Treemap Layout</h1>
+      <h1>Treemaps</h1>
 
-      <iframe style="height:730px;" src="treemap-embed.html"></iframe>
+      <iframe style="height:630px;" src="treemap-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="treemap-full.html" target="_blank">View full screen.</a>
 
-      <p>Protovis has built-in support for standard layout algorithms, such as
-      <a href="http://protovis-js.googlecode.com/svn/trunk/jsdoc/symbols/pv.Layout.treemap.html">squarified
-      treemaps</a>, used here to show the various ActionScript classes of
-      the <a href="http://flare.prefuse.org">Flare</a> visualization toolkit.
-      The color of each cell corresponds to the package, while the area encodes
-      the size of the source code in bytes.
+      <p>Introduced by <a href="http://www.cs.umd.edu/hcil/treemap-history/">Ben
+      Shneiderman</a> in 1991, a treemap recursively subdivides area into
+      rectangles. As with adjacency diagrams, the size of any node in the tree
+      is quickly revealed. This example uses color to encode different packages
+      of the <a href="http://flare.prefuse.org">Flare</a> visualization toolkit,
+      and area to encode file size. &ldquo;Squarified&rdquo; treemaps use
+      approximately square rectangles, which offer better readability and size
+      estimation than naive &ldquo;slice-and-dice&rdquo; subdivision. Fancier
+      algorithms such as <a
+      href="http://portal.acm.org/citation.cfm?id=1056018.1056041">Voronoi</a>
+      and <a
+      href="http://www.research.ibm.com/visual/papers/158-wattenberg-final3.pdf">jigsaw</a>
+      treemaps also exist but are less common.
 
-      <p>This example is interactive! Using the search box beneath the treemap,
-      start typing the name of any class. Classes that do not match the search
-      query will fade out, and the totals in the top-right corner will be
-      updated. You can also click on any cell to jump directly to the source
-      file.
+      <p>Interact with this example by using the search box to filter classes by
+      name.
 
       <blockquote style="font-size:13px;">
         Next: <a href="arc.html">Arc Diagrams</a>

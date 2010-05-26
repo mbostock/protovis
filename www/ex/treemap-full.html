@@ -1,129 +1,96 @@
 <html>
   <head>
-    <title>Flare Treemap</title>
-    <link rel="stylesheet" type="text/css" href="ex.css"/>
+    <title>Treemap</title>
+    <link rel="stylesheet" type="text/css" href="ex.css?3.2"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
     <script type="text/javascript" src="flare.js"></script>
     <style type="text/css">
-      body {
-        background: #222;
-        color: #eee;
-      }
-      #fig {
-        width: 860px;
-      }
-      #footer {
-        font: 24pt helvetica neue;
-        color: #666;
-      }
-      input {
-        font: 24pt helvetica neue;
-        color: #eee;
-        background: none;
-        border: none;
-        outline: 0;
-      }
-      #title {
-        float: right;
-        text-align: right;
-      }
+
+#fig {
+  width: 860px;
+}
+
+#footer {
+  font: 24pt helvetica neue;
+  color: #666;
+}
+
+input {
+  font: 24pt helvetica neue;
+  background: none;
+  border: none;
+  outline: 0;
+}
+
+#title {
+  float: right;
+  text-align: right;
+}
+
     </style>
   </head>
   <body><div id="center"><div id="fig">
-    <input id="sq" name="mode" type="radio" onclick="mode='squarify'; resetAndRender()" checked
-    ><label for="sq">Squarify</label>
-    <input id="sd" name="mode" type="radio" onclick="mode='slice-and-dice'; resetAndRender()"
-    ><label for="sd">Slice-and-Dice</label>
-    <input id="so" name="mode" type="radio" onclick="mode='slice'; resetAndRender()"
-    ><label for="so">Slice only</label>
-    <input id="do" name="mode" type="radio" onclick="mode='dice'; resetAndRender()"
-    ><label for="do">Dice only</label>
     <div id="title"></div>
     <script type="text/javascript+protovis">
 
-      var mode = "squarify";
+/** Computes the full class name of a given node. */
+function title(d) {
+  return d.parentNode ? (title(d.parentNode) + "." + d.nodeName) : d.nodeName;
+}
 
-      function resetAndRender() {
-        // This is needed to flush the layout cache
-        layout.reset();
-        layout.render();
-      }
-      
-      function onNodeClick(node) {
-        var path = node.nodeName;
-        var parentNode = node.parentNode;
-        while(parentNode) {
-          path = parentNode.nodeName + "/" + path;
-          parentNode = parentNode.parentNode;
-        }
-        top.location = "http://svn.prefuse.org/flare/trunk/flare/flare/src/" + path + (node.firstChild?"/":".as");
-      }
+var re = "",
+    color = pv.Colors.category19().by(function(d) d.parentNode.nodeName)
+    nodes = pv.dom(flare).root("flare").nodes();
 
-      function title(d) {
-        return d.parentNode ? (title(d.parentNode) + "." + d.nodeName) : d.nodeName;
-      }
+var vis = new pv.Panel()
+    .width(860)
+    .height(568);
 
-      /* Regular expression for text matching. */
-      var re = "";
+var treemap = vis.add(pv.Layout.Treemap)
+    .nodes(nodes)
+    .round(true);
 
-      /* Color scale. */
-      var color = pv.Colors.category19().by(function(d) d.parentNode.nodeName)
-          nodes = pv.dom(flare).root("flare").nodes();
+treemap.leaf.add(pv.Panel)
+    .fillStyle(function(d) color(d).alpha(title(d).match(re) ? 1 : .2))
+    .strokeStyle("#fff")
+    .lineWidth(1)
+    .antialias(false);
 
-      /* Root panel. */
-      var vis = new pv.Panel()
-          .width(860)
-          .height(668);
+treemap.label.add(pv.Label)
+    .textStyle(function(d) pv.rgb(0, 0, 0, title(d).match(re) ? 1 : .2));
 
-      /* Treemap! */
-      var layout = vis.add(pv.Layout.Treemap)
-          .nodes(nodes)
-          .round(true)
-          .mode(function() mode)
-          .order("descending");
+vis.render();
 
-      var bar = layout.leaf.add(pv.Bar)
-          .strokeStyle("#fff")
-          .lineWidth(1)
-          .fillStyle(function(n) color(n).alpha(title(n).match(re) ? 1 : .2))
-          .title(title)
-          .cursor("pointer")
-          .event("click", onNodeClick);
+/** Counts the number of matching classes, updating the title element. */
+function count() {
+  var classes = 0, bytes = 0, total = 0;
+  for (var i = 0; i < nodes.length; i++) {
+    var n = nodes[i];
+    if(n.firstChild) continue;
+    total += n.nodeValue;
+    if (title(n).match(re)) {
+      classes++;
+      bytes += n.nodeValue;
+    }
+  }
+  var percent = bytes / total * 100;
+  document.getElementById("title").innerHTML
+      = classes + " classes; "
+      + bytes + " bytes ("
+      + percent.toFixed(percent < 10) + "%).";
+}
 
-      layout.label.add(pv.Label)
-          .textStyle(function() "rgba(0,0,0," + bar.fillStyle().opacity + ")");
-       
-      /* Counts the number of matching classes. */
-      function count() {
-        var classes = 0, bytes = 0, total = 0;
-        for (var i = 0; i < nodes.length; i++) {
-          var n = nodes[i];
-          if(n.firstChild) continue;
-          total += n.nodeValue;
-          if (title(n).match(re)) {
-            classes++;
-            bytes += n.nodeValue;
-          }
-        }
-        var percent = bytes / total * 100;
-        document.getElementById("title").innerHTML
-            = classes + " classes; "
-            + bytes + " bytes ("
-            + percent.toFixed(percent < 10) + "%).";
-      }
+/** Updates the visualization and count when a new query is entered. */
+function update(query) {
+  if (query != re) {
+    re = new RegExp(query, "i");
+    count();
+    vis.render();
+  }
+}
 
-      /* Updates the visualization and count when a new query is entered. */
-      function update(query) {
-        if (query != re) {
-          re = new RegExp(query, "i");
-          count();
-          vis.render();
-        }
-      }
-
-      vis.render();
-      search.focus();
-      count();
+search.focus();
+count();
 
     </script>
     <div id="footer">
