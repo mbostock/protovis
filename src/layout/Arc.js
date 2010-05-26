@@ -54,7 +54,7 @@ pv.Layout.Arc = function() {
   this.link
       .data(function(p) {
           var s = p.sourceNode, t = p.targetNode;
-          return reverse != (directed || (s.index < t.index)) ? [s, t] : [t, s];
+          return reverse != (directed || (s.breadth < t.breadth)) ? [s, t] : [t, s];
         })
       .interpolate(function() { return interpolate; });
 };
@@ -72,15 +72,41 @@ pv.Layout.Arc.prototype.defaults = new pv.Layout.Arc()
     .extend(pv.Layout.Network.prototype.defaults)
     .orient("bottom");
 
+/**
+ * Specifies an optional sort function. The sort function follows the same
+ * comparator contract required by {@link pv.Dom.Node#sort}. Specifying a sort
+ * function provides an alternative to sort the nodes as they are specified by
+ * the <tt>nodes</tt> property; the main advantage of doing this is that the
+ * comparator function can access implicit fields populated by the network
+ * layout, such as the <tt>linkDegree</tt>.
+ *
+ * <p>Note that arc diagrams are particularly sensitive to order. This is
+ * referred to as the seriation problem, and many different techniques exist to
+ * find good node orders that emphasize clusters, such as spectral layout and
+ * simulated annealing.
+ *
+ * @param {function} f comparator function for nodes.
+ * @returns {pv.Layout.Arc} this.
+ */
+pv.Layout.Arc.prototype.sort = function(f) {
+  this.$sort = f;
+  return this;
+};
+
 /** @private Populates the x, y and angle attributes on the nodes. */
 pv.Layout.Arc.prototype.buildImplied = function(s) {
   if (pv.Layout.Network.prototype.buildImplied.call(this, s)) return;
 
   var nodes = s.nodes,
       orient = s.orient,
+      sort = this.$sort,
+      index = pv.range(nodes.length),
       w = s.width,
       h = s.height,
       r = Math.min(w, h) / 2;
+
+  /* Sort the nodes. */
+  if (sort) index.sort(function(a, b) { return sort(nodes[a], nodes[b]); });
 
   /** @private Returns the mid-angle, given the breadth. */
   function midAngle(b) {
@@ -117,10 +143,10 @@ pv.Layout.Arc.prototype.buildImplied = function(s) {
 
   /* Populate the x, y and mid-angle attributes. */
   for (var i = 0; i < nodes.length; i++) {
-    var breadth = (i + .5) / nodes.length, n = nodes[i];
-    n.x = x(breadth);
-    n.y = y(breadth);
-    n.midAngle = midAngle(breadth);
+    var n = nodes[index[i]], b = n.breadth = (i + .5) / nodes.length;
+    n.x = x(b);
+    n.y = y(b);
+    n.midAngle = midAngle(b);
   }
 };
 
