@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Dorling Cartogram</title>
+    <title>Protovis - Dorling Cartograms</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
@@ -39,25 +39,24 @@
     </div>
 
     <div class="body">
-      <h1>Dorling Cartogram</h1>
+      <h1>Dorling Cartograms</h1>
 
-      <iframe id="iframe" style="height:430px;" src="cartogram-full.html"></iframe>
+      <iframe id="iframe" style="height:510px;" src="cartogram-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
-      href="cartogram-interactive.html" target="_blank">View full screen.</a>
-      </p>
+      href="cartogram-full.html" target="_blank">View full screen.</a>
 
-      <p>Cartograms distort the shape of geographic regions so that the area directly encodes
-      a data variable. A common example is to redraw every country in the world sizing it
-      proportionally to population or GDP. Many types of cartograms have been created; in
-      this example we use the Dorling cartogram, which represents each geographic region with
-      a sized circle, placed so as to resemble the true geographic configuration.
-      <p>In the above cartogram the absolute number of obese people per state and percentage of
-      obese people, represented with circle area and color respectively. California dominates
-      the map due to its large population size, while color indicates that Mississippi and Alabama
-      are the states with the highest obesity rate.</p>
-      <p>A more complicated example that includes more interaction can be found
-      <a href="cartogram-interactive.html">here</a>.</p>
+      <p><i><a href="http://en.wikipedia.org/wiki/Cartogram">Cartograms</a></i>
+      distort the shape of geographic regions so that the area directly encodes
+      a data variable. A common example is to resize countries proportional to
+      population or GDP. Many types of cartograms have been created; in this
+      example we use the <i>Dorling cartogram</i>, which represents each
+      geographic region as non-overlapping circles.
+
+      <p>This example encodes the number of obese people per state as area, and
+      the percentage of obese people as color. California dominates the map due
+      to its large population, while color indicates that Mississippi and
+      Alabama have the highest obesity rate.
 
       <blockquote style="font-size:13px;">
         Next: <a href="projection.html">Map Projections</a>

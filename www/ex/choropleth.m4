@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Choropleth Maps</title>
+    <title>Protovis - Choropleth Maps</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
