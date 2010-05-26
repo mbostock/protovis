@@ -1,49 +1,43 @@
 <html>
   <head>
-    <title>Circle Packing Layout</title>
+    <title>Circle Packing</title>
     <link type="text/css" rel="stylesheet" href="ex.css?3.2"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
     <script type="text/javascript" src="flare.js"></script>
     <style type="text/css">
-      #fig {
-        width: 800px;
-        height: 800px;
-      }
+
+#fig {
+  width: 800px;
+  height: 800px;
+}
+
     </style>
   </head>
   <body><div id="center"><div id="fig">
     <script type="text/javascript+protovis">
 
-      function onNodeClick(node) {
-        var path = node.nodeName;
-        var parentNode = node.parentNode;
-        while(parentNode) {
-          path = parentNode.nodeName + "/" + path;
-          parentNode = parentNode.parentNode;
-        }
-        top.location = "http://svn.prefuse.org/flare/trunk/flare/flare/src/" + path + (node.firstChild?"/":".as");
-      }
-      
-      var vis = new pv.Panel()
-          .width(796)
-          .height(796)
-          .margin(2);
+/* For pretty number formatting. */
+var format = pv.Format.number();
 
-      var layout = vis.add(pv.Layout.Pack)
-          .nodes(pv.dom(flare).root("flare").nodes())
-          .size(function(d) d.nodeValue)
+var vis = new pv.Panel()
+    .width(796)
+    .height(796)
+    .margin(2);
 
-      layout.node.add(pv.Dot)
-          .fillStyle(function(d) d.firstChild ? "rgba(31, 119, 180, .25)" : "#ff7f0e")
-          .title(function t(d) d.parentNode ? (t(d.parentNode) + "." + d.nodeName) : d.nodeName)
-          .cursor("pointer")
-          .event("click", onNodeClick);
+var pack = vis.add(pv.Layout.Pack)
+    .nodes(pv.dom(flare).root("flare").nodes())
+    .size(function(d) d.nodeValue);
 
-      layout.label.add(pv.Label)
-          .visible(function(d) !d.firstChild)
-          .text(function(d) d.nodeName.substring(0,Math.floor(d.nodeValue/1600)));
+pack.node.add(pv.Dot)
+    .fillStyle(function(d) d.firstChild ? "rgba(31, 119, 180, .25)" : "#ff7f0e")
+    .title(function(d) d.nodeName + (d.firstChild ? "" : ": " + format(d.nodeValue)))
+    .lineWidth(1);
 
-      vis.render();
+pack.label.add(pv.Label)
+    .visible(function(d) !d.firstChild)
+    .text(function(d) d.nodeName.substring(0, Math.sqrt(d.nodeValue) / 20));
+
+vis.render();
 
     </script>
   </div></div></body>

@@ -44,14 +44,18 @@
       <iframe style="height:800px;" src="pack-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
-      href="circle-pack-full.html" target="_blank">View full screen.</a>
+      href="pack-full.html" target="_blank">View full screen.</a>
 
-      <p>The circle packing layout represents teh node leaves of a tree as circles
-      whose size is proportional to the value of the node and then recursively packs
-      these circles into each other to represent the tree. Here we show the various ActionScript
-      classes of the <a href="http://flare.prefuse.org">Flare</a> visualization
-      toolkit. The color of each cell corresponds to the package, while the area of the nodes
-      encodes the size of the source code in bytes.
+      <p>Enclosure diagrams are also space-filling, using <i>containment</i>
+      rather than adjacency to represent the hierarchy. As with adjacency
+      diagrams, the size of any node in the tree is quickly revealed. Although
+      circle packing does not use space as efficiently as a <a
+      href="treemap.html">treemap</a>, the &ldquo;wasted&rdquo; space
+      effectively reveals the hierarchy. At the same time, node sizes can be
+      rapidly compared using area judgments.
+
+      <p>By flattening the hierarchy, the <i>pack</i> layout can also be used to
+      create <a href="bubble.html">bubble charts</a>.
 
       <blockquote style="font-size:13px;">
         Next: <a href="tree.html">Node-Link Tree</a>
