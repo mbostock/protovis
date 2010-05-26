@@ -58,7 +58,8 @@
 
       <p>This style of chart is modeled after R&rsquo;s <a
       href="http://code.google.com/p/protovis-js/wiki/PairsPlot"><tt>pairs</tt>
-      plot</a>.
+      plot</a>. This example is extended to demonstrate <a
+      href="brush.html">brushing + linking</a>.
 
       <blockquote style="font-size:13px;">
         Next: <a href="barley.html">Becker&rsquo;s Barley</a>
