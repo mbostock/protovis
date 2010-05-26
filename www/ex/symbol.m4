@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Graduated Symbol Map</title>
+    <title>Symbol Maps</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
@@ -39,26 +39,25 @@
     </div>
 
     <div class="body">
-      <h1>Graduated Symbol Map</h1>
+      <h1>Symbol Maps</h1>
 
-      <iframe id="iframe" style="height:400px;" src="symbol-full.html"></iframe>
+      <iframe id="iframe" style="height:460px;" src="symbol-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
-      href="symbol-interactive.html" target="_blank">View full screen.</a>
+      href="symbol-full.html" target="_blank">View full screen.</a>
       </p>
 
-      <p>An alternative to <a href="choropleth.html">choropleth maps</a> is the graduated
-      symbol map, which instead places symbols over an underlying map. This approach avoids
-      confounding geographic area with data values and allows for more dimensions to be
-      visualized (e.g., symbol size, shape, and color). In addition to simple shapes like
-      circles, graduated symbol maps may use more complicated glyphs such as pie charts.
+      <p>An alternative to the <a href="choropleth.html">choropleth map</a> is
+      the <i>graduated symbol map</i>, which places symbols over an underlying
+      map.  This approach avoids confounding geographic area with data values
+      and allows for more dimensions to be visualized (<i>e.g.</i>, symbol size,
+      shape, and color). In addition to simple shapes like circles, graduated
+      symbol maps may use more complicated glyphs such as <a href="pie.html">pie
+      charts</a>.
 
-      <p>In the example above the total circle size represents a state's population, and
-      each slice indicates the proportion of people with a specific BMI rating. The area of
-      the entire circle corresponds to the overall population of the state.</p>
-
-      <p>A more complicated example that includes more interaction can be found
-      <a href="symbol-interactive.html">here</a>.</p>
+      <p>In this example, the total circle size represents a state&rsquo;s
+      population, and each slice indicates the proportion of people within a
+      given BMI category.
 
       <blockquote style="font-size:13px;">
         Next: <a href="cartogram.html">Dorling Cartogram</a>
