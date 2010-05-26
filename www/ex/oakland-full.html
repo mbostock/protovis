@@ -5,76 +5,88 @@
     <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=false&amp;key=ABQIAAAAYZ9eMYFYusxZt-1RKXLI7RQGpXqX26B62_lhdlIUxPTUm0CSORRw1BkwdprB1xQ3Xa8KfbgKAacxlw" type="text/javascript"></script>
     <script src="oakland.js" type="text/javascript"></script>
     <style type="text/css">
-      body { margin: 0; }
-      #map { height: 100%; }
-      #map .canvas { position: absolute; }
+
+body {
+  margin: 0;
+}
+
+#map {
+  height: 100%;
+}
+
+#map .canvas {
+  position: absolute;
+}
+
     </style>
     <script type="text/javascript+protovis">
 
-      var colors = {
-        violent: { light: "rgba(217, 0, 0, .8)", dark: "rgb(163, 0, 0)" },
-        property: { light: "rgba(35, 150, 94, .8)", dark: "rgb(26, 112, 70)" },
-        quality: { light: "rgba(52, 137, 186, .8)", dark: "rgb(39, 103, 139)" },
-      };
+var colors = {
+  violent: { light: "rgba(217, 0, 0, .8)", dark: "rgb(163, 0, 0)" },
+  property: { light: "rgba(35, 150, 94, .8)", dark: "rgb(26, 112, 70)" },
+  quality: { light: "rgba(52, 137, 186, .8)", dark: "rgb(39, 103, 139)" },
+};
 
-      codes.forEach(function(x) colors[x.code] = colors[x.category]);
+codes.forEach(function(x) colors[x.code] = colors[x.category]);
 
-      function Canvas(crimes) {
-        this.crimes = crimes;
-      }
+function Canvas(crimes) {
+  this.crimes = crimes;
+}
 
-      Canvas.prototype = pv.extend(GOverlay);
+Canvas.prototype = pv.extend(GOverlay);
 
-      Canvas.prototype.initialize = function(map) {
-        this.map = map;
-        this.canvas = document.createElement("div");
-        this.canvas.setAttribute("class", "canvas");
-        map.getPane(G_MAP_MAP_PANE).parentNode.appendChild(this.canvas);
-      };
+Canvas.prototype.initialize = function(map) {
+  this.map = map;
+  this.canvas = document.createElement("div");
+  this.canvas.setAttribute("class", "canvas");
+  map.getPane(G_MAP_MAP_PANE).parentNode.appendChild(this.canvas);
+};
 
-      Canvas.prototype.redraw = function(force) {
-        if (!force) return;
-        var c = this.canvas, m = this.map, r = 20;
+Canvas.prototype.redraw = function(force) {
+  if (!force) return;
+  var c = this.canvas, m = this.map, r = 20;
 
-        /* Get the pixel locations of the crimes. */
-        var pixels = this.crimes.map(function(d) {
-            return m.fromLatLngToDivPixel(new GLatLng(d.lat, d.lon));
-          });
+  /* Get the pixel locations of the crimes. */
+  var pixels = this.crimes.map(function(d) {
+      return m.fromLatLngToDivPixel(new GLatLng(d.lat, d.lon));
+    });
 
-        /* Update the canvas bounds. Note: may be large. */
-        function x(p) p.x; function y(p) p.y;
-        var x = { min: pv.min(pixels, x) - r, max: pv.max(pixels, x) + r };
-        var y = { min: pv.min(pixels, y) - r, max: pv.max(pixels, y) + r };
-        c.style.width = (x.max - x.min) + "px";
-        c.style.height = (y.max - y.min) + "px";
-        c.style.left = x.min + "px";
-        c.style.top = y.min + "px";
+  /* Update the canvas bounds. Note: may be large. */
+  function x(p) p.x; function y(p) p.y;
+  var x = { min: pv.min(pixels, x) - r, max: pv.max(pixels, x) + r };
+  var y = { min: pv.min(pixels, y) - r, max: pv.max(pixels, y) + r };
+  c.style.width = (x.max - x.min) + "px";
+  c.style.height = (y.max - y.min) + "px";
+  c.style.left = x.min + "px";
+  c.style.top = y.min + "px";
 
-        /* Render the visualization. */
-        new pv.Panel().canvas(c)
-            .left(-x.min).top(-y.min)
-          .add(pv.Panel)
-            .data(this.crimes)
-          .add(pv.Dot)
-            .left(function() pixels[this.parent.index].x)
-            .top(function() pixels[this.parent.index].y)
-            .strokeStyle(function(x, d) colors[d.code].dark)
-            .fillStyle(function(x, d) colors[d.code].light)
-            .size(140)
-          .anchor("center").add(pv.Label)
-            .textStyle("white")
-            .text(function(x, d) d.code)
-          .root.render();
-      };
+  /* Render the visualization. */
+  new pv.Panel()
+      .canvas(c)
+      .left(-x.min)
+      .top(-y.min)
+    .add(pv.Panel)
+      .data(this.crimes)
+    .add(pv.Dot)
+      .left(function() pixels[this.parent.index].x)
+      .top(function() pixels[this.parent.index].y)
+      .strokeStyle(function(x, d) colors[d.code].dark)
+      .fillStyle(function(x, d) colors[d.code].light)
+      .size(140)
+    .anchor("center").add(pv.Label)
+      .textStyle("white")
+      .text(function(x, d) d.code)
+    .root.render();
+};
 
-      /* Restrict minimum and maximum zoom levels. */
-      G_NORMAL_MAP.getMinimumResolution = function() 11;
-      G_NORMAL_MAP.getMaximumResolution = function() 14;
+/* Restrict minimum and maximum zoom levels. */
+G_NORMAL_MAP.getMinimumResolution = function() 11;
+G_NORMAL_MAP.getMaximumResolution = function() 14;
 
-      var map = new GMap2(document.getElementById("map"));
-      map.setCenter(new GLatLng(37.78, -122.22), 12);
-      map.setUI(map.getDefaultUI());
-      map.addOverlay(new Canvas(crimes));
+var map = new GMap2(document.getElementById("map"));
+map.setCenter(new GLatLng(37.78, -122.22), 12);
+map.setUI(map.getDefaultUI());
+map.addOverlay(new Canvas(crimes));
 
     </script>
   </head>

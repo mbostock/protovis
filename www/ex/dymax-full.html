@@ -2,74 +2,77 @@
   <head>
     <title>Dymaxion map</title>
     <link type="text/css" rel="stylesheet" href="ex.css?3.2"/>
-    <script type="text/javascript" src="dymax.js"></script>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
-    <script type="text/javascript" src="countries.js"></script>   
+    <script type="text/javascript" src="dymax.js"></script>
+    <script type="text/javascript" src="countries.js"></script>
     <style type="text/css">
-      #fig {
-        width: 860px;
-        height: 516px;
-      }
+
+#fig {
+  width: 860px;
+  height: 400px;
+}
+
     </style>
   </head>
   <body><div id="center"><div id="fig">
     <script type="text/javascript+protovis">
-  
-      var xMap = function(lon, lat) {
-        return convert_s_t_p_cache(lon, lat).x * 150;
-      };
-      var yMap = function(lon, lat) {
-        return convert_s_t_p_cache(lon, lat).y * 150;
-      };
 
-      var xMapI = function(i, t) {
-        return convert_i_t_p(i, t).x * 150;
-      };
-      var yMapI = function(i, t) {
-        return convert_i_t_p(i, t).y * 150;
-      };
+var xMap = function(lon, lat) {
+  return convert_s_t_p_cache(lon, lat).x * 150;
+};
+var yMap = function(lon, lat) {
+  return convert_s_t_p_cache(lon, lat).y * 150;
+};
 
-      // Generate a random value to visualize (for now).
-      countries.forEach(function(c) c.value = Math.random());
+var xMapI = function(i, t) {
+  return convert_i_t_p(i, t).x * 150;
+};
+var yMapI = function(i, t) {
+  return convert_i_t_p(i, t).y * 150;
+};
 
-      // Note: the aspect ratio is 5/3 and can be rescaled.
-      var w = 860, h = 516;
+// Generate a random value to visualize (for now).
+countries.forEach(function(c) c.value = Math.random());
 
-      var vis = new pv.Panel()
-          .width(w)
-          .height(h);
+var w = 860, h = 400;
 
-      var country = vis.add(pv.Panel)
-          .data(countries);
+var vis = new pv.Panel()
+    .width(w)
+    .height(h);
 
-      country.add(pv.Panel)
-          .data(function(c) c.borders)
-        .add(pv.Line)
-          .data(function(l) l)
-          .left(function(d) xMap(d.lng, d.lat))
-          .bottom(function(d) yMap(d.lng, d.lat))
-          .lineWidth(.5)
-          .strokeStyle("white")
-          .fillStyle(pv.ramp("steelblue", "lightgreen").by(function(d,l,c) c.value))
-          .title(function(d,l,c) c.name)
-          .event("mousedown", function(d,l,c) onGameClick(c));
+var country = vis.add(pv.Panel)
+    .data(countries);
 
-      vis.add(pv.Panel)
-          .data([
-            [1,2,3,1],[1,3,4,1],[1,4,5,1],[1,5,6,1],[1,2,6,1],
-            [2,3,8,2],[8,3,9,8],[9,3,4,9],[10,9,4,10],[5,10,4,5],
-            [5,11,10,5],[5,6,11,5],[11,6,7,11],[7,6,2,7],[8,7,2,8],
-            [12,9,10,12],[12,11,10,12],[12,11,7,12],[12,8,7,12]
-          ]) // exclude [12,9,8,12] - the cut away triangle
-        .add(pv.Line)
-          .data(function(f) f)
-          .left(function(f, t) xMapI(f, t))
-          .bottom(function(f, t) yMapI(f, t))
-          .strokeStyle("#bbb")
-          .lineWidth(.5);
+country.add(pv.Panel)
+    .data(function(c) c.borders)
+  .add(pv.Line)
+    .data(function(l) l)
+    .left(function(d) xMap(d.lng, d.lat))
+    .bottom(function(d) yMap(d.lng, d.lat))
+    .antialias(false)
+    .lineWidth(1)
+    .strokeStyle("#fff")
+    .fillStyle(pv.ramp("steelblue", "lightgreen").by(function(d,l,c) c.value))
+    .title(function(d,l,c) c.name)
+    .event("mousedown", function(d,l,c) onGameClick(c));
 
-      vis.render();
-    
+vis.add(pv.Panel)
+    .data([
+      [1,2,3,1],[1,3,4,1],[1,4,5,1],[1,5,6,1],[1,2,6,1],
+      [2,3,8,2],[8,3,9,8],[9,3,4,9],[10,9,4,10],[5,10,4,5],
+      [5,11,10,5],[5,6,11,5],[11,6,7,11],[7,6,2,7],[8,7,2,8],
+      [12,9,10,12],[12,11,10,12],[12,11,7,12],[12,8,7,12]
+    ]) // exclude [12,9,8,12] - the cut away triangle
+  .add(pv.Line)
+    .data(function(f) f)
+    .left(function(f, t) xMapI(f, t))
+    .bottom(function(f, t) yMapI(f, t))
+    .strokeStyle("#ccc")
+    .lineWidth(1)
+    .antialias(false);
+
+vis.render();
+
     </script>
   </div></div></body>
 </html>

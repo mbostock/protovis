@@ -41,15 +41,17 @@
     <div class="body">
       <h1>Oakland Crimespotting</h1>
 
-      <iframe style="border:solid 1px #aaa;height:465px;" src="oakland-full.html"></iframe>
-      <p><img src="popout.png" width="16" height="16"
-      style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
-      href="oakland-big.html" target="_blank">View full screen.</a>
+      <iframe style="border:solid 1px #aaa;height:465px;"
+      src="oakland-full.html"></iframe> <p><img src="popout.png" width="16"
+      height="16" style="padding:0;vertical-align:top;"> <a
+      style="font-size:13px;" href="oakland-big.html" target="_blank">View full
+      screen.</a>
 
-      <p>This is a simplified recreation
-      of <a href="http://oakland.crimespotting.org">Oakland Crimespotting</a> in
-      Protovis using the Google Maps API. The original was designed and built by
-      Stamen Design&rsquo;s Michal Migurski, Tom Carden, and Eric Rodenbeck. Each
+      <p>This is a simplified recreation of <a
+      href="http://oakland.crimespotting.org">Oakland Crimespotting</a> using
+      the <a href="http://code.google.com/apis/maps/">Google Maps API</a>. The
+      original was designed and built by <a href="http://stamen.com/">Stamen
+      Design</a>&rsquo;s Michal Migurski, Tom Carden, and Eric Rodenbeck. Each
       colored circle corresponds to a crime; the color encodes the category of
       crime (such as <i>violent</i> or <i>quality of life</i>).
 

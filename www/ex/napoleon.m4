@@ -47,12 +47,13 @@
       href="napoleon-full.html" target="_blank">View full screen.</a>
 
       <p><a href="http://en.wikipedia.org/wiki/Charles_Minard">Charles
-      Minard</a>&rsquo;s depiction of Napleon&rsquo;s disastrous march to Moscow, in the
-      winter of 1812, is heralded by
-      <a href="http://www.edwardtufte.com/tufte/posters">Edward Tufte</a> as
-      "probably the best statistical graphic ever drawn." Our adaption includes
-      interactivity using the <a href="http://code.google.com/apis/maps/">Google
-      Maps API</a>.
+      Minard</a>&rsquo;s depiction of Napleon&rsquo;s disastrous march to
+      Moscow, in the winter of 1812, is heralded by <a
+      href="http://www.edwardtufte.com/tufte/posters">Edward Tufte</a> as
+      "probably the best statistical graphic ever drawn." Our adaption of this
+      famous <a href="http://en.wikipedia.org/wiki/Flow_map">flow map</a>
+      includes interactivity using the <a
+      href="http://code.google.com/apis/maps/">Google Maps API</a>.
 
       <blockquote style="font-size:13px;">
         Next: <a href="oakland.html">Oakland Crimespotting</a>
