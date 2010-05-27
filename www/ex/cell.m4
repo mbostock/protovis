@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - Belousov&ndash;Zhabotinsky reaction</title>
+    <title>Protovis - Automaton Explorer</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
@@ -33,42 +33,41 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="cell.html">&laquo; Previous</a> /
-        <a href="nbody.html">Next &raquo;</a>
+        <a href="life.html">&laquo; Previous</a> /
+        <a href="bzr.html">Next &raquo;</a>
       </div>
     </div>
 
     <div class="body">
-      <h1>Belousov&ndash;Zhabotinsky reaction</h1>
+      <h1>Automaton Explorer</h1>
 
-      <div style="float:left;width:430px;">
-      <iframe style="border:solid 4px #ccc;width:400px;height:400px;" src="bzr-full.html"></iframe>
+      <iframe id="iframe" style="height:440px;" src="cell-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
-      href="bzr-full.html" target="_blank">View full screen.</a>
-      </div>
+      href="cell-full.html" target="_blank">View full screen.</a>
 
-      <div style="float:left;width:450px;">
-      A <a href="http://en.wikipedia.org/wiki/Belousov-Zhabotinsky_reaction"
-      >Belousov&ndash;Zhabotinsky reaction</a> is a nonlinear chemical oscillator.
-      This simulation is based on the work of <a
-      href="http://www.nitorijournal.org/?p=2109">Nitori Kawashiro</a>, and uses
-      a two-dimensional cellular automaton similar to Conway&rsquo;s Game of
-      Life.
+      <p>From <a href="http://mathworld.wolfram.com/CellularAutomaton.html">MathWorld</a>:
+      "A cellular automaton is a collection of 'colored' cells on a grid of
+      specified shape that evolves through a number of discrete time steps
+      according to a set of rules based on the states of neighboring cells." This
+      example explores binary, nearest-neighbor, one-dimensional automata, of
+      which there are 256 (2<sup>8</sup>) possible rules.
+
+      <p>The eight possible outcomes for the current rule are shown across the top;
+      click to toggle the selected bit or drag the slider to imediatly jum to the desired
+      rule <b>(WARNING: Moving the slider will produce flashing pasterns)</b>.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="nbody.html">N-Body Simulation</a>
+        Next: <a href="bzr.html">Belousov-Zhabotinsky reaction</a>
       </blockquote>
-      </div>
-      <br clear="all">
 
       <h3>Source</h3>
 
-m4_include(`bzr-full.html.html')
+m4_include(`cell-full.html.html')
 
       <h3>Data</h3>
 
-m4_include(`bzr.js.html')
+m4_include(`cell.js.html')
 
     </div>
 
