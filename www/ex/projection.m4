@@ -46,10 +46,14 @@
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="projection-full.html" target="_blank">View full screen.</a>
 
-      <p>This population density map showcases the different projections available in
-      Protovis. Try selecting the different projections from the drop down box.</p>
-
-      <p>Map colors based on <a href="http://colorbrewer2.org/">www.ColorBrewer.org</a>, by Cynthia A. Brewer, Penn State.
+      <p>Although the <i>Mercator</i> projection is perhaps the most familiar,
+      many different <a href="http://en.wikipedia.org/wiki/Map_projection">map
+      projections</a> exist to map the Earth's spherical surface to a
+      two-dimensional image. Each projection introduces some type of distortion;
+      for different purposes, some distortions may be more desirable. This
+      example is another <a href="choropleth.html">choropleth map</a>, showing
+      population density map of the world's countries. Use the drop-down menu to
+      compare several projections supported by Protovis.
 
       <blockquote style="font-size:13px;">
         Next: <a href="heatmap.html">Heatmaps</a>
