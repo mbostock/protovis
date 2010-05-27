@@ -4,45 +4,40 @@
     <link type="text/css" rel="stylesheet" href="ex.css?3.2"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
     <style type="text/css">
-      #fig {
-        width: 800px;
-        height: 600px;
-      }
+
+#fig {
+  width: 900px;
+  height: 630px;
+}
+
+.header {
+  float: right;
+  padding-top: 5px;
+}
+
     </style>
   </head>
   <body><div id="center"><div id="fig">
-    Interpolate:
-    <select onchange="interpolate = this.value; vis.render();">
-      <option value="cardinal" selected>Cardinal</option>
-      <option value="monotone">Monotone</option>
-      <option value="basis">Basis</option>
-      <option value="linear">Linear</option>
-      <option value="step-before">Step (before)</option>
-      <option value="step-after">Step (after)</option>
-    </select>
-    &nbsp;
-    <input type="checkbox" onchange="segmented = this.checked; vis.render()">Segmented
-    &nbsp;
-    &nbsp;
-    (click anywhere to add a point, pres delete to remove the active point)
     <script type="text/javascript+protovis">
 
-var w = 766,
+var w = 896,
     h = 596,
     i = 3,
     interpolate = "cardinal",
     segmented = false;
 
 var points = pv.range(1, 5).map(function(i) ({
-        x: i * w / 5,
-        y: 50 + Math.random() * (h - 100)
-      }));
+  x: i * w / 5,
+  y: 50 + Math.random() * (h - 100)
+}));
 
 var vis = new pv.Panel()
     .width(w)
     .height(h)
-    .strokeStyle("#ccc")
     .fillStyle("#fff")
+    .strokeStyle("#ccc")
+    .lineWidth(4)
+    .antialias(false)
     .margin(2)
     .event("mousedown", function() (i = points.push(this.mouse()) - 1, this));
 
@@ -70,6 +65,7 @@ vis.add(pv.Dot)
 
 vis.render();
 
+pv.listen(window, "mousedown", function() self.focus());
 pv.listen(window, "keydown", function(e) {
   // code 8 is backspace, code 46 is delete
   if ((e.keyCode == 8 || e.keyCode == 46) && (i >= 0)) {
@@ -80,6 +76,20 @@ pv.listen(window, "keydown", function(e) {
 });
 
 self.focus();
+
     </script>
+    <div class="header">
+      <b>Interpolate:</b>
+      <select onchange="interpolate = this.value; vis.render();">
+        <option value="cardinal" selected>cardinal</option>
+        <option value="monotone">monotone</option>
+        <option value="basis">basis</option>
+        <option value="linear">linear</option>
+        <option value="step-before">step-before</option>
+        <option value="step-after">step-after</option>
+      </select>
+      <input id="segmented" type="checkbox" onchange="segmented = this.checked; vis.render()"
+      ><label for="segmented"><b>Segmented</b></label>
+    </div>
   </div></div></body>
 </html>
