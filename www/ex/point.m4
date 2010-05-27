@@ -34,7 +34,7 @@
       </div>
       <div class="section">
         <a href="tipsy.html">&laquo; Previous</a> /
-        <a href="dendrogram.html">Next &raquo;</a>
+        <a href="splines.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -63,8 +63,9 @@
       in the earlier <a href="minnesota.html">Minnesota Employment</a> example.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="dendrogram.html">Dendrograms</a>
+        Next: <a href="splines.html">Spline Editor</a>
       </blockquote>
+
       </div>
       <br clear="all">
 

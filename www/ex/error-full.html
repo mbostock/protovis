@@ -6,7 +6,7 @@
     <script type="text/javascript" src="error.js"></script>
     <style type="text/css">
       #fig {
-        width: 440px;
+        width: 840px;
         height: 440px;
       }
     </style>
@@ -14,9 +14,9 @@
   <body><div id="center"><div id="fig">
     <script type="text/javascript+protovis">
 
-      var w = 400,
+      var w = 800,
           h = 400,
-          x = pv.Scale.linear(0, 10).range(0, w),
+          x = pv.Scale.linear(0, 20).range(0, w),
           y = pv.Scale.linear(0, 10).range(0, h);
 
       var vis = new pv.Panel()
@@ -26,7 +26,7 @@
 
       /* Add the x-axis rules */
       vis.add(pv.Rule)
-        .data(x.ticks())
+        .data(x.ticks(20))
         .left(x)
         .strokeStyle(function() this.index ? "#ccc" : "#000")
        .anchor("bottom")
@@ -42,7 +42,7 @@
 
       /* Add a panel for each data point */
       var points = vis.add(pv.Panel)
-        .data(error_points)
+        .data(points)
         .left(function(d) x(d.x))
         .bottom(function(d) y(d.y));
 

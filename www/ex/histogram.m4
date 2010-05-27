@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - Box and Whisker</title>
+    <title>Protovis - Histogram</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
@@ -33,36 +33,40 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="qqplot.html">&laquo; Previous</a> /
-        <a href="histogram.html">Next &raquo;</a>
+        <a href="box-and-whisker.html">&laquo; Previous</a> /
+        <a href="error.html">Next &raquo;</a>
       </div>
     </div>
 
     <div class="body">
       <h1>Box and Whisker</h1>
 
-      <iframe id="iframe" style="height:440px;" src="box-and-whisker-full.html"></iframe>
+      <div style="float:left;width:360px;">
+      <iframe id="iframe" style="height:360px;" src="histogram-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
-      href="box-and-whisker-full.html" target="_blank">View full screen.</a>
+      href="histogram-full.html" target="_blank">View full screen.</a>
+      </div>
 
-      <p>A <a href="http://en.wikipedia.org/wiki/Box_plot">Box and Whisker</a> diagram is often
-      used to represent the results of different experiments. The data for each experiment is
-      summarized by displaying a five-number summary: the smallest value, lower quartile, median,
-      upper quartile, and largest value. Such display allows the viewer to easily recognize
-      significant differences (or lack thereof) between the outcomes of the experiments.
+      <p>Histograms are a common way of graphically displaying a frequency distribution.
+      the data is binned and then bars are drawn with variables heights (and sometimes
+      widths, if the bin sizes are not uniform) so that the area of the bar represents
+      the number of results that fall into its bin.
+
+      <p>Histograms are often used to show the color distribution in a photograph and
+      in quality control.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="histogram.html">Histogram</a>
+        Next: <a href="error.html">2D Errors</a>
       </blockquote>
 
       <h3>Source</h3>
 
-m4_include(`box-and-whisker-full.html.html')
+m4_include(`histogram-full.html.html')
 
       <h3>Data</h3>
 
-m4_include(`box-and-whisker.js.html')
+m4_include(`histogram.js.html')
 
     </div>
 
