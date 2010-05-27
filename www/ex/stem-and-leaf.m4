@@ -34,7 +34,7 @@
       </div>
       <div class="section">
         <a href="caltrain.html">&laquo; Previous</a> /
-        <a href="index-chart.html">Next &raquo;</a>
+        <a href="sort.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -66,7 +66,7 @@
       activity.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="index-chart.html">Index Charts</a>
+        Next: <a href="sort.html">Merge Sort</a>
       </blockquote>
 
       </div>

@@ -34,7 +34,7 @@
       </div>
       <div class="section">
         <a href="point.html">&laquo; Previous</a> /
-        <a href="dendrogram.html">Next &raquo;</a>
+        <a href="bubbles.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -53,7 +53,7 @@
       DELETE key to delete the selected control point.</p>
 
       <blockquote style="font-size:13px;">
-        Next: <a href="dendrogram.html">Dendrograms</a>
+        Next: <a href="bubbles.html">Bubbles</a>
       </blockquote>
 
       <h3>Source</h3>

@@ -41,16 +41,27 @@
     <div class="body">
       <h1>Conway&rsquo;s Game of Life</h1>
 
-      <div style="float:left;width:610px;">
-      <iframe style="border:solid 4px #ccc;width:600px;height:600px;" src="life-full.html"></iframe>
+      <div style="float:left;width:300px;">
+      <iframe style="border:solid 4px #ccc;height:300px;" src="life-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="life-full.html" target="_blank">View full screen.</a>
       </div>
 
-      <div style="float:left;padding-left:30px;width:500px;">
-      John Conway devised this life-like cellular automaton in 1970. Here we
-      visualize the cells by directly specifying the pixel colors of an image.
+      <div style="float:left;padding-left:30px;width:570px;">
+      <i><a href="http://en.wikipedia.org/wiki/Conway's_Game_of_Life">Life</a
+      ></i> is a two-dimensional <a href="cell.html">cellular automaton</a>
+      devised by John Conway in 1970. Each cell is either alive or dead. At
+      each step, each cell can change states dependant on its eight immediate
+      neighbors: &ldquo;Any live cell with fewer than two live neighbors dies,
+      as if by underpopulation. Any live cell with more than three live
+      neighbors dies, as if by overcrowding. Any dead cell with exactly three
+      live neighbors becomes a live cell.&rdquo;
+
+      <p>Here we initialize the system with an unusual <i><a
+      href="http://en.wikipedia.org/wiki/Breeder_(CA)">breeder</a></i>: a
+      configuration of cells that generate secondary and tertiary patterns in
+      its wake. Click on the simulation to reset to a random state.
 
       <blockquote style="font-size:13px;">
         Next: <a href="cell.html">Automaton Explorer</a>
@@ -64,8 +75,9 @@ m4_include(`life-full.html.html')
 
       <h3>Data</h3>
 
-      Due to size, the data file is omitted from this
-      example. See <a href="life.js" target="_blank">life.js</a>.
+m4_include(`life.js.html')
+
+      <p>See also <a href="breeder.js" target="_blank">breeder.js</a>.
 
     </div>
 

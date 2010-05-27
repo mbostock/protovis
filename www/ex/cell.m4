@@ -46,17 +46,18 @@
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="cell-full.html" target="_blank">View full screen.</a>
 
-      <p>From <a href="http://mathworld.wolfram.com/CellularAutomaton.html">MathWorld</a>:
+      <p>From <a
+      href="http://mathworld.wolfram.com/CellularAutomaton.html">MathWorld</a>:
       &ldquo;A cellular automaton is a collection of &lsquo;colored&rsquo; cells
       on a grid of specified shape that evolves through a number of discrete
       time steps according to a set of rules based on the states of neighboring
-      cells.&rdquo; This example explores binary, nearest-neighbor, one-dimensional
-      automata, of which there are 256 (2<sup>8</sup>) possible rules.
+      cells.&rdquo; This example explores binary, nearest-neighbor,
+      one-dimensional automata, of which there are 256 (2<sup>8</sup>) possible
+      rules. The eight possible outcomes for the current rule are shown across
+      the top; click to toggle the selected bit or drag the slider to jump to
+      the desired rule.
 
-      <p>The eight possible outcomes for the current rule are shown across the
-      top; click to toggle the selected bit or drag the slider to jump to the
-      desired rule. (<b>WARNING:</b> Moving the slider will produce flashing
-      patterns!)
+      <p><i>WARNING:</i> Moving the slider may produce flashing patterns!
 
       <blockquote style="font-size:13px;">
         Next: <a href="bzr.html">Belousov-Zhabotinsky reaction</a>

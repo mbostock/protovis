@@ -34,7 +34,7 @@
       </div>
       <div class="section">
         <a href="bubbles.html">&laquo; Previous</a> /
-        <a href="clock.html">Next &raquo;</a>
+        <a href="dendrogram.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -89,7 +89,7 @@
       using <tt><a href="http://protovis-js.googlecode.com/svn/trunk/jsdoc/symbols/pv.Mark.html#mouse">pv.Mark#mouse</a></tt>.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="clock.html">PolarClock</a>
+        Next: <a href="dendrogram.html">Dendrograms</a>
       </blockquote>
       </div>
       <br clear="all">

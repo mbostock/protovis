@@ -5,21 +5,24 @@
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
     <script type="text/javascript" src="bzr.js"></script>
     <style type="text/css">
-      body {
-        background: #222;
-      }
-      #fig {
-          width: 400px;
-          height: 400px;
-      }
+
+body {
+  background: #222;
+}
+
+#fig {
+  width: 300px;
+  height: 300px;
+}
+
     </style>
   </head>
   <body><div id="center"><div id="fig">
     <script type="text/javascript+protovis">
 
 var vis = new pv.Panel()
-    .width(bzr.size * 4)
-    .height(bzr.size * 4);
+    .width(bzr.size * 3)
+    .height(bzr.size * 3);
 
 vis.add(pv.Image)
     .def("init", function() bzr.update())

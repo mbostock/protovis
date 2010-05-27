@@ -41,15 +41,15 @@
     <div class="body">
       <h1>Heatmaps</h1>
 
-      <div style="float:left;width:524px;">
-      <iframe style="height:368px;"
+      <div style="float:left;width:526px;">
+      <iframe style="height:370px;"
       src="heatmap-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="heatmap-full.html" target="_blank">View full screen.</a>
       </div>
 
-      <div style="float:left;padding-left:30px;width:346px;">
+      <div style="float:left;padding-left:30px;width:344px;">
       The R <tt>volcano</tt> data set gives topographic information for
       Auckland&rsquo;s Maungawhau volcano, also known as <a
       href="http://en.wikipedia.org/wiki/Mt_Eden">Mt. Eden</a>. Here we

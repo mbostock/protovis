@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - N-Body Simulation</title>
+    <title>Protovis - N-Body Problem</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
@@ -34,23 +34,24 @@
       </div>
       <div class="section">
         <a href="bzr.html">&laquo; Previous</a> /
-        <a href="sort.html">Next &raquo;</a>
+        <a href="clock.html">Next &raquo;</a>
       </div>
     </div>
 
     <div class="body">
-      <h1>N-Body Simulation</h1>
+      <h1><i>N</i>-Body Problem</h1>
 
-      <iframe id="iframe" style="height:600px;width:900px;" src="nbody-full.html"></iframe>
-      <p><img src="popout.png" width="16" height="16"
-      style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
-      href="nbody-full.html" target="_blank">View full screen.</a>
+      <iframe style="border:solid 4px #ccc;height:600px;"
+      src="nbody-full.html"></iframe> <p><img src="popout.png" width="16"
+      height="16" style="padding:0;vertical-align:top;"> <a
+      style="font-size:13px;" href="nbody-full.html" target="_blank">View full
+      screen.</a>
 
       <p>This multi-agent simulation shows the bunching behaviour that naturally arises from
       the simple agent definitions.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="sort.html">Merge Sort</a>
+        Next: <a href="clock.html">PolarClock</a>
       </blockquote>
 
       <h3>Source</h3>

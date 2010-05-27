@@ -6,9 +6,13 @@
     <script type="text/javascript" src="heatmap.js"></script>
     <style type="text/css">
 
+body {
+  background: #222;
+}
+
 #fig {
-  width: 524px;
-  height: 368px;
+  width: 526px;
+  height: 370px;
 }
 
     </style>
@@ -22,9 +26,9 @@ var w = heatmap[0].length,
 var vis = new pv.Panel()
     .width(w * 6)
     .height(h * 6)
-    .margin(1)
+    .margin(2)
     .strokeStyle("#aaa")
-    .lineWidth(1)
+    .lineWidth(4)
     .antialias(false);
 
 vis.add(pv.Image)

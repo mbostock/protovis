@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - Segmented Line</title>
+    <title>Protovis - Rainbow Worm</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
@@ -39,7 +39,7 @@
     </div>
 
     <div class="body">
-      <h1>Segmented Line</h1>
+      <h1>Rainbow Worm</h1>
 
       <iframe style="height:465px;" src="segmented-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"

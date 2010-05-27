@@ -33,7 +33,7 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="eyes.html">&laquo; Previous</a> /
+        <a href="nbody.html">&laquo; Previous</a> /
         <a href="segmented.html">Next &raquo;</a>
       </div>
     </div>
@@ -56,7 +56,7 @@
         angle and fill color.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="segmented.html">Segmented Line</a>
+        Next: <a href="segmented.html">Rainbow Worm</a>
       </blockquote>
       </div>
       <br clear="all">

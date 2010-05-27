@@ -33,8 +33,8 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="nbody.html">&laquo; Previous</a> /
-        <a href="bubbles.html">Next &raquo;</a>
+        <a href="stem-and-leaf.html">&laquo; Previous</a> /
+        <a href="index-chart.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -46,14 +46,17 @@
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="sort-full.html" target="_blank">View full screen.</a>
 
-      <p>7 sequential passes to sort a 200-element array in bottom-up merge
-      sort. Excellent sparkline-like graphics from Robert Sedgewick,
-      <i>Algorithms in C</i> (1998).
-
-      <p>For comparison have a look at the same visualization technique applied to <a href="qsort-full.html">QuickSort</a> (with breadth first traversal).
+      <p><a href="http://www.cs.princeton.edu/~rs/">Robert Sedgewick</a>
+      designed these elegant visualizations of a bottom-up merge sort algorithm,
+      published in <i>Algorithms in C</i> (1998). Seven sequential passes to
+      sort a 200-element array are shown, with array values encoded using
+      angle. The design, reminiscent of wind gusting over tall grasses, allows
+      rapid perception of sorted sub-arrays. For comparison, see the same
+      visualization applied to <a href="qsort-full.html"
+      target="_blank">quicksort</a>.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="bubbles.html">Bubbles</a>
+        Next: <a href="index-chart.html">Index Charts</a>
       </blockquote>
 
       <h3>Source</h3>
