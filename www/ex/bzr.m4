@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - Belousov-Zhabotinsky reaction</title>
+    <title>Protovis - Belousov&ndash;Zhabotinsky reaction</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
@@ -39,7 +39,7 @@
     </div>
 
     <div class="body">
-      <h1>Belousov-Zhabotinsky reaction</h1>
+      <h1>Belousov&ndash;Zhabotinsky reaction</h1>
 
       <div style="float:left;width:430px;">
       <iframe style="border:solid 4px #ccc;width:400px;height:400px;" src="bzr-full.html"></iframe>
@@ -50,7 +50,7 @@
 
       <div style="float:left;width:450px;">
       A <a href="http://en.wikipedia.org/wiki/Belousov-Zhabotinsky_reaction"
-      >Belousov-Zhabotinsky reaction</a> is a nonlinear chemical oscillator.
+      >Belousov&ndash;Zhabotinsky reaction</a> is a nonlinear chemical oscillator.
       This simulation is based on the work of <a
       href="http://www.nitorijournal.org/?p=2109">Nitori Kawashiro</a>, and uses
       a two-dimensional cellular automaton similar to Conway&rsquo;s Game of
