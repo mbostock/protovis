@@ -41,7 +41,7 @@
     <div class="body">
       <h1>Parallel Coordinates</h1>
 
-      <iframe id="iframe" style="height:480px;" src="cars-full.html"></iframe>
+      <iframe scrolling="no" style="height:480px;" src="cars-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="cars-full.html" target="_blank">View full screen.</a>

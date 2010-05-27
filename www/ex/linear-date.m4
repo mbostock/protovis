@@ -41,7 +41,7 @@
     <div class="body">
       <h1>Linear Date Scale</h1>
 
-      <iframe style="height:500px;" src="linear-date-full.html"></iframe>
+      <iframe scrolling="no" style="height:500px;" src="linear-date-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="linear-date-full.html" target="_blank">View full screen.</a>

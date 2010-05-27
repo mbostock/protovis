@@ -42,7 +42,7 @@
       <h1>Bullet Charts</h1>
 
       <div style="float:left;width:520px;">
-      <iframe style="height:350px;" src="bullet-full.html"></iframe>
+      <iframe scrolling="no" style="height:350px;" src="bullet-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="bullet-full.html" target="_blank">View full screen.</a>

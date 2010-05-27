@@ -42,7 +42,7 @@
       <h1>Pointing</h1>
 
       <div style="float:left;width:450px;">
-      <iframe style="height:425px;" src="point-full.html" scrolling="no"></iframe>
+      <iframe scrolling="no" style="height:425px;" src="point-full.html" scrolling="no"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="point-full.html" target="_blank">View full screen.</a>

@@ -41,7 +41,7 @@
     <div class="body">
       <h1>Force-Directed Layouts</h1>
 
-      <iframe style="border:solid 4px #ccc;height:450px;"
+      <iframe scrolling="no" style="border:solid 4px #ccc;height:450px;"
       src="force-full.html"></iframe> <p><img src="popout.png" width="16"
       height="16" style="padding:0;vertical-align:top;"> <a
       style="font-size:13px;" href="force-full.html" target="_blank">View full

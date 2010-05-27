@@ -41,7 +41,7 @@
     <div class="body">
       <h1>Streamgraphs</h1>
 
-      <iframe style="width:900px;height:400px;" src="stream-full.html"></iframe>
+      <iframe scrolling="no" style="width:900px;height:400px;" src="stream-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="stream-full.html" target="_blank">View full screen.</a>

@@ -42,7 +42,7 @@
       <h1>Pie &amp; Donut Charts</h1>
 
       <div style="float:left;width:400px;">
-      <iframe style="height:400px;" src="pie-full.html"></iframe>
+      <iframe scrolling="no" style="height:400px;" src="pie-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="pie-full.html" target="_blank">View full screen.</a>

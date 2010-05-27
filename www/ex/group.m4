@@ -42,7 +42,7 @@
       <h1>Grouped Charts</h1>
 
       <div style="float:left;width:430px;">
-      <iframe style="height:275px;" src="group-full.html"></iframe>
+      <iframe scrolling="no" style="height:275px;" src="group-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="group-full.html" target="_blank">View full screen.</a>

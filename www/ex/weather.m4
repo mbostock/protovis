@@ -42,7 +42,7 @@
       <h1>Seattle Weather</h1>
 
       <div style="float:left;width:200px;">
-      <iframe style="width:200px;height:250px;" src="weather-full.html"></iframe>
+      <iframe scrolling="no" style="width:200px;height:250px;" src="weather-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="weather-full.html" target="_blank">View full screen.</a>

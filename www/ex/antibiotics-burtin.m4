@@ -41,7 +41,7 @@
     <div class="body">
       <h1>Burtin&rsquo;s Antibiotics</h1>
 
-      <iframe style="border:solid 1px #aaa;height:800px;"
+      <iframe scrolling="no" style="border:solid 1px #aaa;height:800px;"
       src="antibiotics-burtin-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"

@@ -42,7 +42,7 @@
       <h1>Scatterplots</h1>
 
       <div style="float:left;width:430px;">
-      <iframe style="height:425px;" src="dot-full.html"></iframe>
+      <iframe scrolling="no" style="height:425px;" src="dot-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="dot-full.html" target="_blank">View full screen.</a>

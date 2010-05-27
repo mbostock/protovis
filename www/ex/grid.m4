@@ -41,7 +41,7 @@
     <div class="body">
       <h1>Grid Intensity</h1>
 
-      <iframe id="iframe" style="height:540px;" src="grid-full.html"></iframe>
+      <iframe scrolling="no" style="height:540px;" src="grid-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="grid-full.html" target="_blank">View full screen.</a>

@@ -41,7 +41,7 @@
     <div class="body">
       <h1>Box-and-Whisker Plots</h1>
 
-      <iframe style="height:340px;" src="box-and-whisker-full.html"></iframe>
+      <iframe scrolling="no" style="height:340px;" src="box-and-whisker-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="box-and-whisker-full.html" target="_blank">View full screen.</a>

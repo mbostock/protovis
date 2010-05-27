@@ -42,7 +42,7 @@
       <h1>Belousov&ndash;Zhabotinsky reaction</h1>
 
       <div style="float:left;width:300px;">
-      <iframe style="border:solid 4px #ccc;height:300px;" src="bzr-full.html"></iframe>
+      <iframe scrolling="no" style="border:solid 4px #ccc;height:300px;" src="bzr-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="bzr-full.html" target="_blank">View full screen.</a>

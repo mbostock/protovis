@@ -41,7 +41,7 @@
     <div class="body">
       <h1>Force Toggle Layout</h1>
 
-      <iframe style="height:400px;width:290px" src="force-toggle-embed.html"></iframe>
+      <iframe scrolling="no" style="height:400px;width:290px" src="force-toggle-embed.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="force-toggle-full.html" target="_blank">View full screen.</a>

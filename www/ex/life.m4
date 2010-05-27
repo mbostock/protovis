@@ -42,7 +42,7 @@
       <h1>Conway&rsquo;s Game of Life</h1>
 
       <div style="float:left;width:300px;">
-      <iframe style="border:solid 4px #ccc;height:300px;" src="life-full.html"></iframe>
+      <iframe scrolling="no" style="border:solid 4px #ccc;height:300px;" src="life-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="life-full.html" target="_blank">View full screen.</a>

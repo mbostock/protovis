@@ -42,7 +42,7 @@
       <h1>Stacked Charts</h1>
 
       <div style="float:left;width:430px;">
-      <iframe style="height:225px;" src="stack-full.html"></iframe>
+      <iframe scrolling="no" style="height:225px;" src="stack-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="stack-full.html" target="_blank">View full screen.</a>

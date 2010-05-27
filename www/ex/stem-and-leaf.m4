@@ -42,7 +42,7 @@
       <h1>Stemplots</h1>
 
       <div style="float:left;width:240px;">
-      <iframe style="height:460px;" src="stem-and-leaf-full.html"></iframe>
+      <iframe scrolling="no" style="height:460px;" src="stem-and-leaf-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="stem-and-leaf-full.html" target="_blank">View full screen.</a>

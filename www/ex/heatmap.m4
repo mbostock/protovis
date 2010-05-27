@@ -42,7 +42,7 @@
       <h1>Heatmaps</h1>
 
       <div style="float:left;width:526px;">
-      <iframe style="height:370px;"
+      <iframe scrolling="no" style="height:370px;"
       src="heatmap-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"

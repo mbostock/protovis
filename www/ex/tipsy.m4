@@ -42,7 +42,7 @@
       <h1>Tooltips</h1>
 
       <div style="float:left;width:440px;">
-      <iframe style="height:280px;" src="tipsy-full.html" scrolling="no"></iframe>
+      <iframe scrolling="no" style="height:280px;" src="tipsy-full.html" scrolling="no"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="tipsy-full.html" target="_blank">View full screen.</a>

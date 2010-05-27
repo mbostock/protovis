@@ -42,7 +42,7 @@
       <h1>Mean &amp; Deviation</h1>
 
       <div style="float:left;width:580px;">
-      <iframe style="height:740px;" src="nba-full.html"></iframe>
+      <iframe scrolling="no" style="height:740px;" src="nba-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="nba-full.html" target="_blank">View full screen.</a>
