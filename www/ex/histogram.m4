@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - Histogram</title>
+    <title>Protovis - Histograms</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
@@ -39,26 +39,33 @@
     </div>
 
     <div class="body">
-      <h1>Box and Whisker</h1>
+      <h1>Histograms</h1>
 
-      <div style="float:left;width:360px;">
-      <iframe id="iframe" style="height:360px;" src="histogram-full.html"></iframe>
+      <div style="float:left;width:460px;">
+      <iframe style="height:340px;" src="histogram-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="histogram-full.html" target="_blank">View full screen.</a>
       </div>
 
-      <p>Histograms are a common way of graphically displaying a frequency distribution.
-      the data is binned and then bars are drawn with variables heights (and sometimes
-      widths, if the bin sizes are not uniform) so that the area of the bar represents
-      the number of results that fall into its bin.
+      <div style="float:left;padding-left:30px;width:410px;">
+      A <i><a href="http://en.wikipedia.org/wiki/Histogram">histogram</a></i> is
+      a common graphical representation of a one-dimensional frequency
+      distribution. The height of each bar encodes the freqency of an interval,
+      such as the number of samples of <i>x</i> where 1.5 &le; <i>x</i> &lt;
+      1.6. A histogram may alternatively show probabilities instead: the
+      relative proportion of samples in each interval.
 
-      <p>Histograms are often used to show the color distribution in a photograph and
-      in quality control.
+      <p>The appearance of a histogram is often heavily affected by the number
+      of binning intervals, which can be easily specified in Protovis using the
+      <tt>bins</tt> method. Bins are typically the same width, but non-uniform
+      bins are also possible.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="error.html">2D Errors</a>
+        Next: <a href="error.html">Error Bars</a>
       </blockquote>
+      </div>
+      <br clear="all">
 
       <h3>Source</h3>
 
