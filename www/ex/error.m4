@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - 2D Errors</title>
+    <title>Protovis - Error Bars</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
@@ -39,16 +39,26 @@
     </div>
 
     <div class="body">
-      <h1>2D Errors</h1>
+      <h1>Error Bars</h1>
 
-      <iframe id="iframe" style="height:440px;" src="error-full.html"></iframe>
+      <iframe style="height:340px;" src="error-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="error-full.html" target="_blank">View full screen.</a>
 
-      <p>An experiment the measures the dependence between two physical quantities will
-      likely have some measure of error in both dimensions. The two dimensional error
-      whiskers are a convenient way of illustrating the observed measurements and their error.
+      <p>Empirical measurements typically have some degree of <i>error</i> or
+      <i>uncertainty</i>. For example, if we attempt to measure office
+      temperature, our thermometer may inaccurate, our reading of the
+      thermometer may be imprecise, and in either case, the temperature inside
+      the office is neither constant nor uniform due to air circulation and heat
+      exchange. Rather than report just a single reading, we might take many
+      readings and report the mean and error.
+
+      <p>To convey the uncertainty of reported measurements, error bars can be
+      used in one or two dimensions. Typically, error bars indicate the
+      statistical <i><a
+      href="http://en.wikipedia.org/wiki/Standard_error_(statistics)">standard
+      error</a></i>, using the standard deviation of the sample distribution.
 
       <blockquote style="font-size:13px;">
         Next: <a href="life.html">Conway's Game of Life</a>

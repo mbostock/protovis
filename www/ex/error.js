@@ -1,8 +1,8 @@
-var points = pv.range(18).map(function(p) {
+var points = pv.range(28).map(function(p) {
   return {
-    x:p+Math.random()+.5,
-    y:p/2+Math.random()+.5,
-    xerr:Math.random()*.9+.1,
-    yerr:Math.random()*.8+.1
+    x: p + Math.random() + .5,
+    y: 8 * Math.sqrt(p / 30) + Math.random() + .5,
+    xerr: Math.random() * .5 + .1,
+    yerr: Math.random() + .1
   };
 });
