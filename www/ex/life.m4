@@ -34,7 +34,7 @@
       </div>
       <div class="section">
         <a href="error.html">&laquo; Previous</a> /
-        <a href="bzr.html">Next &raquo;</a>
+        <a href="cell.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -53,7 +53,7 @@
       visualize the cells by directly specifying the pixel colors of an image.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="bzr.html">Belousov-Zhabotinsky reaction</a>
+        Next: <a href="cell.html">Automaton Explorer</a>
       </blockquote>
       </div>
       <br clear="all">

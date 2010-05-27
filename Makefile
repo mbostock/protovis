@@ -17,6 +17,7 @@ HTML_FILES = \
 	www/ex/candlestick.html \
 	www/ex/cars.html \
 	www/ex/cartogram.html \
+	www/ex/cell.html \
 	www/ex/choropleth.html \
 	www/ex/clock.html \
 	www/ex/crimea-rose.html \
