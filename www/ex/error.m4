@@ -34,7 +34,7 @@
       </div>
       <div class="section">
         <a href="histogram.html">&laquo; Previous</a> /
-        <a href="life.html">Next &raquo;</a>
+        <a href="nba.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -61,7 +61,7 @@
       error</a></i>, using the standard deviation of the sample distribution.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="life.html">Conway's Game of Life</a>
+        Next: <a href="nba.html">Mean &amp; Deviation</a>
       </blockquote>
 
       <h3>Source</h3>
