@@ -33,8 +33,8 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="oakland.html">&laquo; Previous</a> /
-        <a href="treemap.html">Next &raquo;</a>
+        <a href="point.html">&laquo; Previous</a> /
+        <a href="dendrogram.html">Next &raquo;</a>
       </div>
     </div>
 
@@ -53,7 +53,7 @@
       DELETE key to delete the selected control point.</p>
 
       <blockquote style="font-size:13px;">
-        Next: <a href="treemap.html">Treemap</a>
+        Next: <a href="dendrogram.html">Dendrograms</a>
       </blockquote>
 
       <h3>Source</h3>

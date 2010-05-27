@@ -6,7 +6,7 @@
     <script type="text/javascript" src="box-and-whisker.js"></script>
     <style type="text/css">
       #fig {
-        width: 440px;
+        width: 840px;
         height: 440px;
       }
     </style>
@@ -14,7 +14,7 @@
   <body><div id="center"><div id="fig">
     <script type="text/javascript+protovis">
 
-      var w = 400,
+      var w = 800,
           h = 400,
           x = pv.Scale.ordinal(experiments, function(e) e.id).split(0, w)
           y = pv.Scale.linear(0, 1).range(0, h);

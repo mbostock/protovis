@@ -32,6 +32,7 @@ HTML_FILES = \
 	www/ex/grid.html \
 	www/ex/group.html \
 	www/ex/heatmap.html \
+	www/ex/histogram.html \
 	www/ex/horizon.html \
 	www/ex/hotel.html \
 	www/ex/icicle.html \

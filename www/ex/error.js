@@ -1,12 +1,8 @@
-var error_points = [
-  { x:0.9,  y:0.97, xerr:0.697, yerr:0.797 },
-  { x:1.6,  y:1.97, xerr:0.897, yerr:0.297 },
-  { x:2.51, y:3.1,  xerr:0.232, yerr:0.732 },
-  { x:3.55, y:2.79, xerr:0.633, yerr:0.233 },
-  { x:3.83, y:3.96, xerr:0.6,   yerr:0.6   },
-  { x:5.47, y:4.4,  xerr:0.333, yerr:0.633 },
-  { x:5.77, y:5.72, xerr:0.322, yerr:0.732 },
-  { x:6.89, y:7.2,  xerr:0.897, yerr:0.8   },
-  { x:7.76, y:7.65, xerr:1.008, yerr:1.0   },
-  { x:8.78, y:8.34, xerr:1.125, yerr:0.425 }
-];
+var points = pv.range(18).map(function(p) {
+  return {
+    x:p+Math.random()+.5,
+    y:p/2+Math.random()+.5,
+    xerr:Math.random()*.9+.1,
+    yerr:Math.random()*.8+.1
+  };
+});
