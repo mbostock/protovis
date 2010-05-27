@@ -153,6 +153,7 @@ var handle = change.add(pv.Panel)
     .strokeStyle("white")
     .cursor("move")
     .event("mousedown", pv.Behavior.drag())
+    .event("dragstart", update)
     .event("drag", update);
 
 handle.anchor("bottom").add(pv.Label)
