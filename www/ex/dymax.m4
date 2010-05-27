@@ -47,12 +47,16 @@
       href="dymax-full.html" target="_blank">View full screen.</a>
 
       <p>The <a href="http://en.wikipedia.org/wiki/Dymaxion_map">Dymaxion
-      map</a> (also known as Fuller map) is a projection of a World map onto the
-      surface of a polyhedron, which can then be unfolded onto a two dimensional
-      plane.
+      map</a>, designed by <a
+      href="http://en.wikipedia.org/wiki/Buckminster_Fuller">Buckminster
+      Fuller</a>, projects the world onto the surface of an icosahedron. This
+      polyhedron is then unfolded to form a two-dimension image with less
+      distortion than <a href="projection.html">conventional projections</a>.
+      Unusually, the icosahedron can be oriented and unfolded in different ways
+      to maintain contiguity in different regions (e.g., land masses or oceans).
 
       <blockquote style="font-size:13px;">
-        Next: <a href="qqplot.html">Q-Q Plot</a>
+        Next: <a href="qqplot.html">Q-Q Plots</a>
       </blockquote>
 
       <h3>Source</h3>
