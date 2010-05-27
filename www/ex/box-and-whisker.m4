@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - Box and Whisker</title>
+    <title>Protovis - Box-and-Whisker Plots</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
@@ -39,21 +39,23 @@
     </div>
 
     <div class="body">
-      <h1>Box and Whisker</h1>
+      <h1>Box-and-Whisker Plots</h1>
 
-      <iframe id="iframe" style="height:440px;" src="box-and-whisker-full.html"></iframe>
+      <iframe style="height:340px;" src="box-and-whisker-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="box-and-whisker-full.html" target="_blank">View full screen.</a>
 
-      <p>A <a href="http://en.wikipedia.org/wiki/Box_plot">Box and Whisker</a> diagram is often
-      used to represent the results of different experiments. The data for each experiment is
-      summarized by displaying a five-number summary: the smallest value, lower quartile, median,
-      upper quartile, and largest value. Such display allows the viewer to easily recognize
-      significant differences (or lack thereof) between the outcomes of the experiments.
+      <p>A <a href="http://en.wikipedia.org/wiki/Box_plot">box-and-whisker
+      plot</a> uses simple glyphs that summarize a quantitative distribution
+      with five standard statistics: the smallest value, lower quartile, median,
+      upper quartile, and largest value. This summary approach is similar to a
+      <a href="candlestick.html">candlestick chart</a>, and allows the viewer to
+      easily recognize significant differences (or lack thereof) between
+      distributions.
 
       <blockquote style="font-size:13px;">
-        Next: <a href="histogram.html">Histogram</a>
+        Next: <a href="histogram.html">Histograms</a>
       </blockquote>
 
       <h3>Source</h3>

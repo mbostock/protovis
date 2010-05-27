@@ -1,79 +1,78 @@
 <html>
   <head>
-    <title>Box and Whisker plot</title>
+    <title>Box-and-Whisker Plot</title>
     <link rel="stylesheet" type="text/css" href="ex.css"/>
-    <script type="text/javascript" src="../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
     <script type="text/javascript" src="box-and-whisker.js"></script>
     <style type="text/css">
-      #fig {
-        width: 840px;
-        height: 440px;
-      }
+
+#fig {
+  width: 900px;
+  height: 340px;
+}
+
     </style>
   </head>
   <body><div id="center"><div id="fig">
     <script type="text/javascript+protovis">
 
-      var w = 800,
-          h = 400,
-          x = pv.Scale.ordinal(experiments, function(e) e.id).split(0, w)
-          y = pv.Scale.linear(0, 1).range(0, h);
+var w = 860,
+    h = 300,
+    x = pv.Scale.ordinal(experiments, function(e) e.id).splitBanded(0, w, 3/5)
+    y = pv.Scale.linear(0, 1).range(0, h)
+    s = x.range().band / 2;
 
-      var vis = new pv.Panel()
-        .width(w)
-        .height(h)
-        .margin(20);
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .margin(20);
 
-      /* Add the y-axis rules */
-      vis.add(pv.Rule)
-        .data(y.ticks())
-        .bottom(y)
-        .strokeStyle(function() this.index ? "#ccc" : "#000")
-       .anchor("left").add(pv.Label)
-        .text(function(d) d.toFixed(1));
+/* Add the y-axis rules */
+vis.add(pv.Rule)
+    .data(y.ticks())
+    .bottom(y)
+    .strokeStyle(function(d) (d == 0 || d == 1) ? "#000" : "#ccc")
+  .anchor("left").add(pv.Label)
+    .text(y.tickFormat);
 
-      /* Add a panel for each data point */
-      var points = vis.add(pv.Panel)
-        .data(experiments)
-        .left(function(d) x(d.id));
+/* Add a panel for each data point */
+var points = vis.add(pv.Panel)
+    .data(experiments)
+    .left(function(d) x(d.id))
+    .width(s * 2);
 
-      /* Add the experiment id label */
-      points.add(pv.Label)
-        .bottom(-20)
-        .textAlign("center")
-        .text(function(d) d.id);
+/* Add the experiment id label */
+points.anchor("bottom").add(pv.Label)
+    .textBaseline("top")
+    .text(function(d) d.id);
 
-      /* Add the range line */
-      points.add(pv.Rule)
-        .left(0)
-        .bottom(function(d) y(d.min))
-        .height(function(d) y(d.max) - y(d.min));
+/* Add the range line */
+points.add(pv.Rule)
+    .left(s)
+    .bottom(function(d) y(d.min))
+    .height(function(d) y(d.max) - y(d.min));
 
-      /* Add the min and max indicators */
-      points.add(pv.Rule)
-        .data(function(d) [d.min,d.max])
-        .bottom(y)
-        .left(-5)
-        .width(10);
+/* Add the min and max indicators */
+points.add(pv.Rule)
+    .data(function(d) [d.min, d.max])
+    .bottom(y)
+    .left(s / 2)
+    .width(s);
 
-      /* Add the upper/lower quartile ranges */
-      points.add(pv.Bar)
-        .left(-10)
-        .width(20)
-        .bottom(function(d) y(d.lq))
-        .height(function(d) y(d.uq) - y(d.lq))
-        .fillStyle("#ffc")
-        .strokeStyle("black")
-        .antialias(false)
-        .lineWidth(1);
+/* Add the upper/lower quartile ranges */
+points.add(pv.Bar)
+    .bottom(function(d) y(d.lq))
+    .height(function(d) y(d.uq) - y(d.lq))
+    .fillStyle(function(d) d.median > .5 ? "#aec7e8" : "#ffbb78")
+    .strokeStyle("black")
+    .lineWidth(1)
+    .antialias(false);
 
-      /* Add the median line */
-      points.add(pv.Rule)
-        .bottom(function(d) y(d.median))
-        .left(-10)
-        .width(20);
+/* Add the median line */
+points.add(pv.Rule)
+    .bottom(function(d) y(d.median));
 
-      vis.render();
+vis.render();
 
     </script>
   </div></div></body>
