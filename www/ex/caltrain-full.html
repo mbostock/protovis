@@ -20,16 +20,16 @@
   <body><div id="center"><div id="fig">
     <div id="controls" >
       <b>Speed:</b>
-      <input type="checkbox" id="normal" checked onchange="speedn = this.value; vis.render();"
+      <input type="checkbox" id="normal" checked onchange="speedn = this.checked; vis.render();"
       ><label for="normal" style="color:rgb(34,34,34);">Normal</label>
-      <input type="checkbox" id="limited" checked onchange="speedl = this.value; vis.render();"
+      <input type="checkbox" id="limited" checked onchange="speedl = this.checked; vis.render();"
       ><label for="limited" style="color:rgb(183,116,9);">Limited</label>
-      <input type="checkbox" id="bullet" checked onchange="speedb = this.value; vis.render();"
+      <input type="checkbox" id="bullet" checked onchange="speedb = this.checked; vis.render();"
       ><label for="bullet" style="color:rgb(192,62,29);">Bullet</label>
       <b style="margin-left:6em;">Direction:</b>
-      <input type="checkbox" id="northbound" checked onchange="dirn = this.value; vis.render();"
+      <input type="checkbox" id="northbound" checked onchange="dirn = this.checked; vis.render();"
       ><label for="northbound">Northbound</label>
-      <input type="checkbox" id="southbound" checked onchange="dirs = this.value; vis.render();"
+      <input type="checkbox" id="southbound" checked onchange="dirs = this.checked; vis.render();"
       ><label for="southbound">Sorthbound</label>
       <b style="margin-left:6em;">Days:</b>
       <input id="weekdays" name="daySelect" value="Wk" type="radio" checked onchange="oper = this.value; vis.render();"
