@@ -153,9 +153,7 @@ var handle = change.add(pv.Panel)
     .strokeStyle("white")
     .cursor("move")
     .event("mousedown", pv.Behavior.drag())
-    .event("dragstart", function() line.antialias(false))
-    .event("drag", update)
-    .event("dragend", function() line.antialias(true));
+    .event("drag", update);
 
 handle.anchor("bottom").add(pv.Label)
     .textBaseline("top")
