@@ -48,12 +48,12 @@
       href="clock-full.html" target="_blank">View full screen.</a>
       </div>
 
-      <div style="float:left;padding-left:30px;width:440px;">
-        The PolarClock is an intriguing and aesthetically-pleasing visualization
-        of the current time designed by
-        <a href="http://blog.pixelbreaker.com/polarclock">Gabriel Bucknall</a>.
-        A single wedge encodes each time field (e.g., seconds, minutes) as both
-        angle and fill color.
+      <div style="float:left;padding-left:30px;width:470px;">
+      The PolarClock is an intriguing and aesthetically-pleasing visualization
+      of the current time designed by <a
+      href="http://blog.pixelbreaker.com/polarclock">Gabriel Bucknall</a>. A
+      single wedge encodes each time field (e.g., seconds, minutes) as both
+      angle and fill color.
 
       <blockquote style="font-size:13px;">
         Next: <a href="segmented.html">Rainbow Worm</a>

@@ -46,15 +46,15 @@
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="segmented-full.html" target="_blank">View full screen.</a>
 
-      <p>This psychedelic example, reminiscent of
-      an <a href="http://en.wikipedia.org/wiki/Earthworm">earthworm</a>,
-      demonstrates the difference between a segmented and
-      unsegmented <a href="http://protovis-js.googlecode.com/svn/trunk/jsdoc/symbols/pv.Line.html">line</a>.
+      <p>This psychedelic example, reminiscent of an <a
+      href="http://en.wikipedia.org/wiki/Earthworm">earthworm</a>, demonstrates
+      the difference between a segmented and unsegmented <a
+      href="http://protovis-js.googlecode.com/svn/trunk/jsdoc/symbols/pv.Line.html">line</a>.
       Normally, the line width and stroke style of a line are fixed properties:
       they are evaluated once, and the line is rendered with the given width and
-      color. However, in some visualizations&mdash;such as Minard&rsquo;s map
-      of <a href="napoleon.html">Napleon&rsquo;s march</a>&mdash;it is desirable to
-      use a variable width and color to encode additional dimensions of data.
+      color. However, in some visualizations&mdash;such as <a
+      href="napoleon.html">flow maps</a>&mdash;it is desirable to use a variable
+      width and color to encode additional dimensions of data.
 
       <p><a href="segmented-area.html" target="_blank">Segmented areas</a> are
       also possible, allowing the fill color and title tooltip to vary across

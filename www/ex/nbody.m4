@@ -47,8 +47,17 @@
       style="font-size:13px;" href="nbody-full.html" target="_blank">View full
       screen.</a>
 
-      <p>This multi-agent simulation shows the bunching behaviour that naturally arises from
-      the simple agent definitions.
+      <p>The <a
+      href="http://en.wikipedia.org/wiki/N-body_simulation"><i>n</i>-body
+      problem</a> involves predicting the motion of celestial objects under
+      mutual gravitation. With many objects, this simulation can be
+      computationally taxing due to <i>n</i><sup>2</sup> force
+      calculations. Here we simulate two hundred massive objects, using the <a
+      href="http://en.wikipedia.org/wiki/Barnes-Hut_simulation">Barnes&ndash;Hut
+      algorithm</a> to approximate forces in O(<i>n</i> log <i>n</i>). Using
+      dynamic properties, we can easily encode speed using color, and velocity
+      with a white arrow. Watch as worlds collide, undergo planetary accretion,
+      and spin out of control!
 
       <blockquote style="font-size:13px;">
         Next: <a href="clock.html">PolarClock</a>
