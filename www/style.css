@@ -98,7 +98,6 @@ sub, sup {
 }
 
 .highlight {
-  width: 860px;
   overflow: hidden;
   padding-left: 20px;
   border-left: solid 4px #ccc;
