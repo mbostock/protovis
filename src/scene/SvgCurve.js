@@ -222,7 +222,7 @@ pv.SvgScene.curveHermiteSegments = function(points, tangents) {
 };
 
 /**
- * @private Computed the tangents for the given points needed for cardinal
+ * @private Computes the tangents for the given points needed for cardinal
  * spline interpolation. Returns an array of tangent vectors. Note: that for n
  * points only the n-2 well defined tangents are returned.
  *
