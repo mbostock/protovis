@@ -52,7 +52,7 @@
       a <a href="heatmap.html">heatmap</a> to visualize the performance of the
       top 50 scorers in the NBA according to various per-game performance
       statistics. The heatmap is generated using colored bars rather than a
-      dynamic image.
+      <a href="heatmap.html">dynamic image</a>.
 
       <p>One challenge with this dataset is that the ranges for each dimension
       vary wildly; to facilitate comparison of players across dimensions, we
