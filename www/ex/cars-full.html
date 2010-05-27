@@ -98,7 +98,7 @@ rule.anchor("top").add(pv.Label)
 // The parallel coordinates display.
 var change = vis.add(pv.Panel);
 
-change.add(pv.Panel)
+var line = change.add(pv.Panel)
     .data(cars)
     .visible(function(d) dims.every(function(t)
         (d[t] >= filter[t].min) && (d[t] <= filter[t].max)))
@@ -153,8 +153,9 @@ var handle = change.add(pv.Panel)
     .strokeStyle("white")
     .cursor("move")
     .event("mousedown", pv.Behavior.drag())
+    .event("dragstart", function() line.antialias(false))
     .event("drag", update)
-    .event("dragend", update);
+    .event("dragend", function() line.antialias(true));
 
 handle.anchor("bottom").add(pv.Label)
     .textBaseline("top")
