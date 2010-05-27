@@ -1,4 +1,4 @@
-// 2d86fe03fa3f4c545a78b1ccb303125c6e665891
+// fba9dc272a443cf9fdb984676a7732a6a082f4c0
 /**
  * @class The built-in Array class.
  * @name Array
@@ -5311,49 +5311,48 @@ pv.SvgScene.curveHermite = function(points, tangents) {
  * @param tangents the array of tangent vectors.
  */
 pv.SvgScene.curveHermiteSegments = function(points, tangents) {
-  if (tangents.length < 2
+  if (tangents.length < 1
       || (points.length != tangents.length
       && points.length != tangents.length + 2)) return [];
   var quad = points.length != tangents.length,
       paths = [],
-      p0,
-      p1 = points[0],
-      t0,
-      t1 = tangents[0],
+      p0 = points[0],
+      p = p0,
+      t0 = tangents[0],
+      t = t0,
       pi = 1;
 
   if (quad) {
-    p0 = p1;
-    p1 = points[1];
+    p = points[1];
     paths.push("M" + p0.left + "," + p0.top
-        + "Q" + (p1.left - t1.x * 2 / 3) + "," + (p1.top - t1.y * 2 / 3)
-        + "," + p1.left + "," + p1.top);
+        + "Q" + (p.left - t.x * 2 / 3) + "," + (p.top - t.y * 2 / 3)
+        + "," + p.left + "," + p.top);
     pi = 2;
   }
 
   for (var i = 1; i < tangents.length; i++, pi++) {
-    p0 = p1;
-    t0 = t1;
-    p1 = points[pi];
-    t1 = tangents[i];
+    p0 = p;
+    t0 = t;
+    p = points[pi];
+    t = tangents[i];
     paths.push("M" + p0.left + "," + p0.top
         + "C" + (p0.left + t0.x) + "," + (p0.top + t0.y)
-        + "," + (p1.left - t1.x) + "," + (p1.top - t1.y)
-        + "," + p1.left + "," + p1.top);
+        + "," + (p.left - t.x) + "," + (p.top - t.y)
+        + "," + p.left + "," + p.top);
   }
 
   if (quad) {
     var lp = points[pi];
-    paths.push("M" + p1.left + "," + p1.top
-        + "Q" + (p1.left + t1.x * 2 / 3) + "," + (p1.top + t1.y * 2 / 3)
-        + "," + lp.left + "," + lp.top);
+    paths.push("M" + p.left + "," + p.top
+        + "Q" + (p.left + t.x * 2 / 3) + ","  + (p.top + t.y * 2 / 3) + ","
+        + lp.left + "," + lp.top);
   }
 
   return paths;
 };
 
 /**
- * @private Computed the tangents for the given points needed for cardinal
+ * @private Computes the tangents for the given points needed for cardinal
  * spline interpolation. Returns an array of tangent vectors. Note: that for n
  * points only the n-2 well defined tangents are returned.
  *
