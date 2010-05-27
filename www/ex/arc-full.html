@@ -24,7 +24,9 @@ var vis = new pv.Panel()
 var arc = vis.add(pv.Layout.Arc)
     .nodes(miserables.nodes)
     .links(miserables.links)
-    .sort(function(a, b) b.group - a.group);
+    .sort(function(a, b) a.group == b.group
+        ? b.linkDegree - a.linkDegree
+        : b.group - a.group);
 
 arc.link.add(pv.Line);
 
