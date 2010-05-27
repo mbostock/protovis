@@ -44,6 +44,7 @@ HTML_FILES = \
 	www/ex/matrix.html \
 	www/ex/minnesota.html \
 	www/ex/napoleon.html \
+	www/ex/nba.html \
 	www/ex/nbody.html \
 	www/ex/oakland.html \
 	www/ex/pack.html \
