@@ -48,7 +48,7 @@
       href="pie-full.html" target="_blank">View full screen.</a>
       </div>
 
-      <div style="float:left;padding-left:30px;width:400px;">
+      <div style="float:left;padding-left:30px;width:470px;">
       <a href="http://protovis-js.googlecode.com/svn/trunk/examples/pie.html"
       target="_blank">Pie charts</a> are useful for performing relative
       comparisons: how do the parts make up the whole? A more legible

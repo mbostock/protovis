@@ -48,11 +48,11 @@
       href="stack-full.html" target="_blank">View full screen.</a>
       </div>
 
-      <div style="float:left;padding-left:30px;width:400px;"> Protovis includes
-      flexible layouts that can simplify the implementation of common
-      visualization techniques. This example uses <tt>pv.Layout.Stack</tt> to
-      stack area marks vertically with a zero baseline. The stack layout can
-      also be used to <a
+      <div style="float:left;padding-left:30px;width:440px;">
+      Protovis includes flexible layouts that can simplify the implementation of
+      common visualization techniques. This example uses
+      <tt>pv.Layout.Stack</tt> to stack area marks vertically with a zero
+      baseline. The stack layout can also be used to <a
       href="http://protovis-js.googlecode.com/svn/trunk/examples/bar-stacked.html">stack
       bars</a> or <a
       href="http://protovis-js.googlecode.com/svn/trunk/examples/column-stacked.html">columns</a>

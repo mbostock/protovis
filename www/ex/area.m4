@@ -48,7 +48,7 @@
       href="area-full.html" target="_blank">View full screen.</a>
       </div>
 
-      <div style="float:left;padding-left:30px;width:410px;">
+      <div style="float:left;padding-left:30px;width:440px;">
       This simple area chart is constructed using
       an <a href="http://code.google.com/p/protovis-js/wiki/PvArea">area</a>
       mark, with an

@@ -81,7 +81,7 @@
       href="eyes-full.html" target="_blank">View full screen.</a>
       </div>
 
-      <div style="float:left;padding-left:30px;width:640px;">
+      <div style="float:left;padding-left:30px;width:670px;">
       This example is adapted from the
       Processing <a href="http://processing.org/learning/basics/arctangent.html">Arctangent</a>
       example. We demonstrate an equivalent technique for computing the vector

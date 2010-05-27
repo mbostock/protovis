@@ -48,7 +48,7 @@
       href="bar-full.html" target="_blank">View full screen.</a>
       </div>
 
-      <div style="float:left;padding-left:30px;width:400px;">
+      <div style="float:left;padding-left:30px;width:440px;">
       This simple bar chart is constructed using a <a
       href="http://code.google.com/p/protovis-js/wiki/PvBar">bar</a> mark. A
       linear scale is used to compute the width of the bar, while an ordinal

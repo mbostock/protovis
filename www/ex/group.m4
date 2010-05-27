@@ -48,8 +48,7 @@
       href="group-full.html" target="_blank">View full screen.</a>
       </div>
 
-      <div style="float:left;padding-left:30px;width:400px;">
-
+      <div style="float:left;padding-left:30px;width:440px;">
       In this multi-series bar chart, we group bars together rather than <a
       href="http://protovis-js.googlecode.com/svn/trunk/examples/bar-stacked.html">stack
       them</a>. A grouped chart allows accurate comparison of individual values

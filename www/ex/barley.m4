@@ -48,7 +48,7 @@
       href="barley-full.html" target="_blank">View full screen.</a>
       </div>
 
-      <div style="float:left;padding-left:30px;width:505px;"> The <a
+      <div style="float:left;padding-left:30px;width:515px;"> The <a
       href="http://www.jstor.org/pss/1390777">Trellis display</a> by Becker et
       al. helped establish small multiples as a &ldquo;powerful mechanism for
       understanding interactions in studies of how a response depends on

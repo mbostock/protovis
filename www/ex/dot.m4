@@ -48,7 +48,7 @@
       href="dot-full.html" target="_blank">View full screen.</a>
       </div>
 
-      <div style="float:left;padding-left:30px;width:400px;">
+      <div style="float:left;padding-left:30px;width:440px;">
       Scatterplots can facilitate visual analysis along multiple dimensions,
       though care should be taken to avoid interference. In this example, we
       encode three dimensions: two are encoded using position, while the third

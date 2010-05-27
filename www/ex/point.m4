@@ -48,8 +48,7 @@
       href="point-full.html" target="_blank">View full screen.</a>
       </div>
 
-      <div style="float:left;padding-left:30px;width:380px;">
-
+      <div style="float:left;padding-left:30px;width:420px;">
       Rather than require exact mouseovers, as is traditionally done, the
       <i>point</i> behavior identifies the closest mark to the mouse, allowing
       more rapid target acquisition and more responsive details-on-demand. This

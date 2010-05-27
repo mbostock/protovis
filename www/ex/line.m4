@@ -48,7 +48,7 @@
       href="line-full.html" target="_blank">View full screen.</a>
       </div>
 
-      <div style="float:left;padding-left:30px;width:400px;">
+      <div style="float:left;padding-left:30px;width:440px;">
       <a href="http://protovis-js.googlecode.com/svn/trunk/examples/line.html"
       target="_blank">Line charts</a> are often used to visualize time series
       data, encoding the value of a variable over time using position.
