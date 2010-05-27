@@ -59,7 +59,10 @@ vis.add(pv.Panel)
     .data(pv.range(8))
     .right(function(i) (i + .5) * w * 3 / 8)
     .top(-35)
-    .event("mousedown", function(i) ($("#rule").html(rule ^= 1 << i), vis))
+    .event("mousedown", function(i)
+        ($("#rule").html(rule ^= 1 << i),
+         $(slider).slider('value', rule),
+         vis))
   .add(pv.Bar)
     .top(10)
     .right(-5)
