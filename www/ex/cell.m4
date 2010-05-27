@@ -41,21 +41,22 @@
     <div class="body">
       <h1>Automaton Explorer</h1>
 
-      <iframe id="iframe" style="height:440px;" src="cell-full.html"></iframe>
+      <iframe id="iframe" style="height:460px;" src="cell-full.html"></iframe>
       <p><img src="popout.png" width="16" height="16"
       style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
       href="cell-full.html" target="_blank">View full screen.</a>
 
       <p>From <a href="http://mathworld.wolfram.com/CellularAutomaton.html">MathWorld</a>:
-      "A cellular automaton is a collection of 'colored' cells on a grid of
-      specified shape that evolves through a number of discrete time steps
-      according to a set of rules based on the states of neighboring cells." This
-      example explores binary, nearest-neighbor, one-dimensional automata, of
-      which there are 256 (2<sup>8</sup>) possible rules.
+      &ldquo;A cellular automaton is a collection of &lsquo;colored&rsquo; cells
+      on a grid of specified shape that evolves through a number of discrete
+      time steps according to a set of rules based on the states of neighboring
+      cells.&rdquo; This example explores binary, nearest-neighbor, one-dimensional
+      automata, of which there are 256 (2<sup>8</sup>) possible rules.
 
-      <p>The eight possible outcomes for the current rule are shown across the top;
-      click to toggle the selected bit or drag the slider to imediatly jum to the desired
-      rule <b>(WARNING: Moving the slider will produce flashing pasterns)</b>.
+      <p>The eight possible outcomes for the current rule are shown across the
+      top; click to toggle the selected bit or drag the slider to jump to the
+      desired rule. (<b>WARNING:</b> Moving the slider will produce flashing
+      patterns!)
 
       <blockquote style="font-size:13px;">
         Next: <a href="bzr.html">Belousov-Zhabotinsky reaction</a>

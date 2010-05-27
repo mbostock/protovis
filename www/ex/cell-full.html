@@ -3,48 +3,48 @@
     <title>Automaton Explorer</title>
     <link rel="stylesheet" type="text/css" href="ex.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
-		<script type="text/javascript" src="../jquery-1.4.2.min.js"></script>
-		<script type="text/javascript" src="../jquery-ui-1.8rc3.custom.min.js"></script>
+    <script type="text/javascript" src="../jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="../jquery-ui-1.8rc3.custom.min.js"></script>
     <script type="text/javascript" src="cell.js"></script>
-		<link type="text/css" href="../ui-lightness/jquery-ui-1.8rc3.custom.css" rel="stylesheet"/>
+    <link type="text/css" href="../ui-lightness/jquery-ui-1.8rc3.custom.css" rel="stylesheet"/>
     <style type="text/css">
 
-      .ui-slider {
-        font-size: 10px;
-        width: 300px;
-        margin-top: 5px;
-      }
+.ui-slider {
+  font-size: 10px;
+  width: 300px;
+  margin-top: 5px;
+}
 
-      sup, sub {
-        line-height: 0;
-      }
+sup, sub {
+  line-height: 0;
+}
 
-      .ui-state-focus {
-        outline: none;
-      }
+.ui-state-focus {
+  outline: none;
+}
 
-      #slider {
-        width: 300px;
-        display: inline-block;
-        margin-left: 10px;
-        margin-right: 10px;
-      }
+#slider {
+  width: 300px;
+  display: inline-block;
+  margin-left: 5px;
+  margin-right: 15px;
+}
 
-      #fig {
-        width: 768px;
-        height: 440px;
-      }
+#fig {
+  width: 768px;
+  height: 460px;
+}
 
     </style>
   </head>
   <body><div id="center"><div id="fig">
     <div style="width:8in;">
-      rule: <span id="slider"></span><span id="rule">30</span>
+      <b>Rule:</b> <span id="slider"></span><span id="rule">30</span>
       <span style="float:right;">
-        start: <input type="radio" checked id="point" name="start" value="point">
-        <label for="point">point</label>
-        <input type="radio" id="random" name="start" value="random">
-        <label for="random">random</label>
+        <b>Start:</b> <input type="radio" checked id="point" name="start" value="point"
+        ><label for="point">point</label>
+        <input type="radio" id="random" name="start" value="random"
+        ><label for="random">random</label>
       </span>
     </div><p>
     <script type="text/javascript+protovis">
@@ -85,7 +85,7 @@ vis.add(pv.Image)
     .def("cell", cell)
     .imageWidth(w)
     .imageHeight(h)
-    .image(pv.colors("#fff", "#000").by(function(x, y) this.cell()[y][x]));
+    .image(pv.colors(null, "#000").by(function(x, y) this.cell()[y][x]));
 
 vis.render();
 
