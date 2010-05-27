@@ -47,7 +47,7 @@
       href="splines-full.html" target="_blank">View full screen.</a>
       </p>
 
-      <p>This simple editor showcases the various methods of spline
+      <p>This simple editor demonstrates the various methods of spline
       interpolation supported by Protovis. Drag the control points to see how
       the shape of the spline changes. Click to add new points, and use the
       DELETE key to delete the selected control point.</p>
