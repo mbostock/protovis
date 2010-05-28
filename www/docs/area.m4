@@ -198,7 +198,7 @@ m4_include(`area-5.js.txt')
       </ul>
 
       <p>By default, a <tt>fillStyle</tt> color is allocated from
-      the <tt>category20</tt> <a href="colors.html">color palette</a> for each
+      the <tt>category20</tt> <a href="color.html">color palette</a> for each
       mark. The default <tt>strokeStyle</tt> is null, causing the
       related <tt>lineWidth</tt> to be ignored. Unless the area
       is <i>segmented</i>, these properties cannot be specified on a
@@ -216,7 +216,7 @@ m4_include(`area-6.js.txt')
 
       </script></td></tr></table>
 
-      <p>See the <a href="colors.html">color documentation</a> for more examples of
+      <p>See the <a href="color.html">color documentation</a> for more examples of
       acceptable values for stroke and fill styles.
     </div>
 

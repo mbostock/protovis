@@ -47,7 +47,7 @@
         <a href="../jsdoc/symbols/pv.Bar.html">pv.Bar API reference</a>
 
         <br>Examples:
-        <a href="../ex/bar.html">Bar Charts</a>,
+        <a href="../ex/bar.html">Bar &amp; Column Charts</a>,
         <a href="../ex/group.html">Grouped Charts</a>,
         <a href="../ex/histogram.html">Histograms</a>
       </blockquote>
@@ -174,7 +174,7 @@ m4_include(`bar-4.js.txt')
       </ul>
 
       <p>By default, a <tt>fillStyle</tt> color is allocated from
-      the <tt>category20</tt> <a href="colors.html">color palette</a> for each
+      the <tt>category20</tt> <a href="color.html">color palette</a> for each
       mark. The default <tt>strokeStyle</tt> is null, causing the
       related <tt>lineWidth</tt> to be ignored. These visual properties can be
       specified on a per-instance basis, meaning they too can be used to encode
@@ -202,7 +202,7 @@ m4_include(`bar-6.js.txt')
 
       </script></td></tr></table>
 
-      <p>See the <a href="colors.html">color documentation</a> for more examples
+      <p>See the <a href="color.html">color documentation</a> for more examples
       of acceptable values for stroke and fill styles.
     </div>
 

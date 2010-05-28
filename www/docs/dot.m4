@@ -179,7 +179,7 @@ m4_include(`dot-6.js.txt')
       </ul>
 
       <p>By default, a <tt>strokeStyle</tt> color is allocated from
-      the <tt>category10</tt> <a href="colors.html">color palette</a>. The
+      the <tt>category10</tt> <a href="color.html">color palette</a>. The
       default <tt>fillStyle</tt> is null, and the default <tt>lineWidth</tt> is
       1.5. The default shape is "circle"; other supported shapes include
       "triangle", "diamond", "cross" and "square". These visual parameters can

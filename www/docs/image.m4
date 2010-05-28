@@ -115,7 +115,7 @@ m4_include(`image-2.js.txt')
 
       </script></td></tr></table>
 
-      <p>See the <a href="colors.html">color documentation</a> for more examples
+      <p>See the <a href="color.html">color documentation</a> for more examples
       of acceptable values for stroke and fill styles.
     </div>
 
