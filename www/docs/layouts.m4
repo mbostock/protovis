@@ -39,7 +39,7 @@
 
       <blockquote>[When] you see excellent graphics, find out how they were
       done. Borrow strength from demonstrated excellence. The idea for
-      information design is: Don't get it original, get it right. <a
+      information design is: Don&rsquo;t get it original, get it right. <a
       href="http://www.edwardtufte.com/bboard/q-and-a-fetch-msg?msg_id=00000p"
       >&mdash;Edward Tufte</a></blockquote>
 
@@ -76,18 +76,18 @@
 
       <h2>Design</h2>
 
-     Layouts in Protovis are a minor variation of <b><a
-      href="http://code.google.com/p/protovis-js/wiki/PvPanel">panels</a></b>,
+      Layouts in Protovis are a minor specialization
+      of <a href="http://code.google.com/p/protovis-js/wiki/PvPanel">panels</a>,
       which contain and replicate child marks. Indeed, the only difference
-      between the classes <tt>pv.Panel</tt> and <tt>pv.Layout</tt> is that the
-      latter supports custom properties. These custom properties allow top-level
-      configuration of the layout; for example, a treemap layout might support
-      multiple algorithms (e.g., &ldquo;slide-and-dice&rdquo;,
-      &ldquo;squarify&rdquo;, &ldquo;voronoi&rdquo;), while a force-directed
-      network layout might allow tweaking of spring tension or drag
-      coefficients. Whereas standard properties, such as <tt>fillStyle</tt> and
-      <tt>visible</tt>, share a single namespace, layout properties tend to be
-      specialized and are thus defined locally.
+      between a <i>panel</i> and a <i>layout</i> is that the latter can support
+      custom properties. These custom properties allow top-level configuration
+      of the layout; for example, a treemap layout might support multiple
+      algorithms (e.g., &ldquo;slide-and-dice&rdquo;, &ldquo;squarify&rdquo;,
+      &ldquo;voronoi&rdquo;), while a force-directed network layout might allow
+      tweaking of spring tension or drag coefficients. Whereas standard
+      properties, such as <tt>fillStyle</tt> and <tt>visible</tt>, share a
+      single namespace, layout properties tend to be special-purpose and are
+      thus defined locally.
 
       <p>By reusing panels and properties, the design is familiar to existing
       users; the mental model required to understand layouts is simpler. In
@@ -97,25 +97,28 @@
       functions. This simplifies the creation of small multiples of layouts with
       varying parameters, and allows layouts to be nested hierarchically,
       similar to <a href="http://gicentre.org/hierarchical_layouts/" >HiVE</a>.
-      We will explore examples shortly.
+      We will explore example shortly.
 
-      <p>On the other hand, our approach has two hidden complexities:
+      <h3>Limitations</h3>
+
+      <p>Before we dive more deeply into the design, it is important to kind in
+      mind two potential complications of our approach:
 
       <p>Layout implementations typically require an additional pre-processing
       step per instance, where the bulk of the layout work is performed; this is
       typically accomplished by overriding the internal <tt>buildImplied</tt>
       method. Although this detail can be overlooked by <i>users</i> of layouts,
       it must be understood to implement a new layout, and represents a
-      divergence from standard mark and panel specification.
+      divergence from standard mark and panel specification. This is discussed
+      in more detail later in relation to <i>psuedo-properties</i>.
 
-      <!-- Discuss psuedo-properties? -->
-
-      <p>The simplicity of the layout interface means there is no guarantee of
+      <p>The minimalism of the layout interface means there is no guarantee of
       consistency across layout implementation: users must understand the
       semantics of the mark prototypes for each implementation in order to
-      instantiate and customize the layout. Of course, for this reason it is
-      important to establish good practices across layout designs, and to reuse
-      code whenever possible (e.g., across hierarchical and network layouts).
+      instantiate and customize the layout. A practical solution to this problem
+      is the establishment of sensible practices across layout designs, and to
+      reuse code whenever possible (e.g., across hierarchical and network
+      layouts).
 
       <h3>Mark Prototypes</h3>
 
@@ -157,10 +160,10 @@ m4_include(`layouts/grid.js.html')
       </td></tr></table>
 
       <p>Thus, the root panel <tt>vis</tt> contains the <tt>grid</tt> layout.
-      That's the first line of code in the above example. The layout in turn
-      contains the added bar (line 3); this bar extends from the <tt>cell</tt>
-      prototype. We can override properties on the added bar (line 4), which
-      will trump any default logic inherited from the prototype.
+      That&rsquo;s the first line of code in the above example. The layout in
+      turn contains the added bar (line 3); this bar extends from the
+      <tt>cell</tt> prototype. We can override properties on the added bar (line
+      4), which will trump any default logic inherited from the prototype.
 
       <p>Note that the <tt>cell</tt> prototype is not contained inside the
       layout, and so is off to the right with a dashed border in the diagram:
@@ -177,14 +180,14 @@ m4_include(`layouts/grid.js.html')
       <p>How is the cell replicated? All marks in Protovis have a <tt>data</tt>
       property that controls replication: a mark instance is created for each
       element in the data array. The <tt>cell</tt> prototype exported by the
-      grid layout has a <tt>data</tt> property derived from the layout's
+      grid layout has a <tt>data</tt> property derived from the layout&rsquo;s
       <tt>rows</tt> property: the two-dimensional array is flattened (blended)
       into a one-dimensional array. The data on the added bar are thus the
       numbers in the heatmap array, which is then used to derive the fill style.
 
       <p>More powerful, and yet conceptually similar, is the <b>treemap</b>
       layout. Like the grid layout, treemaps can be instantiated by adding a bar
-      to the layout's mark prototype; the treemap&rsquo;s prototype is
+      to the layout&rsquo;s mark prototype; the treemap&rsquo;s prototype is
       called <tt>node</tt>&mdash;rather than <tt>cell</tt>&mdash;but serves a
       similar function in exporting positional properties based on the results
       of running the squarified treemap layout algorithm. (The choice of treemap
@@ -224,15 +227,15 @@ m4_include(`layouts/treemap.js.html')
       above example uses the <tt>firstChild</tt> attribute to distinguish
       internal from leaf nodes.
 
-      <p><b>Matrix:</b> Sed iaculis commodo vestibulum. Pellentesque blandit
-      mollis quam vitae egestas. Sed vehicula augue sed orci placerat id
-      suscipit nulla interdum. Curabitur feugiat posuere dignissim. Nunc congue
-      tortor tortor, ut commodo lectus. Fusce blandit sem ut nulla euismod
-      venenatis. Donec dictum ullamcorper nisl, ut tristique dui aliquet
-      ac. Donec placerat pulvinar quam, nec imperdiet tortor fermentum
-      in. Praesent nisl nisl, dictum quis euismod non, condimentum accumsan
-      risus. Class aptent taciti sociosqu ad litora torquent per conubia nostra,
-      per inceptos himenaeos.
+      <p>By changing the definition of the inherited <tt>data</tt> properties,
+      layouts can change how marks are replicated. For example, the
+      <b>matrix</b> layout visualizes the adjacency matrix of a graph. The
+      <tt>link</tt> prototype functions similar to the grid layout&rsquo;s
+      <tt>cell</tt>, in that it is designed to be used with a bar to render a
+      filled rectangle; in this case, the data property of the <tt>link</tt>
+      prototype is every pair of nodes in the graph. The fill style is derived
+      from the <tt>linkValue</tt> attribute, which is 0 if the nodes are not
+      connected, and positive if they are.
 
       <p><table width="100%"><tr><td>
         <img src="layouts/matrix.png">
@@ -242,25 +245,22 @@ m4_include(`layouts/treemap.js.html')
         </a>
       </td></tr></table>
 
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam vulputate
-      diam id est gravida non facilisis purus ullamcorper. Ut quis purus
-      libero. Vivamus in lorem sed nisi congue pharetra. Quisque nibh sem,
-      tincidunt ac consequat in, scelerisque a elit. Maecenas tristique, tellus
-      vitae facilisis semper, ipsum purus iaculis lectus, in luctus neque erat
-      vitae ligula. Maecenas cursus fermentum auctor. Morbi ac neque in lacus
-      facilisis placerat ut sodales diam. Praesent suscipit ullamcorper eros, eu
-      vulputate lacus pellentesque in.
+      <p>Similarly, the <tt>label</tt> prototype&rsquo;s data array contains two
+      references to each node in the graph, such that a label can be generated
+      across the top of the matrix, and down the left side. Labels can be
+      rendered in alternative positions by overriding the <tt>left</tt>
+      and <tt>top</tt> properties if desired.
 
       <h3>Implicit Replication</h3>
 
-      <p>Sed iaculis commodo vestibulum. Pellentesque blandit mollis quam vitae
-      egestas. Sed vehicula augue sed orci placerat id suscipit nulla
-      interdum. Curabitur feugiat posuere dignissim. Nunc congue tortor tortor,
-      ut commodo lectus. Fusce blandit sem ut nulla euismod venenatis. Donec
-      dictum ullamcorper nisl, ut tristique dui aliquet ac. Donec placerat
-      pulvinar quam, nec imperdiet tortor fermentum in. Praesent nisl nisl,
-      dictum quis euismod non, condimentum accumsan risus. Class aptent taciti
-      sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
+      <p>While the <tt>data</tt> property provides one level of replication,
+      with some layouts this is insufficient: a second level of replication is
+      needed. This is accomplished by inserting a panel between the layout and
+      any added marks. For example, the <b>stack</b> layout can be used to
+      generate a <i>streamgraph</i>, which contains multiple stacked area marks.
+      The data for the area is derived from the <tt>layer</tt> prototype, and
+      contains each value for the associated series; the layers are replicated
+      in an enclosing panel, with one instance per series.
 
       <p><table width="100%"><tr><td>
         <img src="layouts/stack.png">
@@ -270,29 +270,41 @@ m4_include(`layouts/treemap.js.html')
         </a>
       </td></tr></table>
 
-      <p>Layout parameters can be defined as functions, like any other property
-      in Protovis; this provides a great deal of flexibility and hierarchical
-      nesting of layouts.
-
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam vulputate
-      diam id est gravida non facilisis purus ullamcorper. Ut quis purus
-      libero. Vivamus in lorem sed nisi congue pharetra. Quisque nibh sem,
-      tincidunt ac consequat in, scelerisque a elit. Maecenas tristique, tellus
-      vitae facilisis semper, ipsum purus iaculis lectus, in luctus neque erat
-      vitae ligula. Maecenas cursus fermentum auctor. Morbi ac neque in lacus
-      facilisis placerat ut sodales diam. Praesent suscipit ullamcorper eros, eu
-      vulputate lacus pellentesque in.
+      <p>We call this <i>implicit</i> replication because the interstitial panel
+      is not explicitly added by the user. Instead, the panel is inserted by the
+      layout when the area is added to the <tt>layer</tt> prototype:
 
 m4_include(`layouts/stack.js.html')
 
-      <p>Sed iaculis commodo vestibulum. Pellentesque blandit mollis quam vitae
-      egestas. Sed vehicula augue sed orci placerat id suscipit nulla
-      interdum. Curabitur feugiat posuere dignissim. Nunc congue tortor tortor,
-      ut commodo lectus. Fusce blandit sem ut nulla euismod venenatis. Donec
-      dictum ullamcorper nisl, ut tristique dui aliquet ac. Donec placerat
-      pulvinar quam, nec imperdiet tortor fermentum in. Praesent nisl nisl,
-      dictum quis euismod non, condimentum accumsan risus. Class aptent taciti
-      sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
+      <p>The stack layout also makes use of special properties that are
+      evaluated by the layout, rather than using the standard property
+      evaluation mechanism: we call these <i>psuedo-properties</i>. For example,
+      the <tt>x</tt> and <tt>y</tt> properties are evaluated for each value in
+      each layer. In effect, these properties behave as if they were defined on
+      the added area rather than the layout, but they are evaluated earlier
+      along with the other layout properties (during the stack layout&rsquo;s
+      <tt>buildImplied</tt>). The stack layout stores the return values of these
+      psuedo-properties internally, and uses this generated data (the layer
+      thickness for each value in the dataset) to define the inherited mark
+      properties.
+
+      <p>Thus, although psuedo-properties are evaluated through a different
+      mechanism than standard properties, users can, in general, blissfully
+      ignore the difference. Psuedo-properties can be defined in identical
+      fashion to standard properties, as either functions or constants. With the
+      stack layout, for example, we might use a linear scale for <tt>x</tt>
+      and <tt>y</tt>. The psuedo-properties are evaluated in the same context as
+      normal properties, and thus can access the data and index
+      (<tt>this.index</tt>) transparently. Psuedo-properties can also be used to
+      provide comparator functions to order-dependent layouts (such as the
+      previously-discussed matrix layout), in order to sort the data; in this
+      case, the evaluation order of the psuedo-property is dependent on the sort
+      algorithm.
+
+      <p>Implicit replication offers surprising flexibility in terms of layout
+      implementation. The <b>horizon</b> layout, for example, uses a panel to
+      replicate an area mark for each band; the band is then cropped by setting
+      the the panel&rsquo;s <tt>overflow</tt> property to &ldquo;hidden&rdquo;:
 
       <p><table width="100%"><tr><td>
         <img src="layouts/horizon.png">
@@ -302,23 +314,13 @@ m4_include(`layouts/stack.js.html')
         </a>
       </td></tr></table>
 
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam vulputate
-      diam id est gravida non facilisis purus ullamcorper. Ut quis purus
-      libero. Vivamus in lorem sed nisi congue pharetra. Quisque nibh sem,
-      tincidunt ac consequat in, scelerisque a elit. Maecenas tristique, tellus
-      vitae facilisis semper, ipsum purus iaculis lectus, in luctus neque erat
-      vitae ligula. Maecenas cursus fermentum auctor. Morbi ac neque in lacus
-      facilisis placerat ut sodales diam. Praesent suscipit ullamcorper eros, eu
-      vulputate lacus pellentesque in.
-
-      <p>Sed iaculis commodo vestibulum. Pellentesque blandit mollis quam vitae
-      egestas. Sed vehicula augue sed orci placerat id suscipit nulla
-      interdum. Curabitur feugiat posuere dignissim. Nunc congue tortor tortor,
-      ut commodo lectus. Fusce blandit sem ut nulla euismod venenatis. Donec
-      dictum ullamcorper nisl, ut tristique dui aliquet ac. Donec placerat
-      pulvinar quam, nec imperdiet tortor fermentum in. Praesent nisl nisl,
-      dictum quis euismod non, condimentum accumsan risus. Class aptent taciti
-      sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
+      <p>Node-link diagrams, such as the radial <b>tree</b> layout, also use
+      implicit replication for the <tt>link</tt> prototype. With this layout,
+      the <tt>link</tt> prototype is intended to be used with
+      a <a href="http://code.google.com/p/protovis-js/wiki/PvLine">line</a>, and
+      the <tt>data</tt> property is a two-element array for the source node and
+      target node of each link. The interstitial panel&rsquo;s data is,
+      correspondingly, the array of all links:
 
       <p><table width="100%"><tr><td>
         <img src="layouts/tree.png">
@@ -328,28 +330,33 @@ m4_include(`layouts/stack.js.html')
         </a>
       </td></tr></table>
 
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam vulputate
-      diam id est gravida non facilisis purus ullamcorper. Ut quis purus
-      libero. Vivamus in lorem sed nisi congue pharetra. Quisque nibh sem,
-      tincidunt ac consequat in, scelerisque a elit. Maecenas tristique, tellus
-      vitae facilisis semper, ipsum purus iaculis lectus, in luctus neque erat
-      vitae ligula. Maecenas cursus fermentum auctor. Morbi ac neque in lacus
-      facilisis placerat ut sodales diam. Praesent suscipit ullamcorper eros, eu
-      vulputate lacus pellentesque in.
+      <p>The three prototypes provided by the tree layout match those provided
+      by the other <b>network</b> and <b>hierarchy</b> layouts&mdash;two
+      abstract layouts designed to share code across implementations. After the
+      layout is configured, the user can instantiate the link, node and label in
+      the desired z-order:
 
 m4_include(`layouts/tree.js.html')
 
-      <p>Add order affects z-order. Can also be selective about which marks to
-      include.
+      <p>As this example shows, while some amount of duplicate code is necessary
+      with this system to instantiate the mark prototypes, the amount of code is
+      negligible. Furthermore, almost all visualizations will desire
+      customization, even if only to override a single property, or change the
+      z-order or added marks. The Protovis layout architecture allows powerful
+      visualization techniques to be encapsulated for reuse, while retaining a
+      great deal of flexibility through prototypal inheritance.
 
-      <p>Sed iaculis commodo vestibulum. Pellentesque blandit mollis quam vitae
-      egestas. Sed vehicula augue sed orci placerat id suscipit nulla
-      interdum. Curabitur feugiat posuere dignissim. Nunc congue tortor tortor,
-      ut commodo lectus. Fusce blandit sem ut nulla euismod venenatis. Donec
-      dictum ullamcorper nisl, ut tristique dui aliquet ac. Donec placerat
-      pulvinar quam, nec imperdiet tortor fermentum in. Praesent nisl nisl,
-      dictum quis euismod non, condimentum accumsan risus. Class aptent taciti
-      sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
+      <h2>Related Reading</h2>
+
+      Bederson, B. B., J. Grosjean, &amp; J. Meyer. <a
+      href="http://www.cs.umd.edu/hcil/jazz/learn/Toolkit_Design_2004.pdf">Toolkit
+      Design for Interactive Structured Graphics</a>, <i>IEEE Transactions on
+      Software Engineering</i>, 30 (8), pp. 535-546, 2004.
+
+      <p>Heer, J. &amp; Agrawala, M. <a
+      href="http://vis.berkeley.edu/papers/infovis_design_patterns/">Software
+      Design Patterns for Information Visualization</a>, <i>IEEE Transactions on
+      Visualization and Computer Graphics (TVCG)</i>, 12 (5). Sep/Oct 2006.
 
     </div>
 
