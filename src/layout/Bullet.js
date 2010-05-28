@@ -8,6 +8,14 @@
  * http://projects.instantcognition.com/protovis/bulletchart/
  */
 
+/**
+ * Constructs a new, empty bullet layout. Layouts are not typically constructed
+ * directly; instead, they are added to an existing panel via
+ * {@link pv.Mark#add}.
+ *
+ * @class
+ * @extends pv.Layout
+ */
 pv.Layout.Bullet = function() {
   pv.Layout.call(this);
   var that = this,
@@ -30,6 +38,12 @@ pv.Layout.Bullet = function() {
         .domain(0, Math.max(1, x.measures.length - 1));
   };
 
+  /**
+   * The range prototype.
+   *
+   * @type pv.Mark
+   * @name pv.Layout.Bullet.prototype.range
+   */
   (this.range = new pv.Mark())
       .data(function() { return x.ranges; })
       .reverse(true)
@@ -43,6 +57,12 @@ pv.Layout.Bullet = function() {
       .antialias(false)
       .parent = that;
 
+  /**
+   * The measure prototype.
+   *
+   * @type pv.Mark
+   * @name pv.Layout.Bullet.prototype.measure
+   */
   (this.measure = new pv.Mark())
       .extend(this.range)
       .data(function() { return x.measures; })
@@ -53,6 +73,12 @@ pv.Layout.Bullet = function() {
       .fillStyle(function() { return measureColor(this.index); })
       .parent = that;
 
+  /**
+   * The marker prototype.
+   *
+   * @type pv.Mark
+   * @name pv.Layout.Bullet.prototype.marker
+   */
   (this.marker = new pv.Mark())
       .data(function() { return x.markers; })
       .left(function(d) { return orient == "left" ? scale(d) : horizontal ? null : this.parent.width() / 2; })
@@ -82,12 +108,52 @@ pv.Layout.Bullet.prototype = pv.extend(pv.Layout)
     .property("measures")
     .property("maximum", Number);
 
+/**
+ * Default properties for bullet layouts.
+ *
+ * @type pv.Layout.Bullet
+ */
 pv.Layout.Bullet.prototype.defaults = new pv.Layout.Bullet()
     .extend(pv.Layout.prototype.defaults)
     .orient("left")
     .ranges([])
     .markers([])
     .measures([]);
+
+/**
+ * The orientation.
+ *
+ * @type string
+ * @name pv.Layout.Bullet.prototype.orient
+ */
+
+/**
+ * The array of range values.
+ *
+ * @type array
+ * @name pv.Layout.Bullet.prototype.ranges
+ */
+
+/**
+ * The array of marker values.
+ *
+ * @type array
+ * @name pv.Layout.Bullet.prototype.markers
+ */
+
+/**
+ * The array of measure values.
+ *
+ * @type array
+ * @name pv.Layout.Bullet.prototype.measures
+ */
+
+/**
+ * Optional; the maximum range value.
+ *
+ * @type number
+ * @name pv.Layout.Bullet.prototype.maximum
+ */
 
 /** @private */
 pv.Layout.Bullet.prototype.buildImplied = function(s) {
