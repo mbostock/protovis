@@ -101,7 +101,7 @@
 
       <h3>Limitations</h3>
 
-      <p>Before we dive more deeply into the design, it is important to kind in
+      <p>Before we dive more deeply into the design, it is important to keep in
       mind two potential complications of our approach:
 
       <p>Layout implementations typically require an additional pre-processing
@@ -134,19 +134,19 @@
       implementation: given a two-dimensional array of data, it divides the
       layout panel into a series of equally-spaced rows and columns. It exports
       a single mark prototype, <tt>cell</tt>, with positional properties
-      computed from the mark index. For instance, the left margin is <i>width *
-      (index % cols)</i>, where <i>cols</i> is the number of columns derived
-      from the data. If our two-dimensional array contains numbers that
-      represent elevation, we can instantiate simple topographic map using a
-      grid of colored bars:
+      computed from the mark index. For instance, the left margin is <i>(width /
+      cols) * (index % cols)</i>, where <i>cols</i> is the number of columns
+      derived from the data. If our two-dimensional array contains numbers that
+      represent elevation, we can make a simple topographic map using a grid of
+      colored bars:
 
 m4_include(`layouts/grid.js.html')
 
       <p>Adding a layout to a visualization looks similar to adding a panel,
-      with two differences: we can use custom properties such as <tt>rows</tt>
-      to configure the layout, and we can add to a mark prototype such as
-      <tt>cell</tt>, rather than adding directly to the panel. By adding to the
-      <tt>cell</tt> prototype in this example, we are creating a new <a
+      with two differences: we use custom properties such as <tt>rows</tt> to
+      configure the layout, and we add to a mark prototype such as <tt>cell</tt>
+      rather than adding directly to the panel. By adding to the <tt>cell</tt>
+      prototype in this example, we are creating a new <a
       href="http://code.google.com/p/protovis-js/wiki/PvBar">bar</a> that
       inherits properties from <tt>cell</tt>, while simultaneously adding it to
       the layout panel. As a diagram:
@@ -159,28 +159,29 @@ m4_include(`layouts/grid.js.html')
         </a>
       </td></tr></table>
 
-      <p>Thus, the root panel <tt>vis</tt> contains the <tt>grid</tt> layout.
-      That&rsquo;s the first line of code in the above example. The layout in
-      turn contains the added bar (line 3); this bar extends from the
-      <tt>cell</tt> prototype. We can override properties on the added bar (line
-      4), which will trump any default logic inherited from the prototype.
+      <p>Thus, the root panel <tt>vis</tt> contains the <tt>grid</tt> layout
+      (line 1). The layout in turn contains the added bar (line 3); this bar
+      extends from the <tt>cell</tt> prototype. We can override properties on
+      the added bar (lines 4-6), which trump any default logic inherited from
+      the prototype.
 
       <p>Note that the <tt>cell</tt> prototype is not contained inside the
-      layout, and so is off to the right with a dashed border in the diagram:
-      this is what is meant by an &ldquo;off-screen&rdquo; prototype.  The
-      prototype is not rendered directly, used only for extending properties to
-      any explicitly-added marks (such as the bar, here). This gives the user
-      more control over and visibility into how marks are added to the scene
-      graph: the user can choose the order in which marks are added,
-      affecting <i>z-order</i>; the user can choose the <i>implementation</i> of
-      the added mark (for example, using a panel or another layout rather than a
-      bar); the user can <i>pick and choose</i> which prototype to add, if
-      multiple prototypes are available.
+      layout: this is what is meant by an &ldquo;off-screen&rdquo; prototype.
+      The prototype is not rendered directly, being used only for extending
+      properties to added marks (such as the bar, here). This gives the user
+      control over and visibility into how marks are added to the scene graph:
+      the user can choose the order in which marks are added, affecting
+      <i>z-order</i>; the user can choose the <i>implementation</i> of the added
+      mark (for example, using a panel or another layout rather than a bar); the
+      user can <i>pick and choose</i> which prototype to add, if multiple
+      prototypes are available.
 
-      <p>How is the cell replicated? All marks in Protovis have a <tt>data</tt>
-      property that controls replication: a mark instance is created for each
-      element in the data array. The <tt>cell</tt> prototype exported by the
-      grid layout has a <tt>data</tt> property derived from the layout&rsquo;s
+      <h3>Data and Replication</h3>
+
+      <p>All marks in Protovis have a <tt>data</tt> property that controls
+      replication: a mark instance is created for each element in the data
+      array. The <tt>cell</tt> prototype exported by the grid layout has
+      a <tt>data</tt> property derived from the layout&rsquo;s
       <tt>rows</tt> property: the two-dimensional array is flattened (blended)
       into a one-dimensional array. The data on the added bar are thus the
       numbers in the heatmap array, which is then used to derive the fill style.
@@ -192,8 +193,8 @@ m4_include(`layouts/grid.js.html')
       similar function in exporting positional properties based on the results
       of running the squarified treemap layout algorithm. (The choice of treemap
       algorithm can be specified using the <tt>mode</tt> custom property.) In
-      addition, the treemap layout provides a <tt>label</tt> prototype that is a
-      little bit smarter than anchoring a label to the center of the bar:
+      addition, the treemap layout provides a <tt>label</tt> prototype that is
+      slightly smarter than anchoring a label to the center of the bar:
 
       <p><table width="100%"><tr><td>
         <img src="layouts/treemap.png">
@@ -205,18 +206,22 @@ m4_include(`layouts/grid.js.html')
 
       <p>The <tt>label</tt> prototype extends from the <tt>node</tt> prototype,
       although this is purely for the sake of convenience. We can instantiate a
-      treemap by first adding it to the root panel, then adding the node bar,
-      and finally adding the label:
+      treemap by first adding it to a panel, then adding the node bar, and
+      finally adding the label:
 
 m4_include(`layouts/treemap.js.html')
+
+      <p>The layout can also be used as the root panel directly, if desired.
 
       <p>We have customized the treemap layout slightly by redefining the fill
       style: we use translucent blue for internal nodes, and opaque orange for
       leaf nodes. This in conjunction with the six-pixel padding makes it easy
-      to see the tree structure through containment. We also override the label
-      visibility such that labels are hidden on internal nodes; an alternative
-      strategy would be to position the labels at the top-left, which can be
-      done by anchoring a label on the bar.
+      to see the tree structure through nested containment. We also override the
+      label visibility so as to hide label on internal nodes; an alternative
+      strategy would be to position the labels at the top-left corner, which can
+      be done by adding a label to the bar:
+
+m4_include(`layouts/treemap-alt.js.html')
 
       <p>As with all properties in Protovis, properties are defined in terms of
       data. With layouts, this means that we can access the underlying data
