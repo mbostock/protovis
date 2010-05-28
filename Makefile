@@ -2,6 +2,7 @@ HTML_FILES = \
 	www/docs/anchor.html \
 	www/docs/area.html \
 	www/docs/bar.html \
+	www/docs/color.html \
 	www/docs/dot.html \
 	www/docs/image.html \
 	www/docs/index.html \

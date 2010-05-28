@@ -45,7 +45,7 @@
         <p>
         <a href="anchor.html">Anchors</a><br>
         <a href="scale.html">Scales</a><br>
-        <a href="http://code.google.com/p/protovis-js/wiki/PvColors">Colors</a><br>
+        <a href="color.html">Colors</a><br>
 
         <h3>Design</h3>
         <a href="mark.html">Marks</a><br>
