@@ -49,7 +49,7 @@
 
         <h3>Download</h3>
         <a style="font-size:13px;"
-        href="http://protovis-js.googlecode.com/files/protovis-3.2.zip">protovis-3.2.zip (774 KB)</a>
+        href="http://protovis-js.googlecode.com/files/protovis-3.2.zip">protovis-3.2.zip (881 KB)</a>
       </div>
 
       <div style="float:left;width:640px;">
@@ -89,7 +89,7 @@
 
         <blockquote class="button">
           <a href="http://protovis-js.googlecode.com/files/protovis-3.2.zip">
-            <div>protovis-3.2.zip (774 KB)</div>
+            <div>protovis-3.2.zip (881 KB)</div>
             Download Protovis 3.2 &raquo;
           </a>
         </blockquote>
