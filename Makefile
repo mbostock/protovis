@@ -10,6 +10,7 @@ HTML_FILES = \
 	www/docs/mark.html \
 	www/docs/panel.html \
 	www/docs/rule.html \
+	www/docs/wedge.html \
 	www/ex/antibiotics-burtin.html \
 	www/ex/arc.html \
 	www/ex/area.html \

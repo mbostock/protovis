@@ -46,7 +46,7 @@
         <a href="../jsdoc/symbols/pv.Rule.html">pv.Rule API reference</a>
 
         <br>Examples:
-        <a href="../ex/box-and-whisker.html">Boxplots</a>,
+        <a href="../ex/box-and-whisker.html">Box-and-Whisker Plots</a>,
         <a href="../ex/candlestick.html">Candlestick Charts</a>
       </blockquote>
 

@@ -41,7 +41,7 @@
         <a href="label.html">Labels</a><br>
         <a href="line.html">Lines</a><br>
         <a href="rule.html">Rules</a><br>
-        <a href="http://code.google.com/p/protovis-js/wiki/PvWedge">Wedges</a><br>
+        <a href="wedge.html">Wedges</a><br>
         <p>
         <a href="http://code.google.com/p/protovis-js/wiki/PvAnchor">Anchors</a><br>
         <a href="http://code.google.com/p/protovis-js/wiki/PvScale">Scales</a><br>
