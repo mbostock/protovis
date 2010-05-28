@@ -32,13 +32,13 @@
     <div class="body">
       <div style="float:left;width:260px;">
         <h3>Gallery</h3>
-        <a href="ex/pack.html" class="item">
-          <img src="ex/pack-sm.png?3.2" width="200" height="180">
-          Circle Packing
+        <a href="ex/force.html" class="item">
+          <img src="ex/force-sm.png?3.2" width="200" height="180">
+          Force-Directed Layout
         </a>
-        <a href="ex/jobs.html" class="item">
-          <img src="ex/jobs-sm.png?3.0" width="200" height="180">
-          Job Voyager
+        <a href="ex/stream.html" class="item">
+          <img src="ex/stream-sm.png?3.2" width="200" height="180">
+          Streamgraphs
         </a>
         <a href="ex/cars.html" class="item">
           <img src="ex/cars-sm.png?3.2" width="200" height="180">
