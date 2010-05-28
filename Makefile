@@ -6,6 +6,7 @@ HTML_FILES = \
 	www/docs/index.html \
 	www/docs/label.html \
 	www/docs/layouts.html \
+	www/docs/line.html \
 	www/ex/antibiotics-burtin.html \
 	www/ex/arc.html \
 	www/ex/area.html \
