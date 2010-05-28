@@ -48,11 +48,12 @@
         <a href="http://code.google.com/p/protovis-js/wiki/PvColors">Colors</a><br>
 
         <h3>Design</h3>
-        <a href="http://code.google.com/p/protovis-js/wiki/PvMark">Marks</a><br>
+        <a href="mark.html">Marks</a><br>
         <a href="http://code.google.com/p/protovis-js/wiki/PvPanel">Panels</a><br>
         <a href="layouts.html">Layouts</a><span class="new">New</span><br>
         <a href="http://code.google.com/p/protovis-js/wiki/MarkInheritance">Inheritance</a><br>
         <a href="http://code.google.com/p/protovis-js/wiki/Interaction">Interaction</a><br>
+        <span style="color:#999;">Behaviors</span><span class="new">New</span><br>
         <a href="http://code.google.com/p/protovis-js/wiki/PropertyChaining">Property Chaining</a><br>
         <a href="http://code.google.com/p/protovis-js/wiki/MarkDefs">Local Variables</a><br>
         <a href="http://code.google.com/p/protovis-js/wiki/Animation">Animation</a><br>
