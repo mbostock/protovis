@@ -40,7 +40,7 @@
         <a href="image.html">Images</a><br>
         <a href="label.html">Labels</a><br>
         <a href="line.html">Lines</a><br>
-        <a href="http://code.google.com/p/protovis-js/wiki/PvRule">Rules</a><br>
+        <a href="rule.html">Rules</a><br>
         <a href="http://code.google.com/p/protovis-js/wiki/PvWedge">Wedges</a><br>
         <p>
         <a href="http://code.google.com/p/protovis-js/wiki/PvAnchor">Anchors</a><br>

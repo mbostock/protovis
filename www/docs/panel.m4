@@ -35,9 +35,10 @@
     </div>
 
     <div class="body">
-      <h1>Panel</h1>
+      <h1>Panels</h1>
 
-      <p>Panels are used to contain and replicate child marks. Description forthcoming.
+      <p><b>Panels</b> are used to contain and replicate child marks.
+      Description forthcoming.
 
       <blockquote>
         See also:
