@@ -1,4 +1,5 @@
 HTML_FILES = \
+	www/docs/anchor.html \
 	www/docs/area.html \
 	www/docs/bar.html \
 	www/docs/dot.html \
