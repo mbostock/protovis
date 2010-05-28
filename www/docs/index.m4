@@ -49,7 +49,8 @@
 
         <h3>Design</h3>
         <a href="http://code.google.com/p/protovis-js/wiki/PvMark">Marks</a><br>
-        <a href="layouts.html">Layouts</a><br>
+        <a href="http://code.google.com/p/protovis-js/wiki/PvPanel">Panels</a><br>
+        <a href="layouts.html">Layouts</a><span class="new">New</span><br>
         <a href="http://code.google.com/p/protovis-js/wiki/MarkInheritance">Inheritance</a><br>
         <a href="http://code.google.com/p/protovis-js/wiki/Interaction">Interaction</a><br>
         <a href="http://code.google.com/p/protovis-js/wiki/PropertyChaining">Property Chaining</a><br>
@@ -89,17 +90,18 @@
         the benefits of both types of system. Protovis is a <i>graphical</i>
         toolkit, designed for <i>visualization</i>. It retains some of the
         conceptual simplicity and low-level control of graphical systems by
-        dealing directly with graphical elements (shapes, lines, <i>i.e.</i>,
-        marks), but specifies marks declaratively as encodings of
-        data. Additionally, we provide useful abstractions to simplify
-        visualization.
+        dealing directly with graphical elements (shapes, lines, i.e., marks),
+        but specifies marks declaratively as encodings of data. Additionally, we
+        provide useful abstractions such as scales and layouts to simplify
+        common tasks.
 
         <h2>Declarative and Data-Driven</h2>
 
         <p>Protovis is similar to other graphics libraries such as Java 2D or
         Processing: we provide a mechanism for drawing rectangles (bars),
         circles (dots), lines, and polygons (areas). However, Protovis uses a
-        <i>declarative</i>, rather than <i>imperative</i>, syntax.
+        <i>declarative</i>, rather than <i>imperative</i>, syntax. Consider, for
+        example, how this representation affects a pie chart specification.
 
         <p>In Processing, you might specify a pie chart as series of arcs using
         a <tt>for</tt> loop and a call to <tt>arc</tt>, which immediately draws

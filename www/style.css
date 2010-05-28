@@ -153,6 +153,19 @@ iframe {
   background-color: #ff6;
 }
 
+.new {
+  text-transform: lowercase;
+  font-variant: small-caps;
+  font-weight: bold;
+  font-style: oblique;
+  font-size: smaller;
+  line-height: 0;
+  left: 6px;
+  bottom: 2px;
+  position: relative;
+  color: brown;
+}
+
 @media print {
   .head, .subhead {
     display: none;
