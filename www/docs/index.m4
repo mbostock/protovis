@@ -44,7 +44,7 @@
         <a href="wedge.html">Wedges</a><br>
         <p>
         <a href="anchor.html">Anchors</a><br>
-        <a href="http://code.google.com/p/protovis-js/wiki/PvScale">Scales</a><br>
+        <a href="scale.html">Scales</a><br>
         <a href="http://code.google.com/p/protovis-js/wiki/PvColors">Colors</a><br>
 
         <h3>Design</h3>
