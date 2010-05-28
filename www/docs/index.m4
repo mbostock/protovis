@@ -37,7 +37,7 @@
         <a href="area.html">Areas</a><br>
         <a href="bar.html">Bars</a><br>
         <a href="dot.html">Dots</a><br>
-        <a href="http://code.google.com/p/protovis-js/wiki/PvImage">Images</a><br>
+        <a href="image.html">Images</a><br>
         <a href="http://code.google.com/p/protovis-js/wiki/PvLabel">Labels</a><br>
         <a href="http://code.google.com/p/protovis-js/wiki/PvLine">Lines</a><br>
         <a href="http://code.google.com/p/protovis-js/wiki/PvRule">Rules</a><br>
