@@ -94,13 +94,18 @@ sub, sup {
 }
 
 .body tt, .body pre {
-  font: 12px/120% Courier;
+  font-family: Courier;
+  line-height: 120%;
 }
 
 .highlight {
   overflow: hidden;
   padding-left: 20px;
   border-left: solid 4px #ccc;
+}
+
+.highlight pre {
+  font-size: 12px;
 }
 
 iframe {

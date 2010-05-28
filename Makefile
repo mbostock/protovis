@@ -1,4 +1,5 @@
 HTML_FILES = \
+	www/docs/area.html \
 	www/docs/index.html \
 	www/docs/layouts.html \
 	www/ex/antibiotics-burtin.html \
@@ -98,6 +99,9 @@ www/ex/syntax.css: Makefile
 
 %.js.html: %.js Makefile
 	$(PYGMENT) -f html -O style=$(PYGMENT_STYLE) -l js $(filter %.js,$^) > $@
+
+%.js.txt: %.js Makefile
+	cat $(filter %.js,$^) > $@
 
 %.java.html: %.java Makefile
 	$(PYGMENT) -f html -O style=$(PYGMENT_STYLE) -l java $(filter %.java,$^) > $@
