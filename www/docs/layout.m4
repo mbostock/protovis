@@ -140,7 +140,7 @@
       represent elevation, we can make a simple topographic map using a grid of
       colored bars:
 
-m4_include(`layouts/grid.js.html')
+m4_include(`layout/grid.js.html')
 
       <p>Adding a layout to a visualization looks similar to adding a panel,
       with two differences: we use custom properties such as <tt>rows</tt> to
@@ -152,10 +152,10 @@ m4_include(`layouts/grid.js.html')
       the layout panel. As a diagram:
 
       <p><table width="100%"><tr><td>
-        <img src="layouts/grid.png">
+        <img src="layout/grid.png">
       </td><td width="350" align="right" valign="middle">
         <a href="../ex/heatmap.html">
-          <img src="layouts/grid-ex.png" style="border: solid 3px #ccc;">
+          <img src="layout/grid-ex.png" style="border: solid 3px #ccc;">
         </a>
       </td></tr></table>
 
@@ -197,10 +197,10 @@ m4_include(`layouts/grid.js.html')
       slightly smarter than anchoring a label to the center of the bar:
 
       <p><table width="100%"><tr><td>
-        <img src="layouts/treemap.png">
+        <img src="layout/treemap.png">
       </td><td width="350" align="right" valign="middle">
         <a href="../ex/treemap.html">
-          <img src="layouts/treemap-ex.png" style="border: solid 3px #ccc;">
+          <img src="layout/treemap-ex.png" style="border: solid 3px #ccc;">
         </a>
       </td></tr></table>
 
@@ -209,7 +209,7 @@ m4_include(`layouts/grid.js.html')
       treemap by first adding it to a panel, then adding the node bar, and
       finally adding the label:
 
-m4_include(`layouts/treemap.js.html')
+m4_include(`layout/treemap.js.html')
 
       <p>The layout can also be used as the root panel directly, if desired.
 
@@ -221,7 +221,7 @@ m4_include(`layouts/treemap.js.html')
       strategy would be to position the labels at the top-left corner, which can
       be done by adding a label to the bar:
 
-m4_include(`layouts/treemap-alt.js.html')
+m4_include(`layout/treemap-alt.js.html')
 
       <p>As with all properties in Protovis, properties are defined in terms of
       data. With layouts, this means that we can access the underlying data
@@ -243,10 +243,10 @@ m4_include(`layouts/treemap-alt.js.html')
       connected, and positive if they are.
 
       <p><table width="100%"><tr><td>
-        <img src="layouts/matrix.png">
+        <img src="layout/matrix.png">
       </td><td width="350" align="right" valign="middle">
         <a href="../ex/matrix.html">
-          <img src="layouts/matrix-ex.png" style="border: solid 3px #ccc;">
+          <img src="layout/matrix-ex.png" style="border: solid 3px #ccc;">
         </a>
       </td></tr></table>
 
@@ -268,10 +268,10 @@ m4_include(`layouts/treemap-alt.js.html')
       in an enclosing panel, with one instance per series.
 
       <p><table width="100%"><tr><td>
-        <img src="layouts/stack.png">
+        <img src="layout/stack.png">
       </td><td width="350" align="right" valign="middle">
         <a href="../ex/stream.html">
-          <img src="layouts/stack-ex.png" style="border: solid 3px #ccc;">
+          <img src="layout/stack-ex.png" style="border: solid 3px #ccc;">
         </a>
       </td></tr></table>
 
@@ -279,7 +279,7 @@ m4_include(`layouts/treemap-alt.js.html')
       is not explicitly added by the user. Instead, the panel is inserted by the
       layout when the area is added to the <tt>layer</tt> prototype:
 
-m4_include(`layouts/stack.js.html')
+m4_include(`layout/stack.js.html')
 
       <p>The stack layout also makes use of special properties that are
       evaluated by the layout, rather than using the standard property
@@ -312,10 +312,10 @@ m4_include(`layouts/stack.js.html')
       the the panel&rsquo;s <tt>overflow</tt> property to &ldquo;hidden&rdquo;:
 
       <p><table width="100%"><tr><td>
-        <img src="layouts/horizon.png">
+        <img src="layout/horizon.png">
       </td><td width="350" align="right" valign="middle">
         <a href="../ex/horizon.html">
-          <img src="layouts/horizon-ex.png" style="border: solid 3px #ccc;">
+          <img src="layout/horizon-ex.png" style="border: solid 3px #ccc;">
         </a>
       </td></tr></table>
 
@@ -328,10 +328,10 @@ m4_include(`layouts/stack.js.html')
       correspondingly, the array of all links:
 
       <p><table width="100%"><tr><td>
-        <img src="layouts/tree.png">
+        <img src="layout/tree.png">
       </td><td width="350" align="right" valign="middle">
         <a href="../ex/tree.html">
-          <img src="layouts/tree-ex.png" style="border: solid 3px #ccc;">
+          <img src="layout/tree-ex.png" style="border: solid 3px #ccc;">
         </a>
       </td></tr></table>
 
@@ -341,7 +341,7 @@ m4_include(`layouts/stack.js.html')
       layout is configured, the user can instantiate the link, node and label in
       the desired z-order:
 
-m4_include(`layouts/tree.js.html')
+m4_include(`layout/tree.js.html')
 
       <p>As this example shows, while some amount of duplicate code is necessary
       with this system to instantiate the mark prototypes, the amount of code is

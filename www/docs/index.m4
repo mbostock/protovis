@@ -50,7 +50,7 @@
         <h3>Design</h3>
         <a href="mark.html">Marks</a><br>
         <a href="panel.html">Panels</a><br>
-        <a href="layouts.html">Layouts</a><span class="new">New</span><br>
+        <a href="layout.html">Layouts</a><span class="new">New</span><br>
         <a href="http://code.google.com/p/protovis-js/wiki/MarkInheritance">Inheritance</a><br>
         <a href="http://code.google.com/p/protovis-js/wiki/Interaction">Interaction</a><br>
         <span style="color:#999;">Behaviors</span><span class="new">New</span><br>
