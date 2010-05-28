@@ -1,0 +1,11 @@
+new pv.Panel()
+    .width(150)
+    .height(150)
+  .add(pv.Dot)
+    .data([1, 1.2, 1.7, 1.5, .7, .2])
+    .bottom(function(d) d * 80)
+    .left(function() this.index * 25 + 10)
+  .add(pv.Rule)
+    .height(function() this.proto.bottom() - 5)
+    .bottom(0)
+  .root.render();

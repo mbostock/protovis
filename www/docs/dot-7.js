@@ -1,0 +1,10 @@
+new pv.Panel()
+    .width(150)
+    .height(150)
+  .add(pv.Dot)
+    .data(["circle", "square", "triangle", "cross", "diamond"])
+    .left(function() Math.random() * 100 + 25)
+    .bottom(function() this.index * 25 + 25)
+    .shape(function(d) d)
+    .fillStyle(pv.Colors.category10().by(pv.index))
+  .root.render();
