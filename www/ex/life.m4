@@ -33,7 +33,7 @@
         <a href="./">Index</a>
       </div>
       <div class="section">
-        <a href="error.html">&laquo; Previous</a> /
+        <a href="nba.html">&laquo; Previous</a> /
         <a href="cell.html">Next &raquo;</a>
       </div>
     </div>

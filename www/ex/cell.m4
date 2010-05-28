@@ -60,7 +60,7 @@
       <p><i>WARNING:</i> Moving the slider may produce flashing patterns!
 
       <blockquote style="font-size:13px;">
-        Next: <a href="bzr.html">Belousov-Zhabotinsky reaction</a>
+        Next: <a href="bzr.html">Belousov-Zhabotinsky</a>
       </blockquote>
 
       <h3>Source</h3>

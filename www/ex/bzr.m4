@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Protovis - Belousov&ndash;Zhabotinsky reaction</title>
+    <title>Protovis - Belousov&ndash;Zhabotinsky</title>
     <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
     <link type="text/css" rel="stylesheet" href="syntax.css"/>
     <script type="text/javascript" src="../protovis-r3.2.js"></script>
@@ -39,7 +39,7 @@
     </div>
 
     <div class="body">
-      <h1>Belousov&ndash;Zhabotinsky reaction</h1>
+      <h1>Belousov&ndash;Zhabotinsky</h1>
 
       <div style="float:left;width:300px;">
       <iframe scrolling="no" style="border:solid 4px #ccc;height:300px;" src="bzr-full.html"></iframe>
