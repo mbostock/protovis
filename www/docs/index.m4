@@ -34,8 +34,8 @@
         <h3>Reference</h3>
         <a href="../jsdoc/">API Documentation</a><br>
         <p>
-        <a href="http://code.google.com/p/protovis-js/wiki/PvArea">Areas</a><br>
-        <a href="http://code.google.com/p/protovis-js/wiki/PvBar">Bars</a><br>
+        <a href="area.html">Areas</a><br>
+        <a href="bar.html">Bars</a><br>
         <a href="http://code.google.com/p/protovis-js/wiki/PvDot">Dots</a><br>
         <a href="http://code.google.com/p/protovis-js/wiki/PvImage">Images</a><br>
         <a href="http://code.google.com/p/protovis-js/wiki/PvLabel">Labels</a><br>

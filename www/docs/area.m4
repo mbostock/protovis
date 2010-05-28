@@ -49,10 +49,7 @@
         <br>Examples:
         <a href="../ex/area.html">Area Charts</a>,
         <a href="../ex/stack.html">Stacked Charts</a>,
-        <a href="../ex/stream.html">Streamgraphs</a>,
-        <a href="../ex/horizon.html">Horizon Graphs</a>,
-        <a href="../ex/jobs.html">Job Voyager</a>,
-        <a href="../ex/minnesota.html">Minnesota Employment</a>
+        <a href="../ex/stream.html">Streamgraphs</a>
       </blockquote>
 
       <h2>Placement</h2>
