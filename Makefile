@@ -11,6 +11,7 @@ HTML_FILES = \
 	www/docs/index.html \
 	www/docs/inheritance.html \
 	www/docs/interaction.html \
+	www/docs/invert.html \
 	www/docs/label.html \
 	www/docs/layout.html \
 	www/docs/local.html \

@@ -64,7 +64,7 @@
         <h3>Tutorials</h3>
         <a href="start.html">Getting Started</a><br>
         <a href="splom.html">Scatterplot Matrix</a><br>
-        <a href="http://code.google.com/p/protovis-js/wiki/ScaleInvert">Scale Interaction</a><br>
+        <a href="invert.html">Scale Interaction</a><br>
 
         <h3>Publications</h3>
         <a href="../protovis.pdf">IEEE InfoVis 2009</a>
