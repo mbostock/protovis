@@ -62,7 +62,7 @@
         <a href="animation.html">Animation</a><br>
 
         <h3>Tutorials</h3>
-        <a href="http://code.google.com/p/protovis-js/wiki/GettingStarted">Getting Started</a><br>
+        <a href="start.html">Getting Started</a><br>
         <a href="http://code.google.com/p/protovis-js/wiki/PairsPlot">Scatterplot Matrix</a><br>
         <a href="http://code.google.com/p/protovis-js/wiki/ScaleInvert">Scale Interaction</a><br>
 
