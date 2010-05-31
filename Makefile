@@ -16,6 +16,7 @@ HTML_FILES = \
 	www/docs/line.html \
 	www/docs/mark.html \
 	www/docs/panel.html \
+	www/docs/releases.html \
 	www/docs/rule.html \
 	www/docs/scale.html \
 	www/docs/wedge.html \

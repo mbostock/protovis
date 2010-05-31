@@ -44,8 +44,11 @@
         <a href="wedge.html">Wedges</a><br>
         <p>
         <a href="anchor.html">Anchors</a><br>
-        <a href="scale.html">Scales</a><br>
         <a href="color.html">Colors</a><br>
+        <a href="data.html">Data</a><br>
+        <a href="scale.html">Scales</a><br>
+        <p>
+        <a href="releases.html">Release Notes</a><br>
 
         <h3>Design</h3>
         <a href="mark.html">Marks</a><br>
