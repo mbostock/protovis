@@ -298,7 +298,6 @@ m4_include(`interaction-5.js.html')
        <p>One alternative may be to allow the specification of property
        overrides from an event handler (e.g., mouseover). These overrides can
        then easily be removed from another event handlers (e.g., mouseout).
-
     </div>
 
     <div class="foot">
