@@ -20,6 +20,7 @@ HTML_FILES = \
 	www/docs/releases.html \
 	www/docs/rule.html \
 	www/docs/scale.html \
+	www/docs/splom.html \
 	www/docs/start.html \
 	www/docs/wedge.html \
 	www/ex/antibiotics-burtin.html \
