@@ -56,7 +56,7 @@
         <span style="color:#999;">Behaviors</span><span class="new">New</span><br>
         <a href="chaining.html">Property Chaining</a><br>
         <a href="local.html">Local Variables</a><br>
-        <a href="http://code.google.com/p/protovis-js/wiki/Animation">Animation</a><br>
+        <a href="animation.html">Animation</a><br>
 
         <h3>Tutorials</h3>
         <a href="http://code.google.com/p/protovis-js/wiki/GettingStarted">Getting Started</a><br>

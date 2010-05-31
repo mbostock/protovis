@@ -1,5 +1,6 @@
 HTML_FILES = \
 	www/docs/anchor.html \
+	www/docs/animation.html \
 	www/docs/area.html \
 	www/docs/bar.html \
 	www/docs/chaining.html \
