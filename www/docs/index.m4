@@ -55,7 +55,7 @@
         <a href="interaction.html">Interaction</a><br>
         <span style="color:#999;">Behaviors</span><span class="new">New</span><br>
         <a href="chaining.html">Property Chaining</a><br>
-        <a href="http://code.google.com/p/protovis-js/wiki/MarkDefs">Local Variables</a><br>
+        <a href="local.html">Local Variables</a><br>
         <a href="http://code.google.com/p/protovis-js/wiki/Animation">Animation</a><br>
 
         <h3>Tutorials</h3>
