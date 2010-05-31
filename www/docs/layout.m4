@@ -76,13 +76,13 @@
 
       <h2>Design</h2>
 
-      Layouts in Protovis are a minor specialization
-      of <a href="http://code.google.com/p/protovis-js/wiki/PvPanel">panels</a>,
-      which contain and replicate child marks. Indeed, the only difference
-      between a <i>panel</i> and a <i>layout</i> is that the latter can support
-      custom properties. These custom properties allow top-level configuration
-      of the layout; for example, a treemap layout might support multiple
-      algorithms (e.g., &ldquo;slide-and-dice&rdquo;, &ldquo;squarify&rdquo;,
+      Layouts in Protovis are a minor specialization of <a
+      href="panel.html">panels</a>, which contain and replicate child
+      marks. Indeed, the only difference between a <i>panel</i> and a
+      <i>layout</i> is that the latter can support custom properties. These
+      custom properties allow top-level configuration of the layout; for
+      example, a treemap layout might support multiple algorithms (e.g.,
+      &ldquo;slide-and-dice&rdquo;, &ldquo;squarify&rdquo;,
       &ldquo;voronoi&rdquo;), while a force-directed network layout might allow
       tweaking of spring tension or drag coefficients. Whereas standard
       properties, such as <tt>fillStyle</tt> and <tt>visible</tt>, share a
@@ -147,9 +147,8 @@ m4_include(`layout/grid.js.html')
       configure the layout, and we add to a mark prototype such as <tt>cell</tt>
       rather than adding directly to the panel. By adding to the <tt>cell</tt>
       prototype in this example, we are creating a new <a
-      href="http://code.google.com/p/protovis-js/wiki/PvBar">bar</a> that
-      inherits properties from <tt>cell</tt>, while simultaneously adding it to
-      the layout panel. As a diagram:
+      href="bar.html">bar</a> that inherits properties from <tt>cell</tt>, while
+      simultaneously adding it to the layout panel. As a diagram:
 
       <p><table width="100%"><tr><td>
         <img src="layout/grid.png">
@@ -321,11 +320,10 @@ m4_include(`layout/stack.js.html')
 
       <p>Node-link diagrams, such as the radial <b>tree</b> layout, also use
       implicit replication for the <tt>link</tt> prototype. With this layout,
-      the <tt>link</tt> prototype is intended to be used with
-      a <a href="http://code.google.com/p/protovis-js/wiki/PvLine">line</a>, and
-      the <tt>data</tt> property is a two-element array for the source node and
-      target node of each link. The interstitial panel&rsquo;s data is,
-      correspondingly, the array of all links:
+      the <tt>link</tt> prototype is intended to be used with a <a
+      href="line.html">line</a>, and the <tt>data</tt> property is a two-element
+      array for the source node and target node of each link. The interstitial
+      panel&rsquo;s data is, correspondingly, the array of all links:
 
       <p><table width="100%"><tr><td>
         <img src="layout/tree.png">

@@ -75,7 +75,7 @@ pv.listen(self, "mousemove", function() vis.render());
       Processing <a href="http://processing.org/learning/basics/distance2d.html">Distance
       2D</a> example. We demonstrate an equivalent technique for computing the
       distance from the panel to the mouse
-      using <tt><a href="http://protovis-js.googlecode.com/svn/trunk/jsdoc/symbols/pv.Mark.html#mouse">pv.Mark#mouse</a></tt>. One
+      using <tt><a href="../jsdoc/symbols/pv.Mark.html#mouse">pv.Mark#mouse</a></tt>. One
       benefit of a pure-JavaScript approach is that user interface events that
       happen outside of the canvas&mdash;such as mouse movement&mdash;can still
       be captured by visualization.

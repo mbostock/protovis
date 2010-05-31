@@ -48,14 +48,12 @@
       href="bar-full.html" target="_blank">View full screen.</a>
       </div>
 
-      <div style="float:left;padding-left:30px;width:440px;">
-      This simple bar chart is constructed using a <a
-      href="http://code.google.com/p/protovis-js/wiki/PvBar">bar</a> mark. A
+      <div style="float:left;padding-left:30px;width:440px;"> This simple bar
+      chart is constructed using a <a href="../docs/bar.html">bar</a> mark. A
       linear scale is used to compute the width of the bar, while an ordinal
       scale sets the top position and height for the categorical dimension.
-      Next, <a href="http://code.google.com/p/protovis-js/wiki/PvRule">rules</a>
-      and <a href="http://code.google.com/p/protovis-js/wiki/PvLabel">labels</a>
-      are added for reference values.
+      Next, <a href="../docs/rule.html">rules</a> and <a
+      href="../docs/label.html">labels</a> are added for reference values.
 
       <p>Bars can be used in a variety of ways. For instance, they can be <a
       href="stack.html">stacked</a> or <a href="group.html">grouped</a> to show

@@ -58,16 +58,14 @@
           Protovis
         </h1>
 
-        Protovis composes custom views of data with simple marks such
-        as <a href="http://code.google.com/p/protovis-js/wiki/PvBar">bars</a>
-        and <a href="http://code.google.com/p/protovis-js/wiki/PvDot">dots</a>.
-        Unlike low-level graphics libraries that quickly become tedious for
-        visualization, Protovis defines marks through dynamic properties that
-        encode data, allowing
-        <a href="http://code.google.com/p/protovis-js/wiki/MarkInheritance">inheritance</a>,
-        <a href="http://code.google.com/p/protovis-js/wiki/PvScale">scales</a>
-        and <a href="http://code.google.com/p/protovis-js/wiki/PvLayout">layouts</a>
-        to simplify construction.
+        Protovis composes custom views of data with simple marks such as <a
+        href="docs/bar.html">bars</a> and <a
+        href="docs/dot.html">dots</a>. Unlike low-level graphics libraries that
+        quickly become tedious for visualization, Protovis defines marks through
+        dynamic properties that encode data, allowing <a
+        href="docs/inheritance.html">inheritance</a>, <a
+        href="docs/scale.html">scales</a> and <a
+        href="docs/layout.html">layouts</a> to simplify construction.
 
         <p>Protovis is free and open-source, provided under
         the <a href="http://www.opensource.org/licenses/bsd-license.php">BSD
@@ -104,21 +102,21 @@
 
         <p class="update"><i>May 28, 2010</i> - ZOMG! Release 3.2 is finally
         available! Enjoy the powerful new layouts and the variety of new
-        examples in the gallery. We've also moved from SVN to <a
+        examples in the gallery. We&rsquo;ve also moved from SVN to <a
         href="http://gitorious.org/protovis">Gitorious</a> to make it easier for
         you to participate in development!
 
         <p class="update"><i>October 1, 2009</i> - Release 3.1 is available,
-        including minor bug fixes. We've also spruced up the home page and
-        examples gallery in anticipation
-        of <a href="http://vis.computer.org/VisWeek2009/">VisWeek 2009</a>.
+        including minor bug fixes. We&rsquo;ve also spruced up the home page and
+        examples gallery in anticipation of <a
+        href="http://vis.computer.org/VisWeek2009/">VisWeek 2009</a>.
 
         <p class="update"><i>September 19, 2009</i> - Release 3.0 is available,
         including major performance improvments, bug fixes, and handy utilities
-        such as scales and layouts. We've also moved all the documentation to
-        <a href="http://code.google.com/p/protovis-js/w/list">the wiki</a> so
-        that we can more easily keep it up-to-date. New tutorials, examples, and
-        documentation are available, and more is on the way.
+        such as scales and layouts. We&rsquo;ve also moved all the documentation
+        to the wiki so that we can more easily keep it up-to-date. New
+        tutorials, examples, and documentation are available, and more is on the
+        way.
 
         <p class="update"><i>July 16, 2009</i> - Release 2.6 is available,
         including ~2,800 lines of API documentation and numerous bug fixes.
@@ -146,11 +144,11 @@ m4_include(`bar-chart.js.html')
         visualizations.
 
         <p>To simplify construction, Protovis supports panels and inheritance. A
-        <i><a href="api/Panel.html">panel</a></i> is a container for replicating
-        marks.
-        <i><a href="http://code.google.com/p/protovis-js/wiki/MarkInheritance">Inheritance</a></i>
-        lets you derive new marks from existing ones, sharing some or all of the
-        properties. For example, here we derive labels for a rule and bar:
+        <i><a href="docs/panel.html">panel</a></i> is a container for
+        replicating marks. <i><a
+        href="docs/inheritance.html">Inheritance</a></i> lets you derive new
+        marks from existing ones, sharing some or all of the properties. For
+        example, here we derive labels for a rule and bar:
 
         <p><table><tr><td>
 m4_include(`bar-chart2.js.html')
@@ -158,12 +156,11 @@ m4_include(`bar-chart2.js.html')
           <img src="ex/bar-chart2.png?3.0" width="150" height="150">
         </td></tr></table></blockquote>
 
-        <p>The rule's label inherits the <tt>data</tt> and <tt>bottom</tt>
+        <p>The rule&rsquo;s label inherits the <tt>data</tt> and <tt>bottom</tt>
         property, causing it to appear on the rule and render the value (datum)
-        as text. The bar's label uses the bottom
-        <a href="http://code.google.com/p/protovis-js/wiki/PvAnchor">anchor</a>
-        to tweak positioning, so that the label is centered at the bottom of the
-        bar.
+        as text. The bar&rsquo;s label uses the bottom <a
+        href="docs/anchor.html">anchor</a> to tweak positioning, so that the
+        label is centered at the bottom of the bar.
 
         <p>Want to learn more? Peruse our <a href="ex/">examples</a>
         and <a href="docs/">documentation</a>.

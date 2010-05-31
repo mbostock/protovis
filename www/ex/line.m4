@@ -57,7 +57,7 @@
       response to discrete events.
 
       <p>Using the <a
-      href="http://protovis-js.googlecode.com/svn/trunk/jsdoc/symbols/pv.Line.html#interpolate"><tt>interpolate</tt></a>
+      href="../jsdoc/symbols/pv.Line.html#interpolate"><tt>interpolate</tt></a>
       property, it is easy to change this behavior for lines and areas.
       Protovis also supports various nonlinear interpolation methods, including
       cardinal spline, Catmull-Rom spline, B-spline, and monotone cubic!

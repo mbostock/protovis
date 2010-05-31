@@ -58,10 +58,8 @@
       the small multiples use non-aligned scales. This makes it easy to
       distinguish the one individual that worked in space research from the
       hundreds of thousands in manufacturing. This visualization also
-      demonstrates the <a
-      href="http://code.google.com/p/protovis-js/wiki/ScaleInvert">scale
-      inversion</a> interaction technique, showing the closest data point to the
-      mouse.
+      demonstrates the <a href="../docs/invert.html">scale inversion</a>
+      interaction technique, showing the closest data point to the mouse.
 
       <blockquote style="font-size:13px;">
         Next: <a href="zoom.html">Focus + Context</a>

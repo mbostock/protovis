@@ -48,22 +48,17 @@
       href="area-full.html" target="_blank">View full screen.</a>
       </div>
 
-      <div style="float:left;padding-left:30px;width:440px;">
-      This simple area chart is constructed using
-      an <a href="http://code.google.com/p/protovis-js/wiki/PvArea">area</a>
-      mark, with an
-      added <a href="http://code.google.com/p/protovis-js/wiki/PvLine">line</a>
-      for emphasis on the top
-      edge. Next, <a href="http://code.google.com/p/protovis-js/wiki/PvRule">rules</a>
-      and <a href="http://code.google.com/p/protovis-js/wiki/PvLabel">labels</a>
-      are added for reference values.
+      <div style="float:left;padding-left:30px;width:440px;"> This simple area
+      chart is constructed using an <a href="../docs/area.html">area</a> mark,
+      with an added <a href="../docs/line.html">line</a> for emphasis on the top
+      edge. Next, <a href="../docs/rule.html">rules</a> and <a
+      href="../docs/label.html">labels</a> are added for reference values.
 
       <p>Although this example is basic, it provides a good starting point for
       adding more complex features. For instance, <a
-      href="http://code.google.com/p/protovis-js/wiki/ScaleInvert">mouseover
-      interaction</a> can be added to allow precise reading of data values. Or
-      multiple series of data can be added to produce a <a
-      href="stack.html">stacked area chart</a>.
+      href="../docs/invert.html">mouseover interaction</a> can be added to allow
+      precise reading of data values. Or multiple series of data can be added to
+      produce a <a href="stack.html">stacked area chart</a>.
 
       <blockquote style="font-size:13px;">
         Next: <a href="bar.html">Bar &amp; Column Charts</a>
