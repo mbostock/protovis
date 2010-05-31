@@ -52,7 +52,7 @@
         <a href="panel.html">Panels</a><br>
         <a href="layout.html">Layouts</a><span class="new">New</span><br>
         <a href="inheritance.html">Inheritance</a><br>
-        <a href="http://code.google.com/p/protovis-js/wiki/Interaction">Interaction</a><br>
+        <a href="interaction.html">Interaction</a><br>
         <span style="color:#999;">Behaviors</span><span class="new">New</span><br>
         <a href="http://code.google.com/p/protovis-js/wiki/PropertyChaining">Property Chaining</a><br>
         <a href="http://code.google.com/p/protovis-js/wiki/MarkDefs">Local Variables</a><br>

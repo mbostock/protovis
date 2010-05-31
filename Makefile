@@ -7,6 +7,7 @@ HTML_FILES = \
 	www/docs/image.html \
 	www/docs/index.html \
 	www/docs/inheritance.html \
+	www/docs/interaction.html \
 	www/docs/label.html \
 	www/docs/layout.html \
 	www/docs/line.html \
