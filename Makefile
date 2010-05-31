@@ -5,6 +5,7 @@ HTML_FILES = \
 	www/docs/bar.html \
 	www/docs/chaining.html \
 	www/docs/color.html \
+	www/docs/data.html \
 	www/docs/dot.html \
 	www/docs/image.html \
 	www/docs/index.html \

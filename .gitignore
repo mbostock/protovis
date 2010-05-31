@@ -5,6 +5,7 @@ www/docs/area.html
 www/docs/bar.html
 www/docs/chaining.html
 www/docs/color.html
+www/docs/data.html
 www/docs/dot.html
 www/docs/image.html
 www/docs/index.html
@@ -12,8 +13,8 @@ www/docs/inheritance.html
 www/docs/interaction.html
 www/docs/label.html
 www/docs/layout.html
-www/docs/local.html
 www/docs/line.html
+www/docs/local.html
 www/docs/mark.html
 www/docs/panel.html
 www/docs/releases.html
@@ -93,3 +94,4 @@ www/ex/weather.html
 www/ex/wheat.html
 www/ex/zoom.html
 www/index.html
+www/jsdoc
