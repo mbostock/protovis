@@ -39,17 +39,57 @@
 
       <h3>3.2 - May 28, 2010</h3>
 
-      <p>layouts
-      <p>behaviors
-      <p>scales
-      <p>anchors
-      <p>rendering
-      <p>splines
+      <p>layouts:
+      <ul>
+      <li>completely redesigned for reusable visualizations!
+      <li>networks - arc, matrix, force-directed, etc.
+      <li>hierarchies - dendrograms, sunbursts, trees, treemaps, circle-packing, etc.
+      <li>stack layout (stacked bars, stacked areas, streamgraphs, etc.)
+      <li>horizon graphs, bullet charts, and more!
+      </ul>
+
+      <p>interaction:
+      <ul>
+      <li>resuable behaviors - drag, pan, resize, select, point, zoom!
+      <li><tt>events</tt> property for controlling event capture
+      </ul>
+
+      <p>data:
+      <ul>
+      <li>scales - quantile, root
+      <li>ticks - date ticks, custom tick counts, tick formatting
+      <li>stats - histogram, variance, deviation
+      <li>text formatting and parsing - dates, numbers, times
+      <li>particle simulation - constraints, forces, quadtree
+      </ul>
+
+      <p>marks and rendering:
+      <ul>
+      <li>partial rendering - re-render only specific marks for faster updates
+      <li>anchors - no longer inherit by default, can be used across panels
+      <li><tt>antialias</tt> property for crisp edges
+      <li><tt>interpolate</tt> property supports &ldquo;cardinal&rdquo;, &ldquo;basis&rdquo; and &ldquo;polar&rdquo;
+      <li><tt>tension</tt>, <tt>eccentricity</tt> and <tt>lineJoin</tt> properties
+      <li>dynamic images
+      <li>rules one-pixel wide and not antialiased by default
+      </ul>
+
+      <p>geo:
+      <ul>
+      <li>geo scales for mapping latitude-longitude to <i>x</i>-<i>y</i>
+      <li>projections - Mercator, Gall&ndash;Peters, sinusoidal, Aitoff, Hammer
+      </ul>
+
+      <p>gitorious:
+      <ul>
+      <li>source code in <i>protovis</i> repository
+      <li>website and documentation in <i>docs</i> repository
+      </ul>
 
       <h3>3.1 - October 6, 2009</h3>
 
       <ul>
-      <li>panels now support an &ldquo;overflow&rdquo; property; set to &ldquo;hidden&rdquo; for clipping
+      <li>panels now support an <tt>overflow</tt> property; set to &ldquo;hidden&rdquo; for clipping
       <li>linear and log scales support tick formatting
       <li>ordinal scale supports <tt>pv.index</tt> accessor
       <li>log scale invert supports negative values
@@ -72,7 +112,7 @@
       <p>local variables:
 
       <ul>
-      <li>use &ldquo;def&rdquo; to define local state per mark (e.g., <tt>def("foo")</tt>)
+      <li>use <tt>def</tt> to define local state per mark (e.g., <tt>def("foo")</tt>)
       <li>event handlers can override def values (e.g., <tt>this.foo(42)</tt>)
       <li>properties can query def values (e.g., <tt>this.foo() == 42</tt>)
       <li>can also be used to define efficient property functions (e.g., scales)
@@ -137,7 +177,7 @@
       <p>lines and areas:
 
       <ul>
-      <li>can be &ldquo;segmented&rdquo; for variable lineWidth, color, visibility
+      <li>can be <tt>segmented</tt> for variable lineWidth, color, visibility
       <li>segmentation can change dynamically (e.g., on mouseover tooltip refinement)
       <li>see Napoleon's March and animated examples
       <li>step functions!
