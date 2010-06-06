@@ -50,7 +50,8 @@ JS_CORE_FILES = \
 	src/mark/Rule.js \
 	src/mark/Panel.js \
 	src/mark/Image.js \
-	src/mark/Wedge.js
+	src/mark/Wedge.js \
+	src/mark/Ease.js
 
 JS_LAYOUT_FILES = \
 	src/physics/Particle.js \
