@@ -47,6 +47,12 @@ pv.Ease = (function() {
     };
   }
 
+  function poly(e) {
+    return function(t) {
+      return t < 0 ? 0 : t > 1 ? 1 : Math.pow(t, e);
+    }
+  }
+
   function sin(t) {
     return 1 - Math.cos(t * Math.PI / 2);
   }
@@ -84,11 +90,21 @@ pv.Ease = (function() {
         : 7.5625 * (t -= 2.625 / 2.75) * t + .984375;
   }
 
-  var elasticDefault = elastic(),
+  var quad = poly(2),
+      cubic = poly(3),
+      elasticDefault = elastic(),
       backDefault = back();
 
   pv.Eases = {
     "linear": pv.identity,
+    "quad-in": quad,
+    "quad-out": reverse(quad),
+    "quad-in-out": reflect(quad),
+    "quad-out-in": reflect(reverse(quad)),
+    "cubic-in": cubic,
+    "cubic-out": reverse(cubic),
+    "cubic-in-out": reflect(cubic),
+    "cubic-out-in": reflect(reverse(cubic)),
     "sin-in": sin,
     "sin-out": reverse(sin),
     "sin-in-out": reflect(sin),
@@ -124,6 +140,7 @@ pv.Ease = (function() {
     circle: function() { return circle; },
     elastic: elastic,
     back: back,
-    bounce: bounce
+    bounce: bounce,
+    poly: poly
   };
 })();
