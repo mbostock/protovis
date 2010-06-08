@@ -2,6 +2,7 @@
   <head>
     <title>Transition</title>
     <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <link rel="stylesheet" type="text/css" href="../style.css"/>
   </head>
   <body>
     <select id="menu" onchange="ease = pv.ease(this.value); start();">
@@ -39,17 +40,21 @@
       <option value="bounce-in-out">bounce-in-out</option>
       <option value="bounce-out-in">bounce-out-in</option>
     </select>
+    <input type="checkbox" id="slow" onchange="slow = this.checked;"
+    ><label for="slow">Slow</label>
     <input type="button" onclick="start();" value="Start">
     <input type="button" onclick="stop();" value="Stop">
     <br>
     <script type="text/javascript+protovis">
 
-var ease = pv.ease("cubic-in-out");
+var slow = false,
+    ease = pv.ease("cubic-in-out");
 
 var w = 500,
     h = 750,
     i = 0,
-    x = pv.Scale.ordinal(pv.range(15)).splitBanded(0, w, 4/5),
+    c = pv.Colors.category10(),
+    x = pv.Scale.ordinal(pv.range(20)).splitBanded(0, w, 4/5),
     y1 = pv.Scale.linear(-.25, 1.25).range(0, h), // current scale
     y2 = pv.Scale.linear(-2, 3).range(0, h); // previous scale
 
@@ -89,22 +94,19 @@ label.exit()
     .top(function(d) h - y1(d));
 
 var bar = vis.add(pv.Bar)
-    .data(function() pv.range(10 + (i & 1 ? 5 : 0)).map(Math.random))
-    .id(pv.index)
-    .left(function() x(this.index))
+    .data(pv.range(20).map(function(d) (d >= 10 ? .55 : .05) + .45 * Math.random()))
+    .left(function() x(i & 1 ? ((this.index % 10) * 2 + (this.index >= 10)) : this.index))
     .width(function() x.range().band)
     .bottom(function() y1(0))
     .height(function(d) y1(d) - y1(0))
-    .fillStyle(pv.Colors.category10().by(function() i));
+    .fillStyle(c.by(function() this.index < 10));
 
 bar.enter()
-    .fillStyle("transparent")
     .bottom(function() y2(0))
     .top(function() h - y2(0))
     .height(0);
 
 bar.exit()
-    .fillStyle("transparent")
     .bottom(function() y1(0))
     .top(function() h - y1(0))
     .height(0);
@@ -121,7 +123,7 @@ menu.focus();
 function start() {
   i++;
   var y = y1; y1 = y2; y2 = y; // swap scales
-  vis.transition(500).ease(ease).start();
+  vis.transition(slow ? 2500 : 500).ease(ease).start();
 }
 
 function stop() {

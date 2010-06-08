@@ -104,7 +104,10 @@ pv.Transition = function(mark) {
       var mark = before.mark, bi = ids(before), ai = ids(after);
       for (var i = 0; i < before.length; i++) {
         var b = before[i], a = b.id ? ai[b.id] : after[i];
-        if (!a) a = override(before, i, mark.$exit);
+        if (!a) {
+          a = override(before, i, mark.$exit);
+          b.exit = true;
+        }
         interpolateInstance(b, a);
       }
       for (var i = 0; i < after.length; i++) {
@@ -129,13 +132,28 @@ pv.Transition = function(mark) {
       return s;
     }
 
+    /** @private */
+    function cleanup(scene) {
+      for (var i = 0, j = 0; i < scene.length; i++) {
+        var s = scene[i];
+        if (!s.exit) {
+          scene[j++] = s;
+          if (s.children) s.children.forEach(cleanup);
+        }
+      }
+      scene.length = j;
+    }
+
     interpolate(before, after);
 
     timer = setInterval(function() {
       var t = Math.max(0, Math.min(1, (Date.now() - start) / duration)),
           e = ease(t);
       for (var i = interpolators; i; i = i.next) i(e);
-      if (t == 1) that.stop();
+      if (t == 1) {
+        cleanup(before);
+        that.stop();
+      }
       pv.Scene.updateAll(before);
     }, 24);
   };
