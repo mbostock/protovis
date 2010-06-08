@@ -49,39 +49,78 @@ var ease = pv.ease("cubic-in-out");
 var w = 500,
     h = 750,
     i = 0,
-    x = pv.Scale.ordinal(pv.range(10)).splitBanded(0, w, 4/5),
-    y = pv.Scale.linear(-.25, 1.25).range(0, h);
+    x = pv.Scale.ordinal(pv.range(15)).splitBanded(0, w, 4/5),
+    y1 = pv.Scale.linear(-.25, 1.25).range(0, h), // current scale
+    y2 = pv.Scale.linear(-2, 3).range(0, h); // previous scale
 
 var vis = new pv.Panel()
     .width(w)
     .height(h)
     .margin(20);
 
-vis.add(pv.Rule)
-    .data(y.ticks(20))
-    .bottom(y)
-    .strokeStyle("#ddd")
-  .anchor("left").add(pv.Label)
-    .text(y.tickFormat);
+var rule = vis.add(pv.Rule)
+    .data(function() y1.ticks(20))
+    .id(function(d) d.toFixed(1))
+    .bottom(function(d) y1(d))
+    .strokeStyle("#ddd");
+
+var label = rule.anchor("left").add(pv.Label)
+    .id(function(d) d.toFixed(1))
+    .text(function(d) y1.tickFormat(d));
+
+rule.enter()
+    .strokeStyle("transparent")
+    .bottom(function(d) y2(d))
+    .top(function(d) h - y2(d));
+
+rule.exit()
+    .strokeStyle("transparent")
+    .bottom(function(d) y1(d))
+    .top(function(d) h - y1(d));
+
+label.enter()
+    .textStyle("transparent")
+    .bottom(function(d) y2(d))
+    .top(function(d) h - y2(d));
+
+label.exit()
+    .textStyle("transparent")
+    .bottom(function(d) y1(d))
+    .top(function(d) h - y1(d));
 
 var bar = vis.add(pv.Bar)
-    .data(function() pv.range(10).map(Math.random))
+    .data(function() pv.range(10 + (i & 1 ? 5 : 0)).map(Math.random))
+    .id(pv.index)
     .left(function() x(this.index))
-    .width(x.range().band)
-    .bottom(function() y(0))
-    .height(function(d) y(d) - y(0))
+    .width(function() x.range().band)
+    .bottom(function() y1(0))
+    .height(function(d) y1(d) - y1(0))
     .fillStyle(pv.Colors.category10().by(function() i));
+
+bar.enter()
+    .fillStyle("transparent")
+    .bottom(function() y2(0))
+    .top(function() h - y2(0))
+    .height(0);
+
+bar.exit()
+    .fillStyle("transparent")
+    .bottom(function() y1(0))
+    .top(function() h - y1(0))
+    .height(0);
 
 vis.add(pv.Rule)
     .data([0, 1])
-    .bottom(y)
+    .id(function(d) d.toFixed(1))
+    .bottom(function(d) y1(d))
     .strokeStyle("#000");
 
 vis.render();
 menu.focus();
 
 function start() {
-  i++ & 1 ? y.domain(-.25, 1.25) : y.domain(-5, 1.5);
+  i++;
+  var y = y1; y1 = y2; y2 = y; // swap scales
   vis.transition(500).ease(ease).start();
 }
 

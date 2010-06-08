@@ -214,7 +214,8 @@ pv.Mark.prototype
     .property("title", String)
     .property("reverse", Boolean)
     .property("antialias", Boolean)
-    .property("events", String);
+    .property("events", String)
+    .property("id", String);
 
 /**
  * The mark type; a lower camelCase name. The type name controls rendering
@@ -410,6 +411,15 @@ pv.Mark.prototype.scale = 1;
  *
  * @type boolean
  * @name pv.Mark.prototype.reverse
+ */
+
+/**
+ * The instance identifier, for correspondence across animated transitions. If
+ * no identifier is specified, correspondence is determined using the mark
+ * index. Identifiers are not global, but local to a given mark.
+ *
+ * @type String
+ * @name pv.Mark.prototype.id
  */
 
 /**
@@ -883,7 +893,7 @@ pv.Mark.prototype.bind = function() {
  * special. The <tt>data</tt> property is evaluated first; unlike the other
  * properties, the data stack is from the parent panel, rather than the current
  * mark, since the data is not defined until the data property is evaluated.
- * The <tt>visisble</tt> property is subsequently evaluated for each instance;
+ * The <tt>visible</tt> property is subsequently evaluated for each instance;
  * only if true will the {@link #buildInstance} method be called, evaluating
  * other properties and recursively building the scene graph.
  *
@@ -1211,7 +1221,20 @@ pv.Mark.dispatch = function(type, scene, index) {
 };
 
 pv.Mark.prototype.transition = function(ms) {
-  var transition = new pv.Transition(this);
-  if (arguments.length) transition.duration(ms);
-  return transition;
+  var t = new pv.Transition(this);
+  return arguments.length ? t.duration(ms) : t;
+};
+
+pv.Mark.prototype.enter = function() {
+  if (this.$enter) return this.$enter;
+  var e = this.$enter = new pv.Mark();
+  e.defaults = null;
+  return e;
+};
+
+pv.Mark.prototype.exit = function() {
+  if (this.$exit) return this.$exit;
+  var e = this.$exit = new pv.Mark();
+  e.defaults = null;
+  return e;
 };

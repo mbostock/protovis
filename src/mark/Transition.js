@@ -26,6 +26,8 @@ pv.Transition = function(mark) {
     textMargin: 1
   };
 
+  var none = pv.Color.transparent;
+
   that.ease = function(x) {
     return arguments.length
         ? (ease = typeof x == "function" ? x : pv.ease(x), that)
@@ -44,8 +46,9 @@ pv.Transition = function(mark) {
     var before = mark.scene,
         after,
         start = Date.now(),
-        tween;
+        interpolators;
 
+    // TODO clearing the scene like this forces total re-build
     mark.scene = null;
     mark.bind();
     mark.build();
@@ -53,41 +56,87 @@ pv.Transition = function(mark) {
     mark.scene = before;
 
     /** @private */
-    function interpolator(p, before, after) {
-      // TODO handle enter and exit
-      if (before[p] == after[p]) return;
-      if (p in supported) {
-        var i = pv.Scale.interpolator(before[p], after[p]);
-        return function(t) { before[p] = i(t); };
+    function ids(marks) {
+      var map = {};
+      for (var i = 0; i < marks.length; i++) {
+        var mark = marks[i];
+        if (mark.id) map[mark.id] = mark;
+      }
+      return map;
+    }
+
+    /** @private */
+    function interpolateProperty(name, before, after) {
+      if (before[name] == after[name]) return;
+      if (name in supported) {
+        var i = pv.Scale.interpolator(before[name], after[name]);
+        return function(t) {
+          before[name] = i(t);
+        };
+      } else {
+        return function(t) {
+          if (t > .5) {
+            before[name] = after[name];
+          }
+        };
       }
     }
 
     /** @private */
-    function setup(before, after) {
-      for (var i = 0; i < before.length; i++) {
-        var b = before[i], a = after[i];
-        for (var p in b) {
-          var t = interpolator(p, b, a);
-          if (t) {
-            t.next = tween;
-            tween = t;
-          }
+    function interpolateInstance(before, after) {
+      for (var name in before) {
+        if (name == "children") continue; // ignore
+        var i = interpolateProperty(name, before, after);
+        if (i) {
+          i.next = interpolators;
+          interpolators = i;
         }
-        if (b.children) {
-          for (var j = 0; j < b.children.length; j++) {
-            setup(b.children[j], a.children[j]);
-          }
+      }
+      if (before.children) {
+        for (var j = 0; j < before.children.length; j++) {
+          interpolate(before.children[j], after.children[j]);
         }
       }
     }
 
-    setup(before, after);
+    /** @private */
+    function interpolate(before, after) {
+      var mark = before.mark, bi = ids(before), ai = ids(after);
+      for (var i = 0; i < before.length; i++) {
+        var b = before[i], a = b.id ? ai[b.id] : after[i];
+        if (!a) a = override(before, i, mark.$exit);
+        interpolateInstance(b, a);
+      }
+      for (var i = 0; i < after.length; i++) {
+        var a = after[i], b = a.id ? bi[a.id] : before[i];
+        if (!b) {
+          before.push(b = override(after, i, mark.$enter));
+          interpolateInstance(b, a);
+        }
+      }
+    }
+
+    /** @private */
+    function override(scene, index, proto) {
+      if (!proto) return scene[index];
+      var s = pv.extend(scene[index]),
+          r = scene.mark.root.scene;
+      scene.mark.context(scene, index, function() {
+        this.buildProperties(s, proto.$properties);
+        // TODO need to detect and recompute implied properties!
+      });
+      scene.mark.root.scene = r;
+      return s;
+    }
+
+    interpolate(before, after);
+
     timer = setInterval(function() {
       var t = Math.max(0, Math.min(1, (Date.now() - start) / duration)),
           e = ease(t);
-      for (var i = tween; i; i = i.next) i(e);
-      pv.Scene.updateAll(before);
+      for (var i = interpolators; i; i = i.next) i(e);
       if (t == 1) that.stop();
+      pv.Scene.updateAll(before);
     }, 24);
   };
 
