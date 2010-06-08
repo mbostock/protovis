@@ -51,7 +51,8 @@ JS_CORE_FILES = \
 	src/mark/Panel.js \
 	src/mark/Image.js \
 	src/mark/Wedge.js \
-	src/mark/Ease.js
+	src/mark/Ease.js \
+	src/mark/Transition.js
 
 JS_LAYOUT_FILES = \
 	src/physics/Particle.js \

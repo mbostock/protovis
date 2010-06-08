@@ -1209,3 +1209,9 @@ pv.Mark.dispatch = function(type, scene, index) {
     });
   return true;
 };
+
+pv.Mark.prototype.transition = function(ms) {
+  var transition = new pv.Transition(this);
+  if (arguments.length) transition.duration(ms);
+  return transition;
+};
