@@ -4,7 +4,7 @@
     <script type="text/javascript" src="../../protovis-d3.2.js"></script>
   </head>
   <body>
-    <select id="menu" onchange="ease = pv.Eases[this.value];vis.render();">
+    <select id="menu" onchange="ease = pv.ease(this.value); vis.render();">
       <option value="linear">linear</option>
       <option value="quad-in">quad-in</option>
       <option value="quad-out">quad-out</option>
@@ -41,7 +41,7 @@
     </select><br>
     <script type="text/javascript+protovis">
 
-var ease = pv.Eases.linear;
+var ease = pv.ease("linear");
 
 var w = 500,
     h = 750,

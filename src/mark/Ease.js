@@ -95,7 +95,7 @@ pv.Ease = (function() {
       elasticDefault = elastic(),
       backDefault = back();
 
-  pv.Eases = {
+  var eases = {
     "linear": pv.identity,
     "quad-in": quad,
     "quad-out": reverse(quad),
@@ -129,6 +129,10 @@ pv.Ease = (function() {
     "bounce-out": reverse(bounce),
     "bounce-in-out": reflect(bounce),
     "bounce-out-in": reflect(reverse(bounce))
+  };
+
+  pv.ease = function(f) {
+    return eases[f];
   };
 
   return {
