@@ -101,16 +101,6 @@ var bar = vis.add(pv.Bar)
     .height(function(d) y1(d) - y1(0))
     .fillStyle(c.by(function() this.index < 10));
 
-bar.enter()
-    .bottom(function() y2(0))
-    .top(function() h - y2(0))
-    .height(0);
-
-bar.exit()
-    .bottom(function() y1(0))
-    .top(function() h - y1(0))
-    .height(0);
-
 vis.add(pv.Rule)
     .data([0, 1])
     .id(function(d) d.toFixed(1))
