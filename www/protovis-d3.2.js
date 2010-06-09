@@ -1,4 +1,4 @@
-// fba9dc272a443cf9fdb984676a7732a6a082f4c0
+// 1af99abbcda59c0facd0d28e96faee49d18e27b3
 /**
  * @class The built-in Array class.
  * @name Array
@@ -142,7 +142,7 @@ pv.version = {
    * @type number
    * @constant
    */
-  minor: 2
+  minor: 3
 };
 
 /**
@@ -863,7 +863,9 @@ pv.Format.number = function() {
       padf = "0", // default fraction pad
       padg = true, // whether group separator affects integer padding
       decimal = ".", // default decimal separator
-      group = ","; // default group separator
+      group = ",", // default group separator
+      np = "\u2212", // default negative prefix
+      ns = ""; // default negative suffix
 
   /** @private */
   function format(x) {
@@ -872,12 +874,12 @@ pv.Format.number = function() {
     var s = String(Math.abs(x)).split(".");
 
     /* Pad, truncate and group the integral part. */
-    var i = s[0], n = (x < 0) ? "-" : "";
+    var i = s[0];
     if (i.length > maxi) i = i.substring(i.length - maxi);
-    if (padg && (i.length < mini)) i = n + new Array(mini - i.length + 1).join(padi) + i;
+    if (padg && (i.length < mini)) i = new Array(mini - i.length + 1).join(padi) + i;
     if (i.length > 3) i = i.replace(/\B(?=(?:\d{3})+(?!\d))/g, group);
-    if (!padg && (i.length < mins)) i = new Array(mins - i.length + 1).join(padi) + n + i;
-    s[0] = i;
+    if (!padg && (i.length < mins)) i = new Array(mins - i.length + 1).join(padi) + i;
+    s[0] = x < 0 ? np + i + ns : i;
 
     /* Pad the fractional part. */
     var f = s[1] || "";
@@ -1045,6 +1047,23 @@ pv.Format.number = function() {
       return this;
     }
     return group;
+  };
+
+  /**
+   * Sets or gets the negative prefix and suffix. The default negative prefix is
+   * "&minus;", and the default negative suffix is the empty string.
+   *
+   * @param {string} [x] the negative prefix.
+   * @param {string} [y] the negative suffix.
+   * @returns {pv.Format.number} <tt>this</tt> or the current negative format.
+   */
+  format.negativeAffix = function(x, y) {
+    if (arguments.length) {
+      np = String(x || "");
+      ns = String(y || "");
+      return this;
+    }
+    return [np, ns];
   };
 
   return format;
@@ -1350,6 +1369,7 @@ pv.range = function(start, stop, step) {
   if (step == undefined) step = 1;
   if ((stop - start) / step == Infinity) throw new Error("range must be finite");
   var array = [], i = 0, j;
+  stop -= (stop - start) * 1e-10; // floating point precision!
   if (step < 0) {
     while ((j = start + step * i++) > stop) {
       array.push(j);
@@ -6448,7 +6468,8 @@ pv.Mark.prototype
     .property("title", String)
     .property("reverse", Boolean)
     .property("antialias", Boolean)
-    .property("events", String);
+    .property("events", String)
+    .property("id", String);
 
 /**
  * The mark type; a lower camelCase name. The type name controls rendering
@@ -6644,6 +6665,15 @@ pv.Mark.prototype.scale = 1;
  *
  * @type boolean
  * @name pv.Mark.prototype.reverse
+ */
+
+/**
+ * The instance identifier, for correspondence across animated transitions. If
+ * no identifier is specified, correspondence is determined using the mark
+ * index. Identifiers are not global, but local to a given mark.
+ *
+ * @type String
+ * @name pv.Mark.prototype.id
  */
 
 /**
@@ -7117,7 +7147,7 @@ pv.Mark.prototype.bind = function() {
  * special. The <tt>data</tt> property is evaluated first; unlike the other
  * properties, the data stack is from the parent panel, rather than the current
  * mark, since the data is not defined until the data property is evaluated.
- * The <tt>visisble</tt> property is subsequently evaluated for each instance;
+ * The <tt>visible</tt> property is subsequently evaluated for each instance;
  * only if true will the {@link #buildInstance} method be called, evaluating
  * other properties and recursively building the scene graph.
  *
@@ -7442,6 +7472,25 @@ pv.Mark.dispatch = function(type, scene, index) {
       if (m && m.render) m.render();
     });
   return true;
+};
+
+pv.Mark.prototype.transition = function(ms) {
+  var t = new pv.Transition(this);
+  return arguments.length ? t.duration(ms) : t;
+};
+
+pv.Mark.prototype.enter = function() {
+  if (this.$enter) return this.$enter;
+  var e = this.$enter = new pv.Mark();
+  e.defaults = null;
+  return e;
+};
+
+pv.Mark.prototype.exit = function() {
+  if (this.$exit) return this.$exit;
+  var e = this.$exit = new pv.Mark();
+  e.defaults = null;
+  return e;
 };
 /**
  * Constructs a new mark anchor with default properties.
@@ -9258,6 +9307,320 @@ pv.Wedge.prototype.buildImplied = function(s) {
   if (s.angle == null) s.angle = s.endAngle - s.startAngle;
   else if (s.endAngle == null) s.endAngle = s.startAngle + s.angle;
   pv.Mark.prototype.buildImplied.call(this, s);
+};
+/*
+ * TERMS OF USE - EASING EQUATIONS
+ *
+ * Open source under the BSD License.
+ *
+ * Copyright 2001 Robert Penner
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * - Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ * - Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ * - Neither the name of the author nor the names of contributors may be used to
+ *   endorse or promote products derived from this software without specific
+ *   prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
+
+pv.Ease = (function() {
+
+  function reverse(f) {
+    return function(t) {
+      return 1 - f(1 - t);
+    };
+  }
+
+  function reflect(f) {
+    return function(t) {
+      return .5 * (t < .5 ? f(2 * t) : (2 - f(2 - 2 * t)));
+    };
+  }
+
+  function poly(e) {
+    return function(t) {
+      return t < 0 ? 0 : t > 1 ? 1 : Math.pow(t, e);
+    }
+  }
+
+  function sin(t) {
+    return 1 - Math.cos(t * Math.PI / 2);
+  }
+
+  function exp(t) {
+    return t ? Math.pow(2, 10 * (t - 1)) - 0.001 : 0;
+  }
+
+  function circle(t) {
+    return -(Math.sqrt(1 - t * t) - 1);
+  }
+
+  function elastic(a, p) {
+    var s;
+    if (!p) p = 0.45;
+    if (!a || a < 1) { a = 1; s = p / 4; }
+    else s = p / (2 * Math.PI) * Math.asin(1 / a);
+    return function(t) {
+      return t <= 0 || t >= 1 ? t
+          : -(a * Math.pow(2, 10 * (--t)) * Math.sin((t - s) * (2 * Math.PI) / p));
+    };
+  }
+
+  function back(s) {
+    if (!s) s = 1.70158;
+    return function(t) {
+      return t * t * ((s + 1) * t - s);
+    };
+  }
+
+  function bounce(t) {
+    return t < 1 / 2.75 ? 7.5625 * t * t
+        : t < 2 / 2.75 ? 7.5625 * (t -= 1.5 / 2.75) * t + .75
+        : t < 2.5 / 2.75 ? 7.5625 * (t -= 2.25 / 2.75) * t + .9375
+        : 7.5625 * (t -= 2.625 / 2.75) * t + .984375;
+  }
+
+  var quad = poly(2),
+      cubic = poly(3),
+      elasticDefault = elastic(),
+      backDefault = back();
+
+  var eases = {
+    "linear": pv.identity,
+    "quad-in": quad,
+    "quad-out": reverse(quad),
+    "quad-in-out": reflect(quad),
+    "quad-out-in": reflect(reverse(quad)),
+    "cubic-in": cubic,
+    "cubic-out": reverse(cubic),
+    "cubic-in-out": reflect(cubic),
+    "cubic-out-in": reflect(reverse(cubic)),
+    "sin-in": sin,
+    "sin-out": reverse(sin),
+    "sin-in-out": reflect(sin),
+    "sin-out-in": reflect(reverse(sin)),
+    "exp-in": exp,
+    "exp-out": reverse(exp),
+    "exp-in-out": reflect(exp),
+    "exp-out-in": reflect(reverse(exp)),
+    "circle-in": circle,
+    "circle-out": reverse(circle),
+    "circle-in-out": reflect(circle),
+    "circle-out-in": reflect(reverse(circle)),
+    "elastic-in": elasticDefault,
+    "elastic-out": reverse(elasticDefault),
+    "elastic-in-out": reflect(elasticDefault),
+    "elastic-out-in": reflect(reverse(elasticDefault)),
+    "back-in": backDefault,
+    "back-out": reverse(backDefault),
+    "back-in-out": reflect(backDefault),
+    "back-out-in": reflect(reverse(backDefault)),
+    "bounce-in": bounce,
+    "bounce-out": reverse(bounce),
+    "bounce-in-out": reflect(bounce),
+    "bounce-out-in": reflect(reverse(bounce))
+  };
+
+  pv.ease = function(f) {
+    return eases[f];
+  };
+
+  return {
+    reverse: reverse,
+    reflect: reflect,
+    linear: function() { return pv.identity; },
+    sin: function() { return sin; },
+    exp: function() { return exp; },
+    circle: function() { return circle; },
+    elastic: elastic,
+    back: back,
+    bounce: bounce,
+    poly: poly
+  };
+})();
+pv.Transition = function(mark) {
+  var that = this,
+      ease = pv.ease("cubic-in-out"),
+      duration = 250,
+      timer;
+
+  var supported = {
+    top: 1,
+    left: 1,
+    right: 1,
+    bottom: 1,
+    width: 1,
+    height: 1,
+    innerRadius: 1,
+    outerRadius: 1,
+    radius: 1,
+    startAngle: 1,
+    endAngle: 1,
+    angle: 1,
+    fillStyle: 1,
+    strokeStyle: 1,
+    lineWidth: 1,
+    eccentricity: 1,
+    tension: 1,
+    textStyle: 1,
+    textMargin: 1
+  };
+
+  var none = pv.Color.transparent;
+
+  that.ease = function(x) {
+    return arguments.length
+        ? (ease = typeof x == "function" ? x : pv.ease(x), that)
+        : ease;
+  };
+
+  that.duration = function(x) {
+    return arguments.length
+        ? (duration = Number(x), that)
+        : duration;
+  };
+
+  that.start = function() {
+    if (timer) return;
+    if (mark.parent) fail(); // TODO allow partial rendering
+    var before = mark.scene,
+        after,
+        start = Date.now(),
+        interpolators;
+
+    // TODO clearing the scene like this forces total re-build
+    mark.scene = null;
+    mark.bind();
+    mark.build();
+    after = mark.scene;
+    mark.scene = before;
+
+    /** @private */
+    function ids(marks) {
+      var map = {};
+      for (var i = 0; i < marks.length; i++) {
+        var mark = marks[i];
+        if (mark.id) map[mark.id] = mark;
+      }
+      return map;
+    }
+
+    /** @private */
+    function interpolateProperty(name, before, after) {
+      if (before[name] == after[name]) return;
+      if (name in supported) {
+        var i = pv.Scale.interpolator(before[name], after[name]);
+        return function(t) {
+          before[name] = i(t);
+        };
+      } else {
+        return function(t) {
+          if (t > .5) {
+            before[name] = after[name];
+          }
+        };
+      }
+    }
+
+    /** @private */
+    function interpolateInstance(before, after) {
+      for (var name in before) {
+        if (name == "children") continue; // ignore
+        var i = interpolateProperty(name, before, after);
+        if (i) {
+          i.next = interpolators;
+          interpolators = i;
+        }
+      }
+      if (before.children) {
+        for (var j = 0; j < before.children.length; j++) {
+          interpolate(before.children[j], after.children[j]);
+        }
+      }
+    }
+
+    /** @private */
+    function interpolate(before, after) {
+      var mark = before.mark, bi = ids(before), ai = ids(after);
+      for (var i = 0; i < before.length; i++) {
+        var b = before[i], a = b.id ? ai[b.id] : after[i];
+        if (!a) {
+          a = override(before, i, mark.$exit);
+          b.exit = true;
+        }
+        interpolateInstance(b, a);
+      }
+      for (var i = 0; i < after.length; i++) {
+        var a = after[i], b = a.id ? bi[a.id] : before[i];
+        if (!b) {
+          before.push(b = override(after, i, mark.$enter));
+          interpolateInstance(b, a);
+        }
+      }
+    }
+
+    /** @private */
+    function override(scene, index, proto) {
+      if (!proto) return scene[index];
+      var s = pv.extend(scene[index]),
+          r = scene.mark.root.scene;
+      scene.mark.context(scene, index, function() {
+        this.buildProperties(s, proto.$properties);
+        // TODO need to detect and recompute implied properties!
+      });
+      scene.mark.root.scene = r;
+      return s;
+    }
+
+    /** @private */
+    function cleanup(scene) {
+      for (var i = 0, j = 0; i < scene.length; i++) {
+        var s = scene[i];
+        if (!s.exit) {
+          scene[j++] = s;
+          if (s.children) s.children.forEach(cleanup);
+        }
+      }
+      scene.length = j;
+    }
+
+    interpolate(before, after);
+
+    timer = setInterval(function() {
+      var t = Math.max(0, Math.min(1, (Date.now() - start) / duration)),
+          e = ease(t);
+      for (var i = interpolators; i; i = i.next) i(e);
+      if (t == 1) {
+        cleanup(before);
+        that.stop();
+      }
+      pv.Scene.updateAll(before);
+    }, 24);
+  };
+
+  that.stop = function() {
+    clearInterval(timer);
+  };
 };
 /**
  * Abstract; not implemented. There is no explicit constructor; this class
@@ -13973,6 +14336,14 @@ pv.Layout.Matrix.prototype.buildImplied = function(s) {
  * http://projects.instantcognition.com/protovis/bulletchart/
  */
 
+/**
+ * Constructs a new, empty bullet layout. Layouts are not typically constructed
+ * directly; instead, they are added to an existing panel via
+ * {@link pv.Mark#add}.
+ *
+ * @class
+ * @extends pv.Layout
+ */
 pv.Layout.Bullet = function() {
   pv.Layout.call(this);
   var that = this,
@@ -13995,6 +14366,12 @@ pv.Layout.Bullet = function() {
         .domain(0, Math.max(1, x.measures.length - 1));
   };
 
+  /**
+   * The range prototype.
+   *
+   * @type pv.Mark
+   * @name pv.Layout.Bullet.prototype.range
+   */
   (this.range = new pv.Mark())
       .data(function() { return x.ranges; })
       .reverse(true)
@@ -14008,6 +14385,12 @@ pv.Layout.Bullet = function() {
       .antialias(false)
       .parent = that;
 
+  /**
+   * The measure prototype.
+   *
+   * @type pv.Mark
+   * @name pv.Layout.Bullet.prototype.measure
+   */
   (this.measure = new pv.Mark())
       .extend(this.range)
       .data(function() { return x.measures; })
@@ -14018,6 +14401,12 @@ pv.Layout.Bullet = function() {
       .fillStyle(function() { return measureColor(this.index); })
       .parent = that;
 
+  /**
+   * The marker prototype.
+   *
+   * @type pv.Mark
+   * @name pv.Layout.Bullet.prototype.marker
+   */
   (this.marker = new pv.Mark())
       .data(function() { return x.markers; })
       .left(function(d) { return orient == "left" ? scale(d) : horizontal ? null : this.parent.width() / 2; })
@@ -14047,12 +14436,52 @@ pv.Layout.Bullet.prototype = pv.extend(pv.Layout)
     .property("measures")
     .property("maximum", Number);
 
+/**
+ * Default properties for bullet layouts.
+ *
+ * @type pv.Layout.Bullet
+ */
 pv.Layout.Bullet.prototype.defaults = new pv.Layout.Bullet()
     .extend(pv.Layout.prototype.defaults)
     .orient("left")
     .ranges([])
     .markers([])
     .measures([]);
+
+/**
+ * The orientation.
+ *
+ * @type string
+ * @name pv.Layout.Bullet.prototype.orient
+ */
+
+/**
+ * The array of range values.
+ *
+ * @type array
+ * @name pv.Layout.Bullet.prototype.ranges
+ */
+
+/**
+ * The array of marker values.
+ *
+ * @type array
+ * @name pv.Layout.Bullet.prototype.markers
+ */
+
+/**
+ * The array of measure values.
+ *
+ * @type array
+ * @name pv.Layout.Bullet.prototype.measures
+ */
+
+/**
+ * Optional; the maximum range value.
+ *
+ * @type number
+ * @name pv.Layout.Bullet.prototype.maximum
+ */
 
 /** @private */
 pv.Layout.Bullet.prototype.buildImplied = function(s) {
