@@ -47,6 +47,12 @@ text += "(0, 1, NaN)\t''\t'" + i + "'\n";
 i = pv.range(-1, 1);
 text += "(-1, 1)\t'-1,0'\t'" + i + "'\n";
 
+i = pv.range(2.4, 14 * .2 + .2, .2);
+text += "(2.4, 14 * .2 + .2, .2)\t'2.4,2.6,2.8'\t'" + i + "'\n";
+
+i = pv.range(-2.4, -14 * .2 - .2, -.2);
+text += "(-2.4, -14 * .2 - .2, -.2)\t'-2.4,-2.6,-2.8'\t'" + i + "'\n";
+
 i = pv.range(Infinity, Infinity);
 text += "(Infinity, Infinity)\t''\t'" + i + "'\n";
 
