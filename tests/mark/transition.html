@@ -44,7 +44,7 @@
     ><label for="slow">Slow</label>
     <input type="button" onclick="start();" value="Start">
     <input type="button" onclick="stop();" value="Stop">
-    <br>
+    <p>
     <script type="text/javascript+protovis">
 
 var slow = false,
@@ -61,7 +61,7 @@ var w = 500,
 var vis = new pv.Panel()
     .width(w)
     .height(h)
-    .margin(20);
+    .margin(30);
 
 var rule = vis.add(pv.Rule)
     .data(function() y1.ticks(20))
