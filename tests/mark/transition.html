@@ -70,28 +70,20 @@ var rule = vis.add(pv.Rule)
     .strokeStyle("#ddd");
 
 var label = rule.anchor("left").add(pv.Label)
-    .id(function(d) d.toFixed(1))
     .text(function(d) y1.tickFormat(d));
 
 rule.enter()
     .strokeStyle("transparent")
-    .bottom(function(d) y2(d))
-    .top(function(d) h - y2(d));
+    .bottom(function(d) y2(d));
 
 rule.exit()
-    .strokeStyle("transparent")
-    .bottom(function(d) y1(d))
-    .top(function(d) h - y1(d));
+    .strokeStyle("transparent");
 
 label.enter()
-    .textStyle("transparent")
-    .bottom(function(d) y2(d))
-    .top(function(d) h - y2(d));
+    .textStyle("transparent");
 
 label.exit()
-    .textStyle("transparent")
-    .bottom(function(d) y1(d))
-    .top(function(d) h - y1(d));
+    .textStyle("transparent");
 
 var bar = vis.add(pv.Bar)
     .data(pv.range(20).map(function(d) (d >= 10 ? .55 : .05) + .45 * Math.random()))

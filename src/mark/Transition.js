@@ -105,30 +105,48 @@ pv.Transition = function(mark) {
       for (var i = 0; i < before.length; i++) {
         var b = before[i], a = b.id ? ai[b.id] : after[i];
         if (!a) {
-          a = override(before, i, mark.$exit);
-          b.exit = true;
+          after.push(a = override(before, i, mark.$exit, after.target && after.target[after.length]));
+          a.exit = b.exit = true;
         }
         interpolateInstance(b, a);
       }
       for (var i = 0; i < after.length; i++) {
         var a = after[i], b = a.id ? bi[a.id] : before[i];
-        if (!b) {
-          before.push(b = override(after, i, mark.$enter));
+        if (!b && !a.exit) {
+          before.push(b = override(after, i, mark.$enter, before.target && before.target[before.length]));
           interpolateInstance(b, a);
         }
       }
     }
 
     /** @private */
-    function override(scene, index, proto) {
-      if (!proto) return scene[index];
+    function override(scene, index, proto, target) {
+
       var s = pv.extend(scene[index]),
-          r = scene.mark.root.scene;
-      scene.mark.context(scene, index, function() {
-        this.buildProperties(s, proto.$properties);
-        // TODO need to detect and recompute implied properties!
+          m = scene.mark,
+          r = m.root.scene;
+
+      scene = pv.extend(scene);
+      scene[index] = s;
+      s.target = target;
+
+      var properties = m.binds.optional;
+      if (proto) {
+        var seen = {};
+        for (var i = 0; i < proto.$properties.length; i++) {
+          seen[proto.$properties[i].name] = 1;
+        }
+        properties = properties
+            .filter(function(p) { return !(p.name in seen); })
+            .concat(proto.$properties);
+      }
+
+      m.context(scene, index, function() {
+        this.buildProperties(s, properties);
+        this.buildImplied(s);
       });
-      scene.mark.root.scene = r;
+
+      m.root.scene = r;
       return s;
     }
 

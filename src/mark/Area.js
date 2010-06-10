@@ -256,16 +256,13 @@ pv.Area.prototype.buildInstance = function(s) {
 pv.Area.prototype.anchor = function(name) {
   var scene;
   return pv.Mark.prototype.anchor.call(this, name)
-    .def("$area.anchor", function() {
-        scene = this.scene.target;
-      })
     .interpolate(function() {
-       return scene[this.index].interpolate;
+       return this.scene[this.index].target.interpolate;
       })
     .eccentricity(function() {
-       return scene[this.index].eccentricity;
+       return this.scene[this.index].target.eccentricity;
       })
     .tension(function() {
-        return scene[this.index].tension;
+        return this.scene[this.index].target.tension;
       });
 };

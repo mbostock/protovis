@@ -147,11 +147,8 @@ pv.Dot.prototype.defaults = new pv.Dot()
 pv.Dot.prototype.anchor = function(name) {
   var scene;
   return pv.Mark.prototype.anchor.call(this, name)
-    .def("$wedge.anchor", function() {
-        scene = this.scene.target;
-      })
     .left(function() {
-        var s = scene[this.index];
+        var s = this.scene[this.index].target;
         switch (this.name()) {
           case "bottom":
           case "top":
@@ -161,11 +158,11 @@ pv.Dot.prototype.anchor = function(name) {
         return s.left + s.radius;
       })
     .right(function() {
-        var s = scene[this.index];
+        var s = this.scene[this.index].target;
         return this.name() == "left" ? s.right + s.radius : null;
       })
     .top(function() {
-        var s = scene[this.index];
+        var s = this.scene[this.index].target;
         switch (this.name()) {
           case "left":
           case "right":
@@ -175,7 +172,7 @@ pv.Dot.prototype.anchor = function(name) {
         return s.top + s.radius;
       })
     .bottom(function() {
-        var s = scene[this.index];
+        var s = this.scene[this.index].target;
         return this.name() == "top" ? s.bottom + s.radius : null;
       })
     .textAlign(function() {

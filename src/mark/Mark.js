@@ -515,14 +515,14 @@ pv.Mark.prototype.def = function(name, v) {
  * @returns {pv.Anchor} the new anchor.
  */
 pv.Mark.prototype.anchor = function(name) {
-  var target = this, scene;
+  var target = this;
 
   /* Default anchor name. */
   if (!name) name = "center";
 
   /** @private Find the instances of target that match source. */
   function instances(source) {
-    var mark = target, index = [];
+    var mark = target, index = [], scene;
 
     /* Mirrored descent. */
     while (!(scene = mark.scene)) {
@@ -550,17 +550,19 @@ pv.Mark.prototype.anchor = function(name) {
 
   return new pv.Anchor(this)
     .name(name)
-    .def("$mark.anchor", function() {
-        scene = this.scene.target = instances(this);
-      })
     .data(function() {
-        return scene.map(function(s) { return s.data; });
+        return (this.scene.target = instances(this))
+            .map(function(s) { return s.data; });
       })
     .visible(function() {
-        return scene[this.index].visible;
+        return (this.scene[this.index].target = this.scene.target[this.index])
+            .visible;
+      })
+    .id(function() {
+        return this.scene[this.index].target.id;
       })
     .left(function() {
-        var s = scene[this.index], w = s.width || 0;
+        var s = this.scene[this.index].target, w = s.width || 0;
         switch (this.name()) {
           case "bottom":
           case "top":
@@ -570,7 +572,7 @@ pv.Mark.prototype.anchor = function(name) {
         return s.left + w;
       })
     .top(function() {
-        var s = scene[this.index], h = s.height || 0;
+        var s = this.scene[this.index].target, h = s.height || 0;
         switch (this.name()) {
           case "left":
           case "right":
@@ -580,11 +582,11 @@ pv.Mark.prototype.anchor = function(name) {
         return s.top + h;
       })
     .right(function() {
-        var s = scene[this.index];
+        var s = this.scene[this.index].target;
         return this.name() == "left" ? s.right + (s.width || 0) : null;
       })
     .bottom(function() {
-        var s = scene[this.index];
+        var s = this.scene[this.index].target;
         return this.name() == "top" ? s.bottom + (s.height || 0) : null;
       })
     .textAlign(function() {
