@@ -69,23 +69,13 @@ var rule = vis.add(pv.Rule)
     .bottom(function(d) y1(d))
     .strokeStyle("#ddd");
 
-var label = rule.anchor("left").add(pv.Label)
-    .text(function(d) y1.tickFormat(d));
-
-rule.enter()
-    .strokeStyle("transparent")
+rule.on("enter")
     .bottom(function(d) y2(d));
 
-rule.exit()
-    .strokeStyle("transparent");
+rule.anchor("left").add(pv.Label)
+    .text(function(d) y1.tickFormat(d));
 
-label.enter()
-    .textStyle("transparent");
-
-label.exit()
-    .textStyle("transparent");
-
-var bar = vis.add(pv.Bar)
+vis.add(pv.Bar)
     .data(pv.range(20).map(function(d) (d >= 10 ? .55 : .05) + .45 * Math.random()))
     .left(function() x(i & 1 ? ((this.index % 10) * 2 + (this.index >= 10)) : this.index))
     .width(function() x.range().band)

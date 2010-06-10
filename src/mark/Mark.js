@@ -1227,16 +1227,6 @@ pv.Mark.prototype.transition = function(ms) {
   return arguments.length ? t.duration(ms) : t;
 };
 
-pv.Mark.prototype.enter = function() {
-  if (this.$enter) return this.$enter;
-  var e = this.$enter = new pv.Mark();
-  e.defaults = null;
-  return e;
-};
-
-pv.Mark.prototype.exit = function() {
-  if (this.$exit) return this.$exit;
-  var e = this.$exit = new pv.Mark();
-  e.defaults = null;
-  return e;
+pv.Mark.prototype.on = function(state) {
+  return this["$" + state] = new pv.Transient();
 };

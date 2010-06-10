@@ -26,6 +26,8 @@ pv.Transition = function(mark) {
     textMargin: 1
   };
 
+  var defaults = new pv.Transient();
+
   var none = pv.Color.transparent;
 
   that.ease = function(x) {
@@ -121,31 +123,32 @@ pv.Transition = function(mark) {
 
     /** @private */
     function override(scene, index, proto, target) {
-
       var s = pv.extend(scene[index]),
           m = scene.mark,
-          r = m.root.scene;
+          r = m.root.scene,
+          p = (proto || defaults).$properties;
 
-      scene = pv.extend(scene);
-      scene[index] = s;
-      s.target = target;
-
-      var properties = m.binds.optional;
-      if (proto) {
-        var seen = {};
-        for (var i = 0; i < proto.$properties.length; i++) {
-          seen[proto.$properties[i].name] = 1;
-        }
-        properties = properties
-            .filter(function(p) { return !(p.name in seen); })
-            .concat(proto.$properties);
+      /* Correct the target reference, if this is an anchor. */
+      if (target) {
+        scene = pv.extend(scene);
+        scene[index] = s;
+        s.target = target;
       }
 
+      /* Determine the set of properties to evaluate. */
+      var seen = {};
+      for (var i = 0; i < p.length; i++) seen[p[i].name] = 1;
+      p = m.binds.optional
+          .filter(function(p) { return !(p.name in seen); })
+          .concat(p);
+
+      /* Evaluate the properties and update any implied ones. */
       m.context(scene, index, function() {
-        this.buildProperties(s, properties);
+        this.buildProperties(s, p);
         this.buildImplied(s);
       });
 
+      /* Restore the root scene. This should probably be done by context(). */
       m.root.scene = r;
       return s;
     }
