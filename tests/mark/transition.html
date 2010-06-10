@@ -42,13 +42,13 @@
     </select>
     <input type="checkbox" id="slow" onchange="slow = this.checked;"
     ><label for="slow">Slow</label>
-    <input type="button" onclick="start();" value="Start">
-    <input type="button" onclick="stop();" value="Stop">
+    <input type="button" onclick="start();" value="Transition">
     <p>
     <script type="text/javascript+protovis">
 
 var slow = false,
-    ease = pv.ease("cubic-in-out");
+    ease = pv.ease("cubic-in-out"),
+    tx;
 
 var w = 500,
     h = 750,
@@ -95,10 +95,10 @@ menu.focus();
 function start() {
   i++;
   var y = y1; y1 = y2; y2 = y; // swap scales
-  vis.transition(slow ? 2500 : 500).ease(ease).start();
-}
-
-function stop() {
+  vis.transition()
+      .duration(slow ? 5000 : 500)
+      .ease(ease)
+      .start();
 }
 
     </script>

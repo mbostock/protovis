@@ -5,7 +5,7 @@
     <link rel="stylesheet" type="text/css" href="../style.css"/>
   </head>
   <body>
-    <input type="button" onclick="start();" value="Start">
+    <input type="button" onclick="start();" value="Transition">
     <script type="text/javascript+protovis">
 
 var w = 500,
@@ -38,7 +38,7 @@ vis.render();
 
 function start() {
   i++;
-  vis.transition(2500).start();
+  vis.transition().duration(2500).start();
 }
 
     </script>
