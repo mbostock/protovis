@@ -1228,5 +1228,5 @@ pv.Mark.prototype.transition = function(ms) {
 };
 
 pv.Mark.prototype.on = function(state) {
-  return this["$" + state] = new pv.Transient();
+  return this["$" + state] = new pv.Transient(this);
 };

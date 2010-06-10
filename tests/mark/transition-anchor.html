@@ -18,26 +18,21 @@ var vis = new pv.Panel()
     .margin(30);
 
 var rule = vis.add(pv.Rule)
-    .data(function() i & 1 ? [0.25] : [0.5])
+    .data(function() i & 1 ? [0.25, 0.75] : [0.5])
     .id(function(d) d.toFixed(2))
     .bottom(function(d) d * h);
 
-var label = rule.anchor("left").add(pv.Label)
+rule.on("enter")
+    .bottom(0)
+    .left(0)
+    .width(0)
+  .on("exit")
+    .top(0)
+    .left(0)
+    .width(0);
+
+rule.anchor("left").add(pv.Label)
     .text(function(d) d.toFixed(2));
-
-rule.enter()
-    .bottom(0)
-    .strokeStyle("transparent");
-
-rule.exit()
-    .bottom(0)
-    .strokeStyle("transparent");
-
-label.enter()
-    .textStyle("transparent");
-
-label.exit()
-    .textStyle("transparent");
 
 vis.render();
 
