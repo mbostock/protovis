@@ -555,8 +555,7 @@ pv.Mark.prototype.anchor = function(name) {
             .map(function(s) { return s.data; });
       })
     .visible(function() {
-        return (this.scene[this.index].target = this.scene.target[this.index])
-            .visible;
+        return this.scene[this.index].target.visible;
       })
     .id(function() {
         return this.scene[this.index].target.id;
@@ -821,7 +820,7 @@ pv.Mark.stack = [];
  * do not need to be queried during build.
  */
 pv.Mark.prototype.bind = function() {
-  var seen = {}, types = [[], [], [], []], data, visible;
+  var seen = {}, types = [[], [], [], []], data, required = [];
 
   /** Scans the proto chain for the specified mark. */
   function bind(mark) {
@@ -833,7 +832,7 @@ pv.Mark.prototype.bind = function() {
           seen[p.name] = p;
           switch (p.name) {
             case "data": data = p; break;
-            case "visible": visible = p; break;
+            case "visible": case "id": required.push(p); break;
             default: types[p.type].push(p); break;
           }
         }
@@ -866,7 +865,7 @@ pv.Mark.prototype.bind = function() {
     properties: seen,
     data: data,
     defs: defs,
-    required: [visible],
+    required: required,
     optional: pv.blend(types)
   };
 };
@@ -988,6 +987,7 @@ pv.Mark.prototype.buildProperties = function(s, properties) {
  * @param s a node in the scene graph; the instance of the mark to build.
  */
 pv.Mark.prototype.buildInstance = function(s) {
+  if (this.scene.target) s.target = this.scene.target[this.index];
   this.buildProperties(s, this.binds.required);
   if (s.visible) {
     this.buildProperties(s, this.binds.optional);

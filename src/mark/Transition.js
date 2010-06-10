@@ -4,7 +4,7 @@ pv.Transition = function(mark) {
       duration = 250,
       timer;
 
-  var supported = {
+  var interpolated = {
     top: 1,
     left: 1,
     right: 1,
@@ -22,6 +22,7 @@ pv.Transition = function(mark) {
     lineWidth: 1,
     eccentricity: 1,
     tension: 1,
+    textAngle: 1,
     textStyle: 1,
     textMargin: 1
   };
@@ -42,7 +43,7 @@ pv.Transition = function(mark) {
 
   /** @private */
   function interpolateProperty(list, name, before, after) {
-    if (name in supported) {
+    if (name in interpolated) {
       var i = pv.Scale.interpolator(before[name], after[name]);
       var f = function(t) { before[name] = i(t); }
     } else {
@@ -71,17 +72,29 @@ pv.Transition = function(mark) {
     var mark = before.mark, bi = ids(before), ai = ids(after);
     for (var i = 0; i < before.length; i++) {
       var b = before[i], a = b.id ? ai[b.id] : after[i];
-      if (!a) {
-        after.push(a = override(before, i, mark.$exit, after.target && after.target[after.length]));
-        a.exit = b.exit = true;
+      b.index = i;
+      if (!a || !a.visible) {
+        var o = override(before, i, mark.$exit, after.target && after.target[after.length]);
+
+        /*
+         * After the transition finishes, we need to do a little cleanup to
+         * insure that the final state of the scenegraph is consistent with the
+         * "after" render. For instances that were removed, we need to remove
+         * them from the scenegraph; for instances that became invisible, we
+         * need to mark them invisible. See the cleanup method for details.
+         */
+        o.transition = b.transition = a ? 2 : (after.push(o), 1);
+        a = o;
       }
       interpolateInstance(list, b, a);
     }
     for (var i = 0; i < after.length; i++) {
       var a = after[i], b = a.id ? bi[a.id] : before[i];
-      if (!b && !a.exit) {
-        before.push(b = override(after, i, mark.$enter, before.target && before.target[before.length]));
-        interpolateInstance(list, b, a);
+      if (!(b && b.visible) && !a.transition) {
+        var o = override(after, i, mark.$enter, before.target && before.target[before.length]);
+        if (!b) before.push(o);
+        else before[b.index] = o;
+        interpolateInstance(list, o, a);
       }
     }
   }
@@ -122,8 +135,9 @@ pv.Transition = function(mark) {
   function cleanup(scene) {
     for (var i = 0, j = 0; i < scene.length; i++) {
       var s = scene[i];
-      if (!s.exit) {
+      if (s.transition != 1) {
         scene[j++] = s;
+        if (s.transition == 2) s.visible = false;
         if (s.children) s.children.forEach(cleanup);
       }
     }
