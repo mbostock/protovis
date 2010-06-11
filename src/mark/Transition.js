@@ -73,7 +73,8 @@ pv.Transition = function(mark) {
     for (var i = 0; i < before.length; i++) {
       var b = before[i], a = b.id ? ai[b.id] : after[i];
       b.index = i;
-      if (!a || !a.visible) {
+      if (!b.visible) continue;
+      if (!(a && a.visible)) {
         var o = override(before, i, mark.$exit, after.target && after.target[after.length]);
 
         /*
@@ -83,14 +84,14 @@ pv.Transition = function(mark) {
          * them from the scenegraph; for instances that became invisible, we
          * need to mark them invisible. See the cleanup method for details.
          */
-        o.transition = b.transition = a ? 2 : (after.push(o), 1);
+        b.transition = a ? 2 : (after.push(o), 1);
         a = o;
       }
       interpolateInstance(list, b, a);
     }
     for (var i = 0; i < after.length; i++) {
       var a = after[i], b = a.id ? bi[a.id] : before[i];
-      if (!(b && b.visible) && !a.transition) {
+      if (!(b && b.visible) && a.visible) {
         var o = override(after, i, mark.$enter, before.target && before.target[before.length]);
         if (!b) before.push(o);
         else before[b.index] = o;
