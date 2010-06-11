@@ -1021,7 +1021,11 @@ pv.Mark.prototype.buildImplied = function(s) {
   if (w == null) {
     w = width - (r = r || 0) - (l = l || 0);
   } else if (r == null) {
-    r = width - w - (l = l || 0);
+    if (l == null) {
+      l = r = (width - w) / 2;
+    } else {
+      r = width - w - (l = l || 0);
+    }
   } else if (l == null) {
     l = width - w - (r = r || 0);
   }
@@ -1031,7 +1035,11 @@ pv.Mark.prototype.buildImplied = function(s) {
   if (h == null) {
     h = height - (t = t || 0) - (b = b || 0);
   } else if (b == null) {
-    b = height - h - (t = t || 0);
+    if (t == null) {
+      b = t = (height - h) / 2;
+    } else {
+      b = height - h - (t = t || 0);
+    }
   } else if (t == null) {
     t = height - h - (b = b || 0);
   }

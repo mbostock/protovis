@@ -13,8 +13,6 @@ var vis = new pv.Panel()
 
 vis.add(pv.Wedge)
     .data(pv.range(10))
-    .bottom(200)
-    .left(200)
     .innerRadius(function(d) (d + 2) * 15)
     .outerRadius(function(d) (d + 3) * 15)
     .startAngle(function(d) Math.PI / 2 + d / 10 * Math.PI)
