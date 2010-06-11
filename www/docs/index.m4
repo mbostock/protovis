@@ -53,13 +53,14 @@
         <h3>Design</h3>
         <a href="mark.html">Marks</a><br>
         <a href="panel.html">Panels</a><br>
-        <a href="layout.html">Layouts</a><span class="new">New</span><br>
+        <a href="layout.html">Layouts</a><span class="new">3.2</span><br>
         <a href="inheritance.html">Inheritance</a><br>
         <a href="interaction.html">Interaction</a><br>
-        <span style="color:#999;">Behaviors</span><span class="new">New</span><br>
+        <span style="color:#999;">Behaviors</span><span class="new">3.2</span><br>
         <a href="chaining.html">Property Chaining</a><br>
         <a href="local.html">Local Variables</a><br>
         <a href="animation.html">Animation</a><br>
+        <a href="polar.html">Polar Coordinates</a><span class="new">3.3</span><br>
 
         <h3>Tutorials</h3>
         <a href="start.html">Getting Started</a><br>
