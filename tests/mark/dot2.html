@@ -51,7 +51,7 @@ var dot = vis.add(pv.Panel)
     .bottom(function(d) y(d.y))
     .strokeStyle(function(d) c(d.z))
     .fillStyle(function() this.strokeStyle().alpha(.2))
-    .size(function(d) d.z)
+    .shapeSize(function(d) d.z)
     .title(function(d) d.z);
 
 vis.render();

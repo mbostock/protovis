@@ -14,8 +14,8 @@ var vis = new pv.Panel()
     .bottom(100);
 
 vis.anchor("top").add(pv.Dot)
-    .size(3000)
     .shape("circle")
+    .shapeSize(3000)
     .fillStyle("lightcoral")
     .strokeStyle("hsla(240,50%,50%,.5)")
     .lineWidth(10)
@@ -24,8 +24,8 @@ vis.anchor("top").add(pv.Dot)
     .text("DO NOT PUSH");
 
 vis.anchor("bottom").add(pv.Dot)
-    .size(1000)
     .shape("square")
+    .shapeSize(1000)
     .fillStyle("lightcoral")
     .strokeStyle("hsla(240,50%,50%,.5)")
     .lineWidth(10)

@@ -33,7 +33,7 @@ vis.add(pv.Panel)
   .add(pv.Dot)
     .fillStyle("#fff")
     .strokeStyle(null)
-    .size(function() this.mouse().length());
+    .shapeSize(function() this.mouse().length());
 
 vis.render();
 

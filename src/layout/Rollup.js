@@ -70,7 +70,7 @@ pv.Layout.Rollup = function() {
   /* Render rollup nodes. */
   this.node
       .data(function() { return nodes; })
-      .size(function(d) { return d.nodes.length * 20; });
+      .shapeSize(function(d) { return d.nodes.length * 20; });
 
   /* Render rollup links. */
   this.link

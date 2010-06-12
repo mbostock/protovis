@@ -36,13 +36,13 @@ vis.add(pv.Panel)
   .add(pv.Dot)
     .fillStyle("#fff")
     .strokeStyle(null)
-    .radius(function(d) d.r)
+    .shapeRadius(function(d) d.r)
   .add(pv.Dot)
     .def("v", function(d) this.mouse().norm().times(d.r / 2))
     .fillStyle("#aaa")
     .left(function(d) this.v().x)
     .top(function(d) this.v().y)
-    .radius(function(d) d.r / 2);
+    .shapeRadius(function(d) d.r / 2);
 
 vis.render();
 

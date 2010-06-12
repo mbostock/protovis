@@ -15,7 +15,7 @@ var vis = new pv.Panel()
     .right(100);
 
 vis.anchor("top").add(pv.Dot)
-    .size(1000)
+    .shapeSize(1000)
     .fillStyle("#ccc")
     .strokeStyle(null)
   .anchor("center").add(pv.Label)
@@ -27,7 +27,7 @@ var panel = vis.add(pv.Panel)
     .lineWidth(20);
 
 panel.anchor("bottom").add(pv.Dot)
-    .size(1000)
+    .shapeSize(1000)
     .fillStyle("#ccc")
     .strokeStyle(null)
   .anchor("center").add(pv.Label)
@@ -37,7 +37,7 @@ panel.anchor("center").add(pv.Label)
     .text("This is a red panel with a translucent blue border.");
 
 vis.anchor("right").add(pv.Dot)
-    .size(1000)
+    .shapeSize(1000)
     .fillStyle("#ccc")
     .strokeStyle(null)
   .anchor("center").add(pv.Label)

@@ -67,7 +67,7 @@ var dot = cell.add(pv.Panel)
     .data(function(year) year.values)
     .left(function(d) x(d.yield))
     .top(function() this.index * 11)
-    .size(10)
+    .shapeSize(10)
     .lineWidth(2)
     .strokeStyle(function(d) c(d.year));
 

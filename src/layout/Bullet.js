@@ -87,7 +87,7 @@ pv.Layout.Bullet = function() {
       .bottom(function(d) { return orient == "bottom" ? scale(d) : null; })
       .strokeStyle("black")
       .shape("bar")
-      .angle(function() { return horizontal ? 0 : Math.PI / 2; })
+      .shapeAngle(function() { return horizontal ? 0 : Math.PI / 2; })
       .parent = that;
 
   (this.tick = new pv.Mark())

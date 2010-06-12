@@ -20,7 +20,7 @@ vis.add(pv.Dot)
     .data([{x:200, y:200}])
     .left(function(d) d.x)
     .top(function(d) d.y)
-    .radius(10)
+    .shapeRadius(10)
     .fillStyle(function(d) d.fix ? "#ff7f0e" : "#aec7e8")
     .cursor("move")
     .event("mousedown", pv.Behavior.drag());

@@ -20,7 +20,7 @@ layout.link.add(pv.Line)
     .strokeStyle("#aaa");
 
 layout.node.add(pv.Dot)
-    .size(100)
+    .shapeSize(100)
     .strokeStyle(function(d) d.active ? "#f00" : "#aaa")
     .fillStyle(function(d) d.active ? "#fdd" : "#ddd")
     .event("mouseover", function(d) (d.active = true, this))

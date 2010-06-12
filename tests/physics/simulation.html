@@ -35,7 +35,7 @@ vis.add(pv.Dot)
     .data(nodes)
     .left(function(d) d.x)
     .top(function(d) d.y)
-    .radius(function(d) d.r)
+    .shapeRadius(function(d) d.r)
     .strokeStyle(pv.ramp("steelblue", "brown").by(function(d) d.vx * d.vx + d.vy * d.vy));
 
 vis.add(pv.Panel)

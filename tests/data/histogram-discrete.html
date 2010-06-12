@@ -27,7 +27,7 @@ vis.add(pv.Panel)
     .left(function(d) x(d.x))
   .add(pv.Dot)
     .data(function(d) d.sort())
-    .radius(5)
+    .shapeRadius(5)
     .bottom(function(d) this.index * 11.5 + 6.5)
     .fillStyle(pv.ramp("brown", "steelblue").by(function(d, b) (d - b.x) / b.dx))
     .strokeStyle(function() this.fillStyle().darker());

@@ -33,7 +33,7 @@ layout.link.add(pv.Line);
 
 layout.node.add(pv.Dot)
     .title(function(n) n.nodeName)
-    .size(function(n) (n.nodeValue / 100) || 10)
+    .shapeSize(function(n) (n.nodeValue / 100) || 10)
     .fillStyle(function(n) n.toggled ? "#1f77b4" : n.firstChild ? "#aec7e8" : "#ff7f0e")
     .event("mousedown", pv.Behavior.drag())
     .event("drag", layout)

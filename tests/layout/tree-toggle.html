@@ -24,7 +24,7 @@ layout.link.add(pv.Line)
     .strokeStyle("#aaa");
 
 layout.node.add(pv.Dot)
-    .size(100)
+    .shapeSize(100)
     .strokeStyle("#aaa")
     .fillStyle(function(d) d.toggled ? "#aaa" : "#ddd")
     .event("click", function(d) (d.toggle(), layout.reset().parent));

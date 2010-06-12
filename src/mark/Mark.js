@@ -276,7 +276,7 @@ pv.Mark.prototype.index = -1;
  * scale can be used to create scale-independent graphics. For example, to
  * define a dot that has a radius of 10 irrespective of any zooming, say:
  *
- * <pre>dot.radius(function() 10 / this.scale)</pre>
+ * <pre>dot.shapeRadius(function() 10 / this.scale)</pre>
  *
  * Note that the stroke width and font size are defined irrespective of scale
  * (i.e., in screen space) already. Also note that when a transform is applied

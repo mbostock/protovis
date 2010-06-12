@@ -20,7 +20,7 @@ var layout = vis.add(pv.Layout.Arc)
 layout.link.add(pv.Line);
 
 layout.node.add(pv.Dot)
-    .size(function(d) d.linkDegree + 4)
+    .shapeSize(function(d) d.linkDegree + 4)
     .fillStyle(pv.Colors.category19().by(function(d) d.group))
     .strokeStyle(function() this.fillStyle().darker());
 
