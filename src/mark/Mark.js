@@ -238,6 +238,13 @@ pv.Mark.prototype
  */
 
 /**
+ * The mark anchor target, possibly undefined.
+ *
+ * @type pv.Mark
+ * @name pv.Mark.prototype.target
+ */
+
+/**
  * The enclosing parent panel. The parent panel is generally undefined only for
  * the root panel; however, it is possible to create "offscreen" marks that are
  * used only for inheritance purposes.
@@ -450,6 +457,7 @@ pv.Mark.prototype.defaults = new pv.Mark()
  */
 pv.Mark.prototype.extend = function(proto) {
   this.proto = proto;
+  this.target = proto.target;
   return this;
 };
 
@@ -515,53 +523,20 @@ pv.Mark.prototype.def = function(name, v) {
  * @returns {pv.Anchor} the new anchor.
  */
 pv.Mark.prototype.anchor = function(name) {
-  var target = this;
-
-  /* Default anchor name. */
-  if (!name) name = "center";
-
-  /** @private Find the instances of target that match source. */
-  function instances(source) {
-    var mark = target, index = [], scene;
-
-    /* Mirrored descent. */
-    while (!(scene = mark.scene)) {
-      source = source.parent;
-      index.push({index: source.index, childIndex: mark.childIndex});
-      mark = mark.parent;
-    }
-    while (index.length) {
-      var i = index.pop();
-      scene = scene[i.index].children[i.childIndex];
-    }
-
-    /*
-     * When the anchor target is also an ancestor, as in the case of adding
-     * to a panel anchor, only generate one instance per panel. Also, set
-     * the margins to zero, since they are offset by the enclosing panel.
-     */
-    if (target.hasOwnProperty("index")) {
-      var s = pv.extend(scene[target.index]);
-      s.right = s.top = s.left = s.bottom = 0;
-      return [s];
-    }
-    return scene;
-  }
-
+  if (!name) name = "center"; // default anchor name
   return new pv.Anchor(this)
     .name(name)
     .data(function() {
-        return (this.scene.target = instances(this))
-            .map(function(s) { return s.data; });
+        return this.scene.target.map(function(s) { return s.data; });
       })
     .visible(function() {
-        return this.scene[this.index].target.visible;
+        return this.scene.target[this.index].visible;
       })
     .id(function() {
-        return this.scene[this.index].target.id;
+        return this.scene.target[this.index].id;
       })
     .left(function() {
-        var s = this.scene[this.index].target, w = s.width || 0;
+        var s = this.scene.target[this.index], w = s.width || 0;
         switch (this.name()) {
           case "bottom":
           case "top":
@@ -571,7 +546,7 @@ pv.Mark.prototype.anchor = function(name) {
         return s.left + w;
       })
     .top(function() {
-        var s = this.scene[this.index].target, h = s.height || 0;
+        var s = this.scene.target[this.index], h = s.height || 0;
         switch (this.name()) {
           case "left":
           case "right":
@@ -581,11 +556,11 @@ pv.Mark.prototype.anchor = function(name) {
         return s.top + h;
       })
     .right(function() {
-        var s = this.scene[this.index].target;
+        var s = this.scene.target[this.index];
         return this.name() == "left" ? s.right + (s.width || 0) : null;
       })
     .bottom(function() {
-        var s = this.scene[this.index].target;
+        var s = this.scene.target[this.index];
         return this.name() == "top" ? s.bottom + (s.height || 0) : null;
       })
     .textAlign(function() {
@@ -608,20 +583,9 @@ pv.Mark.prototype.anchor = function(name) {
       });
 };
 
-/**
- * Returns the anchor target of this mark, if it is derived from an anchor;
- * otherwise returns null. For example, if a label is derived from a bar anchor,
- *
- * <pre>bar.anchor("top").add(pv.Label);</pre>
- *
- * then property functions on the label can refer to the bar via the
- * <tt>anchorTarget</tt> method. This method is also useful for mark types
- * defining properties on custom anchors.
- *
- * @returns {pv.Mark} the anchor target of this mark; possibly null.
- */
+/** @deprecated Replaced by {@link #target}. */
 pv.Mark.prototype.anchorTarget = function() {
-  return this.proto.anchorTarget();
+  return this.target;
 };
 
 /**
@@ -651,6 +615,38 @@ pv.Mark.prototype.instance = function(defaultIndex) {
   var scene = this.scene || this.parent.instance(-1).children[this.childIndex],
       index = !arguments.length || this.hasOwnProperty("index") ? this.index : defaultIndex;
   return scene[index < 0 ? scene.length - 1 : index];
+};
+
+/**
+ * @private Find the instances of this mark that match source.
+ *
+ * @see pv.Anchor
+ */
+pv.Mark.prototype.instances = function(source) {
+  var mark = this, index = [], scene;
+
+  /* Mirrored descent. */
+  while (!(scene = mark.scene)) {
+    source = source.parent;
+    index.push({index: source.index, childIndex: mark.childIndex});
+    mark = mark.parent;
+  }
+  while (index.length) {
+    var i = index.pop();
+    scene = scene[i.index].children[i.childIndex];
+  }
+
+  /*
+   * When the anchor target is also an ancestor, as in the case of adding
+   * to a panel anchor, only generate one instance per panel. Also, set
+   * the margins to zero, since they are offset by the enclosing panel.
+   */
+  if (this.hasOwnProperty("index")) {
+    var s = pv.extend(scene[this.index]);
+    s.right = s.top = s.left = s.bottom = 0;
+    return [s];
+  }
+  return scene;
 };
 
 /**
@@ -917,6 +913,9 @@ pv.Mark.prototype.build = function() {
     }
   }
 
+  /* Resolve anchor target. */
+  if (this.target) scene.target = this.target.instances(scene);
+
   /* Evaluate defs. */
   if (this.binds.defs.length) {
     var defs = scene.defs;
@@ -987,7 +986,6 @@ pv.Mark.prototype.buildProperties = function(s, properties) {
  * @param s a node in the scene graph; the instance of the mark to build.
  */
 pv.Mark.prototype.buildInstance = function(s) {
-  if (this.scene.target) s.target = this.scene.target[this.index];
   this.buildProperties(s, this.binds.required);
   if (s.visible) {
     this.buildProperties(s, this.binds.optional);
@@ -1024,10 +1022,10 @@ pv.Mark.prototype.buildImplied = function(s) {
     if (l == null) {
       l = r = (width - w) / 2;
     } else {
-      r = width - w - (l = l || 0);
+      r = width - w - l;
     }
   } else if (l == null) {
-    l = width - w - (r = r || 0);
+    l = width - w - r;
   }
 
   /* Compute implied height, bottom and top. */
@@ -1038,10 +1036,10 @@ pv.Mark.prototype.buildImplied = function(s) {
     if (t == null) {
       b = t = (height - h) / 2;
     } else {
-      b = height - h - (t = t || 0);
+      b = height - h - t;
     }
   } else if (t == null) {
-    t = height - h - (b = b || 0);
+    t = height - h - b;
   }
 
   s.left = l;

@@ -62,17 +62,20 @@ pv.Anchor.prototype = pv.extend(pv.Mark)
  */
 
 /**
- * Returns the anchor target of this mark, if it is derived from an anchor;
- * otherwise returns null. For example, if a label is derived from a bar anchor,
+ * Sets the prototype of this anchor to the specified mark. Any properties not
+ * defined on this mark may be inherited from the specified prototype mark, or
+ * its prototype, and so on. The prototype mark need not be the same type of
+ * mark as this mark. (Note that for inheritance to be useful, properties with
+ * the same name on different mark types should have equivalent meaning.)
  *
- * <pre>bar.anchor("top").add(pv.Label);</pre>
+ * <p>This method differs slightly from the normal mark behavior in that the
+ * anchor's target is preserved.
  *
- * then property functions on the label can refer to the bar via the
- * <tt>anchorTarget</tt> method. This method is also useful for mark types
- * defining properties on custom anchors.
- *
- * @returns {pv.Mark} the anchor target of this mark; possibly null.
+ * @param {pv.Mark} proto the new prototype.
+ * @returns {pv.Anchor} this anchor.
+ * @see pv.Mark#add
  */
-pv.Anchor.prototype.anchorTarget = function() {
-  return this.target;
+pv.Anchor.prototype.extend = function(proto) {
+  this.proto = proto;
+  return this;
 };

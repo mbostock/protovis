@@ -257,12 +257,12 @@ pv.Area.prototype.anchor = function(name) {
   var scene;
   return pv.Mark.prototype.anchor.call(this, name)
     .interpolate(function() {
-       return this.scene[this.index].target.interpolate;
+       return this.scene.target[this.index].interpolate;
       })
     .eccentricity(function() {
-       return this.scene[this.index].target.eccentricity;
+       return this.scene.target[this.index].eccentricity;
       })
     .tension(function() {
-        return this.scene[this.index].target.tension;
+        return this.scene.target[this.index].tension;
       });
 };

@@ -75,7 +75,7 @@ pv.Transition = function(mark) {
       b.index = i;
       if (!b.visible) continue;
       if (!(a && a.visible)) {
-        var o = override(before, i, mark.$exit, after.target && after.target[after.length]);
+        var o = override(before, i, mark.$exit, after);
 
         /*
          * After the transition finishes, we need to do a little cleanup to
@@ -92,7 +92,7 @@ pv.Transition = function(mark) {
     for (var i = 0; i < after.length; i++) {
       var a = after[i], b = a.id ? bi[a.id] : before[i];
       if (!(b && b.visible) && a.visible) {
-        var o = override(after, i, mark.$enter, before.target && before.target[before.length]);
+        var o = override(after, i, mark.$enter, before);
         if (!b) before.push(o);
         else before[b.index] = o;
         interpolateInstance(list, o, a);
@@ -101,17 +101,18 @@ pv.Transition = function(mark) {
   }
 
   /** @private */
-  function override(scene, index, proto, target) {
+  function override(scene, index, proto, other) {
     var s = pv.extend(scene[index]),
         m = scene.mark,
         r = m.root.scene,
-        p = (proto || defaults).$properties;
+        p = (proto || defaults).$properties,
+        t;
 
     /* Correct the target reference, if this is an anchor. */
-    if (target) {
+    if (other.target && (t = other.target[other.length])) {
       scene = pv.extend(scene);
-      scene[index] = s;
-      s.target = target;
+      scene.target = pv.extend(other.target);
+      scene.target[index] = t;
     }
 
     /* Determine the set of properties to evaluate. */

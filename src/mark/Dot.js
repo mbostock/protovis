@@ -148,7 +148,7 @@ pv.Dot.prototype.anchor = function(name) {
   var scene;
   return pv.Mark.prototype.anchor.call(this, name)
     .left(function() {
-        var s = this.scene[this.index].target;
+        var s = this.scene.target[this.index];
         switch (this.name()) {
           case "bottom":
           case "top":
@@ -158,11 +158,11 @@ pv.Dot.prototype.anchor = function(name) {
         return s.left + s.radius;
       })
     .right(function() {
-        var s = this.scene[this.index].target;
+        var s = this.scene.target[this.index];
         return this.name() == "left" ? s.right + s.radius : null;
       })
     .top(function() {
-        var s = this.scene[this.index].target;
+        var s = this.scene.target[this.index];
         switch (this.name()) {
           case "left":
           case "right":
@@ -172,7 +172,7 @@ pv.Dot.prototype.anchor = function(name) {
         return s.top + s.radius;
       })
     .bottom(function() {
-        var s = this.scene[this.index].target;
+        var s = this.scene.target[this.index];
         return this.name() == "top" ? s.bottom + s.radius : null;
       })
     .textAlign(function() {

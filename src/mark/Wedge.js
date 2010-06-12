@@ -171,7 +171,7 @@ pv.Wedge.prototype.anchor = function(name) {
   function midAngle(s) { return (s.startAngle + s.endAngle) / 2; }
   return pv.Mark.prototype.anchor.call(this, name)
     .left(function() {
-        var s = this.scene[this.index].target;
+        var s = this.scene.target[this.index];
         if (partial(s)) switch (this.name()) {
           case "outer": return s.left + s.outerRadius * Math.cos(midAngle(s));
           case "inner": return s.left + s.innerRadius * Math.cos(midAngle(s));
@@ -182,7 +182,7 @@ pv.Wedge.prototype.anchor = function(name) {
         return s.left;
       })
     .top(function() {
-        var s = this.scene[this.index].target;
+        var s = this.scene.target[this.index];
         if (partial(s)) switch (this.name()) {
           case "outer": return s.top + s.outerRadius * Math.sin(midAngle(s));
           case "inner": return s.top + s.innerRadius * Math.sin(midAngle(s));
@@ -193,7 +193,7 @@ pv.Wedge.prototype.anchor = function(name) {
         return s.top;
       })
     .textAlign(function() {
-        var s = this.scene[this.index].target;
+        var s = this.scene.target[this.index];
         if (partial(s)) switch (this.name()) {
           case "outer": return pv.Wedge.upright(midAngle(s)) ? "right" : "left";
           case "inner": return pv.Wedge.upright(midAngle(s)) ? "left" : "right";
@@ -201,7 +201,7 @@ pv.Wedge.prototype.anchor = function(name) {
         return "center";
       })
     .textBaseline(function() {
-        var s = this.scene[this.index].target;
+        var s = this.scene.target[this.index];
         if (partial(s)) switch (this.name()) {
           case "start": return pv.Wedge.upright(s.startAngle) ? "top" : "bottom";
           case "end": return pv.Wedge.upright(s.endAngle) ? "bottom" : "top";
@@ -209,7 +209,7 @@ pv.Wedge.prototype.anchor = function(name) {
         return "middle";
       })
     .textAngle(function() {
-        var s = this.scene[this.index].target, a = 0;
+        var s = this.scene.target[this.index], a = 0;
         if (partial(s)) switch (this.name()) {
           case "center":
           case "inner":
