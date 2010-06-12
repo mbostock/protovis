@@ -113,11 +113,11 @@ JS_COMPILER = \
 JSDOC_HOME = /Library/jsdoc-toolkit
 JSDOC = java -jar $(JSDOC_HOME)/jsrun.jar $(JSDOC_HOME)/app/run.js
 
-all: protovis-d3.2.js protovis-r3.2.js
-protovis-d3.2.js: $(JS_FILES)
-protovis-r3.2.js: $(JS_FILES)
+all: protovis-d3.3.js protovis-r3.3.js
+protovis-d3.3.js: $(JS_FILES)
+protovis-r3.3.js: $(JS_FILES)
 
-%-d3.2.js: Makefile
+%-d3.3.js: Makefile
 	grep '	' -Hn $(filter %.js,$^) && echo "ERROR: tab" && exit 1 || true
 	grep '' -Hn $(filter %.js,$^) && echo "ERROR: dos newline" && exit 1 || true
 	grep ' $$' -Hn $(filter %.js,$^) && echo "ERROR: trailing space" && exit 1 || true
@@ -125,7 +125,7 @@ protovis-r3.2.js: $(JS_FILES)
 	echo "// $(shell git rev-parse HEAD)" >> $@
 	cat $(filter %.js,$^) >> $@
 
-%-r3.2.js:: Makefile
+%-r3.3.js:: Makefile
 	rm -f $@
 	echo "// $(shell git rev-parse --short HEAD)" >> $@
 	cat $(filter %.js,$^) | $(JS_COMPILER) >> $@
@@ -135,4 +135,4 @@ jsdoc: $(JS_FILES) Makefile
 	$(JSDOC) -a -t=$(JSDOC_HOME)/templates/jsdoc -d=$@ -E="^pv-" $(JS_FILES)
 
 clean:
-	rm -rf protovis-d3.2.js protovis-r3.2.js jsdoc
+	rm -rf protovis-d3.3.js protovis-r3.3.js jsdoc
