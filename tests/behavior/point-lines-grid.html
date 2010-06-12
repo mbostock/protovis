@@ -34,7 +34,8 @@ vis.add(pv.Rule)
 
 var grid = vis.add(pv.Layout.Grid)
     .cols(4)
-    .data(data);
+    .data(data)
+  .cell.add(pv.Panel);
 
 grid.add(pv.Rule)
     .data(x.ticks(5))
