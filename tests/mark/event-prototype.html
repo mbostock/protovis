@@ -22,6 +22,8 @@ var panel = vis.add(pv.Panel)
     .event("mouseout", function() label.textStyle("black").i(-1));
 
 var label = panel.add(pv.Rule)
+    .top(0)
+    .left(0)
     .width(10)
   .anchor("right").add(pv.Label)
     .def("i", -1)
