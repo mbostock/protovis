@@ -25,16 +25,16 @@ i = pv.Format.number()(-.5);
 text += "-.5\t0\t" + i + "\n";
 
 i = pv.Format.number()(-.6);
-text += "-.6\t-1\t" + i + "\n";
+text += "-.6\t\u22121\t" + i + "\n";
 
 i = pv.Format.number()(-1);
-text += "-1\t-1\t" + i + "\n";
+text += "-1\t\u22121\t" + i + "\n";
 
 i = pv.Format.number().negativeAffix("(", ")").integerDigits(2)(-1);
 text += "-1\t(01)\t" + i + "\n";
 
 i = pv.Format.number().integerDigits(2)(-1);
-text += "-1\t-01\t" + i + "\n";
+text += "-1\t\u221201\t" + i + "\n";
 
 i = pv.Format.number()(NaN);
 text += "NaN\tNaN\t" + i + "\n";
