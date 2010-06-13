@@ -167,12 +167,13 @@ pv.Transition = function(mark) {
     mark.$transition = that;
 
     // TODO clearing the scene like this forces total re-build
-    var before = mark.scene, after;
+    var i = pv.Mark.prototype.index, before = mark.scene, after;
     mark.scene = null;
     mark.bind();
     mark.build();
     after = mark.scene;
     mark.scene = before;
+    pv.Mark.prototype.index = i;
 
     var start = Date.now(), list = {};
     interpolate(list, before, after);
