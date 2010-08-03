@@ -66,7 +66,7 @@ pv.SvgScene.dot = function(scenes) {
     };
     if (path) {
       svg.transform = "translate(" + s.left + "," + s.top + ")";
-      if (s.angle) svg.transform += " rotate(" + 180 * s.shapeAngle / Math.PI + ")";
+      if (s.shapeAngle) svg.transform += " rotate(" + 180 * s.shapeAngle / Math.PI + ")";
       svg.d = path;
       e = this.expect(e, "path", svg);
     } else {
