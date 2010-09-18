@@ -10,27 +10,12 @@
 var pv = {};
 
 /**
- * Protovis major and minor version numbers.
+ * Protovis version number. See <a href="http://semver.org">semver.org</a>.
  *
- * @namespace Protovis major and minor version numbers.
+ * @type string
+ * @constant
  */
-pv.version = {
-  /**
-   * The major version number.
-   *
-   * @type number
-   * @constant
-   */
-  major: 3,
-
-  /**
-   * The minor version number.
-   *
-   * @type number
-   * @constant
-   */
-  minor: 2
-};
+pv.version = "3.2.0";
 
 /**
  * Returns the passed-in argument, <tt>x</tt>; the identity function. This method

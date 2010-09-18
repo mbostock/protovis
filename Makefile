@@ -119,12 +119,10 @@ protovis-r3.2.js: $(JS_FILES)
 	grep '' -Hn $(filter %.js,$^) && echo "ERROR: dos newline" && exit 1 || true
 	grep ' $$' -Hn $(filter %.js,$^) && echo "ERROR: trailing space" && exit 1 || true
 	rm -f $@
-	echo "// $(shell git rev-parse HEAD)" >> $@
 	cat $(filter %.js,$^) >> $@
 
 %-r3.2.js:: Makefile
 	rm -f $@
-	echo "// $(shell git rev-parse --short HEAD)" >> $@
 	cat $(filter %.js,$^) | $(JS_COMPILER) >> $@
 
 jsdoc: $(JS_FILES) Makefile
