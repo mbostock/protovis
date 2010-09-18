@@ -20,7 +20,9 @@ pv.Format.number = function() {
       padf = "0", // default fraction pad
       padg = true, // whether group separator affects integer padding
       decimal = ".", // default decimal separator
-      group = ","; // default group separator
+      group = ",", // default group separator
+      np = "\u2212", // default negative prefix
+      ns = ""; // default negative suffix
 
   /** @private */
   function format(x) {
@@ -29,12 +31,12 @@ pv.Format.number = function() {
     var s = String(Math.abs(x)).split(".");
 
     /* Pad, truncate and group the integral part. */
-    var i = s[0], n = (x < 0) ? "-" : "";
+    var i = s[0];
     if (i.length > maxi) i = i.substring(i.length - maxi);
-    if (padg && (i.length < mini)) i = n + new Array(mini - i.length + 1).join(padi) + i;
+    if (padg && (i.length < mini)) i = new Array(mini - i.length + 1).join(padi) + i;
     if (i.length > 3) i = i.replace(/\B(?=(?:\d{3})+(?!\d))/g, group);
-    if (!padg && (i.length < mins)) i = new Array(mins - i.length + 1).join(padi) + n + i;
-    s[0] = i;
+    if (!padg && (i.length < mins)) i = new Array(mins - i.length + 1).join(padi) + i;
+    s[0] = x < 0 ? np + i + ns : i;
 
     /* Pad the fractional part. */
     var f = s[1] || "";
@@ -202,6 +204,23 @@ pv.Format.number = function() {
       return this;
     }
     return group;
+  };
+
+  /**
+   * Sets or gets the negative prefix and suffix. The default negative prefix is
+   * "&minus;", and the default negative suffix is the empty string.
+   *
+   * @param {string} [x] the negative prefix.
+   * @param {string} [y] the negative suffix.
+   * @returns {pv.Format.number} <tt>this</tt> or the current negative format.
+   */
+  format.negativeAffix = function(x, y) {
+    if (arguments.length) {
+      np = String(x || "");
+      ns = String(y || "");
+      return this;
+    }
+    return [np, ns];
   };
 
   return format;

@@ -260,12 +260,12 @@ pv.Area.prototype.anchor = function(name) {
         scene = this.scene.target;
       })
     .interpolate(function() {
-       return scene[this.index].interpolate;
+       return this.scene.target[this.index].interpolate;
       })
     .eccentricity(function() {
-       return scene[this.index].eccentricity;
+       return this.scene.target[this.index].eccentricity;
       })
     .tension(function() {
-        return scene[this.index].tension;
+        return this.scene.target[this.index].tension;
       });
 };

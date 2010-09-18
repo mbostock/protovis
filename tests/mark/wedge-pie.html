@@ -1,7 +1,7 @@
 <html>
   <head>
     <title>Pie</title>
-    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../../protovis.js?3.3.0"></script>
   </head>
   <body>
     <script type="text/javascript+protovis">
@@ -18,8 +18,6 @@ var vis = new pv.Panel()
 
 vis.add(pv.Wedge)
     .data(data)
-    .bottom(w / 2)
-    .left(w / 2)
     .outerRadius(r)
     .angle(a)
     .title(function(d) d)

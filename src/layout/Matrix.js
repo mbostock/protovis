@@ -80,8 +80,8 @@ pv.Layout.Matrix = function() {
   /* Labels are duplicated for top & left. */
   this.label
       .data(function() { return labels; })
-      .left(function() { return this.index & 1 ? dx * ((this.index >> 1) + .5) : null; })
-      .top(function() { return this.index & 1 ? null : dy * ((this.index >> 1) + .5); })
+      .left(function() { return this.index & 1 ? dx * ((this.index >> 1) + .5) : 0; })
+      .top(function() { return this.index & 1 ? 0 : dy * ((this.index >> 1) + .5); })
       .textMargin(4)
       .textAlign(function() { return this.index & 1 ? "left" : "right"; })
       .textAngle(function() { return this.index & 1 ? -Math.PI / 2 : 0; });

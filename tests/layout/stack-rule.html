@@ -1,7 +1,7 @@
 <html>
   <head>
     <title>Stacked Column Chart</title>
-    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../../protovis.js?3.3.0"></script>
   </head>
   <body>
     <script type="text/javascript+protovis">
@@ -48,6 +48,7 @@ bar.anchor("bottom").add(pv.Label)
 vis.add(pv.Rule)
     .data(y.ticks())
     .bottom(y)
+    .left(function(d) d ? 0 : null)
     .width(function(d) d ? 5 : null)
     .strokeStyle("#000")
   .anchor("left").add(pv.Label)

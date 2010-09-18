@@ -1,7 +1,7 @@
 <html>
   <head>
     <title>Wedge Implied</title>
-    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <script type="text/javascript" src="../../protovis.js?3.3.0"></script>
     <link rel="stylesheet" type="text/css" href="../style.css"/>
   </head>
   <body>
@@ -13,8 +13,6 @@ var vis = new pv.Panel()
 
 vis.add(pv.Wedge)
     .data(pv.range(10))
-    .bottom(200)
-    .left(200)
     .innerRadius(function(d) (d + 2) * 15)
     .outerRadius(function(d) (d + 3) * 15)
     .startAngle(function(d) Math.PI / 2 + d / 10 * Math.PI)
