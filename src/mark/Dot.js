@@ -145,11 +145,7 @@ pv.Dot.prototype.defaults = new pv.Dot()
  * @returns {pv.Anchor}
  */
 pv.Dot.prototype.anchor = function(name) {
-  var scene;
   return pv.Mark.prototype.anchor.call(this, name)
-    .def("$wedge.anchor", function() {
-        scene = this.scene.target;
-      })
     .left(function() {
         var s = this.scene.target[this.index];
         switch (this.name()) {

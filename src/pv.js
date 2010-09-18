@@ -15,7 +15,7 @@ var pv = {};
  * @type string
  * @constant
  */
-pv.version = "3.3.0";
+pv.version = "3.3.1";
 
 /**
  * Returns the passed-in argument, <tt>x</tt>; the identity function. This method

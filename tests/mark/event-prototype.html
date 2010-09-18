@@ -1,7 +1,7 @@
 <html>
   <head>
     <title>Event Prototype</title>
-    <script type="text/javascript" src="../../protovis.js?3.3.0"></script>
+    <script type="text/javascript" src="../../protovis.js"></script>
     <link rel="stylesheet" type="text/css" href="../style.css"/>
   </head>
   <body>
@@ -22,6 +22,8 @@ var panel = vis.add(pv.Panel)
     .event("mouseout", function() label.textStyle("black").i(-1));
 
 var label = panel.add(pv.Rule)
+    .left(0)
+    .top(0)
     .width(10)
   .anchor("right").add(pv.Label)
     .def("i", -1)

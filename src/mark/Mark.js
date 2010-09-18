@@ -516,17 +516,11 @@ pv.Mark.prototype.anchor = function(name) {
   if (!name) name = "center"; // default anchor name
   return new pv.Anchor(this)
     .name(name)
-    .def("$mark.anchor", function() {
-        scene = this.scene.target = instances(this);
-      })
     .data(function() {
         return this.scene.target.map(function(s) { return s.data; });
       })
     .visible(function() {
         return this.scene.target[this.index].visible;
-      })
-    .id(function() {
-        return this.scene.target[this.index].id;
       })
     .left(function() {
         var s = this.scene.target[this.index], w = s.width || 0;

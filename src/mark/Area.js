@@ -254,11 +254,7 @@ pv.Area.prototype.buildInstance = function(s) {
  * @returns {pv.Anchor}
  */
 pv.Area.prototype.anchor = function(name) {
-  var scene;
   return pv.Mark.prototype.anchor.call(this, name)
-    .def("$area.anchor", function() {
-        scene = this.scene.target;
-      })
     .interpolate(function() {
        return this.scene.target[this.index].interpolate;
       })

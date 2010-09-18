@@ -2,7 +2,7 @@
   <head>
     <title>My God, it's full of eyes!</title>
     <link rel="stylesheet" type="text/css" href="../ex.css"/>
-    <script type="text/javascript" src="../../protovis.js?3.3.0"></script>
+    <script type="text/javascript" src="../../protovis.js"></script>
     <style type="text/css">
 
 body {
@@ -34,6 +34,8 @@ vis.add(pv.Panel)
     .left(function(d) d.x)
     .top(function(d) d.y)
   .add(pv.Dot)
+    .left(0)
+    .top(0)
     .fillStyle("#fff")
     .strokeStyle(null)
     .radius(function(d) d.r)

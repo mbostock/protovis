@@ -127,7 +127,7 @@ var pv = {};
  * @type string
  * @constant
  */
-pv.version = "3.3.0";
+pv.version = "3.3.1";
 
 /**
  * Returns the passed-in argument, <tt>x</tt>; the identity function. This method
@@ -6754,17 +6754,11 @@ pv.Mark.prototype.anchor = function(name) {
   if (!name) name = "center"; // default anchor name
   return new pv.Anchor(this)
     .name(name)
-    .def("$mark.anchor", function() {
-        scene = this.scene.target = instances(this);
-      })
     .data(function() {
         return this.scene.target.map(function(s) { return s.data; });
       })
     .visible(function() {
         return this.scene.target[this.index].visible;
-      })
-    .id(function() {
-        return this.scene.target[this.index].id;
       })
     .left(function() {
         var s = this.scene.target[this.index], w = s.width || 0;
@@ -7795,11 +7789,7 @@ pv.Area.prototype.buildInstance = function(s) {
  * @returns {pv.Anchor}
  */
 pv.Area.prototype.anchor = function(name) {
-  var scene;
   return pv.Mark.prototype.anchor.call(this, name)
-    .def("$area.anchor", function() {
-        scene = this.scene.target;
-      })
     .interpolate(function() {
        return this.scene.target[this.index].interpolate;
       })
@@ -8050,11 +8040,7 @@ pv.Dot.prototype.defaults = new pv.Dot()
  * @returns {pv.Anchor}
  */
 pv.Dot.prototype.anchor = function(name) {
-  var scene;
   return pv.Mark.prototype.anchor.call(this, name)
-    .def("$wedge.anchor", function() {
-        scene = this.scene.target;
-      })
     .left(function() {
         var s = this.scene.target[this.index];
         switch (this.name()) {
@@ -9200,11 +9186,7 @@ pv.Wedge.prototype.anchor = function(name) {
   function partial(s) { return s.innerRadius || s.angle < 2 * Math.PI; }
   function midRadius(s) { return (s.innerRadius + s.outerRadius) / 2; }
   function midAngle(s) { return (s.startAngle + s.endAngle) / 2; }
-  var scene;
   return pv.Mark.prototype.anchor.call(this, name)
-    .def("$wedge.anchor", function() {
-        scene = this.scene.target;
-      })
     .left(function() {
         var s = this.scene.target[this.index];
         if (partial(s)) switch (this.name()) {

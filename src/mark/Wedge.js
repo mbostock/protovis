@@ -169,11 +169,7 @@ pv.Wedge.prototype.anchor = function(name) {
   function partial(s) { return s.innerRadius || s.angle < 2 * Math.PI; }
   function midRadius(s) { return (s.innerRadius + s.outerRadius) / 2; }
   function midAngle(s) { return (s.startAngle + s.endAngle) / 2; }
-  var scene;
   return pv.Mark.prototype.anchor.call(this, name)
-    .def("$wedge.anchor", function() {
-        scene = this.scene.target;
-      })
     .left(function() {
         var s = this.scene.target[this.index];
         if (partial(s)) switch (this.name()) {

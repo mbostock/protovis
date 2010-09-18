@@ -1,7 +1,7 @@
 <html>
   <head>
     <title>NBA per game performance of top 50 scorers</title>
-    <script type="text/javascript" src="../../protovis.js?3.3.0"></script>
+    <script type="text/javascript" src="../../protovis.js"></script>
     <script type="text/javascript" src="nba.js"></script>
     <style type="text/css">
 
@@ -61,11 +61,13 @@ vis.add(pv.Panel)
 vis.add(pv.Label)
     .data(cols)
     .left(function() this.index * w + w / 2)
+    .top(0)
     .textAngle(-Math.PI / 2)
     .textBaseline("middle");
 
 vis.add(pv.Label)
     .data(nba)
+    .left(0)
     .top(function() this.index * h + h / 2)
     .textAlign("right")
     .textBaseline("middle")
