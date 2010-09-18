@@ -1,7 +1,7 @@
 <html>
   <head>
     <title>Flare Circle</title>
-    <script type="text/javascript" src="../../protovis-d3.3.js"></script>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
     <script type="text/javascript" src="../flare.js"></script>
   </head>
   <body>
@@ -20,7 +20,7 @@ var layout = vis.add(pv.Layout.Cluster)
     .orient("radial");
 
 layout.link.add(pv.Line);
-layout.node.add(pv.Dot).shapeRadius(3);
+layout.node.add(pv.Dot).radius(3);
 layout.label.add(pv.Label).textMargin(5);
 
 vis.render();

@@ -1,8 +1,8 @@
 <html>
   <head>
     <title>Iris Flowers</title>
-    <link type="text/css" href="../ex.css" rel="stylesheet"/>
-    <script type="text/javascript" src="../../protovis-r3.3.js"></script>
+    <link type="text/css" rel="stylesheet" href="../ex.css"/>
+    <script type="text/javascript" src="../../protovis-r3.2.js"></script>
     <script type="text/javascript" src="flowers.js"></script>
     <style type="text/css">
 
@@ -82,7 +82,7 @@ plot.add(pv.Dot)
     .data(flowers)
     .left(function(d, t) position[t.x](d[t.x]))
     .bottom(function(d, t) position[t.y](d[t.y]))
-    .shapeSize(8)
+    .size(8)
     .strokeStyle(null)
     .fillStyle(function(d) color(d.species));
 
@@ -97,7 +97,7 @@ vis.add(pv.Dot)
     .data(species)
     .bottom(5)
     .left(function() 15 + this.index * 65)
-    .shapeSize(8)
+    .size(8)
     .strokeStyle(null)
     .fillStyle(color)
   .anchor("right").add(pv.Label);

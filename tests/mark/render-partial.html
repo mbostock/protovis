@@ -1,7 +1,7 @@
 <html>
   <head>
     <title>Mark Render</title>
-    <script type="text/javascript" src="../../protovis-d3.3.js"></script>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
   </head>
   <body>
     <script type="text/javascript+protovis">
@@ -15,8 +15,6 @@ var panel1 = vis.add(pv.Panel)
     .height(20);
 
 panel1.add(pv.Label)
-    .top(0)
-    .left(0)
     .textBaseline("top")
     .text(function() "render 1: " + (++panel1.count || (panel1.count = 1)));
 
@@ -25,8 +23,6 @@ var panel2 = panel1.add(pv.Panel)
     .height(20);
 
 panel2.add(pv.Label)
-    .top(0)
-    .left(0)
     .textBaseline("top")
     .text(function() "render 2: " + (++panel2.count || (panel2.count = 1)));
 

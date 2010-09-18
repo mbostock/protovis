@@ -1,7 +1,7 @@
 <html>
   <head>
     <title>Line Charts</title>
-    <script type="text/javascript" src="../../protovis-d3.3.js"></script>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
   </head>
   <body>
     <script type="text/javascript+protovis">
@@ -34,8 +34,7 @@ vis.add(pv.Rule)
 
 var grid = vis.add(pv.Layout.Grid)
     .cols(4)
-    .data(data)
-  .cell.add(pv.Panel);
+    .data(data);
 
 grid.add(pv.Rule)
     .data(x.ticks(5))

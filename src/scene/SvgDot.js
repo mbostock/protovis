@@ -9,7 +9,7 @@ pv.SvgScene.dot = function(scenes) {
     if (!fill.opacity && !stroke.opacity) continue;
 
     /* points */
-    var radius = s.shapeRadius, path = null;
+    var radius = s.radius, path = null;
     switch (s.shape) {
       case "cross": {
         path = "M" + -radius + "," + -radius
@@ -44,11 +44,11 @@ pv.SvgScene.dot = function(scenes) {
         break;
       }
       case "tick": {
-        path = "M0,0L0," + -s.shapeSize;
+        path = "M0,0L0," + -s.size;
         break;
       }
       case "bar": {
-        path = "M0," + (s.shapeSize / 2) + "L0," + -(s.shapeSize / 2);
+        path = "M0," + (s.size / 2) + "L0," + -(s.size / 2);
         break;
       }
     }
@@ -66,7 +66,7 @@ pv.SvgScene.dot = function(scenes) {
     };
     if (path) {
       svg.transform = "translate(" + s.left + "," + s.top + ")";
-      if (s.shapeAngle) svg.transform += " rotate(" + 180 * s.shapeAngle / Math.PI + ")";
+      if (s.angle) svg.transform += " rotate(" + 180 * s.angle / Math.PI + ")";
       svg.d = path;
       e = this.expect(e, "path", svg);
     } else {

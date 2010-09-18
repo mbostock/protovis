@@ -38,7 +38,7 @@ pv.Layout.Pack = function() {
   pv.Layout.Hierarchy.call(this);
 
   this.node
-      .shapeRadius(function(n) { return n.radius; })
+      .radius(function(n) { return n.radius; })
       .strokeStyle("rgb(31, 119, 180)")
       .fillStyle("rgba(31, 119, 180, .25)");
 

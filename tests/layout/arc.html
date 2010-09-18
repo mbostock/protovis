@@ -1,7 +1,7 @@
 <html>
   <head>
     <title>Miserables Arc</title>
-    <script type="text/javascript" src="../../protovis-d3.3.js"></script>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
     <script type="text/javascript" src="../miserables.js"></script>
   </head>
   <body>
@@ -20,7 +20,7 @@ var layout = vis.add(pv.Layout.Arc)
 layout.link.add(pv.Line);
 
 layout.node.add(pv.Dot)
-    .shapeSize(function(d) d.linkDegree + 4)
+    .size(function(d) d.linkDegree + 4)
     .fillStyle(pv.Colors.category19().by(function(d) d.group))
     .strokeStyle(function() this.fillStyle().darker());
 

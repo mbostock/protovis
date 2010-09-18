@@ -22,7 +22,6 @@ pv.range = function(start, stop, step) {
   if (step == undefined) step = 1;
   if ((stop - start) / step == Infinity) throw new Error("range must be finite");
   var array = [], i = 0, j;
-  stop -= (stop - start) * 1e-10; // floating point precision!
   if (step < 0) {
     while ((j = start + step * i++) > stop) {
       array.push(j);

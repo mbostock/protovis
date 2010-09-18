@@ -1,7 +1,7 @@
 <html>
   <head>
     <title>Flare Force Toggle</title>
-    <script type="text/javascript" src="../../protovis-d3.3.js"></script>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
     <script type="text/javascript" src="../flare.js"></script>
     <style type="text/css">
 
@@ -33,7 +33,7 @@ layout.link.add(pv.Line);
 
 layout.node.add(pv.Dot)
     .title(function(n) n.nodeName)
-    .shapeSize(function(n) (n.nodeValue / 100) || 10)
+    .size(function(n) (n.nodeValue / 100) || 10)
     .fillStyle(function(n) n.toggled ? "#1f77b4" : n.firstChild ? "#aec7e8" : "#ff7f0e")
     .event("mousedown", pv.Behavior.drag())
     .event("drag", layout)

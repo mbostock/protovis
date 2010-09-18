@@ -19,10 +19,10 @@ pv.Dot = function() {
 };
 
 pv.Dot.prototype = pv.extend(pv.Mark)
+    .property("size", Number)
+    .property("radius", Number)
     .property("shape", String)
-    .property("shapeAngle", Number)
-    .property("shapeRadius", Number)
-    .property("shapeSize", Number)
+    .property("angle", Number)
     .property("lineWidth", Number)
     .property("strokeStyle", pv.color)
     .property("fillStyle", pv.color);
@@ -30,23 +30,22 @@ pv.Dot.prototype = pv.extend(pv.Mark)
 pv.Dot.prototype.type = "dot";
 
 /**
- * The size of the shape, in square pixels. Square pixels are used such that the
- * area of the shape is linearly proportional to the value of the
- * <tt>shapeSize</tt> property, facilitating representative encodings. This is
- * an alternative to using {@link #shapeRadius}.
+ * The size of the dot, in square pixels. Square pixels are used such that the
+ * area of the dot is linearly proportional to the value of the size property,
+ * facilitating representative encodings.
  *
- * @see #shapeRadius
+ * @see #radius
  * @type number
- * @name pv.Dot.prototype.shapeSize
+ * @name pv.Dot.prototype.size
  */
 
 /**
- * The radius of the shape, in pixels. This is an alternative to using
- * {@link #shapeSize}.
+ * The radius of the dot, in pixels. This is an alternative to using
+ * {@link #size}.
  *
- * @see #shapeSize
+ * @see #size
  * @type number
- * @name pv.Dot.prototype.shapeRadius
+ * @name pv.Dot.prototype.radius
  */
 
 /**
@@ -75,11 +74,11 @@ pv.Dot.prototype.type = "dot";
  */
 
 /**
- * The shape rotation angle, in radians. Used to rotate shapes, such as to turn
- * a cross into a plus.
+ * The rotation angle, in radians. Used to rotate shapes, such as to turn a
+ * cross into a plus.
  *
  * @type number
- * @name pv.Dot.prototype.shapeAngle
+ * @name pv.Dot.prototype.angle
  */
 
 /**
@@ -112,12 +111,13 @@ pv.Dot.prototype.type = "dot";
 
 /**
  * Default properties for dots. By default, there is no fill and the stroke
- * style is a categorical color. The default shape is "circle" with radius 4.5.
+ * style is a categorical color. The default shape is "circle" with size 20.
  *
  * @type pv.Dot
  */
 pv.Dot.prototype.defaults = new pv.Dot()
     .extend(pv.Mark.prototype.defaults)
+    .size(20)
     .shape("circle")
     .lineWidth(1.5)
     .strokeStyle(pv.Colors.category10().by(pv.parent));
@@ -147,33 +147,36 @@ pv.Dot.prototype.defaults = new pv.Dot()
 pv.Dot.prototype.anchor = function(name) {
   var scene;
   return pv.Mark.prototype.anchor.call(this, name)
+    .def("$wedge.anchor", function() {
+        scene = this.scene.target;
+      })
     .left(function() {
-        var s = this.scene.target[this.index];
+        var s = scene[this.index];
         switch (this.name()) {
           case "bottom":
           case "top":
           case "center": return s.left;
           case "left": return null;
         }
-        return s.left + s.shapeRadius;
+        return s.left + s.radius;
       })
     .right(function() {
-        var s = this.scene.target[this.index];
-        return this.name() == "left" ? s.right + s.shapeRadius : null;
+        var s = scene[this.index];
+        return this.name() == "left" ? s.right + s.radius : null;
       })
     .top(function() {
-        var s = this.scene.target[this.index];
+        var s = scene[this.index];
         switch (this.name()) {
           case "left":
           case "right":
           case "center": return s.top;
           case "top": return null;
         }
-        return s.top + s.shapeRadius;
+        return s.top + s.radius;
       })
     .bottom(function() {
-        var s = this.scene.target[this.index];
-        return this.name() == "top" ? s.bottom + s.shapeRadius : null;
+        var s = scene[this.index];
+        return this.name() == "top" ? s.bottom + s.radius : null;
       })
     .textAlign(function() {
         switch (this.name()) {
@@ -197,16 +200,7 @@ pv.Dot.prototype.anchor = function(name) {
 
 /** @private Sets radius based on size or vice versa. */
 pv.Dot.prototype.buildImplied = function(s) {
-  var r = s.shapeRadius, z = s.shapeSize;
-  if (r == null) {
-    if (z == null) {
-      s.shapeSize = 20.25;
-      s.shapeRadius = 4.5;
-    } else {
-      s.shapeRadius = Math.sqrt(z);
-    }
-  } else if (z == null) {
-    s.shapeSize = r * r;
-  }
+  if (s.radius == null) s.radius = Math.sqrt(s.size);
+  else if (s.size == null) s.size = s.radius * s.radius;
   pv.Mark.prototype.buildImplied.call(this, s);
 };

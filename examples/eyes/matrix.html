@@ -1,8 +1,8 @@
 <html>
   <head>
     <title>Matrix</title>
-    <link type="text/css" href="../ex.css" rel="stylesheet"/>
-    <script type="text/javascript" src="../../protovis-r3.3.js"></script>
+    <link rel="stylesheet" type="text/css" href="../ex.css"/>
+    <script type="text/javascript" src="../../protovis-r3.2.js"></script>
     <style type="text/css">
 
 body {
@@ -33,7 +33,7 @@ vis.add(pv.Panel)
   .add(pv.Dot)
     .fillStyle("#fff")
     .strokeStyle(null)
-    .shapeSize(function() this.mouse().length());
+    .size(function() this.mouse().length());
 
 vis.render();
 

@@ -1,7 +1,7 @@
 <html>
   <head>
     <title>Area Anchor</title>
-    <script type="text/javascript" src="../../protovis-d3.3.js"></script>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
     <style type="text/css">span { display: block !important; }</style>
   </head>
   <body>
@@ -29,7 +29,7 @@ var area = vis.add(pv.Area)
     .height(function(d) y(d.y));
 
 area.anchor(function(d, p) p).add(pv.Dot)
-    .shapeSize(6)
+    .size(6)
     .strokeStyle("black")
     .fillStyle("white");
 

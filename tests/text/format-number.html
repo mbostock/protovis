@@ -1,75 +1,67 @@
 <html>
   <head>
     <title>Number Format</title>
-    <script type="text/javascript" src="../../protovis-d3.3.js"></script>
-    <script type="text/javascript" src="../testify.js"></script>
-    <link type="text/css" href="../style.css" rel="stylesheet"/>
-    <link type="text/css" href="../testify.css" rel="stylesheet"/>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
   </head>
   <body>
     <pre id="pre"></pre>
     <script type="text/javascript+protovis">
 
-var i, text = "";
+// 1,235
+pre.innerHTML += pv.Format.number()
+    (1234.56) + "\n";
 
-text += ">>> pv.Format.number()\n";
-text += "<b>input\texpected\tactual</b>\n";
+// 12,345,678.90
+pre.innerHTML += pv.Format.number()
+    .fractionDigits(2)
+    (12345678.90) + "\n";
 
-i = pv.Format.number()(1);
-text += "1\t1\t" + i + "\n";
+// 12,345,678.9
+pre.innerHTML += pv.Format.number()
+    .fractionDigits(0, Infinity)
+    (12345678.90) + "\n";
 
-i = pv.Format.number()(0);
-text += "0\t0\t" + i + "\n";
+// 12,345,6789.01
+pre.innerHTML += pv.Format.number()
+    .fractionDigits(0, Infinity)
+    (123456789.01) + "\n";
 
-i = pv.Format.number()(-.5);
-text += "-.5\t0\t" + i + "\n";
+// 12 345 678,90
+pre.innerHTML += pv.Format.number()
+    .group(" ")
+    .decimal(",")
+    .fractionDigits(2)
+    (12345678.90) + "\n";
 
-i = pv.Format.number()(-.6);
-text += "-.6\t\u22121\t" + i + "\n";
+// 99.99
+pre.innerHTML += pv.Format.number()
+    .integerDigits(2)
+    .fractionDigits(2)
+    (999.9949) + "\n";
 
-i = pv.Format.number()(-1);
-text += "-1\t\u22121\t" + i + "\n";
+// 04,999.90
+pre.innerHTML += pv.Format.number()
+    .integerDigits(5)
+    .integerPad("0")
+    .fractionDigits(2)
+    (4999.9) + "\n";
 
-i = pv.Format.number().negativeAffix("(", ")").integerDigits(2)(-1);
-text += "-1\t(01)\t" + i + "\n";
+//  4,999.90
+pre.innerHTML += pv.Format.number()
+    .integerDigits(5)
+    .integerPad(" ")
+    .fractionDigits(2)
+    (4999.9) + "\n";
 
-i = pv.Format.number().integerDigits(2)(-1);
-text += "-1\t\u221201\t" + i + "\n";
+// 100
+pre.innerHTML += pv.Format.number()
+    .integerDigits(2)
+    .parse(999.9949) + "\n";
 
-i = pv.Format.number()(NaN);
-text += "NaN\tNaN\t" + i + "\n";
+// 1000
+pre.innerHTML += pv.Format.number()
+    .parse(999.9949) + "\n";
 
-i = pv.Format.number()(1234.56);
-text += "1234.56\t1,235\t" + i + "\n";
-
-i = pv.Format.number().fractionDigits(2)(12345678.90);
-text += "12345678.90\t12,345,678.90\t" + i + "\n";
-
-i = pv.Format.number().fractionDigits(0, Infinity)(12345678.90);
-text += "12345678.90\t12,345,678.9\t" + i + "\n";
-
-i = pv.Format.number().fractionDigits(0, Infinity)(123456789.01);
-text += "123456789.01\t123,456,789.01\t" + i + "\n";
-
-i = pv.Format.number().group(" ").decimal(",").fractionDigits(2)(12345678.90);
-text += "12345678.90\t12 345 678,90\t" + i + "\n";
-
-i = pv.Format.number().integerDigits(2).fractionDigits(2)(999.9949);
-text += "999.9949\t99.99\t" + i + "\n";
-
-i = pv.Format.number().integerDigits(5).integerPad("0").fractionDigits(2)(4999.9);
-text += "4999.9\t04,999.90\t" + i + "\n";
-
-i = pv.Format.number().integerDigits(5).integerPad(" ").fractionDigits(2)(4999.9);
-text += "4999.9\t 4,999.90\t" + i + "\n";
-
-i = pv.Format.number().integerDigits(2).parse(999.9949);
-text += "999.9949\t100\t" + i + "\n";
-
-i = pv.Format.number().parse(999.9949);
-text += "999.9949\t1000\t" + i + "\n";
-
-testify(text);
-</script>
+    </script>
   </body>
 </html>

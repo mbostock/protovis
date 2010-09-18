@@ -44,8 +44,8 @@ pv.Behavior.tipsy = function(opts) {
       if (this.properties.width) {
         tip.style.width = Math.ceil(this.width() * t.k) + 1 + "px";
         tip.style.height = Math.ceil(this.height() * t.k) + 1 + "px";
-      } else if (this.properties.shapeRadius) {
-        var r = this.shapeRadius();
+      } else if (this.properties.radius) {
+        var r = this.radius();
         t.x -= r;
         t.y -= r;
         tip.style.height = tip.style.width = Math.ceil(2 * r * t.k) + "px";

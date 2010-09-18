@@ -3,7 +3,6 @@ table.testify {
   font: 14px/134% Courier, monospace;
   border-spacing: 0;
   margin-bottom: 1em;
-  white-space: pre;
 }
 
 table.testify td {
