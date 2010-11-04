@@ -1,0 +1,44 @@
+<html>
+  <head>
+    <title>Icicle</title>
+    <link rel="stylesheet" type="text/css" href="ex.css"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+    <script type="text/javascript" src="flare.js"></script>
+    <style type="text/css">
+
+#fig {
+  width: 900px;
+  height: 330px;
+}
+
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(900)
+    .height(300)
+    .bottom(30);
+
+var layout = vis.add(pv.Layout.Partition.Fill)
+    .nodes(pv.dom(flare).root("flare").nodes())
+    .order("descending")
+    .orient("top")
+    .size(function(d) d.nodeValue);
+
+layout.node.add(pv.Bar)
+    .fillStyle(pv.Colors.category19().by(function(d) d.parentNode && d.parentNode.nodeName))
+    .strokeStyle("rgba(255,255,255,.5)")
+    .lineWidth(1)
+    .antialias(false);
+
+layout.label.add(pv.Label)
+    .textAngle(-Math.PI / 2)
+    .visible(function(d) d.dx > 6);
+
+vis.render();
+
+    </script>
+  </div></div></body>
+</html>

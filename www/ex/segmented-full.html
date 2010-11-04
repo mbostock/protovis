@@ -1,0 +1,45 @@
+<html>
+  <head>
+    <title>Rainbow Worm</title>
+    <link rel="stylesheet" type="text/css" href="ex.css?3.2"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+    <style type="text/css">
+
+body {
+  background: #222;
+  color: #eee;
+}
+
+#fig {
+  width: 700px;
+  height: 430px;
+}
+
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <script type="text/javascript+protovis">
+
+var o = 0, vis = new pv.Panel()
+    .width(500)
+    .height(200)
+    .top(100)
+    .bottom(100)
+    .left(100)
+    .right(100);
+
+vis.add(pv.Line)
+    .segmented(true)
+    .data(function() pv.range(0, 6, .1).map(function(d) Math.sin(d + o)))
+    .left(function() this.index / 59 * 500)
+    .bottom(function(d) (d + 1) / 2 * 200)
+    .strokeStyle(function(d) "hsl(" + (d + 1) * 180 + ",60%,50%)")
+    .lineWidth(function(d) 50 * (d * d) + 10);
+
+setInterval(function() { o += 0.02; vis.render(); }, 20);
+
+    </script>
+    <p><input checked id="l" onchange="vis.children[0].segmented(this.value)"
+    type="checkbox"><label for="l">segmented</label>
+  </div></div></body>
+</html>

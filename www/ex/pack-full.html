@@ -1,0 +1,44 @@
+<html>
+  <head>
+    <title>Circle Packing</title>
+    <link type="text/css" rel="stylesheet" href="ex.css?3.2"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+    <script type="text/javascript" src="flare.js"></script>
+    <style type="text/css">
+
+#fig {
+  width: 800px;
+  height: 800px;
+}
+
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <script type="text/javascript+protovis">
+
+/* For pretty number formatting. */
+var format = pv.Format.number();
+
+var vis = new pv.Panel()
+    .width(796)
+    .height(796)
+    .margin(2);
+
+var pack = vis.add(pv.Layout.Pack)
+    .nodes(pv.dom(flare).root("flare").nodes())
+    .size(function(d) d.nodeValue);
+
+pack.node.add(pv.Dot)
+    .fillStyle(function(d) d.firstChild ? "rgba(31, 119, 180, .25)" : "#ff7f0e")
+    .title(function(d) d.nodeName + (d.firstChild ? "" : ": " + format(d.nodeValue)))
+    .lineWidth(1);
+
+pack.label.add(pv.Label)
+    .visible(function(d) !d.firstChild)
+    .text(function(d) d.nodeName.substring(0, Math.sqrt(d.nodeValue) / 20));
+
+vis.render();
+
+    </script>
+  </div></div></body>
+</html>

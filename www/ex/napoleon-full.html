@@ -1,0 +1,148 @@
+<html>
+  <head>
+    <title>Minard&rsquo;s Napoleon</title>
+    <link type="text/css" rel="stylesheet" href="ex.css?3.2"/>
+    <script src="../protovis-r3.2.js" type="text/javascript"></script>
+    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=false&amp;key=ABQIAAAAYZ9eMYFYusxZt-1RKXLI7RQGpXqX26B62_lhdlIUxPTUm0CSORRw1BkwdprB1xQ3Xa8KfbgKAacxlw" type="text/javascript"></script>
+    <script src="napoleon.js" type="text/javascript"></script>
+    <style type="text/css">
+
+#fig, #map, #temp {
+  width: 895px;
+  height: 455px;
+}
+
+#map {
+  height: 380px;
+  border: solid 1px #999;
+}
+
+#map .canvas, #temp svg {
+  position: absolute;
+}
+
+#temp {
+  height: 75px;
+}
+
+    </style>
+    <script type="text/javascript+protovis">
+
+/* Nest data by direction, then group. */
+var army = pv.nest(napoleon.army)
+    .key(function(d) d.dir).sortKeys()
+    .key(function(d) d.group)
+    .entries();
+
+/* Define a new GOverlay class to contain the visualization. */
+function Canvas() {}
+Canvas.prototype = pv.extend(GOverlay);
+
+/* Add our canvas to the map pane when initialized. */
+Canvas.prototype.initialize = function(map) {
+  this.map = map;
+  this.canvas = document.createElement("div");
+  this.canvas.setAttribute("class", "canvas");
+  map.getPane(G_MAP_MAP_PANE).parentNode.appendChild(this.canvas);
+};
+
+/* Redraw the visualizations when the map is moved. */
+Canvas.prototype.redraw = function(force) {
+  var m = this.map;
+  napoleon.temp.forEach(function(d) {
+      d.x = m.fromLatLngToContainerPixel(new GLatLng(55, d.lon)).x;
+    });
+
+  /* Temperature visualization. */
+  new pv.Panel()
+      .canvas("temp")
+    .add(pv.Rule)
+      .data([0, -10, -20, -30])
+      .bottom(function(d) 1.5 * d + 60 - 0.5)
+      .left(0)
+      .right(30)
+      .strokeStyle("#ccc")
+      .lineWidth(1)
+    .anchor("right").add(pv.Label)
+      .text(function(d) d + "\u00b0")
+      .textMargin(6)
+      .textBaseline("middle")
+    .root.add(pv.Line)
+      .data(napoleon.temp)
+      .strokeStyle("#000")
+      .lineWidth(2)
+      .left(function(d) d.x)
+      .bottom(function(d) 1.5 * d.temp + 60 - 0.5)
+    .add(pv.Label)
+      .textBaseline("top")
+      .textMargin(6)
+      .textAlign("center")
+      .text(function(d) d.date.substr(0, 6))
+    .add(pv.Rule)
+      .left(function() this.proto.left() + .5)
+      .lineWidth(.5)
+      .top(0)
+    .root.render();
+
+  /* Only update troop counts when the map is zoomed. */
+  if (!force) return;
+  var c = this.canvas, r = 50;
+
+  /* Convert latitude and longitude to pixel locations. */
+  napoleon.army.forEach(function(d) {
+      var p = m.fromLatLngToDivPixel(new GLatLng(d.lat, d.lon));
+      d.x = p.x; d.y = p.y;
+    });
+
+  function x(p) p.x; function y(p) p.y;
+  var x = { min: pv.min(napoleon.army, x), max: pv.max(napoleon.army, x) };
+  var y = { min: pv.min(napoleon.army, y), max: pv.max(napoleon.army, y) };
+  var k = (y.max - y.min) / 1000000;
+
+  /* Update the canvas bounds. Note: may be large. */
+  c.style.width = (x.max - x.min + 2 * r) + "px";
+  c.style.height = (y.max - y.min + 2 * r) + "px";
+  c.style.left = x.min - r + "px";
+  c.style.top = y.min - r + "px";
+
+  /* Troop count visualization. */
+  new pv.Panel()
+      .canvas(c)
+      .data(army)
+    .add(pv.Panel)
+      .data(function(d) d.values)
+    .add(pv.Line)
+      .segmented(true)
+      .data(function(d) d.values)
+      .left(function(d) d.x - x.min + r)
+      .top(function(d) d.y - y.min + r)
+      .lineWidth(function(d) Math.max(1, k * d.size))
+      .strokeStyle(pv.colors("black", "brown").by(function(d) d.dir))
+      .title(function(d) d.size)
+    .root.render();
+};
+
+/* Restrict minimum and maximum zoom levels. */
+[G_NORMAL_MAP, G_HYBRID_MAP, G_PHYSICAL_MAP].forEach(function(t) {
+  t.getMinimumResolution = function() 4;
+  t.getMaximumResolution = function() 8;
+});
+
+/* Create the map, embedding our visualization! */
+var map = new GMap2(document.getElementById("map"));
+map.setCenter(new GLatLng(55, 31), 6);
+var ui = map.getDefaultUI();
+ui.maptypes.satellite = false;
+map.setUI(ui);
+map.setMapType(G_PHYSICAL_MAP);
+map.addOverlay(new Canvas());
+
+    </script>
+  </head>
+  <body onunload="GUnload()"><div id="center"><div id="fig">
+    <div id="map"></div>
+    <div id="submap">
+      <div id="temp"></div>
+    </div>
+  </div></div></body>
+</html>

@@ -1,0 +1,204 @@
+body {
+  margin: 0;
+  background-color: #eee;
+}
+
+a {
+  color: #7375b5;
+  text-decoration: none;
+}
+
+a:active {
+  color: #cedb9c;
+}
+
+a:hover {
+  color: #4a5584;
+  text-decoration: underline;
+}
+
+body, td {
+  font: 14px/134% Helvetica Neue, sans-serif;
+}
+
+.title, .head, .subhead, .body, .foot {
+  padding: 10px;
+  width: 900px;
+  margin: auto;
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+.title {
+  background: #eee;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.title a {
+  color: #000;
+}
+
+sub, sup {
+  line-height: 0;
+}
+
+.subtitle {
+  float: right;
+  text-transform: lowercase;
+  font-variant: small-caps;
+  font-weight: normal;
+  color: #666;
+}
+
+.head, .subhead {
+  background: #fff;
+  height: 1.34em;
+  font-weight: bold;
+  border-bottom: solid 1px #aaa;
+  border-right: solid 1px #aaa;
+  margin-bottom: 10px;
+}
+
+.subhead {
+  color: #4a5584;
+  margin-bottom: 0px;
+  border-bottom: solid 1px #eee;
+  font-weight: normal;
+}
+
+.section {
+  float: left;
+  margin-right: 20px;
+}
+
+.selected a {
+  color: #000;
+}
+
+.body {
+  background: #fff;
+  border-right: solid 1px #aaa;
+  border-bottom: solid 1px #aaa;
+  padding-bottom: 40px;
+}
+
+.foot {
+  color: #666;
+  font-size: 11px;
+  text-align: right;
+}
+
+.body table {
+  width: 100%;
+}
+
+.body tt, .body pre {
+  font-family: Courier;
+  line-height: 120%;
+}
+
+.highlight {
+  overflow: hidden;
+  padding-left: 20px;
+  border-left: solid 4px #ccc;
+}
+
+.highlight pre {
+  font-size: 12px;
+}
+
+iframe {
+  border: none;
+  width: 100%;
+}
+
+.item {
+  float: left;
+  width: 200px;
+  height: 190px;
+  font-size: 13px;
+  color: black;
+  margin-right: 25px;
+  margin-bottom: 40px;
+}
+
+.item:hover {
+  color: #4a5584;
+}
+
+.item img {
+  border: solid 4px #ccc;
+  margin-bottom: 10px;
+}
+
+.item:hover img {
+  border: solid 4px #4a5584;
+}
+
+.button a {
+  display: block;
+  font-size: 16px;
+  font-weight: bold;
+  color: black;
+  background-color: #ffb;
+  border-bottom: solid 1px #dda;
+  border-right: solid 1px #dda;
+  padding: 10px;
+}
+
+.button div {
+  float: right;
+  font-weight: normal;
+  color: #996;
+}
+
+.button a:hover {
+  color: #4a5584;
+  background-color: #ff6;
+}
+
+.new {
+  text-transform: lowercase;
+  font-variant: small-caps;
+  font-weight: bold;
+  font-style: oblique;
+  font-size: smaller;
+  line-height: 0;
+  left: 6px;
+  bottom: 2px;
+  position: relative;
+  color: brown;
+}
+
+@media print {
+  .head, .subhead {
+    display: none;
+  }
+
+  .title div {
+    font-size: 16px;
+    display: inline;
+    margin-right: 1em;
+  }
+
+  body, td {
+    font: 8px Helvetica Neue, sans-serif;
+  }
+
+  .body pre {
+    font-size: 8px;
+  }
+
+  .body, .title {
+    margin: .5in;
+    margin-top: 0in;
+    margin-bottom: .25in;
+    padding: 0;
+    padding-left: 0 !important;
+  }
+
+  .foot {
+    border-bottom: none;
+  }
+}

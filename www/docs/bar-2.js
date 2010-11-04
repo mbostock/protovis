@@ -1,0 +1,10 @@
+new pv.Panel()
+    .width(150)
+    .height(150)
+  .add(pv.Bar)
+    .data([[0, 1], [.5, 1.2], [.9, 1.7], [.2, 1.5], [.7, 2.2]])
+    .height(20)
+    .bottom(function() this.index * 25)
+    .width(function(d) (d[1] - d[0]) * 50)
+    .left(function(d) d[0] * 50)
+  .root.render();

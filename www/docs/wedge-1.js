@@ -1,0 +1,10 @@
+new pv.Panel()
+    .width(150)
+    .height(150)
+  .add(pv.Wedge)
+    .data(pv.normalize([1, 1.2, 1.7, 1.5, .7]))
+    .left(75)
+    .bottom(75)
+    .outerRadius(70)
+    .angle(function(d) d * 2 * Math.PI)
+  .root.render();

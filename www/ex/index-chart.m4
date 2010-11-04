@@ -1,0 +1,84 @@
+<html>
+  <head>
+    <title>Protovis - Index Charts</title>
+    <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
+    <link type="text/css" rel="stylesheet" href="syntax.css"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+  </head>
+  <body>
+
+    <div class="title">
+      <div class="subtitle">
+        A graphical toolkit for visualization
+      </div>
+      <a href="../">Protovis</a>
+    </div>
+
+    <div class="head">
+      <div class="section">
+        <a href="../">Overview</a>
+      </div>
+      <div class="section selected">
+        <a href="./">Examples</a>
+      </div>
+      <div class="section">
+        <a href="../docs/">Documentation</a>
+      </div>
+      <div class="section">
+        <a href="http://protovis-js.googlecode.com/files/protovis-3.2.zip">Download</a>
+      </div>
+    </div>
+    <div class="subhead">
+      <div class="section">
+        <a href="./">Index</a>
+      </div>
+      <div class="section">
+        <a href="stem-and-leaf.html">&laquo; Previous</a> /
+        <a href="cars.html">Next &raquo;</a>
+      </div>
+    </div>
+
+    <div class="body">
+      <h1>Index Charts</h1>
+
+      <iframe scrolling="no" style="height:400px;" src="index-chart-full.html"></iframe>
+      <p><img src="popout.png" width="16" height="16"
+      style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
+      href="index-chart-full.html" target="_blank">View full screen.</a>
+
+      <p>With some time series, raw values are less important than relative
+      change. Consider investors, who may be more interested in a stock&rsquo;s
+      growth than its price. Multiple stocks may have dramatically different
+      baseline prices, but be meaningfully compared when normalized. An <i>index
+      chart</i> is an interactive line chart that shows percentage changes for a
+      collection of time-series based on a selected index point.
+
+      <p>In this example, we see the percentage change of selected <a
+      href="http://finance.yahoo.com/">stock prices</a> according to the day of
+      purchase. For January 2005, one can see the rocky rise enjoyed by those
+      who invested in Amazon, Apple, or Google at that time. Mouseover the chart
+      to change the reference month.
+
+      <blockquote style="font-size:13px;">
+        Next: <a href="cars.html">Parallel Coordinates</a>
+      </blockquote>
+
+      <h3>Source</h3>
+
+m4_include(`index-chart-full.html.html')
+
+      <h3>Data</h3>
+
+      Due to size, the data file is omitted from this
+      example. See <a href="stocks.js" target="_blank">stocks.js</a>.
+
+    </div>
+
+    <div class="foot">
+      Copyright 2010 <a href="http://vis.stanford.edu">Stanford Visualization Group</a>
+    </div>
+
+    <script type="text/javascript" src="http://www.google-analytics.com/ga.js"></script>
+    <script type="text/javascript">_gat._getTracker("UA-10741907-2")._trackPageview();</script>
+  </body>
+</html>

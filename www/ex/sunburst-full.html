@@ -1,0 +1,57 @@
+<html>
+  <head>
+    <title>Sunburst</title>
+    <link rel="stylesheet" type="text/css" href="ex.css"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+    <script type="text/javascript" src="flare.js"></script>
+    <style type="text/css">
+
+#fig {
+  width: 900px;
+  margin-top: 5px;
+  height: 840px;
+  text-align: center;
+}
+
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(900)
+    .height(900)
+    .bottom(-80);
+
+var partition = vis.add(pv.Layout.Partition.Fill)
+    .nodes(pv.dom(flare).root("flare").nodes())
+    .size(function(d) d.nodeValue)
+    .order("descending")
+    .orient("radial");
+
+partition.node.add(pv.Wedge)
+    .fillStyle(pv.Colors.category19().by(function(d) d.parentNode && d.parentNode.nodeName))
+    .strokeStyle("#fff")
+    .lineWidth(.5);
+
+partition.label.add(pv.Label)
+    .visible(function(d) d.angle * d.outerRadius >= 6);
+
+vis.render();
+
+/* Update the layout's size method and re-render. */
+function update(method) {
+  switch (method) {
+    case "byte": partition.size(function(d) d.nodeValue); break;
+    case "file": partition.size(function(d) d.firstChild ? 0 : 1); break;
+  }
+  vis.render();
+}
+
+    </script>
+    <br><b>Size:</b> <select id="menu" onchange="update(this.value)">
+      <option value="byte" selected>bytes</option>
+      <option value="file">files</option>
+    </select>
+  </div></div></body>
+</html>

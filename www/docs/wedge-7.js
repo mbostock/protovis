@@ -1,0 +1,13 @@
+new pv.Panel()
+    .width(150)
+    .height(150)
+  .add(pv.Wedge)
+    .data(["red", "orange", "yellow", "green", "blue", "purple"])
+    .left(75)
+    .bottom(75)
+    .startAngle(-Math.PI)
+    .endAngle(0)
+    .innerRadius(function() this.index * 5 + 30)
+    .outerRadius(function() this.index * 5 + 35)
+    .fillStyle(function(d) d)
+  .root.render();

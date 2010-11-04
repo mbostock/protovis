@@ -1,0 +1,54 @@
+<html>
+  <head>
+    <title>Visualization Tools</title>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+    <script type="text/javascript" src="parallel.js"></script>
+    <style type="text/css">
+      body {
+        font: small sans-serif;
+        margin: 1.5em;
+      }
+    </style>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+      var w = 600, h = 400;
+
+      var vis = new pv.Panel()
+          .width(w + 100).height(h);
+
+      vis.add(pv.Rule)
+          .data(dimensions)
+          .left(80).right(20)
+          .top(function() h / dimensions.length * (this.index + .8) + .5)
+        .anchor("left").add(pv.Label)
+          .textMargin(12);
+
+      vis.add(pv.Panel)
+          .data(parallel)
+          .left(80).right(20)
+        .add(pv.Panel)
+          .def("active")
+          .def("color", pv.Colors.category19().by(pv.parent))
+          .event("mouseover", function() this.active(true))
+          .event("mouseout", function() this.active(false))
+        .add(pv.Line)
+          .data(dimensions)
+          .top(function() h / dimensions.length * (this.index + .8))
+          .left(function(x, d) (1 - d[x]) * w)
+          .strokeStyle(function() this.parent.active() ? "black" : this.parent.color())
+          .lineWidth(function() this.parent.active() ? 4 : 2)
+        .add(pv.Dot)
+          .size(40)
+          .fillStyle(function() this.parent.active() ? "coral" : "white")
+        .anchor("top").add(pv.Label)
+          .visible(function() !this.index)
+          .textAngle(-Math.PI / 2)
+          .textBaseline("middle")
+          .textAlign("left")
+          .text(function(d, x) x.name);
+
+      vis.render();
+    </script>
+  </body>
+</html>

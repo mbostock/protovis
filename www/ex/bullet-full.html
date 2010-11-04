@@ -1,0 +1,65 @@
+<html>
+  <head>
+    <title>Bullet Charts</title>
+    <link type="text/css" rel="stylesheet" href="ex.css?3.2"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+    <script type="text/javascript" src="bullet.js"></script>
+    <style type="text/css">
+
+span {
+  display: block !important;
+}
+
+#fig {
+  width: 520px;
+  height: 350px;
+}
+
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <script type="text/javascript+protovis">
+
+var format = pv.Format.number();
+
+var vis = new pv.Panel()
+    .data(bullets)
+    .width(400)
+    .height(30)
+    .margin(20)
+    .left(100);
+
+var bullet = vis.add(pv.Layout.Bullet)
+    .orient("left")
+    .ranges(function(d) d.ranges)
+    .measures(function(d) d.measures)
+    .markers(function(d) d.markers);
+
+bullet.range.add(pv.Bar);
+bullet.measure.add(pv.Bar);
+
+bullet.marker.add(pv.Dot)
+    .shape("triangle")
+    .fillStyle("white");
+
+bullet.tick.add(pv.Rule)
+  .anchor("bottom").add(pv.Label)
+    .text(bullet.x.tickFormat);
+
+bullet.anchor("left").add(pv.Label)
+    .font("bold 12px sans-serif")
+    .textAlign("right")
+    .textBaseline("bottom")
+    .text(function(d) d.title);
+
+bullet.anchor("left").add(pv.Label)
+    .textStyle("#666")
+    .textAlign("right")
+    .textBaseline("top")
+    .text(function(d) d.subtitle);
+
+vis.render();
+
+    </script>
+  </div></div></body>
+</html>

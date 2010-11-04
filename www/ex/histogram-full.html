@@ -1,0 +1,63 @@
+<html>
+  <head>
+    <title>Histogram</title>
+    <link rel="stylesheet" type="text/css" href="ex.css?3.2"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+    <script type="text/javascript" src="histogram.js"></script>
+    <style type="text/css">
+
+#fig {
+  width: 460px;
+  height: 340px;
+}
+
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <script type="text/javascript+protovis">
+
+var w = 420,
+    h = 300,
+    x = pv.Scale.linear(0, experiment.variables).range(0, w),
+    bins = pv.histogram(experiment.values).bins(x.ticks(60)),
+    y = pv.Scale.linear(0, pv.max(bins, function(d) d.y)).range(0, h);
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .margin(20);
+
+vis.add(pv.Bar)
+    .data(bins)
+    .bottom(0)
+    .left(function(d) x(d.x))
+    .width(function(d) x(d.dx))
+    .height(function(d) y(d.y))
+    .fillStyle("#aaa")
+    .strokeStyle("rgba(255, 255, 255, .2)")
+    .lineWidth(1)
+    .antialias(false);
+
+vis.add(pv.Rule)
+    .data(y.ticks(5))
+    .bottom(y)
+    .strokeStyle("#fff")
+  .anchor("left").add(pv.Label)
+    .text(y.tickFormat);
+
+vis.add(pv.Rule)
+    .data(x.ticks())
+    .left(x)
+    .bottom(-5)
+    .height(5)
+  .anchor("bottom").add(pv.Label)
+    .text(x.tickFormat);
+
+vis.add(pv.Rule)
+    .bottom(0);
+
+vis.render();
+
+    </script>
+  </div></div></body>
+</html>

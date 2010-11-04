@@ -1,0 +1,90 @@
+<html>
+  <head>
+    <title>Error Bars</title>
+    <link rel="stylesheet" type="text/css" href="ex.css?3.2"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+    <script type="text/javascript" src="error.js"></script>
+    <style type="text/css">
+
+#fig {
+  width: 900px;
+  height: 340px;
+}
+
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <script type="text/javascript+protovis">
+
+var w = 860,
+    h = 300,
+    k = 3,
+    x = pv.Scale.linear(0, w / h * 10).range(0, w),
+    y = pv.Scale.linear(0, 10).range(0, h);
+
+var vis = new pv.Panel()
+  .width(w)
+  .height(h)
+  .margin(20);
+
+/* Add the x-axis rules */
+vis.add(pv.Rule)
+    .data(x.ticks(40))
+    .left(x)
+    .strokeStyle(function(d) d ? d % 5 ? "#eee" : "#ccc" : "#000")
+  .anchor("bottom").add(pv.Label)
+    .visible(function(d) !(d & 1))
+    .text(x.tickFormat);
+
+/* Add the y-axis rules */
+vis.add(pv.Rule)
+    .data(y.ticks())
+    .bottom(y)
+    .strokeStyle(function(d) d ? d % 5 ? "#eee" : "#ccc" : "#000")
+  .anchor("left").add(pv.Label)
+    .visible(function(d) !(d & 1))
+    .text(y.tickFormat);
+
+/* Add a panel for each data point */
+var points = vis.add(pv.Panel)
+    .data(points)
+    .left(function(d) x(d.x))
+    .bottom(function(d) y(d.y));
+
+/* Add x-error indicators */
+points.add(pv.Rule)
+    .bottom(0)
+    .left(function(d) x(-d.xerr))
+    .width(function(d) x(2 * d.xerr));
+
+points.add(pv.Rule)
+    .data([-1, 1])
+    .left(function(s, d) x(s * d.xerr))
+    .bottom(-k)
+    .height(2 * k);
+
+/* Add y-error indicators */
+points.add(pv.Rule)
+    .left(0)
+    .bottom(function(d) y(-d.yerr))
+    .height(function(d) y(2 * d.yerr));
+
+points.add(pv.Rule)
+    .data(function(d) [-1, 1])
+    .bottom(function(s, d) y(s * d.yerr) - y(0))
+    .left(-k)
+    .width(2 * k);
+
+/* Add the data dots */
+points.add(pv.Dot)
+    .left(0)
+    .bottom(0)
+    .radius(k)
+    .strokeStyle(null)
+    .fillStyle("black");
+
+vis.render();
+
+    </script>
+  </div></div></body>
+</html>

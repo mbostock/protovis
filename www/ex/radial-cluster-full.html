@@ -1,0 +1,60 @@
+<html>
+  <head>
+    <title>Radial Cluster Layout</title>
+    <link type="text/css" rel="stylesheet" href="ex.css?3.2"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+    <script type="text/javascript" src="flare.js"></script>
+    <style type="text/css">
+        #fig {
+            width: 920px;
+            height: 820px;
+        }
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <script type="text/javascript+protovis">
+
+      function onNodeClick(node) {
+          var path = node.nodeName;
+          var parentNode = node.parentNode;
+          while(parentNode) {
+              path = parentNode.nodeName + "/" + path;
+              parentNode = parentNode.parentNode;
+          }
+          top.location = "http://svn.prefuse.org/flare/trunk/flare/flare/src/" + path + (node.firstChild?"/":".as");
+      }
+
+      var vis = new pv.Panel()
+          .width(600)
+          .height(600)
+          .margin(110);
+
+      var layout = vis.add(pv.Layout.Cluster)
+          .nodes(pv.dom(flare)
+              .root("flare")
+              .sort(function(a, b) pv.naturalOrder(a.nodeName, b.nodeName))
+              .nodes())
+          .group(true)
+          .innerRadius(120)
+          .orient("radial");
+
+      layout.link.add(pv.Line);
+
+      layout.node.add(pv.Dot)
+          .fillStyle(function(n) n.firstChild ? "#aec7e8" : "#ff7f0e")
+          .title(function t(d) d.parentNode ? (t(d.parentNode) + "." + d.nodeName) : d.nodeName)
+          .cursor("pointer")
+          .event("click", onNodeClick);
+
+      layout.label.add(pv.Label);
+
+      vis.render();
+
+    </script>
+<div class="caption">
+The Flare package tree laid out in radial layers. All the nodes in a given layer have the same maximum child depth.
+<br/><br/>
+Source: <a class="source" href="http://flare.prefuse.org">Flare Visualization Toolkit</a>
+</div>
+  </div></div></body>
+</html>
