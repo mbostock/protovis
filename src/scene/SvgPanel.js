@@ -8,7 +8,7 @@ pv.SvgScene.panel = function(scenes) {
 
     /* svg */
     if (!scenes.parent) {
-      s.canvas.style.display = "inline-block";
+      s.canvas.style.display = "block";
       if (g && (g.parentNode != s.canvas)) {
         g = s.canvas.firstChild;
         e = g && g.firstChild;
