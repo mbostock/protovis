@@ -1,0 +1,487 @@
+<html>
+  <head>
+    <title>Protovis - Anchors</title>
+    <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
+    <link type="text/css" rel="stylesheet" href="../ex/syntax.css?3.2"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+  </head>
+  <body>
+
+    <div class="title">
+      <div class="subtitle">
+        A graphical toolkit for visualization
+      </div>
+      <a href="../">Protovis</a>
+    </div>
+
+    <div class="head">
+      <div class="section">
+        <a href="../">Overview</a>
+      </div>
+      <div class="section">
+        <a href="../ex/">Examples</a>
+      </div>
+      <div class="section selected">
+        <a href="../docs/">Documentation</a>
+      </div>
+      <div class="section">
+        <a href="http://protovis-js.googlecode.com/files/protovis-3.2.zip">Download</a>
+      </div>
+    </div>
+    <div class="subhead">
+      <div class="section">
+        <a href="./">Index</a>
+      </div>
+    </div>
+
+    <div class="body">
+      <h1>Anchors</h1>
+
+      <p><b>Anchors</b> are well-named positions on the perimeter of an existing
+      mark. They can be used to place labels, dots, lines, and other adjacent
+      marks.
+
+      <blockquote>
+        See also:
+        <a href="../jsdoc/symbols/pv.Anchor.html">pv.Anchor API reference</a>
+      </blockquote>
+
+      <h3>Anchors with Area</h3>
+
+      <p>For example, say we want to emphasize the edge of an area. While this
+      can be done using the <tt>strokeStyle</tt> parameter, it may not produce the
+      desired effect; this strokes the entire perimeter of the area, whereas we
+      might want only the upper boundary of the area stroked. Instead, we can
+      succinctly deriving a line, and optionally a dot, using anchors:
+
+      <p><table><tr><td>
+
+<div class="highlight"><pre><span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Area</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="p">.</span><span class="mi">7</span><span class="p">,</span> <span class="p">.</span><span class="mi">5</span><span class="p">,</span> <span class="p">.</span><span class="mi">2</span><span class="p">])</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="k">this</span><span class="p">.</span><span class="nx">index</span> <span class="o">*</span> <span class="mi">25</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;top&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Line</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Dot</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">root</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+
+
+      </td><td align="right"><script type="text/javascript+protovis">
+
+new pv.Panel()
+    .width(150)
+    .height(150)
+  .add(pv.Area)
+    .data([1, 1.2, 1.7, 1.5, .7, .5, .2])
+    .bottom(0)
+    .height(function(d) d * 80)
+    .left(function() this.index * 25)
+  .anchor("top").add(pv.Line)
+    .strokeStyle("black")
+  .add(pv.Dot)
+  .root.render();
+
+
+      </script></td></tr></table>
+
+      <p>Horizontally-oriented areas support a top anchor and a bottom anchor,
+      shown here in green and red respectively:
+
+      <p><table><tr><td>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">vis</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="mi">150</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">area</span> <span class="o">=</span> <span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Area</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="p">.</span><span class="mi">7</span><span class="p">,</span> <span class="p">.</span><span class="mi">5</span><span class="p">,</span> <span class="p">.</span><span class="mi">2</span><span class="p">])</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="k">this</span><span class="p">.</span><span class="nx">index</span> <span class="o">*</span> <span class="mi">20</span> <span class="o">+</span> <span class="mi">10</span><span class="p">);</span>
+
+<span class="nx">area</span><span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;top&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Dot</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">fillStyle</span><span class="p">(</span><span class="s2">&quot;green&quot;</span><span class="p">);</span>
+
+<span class="nx">area</span><span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Dot</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">fillStyle</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+
+
+      </td><td align="right"><script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(150)
+    .height(150);
+
+var area = vis.add(pv.Area)
+    .data([1, 1.2, 1.7, 1.5, .7, .5, .2])
+    .bottom(10)
+    .height(function(d) d * 60)
+    .left(function() this.index * 20 + 10);
+
+area.anchor("top").add(pv.Dot)
+    .fillStyle("green");
+
+area.anchor("bottom").add(pv.Dot)
+    .fillStyle("red");
+
+vis.render();
+
+
+      </script></td></tr></table>
+
+      <p>If we added another area to the top anchor, we could reproduce the
+      stacked area chart shown previously. Alternatively, we can add the new
+      area to the bottom anchor, producing a different visualization:
+
+      <p><table><tr><td>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">vis</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="mi">150</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">area</span> <span class="o">=</span> <span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Area</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="p">.</span><span class="mi">7</span><span class="p">,</span> <span class="p">.</span><span class="mi">5</span><span class="p">,</span> <span class="p">.</span><span class="mi">2</span><span class="p">])</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">75</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span> <span class="o">*</span> <span class="mi">30</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="k">this</span><span class="p">.</span><span class="nx">index</span> <span class="o">*</span> <span class="mi">22</span> <span class="o">+</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">fillStyle</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Colors</span><span class="p">.</span><span class="nx">category20</span><span class="p">().</span><span class="nx">by</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">child</span><span class="p">));</span>
+
+<span class="nx">area</span><span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="nx">area</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Area</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">([.</span><span class="mi">4</span><span class="p">,</span> <span class="p">.</span><span class="mi">2</span><span class="p">,</span> <span class="p">.</span><span class="mi">8</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="p">.</span><span class="mi">8</span><span class="p">]);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+
+
+      </td><td align="right"><script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(150)
+    .height(150);
+
+var area = vis.add(pv.Area)
+    .data([1, 1.2, 1.7, 1.5, .7, .5, .2])
+    .bottom(75)
+    .height(function(d) d * 30)
+    .left(function() this.index * 22 + 10)
+    .fillStyle(pv.Colors.category20().by(pv.child));
+
+area.anchor("bottom")
+    .extend(area)
+  .add(pv.Area)
+    .data([.4, .2, .8, 1.2, 1.5, 1.1, .8]);
+
+vis.render();
+
+
+      </script></td></tr></table>
+
+      <p>Note that the bottom anchor need not be a straight line. If the
+      original area has a variable bottom, the bottom anchor will adjust
+      appropriately. This can be used to produce yet another style
+      of <a href="../ex/stack.html">stacked area chart</a>, sometimes referred
+      to as a <a href="../ex/stream.html">streamgraph</a>:
+
+      <p><table><tr><td>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">vis</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="mi">150</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">area</span> <span class="o">=</span> <span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Area</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="p">.</span><span class="mi">7</span><span class="p">,</span> <span class="p">.</span><span class="mi">5</span><span class="p">,</span> <span class="p">.</span><span class="mi">2</span><span class="p">])</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="mi">55</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span> <span class="o">*</span> <span class="mi">30</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="k">this</span><span class="p">.</span><span class="nx">index</span> <span class="o">*</span> <span class="mi">22</span> <span class="o">+</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">fillStyle</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Colors</span><span class="p">.</span><span class="nx">category20</span><span class="p">().</span><span class="nx">by</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">child</span><span class="p">));</span>
+
+<span class="nx">area</span><span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="nx">area</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Area</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">([.</span><span class="mi">4</span><span class="p">,</span> <span class="p">.</span><span class="mi">2</span><span class="p">,</span> <span class="p">.</span><span class="mi">8</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="p">.</span><span class="mi">8</span><span class="p">]);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+
+
+      </td><td align="right"><script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(150)
+    .height(150);
+
+var area = vis.add(pv.Area)
+    .data([1, 1.2, 1.7, 1.5, .7, .5, .2])
+    .bottom(function(d) d * 10 + 55)
+    .height(function(d) d * 30)
+    .left(function() this.index * 22 + 10)
+    .fillStyle(pv.Colors.category20().by(pv.child));
+
+area.anchor("bottom")
+    .extend(area)
+  .add(pv.Area)
+    .data([.4, .2, .8, 1.2, 1.5, 1.1, .8]);
+
+vis.render();
+
+
+      </script></td></tr></table>
+
+      <p>Of course, it may be better to use the
+      stack <a href="layout.html">layout</a> rather than use anchors to achieve
+      this design.
+
+      <p>Vertically-oriented areas similarly provide two anchors, right and
+      left. This time we demonstrate the use of anchors with lines rather than
+      dots:
+
+      <p><table><tr><td>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">vis</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="mi">150</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">area</span> <span class="o">=</span> <span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Area</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="p">.</span><span class="mi">7</span><span class="p">,</span> <span class="p">.</span><span class="mi">5</span><span class="p">,</span> <span class="p">.</span><span class="mi">2</span><span class="p">])</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="k">this</span><span class="p">.</span><span class="nx">index</span> <span class="o">*</span> <span class="mi">20</span> <span class="o">+</span> <span class="mi">10</span><span class="p">);</span>
+
+<span class="nx">area</span><span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;right&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Line</span><span class="p">).</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;green&quot;</span><span class="p">);</span>
+<span class="nx">area</span><span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;left&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Line</span><span class="p">).</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+
+
+      </td><td align="right"><script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(150)
+    .height(150);
+
+var area = vis.add(pv.Area)
+    .data([1, 1.2, 1.7, 1.5, .7, .5, .2])
+    .left(10)
+    .width(function(d) d * 60)
+    .bottom(function() this.index * 20 + 10);
+
+area.anchor("right").add(pv.Line).strokeStyle("green");
+area.anchor("left").add(pv.Line).strokeStyle("red");
+
+vis.render();
+
+
+      </script></td></tr></table>
+
+      <p>While it is always possible to specify the location of related marks
+      explicitly, this section shows that anchors are usually the most
+      convenient choice.
+
+      <h3>Anchors with Bar</h3>
+
+      <p>Here is a reimplementation of an example from the <a href="label.html"
+      >label documentation</a>, using the top anchor:
+
+      <p><table><tr><td>
+
+<div class="highlight"><pre><span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Bar</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="p">.</span><span class="mi">7</span><span class="p">,</span> <span class="p">.</span><span class="mi">2</span><span class="p">])</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="mi">19</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="k">this</span><span class="p">.</span><span class="nx">index</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">+</span> <span class="mi">5</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;top&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">textStyle</span><span class="p">(</span><span class="s2">&quot;#fff&quot;</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">root</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+
+
+      </td><td align="right"><script type="text/javascript+protovis">
+
+new pv.Panel()
+    .width(150)
+    .height(150)
+  .add(pv.Bar)
+    .data([1, 1.2, 1.7, 1.5, .7, .2])
+    .bottom(0)
+    .width(19)
+    .height(function(d) d * 70)
+    .left(function() this.index * 24 + 5)
+  .anchor("top").add(pv.Label)
+    .textStyle("#fff")
+  .root.render();
+
+
+      </script></td></tr></table>
+
+      <p>What took a handful of lines of code earlier now takes only one
+      line. Note that in addition the position, anchors can specify reasonable
+      defaults for text placement as well. The top anchor for a bar uses
+      centered text a top baseline. Any number of labels (or other types of
+      marks) can be associated with any anchor. The following diagram shows four
+      of the available anchors for bars:
+
+      <p><table><tr><td>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">vis</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">().</span><span class="nx">width</span><span class="p">(</span><span class="mi">150</span><span class="p">).</span><span class="nx">height</span><span class="p">(</span><span class="mi">150</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">bar</span> <span class="o">=</span> <span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Bar</span><span class="p">);</span>
+<span class="nx">bar</span><span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;top&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="s2">&quot;top&quot;</span><span class="p">);</span>
+<span class="nx">bar</span><span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;left&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="s2">&quot;left&quot;</span><span class="p">);</span>
+<span class="nx">bar</span><span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;right&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="s2">&quot;right&quot;</span><span class="p">);</span>
+<span class="nx">bar</span><span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">);</span>
+<span class="nx">vis</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+
+
+      </td><td align="right"><script type="text/javascript+protovis">
+
+var vis = new pv.Panel().width(150).height(150);
+var bar = vis.add(pv.Bar);
+bar.anchor("top").add(pv.Label).text("top");
+bar.anchor("left").add(pv.Label).text("left");
+bar.anchor("right").add(pv.Label).text("right");
+bar.anchor("bottom").add(pv.Label).text("bottom");
+vis.render();
+
+
+      </script></td></tr></table>
+
+      <h3>Anchors with Dot</h3>
+
+      <p>The behavior for <a href="dot.html">dots</a> is equivalent to bars:
+
+      <p><table><tr><td>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">vis</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">().</span><span class="nx">width</span><span class="p">(</span><span class="mi">150</span><span class="p">).</span><span class="nx">height</span><span class="p">(</span><span class="mi">150</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">dot</span> <span class="o">=</span> <span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Dot</span><span class="p">).</span><span class="nx">left</span><span class="p">(</span><span class="mi">75</span><span class="p">).</span><span class="nx">top</span><span class="p">(</span><span class="mi">75</span><span class="p">).</span><span class="nx">size</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span>
+<span class="nx">dot</span><span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;top&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="s2">&quot;top&quot;</span><span class="p">);</span>
+<span class="nx">dot</span><span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;left&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="s2">&quot;left&quot;</span><span class="p">);</span>
+<span class="nx">dot</span><span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;right&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="s2">&quot;right&quot;</span><span class="p">);</span>
+<span class="nx">dot</span><span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">);</span>
+<span class="nx">dot</span><span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;center&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="s2">&quot;center&quot;</span><span class="p">);</span>
+<span class="nx">vis</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+
+
+      </td><td align="right"><script type="text/javascript+protovis">
+
+var vis = new pv.Panel().width(150).height(150);
+var dot = vis.add(pv.Dot).left(75).top(75).size(1000);
+dot.anchor("top").add(pv.Label).text("top");
+dot.anchor("left").add(pv.Label).text("left");
+dot.anchor("right").add(pv.Label).text("right");
+dot.anchor("bottom").add(pv.Label).text("bottom");
+dot.anchor("center").add(pv.Label).text("center");
+vis.render();
+
+
+      </script></td></tr></table>
+
+      <p>Here is an example of using the right anchor on a scatterplot:
+
+      <p><table><tr><td>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">vis</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="mi">150</span><span class="p">);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Dot</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">([[.</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[.</span><span class="mi">5</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">],</span> <span class="p">[.</span><span class="mi">9</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">],</span> <span class="p">[.</span><span class="mi">2</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">],</span> <span class="p">[.</span><span class="mi">7</span><span class="p">,</span> <span class="mf">2.2</span><span class="p">]])</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;right&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+
+
+      </td><td align="right"><script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(150)
+    .height(150);
+
+vis.add(pv.Dot)
+    .data([[.1, 1], [.5, 1.2], [.9, 1.7], [.2, 1.5], [.7, 2.2]])
+    .left(function(d) d[0] * 100)
+    .bottom(function(d) d[1] * 50)
+  .anchor("right").add(pv.Label);
+
+vis.render();
+
+
+      </script></td></tr></table>
+
+      <h3>Anchors with Wedge</h3>
+
+      <p>Similarly, labels on a donut chart are easy with anchors, when they
+      would be quite tricky to implement by hand. In this example note that we
+      forego the use of <tt>pv.normalize</tt> and instead precompute the scale
+      factor, so that the label displays the original data value:
+
+      <p><table><tr><td>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="p">.</span><span class="mi">7</span><span class="p">],</span> <span class="nx">sum</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">sum</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">vis</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="mi">150</span><span class="p">);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Wedge</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="mi">75</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">75</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">innerRadius</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">outerRadius</span><span class="p">(</span><span class="mi">70</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">angle</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span> <span class="o">/</span> <span class="nx">sum</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;center&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+
+
+      </td><td align="right"><script type="text/javascript+protovis">
+
+var data = [1, 1.2, 1.7, 1.5, .7], sum = pv.sum(data);
+
+var vis = new pv.Panel()
+    .width(150)
+    .height(150);
+
+vis.add(pv.Wedge)
+    .data(data)
+    .left(75)
+    .bottom(75)
+    .innerRadius(50)
+    .outerRadius(70)
+    .angle(function(d) d / sum * 2 * Math.PI)
+  .anchor("center").add(pv.Label);
+
+vis.render();
+
+
+      </script></td></tr></table>
+    </div>
+
+    <div class="foot">
+      Copyright 2010 <a href="http://vis.stanford.edu">Stanford Visualization Group</a>
+    </div>
+
+    <script type="text/javascript" src="http://www.google-analytics.com/ga.js"></script>
+    <script type="text/javascript">_gat._getTracker("UA-10741907-2")._trackPageview();</script>
+  </body>
+</html>

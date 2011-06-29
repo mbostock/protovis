@@ -1,0 +1,11 @@
+new pv.Panel()
+    .width(150)
+    .height(150)
+  .add(pv.Line)
+    .segmented(true)
+    .data([1, 1.2, 1.7, 1.5, .7, .5, .2])
+    .bottom(function(d) d * 70)
+    .left(function() this.index * 20 + 15)
+    .strokeStyle(function(d) "hsl(" + (d * 180) + ",50%,50%)")
+    .lineWidth(function(d) d * 15)
+  .root.render();

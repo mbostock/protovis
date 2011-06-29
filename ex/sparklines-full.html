@@ -1,0 +1,108 @@
+<script type="text/javascript+protovis">
+
+/** A simple sparkline with optional dots. */
+function sparkline(data, dots) {
+  var n = data.length,
+      w = n,
+      h = 10,
+      min = pv.min.index(data),
+      max = pv.max.index(data);
+
+  var vis = new pv.Panel()
+      .width(w)
+      .height(h)
+      .margin(2);
+
+  vis.add(pv.Line)
+      .data(data)
+      .left(pv.Scale.linear(0, n - 1).range(0, w).by(pv.index))
+      .bottom(pv.Scale.linear(data).range(0, h))
+      .strokeStyle("#000")
+      .lineWidth(1)
+    .add(pv.Dot)
+      .visible(function() (dots && this.index == 0) || this.index == n - 1)
+      .strokeStyle(null)
+      .fillStyle("brown")
+      .radius(2)
+    .add(pv.Dot)
+      .visible(function() dots && (this.index == min || this.index == max))
+      .fillStyle("steelblue");
+
+  vis.render();
+}
+
+/** An uptick/downtick sparkline for binary data. */
+function sparktick(data) {
+  var w = data.length * 2,
+      h = 11;
+
+  var vis = new pv.Panel()
+      .width(w)
+      .height(h);
+
+  vis.add(pv.Rule)
+      .bottom(h / 2)
+      .strokeStyle("#870")
+    .add(pv.Rule)
+      .data(data)
+      .left(function() 2 * this.index)
+      .bottom(function(d) d ? h / 2 : 0)
+      .height(h / 2);
+
+  vis.render();
+}
+
+/** A sparkline bar chart. */
+function sparkbar(data) {
+  var w = 60,
+      h = 12;
+
+  var vis = new pv.Panel()
+      .width(w)
+      .height(h);
+
+  vis.add(pv.Bar)
+      .data(bars)
+      .width(4)
+      .left(function() 5 * this.index)
+      .height(function(d) Math.round(h * d))
+      .bottom(0);
+
+  vis.render();
+}
+
+/** A small colored dot. */
+function dot(color) {
+  new pv.Panel()
+      .width(6)
+      .height(9)
+    .anchor("center").add(pv.Dot)
+      .strokeStyle(null)
+      .fillStyle(color)
+      .radius(2)
+    .root.render();
+}
+
+</script>
+
+A sparkline is a word-sized data visualization, such
+as <script type="text/javascript+protovis">sparkline(sunspots);</script>
+or <script type="text/javascript+protovis">sparkbar(bars);</script>, allowing
+visual representations of data to be embedded directly in prose. This avoids any
+interruption in the flow of text, with the data presented in descriptive
+context. Sparklines can be used where space is limited, unlike standalone
+figures.
+
+<p>The necessarily-small size of sparklines introduces special constraints on
+their design: minimalist designs that show data as succinctly as possible are
+favored. For example, the win-loss record of a baseball team might be use
+up-ticks for wins and down-ticks for losses: <script
+type="text/javascript+protovis">sparktick(random(150));</script>. Similarly,
+rather than using axes, ticks, labels and a legend for a line chart, a sparkline
+can show a single-series trend simply as <script
+type="text/javascript+protovis">sparkline(walk(100),1);</script>. This
+particular design comes from Edward Tufte, with red dots (<script
+type="text/javascript+protovis">dot("brown");</script>) to emphasize
+start and end, and blue dots (<script
+type="text/javascript+protovis">dot("steelblue");</script>) for minimum and
+maximum.

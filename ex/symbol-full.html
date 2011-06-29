@@ -1,0 +1,172 @@
+<html>
+  <head>
+    <title>Symbol Map</title>
+    <link type="text/css" rel="stylesheet" href="ex.css?3.2"/>
+    <link type="text/css" rel="stylesheet" href="../ui-lightness/jquery-ui-1.8rc3.custom.css"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+    <script type="text/javascript" src="../jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="../jquery-ui-1.8rc3.custom.min.js"></script>
+    <script type="text/javascript" src="centroid.js"></script>
+    <script type="text/javascript" src="us_lowres.js"></script>
+    <script type="text/javascript" src="us_stats.js"></script>
+    <style type="text/css">
+
+#fig {
+  width: 800px;
+  height: 450px;
+}
+
+#container {
+  height: 10px;
+}
+
+#yearSlider {
+  position: absolute;
+  left: 100;
+  right: 90;
+  margin-top: 3;
+}
+
+#yearLabel {
+  position: absolute;
+  left: 0;
+  width: 85;
+  text-align: right;
+}
+
+#play {
+  position: absolute;
+  right: 50px;
+  cursor: pointer;
+}
+
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <div id="container">
+      <b id="yearLabel">Year:</b
+      ><div id="yearSlider"></div
+      ><img id="play" src="play.png" alt="Play" onclick="playClick()">
+    </div>
+    <script type="text/javascript+protovis">
+
+var year;
+
+$(yearSlider).slider({
+  min: us_stats.minYear,
+  max: us_stats.maxYear,
+  value: year = us_stats.maxYear,
+  slide: function(e, ui) {
+    year = ui.value;
+    pie.render();
+  }
+});
+
+var w = 810,
+    h = 400,
+    yearsMargin = 100,
+    rScale = 1 / 170;
+
+var scale = pv.Geo.scale()
+    .domain({lng: -128, lat: 24}, {lng: -64, lat: 50})
+    .range({x: 0, y: 0}, {x: w, y: h});
+
+var yearsScale = pv.Scale.linear()
+    .domain(us_stats.minYear, us_stats.maxYear)
+    .range(yearsMargin + 2, w - yearsMargin);
+
+var colors = ["#008038", "#F7976B", "#ED1C23"];
+
+us_lowres.forEach(function(c) {
+  c.code = c.code.toUpperCase();
+  c.centLatLon = centroid(c.borders[0]);
+});
+
+var timer = undefined;
+function playClick() {
+  if (timer) {
+    stop();
+  } else {
+    if (year == us_stats.maxYear) year = us_stats.minYear;
+    $(yearSlider).slider('value', year);
+    $(play).attr("src", 'stop.png');
+    pie.render();
+    timer = setInterval(function() {
+      year++;
+      if (year >= us_stats.maxYear) stop();
+      $(yearSlider).slider('value', year);
+      pie.render();
+    }, 900);
+  }
+}
+
+// Stop the animation
+function stop() {
+  clearInterval(timer);
+  timer = undefined;
+  $(play).attr("src", 'play.png');
+}
+
+// Add the main panel for the visualization
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .top(30);
+
+// Add the ticks and labels for the year slider
+vis.add(pv.Rule)
+   .data(pv.range(us_stats.minYear, us_stats.maxYear + .1))
+   .left(yearsScale)
+   .height(4)
+   .top(-20)
+ .anchor("bottom").add(pv.Label);
+
+// Add a panel for each state
+var state = vis.add(pv.Panel)
+    .data(us_lowres);
+
+// Add a panel for each state land mass
+state.add(pv.Panel)
+    .data(function(c) c.borders)
+  .add(pv.Line)
+    .data(function(l) l)
+    .left(scale.x)
+    .top(scale.y)
+    .fillStyle("#eee")
+    .lineWidth(1)
+    .strokeStyle("#ccc")
+    .antialias(false);
+
+// Add the pie chart
+var pie = vis.add(pv.Panel)
+    .data(us_lowres)
+    .left(function(c) scale(c.centLatLon).x)
+    .top(function(c) scale(c.centLatLon).y)
+  .add(pv.Wedge)
+    .data(function(c) [
+        (100 - us_stats[c.code].over[us_stats.yearIdx(year)]
+         - us_stats[c.code].obese[us_stats.yearIdx(year)]),
+        us_stats[c.code].over[us_stats.yearIdx(year)],
+        us_stats[c.code].obese[us_stats.yearIdx(year)]
+      ])
+    .left(0)
+    .top(0)
+    .outerRadius(function(d, c) Math.sqrt(us_stats[c.code].pop[us_stats.yearIdx(year)])*rScale)
+    .angle(function(d) d /100 * 2 * Math.PI)
+    .fillStyle(function() colors[this.index])
+    .title(function(d, c) c.name);
+
+// Add the legend
+vis.add(pv.Dot)
+   .data(["Obese", "Overweight", "Normal"])
+   .left(10)
+   .bottom(function() this.index * 12 + 10)
+   .strokeStyle(null)
+   .fillStyle(function() colors[2 - this.index])
+ .anchor("right").add(pv.Label);
+
+vis.render();
+
+    </script>
+  </div></div></body>
+</html>

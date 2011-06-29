@@ -1,0 +1,12 @@
+new pv.Panel()
+    .width(150)
+    .height(150)
+  .add(pv.Panel)
+    .data(pv.range(3))
+    .bottom(function() this.index * 50 + 5)
+  .add(pv.Line)
+    .data(pv.range(14))
+    .left(function() this.index * 10 + 10)
+    .bottom(function() Math.random() * 40)
+    .lineWidth(5)
+  .root.render();

@@ -1,0 +1,178 @@
+<html>
+  <head>
+    <title>Protovis - Map Projections</title>
+    <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
+    <link type="text/css" rel="stylesheet" href="syntax.css"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+  </head>
+  <body>
+
+    <div class="title">
+      <div class="subtitle">
+        A graphical toolkit for visualization
+      </div>
+      <a href="../">Protovis</a>
+    </div>
+
+    <div class="head">
+      <div class="section">
+        <a href="../">Overview</a>
+      </div>
+      <div class="section selected">
+        <a href="./">Examples</a>
+      </div>
+      <div class="section">
+        <a href="../docs/">Documentation</a>
+      </div>
+      <div class="section">
+        <a href="http://protovis-js.googlecode.com/files/protovis-3.2.zip">Download</a>
+      </div>
+    </div>
+    <div class="subhead">
+      <div class="section">
+        <a href="./">Index</a>
+      </div>
+      <div class="section">
+        <a href="cartogram.html">&laquo; Previous</a> /
+        <a href="heatmap.html">Next &raquo;</a>
+      </div>
+    </div>
+
+    <div class="body">
+      <h1>Map Projections</h1>
+
+      <iframe scrolling="no" style="width:860px;height:550px;" src="projection-full.html"></iframe>
+      <p><img src="popout.png" width="16" height="16"
+      style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
+      href="projection-full.html" target="_blank">View full screen.</a>
+
+      <p>Although the <i>Mercator</i> projection is perhaps the most familiar,
+      many different <a href="http://en.wikipedia.org/wiki/Map_projection">map
+      projections</a> exist to map the Earth's spherical surface to a
+      two-dimensional image. Each projection introduces some type of distortion;
+      for different purposes, some distortions may be more desirable. This
+      example is another <a href="choropleth.html">choropleth map</a>, showing
+      population density map of the world's countries. Use the drop-down menu to
+      compare several projections supported by Protovis.
+
+      <blockquote style="font-size:13px;">
+        Next: <a href="heatmap.html">Heatmaps</a>
+      </blockquote>
+
+      <h3>Source</h3>
+
+<div class="highlight"><pre><span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;title&gt;</span>Choropleth Map<span class="nt">&lt;/title&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">type=</span><span class="s">&quot;text/css&quot;</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;ex.css?3.2&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;../protovis-r3.2.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;countries.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;style </span><span class="na">type=</span><span class="s">&quot;text/css&quot;</span><span class="nt">&gt;</span>
+
+<span class="nf">#fig</span> <span class="p">{</span>
+  <span class="k">width</span><span class="o">:</span> <span class="m">860px</span><span class="p">;</span>
+  <span class="k">height</span><span class="o">:</span> <span class="m">550px</span><span class="p">;</span>
+<span class="p">}</span>
+
+    <span class="nt">&lt;/style&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body&gt;&lt;div</span> <span class="na">id=</span><span class="s">&quot;center&quot;</span><span class="nt">&gt;&lt;div</span> <span class="na">id=</span><span class="s">&quot;fig&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">align=</span><span class="s">&quot;right&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;b&gt;</span>Projection:<span class="nt">&lt;/b&gt;</span>
+      <span class="nt">&lt;select</span> <span class="na">id=</span><span class="s">&quot;menu&quot;</span> <span class="na">onchange=</span><span class="s">&quot;geo.projection(this.value); vis.render();&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">&quot;none&quot;</span><span class="nt">&gt;</span>Identity projection<span class="nt">&lt;/option&gt;</span>
+        <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">&quot;mercator&quot;</span><span class="nt">&gt;</span>Mercator projection<span class="nt">&lt;/option&gt;</span>
+        <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">&quot;gall-peters&quot;</span><span class="nt">&gt;</span>Gall-Peters projection<span class="nt">&lt;/option&gt;</span>
+        <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">&quot;sinusoidal&quot;</span><span class="nt">&gt;</span>Sinusoidal projection<span class="nt">&lt;/option&gt;</span>
+        <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">&quot;hammer&quot;</span> <span class="na">selected</span><span class="nt">&gt;</span>Hammer projection<span class="nt">&lt;/option&gt;</span>
+      <span class="nt">&lt;/select&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript+protovis&quot;</span><span class="nt">&gt;</span>
+
+<span class="cm">/*</span>
+<span class="cm"> * A diverging color scale, using previously-computed quantiles of population</span>
+<span class="cm"> * densities; in the future, we might use a quantile scale here to do this</span>
+<span class="cm"> * automatically. Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer,</span>
+<span class="cm"> * Penn State.</span>
+<span class="cm"> */</span>
+<span class="kd">var</span> <span class="nx">fill</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">domain</span><span class="p">(</span><span class="mi">140</span><span class="p">,</span> <span class="mi">650</span><span class="p">,</span> <span class="mi">1900</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">range</span><span class="p">(</span><span class="s2">&quot;#91bfdb&quot;</span><span class="p">,</span> <span class="s2">&quot;#ffffbf&quot;</span><span class="p">,</span> <span class="s2">&quot;#fc8d59&quot;</span><span class="p">);</span>
+
+<span class="cm">/* Precompute the country&#39;s population density and color. */</span>
+<span class="nx">countries</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">c</span><span class="p">.</span><span class="nx">color</span> <span class="o">=</span> <span class="nx">stats</span><span class="p">[</span><span class="nx">c</span><span class="p">.</span><span class="nx">code</span><span class="p">].</span><span class="nx">area</span>
+      <span class="o">?</span> <span class="nx">fill</span><span class="p">(</span><span class="nx">stats</span><span class="p">[</span><span class="nx">c</span><span class="p">.</span><span class="nx">code</span><span class="p">].</span><span class="nx">pop</span> <span class="o">/</span> <span class="nx">stats</span><span class="p">[</span><span class="nx">c</span><span class="p">.</span><span class="nx">code</span><span class="p">].</span><span class="nx">area</span><span class="p">)</span>
+      <span class="o">:</span> <span class="s2">&quot;#ccc&quot;</span><span class="p">;</span> <span class="c1">// unknown</span>
+<span class="p">});</span>
+
+<span class="kd">var</span> <span class="nx">w</span> <span class="o">=</span> <span class="mi">860</span><span class="p">,</span>
+    <span class="nx">h</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">/</span> <span class="mi">5</span> <span class="o">*</span> <span class="nx">w</span><span class="p">,</span>
+    <span class="nx">geo</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Geo</span><span class="p">.</span><span class="nx">scale</span><span class="p">(</span><span class="s2">&quot;hammer&quot;</span><span class="p">).</span><span class="nx">range</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="nx">h</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">vis</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="nx">w</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="nx">h</span><span class="p">);</span>
+
+<span class="cm">/* Countries. */</span>
+<span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">countries</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span> <span class="nx">c</span><span class="p">.</span><span class="nx">borders</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Line</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">b</span><span class="p">)</span> <span class="nx">b</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="nx">geo</span><span class="p">.</span><span class="nx">x</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">top</span><span class="p">(</span><span class="nx">geo</span><span class="p">.</span><span class="nx">y</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">title</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">)</span> <span class="nx">c</span><span class="p">.</span><span class="nx">name</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">fillStyle</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">)</span> <span class="nx">c</span><span class="p">.</span><span class="nx">color</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="k">this</span><span class="p">.</span><span class="nx">fillStyle</span><span class="p">().</span><span class="nx">darker</span><span class="p">())</span>
+    <span class="p">.</span><span class="nx">lineWidth</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">antialias</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+
+<span class="cm">/* Latitude ticks. */</span>
+<span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">geo</span><span class="p">.</span><span class="nx">ticks</span><span class="p">.</span><span class="nx">lat</span><span class="p">())</span>
+  <span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Line</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">b</span><span class="p">)</span> <span class="nx">b</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="nx">geo</span><span class="p">.</span><span class="nx">x</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">top</span><span class="p">(</span><span class="nx">geo</span><span class="p">.</span><span class="nx">y</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;rgba(128,128,128,.3)&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">lineWidth</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">interpolate</span><span class="p">(</span><span class="s2">&quot;cardinal&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">antialias</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+
+<span class="cm">/* Longitude ticks. */</span>
+<span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">geo</span><span class="p">.</span><span class="nx">ticks</span><span class="p">.</span><span class="nx">lng</span><span class="p">())</span>
+  <span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Line</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">b</span><span class="p">)</span> <span class="nx">b</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="nx">geo</span><span class="p">.</span><span class="nx">x</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">top</span><span class="p">(</span><span class="nx">geo</span><span class="p">.</span><span class="nx">y</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;rgba(128,128,128,.3)&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">lineWidth</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">interpolate</span><span class="p">(</span><span class="s2">&quot;cardinal&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">antialias</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+
+    <span class="nt">&lt;/script&gt;</span>
+  <span class="nt">&lt;/div&gt;&lt;/div&gt;&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre></div>
+
+
+      <h3>Data</h3>
+
+      Due to size, the data file is omitted from this
+      example. See <a href="countries.js" target="_blank">countries.js</a>.
+
+    </div>
+
+    <div class="foot">
+      Copyright 2010 <a href="http://vis.stanford.edu">Stanford Visualization Group</a>
+    </div>
+
+    <script type="text/javascript" src="http://www.google-analytics.com/ga.js"></script>
+    <script type="text/javascript">_gat._getTracker("UA-10741907-2")._trackPageview();</script>
+  </body>
+</html>

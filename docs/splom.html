@@ -1,0 +1,224 @@
+<html>
+  <head>
+    <title>Protovis - How-To: Scatterplot Matrix</title>
+    <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
+    <link type="text/css" rel="stylesheet" href="../ex/syntax.css?3.2"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+    <script type="text/javascript" src="../ex/flowers.js"></script>
+  </head>
+  <body>
+
+    <div class="title">
+      <div class="subtitle">
+        A graphical toolkit for visualization
+      </div>
+      <a href="../">Protovis</a>
+    </div>
+
+    <div class="head">
+      <div class="section">
+        <a href="../">Overview</a>
+      </div>
+      <div class="section">
+        <a href="../ex/">Examples</a>
+      </div>
+      <div class="section selected">
+        <a href="../docs/">Documentation</a>
+      </div>
+      <div class="section">
+        <a href="http://protovis-js.googlecode.com/files/protovis-3.2.zip">Download</a>
+      </div>
+    </div>
+    <div class="subhead">
+      <div class="section">
+        <a href="./">Index</a>
+      </div>
+      <div class="section">
+        <a href="start.html">&laquo; Previous</a> /
+        <a href="invert.html">Next &raquo;</a>
+      </div>
+    </div>
+
+    <div class="body">
+      <h1>How-To: Scatterplot Matrix</h1>
+
+      <p>You&rsquo;ve probably seen the simple <a href="../ex/dot.html"
+      >scatterplot example</a> already. We will now extend this simple example
+      to do something a bit more interesting: a scatterplot matrix! That is, a
+      grid of little scatterplots, each displaying the relationship between two
+      dimensions <i>i</i> and <i>j</i>.
+
+      <p>For example, given tabular data on <a
+      href="http://en.wikipedia.org/wiki/Iris_flower_data_set">Iris flowers</a>,
+      how might we explore the relationships between sepal and petal dimensions
+      and species?
+
+<div class="highlight"><pre><span class="p">{</span> <span class="nx">sepalLength</span><span class="o">:</span> <span class="mf">5.1</span><span class="p">,</span> <span class="nx">sepalWidth</span><span class="o">:</span> <span class="mf">3.5</span><span class="p">,</span> <span class="nx">petalLength</span><span class="o">:</span> <span class="mf">1.4</span><span class="p">,</span> <span class="nx">petalWidth</span><span class="o">:</span> <span class="mf">0.2</span><span class="p">,</span> <span class="nx">species</span><span class="o">:</span> <span class="s2">&quot;setosa&quot;</span> <span class="p">},</span>
+<span class="p">{</span> <span class="nx">sepalLength</span><span class="o">:</span> <span class="mf">4.9</span><span class="p">,</span> <span class="nx">sepalWidth</span><span class="o">:</span> <span class="mf">3.0</span><span class="p">,</span> <span class="nx">petalLength</span><span class="o">:</span> <span class="mf">1.4</span><span class="p">,</span> <span class="nx">petalWidth</span><span class="o">:</span> <span class="mf">0.2</span><span class="p">,</span> <span class="nx">species</span><span class="o">:</span> <span class="s2">&quot;setosa&quot;</span> <span class="p">},</span>
+<span class="p">{</span> <span class="nx">sepalLength</span><span class="o">:</span> <span class="mf">4.7</span><span class="p">,</span> <span class="nx">sepalWidth</span><span class="o">:</span> <span class="mf">3.2</span><span class="p">,</span> <span class="nx">petalLength</span><span class="o">:</span> <span class="mf">1.3</span><span class="p">,</span> <span class="nx">petalWidth</span><span class="o">:</span> <span class="mf">0.2</span><span class="p">,</span> <span class="nx">species</span><span class="o">:</span> <span class="s2">&quot;setosa&quot;</span> <span class="p">},</span>
+<span class="p">...</span>
+</pre></div>
+
+
+      <p>Here&rsquo;s a rudimentary scatterplot matrix:
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">s</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="nx">p</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="nx">keys</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">flowers</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+
+<span class="kd">var</span> <span class="nx">vis</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="nx">keys</span><span class="p">.</span><span class="nx">length</span> <span class="o">*</span> <span class="p">(</span><span class="nx">s</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="nx">p</span><span class="p">))</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="nx">keys</span><span class="p">.</span><span class="nx">length</span> <span class="o">*</span> <span class="p">(</span><span class="nx">s</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="nx">p</span><span class="p">));</span>
+
+<span class="kd">var</span> <span class="nx">cell</span> <span class="o">=</span> <span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">keys</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="k">this</span><span class="p">.</span><span class="nx">index</span> <span class="o">*</span> <span class="p">(</span><span class="nx">s</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="nx">p</span><span class="p">)</span> <span class="o">+</span> <span class="nx">p</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">keys</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">top</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="k">this</span><span class="p">.</span><span class="nx">index</span> <span class="o">*</span> <span class="p">(</span><span class="nx">s</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="nx">p</span><span class="p">)</span> <span class="o">+</span> <span class="nx">p</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;#ccc&quot;</span><span class="p">);</span>
+
+<span class="nx">cell</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Dot</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">def</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">k0</span><span class="p">,</span> <span class="nx">k1</span><span class="p">)</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">(</span><span class="nx">flowers</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span><span class="p">[</span><span class="nx">k0</span><span class="p">]).</span><span class="nx">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">s</span><span class="p">))</span>
+    <span class="p">.</span><span class="nx">def</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">k0</span><span class="p">,</span> <span class="nx">k1</span><span class="p">)</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">(</span><span class="nx">flowers</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span><span class="p">[</span><span class="nx">k1</span><span class="p">]).</span><span class="nx">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">s</span><span class="p">))</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">flowers</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">k0</span><span class="p">,</span> <span class="nx">k1</span><span class="p">)</span> <span class="k">this</span><span class="p">.</span><span class="nx">x</span><span class="p">()(</span><span class="nx">d</span><span class="p">[</span><span class="nx">k0</span><span class="p">]))</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">k0</span><span class="p">,</span> <span class="nx">k1</span><span class="p">)</span> <span class="k">this</span><span class="p">.</span><span class="nx">y</span><span class="p">()(</span><span class="nx">d</span><span class="p">[</span><span class="nx">k1</span><span class="p">]));</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+
+
+      <p>Breaking it down:
+
+      <p>1. A root [PvPanel panel], <tt>vis</tt>, to contain the visualization.
+      Its dimensions are a multiple of the size <tt>s</tt> and some padding
+      <tt>p</tt> between cells.
+
+      <p>2. Another panel, <tt>cell</tt>, to contain the scatterplot. But note
+      that <tt>cell</tt> is not directly a child of the root: we use one panel
+      to make columns, and another panel to make rows. These panels share the
+      same data: the array of dimensions (&ldquo;sepalLength&rdquo;,
+      &ldquo;sepalWidth&rdquo;, etc.), <tt>keys</tt>.
+
+      <p>3. A <a href="dot.html">dot</a>, to produce the scatterplot. We use two
+      <a href="local.html">local variables</a> <tt>x</tt> and <tt>y</tt> to
+      store linear scales for each dimensions. Note: it would be more efficient
+      to cache these scales for each dimension, rather than constructing them on
+      the fly. (Exercise: Try it!)
+
+      <p>The result is a good start:
+
+      <p><script type="text/javascript+protovis">
+
+var s = 100,
+    p = 5,
+    keys = pv.keys(flowers[0]);
+
+var vis = new pv.Panel()
+    .width(keys.length * (s + 2 * p))
+    .height(keys.length * (s + 2 * p));
+
+var cell = vis.add(pv.Panel)
+    .data(keys)
+    .width(s)
+    .left(function() this.index * (s + 2 * p) + p)
+  .add(pv.Panel)
+    .data(keys)
+    .height(s)
+    .top(function() this.index * (s + 2 * p) + p)
+    .strokeStyle("#ccc");
+
+cell.add(pv.Dot)
+    .def("x", function(k0, k1) pv.Scale.linear(flowers, function(d) d[k0]).range(0, s))
+    .def("y", function(k0, k1) pv.Scale.linear(flowers, function(d) d[k1]).range(0, s))
+    .data(flowers)
+    .left(function(d, k0, k1) this.x()(d[k0]))
+    .bottom(function(d, k0, k1) this.y()(d[k1]));
+
+vis.render();
+
+
+      </script>
+
+      <p>Of course, one of the problems with the rudimentary approach is that a
+      linear scale isn&rsquo;t appropriate for all dimensions: the species name
+      is ordinal, not quantitative. It might be useful in Protovis generated a
+      suitable default scale for you, but it&rsquo;s easy enough to write your
+      own scale factory:
+
+<div class="highlight"><pre><span class="kd">function</span> <span class="nx">scale</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="nx">t</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;number&quot;</span><span class="p">)</span>
+      <span class="o">?</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span><span class="p">[</span><span class="nx">t</span><span class="p">]).</span><span class="nx">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">s</span><span class="p">)</span>
+      <span class="o">:</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">ordinal</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span><span class="p">[</span><span class="nx">t</span><span class="p">]).</span><span class="nx">split</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">s</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+
+      <p>Then, replace the defs for <tt>x</tt> and <tt>y</tt> to use the new
+      scale factory:
+
+<div class="highlight"><pre>    <span class="p">.</span><span class="nx">def</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">k0</span><span class="p">,</span> <span class="nx">k1</span><span class="p">)</span> <span class="nx">scale</span><span class="p">(</span><span class="nx">k0</span><span class="p">))</span>
+    <span class="p">.</span><span class="nx">def</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">k0</span><span class="p">,</span> <span class="nx">k1</span><span class="p">)</span> <span class="nx">scale</span><span class="p">(</span><span class="nx">k1</span><span class="p">))</span>
+</pre></div>
+
+
+      <p>You could employ another <a href="scale.html">ordinal scale</a> to
+      color the dots by species. This is left as an exercise for the reader.
+
+      <p><script type="text/javascript+protovis">
+
+function scale(t) {
+  return (typeof flowers[0][t] == "number")
+      ? pv.Scale.linear(flowers, function(d) d[t]).range(0, s)
+      : pv.Scale.ordinal(flowers, function(d) d[t]).split(0, s);
+}
+
+var s = 100,
+    p = 5,
+    keys = pv.keys(flowers[0]);
+
+var vis = new pv.Panel()
+    .width(keys.length * (s + 2 * p))
+    .height(keys.length * (s + 2 * p));
+
+var cell = vis.add(pv.Panel)
+    .data(keys)
+    .width(s)
+    .left(function() this.index * (s + 2 * p) + p)
+  .add(pv.Panel)
+    .data(keys)
+    .height(s)
+    .top(function() this.index * (s + 2 * p) + p)
+    .strokeStyle("#ccc");
+
+cell.add(pv.Dot)
+    .def("x", function(k0, k1) scale(k0))
+    .def("y", function(k0, k1) scale(k1))
+    .data(flowers)
+    .left(function(d, k0, k1) this.x()(d[k0]))
+    .bottom(function(d, k0, k1) this.y()(d[k1]))
+    .strokeStyle(pv.Colors.category10().by(function(d) d.species));
+
+vis.render();
+
+
+      </script>
+
+      <p>Lastly, you may want to add appropriate labels, ticks, or even a legend!
+
+      <blockquote style="font-size:13px;">
+        Next: <a href="invert.html">Scale Interaction</a>
+      </blockquote>
+    </div>
+
+    <div class="foot">
+      Copyright 2010 <a href="http://vis.stanford.edu">Stanford Visualization Group</a>
+    </div>
+
+    <script type="text/javascript" src="http://www.google-analytics.com/ga.js"></script>
+    <script type="text/javascript">_gat._getTracker("UA-10741907-2")._trackPageview();</script>
+  </body>
+</html>

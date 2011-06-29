@@ -1,0 +1,272 @@
+<html>
+  <head>
+    <title>Protovis - Stemplots</title>
+    <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
+    <link type="text/css" rel="stylesheet" href="syntax.css"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+  </head>
+  <body>
+
+    <div class="title">
+      <div class="subtitle">
+        A graphical toolkit for visualization
+      </div>
+      <a href="../">Protovis</a>
+    </div>
+
+    <div class="head">
+      <div class="section">
+        <a href="../">Overview</a>
+      </div>
+      <div class="section selected">
+        <a href="./">Examples</a>
+      </div>
+      <div class="section">
+        <a href="../docs/">Documentation</a>
+      </div>
+      <div class="section">
+        <a href="http://protovis-js.googlecode.com/files/protovis-3.2.zip">Download</a>
+      </div>
+    </div>
+    <div class="subhead">
+      <div class="section">
+        <a href="./">Index</a>
+      </div>
+      <div class="section">
+        <a href="caltrain.html">&laquo; Previous</a> /
+        <a href="sort.html">Next &raquo;</a>
+      </div>
+    </div>
+
+    <div class="body">
+      <h1>Stemplots</h1>
+
+      <div style="float:left;width:240px;">
+      <iframe scrolling="no" style="height:460px;" src="stem-and-leaf-full.html"></iframe>
+      <p><img src="popout.png" width="16" height="16"
+      style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
+      href="stem-and-leaf-full.html" target="_blank">View full screen.</a>
+      </div>
+
+      <div style="float:left;padding-left:30px;width:630px;">
+      Stemplots use the clever arrangement of text to convey the distribution of
+      data: an alternative to a <a href="histogram.html">histogram</a>. Although
+      originally designed for monospaced text displays, such as typewriters and
+      computer terminals, they still find use today for train schedules and
+      other applications that seek quick scanning and efficient use of space.
+
+      <p>Here we show <a
+      href="http://www.caltrain.com/timetable.html">CalTrain</a> weekday arrival
+      times. The minutes of each northbound and southbound arrival are placed to
+      the left and right, respectively, of their corresponding hour. The time is
+      colored to indicate whether the train service is <span style="color:
+      rgba(34,34,34,1);">normal</span>, <span style="color: rgba(183,116,9,1);">
+      limited</span> or <span style="color: rgba(196,62,29,1);">bullet</span>.
+      Peak times of morning and evening rush hour can be seen by increased
+      activity.
+
+      <blockquote style="font-size:13px;">
+        Next: <a href="sort.html">Merge Sort</a>
+      </blockquote>
+
+      </div>
+      <br clear="all">
+
+      <h3>Source</h3>
+
+<div class="highlight"><pre><span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;title&gt;</span>Stemplot<span class="nt">&lt;/title&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">type=</span><span class="s">&quot;text/css&quot;</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;ex.css?3.2&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;../protovis-r3.2.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;caltrain.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;style </span><span class="na">type=</span><span class="s">&quot;text/css&quot;</span><span class="nt">&gt;</span>
+
+<span class="nf">#fig</span> <span class="p">{</span>
+  <span class="k">width</span><span class="o">:</span> <span class="m">240px</span><span class="p">;</span>
+  <span class="k">height</span><span class="o">:</span> <span class="m">460px</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nf">#station</span> <span class="p">{</span>
+  <span class="k">padding-bottom</span><span class="o">:</span> <span class="m">10px</span><span class="p">;</span>
+  <span class="k">text-align</span><span class="o">:</span> <span class="k">center</span><span class="p">;</span>
+<span class="p">}</span>
+
+    <span class="nt">&lt;/style&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body&gt;&lt;div</span> <span class="na">id=</span><span class="s">&quot;center&quot;</span><span class="nt">&gt;&lt;div</span> <span class="na">id=</span><span class="s">&quot;fig&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;station&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;b&gt;</span>Station:<span class="nt">&lt;/b&gt;</span>
+      <span class="nt">&lt;select</span> <span class="na">id=</span><span class="s">&quot;stationSelect&quot;</span>
+        <span class="na">onchange=</span><span class="s">&quot;station = this.value; updateTrains(); vis.render();&quot;</span>
+        <span class="na">onkeyup=</span><span class="s">&quot;station = this.value; updateTrains(); vis.render();&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;/select&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript+protovis&quot;</span><span class="nt">&gt;</span>
+
+<span class="kd">var</span> <span class="nx">station</span> <span class="o">=</span> <span class="s2">&quot;Palo Alto&quot;</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">stationSelect</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;stationSelect&#39;</span><span class="p">);</span>
+<span class="nx">stationsNS</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">optn</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s2">&quot;OPTION&quot;</span><span class="p">);</span>
+  <span class="nx">optn</span><span class="p">.</span><span class="nx">text</span> <span class="o">=</span> <span class="nx">s</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span>
+  <span class="nx">optn</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">s</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span>
+  <span class="nx">optn</span><span class="p">.</span><span class="nx">selected</span> <span class="o">=</span> <span class="p">(</span><span class="nx">s</span><span class="p">.</span><span class="nx">name</span> <span class="o">==</span> <span class="nx">station</span><span class="p">);</span>
+  <span class="nx">stationSelect</span><span class="p">.</span><span class="nx">options</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">optn</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="c1">// Flatten the data so that we have an array of (Train x Station x Time)</span>
+<span class="nx">northbound</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">flatten</span><span class="p">(</span><span class="nx">northbound</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">key</span><span class="p">(</span><span class="s2">&quot;train&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">key</span><span class="p">(</span><span class="s2">&quot;station&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="nx">stationsNS</span><span class="p">[</span><span class="nx">stationsNS</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="nx">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">].</span><span class="nx">name</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">key</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">array</span><span class="p">();</span>
+
+<span class="nx">southbound</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">flatten</span><span class="p">(</span><span class="nx">southbound</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">key</span><span class="p">(</span><span class="s2">&quot;train&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">key</span><span class="p">(</span><span class="s2">&quot;station&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="nx">stationsNS</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">name</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">key</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">array</span><span class="p">();</span>
+
+<span class="c1">// Label the trains with their directions of travel</span>
+<span class="nx">northbound</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">stop</span><span class="p">)</span> <span class="nx">stop</span><span class="p">.</span><span class="nx">bound</span> <span class="o">=</span> <span class="s2">&quot;N&quot;</span><span class="p">);</span>
+<span class="nx">southbound</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">stop</span><span class="p">)</span> <span class="nx">stop</span><span class="p">.</span><span class="nx">bound</span> <span class="o">=</span> <span class="s2">&quot;S&quot;</span><span class="p">);</span>
+
+<span class="c1">// Concatenate the northbound and southbound trains to make a list of all trains</span>
+<span class="kd">var</span> <span class="nx">allTrains</span> <span class="o">=</span> <span class="nx">northbound</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">southbound</span><span class="p">).</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">stop</span><span class="p">)</span> <span class="nx">stop</span><span class="p">.</span><span class="nx">time</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">);</span>
+
+<span class="c1">// Parse the stop time and do some extra clean up</span>
+<span class="nx">allTrains</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">stop</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// parse type</span>
+  <span class="nx">stop</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="nx">stop</span><span class="p">.</span><span class="nx">train</span><span class="p">.</span><span class="nx">charAt</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+  <span class="nx">stop</span><span class="p">.</span><span class="nx">train</span> <span class="o">=</span> <span class="nx">stop</span><span class="p">.</span><span class="nx">train</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">);</span>
+
+  <span class="c1">// check to see if the stop is an interconnect</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">stop</span><span class="p">.</span><span class="nx">time</span><span class="p">.</span><span class="nx">charAt</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;i&quot;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">time</span> <span class="o">=</span> <span class="nx">stop</span><span class="p">.</span><span class="nx">time</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="nx">stop</span><span class="p">.</span><span class="nx">conn</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">time</span> <span class="o">=</span> <span class="nx">stop</span><span class="p">.</span><span class="nx">time</span><span class="p">;</span>
+    <span class="nx">stop</span><span class="p">.</span><span class="nx">conn</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">6</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">h</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">10</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">m</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">10</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">pm</span> <span class="o">=</span> <span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;pm&quot;</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">h</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">10</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">m</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">10</span><span class="p">);</span> <span class="c1">// parseInt(&quot;09&quot;) == 0 because it assumes octal</span>
+    <span class="kd">var</span> <span class="nx">pm</span> <span class="o">=</span> <span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;pm&quot;</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">h</span> <span class="o">==</span> <span class="mi">12</span><span class="p">)</span> <span class="nx">pm</span> <span class="o">=</span> <span class="o">!</span><span class="nx">pm</span> <span class="c1">// for 12 we have to swap am and pm because time is retarded</span>
+
+  <span class="nx">h</span> <span class="o">=</span> <span class="nx">h</span> <span class="o">+</span> <span class="p">(</span><span class="nx">pm</span><span class="o">?</span><span class="mi">12</span><span class="o">:</span><span class="mi">0</span><span class="p">);</span> <span class="c1">// calculate the number of minutes from midnight</span>
+  <span class="nx">stop</span><span class="p">.</span><span class="nx">hour</span> <span class="o">=</span> <span class="nx">h</span> <span class="o">+</span> <span class="p">((</span><span class="nx">h</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">)</span><span class="o">?</span><span class="mi">24</span><span class="o">:</span><span class="mi">0</span><span class="p">);</span> <span class="c1">// make the day switch at 3am instead of midnight</span>
+  <span class="nx">stop</span><span class="p">.</span><span class="nx">time</span> <span class="o">=</span> <span class="nx">m</span> <span class="o">&lt;</span> <span class="mi">10</span> <span class="o">?</span> <span class="s2">&quot;0&quot;</span> <span class="o">+</span> <span class="nx">m</span> <span class="o">:</span> <span class="nx">m</span><span class="p">;</span>
+<span class="p">})</span>
+
+<span class="kd">var</span> <span class="nx">trains</span><span class="p">;</span>
+
+<span class="kd">function</span> <span class="nx">updateTrains</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">stationTrains</span> <span class="o">=</span> <span class="nx">allTrains</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">station</span> <span class="o">!=</span> <span class="nx">station</span><span class="p">)</span> <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">type</span><span class="o">==</span><span class="s2">&quot;N&quot;</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">type</span><span class="o">==</span><span class="s2">&quot;L&quot;</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">type</span><span class="o">==</span><span class="s2">&quot;B&quot;</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="c1">// Nest the trains-stops by train as we will draw one line per train</span>
+  <span class="nx">trains</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">nest</span><span class="p">(</span><span class="nx">stationTrains</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">key</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span><span class="p">.</span><span class="nx">hour</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">key</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span><span class="p">.</span><span class="nx">bound</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">sortValues</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="nx">a</span><span class="p">.</span><span class="nx">time</span> <span class="o">-</span> <span class="nx">b</span><span class="p">.</span><span class="nx">time</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">entries</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="nx">updateTrains</span><span class="p">();</span>
+
+<span class="c1">// Initialize the variables</span>
+<span class="kd">var</span> <span class="nx">w</span> <span class="o">=</span> <span class="mi">240</span><span class="p">,</span>
+    <span class="nx">h</span> <span class="o">=</span> <span class="mi">420</span><span class="p">,</span>
+    <span class="nx">boxSize</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+    <span class="nx">midSize</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
+    <span class="nx">minHour</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="nx">maxHour</span> <span class="o">=</span> <span class="mi">24</span><span class="p">;</span>
+
+<span class="c1">// Make the scale functions</span>
+<span class="kd">var</span> <span class="nx">y</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">(</span><span class="nx">minHour</span><span class="p">,</span> <span class="nx">maxHour</span><span class="p">).</span><span class="nx">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">h</span><span class="p">);</span>
+
+<span class="c1">// The root panel, with padding for labels</span>
+<span class="kd">var</span> <span class="nx">vis</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="nx">w</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="nx">h</span><span class="p">);</span>
+
+<span class="c1">// Add the vertical rules</span>
+<span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Rule</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;#ccc&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">m</span><span class="p">)</span> <span class="nx">w</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="nx">m</span> <span class="o">*</span> <span class="nx">midSize</span> <span class="o">/</span> <span class="mf">2.4</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">top</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+<span class="c1">// Add the destination labels</span>
+<span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">([</span><span class="s1">&#39;Northbound&#39;</span><span class="p">,</span> <span class="s1">&#39;Southbound&#39;</span><span class="p">])</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span> <span class="o">==</span> <span class="s1">&#39;Southbound&#39;</span> <span class="o">?</span> <span class="p">(</span><span class="nx">w</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="nx">midSize</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">:</span> <span class="kc">null</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">right</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span> <span class="o">==</span> <span class="s1">&#39;Northbound&#39;</span> <span class="o">?</span> <span class="p">(</span><span class="nx">w</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="nx">midSize</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">:</span> <span class="kc">null</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">top</span><span class="p">(</span><span class="nx">boxSize</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">font</span><span class="p">(</span><span class="s2">&quot;13px sans-serif&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">textAlign</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span> <span class="o">==</span> <span class="s1">&#39;Southbound&#39;</span> <span class="o">?</span> <span class="s1">&#39;left&#39;</span> <span class="o">:</span> <span class="s1">&#39;right&#39;</span><span class="p">);</span>
+
+<span class="c1">// Add a panel for each hour</span>
+<span class="kd">var</span> <span class="nx">hour</span> <span class="o">=</span> <span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="nx">trains</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">top</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">y</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">key</span><span class="p">));</span>
+
+<span class="c1">// Add the center hour label for each hour panel</span>
+<span class="nx">hour</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="nx">w</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">textAlign</span><span class="p">(</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">font</span><span class="p">(</span><span class="s2">&quot;bold 10px sans-serif&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span>
+       <span class="kd">var</span> <span class="nx">h</span> <span class="o">=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">key</span><span class="p">;</span>
+       <span class="k">return</span> <span class="p">(</span><span class="nx">h</span> <span class="o">&gt;</span> <span class="mi">12</span> <span class="o">?</span> <span class="p">(</span><span class="nx">h</span> <span class="o">&gt;</span> <span class="mi">24</span> <span class="o">?</span> <span class="nx">h</span> <span class="o">-</span> <span class="mi">24</span> <span class="o">:</span> <span class="nx">h</span> <span class="o">-</span> <span class="mi">12</span><span class="p">)</span> <span class="o">:</span> <span class="nx">h</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="nx">h</span> <span class="o">&gt;</span> <span class="mi">11</span> <span class="o">&amp;&amp;</span> <span class="nx">h</span> <span class="o">&lt;</span> <span class="mi">24</span><span class="p">)</span> <span class="o">?</span> <span class="s1">&#39;p&#39;</span> <span class="o">:</span> <span class="s1">&#39;a&#39;</span><span class="p">);</span>
+    <span class="p">});</span>
+
+<span class="c1">// Add the left and right panels and populate them with the corresponding times</span>
+<span class="nx">hour</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span><span class="p">.</span><span class="nx">values</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span><span class="p">.</span><span class="nx">key</span> <span class="o">==</span> <span class="s1">&#39;S&#39;</span> <span class="o">?</span> <span class="p">(</span><span class="nx">w</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="nx">midSize</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">:</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">right</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span><span class="p">.</span><span class="nx">key</span> <span class="o">==</span> <span class="s1">&#39;N&#39;</span> <span class="o">?</span> <span class="p">(</span><span class="nx">w</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="nx">midSize</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">:</span> <span class="mi">0</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span><span class="p">.</span><span class="nx">values</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span><span class="p">.</span><span class="nx">bound</span> <span class="o">==</span> <span class="s1">&#39;S&#39;</span> <span class="o">?</span> <span class="p">(</span><span class="nx">boxSize</span> <span class="o">*</span> <span class="k">this</span><span class="p">.</span><span class="nx">index</span><span class="p">)</span> <span class="o">:</span> <span class="kc">null</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">right</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span><span class="p">.</span><span class="nx">bound</span> <span class="o">==</span> <span class="s1">&#39;N&#39;</span> <span class="o">?</span> <span class="p">(</span><span class="nx">boxSize</span> <span class="o">*</span> <span class="k">this</span><span class="p">.</span><span class="nx">index</span><span class="p">)</span> <span class="o">:</span> <span class="kc">null</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">textAlign</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span><span class="p">.</span><span class="nx">bound</span> <span class="o">==</span> <span class="s1">&#39;S&#39;</span> <span class="o">?</span> <span class="s2">&quot;left&quot;</span> <span class="o">:</span> <span class="s2">&quot;right&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">textStyle</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">types</span><span class="p">[</span><span class="nx">d</span><span class="p">.</span><span class="nx">type</span><span class="p">])</span>
+    <span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span><span class="p">.</span><span class="nx">time</span><span class="p">);</span>
+
+<span class="c1">// render everything</span>
+<span class="nx">vis</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+
+    <span class="nt">&lt;/script&gt;</span>
+  <span class="nt">&lt;/div&gt;&lt;/div&gt;&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre></div>
+
+
+      <h3>Data</h3>
+
+      Due to size, the data file is omitted from this example. See <a
+      href="caltrain.js" target="_blank">caltrain.js</a>.
+
+    </div>
+
+    <div class="foot">
+      Copyright 2010 <a href="http://vis.stanford.edu">Stanford Visualization Group</a>
+    </div>
+
+    <script type="text/javascript" src="http://www.google-analytics.com/ga.js"></script>
+    <script type="text/javascript">_gat._getTracker("UA-10741907-2")._trackPageview();</script>
+  </body>
+</html>

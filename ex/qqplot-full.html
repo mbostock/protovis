@@ -1,0 +1,164 @@
+<html>
+  <head>
+    <title>Q-Q Plot</title>
+    <link type="text/css" rel="stylesheet" href="ex.css?3.2"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+    <script type="text/javascript" src="turkers.js"></script>
+    <style type="text/css">
+
+#fig {
+  width: 900px;
+  height: 300px;
+}
+
+.label {
+  font-size: 13px;
+  padding-top: 2px;
+  padding-bottom: 10px;
+}
+
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <script type="text/javascript+protovis">
+
+/** Sample from a normal distribution with mean 0, stddev 1. */
+function normal_sample() {
+  var x = 0, y = 0, rds, c;
+  do {
+    x = Math.random() * 2 - 1;
+    y = Math.random() * 2 - 1;
+    rds = x * x + y * y;
+  } while (rds == 0 || rds > 1);
+  c = Math.sqrt(-2 * Math.log(rds) / rds); // Box-Muller transform
+  return x * c; // throw away extra sample y * c
+}
+
+// Uniform random distribution
+var uniform = function() { return Math.random(); };
+uniform.label = "Uniform Distribution";
+
+// Simple 1D Gaussian (normal) distribution
+var avg = pv.mean(turkers.percent.values);
+var dev = pv.deviation(turkers.percent.values);
+var normal1 = function() { return avg + dev * normal_sample(); }
+normal1.label = "Gaussian (Normal) Distribution";
+
+// Gaussian Mixture Model (k=3) fit using E-M algorithm
+var normal3 = function() {
+  var dd = [
+        [0.10306430789206111, 0.0036139086950272735, 0.30498647327844536],
+        [0.5924252668569606, 0.0462763685758622, 0.4340870312025223],
+        [0.9847627827855167, 2.352350767874714E-4, 0.2609264955190324]],
+      r = Math.random(),
+      i = r < dd[0][2] ? 0 : r < dd[0][2] + dd[1][2] ? 1 : 2,
+      d = dd[i];
+  return d[0] + Math.sqrt(d[1]) * normal_sample();
+}
+normal3.label = "Mixture of 3 Gaussians";
+
+/* Distributions for comparison. */
+var dists = [uniform, normal1, normal3];
+
+/* Compute quantiles of a distribution. */
+function quantile(n, values) {
+  values = values.slice().sort(function(a, b) a - b);
+  return pv.range(n).map(function(i) values[Math.floor(i * (values.length - 1) / n)]);
+}
+
+/* Lookup the value for an input quantile. */
+function qi(f, quantiles) {
+  return quantiles[Math.round(f*(quantiles.length-1))];
+}
+
+/* Helpers for labeling 1st, 2nd, 3rd, etc. */
+var suffixMap = {1:"st", 2:"nd", 3:"rd"};
+var suffix = function(d) suffixMap[Math.floor(d) % 10] || "th";
+var percent = function(d) (100 * d).toFixed(0);
+
+/* Parameters and scales. */
+var w = 270,
+    h = 270,
+    p = 10,
+    q2 = quantile(100, turkers.percent.values),
+    x = pv.Scale.linear(-0.5, 1.5).range(0, w),
+    y = pv.Scale.linear(-0.5, 1.5).range(0, h);
+
+/* The root panel. */
+var vis = new pv.Panel()
+    .margin(5)
+    .bottom(20)
+    .left(50)
+    .width((w + p) * dists.length - p)
+    .height(h);
+
+/* The Q-Q plot panel. */
+var plot = vis.add(pv.Panel)
+    .data(dists.map(function(d) quantile(100, pv.range(0, 10000).map(d))))
+    .left(function() this.index * (w + p))
+    .width(w)
+    .strokeStyle("#ccc");
+
+/* Plot diagonal. */
+plot.add(pv.Line)
+    .data([0, 1])
+    .left(function(d) w * d)
+    .bottom(function(d) h * d)
+    .strokeStyle("#000")
+    .lineWidth(1);
+
+/* Y-axis label. */
+vis.add(pv.Label)
+    .data(["Turker Task Group Completion %"])
+    .left(-35)
+    .top(h / 2)
+    .textAlign("center")
+    .textAngle(-Math.PI / 2)
+    .font("bold 11px sans-serif");
+
+/* X-axis ticks and labels. */
+plot.add(pv.Dot)
+    .data(pv.range(0, 1.1, 0.5))
+    .left(x)
+    .bottom(-5)
+    .size(5)
+    .shape("tick")
+    .strokeStyle("#999")
+  .anchor("bottom").add(pv.Label)
+    .text(percent);
+
+/* Y-axis ticks and labels. */
+plot.add(pv.Dot)
+    .data(pv.range(0, 1.1, 0.5))
+    .bottom(x)
+    .left(-5)
+    .size(5)
+    .shape("tick")
+    .angle(Math.PI/2)
+    .strokeStyle("#999")
+  .anchor("left").add(pv.Label)
+    .visible(function() !this.parent.index)
+    .text(percent);
+
+/* Data points by quantiles. */
+plot.add(pv.Dot)
+    .data(pv.range(0.01, 1.0, 0.01))
+    .left(function(f, q1) x(qi(f, q1)))
+    .bottom(function(f) y(qi(f, q2)))
+    .fillStyle(function() this.strokeStyle().alpha(.2))
+    .title(function(f, q1) (100 * f).toFixed(0) + suffix(100 * f)
+        + " Percentile: " + qi(f, q1).toFixed(2)
+        + ", " + qi(f, q2).toFixed(2));
+
+/* Plot label. */
+plot.add(pv.Label)
+    .textMargin(6)
+    .textBaseline("top")
+    .font("bold 10px sans-serif")
+    .text(function() dists[this.parent.index].label);
+
+vis.render();
+
+    </script>
+  </div></div></body>
+</html>

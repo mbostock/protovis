@@ -1,0 +1,155 @@
+<html>
+  <head>
+    <title>Grid Intensity</title>
+    <link rel="stylesheet" type="text/css" href="ex.css"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+    <script type="text/javascript" src="grid.js"></script>
+    <style type="text/css">
+      #fig {
+        width: 680px;
+        height: 540px;
+      }
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <script type="text/javascript+protovis">
+
+      /* Scales for position, and the grid intensity. */
+      var x = pv.Scale.linear(0, 1).range(0, 640),
+          y = pv.Scale.linear(0, 1).range(0, 440),
+          color = pv.color("#ccc");
+
+      /* The root panel. */
+      var vis = new pv.Panel()
+          .width(680)
+          .height(480);
+
+      /* Inset a panel to hold the dot plot. */
+      var panel = vis.add(pv.Panel)
+          .left(20)
+          .right(20)
+          .top(20)
+          .bottom(20);
+
+      /* The grid frame. */
+      var grid = panel.add(pv.Panel)
+          .strokeStyle(function() color);
+
+      /* X-rules. */
+      grid.add(pv.Rule)
+          .data(pv.range(.1, 1, .1))
+          .strokeStyle(function() color)
+          .left(function(d) Math.round(x(d)) + .5)
+        .anchor("bottom").add(pv.Label)
+          .text(function(x) x.toFixed(1));
+
+      /* Y-rules. */
+      grid.add(pv.Rule)
+          .data(pv.range(.1, 1, .1))
+          .strokeStyle(function() color)
+          .bottom(function(d) Math.round(y(d)) + .5)
+        .anchor("right").add(pv.Label)
+          .text(function(y) y.toFixed(1));
+
+      /* The dot plot. */
+      panel.add(pv.Dot)
+          .data(data)
+          .left(function(d) x(d[0]))
+          .bottom(function(d) y(d[1]));
+
+      vis.render();
+
+    </script><br>
+
+    <script type="text/javascript+protovis">
+
+      /* The user interface for adjusting grid intensity. */
+      var velocity, timer, ui = new pv.Panel()
+          .width(680)
+          .height(60)
+          .fillStyle("#fff")
+          .def("drag")
+          .def("x")
+          .cursor("pointer")
+          .event("mousedown", startDrag)
+          .event("mousemove", drag)
+          .event("mouseup", stopDrag);
+
+      /* The rule that extends from the center to the drag handle position. */
+      ui.add(pv.Rule)
+         .visible(function() ui.drag())
+         .left(function() Math.min(ui.x(), 340))
+         .right(function() Math.min(680 - ui.x(), 340))
+         .strokeStyle("#222")
+         .lineWidth(4)
+         .bottom(30);
+
+      /* The drag handle. */
+      var dot = ui.add(pv.Dot)
+          .left(function() ui.drag() ? ui.x() : 340)
+          .bottom(30)
+          .fillStyle("#ccc")
+          .strokeStyle("#222")
+          .size(100);
+
+      /* A left-facing arrow. */
+      ui.add(pv.Dot).extend(dot)
+          .visible(function() ui.drag() && ui.x() < 340)
+          .left(function() dot.left() - 16)
+          .bottom(30)
+          .shape("triangle")
+          .size(20)
+          .angle(-Math.PI / 6);
+
+      /* A right-facing arrow. */
+      ui.add(pv.Dot).extend(dot)
+          .visible(function() ui.drag() && ui.x() > 340)
+          .left(function() dot.left() + 16)
+          .bottom(30)
+          .shape("triangle")
+          .size(20)
+          .angle(Math.PI / 6);
+
+      /* Labels. */
+      ui.add(pv.Label)
+          .textBaseline("middle")
+          .textAlign("right")
+          .text("\u00ab lighter")
+          .left(70)
+          .bottom(30)
+        .add(pv.Label)
+          .textAlign("left")
+          .text("darker \u00bb")
+          .left(null)
+          .right(70);
+
+      ui.render();
+
+      /* Start animation on mousedown. */
+      function startDrag() {
+        timer = setInterval(function() {
+            var l = Math.max(0, Math.min(255, color.r + velocity));
+            color = pv.rgb(l, l, l, 1);
+            grid.render();
+          }, 20);
+        this.drag(true);
+        return drag.apply(this, arguments);
+      }
+
+      /* Change speed based on the mouse x-coordinate. */
+      function drag() {
+        var x = Math.max(100, Math.min(540, dot.mouse().x));
+        velocity = Math.round((x - 340) * (x - 340) / 5000);
+        if (x > 340) velocity *= -1;
+        return this.x(x);
+      }
+
+      /* Stop animation on mouseup. */
+      function stopDrag() {
+        clearInterval(timer);
+        return this.drag(false);
+      }
+
+    </script>
+  </div></div></body>
+</html>

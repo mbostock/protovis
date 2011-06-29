@@ -1,0 +1,216 @@
+<html>
+  <head>
+    <title>Protovis - Property Chaining</title>
+    <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
+    <link type="text/css" rel="stylesheet" href="../ex/syntax.css?3.2"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+  </head>
+  <body>
+
+    <div class="title">
+      <div class="subtitle">
+        A graphical toolkit for visualization
+      </div>
+      <a href="../">Protovis</a>
+    </div>
+
+    <div class="head">
+      <div class="section">
+        <a href="../">Overview</a>
+      </div>
+      <div class="section">
+        <a href="../ex/">Examples</a>
+      </div>
+      <div class="section selected">
+        <a href="../docs/">Documentation</a>
+      </div>
+      <div class="section">
+        <a href="http://protovis-js.googlecode.com/files/protovis-3.2.zip">Download</a>
+      </div>
+    </div>
+    <div class="subhead">
+      <div class="section">
+        <a href="./">Index</a>
+      </div>
+    </div>
+
+    <div class="body">
+      <h1>Property Chaining</h1>
+
+      <h2>Absolute References</h2>
+
+      <p>A stacked area chart can be produced using property chaining, where a
+      new mark's properties are defined in terms of an existing one:
+
+      <p><table><tr><td>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">vis</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="mi">150</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">area</span> <span class="o">=</span> <span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Area</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="p">.</span><span class="mi">7</span><span class="p">,</span> <span class="p">.</span><span class="mi">5</span><span class="p">,</span> <span class="p">.</span><span class="mi">2</span><span class="p">])</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="k">this</span><span class="p">.</span><span class="nx">index</span> <span class="o">*</span> <span class="mi">25</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">fillStyle</span><span class="p">(</span><span class="s2">&quot;steelblue&quot;</span><span class="p">);</span>
+
+<span class="nx">area</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Area</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">([.</span><span class="mi">4</span><span class="p">,</span> <span class="p">.</span><span class="mi">2</span><span class="p">,</span> <span class="p">.</span><span class="mi">8</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="p">.</span><span class="mi">8</span><span class="p">])</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="nx">area</span><span class="p">.</span><span class="nx">bottom</span><span class="p">()</span> <span class="o">+</span> <span class="nx">area</span><span class="p">.</span><span class="nx">height</span><span class="p">())</span>
+    <span class="p">.</span><span class="nx">fillStyle</span><span class="p">(</span><span class="s2">&quot;lightsteelblue&quot;</span><span class="p">);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+
+
+      </td><td align="right"><script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(150)
+    .height(150);
+
+var area = vis.add(pv.Area)
+    .data([1, 1.2, 1.7, 1.5, .7, .5, .2])
+    .bottom(0)
+    .height(function(d) d * 40)
+    .left(function() this.index * 25)
+    .fillStyle("steelblue");
+
+area.add(pv.Area)
+    .data([.4, .2, .8, 1.2, 1.5, 1.1, .8])
+    .bottom(function() area.bottom() + area.height())
+    .fillStyle("lightsteelblue");
+
+vis.render();
+
+
+      </script></td></tr></table>
+
+      <p>This example actually combines inheritance with property chaining. Another example:
+
+      <p><table><tr><td>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">vis</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="mi">150</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">area</span> <span class="o">=</span> <span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Area</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="p">.</span><span class="mi">7</span><span class="p">,</span> <span class="p">.</span><span class="mi">5</span><span class="p">,</span> <span class="p">.</span><span class="mi">2</span><span class="p">])</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="k">this</span><span class="p">.</span><span class="nx">index</span> <span class="o">*</span> <span class="mi">25</span><span class="p">);</span>
+
+<span class="nx">area</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Area</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">([.</span><span class="mi">4</span><span class="p">,</span> <span class="p">.</span><span class="mi">2</span><span class="p">,</span> <span class="p">.</span><span class="mi">8</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="p">.</span><span class="mi">8</span><span class="p">])</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="nx">area</span><span class="p">.</span><span class="nx">left</span><span class="p">()</span> <span class="o">+</span> <span class="nx">area</span><span class="p">.</span><span class="nx">width</span><span class="p">())</span>
+  <span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Line</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;white&quot;</span><span class="p">);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+
+
+      </td><td align="right"><script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(150)
+    .height(150);
+
+var area = vis.add(pv.Area)
+    .data([1, 1.2, 1.7, 1.5, .7, .5, .2])
+    .left(0)
+    .width(function(d) d * 40)
+    .bottom(function() this.index * 25);
+
+area.add(pv.Area)
+    .data([.4, .2, .8, 1.2, 1.5, 1.1, .8])
+    .left(function() area.left() + area.width())
+  .add(pv.Line)
+    .strokeStyle("white");
+
+vis.render();
+
+
+      </script></td></tr></table>
+
+      <p>Although straightforward, property chaining can be verbose.
+
+      <h2>Relative References</h2>
+
+      <h3>Using <tt>parent</tt></h3>
+
+      <p>The most common way marks may refer to previously-computed properties
+      is by looking at their parent.
+
+      <h3>Using <tt>proto</tt></h3>
+
+      <p>Description forthcoming. Note: requires that <tt>proto</tt> is visible
+      and rendered. Also, if a property function that references
+      <tt>this.proto</tt> is inherited, the reference changes!
+
+      <p>Stacked area charts can also be specified using panels. As above, the
+      panel data is a two-dimensional array, each element an array of values for
+      the area. To offset the bottom of the area, we refer to the <i>cousin</i>,
+      which is the corresponding area instance in the previous instance of the
+      parent panel:
+
+      <p><table><tr><td>
+
+<div class="highlight"><pre><span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="p">.</span><span class="mi">7</span><span class="p">,</span> <span class="p">.</span><span class="mi">5</span><span class="p">,</span> <span class="p">.</span><span class="mi">2</span><span class="p">],</span>
+           <span class="p">[.</span><span class="mi">4</span><span class="p">,</span> <span class="p">.</span><span class="mi">2</span><span class="p">,</span> <span class="p">.</span><span class="mi">8</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="p">.</span><span class="mi">8</span><span class="p">],</span>
+           <span class="p">[.</span><span class="mi">4</span><span class="p">,</span> <span class="p">.</span><span class="mi">6</span><span class="p">,</span> <span class="p">.</span><span class="mi">8</span><span class="p">,</span> <span class="p">.</span><span class="mi">7</span><span class="p">,</span> <span class="p">.</span><span class="mi">6</span><span class="p">,</span> <span class="p">.</span><span class="mi">5</span><span class="p">,</span> <span class="p">.</span><span class="mi">8</span><span class="p">]])</span>
+  <span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Area</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">c</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">cousin</span><span class="p">();</span>
+        <span class="k">return</span> <span class="nx">c</span> <span class="o">?</span> <span class="nx">c</span><span class="p">.</span><span class="nx">bottom</span> <span class="o">+</span> <span class="nx">c</span><span class="p">.</span><span class="nx">height</span> <span class="o">:</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="p">})</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="k">this</span><span class="p">.</span><span class="nx">index</span> <span class="o">*</span> <span class="mi">25</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">root</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+
+
+      </td><td align="right"><script type="text/javascript+protovis">
+
+new pv.Panel()
+    .width(150)
+    .height(150)
+  .add(pv.Panel)
+    .data([[1, 1.2, 1.7, 1.5, .7, .5, .2],
+           [.4, .2, .8, 1.2, 1.5, 1.1, .8],
+           [.4, .6, .8, .7, .6, .5, .8]])
+  .add(pv.Area)
+    .data(function(d) d)
+    .bottom(function() {
+        var c = this.cousin();
+        return c ? c.bottom + c.height : 0;
+      })
+    .height(function(d) d * 40)
+    .left(function() this.index * 25)
+  .root.render();
+
+
+      </script></td></tr></table>
+
+      <p>Of course, this is a bit convoluted. The convenient <a
+      href="../ex/stack.html">stack layout</a> presents an automatic
+      alternative, but it would be nice to design something a bit more robust
+      (for instance, that calculates the offset in data space rather than pixel
+      space). The technique of using the cousin can break if some of the panel
+      instances are invisible, or in conjunction with inheritance.
+    </div>
+
+    <div class="foot">
+      Copyright 2010 <a href="http://vis.stanford.edu">Stanford Visualization Group</a>
+    </div>
+
+    <script type="text/javascript" src="http://www.google-analytics.com/ga.js"></script>
+    <script type="text/javascript">_gat._getTracker("UA-10741907-2")._trackPageview();</script>
+  </body>
+</html>

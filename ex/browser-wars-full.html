@@ -1,0 +1,71 @@
+<html>
+  <head>
+    <title>Browser Wars</title>
+    <link type="text/css" rel="stylesheet" href="ex.css?3.2"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+    <script type="text/javascript" src="browsers.js"></script>
+    <style type="text/css">
+      #fig {
+        width: 840px;
+        height: 425px;
+      }
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <script type="text/javascript+protovis">
+
+      var dateFormatIn = pv.Format.date("%B %Y");
+      var dateFormatOut = pv.Format.date("%Y");
+
+      stats.forEach(function(d) {
+        d.month = dateFormatIn.parse(d.month);
+      });
+
+      // reformat the data so that it fits what pv.Layout.Stack expects
+      var statsByBrowser = [];
+      for(var browser in colors) {
+        statsByBrowser.push(stats.map(function(stat) {
+          return {name:browser, month:stat.month, value:(stat.data[browser] ? stat.data[browser] : 0)};
+        }));
+      }
+
+      var w = 800,
+          h = 400,
+          x = pv.Scale.linear(stats, function(d) d.month).range(0, w),
+          y = pv.Scale.linear(0, 1).range(0, h);
+
+      var vis = new pv.Panel()
+          .width(w)
+          .height(h)
+          .bottom(20)
+          .left(30)
+          .right(10)
+          .top(5);
+
+      vis.add(pv.Layout.Stack)
+          .layers(statsByBrowser)
+          .x(function(d) x(d.month))
+          .y(function(d) y(d.value))
+        .layer.add(pv.Area)
+          .fillStyle(function(d) colors[d.name])
+          .title(function(d) d.name);
+
+      vis.add(pv.Rule)
+          .data(y.ticks(5))
+          .bottom(y)
+          .strokeStyle(function(d) d ? "rgba(255,255,255,0.4)" : "#000")
+        .anchor("left").add(pv.Label)
+          .text(function(d) (d*100).toFixed(0) + "%");
+
+      vis.add(pv.Rule)
+          .data(x.ticks())
+          .left(x)
+          .strokeStyle("rgba(255,255,255,0.4)")
+        .anchor("bottom").add(pv.Label)
+          .text(dateFormatOut);
+
+      vis.render();
+
+    </script>
+  </div></div></body>
+</html>

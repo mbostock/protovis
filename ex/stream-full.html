@@ -1,0 +1,44 @@
+<html>
+  <head>
+    <title>Streamgraph</title>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+    <script type="text/javascript" src="stream.js"></script>
+    <style type="text/css">
+
+body {
+  margin: 0;
+}
+
+    </style>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var n = 20, // number of layers
+    m = 400, // number of samples per layer
+    data = layers(n, m);
+
+var w = document.body.clientWidth,
+    h = document.body.clientHeight,
+    x = pv.Scale.linear(0, m - 1).range(0, w),
+    y = pv.Scale.linear(0, 2 * n).range(0, h);
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(h);
+
+vis.add(pv.Layout.Stack)
+    .layers(data)
+    .order("inside-out")
+    .offset("wiggle")
+    .x(x.by(pv.index))
+    .y(y)
+  .layer.add(pv.Area)
+    .fillStyle(pv.ramp("#aad", "#556").by(Math.random))
+    .strokeStyle(function() this.fillStyle().alpha(.5));
+
+vis.render();
+
+    </script>
+  </body>
+</html>

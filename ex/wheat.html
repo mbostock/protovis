@@ -1,0 +1,276 @@
+<html>
+  <head>
+    <title>Protovis - Playfair&rsquo;s Wheat</title>
+    <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
+    <link type="text/css" rel="stylesheet" href="syntax.css"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+  </head>
+  <body>
+
+    <div class="title">
+      <div class="subtitle">
+        A graphical toolkit for visualization
+      </div>
+      <a href="../">Protovis</a>
+    </div>
+
+    <div class="head">
+      <div class="section">
+        <a href="../">Overview</a>
+      </div>
+      <div class="section selected">
+        <a href="./">Examples</a>
+      </div>
+      <div class="section">
+        <a href="../docs/">Documentation</a>
+      </div>
+      <div class="section">
+        <a href="http://protovis-js.googlecode.com/files/protovis-3.2.zip">Download</a>
+      </div>
+    </div>
+    <div class="subhead">
+      <div class="section">
+        <a href="./">Index</a>
+      </div>
+      <div class="section">
+        <a href="crimea-rose.html">&laquo; Previous</a> /
+        <a href="driving.html">Next &raquo;</a>
+      </div>
+    </div>
+
+    <div class="body">
+      <h1>Playfair&rsquo;s Wheat</h1>
+
+      <iframe scrolling="no" style="width:860px;height:465px;" src="wheat-full.html"></iframe>
+      <p><img src="popout.png" width="16" height="16"
+      style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
+      href="wheat-full.html" target="_blank">View full screen.</a>
+
+      <p>Often credited as the founder of statistical graphics, <a
+      href="http://en.wikipedia.org/wiki/William_Playfair">William Playfair</a>
+      published this elegant chart in 1822 in a letter to Parliament. It shows
+      250 years of the price of wheat, typical weekly wages, and the reigning
+      monarch. He intended to demonstrate that &ldquo;never at any former period
+      was wheat so cheap, in proportion to mechanical labour, as it is at the
+      present time.&rdquo;
+
+      <p>For comparison, see the <a href="wheat-alt.html"
+      target="_blank"><i>relative</i> price</a> of wheat in terms of weekly wages.
+
+      <blockquote style="font-size:13px;">
+        Next: <a href="driving.html">Gas &amp; Driving</a>
+      </blockquote>
+
+      <h3>Source</h3>
+
+<div class="highlight"><pre><span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;title&gt;</span>Wheat <span class="ni">&amp;amp;</span> Wages<span class="nt">&lt;/title&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">type=</span><span class="s">&quot;text/css&quot;</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;ex.css?3.2&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;../protovis-r3.2.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;wheat.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;style </span><span class="na">type=</span><span class="s">&quot;text/css&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">body</span> <span class="p">{</span>
+        <span class="k">font</span><span class="o">:</span> <span class="k">oblique</span> <span class="n">small</span> <span class="n">baskerville</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="nf">#fig</span> <span class="p">{</span>
+        <span class="k">width</span><span class="o">:</span> <span class="m">860px</span><span class="p">;</span>
+        <span class="k">height</span><span class="o">:</span> <span class="m">465px</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="nf">#title</span> <span class="p">{</span>
+        <span class="k">position</span><span class="o">:</span> <span class="k">absolute</span><span class="p">;</span>
+        <span class="k">top</span><span class="o">:</span> <span class="m">70px</span><span class="p">;</span>
+        <span class="k">left</span><span class="o">:</span> <span class="m">200px</span><span class="p">;</span>
+        <span class="k">padding</span><span class="o">:</span> <span class="m">10px</span><span class="p">;</span>
+        <span class="k">background</span><span class="o">:</span> <span class="nb">white</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="nt">large</span> <span class="p">{</span>
+        <span class="k">font-size</span><span class="o">:</span> <span class="k">medium</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="nt">&lt;/style&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body&gt;&lt;div</span> <span class="na">id=</span><span class="s">&quot;center&quot;</span><span class="nt">&gt;&lt;div</span> <span class="na">id=</span><span class="s">&quot;fig&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;center</span> <span class="na">id=</span><span class="s">&quot;title&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;large&gt;&lt;b&gt;</span>CHART<span class="nt">&lt;/b&gt;</span>,<span class="nt">&lt;br&gt;</span>
+      Shewing at One View<span class="nt">&lt;br&gt;</span>
+      The Price of The Quarter of Wheat,<span class="nt">&lt;/large&gt;&lt;br&gt;</span> <span class="ni">&amp;amp;</span>
+      Wages of Labour by the Week,<span class="nt">&lt;br&gt;</span>
+      from The Year 1565 to 1821,<span class="nt">&lt;br&gt;</span>
+      by WILLIAM PLAYFAIR
+    <span class="nt">&lt;/center&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript+protovis&quot;</span><span class="nt">&gt;</span>
+      <span class="kd">var</span> <span class="nx">w</span> <span class="o">=</span> <span class="mi">860</span> <span class="o">-</span> <span class="mi">60</span><span class="p">,</span>
+          <span class="nx">h</span> <span class="o">=</span> <span class="mi">465</span> <span class="o">-</span> <span class="mi">20</span><span class="p">,</span>
+          <span class="nx">x</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">(</span><span class="mi">1565</span><span class="p">,</span> <span class="mi">1821</span><span class="p">).</span><span class="nx">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">w</span><span class="p">),</span>
+          <span class="nx">y</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">).</span><span class="nx">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">h</span><span class="p">);</span>
+
+      <span class="kd">var</span> <span class="nx">vis</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+          <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="nx">w</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="nx">h</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">right</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">20</span><span class="p">);</span>
+
+      <span class="cm">/* Price of The Quarter of Wheat. */</span>
+      <span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Area</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">wheat</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">interpolate</span><span class="p">(</span><span class="s2">&quot;step-after&quot;</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">y</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">wheat</span><span class="p">))</span>
+          <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">x</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">year</span><span class="p">))</span>
+          <span class="p">.</span><span class="nx">fillStyle</span><span class="p">(</span><span class="s2">&quot;#aaa&quot;</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;#999&quot;</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Rule</span><span class="p">);</span>
+
+      <span class="cm">/* Weekly Wages of a Good Mechanic. */</span>
+      <span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Area</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">wheat</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span><span class="p">.</span><span class="nx">wages</span><span class="p">))</span>
+          <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">x</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">year</span><span class="p">))</span>
+          <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">y</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">wages</span><span class="p">))</span>
+          <span class="p">.</span><span class="nx">fillStyle</span><span class="p">(</span><span class="s2">&quot;hsla(195, 50%, 80%, .75)&quot;</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;top&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Line</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">fillStyle</span><span class="p">(</span><span class="kc">null</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">lineWidth</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;lightcoral&quot;</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Line</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">top</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="k">this</span><span class="p">.</span><span class="nx">proto</span><span class="p">.</span><span class="nx">top</span><span class="p">()</span> <span class="o">+</span> <span class="mf">1.5</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">lineWidth</span><span class="p">(</span><span class="mf">1.5</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;black&quot;</span><span class="p">);</span>
+
+      <span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="mi">130</span><span class="p">).</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">31</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">font</span><span class="p">(</span><span class="s2">&quot;italic 10px serif&quot;</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="s2">&quot;Weekly Wages of a Good Mechanic&quot;</span><span class="p">);</span>
+
+      <span class="cm">/* Y-axis. */</span>
+      <span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Rule</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="o">-</span><span class="p">.</span><span class="mi">5</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Rule</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+          <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="nx">y</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;rgba(255, 255, 255, .2)&quot;</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;right&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">visible</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="o">!</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">index</span> <span class="o">%</span> <span class="mi">2</span><span class="p">))</span>
+          <span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span> <span class="nx">s</span> <span class="o">+</span> <span class="p">(</span><span class="nx">s</span> <span class="o">?</span> <span class="s2">&quot;&quot;</span> <span class="o">:</span> <span class="s2">&quot; shillings&quot;</span><span class="p">));</span>
+
+      <span class="cm">/* X-axis. */</span>
+      <span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Rule</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">range</span><span class="p">(</span><span class="mi">1560</span><span class="p">,</span> <span class="mi">1830</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+          <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Rule</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">range</span><span class="p">(</span><span class="mi">1600</span><span class="p">,</span> <span class="mi">1850</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span>
+          <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="kc">null</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">top</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;rgba(0, 0, 0, .2)&quot;</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">textMargin</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+
+      <span class="cm">/* Monarchs. */</span>
+      <span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Bar</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">monarch</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">top</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">(</span><span class="o">!</span><span class="nx">d</span><span class="p">.</span><span class="nx">commonwealth</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">index</span> <span class="o">%</span> <span class="mi">2</span><span class="p">))</span> <span class="o">?</span> <span class="mi">15</span> <span class="o">:</span> <span class="mi">10</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">fillStyle</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span><span class="p">.</span><span class="nx">commonwealth</span> <span class="o">?</span> <span class="kc">null</span> <span class="o">:</span> <span class="s2">&quot;#000&quot;</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;#000&quot;</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">x</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">start</span><span class="p">))</span>
+          <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">x</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">end</span><span class="p">)</span> <span class="o">-</span> <span class="nx">x</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">start</span><span class="p">))</span>
+        <span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;center&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">textBaseline</span><span class="p">(</span><span class="s2">&quot;top&quot;</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">textMargin</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">font</span><span class="p">(</span><span class="s2">&quot;italic 10px serif&quot;</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span>
+
+      <span class="nx">vis</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+    <span class="nt">&lt;/script&gt;</span>
+  <span class="nt">&lt;/div&gt;&lt;/div&gt;&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre></div>
+
+
+      <h3>Data</h3>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">wheat</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1565</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">41</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mi">5</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1570</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">45</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">5.05</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1575</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">42</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">5.08</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1580</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">49</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">5.12</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1585</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mf">41.5</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">5.15</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1590</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">47</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">5.25</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1595</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">64</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">5.54</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1600</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">27</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">5.61</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1605</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">33</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">5.69</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1610</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">32</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">5.78</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1615</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">33</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">5.94</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1620</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">35</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">6.01</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1625</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">33</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">6.12</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1630</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">45</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">6.22</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1635</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">33</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">6.3</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1640</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">39</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">6.37</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1645</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">53</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">6.45</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1650</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">42</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">6.5</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1655</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mf">40.5</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">6.6</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1660</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mf">46.5</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">6.75</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1665</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">32</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">6.8</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1670</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">37</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">6.9</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1675</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">43</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mi">7</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1680</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">35</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">7.3</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1685</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">27</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">7.6</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1690</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">40</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mi">8</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1695</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">50</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">8.5</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1700</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">30</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mi">9</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1705</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">32</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mi">10</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1710</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">44</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mi">11</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1715</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">33</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">11.75</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1720</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">29</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">12.5</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1725</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">39</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mi">13</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1730</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">26</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">13.3</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1735</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">32</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">13.6</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1740</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">27</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mi">14</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1745</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mf">27.5</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">14.5</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1750</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">31</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mi">15</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1755</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mf">35.5</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">15.7</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1760</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">31</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">16.5</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1765</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">43</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">17.6</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1770</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">47</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">18.5</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1775</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">44</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">19.5</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1780</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">46</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mi">21</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1785</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">42</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mi">23</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1790</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mf">47.5</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">25.5</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1795</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">76</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">27.5</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1800</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">79</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">28.5</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1805</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">81</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mf">29.5</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1810</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">99</span><span class="p">,</span> <span class="nx">wages</span><span class="o">:</span> <span class="mi">30</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1815</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">78</span> <span class="p">},</span> <span class="c1">// TODO</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1820</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">54</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">year</span><span class="o">:</span> <span class="mi">1821</span><span class="p">,</span> <span class="nx">wheat</span><span class="o">:</span> <span class="mi">54</span> <span class="p">}</span>
+<span class="p">];</span>
+
+<span class="kd">var</span> <span class="nx">monarch</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Elizabeth&quot;</span><span class="p">,</span> <span class="nx">start</span><span class="o">:</span> <span class="mi">1565</span><span class="p">,</span> <span class="nx">end</span><span class="o">:</span> <span class="mi">1603</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;James I&quot;</span><span class="p">,</span> <span class="nx">start</span><span class="o">:</span> <span class="mi">1603</span><span class="p">,</span> <span class="nx">end</span><span class="o">:</span> <span class="mi">1625</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Charles I&quot;</span><span class="p">,</span> <span class="nx">start</span><span class="o">:</span> <span class="mi">1625</span><span class="p">,</span> <span class="nx">end</span><span class="o">:</span> <span class="mi">1649</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Cromwell&quot;</span><span class="p">,</span> <span class="nx">start</span><span class="o">:</span> <span class="mi">1649</span><span class="p">,</span> <span class="nx">end</span><span class="o">:</span> <span class="mi">1660</span><span class="p">,</span> <span class="nx">commonwealth</span><span class="o">:</span> <span class="kc">true</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Charles II&quot;</span><span class="p">,</span> <span class="nx">start</span><span class="o">:</span> <span class="mi">1660</span><span class="p">,</span> <span class="nx">end</span><span class="o">:</span> <span class="mi">1685</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;James II&quot;</span><span class="p">,</span> <span class="nx">start</span><span class="o">:</span> <span class="mi">1685</span><span class="p">,</span> <span class="nx">end</span><span class="o">:</span> <span class="mi">1689</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;W&amp;M&quot;</span><span class="p">,</span> <span class="nx">start</span><span class="o">:</span> <span class="mi">1689</span><span class="p">,</span> <span class="nx">end</span><span class="o">:</span> <span class="mi">1702</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Anne&quot;</span><span class="p">,</span> <span class="nx">start</span><span class="o">:</span> <span class="mi">1702</span><span class="p">,</span> <span class="nx">end</span><span class="o">:</span> <span class="mi">1714</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;George I&quot;</span><span class="p">,</span> <span class="nx">start</span><span class="o">:</span> <span class="mi">1714</span><span class="p">,</span> <span class="nx">end</span><span class="o">:</span> <span class="mi">1727</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;George II&quot;</span><span class="p">,</span> <span class="nx">start</span><span class="o">:</span> <span class="mi">1727</span><span class="p">,</span> <span class="nx">end</span><span class="o">:</span> <span class="mi">1760</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;George III&quot;</span><span class="p">,</span> <span class="nx">start</span><span class="o">:</span> <span class="mi">1760</span><span class="p">,</span> <span class="nx">end</span><span class="o">:</span> <span class="mi">1820</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;George IV&quot;</span><span class="p">,</span> <span class="nx">start</span><span class="o">:</span> <span class="mi">1820</span><span class="p">,</span> <span class="nx">end</span><span class="o">:</span> <span class="mi">1821</span> <span class="p">}</span>
+<span class="p">];</span>
+</pre></div>
+
+
+    </div>
+
+    <div class="foot">
+      Copyright 2010 <a href="http://vis.stanford.edu">Stanford Visualization Group</a>
+    </div>
+
+    <script type="text/javascript" src="http://www.google-analytics.com/ga.js"></script>
+    <script type="text/javascript">_gat._getTracker("UA-10741907-2")._trackPageview();</script>
+  </body>
+</html>

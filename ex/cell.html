@@ -1,0 +1,222 @@
+<html>
+  <head>
+    <title>Protovis - Automaton Explorer</title>
+    <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
+    <link type="text/css" rel="stylesheet" href="syntax.css"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+  </head>
+  <body>
+
+    <div class="title">
+      <div class="subtitle">
+        A graphical toolkit for visualization
+      </div>
+      <a href="../">Protovis</a>
+    </div>
+
+    <div class="head">
+      <div class="section">
+        <a href="../">Overview</a>
+      </div>
+      <div class="section selected">
+        <a href="./">Examples</a>
+      </div>
+      <div class="section">
+        <a href="../docs/">Documentation</a>
+      </div>
+      <div class="section">
+        <a href="http://protovis-js.googlecode.com/files/protovis-3.2.zip">Download</a>
+      </div>
+    </div>
+    <div class="subhead">
+      <div class="section">
+        <a href="./">Index</a>
+      </div>
+      <div class="section">
+        <a href="life.html">&laquo; Previous</a> /
+        <a href="bzr.html">Next &raquo;</a>
+      </div>
+    </div>
+
+    <div class="body">
+      <h1>Automaton Explorer</h1>
+
+      <iframe scrolling="no" style="height:460px;" src="cell-full.html"></iframe>
+      <p><img src="popout.png" width="16" height="16"
+      style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
+      href="cell-full.html" target="_blank">View full screen.</a>
+
+      <p>From <a
+      href="http://mathworld.wolfram.com/CellularAutomaton.html">MathWorld</a>:
+      &ldquo;A cellular automaton is a collection of &lsquo;colored&rsquo; cells
+      on a grid of specified shape that evolves through a number of discrete
+      time steps according to a set of rules based on the states of neighboring
+      cells.&rdquo; This example explores binary, nearest-neighbor,
+      one-dimensional automata, of which there are 256 (2<sup>8</sup>) possible
+      rules. The eight possible outcomes for the current rule are shown across
+      the top; click to toggle the selected bit or drag the slider to jump to
+      the desired rule.
+
+      <p><i>WARNING:</i> Moving the slider may produce flashing patterns!
+
+      <blockquote style="font-size:13px;">
+        Next: <a href="bzr.html">Belousov-Zhabotinsky</a>
+      </blockquote>
+
+      <h3>Source</h3>
+
+<div class="highlight"><pre><span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;title&gt;</span>Automaton Explorer<span class="nt">&lt;/title&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">type=</span><span class="s">&quot;text/css&quot;</span> <span class="na">href=</span><span class="s">&quot;ex.css&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;../protovis-r3.2.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;../jquery-1.4.2.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;../jquery-ui-1.8rc3.custom.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;cell.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">type=</span><span class="s">&quot;text/css&quot;</span> <span class="na">href=</span><span class="s">&quot;../ui-lightness/jquery-ui-1.8rc3.custom.css&quot;</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;style </span><span class="na">type=</span><span class="s">&quot;text/css&quot;</span><span class="nt">&gt;</span>
+
+<span class="nc">.ui-slider</span> <span class="p">{</span>
+  <span class="k">font-size</span><span class="o">:</span> <span class="m">10px</span><span class="p">;</span>
+  <span class="k">width</span><span class="o">:</span> <span class="m">300px</span><span class="p">;</span>
+  <span class="k">margin-top</span><span class="o">:</span> <span class="m">5px</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nt">sup</span><span class="o">,</span> <span class="nt">sub</span> <span class="p">{</span>
+  <span class="k">line-height</span><span class="o">:</span> <span class="m">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nc">.ui-state-focus</span> <span class="p">{</span>
+  <span class="k">outline</span><span class="o">:</span> <span class="k">none</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nf">#slider</span> <span class="p">{</span>
+  <span class="k">width</span><span class="o">:</span> <span class="m">300px</span><span class="p">;</span>
+  <span class="k">display</span><span class="o">:</span> <span class="k">inline</span><span class="o">-</span><span class="k">block</span><span class="p">;</span>
+  <span class="k">margin-left</span><span class="o">:</span> <span class="m">5px</span><span class="p">;</span>
+  <span class="k">margin-right</span><span class="o">:</span> <span class="m">15px</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nf">#fig</span> <span class="p">{</span>
+  <span class="k">width</span><span class="o">:</span> <span class="m">768px</span><span class="p">;</span>
+  <span class="k">height</span><span class="o">:</span> <span class="m">460px</span><span class="p">;</span>
+<span class="p">}</span>
+
+    <span class="nt">&lt;/style&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body&gt;&lt;div</span> <span class="na">id=</span><span class="s">&quot;center&quot;</span><span class="nt">&gt;&lt;div</span> <span class="na">id=</span><span class="s">&quot;fig&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">style=</span><span class="s">&quot;width:8in;&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;b&gt;</span>Rule:<span class="nt">&lt;/b&gt;</span> <span class="nt">&lt;span</span> <span class="na">id=</span><span class="s">&quot;slider&quot;</span><span class="nt">&gt;&lt;/span&gt;&lt;span</span> <span class="na">id=</span><span class="s">&quot;rule&quot;</span><span class="nt">&gt;</span>30<span class="nt">&lt;/span&gt;</span>
+      <span class="nt">&lt;span</span> <span class="na">style=</span><span class="s">&quot;float:right;&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;b&gt;</span>Start:<span class="nt">&lt;/b&gt;</span> <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;radio&quot;</span> <span class="na">checked</span> <span class="na">id=</span><span class="s">&quot;point&quot;</span> <span class="na">name=</span><span class="s">&quot;start&quot;</span> <span class="na">value=</span><span class="s">&quot;point&quot;</span>
+        <span class="nt">&gt;&lt;label</span> <span class="na">for=</span><span class="s">&quot;point&quot;</span><span class="nt">&gt;</span>point<span class="nt">&lt;/label&gt;</span>
+        <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;radio&quot;</span> <span class="na">id=</span><span class="s">&quot;random&quot;</span> <span class="na">name=</span><span class="s">&quot;start&quot;</span> <span class="na">value=</span><span class="s">&quot;random&quot;</span>
+        <span class="nt">&gt;&lt;label</span> <span class="na">for=</span><span class="s">&quot;random&quot;</span><span class="nt">&gt;</span>random<span class="nt">&lt;/label&gt;</span>
+      <span class="nt">&lt;/span&gt;</span>
+    <span class="nt">&lt;/div&gt;&lt;p&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript+protovis&quot;</span><span class="nt">&gt;</span>
+
+<span class="kd">var</span> <span class="nx">h</span> <span class="o">=</span> <span class="mi">128</span><span class="p">,</span>
+    <span class="nx">w</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="nx">h</span><span class="p">,</span>
+    <span class="nx">start</span> <span class="o">=</span> <span class="s2">&quot;point&quot;</span><span class="p">,</span>
+    <span class="nx">rule</span> <span class="o">=</span> <span class="mi">30</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">vis</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="nx">w</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="nx">h</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">top</span><span class="p">(</span><span class="mi">40</span><span class="p">);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">range</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
+    <span class="p">.</span><span class="nx">right</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="p">(</span><span class="nx">i</span> <span class="o">+</span> <span class="p">.</span><span class="mi">5</span><span class="p">)</span> <span class="o">*</span> <span class="nx">w</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">/</span> <span class="mi">8</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">top</span><span class="p">(</span><span class="o">-</span><span class="mi">35</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">event</span><span class="p">(</span><span class="s2">&quot;mousedown&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span>
+        <span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#rule&quot;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="nx">rule</span> <span class="o">^=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="nx">i</span><span class="p">),</span>
+         <span class="nx">$</span><span class="p">(</span><span class="nx">slider</span><span class="p">).</span><span class="nx">slider</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="nx">rule</span><span class="p">),</span>
+         <span class="nx">vis</span><span class="p">))</span>
+  <span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Bar</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">top</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">right</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">title</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">j</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="s2">&quot;Toggle bit &quot;</span> <span class="o">+</span> <span class="nx">i</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;#bbb&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">fillStyle</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="nx">rule</span> <span class="o">&gt;&gt;</span> <span class="nx">i</span> <span class="o">&amp;</span> <span class="mi">1</span> <span class="o">?</span> <span class="s2">&quot;#000&quot;</span> <span class="o">:</span> <span class="s2">&quot;#fff&quot;</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Bar</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">range</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+    <span class="p">.</span><span class="nx">top</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">right</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="nx">i</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">-</span> <span class="mi">15</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">fillStyle</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">i</span><span class="p">,</span> <span class="nx">j</span><span class="p">)</span> <span class="nx">j</span> <span class="o">&gt;&gt;</span> <span class="nx">i</span> <span class="o">&amp;</span> <span class="mi">1</span> <span class="o">?</span> <span class="s2">&quot;#000&quot;</span> <span class="o">:</span> <span class="s2">&quot;#fff&quot;</span><span class="p">);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Image</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">def</span><span class="p">(</span><span class="s2">&quot;cell&quot;</span><span class="p">,</span> <span class="nx">cell</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">imageWidth</span><span class="p">(</span><span class="nx">w</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">imageHeight</span><span class="p">(</span><span class="nx">h</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">image</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">colors</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="s2">&quot;#000&quot;</span><span class="p">).</span><span class="nx">by</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="k">this</span><span class="p">.</span><span class="nx">cell</span><span class="p">()[</span><span class="nx">y</span><span class="p">][</span><span class="nx">x</span><span class="p">]));</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+
+<span class="nx">$</span><span class="p">(</span><span class="nx">slider</span><span class="p">).</span><span class="nx">slider</span><span class="p">({</span>
+  <span class="nx">min</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">value</span><span class="o">:</span> <span class="mi">30</span><span class="p">,</span> <span class="nx">max</span><span class="o">:</span> <span class="mi">255</span><span class="p">,</span> <span class="nx">slide</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">ui</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#rule&quot;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="nx">rule</span> <span class="o">=</span> <span class="nx">ui</span><span class="p">.</span><span class="nx">value</span><span class="p">);</span>
+    <span class="nx">vis</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="nx">$</span><span class="p">([</span><span class="nx">point</span><span class="p">,</span> <span class="nx">random</span><span class="p">]).</span><span class="nx">change</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">start</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
+  <span class="nx">vis</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+<span class="p">});</span>
+
+    <span class="nt">&lt;/script&gt;</span>
+  <span class="nt">&lt;/div&gt;&lt;/div&gt;&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre></div>
+
+
+      <h3>Data</h3>
+
+<div class="highlight"><pre><span class="cm">/** Depends on globals: rule, w, h, mode. */</span>
+<span class="kd">function</span> <span class="nx">cell</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">range</span><span class="p">(</span><span class="nx">h</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">range</span><span class="p">(</span><span class="nx">w</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span> <span class="p">});</span>
+        <span class="p">}),</span>
+      <span class="nx">r</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">range</span><span class="p">(</span><span class="mi">8</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">rule</span> <span class="o">&gt;&gt;</span> <span class="nx">i</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="p">});</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">start</span> <span class="o">==</span> <span class="s2">&quot;point&quot;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">d</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="nx">w</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">x</span> <span class="o">&lt;</span> <span class="nx">w</span><span class="p">;</span> <span class="nx">x</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">d</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="nx">x</span><span class="p">]</span> <span class="o">=</span> <span class="nx">cell</span><span class="p">.</span><span class="nx">random</span><span class="p">(</span><span class="nx">x</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">y</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">y</span> <span class="o">&lt;</span> <span class="nx">h</span><span class="p">;</span> <span class="nx">y</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">p</span> <span class="o">=</span> <span class="nx">d</span><span class="p">[</span><span class="nx">y</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="nx">c</span> <span class="o">=</span> <span class="nx">d</span><span class="p">[</span><span class="nx">y</span><span class="p">];</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">x</span> <span class="o">&lt;</span> <span class="nx">w</span><span class="p">;</span> <span class="nx">x</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">c</span><span class="p">[</span><span class="nx">x</span><span class="p">]</span> <span class="o">=</span> <span class="nx">r</span><span class="p">[</span><span class="nx">p</span><span class="p">[</span><span class="nx">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span> <span class="o">|</span> <span class="nx">p</span><span class="p">[</span><span class="nx">x</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span> <span class="o">|</span> <span class="nx">p</span><span class="p">[</span><span class="nx">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]];</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">d</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">cell</span><span class="p">.</span><span class="nx">$random</span> <span class="o">=</span> <span class="p">{};</span>
+
+<span class="cm">/** Caches random output to make exploration deterministic. */</span>
+<span class="nx">cell</span><span class="p">.</span><span class="nx">random</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">i</span> <span class="k">in</span> <span class="nx">cell</span><span class="p">.</span><span class="nx">$random</span> <span class="o">?</span> <span class="nx">cell</span><span class="p">.</span><span class="nx">$random</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span>
+      <span class="o">:</span> <span class="p">(</span><span class="nx">cell</span><span class="p">.</span><span class="nx">$random</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="p">.</span><span class="mi">5</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="mi">1</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+
+
+    </div>
+
+    <div class="foot">
+      Copyright 2010 <a href="http://vis.stanford.edu">Stanford Visualization Group</a>
+    </div>
+
+    <script type="text/javascript" src="http://www.google-analytics.com/ga.js"></script>
+    <script type="text/javascript">_gat._getTracker("UA-10741907-2")._trackPageview();</script>
+  </body>
+</html>

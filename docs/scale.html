@@ -1,0 +1,582 @@
+<html>
+  <head>
+    <title>Protovis - Scales</title>
+    <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
+    <link type="text/css" rel="stylesheet" href="../ex/syntax.css?3.2"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+  </head>
+  <body>
+
+    <div class="title">
+      <div class="subtitle">
+        A graphical toolkit for visualization
+      </div>
+      <a href="../">Protovis</a>
+    </div>
+
+    <div class="head">
+      <div class="section">
+        <a href="../">Overview</a>
+      </div>
+      <div class="section">
+        <a href="../ex/">Examples</a>
+      </div>
+      <div class="section selected">
+        <a href="../docs/">Documentation</a>
+      </div>
+      <div class="section">
+        <a href="http://protovis-js.googlecode.com/files/protovis-3.2.zip">Download</a>
+      </div>
+    </div>
+    <div class="subhead">
+      <div class="section">
+        <a href="./">Index</a>
+      </div>
+    </div>
+
+    <div class="body">
+      <h1>Scales</h1>
+
+      <p><b>Scales</b> are functions that map from domain to range.
+      <i>Quantitative</i> scales map from a continuous domain to a continuous
+      range (e.g., real numbers to pixel positions): <tt>pv.Scale.linear</tt>,
+      <tt>pv.Scale.root</tt>, <tt>pv.Scale.log</tt>. <i>Quantile</i> scales map
+      from a continuous domain to a discrete range. <i>Ordinal</i> scales map
+      from a discrete domain to a discrete range (e.g., names to
+      colors): <tt>pv.Scale.ordinal</tt>, <tt>pv.Colors</tt>.
+
+      <blockquote>
+        See also:
+        <a href="../jsdoc/symbols/pv.Scale.html">pv.Scale API reference</a>
+      </blockquote>
+
+      <h2>Quantitative Scales</h2>
+
+      <blockquote>
+        See also:
+        <a href="../jsdoc/symbols/pv.Scale.quantitative.html">pv.Scale.quantitative</a>,
+        <a href="../jsdoc/symbols/pv.Scale.linear.html">linear</a>,
+        <a href="../jsdoc/symbols/pv.Scale.log.html">log</a>,
+        <a href="../jsdoc/symbols/pv.Scale.root.html">root API reference</a>
+      </blockquote>
+
+      <h3>Example with position, color and ticks</h3>
+
+      <p><table><tr><td>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">range</span><span class="p">(</span><span class="mi">100</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">),</span>
+    <span class="nx">w</span> <span class="o">=</span> <span class="mi">360</span><span class="p">,</span>
+    <span class="nx">h</span> <span class="o">=</span> <span class="mi">360</span><span class="p">,</span>
+    <span class="nx">x</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">).</span><span class="nx">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">w</span><span class="p">),</span>
+    <span class="nx">y</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">).</span><span class="nx">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">h</span><span class="p">),</span>
+    <span class="nx">c</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">(</span><span class="nx">data</span><span class="p">).</span><span class="nx">range</span><span class="p">(</span><span class="s2">&quot;#1f77b4&quot;</span><span class="p">,</span> <span class="s2">&quot;#ff7f0e&quot;</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">vis</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="nx">w</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="nx">h</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">margin</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;#ccc&quot;</span><span class="p">);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Rule</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">x</span><span class="p">.</span><span class="nx">ticks</span><span class="p">())</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;#eee&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="nx">x</span><span class="p">.</span><span class="nx">tickFormat</span><span class="p">);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Rule</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">y</span><span class="p">.</span><span class="nx">ticks</span><span class="p">())</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;#eee&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="nx">y</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;right&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="nx">y</span><span class="p">.</span><span class="nx">tickFormat</span><span class="p">);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Dot</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="nx">x</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">index</span><span class="p">))</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="nx">y</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">fillStyle</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">c</span><span class="p">(</span><span class="nx">d</span><span class="p">).</span><span class="nx">alpha</span><span class="p">(.</span><span class="mi">2</span><span class="p">));</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+
+
+      </td><td align="right"><script type="text/javascript+protovis">
+
+var data = pv.range(100).map(Math.random),
+    w = 360,
+    h = 360,
+    x = pv.Scale.linear(0, 100).range(0, w),
+    y = pv.Scale.linear(0, 1).range(0, h),
+    c = pv.Scale.linear(data).range("#1f77b4", "#ff7f0e");
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .margin(20)
+    .strokeStyle("#ccc");
+
+vis.add(pv.Rule)
+    .data(x.ticks())
+    .strokeStyle("#eee")
+    .left(x)
+  .anchor("bottom").add(pv.Label)
+    .text(x.tickFormat);
+
+vis.add(pv.Rule)
+    .data(y.ticks())
+    .strokeStyle("#eee")
+    .bottom(y)
+  .anchor("right").add(pv.Label)
+    .text(y.tickFormat);
+
+vis.add(pv.Dot)
+    .data(data)
+    .left(function() x(this.index))
+    .bottom(y)
+    .strokeStyle(c)
+    .fillStyle(function(d) c(d).alpha(.2));
+
+vis.render();
+
+
+      </script></td></tr></table>
+
+      <h3>Example with <tt>angle</tt></h3>
+
+      <p><table><tr><td>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="p">.</span><span class="mi">7</span><span class="p">];</span>
+
+<span class="kd">var</span> <span class="nx">vis</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="mi">150</span><span class="p">);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Wedge</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="mi">75</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">75</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">innerRadius</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">outerRadius</span><span class="p">(</span><span class="mi">70</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">angle</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">sum</span><span class="p">(</span><span class="nx">data</span><span class="p">)).</span><span class="nx">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span><span class="p">));</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+
+
+      </td><td align="right"><script type="text/javascript+protovis">
+
+var data = [1, 1.2, 1.7, 1.5, .7];
+
+var vis = new pv.Panel()
+    .width(150)
+    .height(150);
+
+vis.add(pv.Wedge)
+    .data(data)
+    .left(75)
+    .bottom(75)
+    .innerRadius(50)
+    .outerRadius(70)
+    .angle(pv.Scale.linear(0, pv.sum(data)).range(0, 2 * Math.PI));
+
+vis.render();
+
+
+      </script></td></tr></table>
+
+      <h3>Example with diverging color</h3>
+
+      <p>Replacing the definition of <tt>c</tt> above with a diverging scale:
+
+      <p><table><tr><td>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">range</span><span class="p">(</span><span class="mi">100</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">),</span>
+    <span class="nx">w</span> <span class="o">=</span> <span class="mi">360</span><span class="p">,</span>
+    <span class="nx">h</span> <span class="o">=</span> <span class="mi">360</span><span class="p">,</span>
+    <span class="nx">x</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">).</span><span class="nx">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">w</span><span class="p">),</span>
+    <span class="nx">y</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">).</span><span class="nx">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">h</span><span class="p">),</span>
+    <span class="nx">c</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">.</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">).</span><span class="nx">range</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;yellow&quot;</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">vis</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="nx">w</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="nx">h</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">margin</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;#ccc&quot;</span><span class="p">);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Rule</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">x</span><span class="p">.</span><span class="nx">ticks</span><span class="p">())</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;#eee&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="nx">x</span><span class="p">.</span><span class="nx">tickFormat</span><span class="p">);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Rule</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">y</span><span class="p">.</span><span class="nx">ticks</span><span class="p">())</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;#eee&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="nx">y</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;right&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="nx">y</span><span class="p">.</span><span class="nx">tickFormat</span><span class="p">);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Dot</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="nx">x</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">index</span><span class="p">))</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="nx">y</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">fillStyle</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">c</span><span class="p">(</span><span class="nx">d</span><span class="p">).</span><span class="nx">alpha</span><span class="p">(.</span><span class="mi">2</span><span class="p">));</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+
+
+      </td><td align="right"><script type="text/javascript+protovis">
+
+var data = pv.range(100).map(Math.random),
+    w = 360,
+    h = 360,
+    x = pv.Scale.linear(0, 100).range(0, w),
+    y = pv.Scale.linear(0, 1).range(0, h),
+    c = pv.Scale.linear(0, .5, 1).range("red", "yellow", "green");
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .margin(20)
+    .strokeStyle("#ccc");
+
+vis.add(pv.Rule)
+    .data(x.ticks())
+    .strokeStyle("#eee")
+    .left(x)
+  .anchor("bottom").add(pv.Label)
+    .text(x.tickFormat);
+
+vis.add(pv.Rule)
+    .data(y.ticks())
+    .strokeStyle("#eee")
+    .bottom(y)
+  .anchor("right").add(pv.Label)
+    .text(y.tickFormat);
+
+vis.add(pv.Dot)
+    .data(data)
+    .left(function() x(this.index))
+    .bottom(y)
+    .strokeStyle(c)
+    .fillStyle(function(d) c(d).alpha(.2));
+
+vis.render();
+
+
+      </script></td></tr></table>
+
+      <h3>Example with log transform</h3>
+
+      <p><table><tr><td>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">range</span><span class="p">(</span><span class="mi">100</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">),</span>
+    <span class="nx">w</span> <span class="o">=</span> <span class="mi">360</span><span class="p">,</span>
+    <span class="nx">h</span>  <span class="o">=</span> <span class="mi">360</span><span class="p">,</span>
+    <span class="nx">x</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">).</span><span class="nx">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">w</span><span class="p">),</span>
+    <span class="nx">y</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">1</span><span class="p">).</span><span class="nx">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">h</span><span class="p">),</span>
+    <span class="nx">c</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">).</span><span class="nx">range</span><span class="p">(</span><span class="s2">&quot;#1f77b4&quot;</span><span class="p">,</span> <span class="s2">&quot;#ff7f0e&quot;</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">vis</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="nx">w</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="nx">h</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">margin</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;#ccc&quot;</span><span class="p">);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Rule</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">x</span><span class="p">.</span><span class="nx">ticks</span><span class="p">())</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;#eee&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="nx">x</span><span class="p">.</span><span class="nx">tickFormat</span><span class="p">);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Rule</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">y</span><span class="p">.</span><span class="nx">ticks</span><span class="p">())</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;#eee&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="nx">y</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;right&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="nx">y</span><span class="p">.</span><span class="nx">tickFormat</span><span class="p">);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Dot</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="nx">x</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">index</span><span class="p">))</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="nx">y</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">fillStyle</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">c</span><span class="p">(</span><span class="nx">d</span><span class="p">).</span><span class="nx">alpha</span><span class="p">(.</span><span class="mi">2</span><span class="p">));</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+
+
+      </td><td align="right"><script type="text/javascript+protovis">
+
+var data = pv.range(100).map(Math.random),
+    w = 360,
+    h  = 360,
+    x = pv.Scale.linear(0, 100).range(0, w),
+    y = pv.Scale.log(0.01, 1).range(0, h),
+    c = pv.Scale.log(data).range("#1f77b4", "#ff7f0e");
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .margin(20)
+    .strokeStyle("#ccc");
+
+vis.add(pv.Rule)
+    .data(x.ticks())
+    .strokeStyle("#eee")
+    .left(x)
+  .anchor("bottom").add(pv.Label)
+    .text(x.tickFormat);
+
+vis.add(pv.Rule)
+    .data(y.ticks())
+    .strokeStyle("#eee")
+    .bottom(y)
+  .anchor("right").add(pv.Label)
+    .text(y.tickFormat);
+
+vis.add(pv.Dot)
+    .data(data)
+    .left(function() x(this.index))
+    .bottom(y)
+    .strokeStyle(c)
+    .fillStyle(function(d) c(d).alpha(.2));
+
+vis.render();
+
+
+      </script></td></tr></table>
+
+      <h2>Quantile Scales</h2>
+
+      Description forthcoming.
+
+      <blockquote>
+        See also:
+        <a href="../jsdoc/symbols/pv.Scale.quantile.html">pv.Scale.quantile API reference</a>
+      </blockquote>
+
+      <h2>Ordinal Scales</h2>
+
+      <h3>Example with position (bands) and color</h3>
+
+      <p><table><tr><td>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">categories</span> <span class="o">=</span> <span class="s2">&quot;ABCDEFGHIJK&quot;</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">),</span>
+    <span class="nx">data</span> <span class="o">=</span> <span class="nx">categories</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span> <span class="p">[</span><span class="nx">c</span><span class="p">,</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()]),</span>
+    <span class="nx">w</span> <span class="o">=</span> <span class="mi">160</span><span class="p">,</span>
+    <span class="nx">h</span> <span class="o">=</span> <span class="mi">360</span><span class="p">,</span>
+    <span class="nx">x</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">ordinal</span><span class="p">(</span><span class="nx">categories</span><span class="p">).</span><span class="nx">splitBanded</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">w</span><span class="p">,</span> <span class="mi">4</span><span class="o">/</span><span class="mi">5</span><span class="p">),</span>
+    <span class="nx">y</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">).</span><span class="nx">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">h</span><span class="p">),</span>
+    <span class="nx">c</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Colors</span><span class="p">.</span><span class="nx">category19</span><span class="p">(</span><span class="nx">categories</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">vis</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="nx">w</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="nx">h</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">margin</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;#ccc&quot;</span><span class="p">);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Bar</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">x</span><span class="p">(</span><span class="nx">d</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="nx">x</span><span class="p">.</span><span class="nx">range</span><span class="p">().</span><span class="nx">band</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">y</span><span class="p">(</span><span class="nx">d</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="p">.</span><span class="nx">fillStyle</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">c</span><span class="p">(</span><span class="nx">d</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+  <span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">textBaseline</span><span class="p">(</span><span class="s2">&quot;top&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Rule</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">y</span><span class="p">.</span><span class="nx">ticks</span><span class="p">())</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;rgba(255, 255, 255, .5)&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="nx">y</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;right&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="nx">y</span><span class="p">.</span><span class="nx">tickFormat</span><span class="p">);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+
+
+      </td><td align="right"><script type="text/javascript+protovis">
+
+var categories = "ABCDEFGHIJK".split(""),
+    data = categories.map(function(c) [c, Math.random()]),
+    w = 160,
+    h = 360,
+    x = pv.Scale.ordinal(categories).splitBanded(0, w, 4/5),
+    y = pv.Scale.linear(0, 1).range(0, h),
+    c = pv.Colors.category19(categories);
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .margin(20)
+    .strokeStyle("#ccc");
+
+vis.add(pv.Bar)
+    .data(data)
+    .left(function(d) x(d[0]))
+    .width(x.range().band)
+    .bottom(0)
+    .height(function(d) y(d[1]))
+    .fillStyle(function(d) c(d[0]))
+  .anchor("bottom").add(pv.Label)
+    .textBaseline("top")
+    .text(function(d) d[0]);
+
+vis.add(pv.Rule)
+    .data(y.ticks())
+    .strokeStyle("rgba(255, 255, 255, .5)")
+    .bottom(y)
+  .anchor("right").add(pv.Label)
+    .text(y.tickFormat);
+
+vis.render();
+
+
+      </script></td></tr></table>
+
+      <h3>Example with position (points)</h3>
+
+      <p><table><tr><td>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">categories</span> <span class="o">=</span> <span class="s2">&quot;ABCDEF&quot;</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">),</span>
+    <span class="nx">data</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">range</span><span class="p">(</span><span class="mi">100</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">[</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">(),</span> <span class="nx">categories</span><span class="p">[</span><span class="nx">i</span> <span class="o">%</span> <span class="mi">6</span><span class="p">]]),</span>
+    <span class="nx">w</span> <span class="o">=</span> <span class="mi">160</span><span class="p">,</span>
+    <span class="nx">h</span> <span class="o">=</span> <span class="mi">360</span><span class="p">,</span>
+    <span class="nx">x</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">ordinal</span><span class="p">(</span><span class="nx">categories</span><span class="p">).</span><span class="nx">split</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">w</span><span class="p">),</span>
+    <span class="nx">y</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">).</span><span class="nx">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">h</span><span class="p">),</span>
+    <span class="nx">c</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">.</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">).</span><span class="nx">range</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;yellow&quot;</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">vis</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="nx">w</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="nx">h</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">margin</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;#ccc&quot;</span><span class="p">);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Rule</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">categories</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;#eee&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Rule</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">y</span><span class="p">.</span><span class="nx">ticks</span><span class="p">())</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;#eee&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="nx">y</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;right&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Dot</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">x</span><span class="p">(</span><span class="nx">d</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">y</span><span class="p">(</span><span class="nx">d</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">c</span><span class="p">(</span><span class="nx">d</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="p">.</span><span class="nx">fillStyle</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">c</span><span class="p">(</span><span class="nx">d</span><span class="p">[</span><span class="mi">0</span><span class="p">]).</span><span class="nx">alpha</span><span class="p">(.</span><span class="mi">2</span><span class="p">));</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+
+
+      </td><td align="right"><script type="text/javascript+protovis">
+
+var categories = "ABCDEF".split(""),
+    data = pv.range(100).map(function(d, i) [Math.random(), categories[i % 6]]),
+    w = 160,
+    h = 360,
+    x = pv.Scale.ordinal(categories).split(0, w),
+    y = pv.Scale.linear(0, 1).range(0, h),
+    c = pv.Scale.linear(0, .5, 1).range("red", "yellow", "green");
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .margin(20)
+    .strokeStyle("#ccc");
+
+vis.add(pv.Rule)
+    .data(categories)
+    .strokeStyle("#eee")
+    .left(x)
+  .anchor("bottom").add(pv.Label);
+
+vis.add(pv.Rule)
+    .data(y.ticks())
+    .strokeStyle("#eee")
+    .bottom(y)
+  .anchor("right").add(pv.Label);
+
+vis.add(pv.Dot)
+    .data(data)
+    .left(function(d) x(d[1]))
+    .bottom(function(d) y(d[0]))
+    .strokeStyle(function(d) c(d[0]))
+    .fillStyle(function(d) c(d[0]).alpha(.2));
+
+vis.render();
+
+
+      </script></td></tr></table>
+
+      <h2>Other Features</h2>
+
+      <p>The <a href="../jsdoc/symbols/pv.Scale.html#by"><tt>by</tt> method</a>
+      is a shorthand way of binding an accessor function with the scale. This
+      method is provided for convenience, such that scales can be succinctly
+      defined inline. For example, given an array of data elements that have a
+      score attribute with the domain [0, 1], the <tt>height</tt> property could
+      be specified as:
+
+<div class="highlight"><pre>    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">).</span><span class="nx">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">480</span><span class="p">).</span><span class="nx">by</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span><span class="p">.</span><span class="nx">score</span><span class="p">))</span>
+</pre></div>
+
+
+      <p>This is shorthand for:
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">y</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">).</span><span class="nx">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">480</span><span class="p">);</span>
+
+<span class="p">...</span>
+
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">y</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">score</span><span class="p">))</span>
+</pre></div>
+
+
+      <p>This method should be used judiciously; it is typically more clear to
+      invoke the scale directly, passing in the value to be scaled. Most
+      commonly, the <tt>by</tt> method is used in conjunction with categorical
+      color scales. There are also several pre-defined accessor functions for
+      convenience:
+
+      <ul>
+      <li><a href="../jsdoc/symbols/pv.html#.index"><tt>pv.index</tt></a> - <tt>function() this.index</tt>
+      <li><a href="../jsdoc/symbols/pv.html#.parent"><tt>pv.parent</tt></a> - <tt>function() this.parent.index</tt>
+      <li><a href="../jsdoc/symbols/pv.html#.child"><tt>pv.child</tt></a> - <tt>function() this.childIndex</tt>
+      </ul>
+
+      <p>For example, the default fill color for <a href="bar.html">bars</a> is
+
+<div class="highlight"><pre><span class="nx">pv</span><span class="p">.</span><span class="nx">Colors</span><span class="p">.</span><span class="nx">category20</span><span class="p">().</span><span class="nx">by</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">parent</span><span class="p">)</span>
+</pre></div>
+
+
+      <p>which causes bars to be filled with a unique color according to the
+      parent panel index. Since the parent panel data is typically a
+      two-dimensional array of each series of data, this causes bars of the same
+      series to share a color by default.
+    </div>
+
+    <div class="foot">
+      Copyright 2010 <a href="http://vis.stanford.edu">Stanford Visualization Group</a>
+    </div>
+
+    <script type="text/javascript" src="http://www.google-analytics.com/ga.js"></script>
+    <script type="text/javascript">_gat._getTracker("UA-10741907-2")._trackPageview();</script>
+  </body>
+</html>

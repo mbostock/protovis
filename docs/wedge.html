@@ -1,0 +1,518 @@
+<html>
+  <head>
+    <title>Protovis - Wedges</title>
+    <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
+    <link type="text/css" rel="stylesheet" href="../ex/syntax.css?3.2"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+  </head>
+  <body>
+
+    <div class="title">
+      <div class="subtitle">
+        A graphical toolkit for visualization
+      </div>
+      <a href="../">Protovis</a>
+    </div>
+
+    <div class="head">
+      <div class="section">
+        <a href="../">Overview</a>
+      </div>
+      <div class="section">
+        <a href="../ex/">Examples</a>
+      </div>
+      <div class="section selected">
+        <a href="../docs/">Documentation</a>
+      </div>
+      <div class="section">
+        <a href="http://protovis-js.googlecode.com/files/protovis-3.2.zip">Download</a>
+      </div>
+    </div>
+    <div class="subhead">
+      <div class="section">
+        <a href="./">Index</a>
+      </div>
+    </div>
+
+    <div class="body">
+      <h1>Wedge</h1>
+
+      <p>The <b>wedge</b> mark type represents a solid arc, akin to
+      a <a href="bar.html">bar</a> in polar coordinates, that can be filled
+      (via <tt>fillStyle</tt>) and stroked (via <tt>strokeStyle</tt>). Wedges
+      are used for some popular visualization types, including pie charts and
+      donut charts.
+
+      <blockquote>
+        See also:
+        <a href="../jsdoc/symbols/pv.Wedge.html">pv.Wedge API reference</a>
+
+        <br>Examples:
+        <a href="../ex/pie.html">Pie &amp; Donut Charts</a>,
+        <a href="../ex/antibiotics-burtin.html">Burtin&rsquo;s Antibiotics</a>,
+        <a href="../ex/clock.html">PolarClock</a>
+      </blockquote>
+
+      <h2>Placement</h2>
+
+      <img src="wedge.png">
+
+      <p>A wedge&rsquo;s placement is specified through some combination of
+      properties:
+
+      <ul>
+      <li><tt>top</tt> - the distance from the top edge of the parent panel to the wedge center.
+      <li><tt>left</tt> - the distance from the left edge of the parent panel to the wedge center.
+      <li><tt>bottom</tt> - the distance from the bottom edge of the parent panel to the wedge center.
+      <li><tt>right</tt> - the distance from the right edge of the parent panel to the wedge center.
+      <li><tt>startAngle</tt> - the start angle of the wedge in radians.
+      <li><tt>endAngle</tt> - the end angle of the wedge in radians.
+      <li><tt>angle</tt> - the angle subtended by the wedge in radians.
+      <li><tt>innerRadius</tt> - the inner radius of the wedge.
+      <li><tt>outerRadius</tt> - the outer radius of the wedge.
+      </ul>
+
+      <p>Should the radius be used to encode data, the area of the wedge is
+      proportional to the square of the radius. The inner radius defaults to 0,
+      suitable for pie charts; a positive value can be used for donut charts.
+
+      <p>Note that first four properties together over-specify the center of the
+      wedge. In practice, only two (orthogonal) properties should be
+      specified. This section looks at some examples.
+
+      <h3>Using <tt>left</tt> and <tt>bottom</tt> with <tt>angle</tt></h3>
+
+      <p>In most cases, the left and bottom will be constant, since the
+      instantiated wedges will share the same center point; the data is instead
+      visually encoded using angle. For example, a simple pie chart:
+
+      <p><table><tr><td>
+
+<div class="highlight"><pre><span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Wedge</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">normalize</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="p">.</span><span class="mi">7</span><span class="p">]))</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="mi">75</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">75</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">outerRadius</span><span class="p">(</span><span class="mi">70</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">angle</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">root</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+
+
+      </td><td align="right"><script type="text/javascript+protovis">
+
+new pv.Panel()
+    .width(150)
+    .height(150)
+  .add(pv.Wedge)
+    .data(pv.normalize([1, 1.2, 1.7, 1.5, .7]))
+    .left(75)
+    .bottom(75)
+    .outerRadius(70)
+    .angle(function(d) d * 2 * Math.PI)
+  .root.render();
+
+
+      </script></td></tr></table>
+
+      <p>Observe that the <tt>angle</tt> property is specified, rather
+      than <tt>startAngle</tt> and <tt>endAngle</tt>. The default implementation
+      of <tt>startAngle</tt> uses the value of the previous wedge's end
+      angle. This way, by specifying just the angle, the wedges neatly stack
+      together to produce a whole. It is still possible to provide custom
+      implementations for the start and end angle, but this is rarely needed.
+
+      <p>Note the preprocessing step to <a href="../jsdoc/symbols/pv.html#.normalize"
+      >normalize</a> the data array. This produces a rescaled copy of the original
+      data array, such that the sum of all values is 1; this simplifies the
+      subsequent calculation of the wedge angle. An alternative is to calculate
+      the sum:
+
+      <p><table><tr><td>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="p">.</span><span class="mi">7</span><span class="p">],</span> <span class="nx">sum</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">sum</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">vis</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="mi">150</span><span class="p">);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Wedge</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="mi">75</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">75</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">innerRadius</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">outerRadius</span><span class="p">(</span><span class="mi">70</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">angle</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span> <span class="o">/</span> <span class="nx">sum</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span><span class="p">);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+
+
+      </td><td align="right"><script type="text/javascript+protovis">
+
+var data = [1, 1.2, 1.7, 1.5, .7], sum = pv.sum(data);
+
+var vis = new pv.Panel()
+    .width(150)
+    .height(150);
+
+vis.add(pv.Wedge)
+    .data(data)
+    .left(75)
+    .bottom(75)
+    .innerRadius(50)
+    .outerRadius(70)
+    .angle(function(d) d / sum * 2 * Math.PI);
+
+vis.render();
+
+
+      </script></td></tr></table>
+
+      <p>But perhaps the best alternative is to use a <a href="scale.html"
+      >linear scale</a>.
+
+      <h3>Using <tt>innerRadius</tt> and <tt>outerRadius</tt></h3>
+
+      <p>In the previous example, we saw that a donut chart can be produced
+      instead of a pie chart by changing the inner radius. If desired, you can
+      vary the inner and outer radius based on data, though note that the area
+      of a wedge is proportional to the <i>square</i> of its radius:
+
+      <p><table><tr><td>
+
+<div class="highlight"><pre><span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Wedge</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="p">.</span><span class="mi">7</span><span class="p">])</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="mi">75</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">75</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">outerRadius</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">sqrt</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">angle</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span> <span class="o">/</span> <span class="mi">5</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">root</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+
+
+      </td><td align="right"><script type="text/javascript+protovis">
+
+new pv.Panel()
+    .width(150)
+    .height(150)
+  .add(pv.Wedge)
+    .data([1, 1.2, 1.7, 1.5, .7])
+    .left(75)
+    .bottom(75)
+    .outerRadius(function(d) Math.sqrt(d) * 50)
+    .angle(2 * Math.PI / 5)
+  .root.render();
+
+
+      </script></td></tr></table>
+
+      <p>Varying the inner radius can also be used to nest donuts (or pies):
+
+      <p><table><tr><td>
+
+<div class="highlight"><pre><span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Wedge</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">normalize</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="p">.</span><span class="mi">7</span><span class="p">]))</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="mi">75</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">75</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">innerRadius</span><span class="p">(</span><span class="mi">51</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">outerRadius</span><span class="p">(</span><span class="mi">70</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">angle</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Wedge</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">normalize</span><span class="p">([.</span><span class="mi">3</span><span class="p">,</span> <span class="p">.</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="p">.</span><span class="mi">4</span><span class="p">]))</span>
+    <span class="p">.</span><span class="nx">innerRadius</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">outerRadius</span><span class="p">(</span><span class="mi">49</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">root</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+
+
+      </td><td align="right"><script type="text/javascript+protovis">
+
+new pv.Panel()
+    .width(150)
+    .height(150)
+  .add(pv.Wedge)
+    .data(pv.normalize([1, 1.2, 1.7, 1.5, .7]))
+    .left(75)
+    .bottom(75)
+    .innerRadius(51)
+    .outerRadius(70)
+    .angle(function(d) d * 2 * Math.PI)
+  .add(pv.Wedge)
+    .data(pv.normalize([.3, .2, 1, 1.5, .4]))
+    .innerRadius(30)
+    .outerRadius(49)
+  .root.render();
+
+
+      </script></td></tr></table>
+
+      <p>The above examples merely demonstrate possible visualiations using
+      wedges; they are not necessarily examples of <i>good</i> visualizations. Care
+      should be taken when using wedges, as studies have shown that angle
+      judgements are generally less accurate than position or length
+      judgements. These inaccuracies can be compounded by bad design, as we will
+      see in the next section.
+
+      <h3>Using <tt>startAngle</tt> and <tt>endAngle</tt></h3>
+
+      <p>Specifying <tt>startAngle</tt> and <tt>endAngle</tt> allows for
+      wedge-based visualizations that are not traditional pie or donut
+      charts. For example, to produce something akin to a speedometer, we can
+      use a fixed start angle, equispaced inner and outer radius, and a variable
+      end angle:
+
+      <p><table><tr><td>
+
+<div class="highlight"><pre><span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Wedge</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="p">.</span><span class="mi">7</span><span class="p">])</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="mi">75</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">75</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">startAngle</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">innerRadius</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="k">this</span><span class="p">.</span><span class="nx">index</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="mi">20</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">outerRadius</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="k">this</span><span class="p">.</span><span class="nx">index</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="mi">30</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">angle</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">root</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+
+
+      </td><td align="right"><script type="text/javascript+protovis">
+
+new pv.Panel()
+    .width(150)
+    .height(150)
+  .add(pv.Wedge)
+    .data([1, 1.2, 1.7, 1.5, .7])
+    .left(75)
+    .bottom(75)
+    .startAngle(Math.PI)
+    .innerRadius(function() this.index * 10 + 20)
+    .outerRadius(function() this.index * 10 + 30)
+    .angle(function(d) d * 2)
+  .root.render();
+
+
+      </script></td></tr></table>
+
+      <p>Of course, it is possible to go overboard with this technique:
+
+      <p><table><tr><td>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">s</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">vis</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="mi">150</span><span class="p">);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Wedge</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="p">.</span><span class="mi">7</span><span class="p">])</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="mi">75</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">75</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">startAngle</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">innerRadius</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="k">this</span><span class="p">.</span><span class="nx">index</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="mi">20</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">outerRadius</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="k">this</span><span class="p">.</span><span class="nx">index</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="mi">30</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">startAngle</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">(</span><span class="nx">s</span> <span class="o">+=</span> <span class="p">.</span><span class="mi">001</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="p">.</span><span class="nx">angle</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span> <span class="o">*</span> <span class="mi">2</span><span class="p">);</span>
+
+<span class="nx">setInterval</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="nx">vis</span><span class="p">.</span><span class="nx">render</span><span class="p">(),</span> <span class="mi">35</span><span class="p">);</span>
+</pre></div>
+
+
+      </td><td align="right"><script type="text/javascript+protovis">
+
+var s = 0, vis = new pv.Panel()
+    .width(150)
+    .height(150);
+
+vis.add(pv.Wedge)
+    .data([1, 1.2, 1.7, 1.5, .7])
+    .left(75)
+    .bottom(75)
+    .startAngle(Math.PI)
+    .innerRadius(function() this.index * 10 + 20)
+    .outerRadius(function() this.index * 10 + 30)
+    .startAngle(function() (s += .001) * (this.index + 1))
+    .angle(function(d) d * 2);
+
+setInterval(function() vis.render(), 35);
+
+
+      </script></td></tr></table>
+
+      <p>Wedges should be used judiciously. Although the examples in this
+      section may be aesthetically pleasing, note in particular that the
+      innermost dark blue wedge is significantly smaller (at 260 square pixels)
+      than the outermost green wedge (470 square pixels). This is grossly
+      misleading, since the associated datum (1.0) is in fact 40% larger (0.7)!
+      The <a href="http://www.infovis-wiki.net/index.php/Lie_Factor">lie
+      factor</a> in this case is 2.7.
+
+      <h2>Style</h2>
+
+      <p>Like <a href="bar.html">bars</a>, a wedge&rsquo;s visual style is
+      specified through three optional attributes
+
+      <ul>
+      <li><tt>fillStyle</tt>
+      <li><tt>strokeStyle</tt>
+      <li><tt>lineWidth</tt>
+      </ul>
+
+      <p>By default, a fill color is allocated from the <tt>category20</tt>
+      <a href="color.html">color palette</a> for each mark instance. Most
+      instances of a given mark share the same color, such as bars in a bar
+      chart; in contrast, wedges are allocated unique colors by default. The
+      default <tt>strokeStyle</tt> is null, while the default <tt>lineWidth</tt>
+      is 1.5 pixels.
+
+      <p>These three visual parameters can be specified on a per-instance basis,
+      meaning they too can be used to encode data visually. For example, to make
+      a rainbow:
+
+      <p><table><tr><td>
+
+<div class="highlight"><pre><span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Wedge</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">([</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;orange&quot;</span><span class="p">,</span> <span class="s2">&quot;yellow&quot;</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;purple&quot;</span><span class="p">])</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="mi">75</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">75</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">startAngle</span><span class="p">(</span><span class="o">-</span><span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">endAngle</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">innerRadius</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="k">this</span><span class="p">.</span><span class="nx">index</span> <span class="o">*</span> <span class="mi">5</span> <span class="o">+</span> <span class="mi">30</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">outerRadius</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="k">this</span><span class="p">.</span><span class="nx">index</span> <span class="o">*</span> <span class="mi">5</span> <span class="o">+</span> <span class="mi">35</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">fillStyle</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">root</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+
+
+      </td><td align="right"><script type="text/javascript+protovis">
+
+new pv.Panel()
+    .width(150)
+    .height(150)
+  .add(pv.Wedge)
+    .data(["red", "orange", "yellow", "green", "blue", "purple"])
+    .left(75)
+    .bottom(75)
+    .startAngle(-Math.PI)
+    .endAngle(0)
+    .innerRadius(function() this.index * 5 + 30)
+    .outerRadius(function() this.index * 5 + 35)
+    .fillStyle(function(d) d)
+  .root.render();
+
+
+      </script></td></tr></table>
+
+      <p>If <tt>strokeStyle</tt> is non-null, a path is stroked around the
+      perimeter of the wedge. The thickness of the path is controlled by
+      the <tt>lineWidth</tt> property. For example, a quick way to separate
+      wedges is to use a white border, at the expense of some accuracy in angle
+      comparison (especially for small wedges):
+
+      <p><table><tr><td>
+
+<div class="highlight"><pre><span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Wedge</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">normalize</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="p">.</span><span class="mi">7</span><span class="p">]))</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="mi">75</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">75</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">outerRadius</span><span class="p">(</span><span class="mi">65</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">angle</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">lineWidth</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">root</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+
+
+      </td><td align="right"><script type="text/javascript+protovis">
+
+new pv.Panel()
+    .width(150)
+    .height(150)
+  .add(pv.Wedge)
+    .data(pv.normalize([1, 1.2, 1.7, 1.5, .7]))
+    .left(75)
+    .bottom(75)
+    .outerRadius(65)
+    .angle(function(d) d * 2 * Math.PI)
+    .strokeStyle("white")
+    .lineWidth(4)
+  .root.render();
+
+
+      </script></td></tr></table>
+
+      <p>An alternative, more correct, approach is to offset the left and bottom
+      position, so the wedges are offset from the center. Perhaps this could be
+      incorporated into a future <a href="layout.html">pie layout</a>.
+      Here&rsquo;s an interactive example:
+
+      <p><table><tr><td>
+
+<div class="highlight"><pre><span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Wedge</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">def</span><span class="p">(</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">normalize</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">range</span><span class="p">(</span><span class="mi">10</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">)))</span>
+    <span class="p">.</span><span class="nx">outerRadius</span><span class="p">(</span><span class="mi">65</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">angle</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="mi">75</span>
+        <span class="o">+</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">cos</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">startAngle</span><span class="p">()</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">angle</span><span class="p">()</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="o">*</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">o</span><span class="p">()</span> <span class="o">==</span> <span class="k">this</span><span class="p">.</span><span class="nx">index</span><span class="p">)</span> <span class="o">?</span> <span class="mi">10</span> <span class="o">:</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="mi">75</span>
+        <span class="o">-</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">sin</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">startAngle</span><span class="p">()</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">angle</span><span class="p">()</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="o">*</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">o</span><span class="p">()</span> <span class="o">==</span> <span class="k">this</span><span class="p">.</span><span class="nx">index</span><span class="p">)</span> <span class="o">?</span> <span class="mi">10</span> <span class="o">:</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="p">.</span><span class="nx">event</span><span class="p">(</span><span class="s2">&quot;mouseover&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="k">this</span><span class="p">.</span><span class="nx">o</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">index</span><span class="p">))</span>
+  <span class="p">.</span><span class="nx">root</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+
+
+      </td><td align="right"><script type="text/javascript+protovis">
+
+new pv.Panel()
+    .width(150)
+    .height(150)
+  .add(pv.Wedge)
+    .def("o", -1)
+    .data(pv.normalize(pv.range(10).map(Math.random)))
+    .outerRadius(65)
+    .angle(function(d) d * 2 * Math.PI)
+    .left(function() 75
+        + Math.cos(this.startAngle() + this.angle() / 2)
+        * ((this.o() == this.index) ? 10 : 0))
+    .bottom(function() 75
+        - Math.sin(this.startAngle() + this.angle() / 2)
+        * ((this.o() == this.index) ? 10 : 0))
+    .event("mouseover", function() this.o(this.index))
+  .root.render();
+
+
+      </script></td></tr></table>
+
+      <p>See the <a href="color.html">color documentation</a> for more examples
+      of acceptable values for stroke and fill styles.
+    </div>
+
+    <div class="foot">
+      Copyright 2010 <a href="http://vis.stanford.edu">Stanford Visualization Group</a>
+    </div>
+
+    <script type="text/javascript" src="http://www.google-analytics.com/ga.js"></script>
+    <script type="text/javascript">_gat._getTracker("UA-10741907-2")._trackPageview();</script>
+  </body>
+</html>

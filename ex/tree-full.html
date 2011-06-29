@@ -1,0 +1,44 @@
+<html>
+  <head>
+    <title>Node-Link Tree</title>
+    <link type="text/css" rel="stylesheet" href="ex.css?3.2"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+    <script type="text/javascript" src="flare.js"></script>
+    <style type="text/css">
+
+#fig {
+  width: 800px;
+  height: 700px;
+}
+
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(800)
+    .height(800)
+    .left(75)
+    .right(-75)
+    .top(-30)
+    .bottom(-80);
+
+var tree = vis.add(pv.Layout.Tree)
+    .nodes(pv.dom(flare).root("flare").nodes())
+    .depth(85)
+    .breadth(7.25)
+    .orient("radial");
+
+tree.link.add(pv.Line);
+
+tree.node.add(pv.Dot)
+    .fillStyle(function(n) n.firstChild ? "#aec7e8" : "#ff7f0e");
+
+tree.label.add(pv.Label);
+
+vis.render();
+
+    </script>
+  </div></div></body>
+</html>

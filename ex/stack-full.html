@@ -1,0 +1,63 @@
+<html>
+  <head>
+    <title>Stacked Area Chart</title>
+    <link type="text/css" rel="stylesheet" href="ex.css?3.2"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+    <script type="text/javascript" src="stack.js"></script>
+    <style type="text/css">
+
+#fig {
+  width: 430px;
+  height: 225px;
+}
+
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <script type="text/javascript+protovis">
+
+/* Sizing and scales. */
+var w = 400,
+    h = 200,
+    x = pv.Scale.linear(0, 9.9).range(0, w),
+    y = pv.Scale.linear(0, 14).range(0, h);
+
+/* The root panel. */
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .bottom(20)
+    .left(20)
+    .right(10)
+    .top(5);
+
+/* X-axis and ticks. */
+vis.add(pv.Rule)
+    .data(x.ticks())
+    .visible(function(d) d)
+    .left(x)
+    .bottom(-5)
+    .height(5)
+  .anchor("bottom").add(pv.Label)
+    .text(x.tickFormat);
+
+/* The stack layout. */
+vis.add(pv.Layout.Stack)
+    .layers(data)
+    .x(function(d) x(d.x))
+    .y(function(d) y(d.y))
+  .layer.add(pv.Area);
+
+/* Y-axis and ticks. */
+vis.add(pv.Rule)
+    .data(y.ticks(3))
+    .bottom(y)
+    .strokeStyle(function(d) d ? "rgba(128,128,128,.2)" : "#000")
+  .anchor("left").add(pv.Label)
+    .text(y.tickFormat);
+
+vis.render();
+
+    </script>
+  </div></div></body>
+</html>

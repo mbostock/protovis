@@ -1,0 +1,346 @@
+<html>
+  <head>
+    <title>Protovis - Bars</title>
+    <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
+    <link type="text/css" rel="stylesheet" href="../ex/syntax.css?3.2"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+  </head>
+  <body>
+
+    <div class="title">
+      <div class="subtitle">
+        A graphical toolkit for visualization
+      </div>
+      <a href="../">Protovis</a>
+    </div>
+
+    <div class="head">
+      <div class="section">
+        <a href="../">Overview</a>
+      </div>
+      <div class="section">
+        <a href="../ex/">Examples</a>
+      </div>
+      <div class="section selected">
+        <a href="../docs/">Documentation</a>
+      </div>
+      <div class="section">
+        <a href="http://protovis-js.googlecode.com/files/protovis-3.2.zip">Download</a>
+      </div>
+    </div>
+    <div class="subhead">
+      <div class="section">
+        <a href="./">Index</a>
+      </div>
+    </div>
+
+    <div class="body">
+      <h1>Bars</h1>
+
+      <p>The <b>bar</b> mark type represents an axis-aligned rectangle that can
+      be filled (via <tt>fillStyle</tt>) and stroked (via <tt>strokeStyle</tt>).
+      Bars are used for many popular visualization types, including bar charts,
+      grouped bar charts, stacked bar charts and histograms.
+
+      <blockquote>
+        See also:
+        <a href="../jsdoc/symbols/pv.Bar.html">pv.Bar API reference</a>
+
+        <br>Examples:
+        <a href="../ex/bar.html">Bar &amp; Column Charts</a>,
+        <a href="../ex/group.html">Grouped Charts</a>,
+        <a href="../ex/histogram.html">Histograms</a>
+      </blockquote>
+
+      <h2>Placement</h2>
+
+      <img src="bar-bhlw.png">
+
+      <p>A bar&rsquo;s position and dimensions are specified through some
+      combination of properties:
+
+      <ul>
+      <li><tt>top</tt> - the distance from the top edge of the parent panel.</li>
+      <li><tt>left</tt> - the distance from the left edge of the parent panel.</li>
+      <li><tt>bottom</tt> - the distance from the bottom edge of the parent panel.</li>
+      <li><tt>right</tt> - the distance from the right edge of the parent panel.</li>
+      <li><tt>width</tt> - the width of the bar.</li>
+      <li><tt>height</tt> - the height of the bar.</li>
+      </ul>
+
+      <p>Note that these properties together over-specify the placement of the
+      bar. In practice, only four (orthogonal) properties should be
+      specified. This section looks at some examples.
+
+      <h3>Using <tt>left</tt>, <tt>bottom</tt>, <tt>width</tt> and <tt>height</tt></h3>
+
+      <p>To produce a standard bar chart encoding a single variable with
+      position&mdash;i.e., for <i>univariate</i> data&mdash;use constant
+      <tt>bottom</tt>, constant <tt>width</tt>, equispaced <tt>left</tt> and
+      variable <tt>height</tt>:
+
+      <p><table><tr><td>
+
+<div class="highlight"><pre><span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Bar</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="p">.</span><span class="mi">7</span><span class="p">])</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="k">this</span><span class="p">.</span><span class="nx">index</span> <span class="o">*</span> <span class="mi">25</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">root</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+
+
+      </td><td align="right"><script type="text/javascript+protovis">
+
+new pv.Panel()
+    .width(150)
+    .height(150)
+  .add(pv.Bar)
+    .data([1, 1.2, 1.7, 1.5, .7])
+    .bottom(0)
+    .width(20)
+    .height(function(d) d * 80)
+    .left(function() this.index * 25)
+  .root.render();
+
+
+      </script></td></tr></table>
+
+      <p>The <tt>left</tt> property is calculated using the automatic
+      <tt>index</tt> variable. The index starts at 0 for the first datum, and is
+      subsequently incremented by 1.
+
+      <p>For <i>multivariate</i> data, simply specify additional properties as
+      functions rather than constants. For example, a Gantt chart can be
+      produced using variable <tt>left</tt> and <tt>width</tt>, with
+      equispaced <tt>bottom</tt> and constant <tt>height</tt>:
+
+      <p><table><tr><td>
+
+<div class="highlight"><pre><span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Bar</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[.</span><span class="mi">5</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">],</span> <span class="p">[.</span><span class="mi">9</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">],</span> <span class="p">[.</span><span class="mi">2</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">],</span> <span class="p">[.</span><span class="mi">7</span><span class="p">,</span> <span class="mf">2.2</span><span class="p">]])</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="k">this</span><span class="p">.</span><span class="nx">index</span> <span class="o">*</span> <span class="mi">25</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">(</span><span class="nx">d</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="nx">d</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">root</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+
+
+      </td><td align="right"><script type="text/javascript+protovis">
+
+new pv.Panel()
+    .width(150)
+    .height(150)
+  .add(pv.Bar)
+    .data([[0, 1], [.5, 1.2], [.9, 1.7], [.2, 1.5], [.7, 2.2]])
+    .height(20)
+    .bottom(function() this.index * 25)
+    .width(function(d) (d[1] - d[0]) * 50)
+    .left(function(d) d[0] * 50)
+  .root.render();
+
+
+      </script></td></tr></table>
+
+      <p>Thus, with only four properties, a number of different visualizations
+      can be expressed. More possibilities are available by using the additional
+      top and right properties, as discussed next.
+
+      <h3>Using <tt>top</tt> instead of <tt>bottom</tt>, or <tt>right</tt>
+      and <tt>left</tt></h3>
+
+      <p>By defining the <tt>top</tt> instead of <tt>bottom</tt>, the bars are
+      flipped vertically:
+
+      <p><table><tr><td>
+
+<div class="highlight"><pre><span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Bar</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="p">.</span><span class="mi">7</span><span class="p">])</span>
+    <span class="p">.</span><span class="nx">top</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="k">this</span><span class="p">.</span><span class="nx">index</span> <span class="o">*</span> <span class="mi">25</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">root</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+
+
+      </td><td align="right"><script type="text/javascript+protovis">
+
+new pv.Panel()
+    .width(150)
+    .height(150)
+  .add(pv.Bar)
+    .data([1, 1.2, 1.7, 1.5, .7])
+    .top(0)
+    .width(20)
+    .height(function(d) d * 80)
+    .left(function() this.index * 25)
+  .root.render();
+
+
+      </script></td></tr></table>
+
+      <p>Similarly, using <tt>right</tt> instead of <tt>left</tt> produces
+      right-to-left ordering:
+
+      <p><table><tr><td>
+
+<div class="highlight"><pre><span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Bar</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="p">.</span><span class="mi">7</span><span class="p">])</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">right</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="k">this</span><span class="p">.</span><span class="nx">index</span> <span class="o">*</span> <span class="mi">25</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">root</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+
+
+      </td><td align="right"><script type="text/javascript+protovis">
+
+new pv.Panel()
+    .width(150)
+    .height(150)
+  .add(pv.Bar)
+    .data([1, 1.2, 1.7, 1.5, .7])
+    .bottom(0)
+    .width(20)
+    .height(function(d) d * 80)
+    .right(function() this.index * 25)
+  .root.render();
+
+
+      </script></td></tr></table>
+
+      <p>You can even vary which properties are defined on a per-element basis,
+      by using a function that returns null if the property is undefined.
+
+      <h3>Using <tt>left</tt> with <tt>right</tt>, or <tt>top</tt>
+      with <tt>bottom</tt></h3>
+
+      <p>Sometimes it is desirable to specify the <tt>left</tt>
+      and <tt>right</tt> properties concurrently, instead of specifying one in
+      conjunction with <tt>width</tt>. This is valid&mdash;for example to make
+      insets&mdash;but keep in mind that the <tt>left</tt> property is relative
+      to the <i>left</i> edge of the parent panel, while the <tt>right</tt>
+      property is relative to the <i>right</i> edge of the parent panel. This
+      results in a bar width that is proportional to the panel width, which may
+      not be desired. A similar situation occurs with bar height
+      when <tt>top</tt> and <tt>bottom</tt> are used together.
+
+      <p>It may be better to pick one property for position
+      (e.g., <tt>left</tt>) and another for length (e.g., <tt>width</tt>) and
+      then perform subtraction in the length property if necessary, as is done
+      in the Gantt chart example above.
+
+      <h2>Style</h2>
+
+      <p>A bar&rsquo;s visual style is specified through three optional
+      properties:
+
+      <ul>
+      <li><tt>fillStyle</tt> - the fill color.</li>
+      <li><tt>strokeStyle</tt> - the stroke color.</li>
+      <li><tt>lineWidth</tt> - the stroke thickness.</li>
+      </ul>
+
+      <p>By default, a <tt>fillStyle</tt> color is allocated from
+      the <tt>category20</tt> <a href="color.html">color palette</a> for each
+      mark. The default <tt>strokeStyle</tt> is null, causing the
+      related <tt>lineWidth</tt> to be ignored. These visual properties can be
+      specified on a per-instance basis, meaning they too can be used to encode
+      data visually. For example, to make a rainbow:
+
+      <p><table><tr><td>
+
+<div class="highlight"><pre><span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Bar</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">([</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;orange&quot;</span><span class="p">,</span> <span class="s2">&quot;yellow&quot;</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;purple&quot;</span><span class="p">])</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">right</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="mi">25</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">top</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="k">this</span><span class="p">.</span><span class="nx">index</span> <span class="o">*</span> <span class="mi">25</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">fillStyle</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">root</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+
+
+      </td><td align="right"><script type="text/javascript+protovis">
+
+new pv.Panel()
+    .width(150)
+    .height(150)
+  .add(pv.Bar)
+    .data(["red", "orange", "yellow", "green", "blue", "purple"])
+    .left(0)
+    .right(0)
+    .height(25)
+    .top(function() this.index * 25)
+    .fillStyle(function(d) d)
+  .root.render();
+
+
+      </script></td></tr></table>
+
+      <p>Or, to highlight all data greater than 1:
+
+      <p><table><tr><td>
+
+<div class="highlight"><pre><span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Bar</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="p">.</span><span class="mi">7</span><span class="p">])</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="k">this</span><span class="p">.</span><span class="nx">index</span> <span class="o">*</span> <span class="mi">25</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">(</span><span class="nx">d</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">?</span> <span class="s2">&quot;red&quot;</span> <span class="o">:</span> <span class="s2">&quot;black&quot;</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">root</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</pre></div>
+
+
+      </td><td align="right"><script type="text/javascript+protovis">
+
+new pv.Panel()
+    .width(150)
+    .height(150)
+  .add(pv.Bar)
+    .data([1, 1.2, 1.7, 1.5, .7])
+    .bottom(2)
+    .width(20)
+    .height(function(d) d * 80)
+    .left(function() this.index * 25 + 2)
+    .strokeStyle(function(d) (d > 1) ? "red" : "black")
+  .root.render();
+
+
+      </script></td></tr></table>
+
+      <p>See the <a href="color.html">color documentation</a> for more examples
+      of acceptable values for stroke and fill styles.
+    </div>
+
+    <div class="foot">
+      Copyright 2010 <a href="http://vis.stanford.edu">Stanford Visualization Group</a>
+    </div>
+
+    <script type="text/javascript" src="http://www.google-analytics.com/ga.js"></script>
+    <script type="text/javascript">_gat._getTracker("UA-10741907-2")._trackPageview();</script>
+  </body>
+</html>

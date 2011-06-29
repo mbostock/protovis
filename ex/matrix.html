@@ -1,0 +1,142 @@
+<html>
+  <head>
+    <title>Protovis - Matrix Diagrams</title>
+    <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
+    <link type="text/css" rel="stylesheet" href="syntax.css"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+  </head>
+  <body>
+
+    <div class="title">
+      <div class="subtitle">
+        A graphical toolkit for visualization
+      </div>
+      <a href="../">Protovis</a>
+    </div>
+
+    <div class="head">
+      <div class="section">
+        <a href="../">Overview</a>
+      </div>
+      <div class="section selected">
+        <a href="./">Examples</a>
+      </div>
+      <div class="section">
+        <a href="../docs/">Documentation</a>
+      </div>
+      <div class="section">
+        <a href="http://protovis-js.googlecode.com/files/protovis-3.2.zip">Download</a>
+      </div>
+    </div>
+    <div class="subhead">
+      <div class="section">
+        <a href="./">Index</a>
+      </div>
+      <div class="section">
+        <a href="force.html">&laquo; Previous</a> /
+        <a href="napoleon.html">Next &raquo;</a>
+      </div>
+    </div>
+
+    <div class="body">
+      <h1>Matrix Diagrams</h1>
+
+      <iframe scrolling="no" style="height:800px;" src="matrix-full.html"></iframe>
+      <p><img src="popout.png" width="16" height="16"
+      style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
+      href="matrix-full.html" target="_blank">View full screen.</a>
+
+      <p>A graph can be represented by an <i>adjacency matrix</i>, where each
+      value in row <i>i</i> and column <i>j</i> corresponds to the link from
+      node <i>i</i> to node <i>j</i>. Given this representation, an obvious
+      visualization then is: show the matrix! Using color or saturation instead
+      of text allows patterns to be perceived rapidly. The seriation problem
+      applies just as much to the matrix view as to the <a href="arc.html">arc
+      diagram</a>, so the order of rows and columns is important: here we use a
+      community-detection algorithm to order and color the display.
+
+      <p>While path following is harder in a matrix view than in a <a
+      href="force.html">node-link diagram</a>, matrices have a number of
+      compensating advantages. As networks get large and highly connected,
+      node-link diagrams often devolve into giant hairballs of line
+      crossings. In matrix views, however, line crossings are impossible, and
+      with an effective sorting one quickly can spot clusters and
+      bridges. Allowing interactive grouping and reordering of the matrix
+      facilitates deeper exploration of network structure.
+
+      <p>This network represents character co-occurrence in the chapters of
+      Victor Hugo's classic novel, <i>Les Mis&eacute;rables</i>. Node colors
+      depict cluster memberships computed by a community-detection algorithm.
+      Source: Knuth, D. E. 1993. <i>The Stanford GraphBase: A Platform for
+      Combinatorial Computing</i>, Addison-Wesley.
+
+      <blockquote style="font-size:13px;">
+        Next: <a href="napoleon.html">Minard's Napoleon</a>
+      </blockquote>
+
+      <h3>Source</h3>
+
+<div class="highlight"><pre><span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;title&gt;</span>Matrix Diagram<span class="nt">&lt;/title&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">type=</span><span class="s">&quot;text/css&quot;</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;ex.css?3.2&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;../protovis-r3.2.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;miserables.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;style </span><span class="na">type=</span><span class="s">&quot;text/css&quot;</span><span class="nt">&gt;</span>
+
+<span class="nf">#fig</span> <span class="p">{</span>
+  <span class="k">width</span><span class="o">:</span> <span class="m">800px</span><span class="p">;</span>
+  <span class="k">height</span><span class="o">:</span> <span class="m">800px</span><span class="p">;</span>
+<span class="p">}</span>
+
+    <span class="nt">&lt;/style&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body&gt;&lt;div</span> <span class="na">id=</span><span class="s">&quot;center&quot;</span><span class="nt">&gt;&lt;div</span> <span class="na">id=</span><span class="s">&quot;fig&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript+protovis&quot;</span><span class="nt">&gt;</span>
+
+<span class="kd">var</span> <span class="nx">color</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Colors</span><span class="p">.</span><span class="nx">category19</span><span class="p">().</span><span class="nx">by</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span><span class="p">.</span><span class="nx">group</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">vis</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="mi">693</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="mi">693</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">top</span><span class="p">(</span><span class="mi">90</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="mi">90</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">layout</span> <span class="o">=</span> <span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Layout</span><span class="p">.</span><span class="nx">Matrix</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">nodes</span><span class="p">(</span><span class="nx">miserables</span><span class="p">.</span><span class="nx">nodes</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">links</span><span class="p">(</span><span class="nx">miserables</span><span class="p">.</span><span class="nx">links</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="nx">b</span><span class="p">.</span><span class="nx">group</span> <span class="o">-</span> <span class="nx">a</span><span class="p">.</span><span class="nx">group</span><span class="p">);</span>
+
+<span class="nx">layout</span><span class="p">.</span><span class="nx">link</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Bar</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">fillStyle</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">l</span><span class="p">)</span> <span class="nx">l</span><span class="p">.</span><span class="nx">linkValue</span>
+        <span class="o">?</span> <span class="p">((</span><span class="nx">l</span><span class="p">.</span><span class="nx">targetNode</span><span class="p">.</span><span class="nx">group</span> <span class="o">==</span> <span class="nx">l</span><span class="p">.</span><span class="nx">sourceNode</span><span class="p">.</span><span class="nx">group</span><span class="p">)</span>
+        <span class="o">?</span> <span class="nx">color</span><span class="p">(</span><span class="nx">l</span><span class="p">.</span><span class="nx">sourceNode</span><span class="p">)</span> <span class="o">:</span> <span class="s2">&quot;#555&quot;</span><span class="p">)</span> <span class="o">:</span> <span class="s2">&quot;#eee&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">antialias</span><span class="p">(</span><span class="kc">false</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">lineWidth</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="nx">layout</span><span class="p">.</span><span class="nx">label</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">textStyle</span><span class="p">(</span><span class="nx">color</span><span class="p">);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+
+    <span class="nt">&lt;/script&gt;</span>
+  <span class="nt">&lt;/div&gt;&lt;/div&gt;&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre></div>
+
+
+      <h3>Data</h3>
+
+      Due to size, the data file is omitted from this
+      example. See <a href="miserables.js" target="_blank">miserables.js</a>.
+
+    </div>
+
+    <div class="foot">
+      Copyright 2010 <a href="http://vis.stanford.edu">Stanford Visualization Group</a>
+    </div>
+
+    <script type="text/javascript" src="http://www.google-analytics.com/ga.js"></script>
+    <script type="text/javascript">_gat._getTracker("UA-10741907-2")._trackPageview();</script>
+  </body>
+</html>

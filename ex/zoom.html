@@ -1,0 +1,224 @@
+<html>
+  <head>
+    <title>Protovis - Focus + Context</title>
+    <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
+    <link type="text/css" rel="stylesheet" href="syntax.css"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+  </head>
+  <body>
+
+    <div class="title">
+      <div class="subtitle">
+        A graphical toolkit for visualization
+      </div>
+      <a href="../">Protovis</a>
+    </div>
+
+    <div class="head">
+      <div class="section">
+        <a href="../">Overview</a>
+      </div>
+      <div class="section selected">
+        <a href="./">Examples</a>
+      </div>
+      <div class="section">
+        <a href="../docs/">Documentation</a>
+      </div>
+      <div class="section">
+        <a href="http://protovis-js.googlecode.com/files/protovis-3.2.zip">Download</a>
+      </div>
+    </div>
+    <div class="subhead">
+      <div class="section">
+        <a href="./">Index</a>
+      </div>
+      <div class="section">
+        <a href="minnesota.html">&laquo; Previous</a> /
+        <a href="transform.html">Next &raquo;</a>
+      </div>
+    </div>
+
+    <div class="body">
+      <h1>Focus + Context</h1>
+
+      <iframe scrolling="no" style="height:420px;" src="zoom-full.html"></iframe>
+      <p><img src="popout.png" width="16" height="16"
+      style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
+      href="zoom-full.html" target="_blank">View full screen.</a>
+
+      <p><i>Focus + context</i> is a technique that allows the viewer to inspect
+      an interesting portion of the data in detail (the focus) without losing
+      global context&mdash;the global view is preserved at reduced detail,
+      highlighting the focused region. In this visualization, a three-year
+      window is focused within a time series spanning three decades. The focus
+      region can be dynamically resized and repositioned.
+
+      <blockquote style="font-size:13px;">
+        Next: <a href="transform.html">Pan + Zoom</a>
+      </blockquote>
+
+      <h3>Source</h3>
+
+<div class="highlight"><pre><span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;title&gt;</span>Focus + Context<span class="nt">&lt;/title&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">type=</span><span class="s">&quot;text/css&quot;</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;ex.css?3.2&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;../protovis-r3.2.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;zoom.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;style </span><span class="na">type=</span><span class="s">&quot;text/css&quot;</span><span class="nt">&gt;</span>
+
+<span class="nf">#fig</span> <span class="p">{</span>
+  <span class="k">width</span><span class="o">:</span> <span class="m">860px</span><span class="p">;</span>
+  <span class="k">height</span><span class="o">:</span> <span class="m">390px</span><span class="p">;</span>
+<span class="p">}</span>
+
+    <span class="nt">&lt;/style&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body&gt;&lt;div</span> <span class="na">id=</span><span class="s">&quot;center&quot;</span><span class="nt">&gt;&lt;div</span> <span class="na">id=</span><span class="s">&quot;fig&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">style=</span><span class="s">&quot;text-align:right;padding-right:20;&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;input</span> <span class="na">checked</span> <span class="na">id=</span><span class="s">&quot;scale&quot;</span> <span class="na">type=</span><span class="s">&quot;checkbox&quot;</span> <span class="na">onchange=</span><span class="s">&quot;vis.render()&quot;</span>
+      <span class="nt">&gt;&lt;label</span> <span class="na">for=</span><span class="s">&quot;scale&quot;</span><span class="nt">&gt;</span>Scale to fit<span class="nt">&lt;/label&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript+protovis&quot;</span><span class="nt">&gt;</span>
+
+<span class="cm">/* Scales and sizing. */</span>
+<span class="kd">var</span> <span class="nx">w</span> <span class="o">=</span> <span class="mi">810</span><span class="p">,</span>
+    <span class="nx">h1</span> <span class="o">=</span> <span class="mi">300</span><span class="p">,</span>
+    <span class="nx">h2</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
+    <span class="nx">x</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">(</span><span class="nx">start</span><span class="p">,</span> <span class="nx">end</span><span class="p">).</span><span class="nx">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">w</span><span class="p">),</span>
+    <span class="nx">y</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span><span class="p">.</span><span class="nx">y</span><span class="p">)).</span><span class="nx">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">h2</span><span class="p">);</span>
+
+<span class="cm">/* Interaction state. Focus scales will have domain set on-render. */</span>
+<span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="p">{</span><span class="nx">x</span><span class="o">:</span><span class="mi">200</span><span class="p">,</span> <span class="nx">dx</span><span class="o">:</span><span class="mi">100</span><span class="p">},</span>
+    <span class="nx">fx</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">().</span><span class="nx">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">w</span><span class="p">),</span>
+    <span class="nx">fy</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">().</span><span class="nx">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">h1</span><span class="p">);</span>
+
+<span class="cm">/* Root panel. */</span>
+<span class="kd">var</span> <span class="nx">vis</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="nx">w</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="nx">h1</span> <span class="o">+</span> <span class="mi">20</span> <span class="o">+</span> <span class="nx">h2</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">right</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">top</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+
+<span class="cm">/* Focus panel (zoomed in). */</span>
+<span class="kd">var</span> <span class="nx">focus</span> <span class="o">=</span> <span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">def</span><span class="p">(</span><span class="s2">&quot;init&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">d1</span> <span class="o">=</span> <span class="nx">x</span><span class="p">.</span><span class="nx">invert</span><span class="p">(</span><span class="nx">i</span><span class="p">.</span><span class="nx">x</span><span class="p">),</span>
+            <span class="nx">d2</span> <span class="o">=</span> <span class="nx">x</span><span class="p">.</span><span class="nx">invert</span><span class="p">(</span><span class="nx">i</span><span class="p">.</span><span class="nx">x</span> <span class="o">+</span> <span class="nx">i</span><span class="p">.</span><span class="nx">dx</span><span class="p">),</span>
+            <span class="nx">dd</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span>
+                <span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">search</span><span class="p">.</span><span class="nx">index</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">d1</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span><span class="p">.</span><span class="nx">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span>
+                <span class="nx">pv</span><span class="p">.</span><span class="nx">search</span><span class="p">.</span><span class="nx">index</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">d2</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span><span class="p">.</span><span class="nx">x</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+        <span class="nx">fx</span><span class="p">.</span><span class="nx">domain</span><span class="p">(</span><span class="nx">d1</span><span class="p">,</span> <span class="nx">d2</span><span class="p">);</span>
+        <span class="nx">fy</span><span class="p">.</span><span class="nx">domain</span><span class="p">(</span><span class="nx">scale</span><span class="p">.</span><span class="nx">checked</span> <span class="o">?</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="nx">dd</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span><span class="p">.</span><span class="nx">y</span><span class="p">)]</span> <span class="o">:</span> <span class="nx">y</span><span class="p">.</span><span class="nx">domain</span><span class="p">());</span>
+        <span class="k">return</span> <span class="nx">dd</span><span class="p">;</span>
+      <span class="p">})</span>
+    <span class="p">.</span><span class="nx">top</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="nx">h1</span><span class="p">);</span>
+
+<span class="cm">/* X-axis ticks. */</span>
+<span class="nx">focus</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Rule</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="nx">fx</span><span class="p">.</span><span class="nx">ticks</span><span class="p">())</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="nx">fx</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;#eee&quot;</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="nx">fx</span><span class="p">.</span><span class="nx">tickFormat</span><span class="p">);</span>
+
+<span class="cm">/* Y-axis ticks. */</span>
+<span class="nx">focus</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Rule</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="nx">fy</span><span class="p">.</span><span class="nx">ticks</span><span class="p">(</span><span class="mi">7</span><span class="p">))</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="nx">fy</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span> <span class="o">?</span> <span class="s2">&quot;#aaa&quot;</span> <span class="o">:</span> <span class="s2">&quot;#000&quot;</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;left&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="nx">fy</span><span class="p">.</span><span class="nx">tickFormat</span><span class="p">);</span>
+
+<span class="cm">/* Focus area chart. */</span>
+<span class="nx">focus</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">overflow</span><span class="p">(</span><span class="s2">&quot;hidden&quot;</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Area</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="nx">focus</span><span class="p">.</span><span class="nx">init</span><span class="p">())</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">fx</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">x</span><span class="p">))</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">fy</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">y</span><span class="p">))</span>
+    <span class="p">.</span><span class="nx">fillStyle</span><span class="p">(</span><span class="s2">&quot;lightsteelblue&quot;</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;top&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Line</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">fillStyle</span><span class="p">(</span><span class="kc">null</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;steelblue&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">lineWidth</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+
+<span class="cm">/* Context panel (zoomed out). */</span>
+<span class="kd">var</span> <span class="nx">context</span> <span class="o">=</span> <span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="nx">h2</span><span class="p">);</span>
+
+<span class="cm">/* X-axis ticks. */</span>
+<span class="nx">context</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Rule</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">x</span><span class="p">.</span><span class="nx">ticks</span><span class="p">())</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;#eee&quot;</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="nx">x</span><span class="p">.</span><span class="nx">tickFormat</span><span class="p">);</span>
+
+<span class="cm">/* Y-axis ticks. */</span>
+<span class="nx">context</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Rule</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+<span class="cm">/* Context area chart. */</span>
+<span class="nx">context</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Area</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">x</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">x</span><span class="p">))</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">y</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">y</span><span class="p">))</span>
+    <span class="p">.</span><span class="nx">fillStyle</span><span class="p">(</span><span class="s2">&quot;lightsteelblue&quot;</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;top&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Line</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;steelblue&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">lineWidth</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+
+<span class="cm">/* The selectable, draggable focus region. */</span>
+<span class="nx">context</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">([</span><span class="nx">i</span><span class="p">])</span>
+    <span class="p">.</span><span class="nx">cursor</span><span class="p">(</span><span class="s2">&quot;crosshair&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">events</span><span class="p">(</span><span class="s2">&quot;all&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">event</span><span class="p">(</span><span class="s2">&quot;mousedown&quot;</span><span class="p">,</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Behavior</span><span class="p">.</span><span class="nx">select</span><span class="p">())</span>
+    <span class="p">.</span><span class="nx">event</span><span class="p">(</span><span class="s2">&quot;select&quot;</span><span class="p">,</span> <span class="nx">focus</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Bar</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span><span class="p">.</span><span class="nx">x</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span><span class="p">.</span><span class="nx">dx</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">fillStyle</span><span class="p">(</span><span class="s2">&quot;rgba(255, 128, 128, .4)&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">cursor</span><span class="p">(</span><span class="s2">&quot;move&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">event</span><span class="p">(</span><span class="s2">&quot;mousedown&quot;</span><span class="p">,</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Behavior</span><span class="p">.</span><span class="nx">drag</span><span class="p">())</span>
+    <span class="p">.</span><span class="nx">event</span><span class="p">(</span><span class="s2">&quot;drag&quot;</span><span class="p">,</span> <span class="nx">focus</span><span class="p">);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+
+    <span class="nt">&lt;/script&gt;</span>
+  <span class="nt">&lt;/div&gt;&lt;/div&gt;&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre></div>
+
+
+      <h3>Data</h3>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">start</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="mi">1990</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">year</span> <span class="o">=</span> <span class="mi">1000</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">365</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="p">.</span><span class="mi">02</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span><span class="nx">x</span><span class="o">:</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="nx">start</span><span class="p">.</span><span class="nx">getTime</span><span class="p">()</span> <span class="o">+</span> <span class="nx">year</span> <span class="o">*</span> <span class="nx">x</span><span class="p">),</span>
+            <span class="nx">y</span><span class="o">:</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">.</span><span class="mi">1</span> <span class="o">*</span> <span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">sin</span><span class="p">(</span><span class="nx">x</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span><span class="p">))</span>
+                <span class="o">+</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="p">.</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mf">1.18</span><span class="p">,</span> <span class="nx">x</span><span class="p">)</span>
+                <span class="o">+</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="p">.</span><span class="mi">1</span><span class="p">};</span>
+  <span class="p">});</span>
+<span class="kd">var</span> <span class="nx">end</span> <span class="o">=</span> <span class="nx">data</span><span class="p">[</span><span class="nx">data</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">].</span><span class="nx">x</span><span class="p">;</span>
+</pre></div>
+
+
+    </div>
+
+    <div class="foot">
+      Copyright 2010 <a href="http://vis.stanford.edu">Stanford Visualization Group</a>
+    </div>
+
+    <script type="text/javascript" src="http://www.google-analytics.com/ga.js"></script>
+    <script type="text/javascript">_gat._getTracker("UA-10741907-2")._trackPageview();</script>
+  </body>
+</html>

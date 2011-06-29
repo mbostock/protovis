@@ -1,0 +1,164 @@
+<html>
+  <head>
+    <title>Protovis - Minnesota Employment</title>
+    <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
+    <link type="text/css" rel="stylesheet" href="syntax.css"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+  </head>
+  <body>
+
+    <div class="title">
+      <div class="subtitle">
+        A graphical toolkit for visualization
+      </div>
+      <a href="../">Protovis</a>
+    </div>
+
+    <div class="head">
+      <div class="section">
+        <a href="../">Overview</a>
+      </div>
+      <div class="section selected">
+        <a href="./">Examples</a>
+      </div>
+      <div class="section">
+        <a href="../docs/">Documentation</a>
+      </div>
+      <div class="section">
+        <a href="http://protovis-js.googlecode.com/files/protovis-3.2.zip">Download</a>
+      </div>
+    </div>
+    <div class="subhead">
+      <div class="section">
+        <a href="./">Index</a>
+      </div>
+      <div class="section">
+        <a href="jobs.html">&laquo; Previous</a> /
+        <a href="zoom.html">Next &raquo;</a>
+      </div>
+    </div>
+
+    <div class="body">
+      <h1>Minnesota Employment</h1>
+
+      <iframe style="border:solid 4px #ccc;height:430px;"
+          src="minnesota-full.html"></iframe>
+      <p><img src="popout.png" width="16" height="16"
+      style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
+      href="minnesota-full.html" target="_blank">View full screen.</a>
+
+      <p>Another <a
+      href="http://minnesota.publicradio.org/projects/2008/07/16_minnesota_slowdown/">Flare-inspired
+      visualization</a>, this one shows employment data for various jobs and job
+      categories from Minnesota. Seasonal variations are apparent, such as the
+      summer peaks in amusement parks (which coincides with dips in educational
+      services!).
+
+      <p>Color saturation is used to encode the population for each job, since
+      the small multiples use non-aligned scales. This makes it easy to
+      distinguish the one individual that worked in space research from the
+      hundreds of thousands in manufacturing. This visualization also
+      demonstrates the <a href="../docs/invert.html">scale inversion</a>
+      interaction technique, showing the closest data point to the mouse.
+
+      <blockquote style="font-size:13px;">
+        Next: <a href="zoom.html">Focus + Context</a>
+      </blockquote>
+
+      <h3>Source</h3>
+
+<div class="highlight"><pre><span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;title&gt;</span>Minnesota Employment<span class="nt">&lt;/title&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;../protovis-r3.2.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;minnesota.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript+protovis&quot;</span><span class="nt">&gt;</span>
+
+<span class="kd">var</span> <span class="nx">w</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span>
+    <span class="nx">h</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
+    <span class="nx">numberFormat</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Format</span><span class="p">.</span><span class="nx">number</span><span class="p">(),</span>
+    <span class="nx">dateFormat</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Format</span><span class="p">.</span><span class="nx">date</span><span class="p">(</span><span class="s2">&quot;%B %Y&quot;</span><span class="p">);</span>
+
+<span class="cm">/* Color by maximum number of people employed in that job. */</span>
+<span class="kd">var</span> <span class="nx">c</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">minnesota</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">values</span><span class="p">))</span>
+    <span class="p">.</span><span class="nx">range</span><span class="p">(</span><span class="s2">&quot;#ccc&quot;</span><span class="p">,</span> <span class="s2">&quot;#1f77b4&quot;</span><span class="p">);</span>
+
+<span class="cm">/* Tile the visualization for each job. */</span>
+<span class="kd">var</span> <span class="nx">vis</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">minnesota</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="nx">w</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="nx">h</span> <span class="o">+</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">top</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">right</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
+
+<span class="cm">/* A panel instance to store scales (x, y) and the mouseover index (i). */</span>
+<span class="kd">var</span> <span class="nx">panel</span> <span class="o">=</span> <span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">def</span><span class="p">(</span><span class="s2">&quot;i&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">def</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">values</span><span class="p">,</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">index</span><span class="p">).</span><span class="nx">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">w</span><span class="p">))</span>
+    <span class="p">.</span><span class="nx">def</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">values</span><span class="p">)).</span><span class="nx">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">h</span><span class="p">))</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">events</span><span class="p">(</span><span class="s2">&quot;all&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">event</span><span class="p">(</span><span class="s2">&quot;mousemove&quot;</span><span class="p">,</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Behavior</span><span class="p">.</span><span class="nx">point</span><span class="p">(</span><span class="kc">Infinity</span><span class="p">).</span><span class="nx">collapse</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">));</span>
+
+<span class="cm">/* The area. */</span>
+<span class="nx">panel</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Area</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span><span class="p">.</span><span class="nx">values</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">fillStyle</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">p</span><span class="p">)</span> <span class="nx">panel</span><span class="p">.</span><span class="nx">i</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="nx">c</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">values</span><span class="p">))</span> <span class="o">:</span> <span class="s2">&quot;#2ca02c&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="nx">panel</span><span class="p">.</span><span class="nx">x</span><span class="p">()(</span><span class="k">this</span><span class="p">.</span><span class="nx">index</span><span class="p">))</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">panel</span><span class="p">.</span><span class="nx">y</span><span class="p">()(</span><span class="nx">d</span><span class="p">))</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">event</span><span class="p">(</span><span class="s2">&quot;point&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="nx">panel</span><span class="p">.</span><span class="nx">i</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">index</span><span class="p">))</span>
+    <span class="p">.</span><span class="nx">event</span><span class="p">(</span><span class="s2">&quot;unpoint&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="nx">panel</span><span class="p">.</span><span class="nx">i</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">));</span>
+
+<span class="cm">/* The x-axis. */</span>
+<span class="nx">panel</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Rule</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+<span class="cm">/* The mouseover dot. */</span>
+<span class="nx">panel</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Dot</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">visible</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="nx">panel</span><span class="p">.</span><span class="nx">i</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="nx">panel</span><span class="p">.</span><span class="nx">x</span><span class="p">()(</span><span class="nx">panel</span><span class="p">.</span><span class="nx">i</span><span class="p">()))</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">panel</span><span class="p">.</span><span class="nx">y</span><span class="p">()(</span><span class="nx">d</span><span class="p">.</span><span class="nx">values</span><span class="p">[</span><span class="nx">panel</span><span class="p">.</span><span class="nx">i</span><span class="p">()]))</span>
+    <span class="p">.</span><span class="nx">fillStyle</span><span class="p">(</span><span class="s2">&quot;#ff7f0e&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="kc">null</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">size</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+
+<span class="cm">/* The label: either the job name, or the month and value. */</span>
+<span class="nx">panel</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">textBaseline</span><span class="p">(</span><span class="s2">&quot;top&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="nx">panel</span><span class="p">.</span><span class="nx">i</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="kc">null</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">right</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="nx">panel</span><span class="p">.</span><span class="nx">i</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="kc">null</span> <span class="o">:</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">textAlign</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="nx">panel</span><span class="p">.</span><span class="nx">i</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="s2">&quot;left&quot;</span> <span class="o">:</span> <span class="s2">&quot;right&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">textStyle</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="nx">panel</span><span class="p">.</span><span class="nx">i</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="s2">&quot;#999&quot;</span> <span class="o">:</span> <span class="s2">&quot;#000&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">panel</span><span class="p">.</span><span class="nx">i</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="nx">d</span><span class="p">.</span><span class="nx">name</span>
+        <span class="o">:</span> <span class="nx">dateFormat</span><span class="p">(</span><span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="nx">panel</span><span class="p">.</span><span class="nx">i</span><span class="p">()</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="o">+</span> <span class="s2">&quot;: &quot;</span> <span class="o">+</span> <span class="nx">numberFormat</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">values</span><span class="p">[</span><span class="nx">panel</span><span class="p">.</span><span class="nx">i</span><span class="p">()]));</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+
+    <span class="nt">&lt;/script&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre></div>
+
+
+      <h3>Data</h3>
+
+      Due to size, the data file is omitted from this
+      example. See <a href="minnesota.js" target="_blank">minnesota.js</a>.
+
+    </div>
+
+    <div class="foot">
+      Copyright 2010 <a href="http://vis.stanford.edu">Stanford Visualization Group</a>
+    </div>
+
+    <script type="text/javascript" src="http://www.google-analytics.com/ga.js"></script>
+    <script type="text/javascript">_gat._getTracker("UA-10741907-2")._trackPageview();</script>
+  </body>
+</html>

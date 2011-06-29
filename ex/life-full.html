@@ -1,0 +1,41 @@
+<html>
+  <head>
+    <title>Conway&rsquo;s Game of Life</title>
+    <link type="text/css" rel="stylesheet" href="ex.css?3.2"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+    <script type="text/javascript" src="life.js"></script>
+    <script type="text/javascript" src="breeder.js"></script>
+    <style type="text/css">
+
+body {
+  background: #222;
+}
+
+#fig {
+  width: 300px;
+  height: 300px;
+}
+
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(life.size * 2)
+    .height(life.size * 2);
+
+vis.add(pv.Image)
+    .def("init", function() life.update())
+    .imageWidth(life.size)
+    .imageHeight(life.size)
+    .image(pv.colors(null, "#0f0").by(function(i, j) life[j * life.size + i]))
+    .event("click", function() life.reset());
+
+vis.render();
+
+setInterval(function() vis.render(), 42);
+
+    </script>
+  </div></div></body>
+</html>

@@ -1,0 +1,157 @@
+<html>
+  <head>
+    <title>Protovis - Streamgraphs</title>
+    <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
+    <link type="text/css" rel="stylesheet" href="syntax.css"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+  </head>
+  <body>
+
+    <div class="title">
+      <div class="subtitle">
+        A graphical toolkit for visualization
+      </div>
+      <a href="../">Protovis</a>
+    </div>
+
+    <div class="head">
+      <div class="section">
+        <a href="../">Overview</a>
+      </div>
+      <div class="section selected">
+        <a href="./">Examples</a>
+      </div>
+      <div class="section">
+        <a href="../docs/">Documentation</a>
+      </div>
+      <div class="section">
+        <a href="http://protovis-js.googlecode.com/files/protovis-3.2.zip">Download</a>
+      </div>
+    </div>
+    <div class="subhead">
+      <div class="section">
+        <a href="./">Index</a>
+      </div>
+      <div class="section">
+        <a href="hotel.html">&laquo; Previous</a> /
+        <a href="sparklines.html">Next &raquo;</a>
+      </div>
+    </div>
+
+    <div class="body">
+      <h1>Streamgraphs</h1>
+
+      <iframe scrolling="no" style="width:900px;height:400px;" src="stream-full.html"></iframe>
+      <p><img src="popout.png" width="16" height="16"
+      style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
+      href="stream-full.html" target="_blank">View full screen.</a>
+
+      <p>Streamgraphs are a generalization of <a href="stack.html">stacked area
+      graphs</a> where the baseline is free. By shifting the baseline, it is
+      possible to minimize the change in slope (or &ldquo;wiggle&rdquo;) in
+      individual series, thereby making it easier to perceive the thickness of
+      any given layer across the data. Byron &amp; Wattenberg describe several
+      streamgraph algorithms in <a
+      href="http://www.leebyron.com/else/streamgraph/">&ldquo;Stacked
+      Graphs&mdash;Geometry &amp; Aesthetics&rdquo;</a>, several of which are
+      implemented by <tt>pv.Layout.Stack</tt>. As additional examples, see
+      stacked graphs of <a href="jobs.html">employment</a> and <a
+      href="http://hci.stanford.edu/jheer/files/zoo/ex/time/stack.html">unemployment</a>
+      statistics.
+
+      <blockquote style="font-size:13px;">
+        Next: <a href="sparklines.html">Sparklines</a>
+      </blockquote>
+
+      <h3>Source</h3>
+
+<div class="highlight"><pre><span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;title&gt;</span>Streamgraph<span class="nt">&lt;/title&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;../protovis-r3.2.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;stream.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;style </span><span class="na">type=</span><span class="s">&quot;text/css&quot;</span><span class="nt">&gt;</span>
+
+<span class="nt">body</span> <span class="p">{</span>
+  <span class="k">margin</span><span class="o">:</span> <span class="m">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+    <span class="nt">&lt;/style&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript+protovis&quot;</span><span class="nt">&gt;</span>
+
+<span class="kd">var</span> <span class="nx">n</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span> <span class="c1">// number of layers</span>
+    <span class="nx">m</span> <span class="o">=</span> <span class="mi">400</span><span class="p">,</span> <span class="c1">// number of samples per layer</span>
+    <span class="nx">data</span> <span class="o">=</span> <span class="nx">layers</span><span class="p">(</span><span class="nx">n</span><span class="p">,</span> <span class="nx">m</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">w</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">clientWidth</span><span class="p">,</span>
+    <span class="nx">h</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">clientHeight</span><span class="p">,</span>
+    <span class="nx">x</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">m</span> <span class="o">-</span> <span class="mi">1</span><span class="p">).</span><span class="nx">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">w</span><span class="p">),</span>
+    <span class="nx">y</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="nx">n</span><span class="p">).</span><span class="nx">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">h</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">vis</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="nx">w</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="nx">h</span><span class="p">);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Layout</span><span class="p">.</span><span class="nx">Stack</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">layers</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">order</span><span class="p">(</span><span class="s2">&quot;inside-out&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">offset</span><span class="p">(</span><span class="s2">&quot;wiggle&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">x</span><span class="p">(</span><span class="nx">x</span><span class="p">.</span><span class="nx">by</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">index</span><span class="p">))</span>
+    <span class="p">.</span><span class="nx">y</span><span class="p">(</span><span class="nx">y</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">layer</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Area</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">fillStyle</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">ramp</span><span class="p">(</span><span class="s2">&quot;#aad&quot;</span><span class="p">,</span> <span class="s2">&quot;#556&quot;</span><span class="p">).</span><span class="nx">by</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">))</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="k">this</span><span class="p">.</span><span class="nx">fillStyle</span><span class="p">().</span><span class="nx">alpha</span><span class="p">(.</span><span class="mi">5</span><span class="p">));</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+
+    <span class="nt">&lt;/script&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre></div>
+
+
+      <h3>Data</h3>
+
+<div class="highlight"><pre><span class="cm">/* Inspired by Lee Byron&#39;s test data generator. */</span>
+<span class="kd">function</span> <span class="nx">layers</span><span class="p">(</span><span class="nx">n</span><span class="p">,</span> <span class="nx">m</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">function</span> <span class="nx">bump</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">x</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(.</span><span class="mi">1</span> <span class="o">+</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()),</span>
+        <span class="nx">y</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">-</span> <span class="p">.</span><span class="mi">5</span><span class="p">,</span>
+        <span class="nx">z</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">/</span> <span class="p">(.</span><span class="mi">1</span> <span class="o">+</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">());</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">m</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">w</span> <span class="o">=</span> <span class="p">(</span><span class="nx">i</span> <span class="o">/</span> <span class="nx">m</span> <span class="o">-</span> <span class="nx">y</span><span class="p">)</span> <span class="o">*</span> <span class="nx">z</span><span class="p">;</span>
+      <span class="nx">a</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">x</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">exp</span><span class="p">(</span><span class="o">-</span><span class="nx">w</span> <span class="o">*</span> <span class="nx">w</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">range</span><span class="p">(</span><span class="nx">n</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">[],</span> <span class="nx">i</span><span class="p">;</span>
+      <span class="k">for</span> <span class="p">(</span><span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">m</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="nx">a</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">for</span> <span class="p">(</span><span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="nx">bump</span><span class="p">(</span><span class="nx">a</span><span class="p">);</span>
+      <span class="k">return</span> <span class="nx">a</span><span class="p">;</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="cm">/* Another layer generator using gamma distributions. */</span>
+<span class="kd">function</span> <span class="nx">waves</span><span class="p">(</span><span class="nx">n</span><span class="p">,</span> <span class="nx">m</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">range</span><span class="p">(</span><span class="nx">n</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">range</span><span class="p">(</span><span class="nx">m</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">j</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">x</span> <span class="o">=</span> <span class="mi">20</span> <span class="o">*</span> <span class="nx">j</span> <span class="o">/</span> <span class="nx">m</span> <span class="o">-</span> <span class="nx">i</span> <span class="o">/</span> <span class="mi">3</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nx">x</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">2</span> <span class="o">*</span> <span class="nx">x</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">exp</span><span class="p">(</span><span class="o">-</span><span class="p">.</span><span class="mi">5</span> <span class="o">*</span> <span class="nx">x</span><span class="p">)</span> <span class="o">:</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="p">});</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+</pre></div>
+
+
+    </div>
+
+    <div class="foot">
+      Copyright 2010 <a href="http://vis.stanford.edu">Stanford Visualization Group</a>
+    </div>
+
+    <script type="text/javascript" src="http://www.google-analytics.com/ga.js"></script>
+    <script type="text/javascript">_gat._getTracker("UA-10741907-2")._trackPageview();</script>
+  </body>
+</html>

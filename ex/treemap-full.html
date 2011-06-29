@@ -1,0 +1,100 @@
+<html>
+  <head>
+    <title>Treemap</title>
+    <link rel="stylesheet" type="text/css" href="ex.css?3.2"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+    <script type="text/javascript" src="flare.js"></script>
+    <style type="text/css">
+
+#fig {
+  width: 860px;
+}
+
+#footer {
+  font: 24pt helvetica neue;
+  color: #666;
+}
+
+input {
+  font: 24pt helvetica neue;
+  background: none;
+  border: none;
+  outline: 0;
+}
+
+#title {
+  float: right;
+  text-align: right;
+}
+
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <div id="title"></div>
+    <script type="text/javascript+protovis">
+
+/** Computes the full class name of a given node. */
+function title(d) {
+  return d.parentNode ? (title(d.parentNode) + "." + d.nodeName) : d.nodeName;
+}
+
+var re = "",
+    color = pv.Colors.category19().by(function(d) d.parentNode.nodeName)
+    nodes = pv.dom(flare).root("flare").nodes();
+
+var vis = new pv.Panel()
+    .width(860)
+    .height(568);
+
+var treemap = vis.add(pv.Layout.Treemap)
+    .nodes(nodes)
+    .round(true);
+
+treemap.leaf.add(pv.Panel)
+    .fillStyle(function(d) color(d).alpha(title(d).match(re) ? 1 : .2))
+    .strokeStyle("#fff")
+    .lineWidth(1)
+    .antialias(false);
+
+treemap.label.add(pv.Label)
+    .textStyle(function(d) pv.rgb(0, 0, 0, title(d).match(re) ? 1 : .2));
+
+vis.render();
+
+/** Counts the number of matching classes, updating the title element. */
+function count() {
+  var classes = 0, bytes = 0, total = 0;
+  for (var i = 0; i < nodes.length; i++) {
+    var n = nodes[i];
+    if(n.firstChild) continue;
+    total += n.nodeValue;
+    if (title(n).match(re)) {
+      classes++;
+      bytes += n.nodeValue;
+    }
+  }
+  var percent = bytes / total * 100;
+  document.getElementById("title").innerHTML
+      = classes + " classes; "
+      + bytes + " bytes ("
+      + percent.toFixed(percent < 10) + "%).";
+}
+
+/** Updates the visualization and count when a new query is entered. */
+function update(query) {
+  if (query != re) {
+    re = new RegExp(query, "i");
+    count();
+    vis.render();
+  }
+}
+
+count();
+
+    </script>
+    <div id="footer">
+      <label for="search">search: </label>
+      <input type="text" id="search" onkeyup="update(this.value)">
+    </div>
+  </div></div></body>
+</html>

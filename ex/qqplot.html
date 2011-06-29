@@ -1,0 +1,302 @@
+<html>
+  <head>
+    <title>Protovis - Q-Q Plots</title>
+    <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
+    <link type="text/css" rel="stylesheet" href="syntax.css"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+  </head>
+  <body>
+
+    <div class="title">
+      <div class="subtitle">
+        A graphical toolkit for visualization
+      </div>
+      <a href="../">Protovis</a>
+    </div>
+
+    <div class="head">
+      <div class="section">
+        <a href="../">Overview</a>
+      </div>
+      <div class="section selected">
+        <a href="./">Examples</a>
+      </div>
+      <div class="section">
+        <a href="../docs/">Documentation</a>
+      </div>
+      <div class="section">
+        <a href="http://protovis-js.googlecode.com/files/protovis-3.2.zip">Download</a>
+      </div>
+    </div>
+    <div class="subhead">
+      <div class="section">
+        <a href="./">Index</a>
+      </div>
+      <div class="section">
+        <a href="dymax.html">&laquo; Previous</a> /
+        <a href="box-and-whisker.html">Next &raquo;</a>
+      </div>
+    </div>
+
+    <div class="body">
+      <h1>Q-Q Plots</h1>
+
+      <iframe scrolling="no" style="height:300px;" src="qqplot-full.html"></iframe>
+      <p><img src="popout.png" width="16" height="16"
+      style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
+      href="qqplot-full.html" target="_blank">View full screen.</a>
+
+      <p><i><a href="http://en.wikipedia.org/wiki/Q-Q_plot">Quantile-Quantile
+      plots</a></i> (or simply <i>Q-Q plots</i>) compare two probability
+      distributions by graphing their <a
+      href="http://en.wikipedia.org/wiki/Quantile">quantiles</a> against each
+      other. If the two are similar, the plotted values will roughly lie along
+      the central diagonal. If the two are linearly related, values will again
+      lie along a line, though with varying slope and intercept.
+
+      <p>This example shows Mechanical Turk participation data compared to three
+      statistical distributions. Note how the data forms three distinct
+      components when compared to uniform and normal (Gaussian) distributions:
+      this suggests that a statistical model with three components might be more
+      appropriate, and indeed we see in the final plot that a fitted mixture of
+      three normal distributions provides a better fit.</p>
+
+      <blockquote style="font-size:13px;">
+        Next: <a href="box-and-whisker.html">Box-and-Whisker Plots</a>
+      </blockquote>
+
+      <h3>Source</h3>
+
+<div class="highlight"><pre><span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;title&gt;</span>Q-Q Plot<span class="nt">&lt;/title&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">type=</span><span class="s">&quot;text/css&quot;</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;ex.css?3.2&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;../protovis-r3.2.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;turkers.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;style </span><span class="na">type=</span><span class="s">&quot;text/css&quot;</span><span class="nt">&gt;</span>
+
+<span class="nf">#fig</span> <span class="p">{</span>
+  <span class="k">width</span><span class="o">:</span> <span class="m">900px</span><span class="p">;</span>
+  <span class="k">height</span><span class="o">:</span> <span class="m">300px</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nc">.label</span> <span class="p">{</span>
+  <span class="k">font-size</span><span class="o">:</span> <span class="m">13px</span><span class="p">;</span>
+  <span class="k">padding-top</span><span class="o">:</span> <span class="m">2px</span><span class="p">;</span>
+  <span class="k">padding-bottom</span><span class="o">:</span> <span class="m">10px</span><span class="p">;</span>
+<span class="p">}</span>
+
+    <span class="nt">&lt;/style&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body&gt;&lt;div</span> <span class="na">id=</span><span class="s">&quot;center&quot;</span><span class="nt">&gt;&lt;div</span> <span class="na">id=</span><span class="s">&quot;fig&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript+protovis&quot;</span><span class="nt">&gt;</span>
+
+<span class="cm">/** Sample from a normal distribution with mean 0, stddev 1. */</span>
+<span class="kd">function</span> <span class="nx">normal_sample</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">rds</span><span class="p">,</span> <span class="nx">c</span><span class="p">;</span>
+  <span class="k">do</span> <span class="p">{</span>
+    <span class="nx">x</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="nx">y</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="nx">rds</span> <span class="o">=</span> <span class="nx">x</span> <span class="o">*</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span> <span class="o">*</span> <span class="nx">y</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="nx">rds</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="nx">rds</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="nx">c</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">sqrt</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">rds</span><span class="p">)</span> <span class="o">/</span> <span class="nx">rds</span><span class="p">);</span> <span class="c1">// Box-Muller transform</span>
+  <span class="k">return</span> <span class="nx">x</span> <span class="o">*</span> <span class="nx">c</span><span class="p">;</span> <span class="c1">// throw away extra sample y * c</span>
+<span class="p">}</span>
+
+<span class="c1">// Uniform random distribution</span>
+<span class="kd">var</span> <span class="nx">uniform</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">();</span> <span class="p">};</span>
+<span class="nx">uniform</span><span class="p">.</span><span class="nx">label</span> <span class="o">=</span> <span class="s2">&quot;Uniform Distribution&quot;</span><span class="p">;</span>
+
+<span class="c1">// Simple 1D Gaussian (normal) distribution</span>
+<span class="kd">var</span> <span class="nx">avg</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">mean</span><span class="p">(</span><span class="nx">turkers</span><span class="p">.</span><span class="nx">percent</span><span class="p">.</span><span class="nx">values</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">dev</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">deviation</span><span class="p">(</span><span class="nx">turkers</span><span class="p">.</span><span class="nx">percent</span><span class="p">.</span><span class="nx">values</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">normal1</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">avg</span> <span class="o">+</span> <span class="nx">dev</span> <span class="o">*</span> <span class="nx">normal_sample</span><span class="p">();</span> <span class="p">}</span>
+<span class="nx">normal1</span><span class="p">.</span><span class="nx">label</span> <span class="o">=</span> <span class="s2">&quot;Gaussian (Normal) Distribution&quot;</span><span class="p">;</span>
+
+<span class="c1">// Gaussian Mixture Model (k=3) fit using E-M algorithm</span>
+<span class="kd">var</span> <span class="nx">normal3</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">dd</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">[</span><span class="mf">0.10306430789206111</span><span class="p">,</span> <span class="mf">0.0036139086950272735</span><span class="p">,</span> <span class="mf">0.30498647327844536</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">0.5924252668569606</span><span class="p">,</span> <span class="mf">0.0462763685758622</span><span class="p">,</span> <span class="mf">0.4340870312025223</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">0.9847627827855167</span><span class="p">,</span> <span class="mf">2.352350767874714</span><span class="nx">E</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mf">0.2609264955190324</span><span class="p">]],</span>
+      <span class="nx">r</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">(),</span>
+      <span class="nx">i</span> <span class="o">=</span> <span class="nx">r</span> <span class="o">&lt;</span> <span class="nx">dd</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="nx">r</span> <span class="o">&lt;</span> <span class="nx">dd</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="nx">dd</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+      <span class="nx">d</span> <span class="o">=</span> <span class="nx">dd</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+  <span class="k">return</span> <span class="nx">d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">sqrt</span><span class="p">(</span><span class="nx">d</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="nx">normal_sample</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="nx">normal3</span><span class="p">.</span><span class="nx">label</span> <span class="o">=</span> <span class="s2">&quot;Mixture of 3 Gaussians&quot;</span><span class="p">;</span>
+
+<span class="cm">/* Distributions for comparison. */</span>
+<span class="kd">var</span> <span class="nx">dists</span> <span class="o">=</span> <span class="p">[</span><span class="nx">uniform</span><span class="p">,</span> <span class="nx">normal1</span><span class="p">,</span> <span class="nx">normal3</span><span class="p">];</span>
+
+<span class="cm">/* Compute quantiles of a distribution. */</span>
+<span class="kd">function</span> <span class="nx">quantile</span><span class="p">(</span><span class="nx">n</span><span class="p">,</span> <span class="nx">values</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">values</span> <span class="o">=</span> <span class="nx">values</span><span class="p">.</span><span class="nx">slice</span><span class="p">().</span><span class="nx">sort</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="nx">a</span> <span class="o">-</span> <span class="nx">b</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">range</span><span class="p">(</span><span class="nx">n</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="nx">values</span><span class="p">[</span><span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">i</span> <span class="o">*</span> <span class="p">(</span><span class="nx">values</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="nx">n</span><span class="p">)]);</span>
+<span class="p">}</span>
+
+<span class="cm">/* Lookup the value for an input quantile. */</span>
+<span class="kd">function</span> <span class="nx">qi</span><span class="p">(</span><span class="nx">f</span><span class="p">,</span> <span class="nx">quantiles</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">quantiles</span><span class="p">[</span><span class="nb">Math</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span><span class="nx">f</span><span class="o">*</span><span class="p">(</span><span class="nx">quantiles</span><span class="p">.</span><span class="nx">length</span><span class="o">-</span><span class="mi">1</span><span class="p">))];</span>
+<span class="p">}</span>
+
+<span class="cm">/* Helpers for labeling 1st, 2nd, 3rd, etc. */</span>
+<span class="kd">var</span> <span class="nx">suffixMap</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="o">:</span><span class="s2">&quot;st&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="o">:</span><span class="s2">&quot;nd&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="o">:</span><span class="s2">&quot;rd&quot;</span><span class="p">};</span>
+<span class="kd">var</span> <span class="nx">suffix</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">suffixMap</span><span class="p">[</span><span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="o">%</span> <span class="mi">10</span><span class="p">]</span> <span class="o">||</span> <span class="s2">&quot;th&quot;</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">percent</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="nx">d</span><span class="p">).</span><span class="nx">toFixed</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+<span class="cm">/* Parameters and scales. */</span>
+<span class="kd">var</span> <span class="nx">w</span> <span class="o">=</span> <span class="mi">270</span><span class="p">,</span>
+    <span class="nx">h</span> <span class="o">=</span> <span class="mi">270</span><span class="p">,</span>
+    <span class="nx">p</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="nx">q2</span> <span class="o">=</span> <span class="nx">quantile</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="nx">turkers</span><span class="p">.</span><span class="nx">percent</span><span class="p">.</span><span class="nx">values</span><span class="p">),</span>
+    <span class="nx">x</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">).</span><span class="nx">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">w</span><span class="p">),</span>
+    <span class="nx">y</span> <span class="o">=</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">).</span><span class="nx">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">h</span><span class="p">);</span>
+
+<span class="cm">/* The root panel. */</span>
+<span class="kd">var</span> <span class="nx">vis</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">margin</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">((</span><span class="nx">w</span> <span class="o">+</span> <span class="nx">p</span><span class="p">)</span> <span class="o">*</span> <span class="nx">dists</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="nx">p</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="nx">h</span><span class="p">);</span>
+
+<span class="cm">/* The Q-Q plot panel. */</span>
+<span class="kd">var</span> <span class="nx">plot</span> <span class="o">=</span> <span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">dists</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">quantile</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10000</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="nx">d</span><span class="p">))))</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="k">this</span><span class="p">.</span><span class="nx">index</span> <span class="o">*</span> <span class="p">(</span><span class="nx">w</span> <span class="o">+</span> <span class="nx">p</span><span class="p">))</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="nx">w</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;#ccc&quot;</span><span class="p">);</span>
+
+<span class="cm">/* Plot diagonal. */</span>
+<span class="nx">plot</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Line</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">w</span> <span class="o">*</span> <span class="nx">d</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">h</span> <span class="o">*</span> <span class="nx">d</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;#000&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">lineWidth</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="cm">/* Y-axis label. */</span>
+<span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">([</span><span class="s2">&quot;Turker Task Group Completion %&quot;</span><span class="p">])</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="o">-</span><span class="mi">35</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">top</span><span class="p">(</span><span class="nx">h</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">textAlign</span><span class="p">(</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">textAngle</span><span class="p">(</span><span class="o">-</span><span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">font</span><span class="p">(</span><span class="s2">&quot;bold 11px sans-serif&quot;</span><span class="p">);</span>
+
+<span class="cm">/* X-axis ticks and labels. */</span>
+<span class="nx">plot</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Dot</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">size</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">shape</span><span class="p">(</span><span class="s2">&quot;tick&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;#999&quot;</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="nx">percent</span><span class="p">);</span>
+
+<span class="cm">/* Y-axis ticks and labels. */</span>
+<span class="nx">plot</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Dot</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">size</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">shape</span><span class="p">(</span><span class="s2">&quot;tick&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">angle</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;#999&quot;</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">anchor</span><span class="p">(</span><span class="s2">&quot;left&quot;</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">visible</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">parent</span><span class="p">.</span><span class="nx">index</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="nx">percent</span><span class="p">);</span>
+
+<span class="cm">/* Data points by quantiles. */</span>
+<span class="nx">plot</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Dot</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">range</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">))</span>
+    <span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">f</span><span class="p">,</span> <span class="nx">q1</span><span class="p">)</span> <span class="nx">x</span><span class="p">(</span><span class="nx">qi</span><span class="p">(</span><span class="nx">f</span><span class="p">,</span> <span class="nx">q1</span><span class="p">)))</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">f</span><span class="p">)</span> <span class="nx">y</span><span class="p">(</span><span class="nx">qi</span><span class="p">(</span><span class="nx">f</span><span class="p">,</span> <span class="nx">q2</span><span class="p">)))</span>
+    <span class="p">.</span><span class="nx">fillStyle</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="k">this</span><span class="p">.</span><span class="nx">strokeStyle</span><span class="p">().</span><span class="nx">alpha</span><span class="p">(.</span><span class="mi">2</span><span class="p">))</span>
+    <span class="p">.</span><span class="nx">title</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">f</span><span class="p">,</span> <span class="nx">q1</span><span class="p">)</span> <span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="nx">f</span><span class="p">).</span><span class="nx">toFixed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="nx">suffix</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="nx">f</span><span class="p">)</span>
+        <span class="o">+</span> <span class="s2">&quot; Percentile: &quot;</span> <span class="o">+</span> <span class="nx">qi</span><span class="p">(</span><span class="nx">f</span><span class="p">,</span> <span class="nx">q1</span><span class="p">).</span><span class="nx">toFixed</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="o">+</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="nx">qi</span><span class="p">(</span><span class="nx">f</span><span class="p">,</span> <span class="nx">q2</span><span class="p">).</span><span class="nx">toFixed</span><span class="p">(</span><span class="mi">2</span><span class="p">));</span>
+
+<span class="cm">/* Plot label. */</span>
+<span class="nx">plot</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">textMargin</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">textBaseline</span><span class="p">(</span><span class="s2">&quot;top&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">font</span><span class="p">(</span><span class="s2">&quot;bold 10px sans-serif&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="nx">dists</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">parent</span><span class="p">.</span><span class="nx">index</span><span class="p">].</span><span class="nx">label</span><span class="p">);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+
+    <span class="nt">&lt;/script&gt;</span>
+  <span class="nt">&lt;/div&gt;&lt;/div&gt;&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre></div>
+
+
+      <h3>Data</h3>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">turkers</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">percent</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">minValue</span><span class="o">:</span> <span class="mf">0.009259259</span><span class="p">,</span>
+    <span class="nx">maxValue</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nx">values</span><span class="o">:</span> <span class="p">[</span>
+      <span class="mf">0.009259259</span><span class="p">,</span> <span class="mf">0.014285714</span><span class="p">,</span> <span class="mf">0.014285714</span><span class="p">,</span> <span class="mf">0.016666667</span><span class="p">,</span>
+      <span class="mf">0.016666667</span><span class="p">,</span> <span class="mf">0.017857143</span><span class="p">,</span> <span class="mf">0.018518519</span><span class="p">,</span> <span class="mf">0.027777778</span><span class="p">,</span>
+      <span class="mf">0.028571429</span><span class="p">,</span> <span class="mf">0.028571429</span><span class="p">,</span> <span class="mf">0.028571429</span><span class="p">,</span> <span class="mf">0.033333333</span><span class="p">,</span>
+      <span class="mf">0.033333333</span><span class="p">,</span> <span class="mf">0.035714286</span><span class="p">,</span> <span class="mf">0.0375</span><span class="p">,</span> <span class="mf">0.041666667</span><span class="p">,</span>
+      <span class="mf">0.041666667</span><span class="p">,</span> <span class="mf">0.041666667</span><span class="p">,</span> <span class="mf">0.041666667</span><span class="p">,</span> <span class="mf">0.042857143</span><span class="p">,</span>
+      <span class="mf">0.042857143</span><span class="p">,</span> <span class="mf">0.042857143</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.055555556</span><span class="p">,</span>
+      <span class="mf">0.069444444</span><span class="p">,</span> <span class="mf">0.083333333</span><span class="p">,</span> <span class="mf">0.083333333</span><span class="p">,</span> <span class="mf">0.083333333</span><span class="p">,</span>
+      <span class="mf">0.083333333</span><span class="p">,</span> <span class="mf">0.083333333</span><span class="p">,</span> <span class="mf">0.083333333</span><span class="p">,</span> <span class="mf">0.085714286</span><span class="p">,</span>
+      <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.101851852</span><span class="p">,</span> <span class="mf">0.104166667</span><span class="p">,</span>
+      <span class="mf">0.111111111</span><span class="p">,</span> <span class="mf">0.111111111</span><span class="p">,</span> <span class="mf">0.114285714</span><span class="p">,</span> <span class="mf">0.114285714</span><span class="p">,</span>
+      <span class="mf">0.116666667</span><span class="p">,</span> <span class="mf">0.12037037</span><span class="p">,</span> <span class="mf">0.125</span><span class="p">,</span> <span class="mf">0.125</span><span class="p">,</span>
+      <span class="mf">0.128571429</span><span class="p">,</span> <span class="mf">0.133333333</span><span class="p">,</span> <span class="mf">0.138888889</span><span class="p">,</span> <span class="mf">0.141666667</span><span class="p">,</span>
+      <span class="mf">0.142857143</span><span class="p">,</span> <span class="mf">0.142857143</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.152777778</span><span class="p">,</span> <span class="mf">0.158333333</span><span class="p">,</span>
+      <span class="mf">0.166666667</span><span class="p">,</span> <span class="mf">0.171428571</span><span class="p">,</span> <span class="mf">0.183333333</span><span class="p">,</span> <span class="mf">0.185714286</span><span class="p">,</span>
+      <span class="mf">0.185714286</span><span class="p">,</span> <span class="mf">0.1875</span><span class="p">,</span> <span class="mf">0.190140845</span><span class="p">,</span> <span class="mf">0.194444444</span><span class="p">,</span>
+      <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.204545455</span><span class="p">,</span> <span class="mf">0.208333333</span><span class="p">,</span> <span class="mf">0.214285714</span><span class="p">,</span>
+      <span class="mf">0.214285714</span><span class="p">,</span> <span class="mf">0.253521127</span><span class="p">,</span> <span class="mf">0.271428571</span><span class="p">,</span> <span class="mf">0.277777778</span><span class="p">,</span>
+      <span class="mf">0.291666667</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.307017544</span><span class="p">,</span>
+      <span class="mf">0.324074074</span><span class="p">,</span> <span class="mf">0.328571429</span><span class="p">,</span> <span class="mf">0.333333333</span><span class="p">,</span> <span class="mf">0.333333333</span><span class="p">,</span>
+      <span class="mf">0.342857143</span><span class="p">,</span> <span class="mf">0.357142857</span><span class="p">,</span> <span class="mf">0.358333333</span><span class="p">,</span> <span class="mf">0.378787879</span><span class="p">,</span>
+      <span class="mf">0.381355932</span><span class="p">,</span> <span class="mf">0.395833333</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.414285714</span><span class="p">,</span>
+      <span class="mf">0.414285714</span><span class="p">,</span> <span class="mf">0.414285714</span><span class="p">,</span> <span class="mf">0.414285714</span><span class="p">,</span> <span class="mf">0.43</span><span class="p">,</span>
+      <span class="mf">0.433333333</span><span class="p">,</span> <span class="mf">0.4375</span><span class="p">,</span> <span class="mf">0.445833333</span><span class="p">,</span> <span class="mf">0.450704225</span><span class="p">,</span>
+      <span class="mf">0.453333333</span><span class="p">,</span> <span class="mf">0.458333333</span><span class="p">,</span> <span class="mf">0.466666667</span><span class="p">,</span> <span class="mf">0.476666667</span><span class="p">,</span>
+      <span class="mf">0.494736842</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.516666667</span><span class="p">,</span> <span class="mf">0.533333333</span><span class="p">,</span>
+      <span class="mf">0.55</span><span class="p">,</span> <span class="mf">0.557142857</span><span class="p">,</span> <span class="mf">0.56884058</span><span class="p">,</span> <span class="mf">0.569444444</span><span class="p">,</span>
+      <span class="mf">0.571428571</span><span class="p">,</span> <span class="mf">0.585714286</span><span class="p">,</span> <span class="mf">0.61</span><span class="p">,</span> <span class="mf">0.622222222</span><span class="p">,</span>
+      <span class="mf">0.657407407</span><span class="p">,</span> <span class="mf">0.666666667</span><span class="p">,</span> <span class="mf">0.678947368</span><span class="p">,</span> <span class="mf">0.685714286</span><span class="p">,</span>
+      <span class="mf">0.685714286</span><span class="p">,</span> <span class="mf">0.69047619</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span>
+      <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.711538462</span><span class="p">,</span> <span class="mf">0.763888889</span><span class="p">,</span> <span class="mf">0.771428571</span><span class="p">,</span>
+      <span class="mf">0.788888889</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.808333333</span><span class="p">,</span>
+      <span class="mf">0.824712644</span><span class="p">,</span> <span class="mf">0.828571429</span><span class="p">,</span> <span class="mf">0.836842105</span><span class="p">,</span> <span class="mf">0.839285714</span><span class="p">,</span>
+      <span class="mf">0.839285714</span><span class="p">,</span> <span class="mf">0.84</span><span class="p">,</span> <span class="mf">0.842857143</span><span class="p">,</span> <span class="mf">0.842857143</span><span class="p">,</span>
+      <span class="mf">0.842857143</span><span class="p">,</span> <span class="mf">0.85</span><span class="p">,</span> <span class="mf">0.859649123</span><span class="p">,</span> <span class="mf">0.869791667</span><span class="p">,</span>
+      <span class="mf">0.871428571</span><span class="p">,</span> <span class="mf">0.871428571</span><span class="p">,</span> <span class="mf">0.892344498</span><span class="p">,</span> <span class="mf">0.914285714</span><span class="p">,</span>
+      <span class="mf">0.928571429</span><span class="p">,</span> <span class="mf">0.933908046</span><span class="p">,</span> <span class="mf">0.953703704</span><span class="p">,</span> <span class="mf">0.973684211</span><span class="p">,</span>
+      <span class="mf">0.975</span><span class="p">,</span> <span class="mf">0.981481481</span><span class="p">,</span> <span class="mf">0.983333333</span><span class="p">,</span> <span class="mf">0.985714286</span><span class="p">,</span>
+      <span class="mf">0.985714286</span><span class="p">,</span> <span class="mf">0.985714286</span><span class="p">,</span> <span class="mf">0.985714286</span><span class="p">,</span> <span class="mf">0.985714286</span><span class="p">,</span>
+      <span class="mf">0.985714286</span><span class="p">,</span> <span class="mf">0.985714286</span><span class="p">,</span> <span class="mf">0.985714286</span><span class="p">,</span> <span class="mf">0.985714286</span><span class="p">,</span>
+      <span class="mf">0.985714286</span><span class="p">,</span> <span class="mf">0.985714286</span><span class="p">,</span> <span class="mf">0.985714286</span><span class="p">,</span> <span class="mf">0.985714286</span><span class="p">,</span>
+      <span class="mf">0.985714286</span><span class="p">,</span> <span class="mf">0.987096774</span><span class="p">,</span> <span class="mf">0.990740741</span><span class="p">,</span> <span class="mf">0.991666667</span><span class="p">,</span>
+      <span class="mf">0.992</span><span class="p">,</span> <span class="mf">0.994047619</span><span class="p">,</span> <span class="mf">0.996666667</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>
+    <span class="p">]</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+
+
+    </div>
+
+    <div class="foot">
+      Copyright 2010 <a href="http://vis.stanford.edu">Stanford Visualization Group</a>
+    </div>
+
+    <script type="text/javascript" src="http://www.google-analytics.com/ga.js"></script>
+    <script type="text/javascript">_gat._getTracker("UA-10741907-2")._trackPageview();</script>
+  </body>
+</html>

@@ -1,0 +1,406 @@
+<html>
+  <head>
+    <title>Protovis - Icicles</title>
+    <link type="text/css" rel="stylesheet" href="../style.css?3.2"/>
+    <link type="text/css" rel="stylesheet" href="syntax.css"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+  </head>
+  <body>
+
+    <div class="title">
+      <div class="subtitle">
+        A graphical toolkit for visualization
+      </div>
+      <a href="../">Protovis</a>
+    </div>
+
+    <div class="head">
+      <div class="section">
+        <a href="../">Overview</a>
+      </div>
+      <div class="section selected">
+        <a href="./">Examples</a>
+      </div>
+      <div class="section">
+        <a href="../docs/">Documentation</a>
+      </div>
+      <div class="section">
+        <a href="http://protovis-js.googlecode.com/files/protovis-3.2.zip">Download</a>
+      </div>
+    </div>
+    <div class="subhead">
+      <div class="section">
+        <a href="./">Index</a>
+      </div>
+      <div class="section">
+        <a href="sunburst.html">&laquo; Previous</a> /
+        <a href="indent.html">Next &raquo;</a>
+      </div>
+    </div>
+
+    <div class="body">
+      <h1>Icicles</h1>
+
+      <iframe scrolling="no" style="height:330px;" src="icicle-full.html"></iframe>
+      <p><img src="popout.png" width="16" height="16"
+      style="padding:0;vertical-align:top;"> <a style="font-size:13px;"
+      href="icicle-full.html" target="_blank">View full screen.</a>
+
+      <p>An <i>icicle</i> is simply a <a href="sunburst.html">sunburst</a>
+      transformed from polar to cartesian coordinates. Here we show the various
+      ActionScript classes of the <a href="http://flare.prefuse.org">Flare</a>
+      visualization toolkit; the color of each cell corresponds to the package,
+      while the area encodes the size of the source code in bytes.
+
+      <blockquote style="font-size:13px;">
+        Next: <a href="indent.html">Indented Trees</a>
+      </blockquote>
+
+      <h3>Source</h3>
+
+<div class="highlight"><pre><span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;title&gt;</span>Icicle<span class="nt">&lt;/title&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">type=</span><span class="s">&quot;text/css&quot;</span> <span class="na">href=</span><span class="s">&quot;ex.css&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;../protovis-r3.2.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;flare.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;style </span><span class="na">type=</span><span class="s">&quot;text/css&quot;</span><span class="nt">&gt;</span>
+
+<span class="nf">#fig</span> <span class="p">{</span>
+  <span class="k">width</span><span class="o">:</span> <span class="m">900px</span><span class="p">;</span>
+  <span class="k">height</span><span class="o">:</span> <span class="m">330px</span><span class="p">;</span>
+<span class="p">}</span>
+
+    <span class="nt">&lt;/style&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body&gt;&lt;div</span> <span class="na">id=</span><span class="s">&quot;center&quot;</span><span class="nt">&gt;&lt;div</span> <span class="na">id=</span><span class="s">&quot;fig&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript+protovis&quot;</span><span class="nt">&gt;</span>
+
+<span class="kd">var</span> <span class="nx">vis</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">pv</span><span class="p">.</span><span class="nx">Panel</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="mi">900</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="mi">300</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">bottom</span><span class="p">(</span><span class="mi">30</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">layout</span> <span class="o">=</span> <span class="nx">vis</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Layout</span><span class="p">.</span><span class="nx">Partition</span><span class="p">.</span><span class="nx">Fill</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">nodes</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">dom</span><span class="p">(</span><span class="nx">flare</span><span class="p">).</span><span class="nx">root</span><span class="p">(</span><span class="s2">&quot;flare&quot;</span><span class="p">).</span><span class="nx">nodes</span><span class="p">())</span>
+    <span class="p">.</span><span class="nx">order</span><span class="p">(</span><span class="s2">&quot;descending&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">orient</span><span class="p">(</span><span class="s2">&quot;top&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">size</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span><span class="p">.</span><span class="nx">nodeValue</span><span class="p">);</span>
+
+<span class="nx">layout</span><span class="p">.</span><span class="nx">node</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Bar</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">fillStyle</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Colors</span><span class="p">.</span><span class="nx">category19</span><span class="p">().</span><span class="nx">by</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span><span class="p">.</span><span class="nx">parentNode</span> <span class="o">&amp;&amp;</span> <span class="nx">d</span><span class="p">.</span><span class="nx">parentNode</span><span class="p">.</span><span class="nx">nodeName</span><span class="p">))</span>
+    <span class="p">.</span><span class="nx">strokeStyle</span><span class="p">(</span><span class="s2">&quot;rgba(255,255,255,.5)&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">lineWidth</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">antialias</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+
+<span class="nx">layout</span><span class="p">.</span><span class="nx">label</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pv</span><span class="p">.</span><span class="nx">Label</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">textAngle</span><span class="p">(</span><span class="o">-</span><span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">visible</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="nx">d</span><span class="p">.</span><span class="nx">dx</span> <span class="o">&gt;</span> <span class="mi">6</span><span class="p">);</span>
+
+<span class="nx">vis</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+
+    <span class="nt">&lt;/script&gt;</span>
+  <span class="nt">&lt;/div&gt;&lt;/div&gt;&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre></div>
+
+
+      <h3>Data</h3>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">flare</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">analytics</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">cluster</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">AgglomerativeCluster</span><span class="o">:</span> <span class="mi">3938</span><span class="p">,</span>
+      <span class="nx">CommunityStructure</span><span class="o">:</span> <span class="mi">3812</span><span class="p">,</span>
+      <span class="nx">HierarchicalCluster</span><span class="o">:</span> <span class="mi">6714</span><span class="p">,</span>
+      <span class="nx">MergeEdge</span><span class="o">:</span> <span class="mi">743</span>
+    <span class="p">},</span>
+    <span class="nx">graph</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">BetweennessCentrality</span><span class="o">:</span> <span class="mi">3534</span><span class="p">,</span>
+      <span class="nx">LinkDistance</span><span class="o">:</span> <span class="mi">5731</span><span class="p">,</span>
+      <span class="nx">MaxFlowMinCut</span><span class="o">:</span> <span class="mi">7840</span><span class="p">,</span>
+      <span class="nx">ShortestPaths</span><span class="o">:</span> <span class="mi">5914</span><span class="p">,</span>
+      <span class="nx">SpanningTree</span><span class="o">:</span> <span class="mi">3416</span>
+    <span class="p">},</span>
+    <span class="nx">optimization</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">AspectRatioBanker</span><span class="o">:</span> <span class="mi">7074</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="nx">animate</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">Easing</span><span class="o">:</span> <span class="mi">17010</span><span class="p">,</span>
+    <span class="nx">FunctionSequence</span><span class="o">:</span> <span class="mi">5842</span><span class="p">,</span>
+    <span class="nx">interpolate</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">ArrayInterpolator</span><span class="o">:</span> <span class="mi">1983</span><span class="p">,</span>
+      <span class="nx">ColorInterpolator</span><span class="o">:</span> <span class="mi">2047</span><span class="p">,</span>
+      <span class="nx">DateInterpolator</span><span class="o">:</span> <span class="mi">1375</span><span class="p">,</span>
+      <span class="nx">Interpolator</span><span class="o">:</span> <span class="mi">8746</span><span class="p">,</span>
+      <span class="nx">MatrixInterpolator</span><span class="o">:</span> <span class="mi">2202</span><span class="p">,</span>
+      <span class="nx">NumberInterpolator</span><span class="o">:</span> <span class="mi">1382</span><span class="p">,</span>
+      <span class="nx">ObjectInterpolator</span><span class="o">:</span> <span class="mi">1629</span><span class="p">,</span>
+      <span class="nx">PointInterpolator</span><span class="o">:</span> <span class="mi">1675</span><span class="p">,</span>
+      <span class="nx">RectangleInterpolator</span><span class="o">:</span> <span class="mi">2042</span>
+    <span class="p">},</span>
+    <span class="nx">ISchedulable</span><span class="o">:</span> <span class="mi">1041</span><span class="p">,</span>
+    <span class="nx">Parallel</span><span class="o">:</span> <span class="mi">5176</span><span class="p">,</span>
+    <span class="nx">Pause</span><span class="o">:</span> <span class="mi">449</span><span class="p">,</span>
+    <span class="nx">Scheduler</span><span class="o">:</span> <span class="mi">5593</span><span class="p">,</span>
+    <span class="nx">Sequence</span><span class="o">:</span> <span class="mi">5534</span><span class="p">,</span>
+    <span class="nx">Transition</span><span class="o">:</span> <span class="mi">9201</span><span class="p">,</span>
+    <span class="nx">Transitioner</span><span class="o">:</span> <span class="mi">19975</span><span class="p">,</span>
+    <span class="nx">TransitionEvent</span><span class="o">:</span> <span class="mi">1116</span><span class="p">,</span>
+    <span class="nx">Tween</span><span class="o">:</span> <span class="mi">6006</span>
+  <span class="p">},</span>
+  <span class="nx">data</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">converters</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">Converters</span><span class="o">:</span> <span class="mi">721</span><span class="p">,</span>
+      <span class="nx">DelimitedTextConverter</span><span class="o">:</span> <span class="mi">4294</span><span class="p">,</span>
+      <span class="nx">GraphMLConverter</span><span class="o">:</span> <span class="mi">9800</span><span class="p">,</span>
+      <span class="nx">IDataConverter</span><span class="o">:</span> <span class="mi">1314</span><span class="p">,</span>
+      <span class="nx">JSONConverter</span><span class="o">:</span> <span class="mi">2220</span>
+    <span class="p">},</span>
+    <span class="nx">DataField</span><span class="o">:</span> <span class="mi">1759</span><span class="p">,</span>
+    <span class="nx">DataSchema</span><span class="o">:</span> <span class="mi">2165</span><span class="p">,</span>
+    <span class="nx">DataSet</span><span class="o">:</span> <span class="mi">586</span><span class="p">,</span>
+    <span class="nx">DataSource</span><span class="o">:</span> <span class="mi">3331</span><span class="p">,</span>
+    <span class="nx">DataTable</span><span class="o">:</span> <span class="mi">772</span><span class="p">,</span>
+    <span class="nx">DataUtil</span><span class="o">:</span> <span class="mi">3322</span>
+  <span class="p">},</span>
+  <span class="nx">display</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">DirtySprite</span><span class="o">:</span> <span class="mi">8833</span><span class="p">,</span>
+    <span class="nx">LineSprite</span><span class="o">:</span> <span class="mi">1732</span><span class="p">,</span>
+    <span class="nx">RectSprite</span><span class="o">:</span> <span class="mi">3623</span><span class="p">,</span>
+    <span class="nx">TextSprite</span><span class="o">:</span> <span class="mi">10066</span>
+  <span class="p">},</span>
+  <span class="nx">flex</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">FlareVis</span><span class="o">:</span> <span class="mi">4116</span>
+  <span class="p">},</span>
+  <span class="nx">physics</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">DragForce</span><span class="o">:</span> <span class="mi">1082</span><span class="p">,</span>
+    <span class="nx">GravityForce</span><span class="o">:</span> <span class="mi">1336</span><span class="p">,</span>
+    <span class="nx">IForce</span><span class="o">:</span> <span class="mi">319</span><span class="p">,</span>
+    <span class="nx">NBodyForce</span><span class="o">:</span> <span class="mi">10498</span><span class="p">,</span>
+    <span class="nx">Particle</span><span class="o">:</span> <span class="mi">2822</span><span class="p">,</span>
+    <span class="nx">Simulation</span><span class="o">:</span> <span class="mi">9983</span><span class="p">,</span>
+    <span class="nx">Spring</span><span class="o">:</span> <span class="mi">2213</span><span class="p">,</span>
+    <span class="nx">SpringForce</span><span class="o">:</span> <span class="mi">1681</span>
+  <span class="p">},</span>
+  <span class="nx">query</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">AggregateExpression</span><span class="o">:</span> <span class="mi">1616</span><span class="p">,</span>
+    <span class="nx">And</span><span class="o">:</span> <span class="mi">1027</span><span class="p">,</span>
+    <span class="nx">Arithmetic</span><span class="o">:</span> <span class="mi">3891</span><span class="p">,</span>
+    <span class="nx">Average</span><span class="o">:</span> <span class="mi">891</span><span class="p">,</span>
+    <span class="nx">BinaryExpression</span><span class="o">:</span> <span class="mi">2893</span><span class="p">,</span>
+    <span class="nx">Comparison</span><span class="o">:</span> <span class="mi">5103</span><span class="p">,</span>
+    <span class="nx">CompositeExpression</span><span class="o">:</span> <span class="mi">3677</span><span class="p">,</span>
+    <span class="nx">Count</span><span class="o">:</span> <span class="mi">781</span><span class="p">,</span>
+    <span class="nx">DateUtil</span><span class="o">:</span> <span class="mi">4141</span><span class="p">,</span>
+    <span class="nx">Distinct</span><span class="o">:</span> <span class="mi">933</span><span class="p">,</span>
+    <span class="nx">Expression</span><span class="o">:</span> <span class="mi">5130</span><span class="p">,</span>
+    <span class="nx">ExpressionIterator</span><span class="o">:</span> <span class="mi">3617</span><span class="p">,</span>
+    <span class="nx">Fn</span><span class="o">:</span> <span class="mi">3240</span><span class="p">,</span>
+    <span class="nx">If</span><span class="o">:</span> <span class="mi">2732</span><span class="p">,</span>
+    <span class="nx">IsA</span><span class="o">:</span> <span class="mi">2039</span><span class="p">,</span>
+    <span class="nx">Literal</span><span class="o">:</span> <span class="mi">1214</span><span class="p">,</span>
+    <span class="nx">Match</span><span class="o">:</span> <span class="mi">3748</span><span class="p">,</span>
+    <span class="nx">Maximum</span><span class="o">:</span> <span class="mi">843</span><span class="p">,</span>
+    <span class="nx">methods</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">add</span><span class="o">:</span> <span class="mi">593</span><span class="p">,</span>
+      <span class="nx">and</span><span class="o">:</span> <span class="mi">330</span><span class="p">,</span>
+      <span class="nx">average</span><span class="o">:</span> <span class="mi">287</span><span class="p">,</span>
+      <span class="nx">count</span><span class="o">:</span> <span class="mi">277</span><span class="p">,</span>
+      <span class="nx">distinct</span><span class="o">:</span> <span class="mi">292</span><span class="p">,</span>
+      <span class="nx">div</span><span class="o">:</span> <span class="mi">595</span><span class="p">,</span>
+      <span class="nx">eq</span><span class="o">:</span> <span class="mi">594</span><span class="p">,</span>
+      <span class="nx">fn</span><span class="o">:</span> <span class="mi">460</span><span class="p">,</span>
+      <span class="nx">gt</span><span class="o">:</span> <span class="mi">603</span><span class="p">,</span>
+      <span class="nx">gte</span><span class="o">:</span> <span class="mi">625</span><span class="p">,</span>
+      <span class="nx">iff</span><span class="o">:</span> <span class="mi">748</span><span class="p">,</span>
+      <span class="nx">isa</span><span class="o">:</span> <span class="mi">461</span><span class="p">,</span>
+      <span class="nx">lt</span><span class="o">:</span> <span class="mi">597</span><span class="p">,</span>
+      <span class="nx">lte</span><span class="o">:</span> <span class="mi">619</span><span class="p">,</span>
+      <span class="nx">max</span><span class="o">:</span> <span class="mi">283</span><span class="p">,</span>
+      <span class="nx">min</span><span class="o">:</span> <span class="mi">283</span><span class="p">,</span>
+      <span class="nx">mod</span><span class="o">:</span> <span class="mi">591</span><span class="p">,</span>
+      <span class="nx">mul</span><span class="o">:</span> <span class="mi">603</span><span class="p">,</span>
+      <span class="nx">neq</span><span class="o">:</span> <span class="mi">599</span><span class="p">,</span>
+      <span class="nx">not</span><span class="o">:</span> <span class="mi">386</span><span class="p">,</span>
+      <span class="nx">or</span><span class="o">:</span> <span class="mi">323</span><span class="p">,</span>
+      <span class="nx">orderby</span><span class="o">:</span> <span class="mi">307</span><span class="p">,</span>
+      <span class="nx">range</span><span class="o">:</span> <span class="mi">772</span><span class="p">,</span>
+      <span class="nx">select</span><span class="o">:</span> <span class="mi">296</span><span class="p">,</span>
+      <span class="nx">stddev</span><span class="o">:</span> <span class="mi">363</span><span class="p">,</span>
+      <span class="nx">sub</span><span class="o">:</span> <span class="mi">600</span><span class="p">,</span>
+      <span class="nx">sum</span><span class="o">:</span> <span class="mi">280</span><span class="p">,</span>
+      <span class="nx">update</span><span class="o">:</span> <span class="mi">307</span><span class="p">,</span>
+      <span class="nx">variance</span><span class="o">:</span> <span class="mi">335</span><span class="p">,</span>
+      <span class="nx">where</span><span class="o">:</span> <span class="mi">299</span><span class="p">,</span>
+      <span class="nx">xor</span><span class="o">:</span> <span class="mi">354</span><span class="p">,</span>
+      <span class="nx">_</span><span class="o">:</span> <span class="mi">264</span>
+    <span class="p">},</span>
+    <span class="nx">Minimum</span><span class="o">:</span> <span class="mi">843</span><span class="p">,</span>
+    <span class="nx">Not</span><span class="o">:</span> <span class="mi">1554</span><span class="p">,</span>
+    <span class="nx">Or</span><span class="o">:</span> <span class="mi">970</span><span class="p">,</span>
+    <span class="nx">Query</span><span class="o">:</span> <span class="mi">13896</span><span class="p">,</span>
+    <span class="nx">Range</span><span class="o">:</span> <span class="mi">1594</span><span class="p">,</span>
+    <span class="nx">StringUtil</span><span class="o">:</span> <span class="mi">4130</span><span class="p">,</span>
+    <span class="nx">Sum</span><span class="o">:</span> <span class="mi">791</span><span class="p">,</span>
+    <span class="nx">Variable</span><span class="o">:</span> <span class="mi">1124</span><span class="p">,</span>
+    <span class="nx">Variance</span><span class="o">:</span> <span class="mi">1876</span><span class="p">,</span>
+    <span class="nx">Xor</span><span class="o">:</span> <span class="mi">1101</span>
+  <span class="p">},</span>
+  <span class="nx">scale</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">IScaleMap</span><span class="o">:</span> <span class="mi">2105</span><span class="p">,</span>
+    <span class="nx">LinearScale</span><span class="o">:</span> <span class="mi">1316</span><span class="p">,</span>
+    <span class="nx">LogScale</span><span class="o">:</span> <span class="mi">3151</span><span class="p">,</span>
+    <span class="nx">OrdinalScale</span><span class="o">:</span> <span class="mi">3770</span><span class="p">,</span>
+    <span class="nx">QuantileScale</span><span class="o">:</span> <span class="mi">2435</span><span class="p">,</span>
+    <span class="nx">QuantitativeScale</span><span class="o">:</span> <span class="mi">4839</span><span class="p">,</span>
+    <span class="nx">RootScale</span><span class="o">:</span> <span class="mi">1756</span><span class="p">,</span>
+    <span class="nx">Scale</span><span class="o">:</span> <span class="mi">4268</span><span class="p">,</span>
+    <span class="nx">ScaleType</span><span class="o">:</span> <span class="mi">1821</span><span class="p">,</span>
+    <span class="nx">TimeScale</span><span class="o">:</span> <span class="mi">5833</span>
+  <span class="p">},</span>
+  <span class="nx">util</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">Arrays</span><span class="o">:</span> <span class="mi">8258</span><span class="p">,</span>
+    <span class="nx">Colors</span><span class="o">:</span> <span class="mi">10001</span><span class="p">,</span>
+    <span class="nx">Dates</span><span class="o">:</span> <span class="mi">8217</span><span class="p">,</span>
+    <span class="nx">Displays</span><span class="o">:</span> <span class="mi">12555</span><span class="p">,</span>
+    <span class="nx">Filter</span><span class="o">:</span> <span class="mi">2324</span><span class="p">,</span>
+    <span class="nx">Geometry</span><span class="o">:</span> <span class="mi">10993</span><span class="p">,</span>
+    <span class="nx">heap</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">FibonacciHeap</span><span class="o">:</span> <span class="mi">9354</span><span class="p">,</span>
+      <span class="nx">HeapNode</span><span class="o">:</span> <span class="mi">1233</span>
+    <span class="p">},</span>
+    <span class="nx">IEvaluable</span><span class="o">:</span> <span class="mi">335</span><span class="p">,</span>
+    <span class="nx">IPredicate</span><span class="o">:</span> <span class="mi">383</span><span class="p">,</span>
+    <span class="nx">IValueProxy</span><span class="o">:</span> <span class="mi">874</span><span class="p">,</span>
+    <span class="nx">math</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">DenseMatrix</span><span class="o">:</span> <span class="mi">3165</span><span class="p">,</span>
+      <span class="nx">IMatrix</span><span class="o">:</span> <span class="mi">2815</span><span class="p">,</span>
+      <span class="nx">SparseMatrix</span><span class="o">:</span> <span class="mi">3366</span>
+    <span class="p">},</span>
+    <span class="nx">Maths</span><span class="o">:</span> <span class="mi">17705</span><span class="p">,</span>
+    <span class="nx">Orientation</span><span class="o">:</span> <span class="mi">1486</span><span class="p">,</span>
+    <span class="nx">palette</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">ColorPalette</span><span class="o">:</span> <span class="mi">6367</span><span class="p">,</span>
+      <span class="nx">Palette</span><span class="o">:</span> <span class="mi">1229</span><span class="p">,</span>
+      <span class="nx">ShapePalette</span><span class="o">:</span> <span class="mi">2059</span><span class="p">,</span>
+      <span class="nx">SizePalette</span><span class="o">:</span> <span class="mi">2291</span>
+    <span class="p">},</span>
+    <span class="nx">Property</span><span class="o">:</span> <span class="mi">5559</span><span class="p">,</span>
+    <span class="nx">Shapes</span><span class="o">:</span> <span class="mi">19118</span><span class="p">,</span>
+    <span class="nx">Sort</span><span class="o">:</span> <span class="mi">6887</span><span class="p">,</span>
+    <span class="nx">Stats</span><span class="o">:</span> <span class="mi">6557</span><span class="p">,</span>
+    <span class="nx">Strings</span><span class="o">:</span> <span class="mi">22026</span>
+  <span class="p">},</span>
+  <span class="nx">vis</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">axis</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">Axes</span><span class="o">:</span> <span class="mi">1302</span><span class="p">,</span>
+      <span class="nx">Axis</span><span class="o">:</span> <span class="mi">24593</span><span class="p">,</span>
+      <span class="nx">AxisGridLine</span><span class="o">:</span> <span class="mi">652</span><span class="p">,</span>
+      <span class="nx">AxisLabel</span><span class="o">:</span> <span class="mi">636</span><span class="p">,</span>
+      <span class="nx">CartesianAxes</span><span class="o">:</span> <span class="mi">6703</span>
+    <span class="p">},</span>
+    <span class="nx">controls</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">AnchorControl</span><span class="o">:</span> <span class="mi">2138</span><span class="p">,</span>
+      <span class="nx">ClickControl</span><span class="o">:</span> <span class="mi">3824</span><span class="p">,</span>
+      <span class="nx">Control</span><span class="o">:</span> <span class="mi">1353</span><span class="p">,</span>
+      <span class="nx">ControlList</span><span class="o">:</span> <span class="mi">4665</span><span class="p">,</span>
+      <span class="nx">DragControl</span><span class="o">:</span> <span class="mi">2649</span><span class="p">,</span>
+      <span class="nx">ExpandControl</span><span class="o">:</span> <span class="mi">2832</span><span class="p">,</span>
+      <span class="nx">HoverControl</span><span class="o">:</span> <span class="mi">4896</span><span class="p">,</span>
+      <span class="nx">IControl</span><span class="o">:</span> <span class="mi">763</span><span class="p">,</span>
+      <span class="nx">PanZoomControl</span><span class="o">:</span> <span class="mi">5222</span><span class="p">,</span>
+      <span class="nx">SelectionControl</span><span class="o">:</span> <span class="mi">7862</span><span class="p">,</span>
+      <span class="nx">TooltipControl</span><span class="o">:</span> <span class="mi">8435</span>
+    <span class="p">},</span>
+    <span class="nx">data</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">Data</span><span class="o">:</span> <span class="mi">20544</span><span class="p">,</span>
+      <span class="nx">DataList</span><span class="o">:</span> <span class="mi">19788</span><span class="p">,</span>
+      <span class="nx">DataSprite</span><span class="o">:</span> <span class="mi">10349</span><span class="p">,</span>
+      <span class="nx">EdgeSprite</span><span class="o">:</span> <span class="mi">3301</span><span class="p">,</span>
+      <span class="nx">NodeSprite</span><span class="o">:</span> <span class="mi">19382</span><span class="p">,</span>
+      <span class="nx">render</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">ArrowType</span><span class="o">:</span> <span class="mi">698</span><span class="p">,</span>
+        <span class="nx">EdgeRenderer</span><span class="o">:</span> <span class="mi">5569</span><span class="p">,</span>
+        <span class="nx">IRenderer</span><span class="o">:</span> <span class="mi">353</span><span class="p">,</span>
+        <span class="nx">ShapeRenderer</span><span class="o">:</span> <span class="mi">2247</span>
+      <span class="p">},</span>
+      <span class="nx">ScaleBinding</span><span class="o">:</span> <span class="mi">11275</span><span class="p">,</span>
+      <span class="nx">Tree</span><span class="o">:</span> <span class="mi">7147</span><span class="p">,</span>
+      <span class="nx">TreeBuilder</span><span class="o">:</span> <span class="mi">9930</span>
+    <span class="p">},</span>
+    <span class="nx">events</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">DataEvent</span><span class="o">:</span> <span class="mi">2313</span><span class="p">,</span>
+      <span class="nx">SelectionEvent</span><span class="o">:</span> <span class="mi">1880</span><span class="p">,</span>
+      <span class="nx">TooltipEvent</span><span class="o">:</span> <span class="mi">1701</span><span class="p">,</span>
+      <span class="nx">VisualizationEvent</span><span class="o">:</span> <span class="mi">1117</span>
+    <span class="p">},</span>
+    <span class="nx">legend</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">Legend</span><span class="o">:</span> <span class="mi">20859</span><span class="p">,</span>
+      <span class="nx">LegendItem</span><span class="o">:</span> <span class="mi">4614</span><span class="p">,</span>
+      <span class="nx">LegendRange</span><span class="o">:</span> <span class="mi">10530</span>
+    <span class="p">},</span>
+    <span class="nx">operator</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">distortion</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">BifocalDistortion</span><span class="o">:</span> <span class="mi">4461</span><span class="p">,</span>
+        <span class="nx">Distortion</span><span class="o">:</span> <span class="mi">6314</span><span class="p">,</span>
+        <span class="nx">FisheyeDistortion</span><span class="o">:</span> <span class="mi">3444</span>
+      <span class="p">},</span>
+      <span class="nx">encoder</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">ColorEncoder</span><span class="o">:</span> <span class="mi">3179</span><span class="p">,</span>
+        <span class="nx">Encoder</span><span class="o">:</span> <span class="mi">4060</span><span class="p">,</span>
+        <span class="nx">PropertyEncoder</span><span class="o">:</span> <span class="mi">4138</span><span class="p">,</span>
+        <span class="nx">ShapeEncoder</span><span class="o">:</span> <span class="mi">1690</span><span class="p">,</span>
+        <span class="nx">SizeEncoder</span><span class="o">:</span> <span class="mi">1830</span>
+      <span class="p">},</span>
+      <span class="nx">filter</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">FisheyeTreeFilter</span><span class="o">:</span> <span class="mi">5219</span><span class="p">,</span>
+        <span class="nx">GraphDistanceFilter</span><span class="o">:</span> <span class="mi">3165</span><span class="p">,</span>
+        <span class="nx">VisibilityFilter</span><span class="o">:</span> <span class="mi">3509</span>
+      <span class="p">},</span>
+      <span class="nx">IOperator</span><span class="o">:</span> <span class="mi">1286</span><span class="p">,</span>
+      <span class="nx">label</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">Labeler</span><span class="o">:</span> <span class="mi">9956</span><span class="p">,</span>
+        <span class="nx">RadialLabeler</span><span class="o">:</span> <span class="mi">3899</span><span class="p">,</span>
+        <span class="nx">StackedAreaLabeler</span><span class="o">:</span> <span class="mi">3202</span>
+      <span class="p">},</span>
+      <span class="nx">layout</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">AxisLayout</span><span class="o">:</span> <span class="mi">6725</span><span class="p">,</span>
+        <span class="nx">BundledEdgeRouter</span><span class="o">:</span> <span class="mi">3727</span><span class="p">,</span>
+        <span class="nx">CircleLayout</span><span class="o">:</span> <span class="mi">9317</span><span class="p">,</span>
+        <span class="nx">CirclePackingLayout</span><span class="o">:</span> <span class="mi">12003</span><span class="p">,</span>
+        <span class="nx">DendrogramLayout</span><span class="o">:</span> <span class="mi">4853</span><span class="p">,</span>
+        <span class="nx">ForceDirectedLayout</span><span class="o">:</span> <span class="mi">8411</span><span class="p">,</span>
+        <span class="nx">IcicleTreeLayout</span><span class="o">:</span> <span class="mi">4864</span><span class="p">,</span>
+        <span class="nx">IndentedTreeLayout</span><span class="o">:</span> <span class="mi">3174</span><span class="p">,</span>
+        <span class="nx">Layout</span><span class="o">:</span> <span class="mi">7881</span><span class="p">,</span>
+        <span class="nx">NodeLinkTreeLayout</span><span class="o">:</span> <span class="mi">12870</span><span class="p">,</span>
+        <span class="nx">PieLayout</span><span class="o">:</span> <span class="mi">2728</span><span class="p">,</span>
+        <span class="nx">RadialTreeLayout</span><span class="o">:</span> <span class="mi">12348</span><span class="p">,</span>
+        <span class="nx">RandomLayout</span><span class="o">:</span> <span class="mi">870</span><span class="p">,</span>
+        <span class="nx">StackedAreaLayout</span><span class="o">:</span> <span class="mi">9121</span><span class="p">,</span>
+        <span class="nx">TreeMapLayout</span><span class="o">:</span> <span class="mi">9191</span>
+      <span class="p">},</span>
+      <span class="nx">Operator</span><span class="o">:</span> <span class="mi">2490</span><span class="p">,</span>
+      <span class="nx">OperatorList</span><span class="o">:</span> <span class="mi">5248</span><span class="p">,</span>
+      <span class="nx">OperatorSequence</span><span class="o">:</span> <span class="mi">4190</span><span class="p">,</span>
+      <span class="nx">OperatorSwitch</span><span class="o">:</span> <span class="mi">2581</span><span class="p">,</span>
+      <span class="nx">SortOperator</span><span class="o">:</span> <span class="mi">2023</span>
+    <span class="p">},</span>
+    <span class="nx">Visualization</span><span class="o">:</span> <span class="mi">16540</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+
+
+    </div>
+
+    <div class="foot">
+      Copyright 2010 <a href="http://vis.stanford.edu">Stanford Visualization Group</a>
+    </div>
+
+    <script type="text/javascript" src="http://www.google-analytics.com/ga.js"></script>
+    <script type="text/javascript">_gat._getTracker("UA-10741907-2")._trackPageview();</script>
+  </body>
+</html>

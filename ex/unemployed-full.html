@@ -1,0 +1,114 @@
+<html>
+  <head>
+    <title>Stacked Graph</title>
+    <link type="text/css" rel="stylesheet" href="../ex.css?3.2"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+    <script type="text/javascript" src="unemployment.js"></script>
+    <style type="text/css">
+      body { font-family: Arial; }
+      #fig {
+        width: 800px;
+        height: 460px;
+      }
+      .label {
+        font-size: 13px;
+        padding-top: 2px;
+        padding-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body><div id="center"><div id="fig">
+    <div>
+    Layout:
+    <select onchange="update(event);">
+      <option value="wiggle">Counts (Centered)</option>
+      <option value="zero">Counts (Zero-Baseline)</option>
+      <option value="expand">Percentage</option>
+    </select>
+    </div>
+    <script script type="text/javascript+protovis">
+
+      /* Nest the data to group by series name. */
+      var nest = pv.nest(unemp)
+          .key(function(d) d.series)
+          .sortKeys(function(a,b) {
+              a = unemployment.series[a], b = unemployment.series[b];
+              return a < b ? -1 : a > b ? 1 : 0;
+           })
+          .entries();
+
+      /* Visualization parameters. */
+      var data = [],
+          fy = function(d) d.count, // y-axis value
+          fx = function(d) d.date,  // x-axis value
+          ft = function(d) unemployment.series[nest[this.parent.index].key], // label
+          w = 550,
+          h = 400,
+          S = pv.max(nest, function(s) s.values.length),
+          x = pv.Scale.linear(new Date(2000,0,0),new Date(2010,1,0)).range(0,w),
+          y = pv.Scale.linear(0,15000).range(0,h),
+          p = pv.Scale.linear(0,1).range(0,h),
+          offset = "wiggle";
+
+      /* The visualization panel. */
+      var vis = new pv.Panel()
+          .left(32.5).right(150)
+          .top(10.5).bottom(28)
+          .width(w)
+          .height(h);
+
+      /* Y-axis gridlines (shown with "zero" baseline). */
+      vis.add(pv.Rule)
+          .visible(function() offset=="zero")
+          .data(function() y.ticks(10))
+          .left(-5).right(0)
+          .bottom(y)
+          .strokeStyle(function(d) d==0 ? "black" : "#cccccc")
+        .anchor("left").add(pv.Label)
+          .text(function(d) y.tickFormat(d/1000)+(d>0?"M":""));
+
+      /* Y-axis gridlines (shown with "expand" baseline). */
+      vis.add(pv.Rule)
+          .visible(function() offset=="expand")
+          .data(function() p.ticks())
+          .left(-2).right(0)
+          .bottom(p)
+          .strokeStyle(function(d) d==0 ? "black" : "#cccccc")
+        .anchor("left").add(pv.Label)
+          .text(function(d) (100*d).toFixed(0)+"%");
+
+      /* X-axis ticks. */
+      vis.add(pv.Dot)
+          .data(x.ticks)
+          .left(x).bottom(-5)
+          .shape("tick").size(5)
+          .strokeStyle("black")
+        .anchor("bottom").add(pv.Label)
+          .text(function(d) x.tickFormat(d));
+
+      /* The stacked areas. */
+      vis.add(pv.Layout.Stack)
+          .layers(function() nest.map(function(l) l.values))
+          .orient("bottom")
+          .order("reverse")
+          .offset(function() offset)
+          .x(x.by(fx))
+          .y(y.by(fy))
+        .layer.add(pv.Area)
+          .fillStyle(pv.Colors.category19().by(function() this.parent.index))
+        .anchor("right").add(pv.Label)
+          .visible(function() !this.index)
+          .textStyle("black")
+          .textAlign("left")
+          .text(ft);
+
+      vis.render();
+
+      function update(e) {
+          offset = e.target.value;
+          vis.render();
+      }
+
+    </script>
+</div></div></body>
+</html>

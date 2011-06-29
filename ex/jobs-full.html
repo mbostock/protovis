@@ -1,0 +1,172 @@
+<html>
+  <head>
+    <title>Job Voyager</title>
+    <link type="text/css" rel="stylesheet" href="ex.css?3.2"/>
+    <script type="text/javascript" src="../protovis-r3.2.js"></script>
+    <script type="text/javascript" src="jobs.js"></script>
+    <style type="text/css">
+
+#fig {
+  width: 860px;
+  height: 580px;
+}
+
+#footer {
+  font: 24pt helvetica neue;
+  padding-left: 40px;
+  color: #666;
+}
+
+#footer input {
+  font: 24pt helvetica neue;
+  background: none;
+  border: none;
+  outline: 0;
+}
+
+    </style>
+  </head>
+  <body>
+    <div id="center"><div id="fig">
+    <div style="text-align:right;padding-right:20;">
+      <b>Gender:</b>
+      <input type="radio" name="gender" id="men" onchange="update(gender = 1);"
+      ><label for="men">Men</label>
+      <input type="radio" name="gender" id="women" onchange="update(gender = 2);"
+      ><label for="women">Women</label>
+      <input type="radio" name="gender" id="any" checked onchange="update(gender = 0);"
+      ><label for="any">Any</label>
+    </div>
+    <script type="text/javascript+protovis">
+
+/* Interaction state. */
+var gender = 0,
+    re = "";
+
+/* Flatten the tree into an array to faciliate transformation. */
+var jobs = pv.flatten(jobs)
+    .key("job")
+    .key("gender", function(g) (g == "men") ? 1 : 2)
+    .key("year", function(i) years[i])
+    .key("people")
+    .array();
+
+/*
+ * Use per-year sums to normalize the data, so we can compute a
+ * percentage. Use per-gender+job sums to determine a saturation encoding.
+ */
+var sumByYear = pv.nest(jobs)
+    .key(function(d) d.year)
+    .rollup(function(v) pv.sum(v, function(d) d.people)),
+  sumByJob = pv.nest(jobs)
+    .key(function(d) d.gender + d.job)
+    .rollup(function(v) pv.sum(v, function(d) d.people));
+
+/* Cache the percentage of people employed per year. */
+jobs.forEach(function(d) d.percent = 100 * d.people / sumByYear[d.year]);
+
+/* Sizing parameters and scales. */
+var w = 800,
+    h = 480,
+    x = pv.Scale.linear(1850, 2000).range(0, w),
+    y = pv.Scale.linear(0, 100).range(0, h),
+    color = pv.Scale.ordinal(1, 2).range("#33f", "#f33"),
+    alpha = pv.Scale.linear(pv.values(sumByJob)).range(.4, .8);
+
+/* The root panel. */
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .top(9.5)
+    .left(39.5)
+    .right(20)
+    .bottom(30);
+
+/* A background bar to reset the search query.  */
+vis.add(pv.Bar)
+    .fillStyle("white")
+    .event("click", function() search(""))
+    .cursor("pointer");
+
+/* Y-axis ticks and labels. */
+vis.add(pv.Rule)
+    .data(function() y.ticks())
+    .bottom(y)
+    .strokeStyle(function(y) y ? "#ccc" : "#000")
+  .anchor("left").add(pv.Label)
+    .text(function(d) y.tickFormat(d) + "%");
+
+/* Stack layout. */
+var area = vis.add(pv.Layout.Stack)
+    .layers(function() pv.nest(jobs.filter(test))
+        .key(function(d) d.gender + d.job)
+        .sortKeys(function(a, b) pv.reverseOrder(a.substring(1), b.substring(1)))
+        .entries())
+    .values(function(d) d.values)
+    .x(function(d) x(d.year))
+    .y(function(d) y(d.percent))
+  .layer.add(pv.Area)
+    .def("alpha", function(d) alpha(sumByJob[d.key]))
+    .fillStyle(function(d) color(d.gender).alpha(this.alpha()))
+    .cursor("pointer")
+    .event("mouseover", function(d) this.alpha(1).title(d.job))
+    .event("mouseout", function(d) this.alpha(null))
+    .event("click", function(d) search("^" + d.job + "$"));
+
+/* Stack labels. */
+vis.add(pv.Panel)
+    .extend(area.parent)
+  .add(pv.Area)
+    .extend(area)
+    .fillStyle(null)
+  .anchor("center").add(pv.Label)
+    .def("max", function(d) pv.max.index(d.values, function(d) d.percent))
+    .visible(function() this.index == this.max())
+    .font(function(d) Math.round(5 + Math.sqrt(y(d.percent))) + "px sans-serif")
+    .textMargin(6)
+    .textStyle(function(d) "rgba(0, 0, 0, " + (Math.sqrt(y(d.percent)) / 7) + ")")
+    .textAlign(function() this.index < 5 ? "left" : "right")
+    .text(function(d, p) p.key.substring(1));
+
+/* X-axis ticks and labels. */
+vis.add(pv.Rule)
+    .data(pv.range(1850, 2010, 10))
+    .left(x)
+    .bottom(-6)
+    .height(5)
+  .anchor("bottom").add(pv.Label);
+
+/* Update the query regular expression when text is entered. */
+function search(text) {
+  if (text != re) {
+    if (query.value != text) {
+      query.value = text;
+      query.focus();
+    }
+    re = new RegExp(text, "i");
+    update();
+  }
+}
+
+/* Tests to see whether the specified datum matches the current filters. */
+function test(d) {
+  return (!gender || d.gender == gender) && d.job.match(re);
+}
+
+/* Recompute the y-scale domain based on query filtering. */
+function update() {
+  y.domain(0, Math.min(100, pv.max(pv.values(pv.nest(jobs.filter(test))
+      .key(function(d) d.year)
+      .rollup(function(v) pv.sum(v, function(d) d.percent))))));
+  vis.render();
+}
+
+vis.render();
+
+    </script>
+    <div id="footer">
+      <label for="query">search: </label>
+      <input id="query" type="text" onkeyup="search(this.value);">
+    </div>
+  </div></div></body>
+</html>
