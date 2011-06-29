@@ -136,7 +136,7 @@ iframe {
   border: solid 4px #4a5584;
 }
 
-.button a {
+.button {
   display: block;
   font-size: 16px;
   font-weight: bold;
@@ -145,17 +145,6 @@ iframe {
   border-bottom: solid 1px #dda;
   border-right: solid 1px #dda;
   padding: 10px;
-}
-
-.button div {
-  float: right;
-  font-weight: normal;
-  color: #996;
-}
-
-.button a:hover {
-  color: #4a5584;
-  background-color: #ff6;
 }
 
 .new {
