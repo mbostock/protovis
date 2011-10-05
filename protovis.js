@@ -316,6 +316,8 @@ pv.listener = function(f) {
       try {
         pv.event = e;
         return f.call(this, e);
+      } catch ( e ) {
+        pv.error(e);
       } finally {
         delete pv.event;
       }
@@ -7436,6 +7438,8 @@ pv.Mark.prototype.context = function(scene, index, f) {
   apply(scene, index);
   try {
     f.apply(this, stack);
+  } catch ( e ) {
+    pv.error(e);
   } finally {
     clear(scene, index);
     apply(oscene, oindex);

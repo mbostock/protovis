@@ -1198,6 +1198,8 @@ pv.Mark.prototype.context = function(scene, index, f) {
   apply(scene, index);
   try {
     f.apply(this, stack);
+  } catch ( e ) {
+    pv.error(e);
   } finally {
     clear(scene, index);
     apply(oscene, oindex);
