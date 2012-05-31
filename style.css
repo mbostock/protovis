@@ -114,12 +114,12 @@ iframe {
 }
 
 .item {
-  float: left;
+  display: inline-block;
   width: 200px;
   height: 190px;
   font-size: 13px;
   color: black;
-  margin-right: 25px;
+  margin-right: 20px;
   margin-bottom: 40px;
 }
 
