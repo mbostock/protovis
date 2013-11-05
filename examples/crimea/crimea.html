@@ -38,12 +38,24 @@
     </center>
     <script type="text/javascript+protovis">
 
+/* Compute death rate per 1000 soldiers for each month. */
+crimea.forEach(function(d) {
+    d.wounds = 1000 * d.wounds / d.total;
+    d.other = 1000 * d.other / d.total;
+    d.disease = 1000 * d.disease / d.total;
+});
+
 /* Compute maximum. */
-crimea.forEach(function(d) d.max = Math.max(350, d.wounds, d.other, d.disease));
+var max = 0;
+
+crimea.forEach(function(d) {
+  d.max = Math.max(350, d.wounds, d.other, d.disease);
+  max = Math.max(max, d.max);
+});
 
 /* Scales for radius, angle, and fill. */
 var format = pv.Format.date("%b"),
-    radius = pv.Scale.linear(0, 1400).range(0, 275),
+    radius = function(v) { return Math.sqrt(v/max) * 275; },
     angle = pv.Scale.linear(0, 12).range(Math.PI / 2, 5 * Math.PI / 2),
     fill = pv.colors("lightpink", "darkgray", "lightblue").domain(causes);
 
