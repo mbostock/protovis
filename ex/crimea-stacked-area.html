@@ -20,7 +20,7 @@
 var w = 545,
     h = 280,
     x = pv.Scale.linear(crimea, function(d) d.date).range(0, w),
-    y = pv.Scale.linear(0, 2200).range(0, h),
+    y = pv.Scale.linear(0, .1).range(0, h),
     fill = pv.colors("lightpink", "darkgray", "lightblue"),
     format = pv.Format.date("%b");
 
@@ -34,7 +34,7 @@ vis.add(pv.Layout.Stack)
     .layers(causes)
     .values(crimea)
     .x(function(d) x(d.date))
-    .y(function(d, t) y(d[t]))
+    .y(function(d, t) y(d[t] / d.total))
   .layer.add(pv.Area)
     .fillStyle(fill.by(pv.parent))
     .strokeStyle(function() this.fillStyle().darker())
@@ -53,7 +53,8 @@ vis.add(pv.Rule)
     .bottom(y)
     .strokeStyle(function(i) i ? "rgba(255, 255, 255, .7)" : "black")
   .anchor("right").add(pv.Label)
-    .textMargin(6);
+    .textMargin(6)
+    .text(function(d) Math.round(d * 100) + "%");
 
 vis.render();
 

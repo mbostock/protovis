@@ -20,7 +20,7 @@
 var w = 545,
     h = 280,
     x = pv.Scale.ordinal(crimea, function(d) d.date).splitBanded(0, w, 4 / 5),
-    y = pv.Scale.linear(0, 1500).range(0, h),
+    y = pv.Scale.linear(0, .1).range(0, h),
     k = x.range().band / causes.length,
     format = pv.Format.date("%b");
 
@@ -40,7 +40,7 @@ panel.add(pv.Bar)
     .bottom(0)
     .width(k)
     .left(function() this.index * k)
-    .height(function(t, d) y(d[t]))
+    .height(function(t, d) y(d[t] / d.total))
     .fillStyle(pv.colors("lightpink", "darkgray", "lightblue"))
     .strokeStyle(function() this.fillStyle().darker())
     .lineWidth(1);
@@ -57,7 +57,8 @@ vis.add(pv.Rule)
     .strokeStyle(function(i) i ? "rgba(255, 255, 255, .5)" : "black")
   .anchor("right").add(pv.Label)
     .visible(function() !(this.index & 1))
-    .textMargin(6);
+    .textMargin(6)
+    .text(function(d) Math.round(d * 100) + "%");
 
 vis.render();
 
