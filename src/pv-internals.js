@@ -124,6 +124,8 @@ pv.listener = function(f) {
       try {
         pv.event = e;
         return f.call(this, e);
+      } catch ( e ) {
+        pv.error(e);
       } finally {
         delete pv.event;
       }
