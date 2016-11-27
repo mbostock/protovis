@@ -1,6 +1,12 @@
 /************************************************************************/
-/* NOTE: in C, array indexing starts with element zero(0).  I choose   */
-/*       to start my array indexing with elemennt one(1) so all arrays */
+/* This program is based on work by Robert W. Gray and may not be used  */
+/* in ANY for-profit project without his written permission.            */
+/* http://www.rwgrayprojects.com/rbfnotes/maps/graymap6.html            */
+/************************************************************************/
+
+/************************************************************************/
+/* NOTE: in C, array indexing starts with element zero(0).  I choose    */
+/*       to start my array indexing with elemennt one(1) so all arrays  */
 /*       are defined one element longer than they need to be.           */
 /************************************************************************/
 
@@ -71,7 +77,7 @@ function convert_i_t_p(i, t) {
   var x = 0;
   var y = 0;
   var z = 0;
-  
+
   // We need to 'nudge' the point a little bit into the triangle
   // Hence we do a weighted average with point i having a massive weight
   for(var j = 0; j < 3; j++) {
@@ -85,7 +91,7 @@ function convert_i_t_p(i, t) {
       z += v_z[t[j]] * 0.00005;
     }
   }
-  
+
   var info = s_tri_info(x, y, z);
   /* Determine the corresponding Fuller map plane(x, y) point */
 
@@ -98,7 +104,7 @@ function conv_ll_t_sc(lng, lat) {
   /* with r=radius=1.  Angles are given in radians.               */
   var sc = new Object();
   var h_theta, h_phi;
- 
+
   h_theta = 90.0 - lat ;
   h_phi = lng;
   if(lng < 0.0) {h_phi = lng + 360.0;}
@@ -338,7 +344,7 @@ function s_to_c(theta, phi) {
     c.x = Math.sin(theta) * Math.cos(phi);
     c.y = Math.sin(theta) * Math.sin(phi);
     c.z = Math.cos(theta);
-    
+
     return c;
  } /* end s_to_c */
 
@@ -359,7 +365,7 @@ function c_to_s(x, y, z) {
     if(x>0.0 && y==0.0) {s.lng = radians(0.0);}
     if(x<0.0 && y==0.0) {s.lng = radians(180.0);}
     if(x!=0.0 && y!=0.0){s.lng = Math.atan(y/x) + a;}
-    
+
     return s;
 } /* end c_to_s */
 
@@ -370,7 +376,7 @@ function s_tri_info(x, y, z) {
   var h_dist1, h_dist2, h_dist3, h1, h2, h3; // double
   var i, h_tri, h_lcd ;  //int
   var v1, v2, v3;       // int
-  
+
   var info = new Object();
 
   h_tri = 0;
@@ -536,7 +542,7 @@ function dymax_point(tri, lcd, x, y, z) {
 
   /* rotate and translate to correct position          */
   var point2d = new Object();
-  
+
   switch(tri)
    {
      case  1: rotate2d(240.0,pt);
@@ -600,7 +606,7 @@ function dymax_point(tri, lcd, x, y, z) {
               point2d.x = pt.x + 5.0; point2d.y = pt.y + 5.0 / (2.0 * SQRT_3); break;
 
    } /* end switch statement */
-   
+
    return point2d;
 } /* end of dymax_point */
 
@@ -615,7 +621,7 @@ function rotate2d(angle, point2d) {
   hy = point2d.y;
   point2d.x = hx * Math.cos(ha) - hy * Math.sin(ha);
   point2d.y = hx * Math.sin(ha) + hy * Math.cos(ha);
-  
+
   return point2d;
 } /* end rotate procedure */
 
@@ -626,7 +632,7 @@ function rotate3d(axis, alpha, point3d) {
   var a = point3d.x;
   var b = point3d.y;
   var c = point3d.z;
-  
+
   if(axis == 1) {
     point3d.y = b * Math.cos(alpha) + c * Math.sin(alpha);
     point3d.z = c * Math.cos(alpha) - b * Math.sin(alpha);
@@ -641,7 +647,7 @@ function rotate3d(axis, alpha, point3d) {
     point3d.x = a * Math.cos(alpha) + b * Math.sin(alpha);
     point3d.y = b * Math.cos(alpha) - a * Math.sin(alpha);
   }
-  
+
   return point3d;
 } /* end of r2 */
 
